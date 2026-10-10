@@ -2,21 +2,21 @@
 ## Архитектура, методология разработки и система документации
 
 **Проект:** Sunday School — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
-**Версия:** 1.0  
-**Статус:** Template — заполнить при bootstrap (промпт P2)  
+**Версия:** 1.1  
+**Статус:** Canonical — адаптирована под Sunday School в P2 (2026-10-10); ожидает утверждения владельцем (gate G2)  
 **Референс:** Pulse (fitapp) — [`docs/examples/pulse/`](../examples/pulse/) · [`pulse_project_reference.md`](../reference/pulse_project_reference.md)
 
-> **Template note:** полный образец methodology — `docs/examples/pulse/docs/meta/ai_first_project_methodology.md`
+> Полный образец methodology (Pulse, strict) — `docs/examples/pulse/docs/meta/ai_first_project_methodology.md`. Уровень строгости проекта — [`project_quality_profile.md`](./project_quality_profile.md) (lean); здесь он не дублируется.
 
 ---
 
 ## Введение
 
-Документ описывает AI-first подход к разработке **Sunday School**. Структура наследуется из Pulse reference, адаптируется под домен и interim docs в [`docs/my_specs/`](../default_docs/) и [`docs/prototypes/`](../prototypes/).
+Документ описывает AI-first подход к разработке **Sunday School**. Структура наследуется из Pulse reference, адаптируется под домен и interim docs в [`docs/my_specs/`](../my_specs/) и [`docs/prototypes/`](../prototypes/).
 
 **Цель:** AI-агенты следуют задокументированным контрактам, а не изобретают архитектуру.
 
-**Порядок создания документов:** [`documentation_creation_registry.md`](./documentation_creation_registry.md) (создаётся из template в P2).
+**Порядок создания документов:** [`documentation_creation_registry.md`](./documentation_creation_registry.md) (Canonical, адаптирован в P2).
 
 ---
 
@@ -25,17 +25,18 @@
 ### 1.1 Двухконтурная модель
 
 **Контур A — Web (UI + BFF)** — Next.js 16.4 на Vercel  
-**Контур B — Jobs** — Vercel Cron + serverless; не в request path
+**Контур B — Jobs** — Vercel Cron + serverless; не в request path (**post-MVP**, модуль `email_jobs` выключен)
 
 | Компонент | Технология |
 |-----------|-----------|
 | Framework | Next.js **16.4** (exact patch pin, no caret), App Router, `proxy.ts` |
 | Hosting | Vercel |
 | DB | Neon PostgreSQL 17 + Prisma v7 |
-| Auth | Auth.js v5, Credentials, JWT |
+| Auth | Auth.js v5, Google + Telegram (OIDC), JWT, роли `admin` / `teacher` |
 | UI | shadcn/ui (Base UI) + Tailwind CSS v4 |
-| Email | Resend (post-MVP; schema-ready) |
-| Storage | AWS S3 (presigned) |
+| Email | Resend (post-MVP; модуль `email_jobs` выключен) |
+| Storage | AWS S3 (presigned) — модуль `s3_uploads` выключен профилем |
+| i18n | ru / en, срезы словарей (модуль `i18n`) |
 | Observability | Sentry |
 | Toasts | Sonner |
 
@@ -44,7 +45,7 @@
 ```
 monorepo/
 ├── apps/web/          — Next.js (тонкий BFF)
-├── apps/workers/      — Cron / jobs (MVP: may live in apps/web)
+├── apps/workers/      — Cron / jobs (post-MVP)
 └── packages/
     ├── domain/        — чистые правила (без Next/DB)
     ├── policy/edge/   — JWT-only
@@ -54,7 +55,7 @@ monorepo/
 
 **Правила импорта:** см. `monorepo_boundaries_contract.md` (W8) · образец: `docs/examples/pulse/docs/implementation/mvp/contracts/`
 
-### 1.3 Domain invariants (заполнить в W3)
+### 1.3 Domain invariants (зафиксированы в P0 из спецификации; детализируются в W3-04)
 
 1. В школе не более одного активного учебного года; уроки создаются только в активном году; закрытый год — только чтение для teacher, admin правит с записью в журнал (БП-6)
 2. Журнал изменений и журнал кирпичиков — только добавление; ошибки исправляются компенсирующими записями; удаление — только по запросу на удаление данных (БП-8, БП-11)
@@ -78,7 +79,7 @@ monorepo/
 
 | Шаг | Действие |
 |-----|----------|
-| КОНТЕКСТ | `AGENTS.md` + `project-context.template.mdc` (после bootstrap: `project-context.mdc`) + [`project_quality_profile.md`](./project_quality_profile.md) — уровень строгости и модули |
+| КОНТЕКСТ | `AGENTS.md` + `project-context.mdc` + [`project_quality_profile.md`](./project_quality_profile.md) — уровень строгости и модули |
 | TIER/DoR | Task tier T0–T3, Definition of Ready и делегирование: [`ai_agent_model_routing.md`](./ai_agent_model_routing.md), runtime `model-routing.mdc`. Это не rule-tier T0–T2 из `.cursor/rules/README.md`. |
 | ФАЗА | `P{N}_phase_description.md` |
 | КОНТРАКТ | `docs/implementation/mvp/contracts/` |
@@ -125,9 +126,9 @@ docs/implementation/mvp/
 
 ## 3. Структура документации
 
-См. §3.1 в `documentation_creation_registry.md` и полный образец Pulse registry.
+См. волны §5 и иерархию источников истины §2.1 в [`documentation_creation_registry.md`](./documentation_creation_registry.md); полный образец — Pulse registry.
 
-**Иерархия истины:** канон — [`.cursor/rules/tiers/t0-always/project-context.template.mdc`](../../.cursor/rules/tiers/t0-always/project-context.template.mdc) § Source-of-truth order (после bootstrap: `project-context.mdc`).
+**Иерархия истины:** канон — [`.cursor/rules/project-context.mdc`](../../.cursor/rules/project-context.mdc) § Source-of-truth order.
 
 ---
 

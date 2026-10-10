@@ -344,7 +344,7 @@ async function TrainerProfile({ id }: { id: string }) {
 
 ### Context (Pulse)
 
-Root `layout.tsx` may `await auth()` for session-aware chrome (nav, role). Pulse uses **JWT sessions** (Auth.js v5, Credentials) — see [ADR-003](../../prds/07_governance/adr_003_auth_credentials_jwt_rbac.md).
+Root `layout.tsx` may `await auth()` for session-aware chrome (nav, role). Pulse uses **JWT sessions** (Auth.js v5, Credentials) — see [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md).
 
 Typical JWT `auth()`:
 

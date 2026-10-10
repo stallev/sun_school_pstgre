@@ -39,7 +39,7 @@ When code **cannot** follow an existing doc verbatim — or you choose a differe
 | Database | [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) |
 | Authorization | [`docs/prds/04_authorization_privacy/`](docs/prds/04_authorization_privacy/) (when created) |
 | Governance | ADRs in [`docs/prds/07_governance/`](docs/prds/07_governance/) |
-| Auth / runtime | [`auth_runtime_spec.md`](docs/prds/05_runtime/auth_runtime_spec.md), [`ai_auth_implementation_guide.md`](docs/guidelines/auth/ai_auth_implementation_guide.md), [`adr_003_auth_credentials_jwt_rbac.md`](docs/prds/07_governance/adr_003_auth_credentials_jwt_rbac.md) |
+| Auth / runtime | [`auth_runtime_spec.md`](docs/prds/05_runtime/auth_runtime_spec.md), [`ai_auth_implementation_guide.md`](docs/guidelines/auth/ai_auth_implementation_guide.md), [`adr_003_auth_oidc_jwt_rbac.md`](docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) |
 | Phase tasks / DoD | [`docs/implementation/mvp/tasks/`](docs/implementation/mvp/tasks/), [`phases_tasks_descriptions/`](docs/implementation/mvp/phases_tasks_descriptions/) |
 
 ## Precedence

@@ -1,8 +1,8 @@
 ﻿# Documentation Creation Registry — Sunday School
 
 **Проект:** Sunday School — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
-**Версия реестра:** 1.1 (template) — DoR-ready: §2.3.2a пути H/N/S, §2.3.6 checklist, commit units в phase tasks  
-**Статус:** Template — адаптировать под домен в промпте P2; полный образец волн W0–W14: `docs/examples/pulse/docs/meta/documentation_creation_registry.md`  
+**Версия реестра:** 1.2 (canonical, профиль lean) — DoR-ready: §2.3.2a пути H/N/S, §2.3.6 checklist, commit units в phase tasks  
+**Статус:** Canonical — адаптирован под Sunday School в P2 (2026-10-10); ожидает утверждения владельцем (gate G2). Полный образец волн W0–W14 (Pulse): `docs/examples/pulse/docs/meta/documentation_creation_registry.md`  
 **Аудитория:** AI-агенты (Cursor, Claude, GPT)
 
 **Связанные документы:**
@@ -12,7 +12,7 @@
 - Точка входа monorepo: [`AGENTS.md`](../../AGENTS.md)
 - Референс Pulse reference: [`pulse_project_reference.md`](../reference/pulse_project_reference.md)
 - Прототип (визуальный эталон): [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html)
-- Interim PRD (источник миграции): [`default_docs/`](../default_docs/)
+- Interim brief и спецификации владельца (источник миграции): [`my_specs/`](../my_specs/)
 
 > **Правило для агентов:** этот файл — **единственный источник порядка** создания документов.  
 > Создавайте файлы **строго по волнам и номерам** внутри волны. Не перескакивайте вперёд без явного запроса пользователя.
@@ -32,14 +32,14 @@
 
 | Файл | Статус |
 |------|--------|
-| `docs/meta/ai_first_project_methodology.md` | Канон (адаптируется в P2) |
+| `docs/meta/ai_first_project_methodology.md` | Канон (адаптирована в P2) |
 | `docs/meta/project_quality_profile.md` | Канон — создаёт P00; уровень определяет набор волн (§5.0) |
 | `docs/reference/pulse_project_reference.md` | Канон |
-| `docs/default_docs/*` | Interim archive — только читать при миграции |
-
-Фундаментальные документы, которые в Pulse существовали до реестра (ADR-001/002, `architecture_master_index`, user flows, `canonical_routes`, `database_schema_v1`, `01_architecture_overview`), в новом проекте создаются волнами — строки `W1-F*` и `W13-00`.
+| `docs/my_specs/*` | Interim brief, спецификации, данные Библии — только читать при миграции (`default_docs/` в проекте не используется) |
 | `docs/guidelines/**` | Канон реализации — ссылаться, не дублировать |
 | `docs/claude-code-cursor-rules-sync.md` | Канон механизма Cursor `.mdc` → Claude `.md` (`npm run rules:sync`) — **не пересоздавать в P2** |
+
+Фундаментальные документы, которые в Pulse существовали до реестра (ADR-001/002, `architecture_master_index`, user flows, `canonical_routes`, `database_schema_v1`, `01_architecture_overview`), в новом проекте создаются волнами — строки `W1-F*` и `W13-00`.
 
 ---
 
@@ -47,11 +47,11 @@
 
 ### 2.1 Иерархия источников истины
 
-Базовый порядок — канон: [`.cursor/rules/tiers/t0-always/project-context.template.mdc`](../../.cursor/rules/tiers/t0-always/project-context.template.mdc) § Source-of-truth order (после bootstrap: `project-context.mdc`). Не дублировать список здесь.
+Базовый порядок — канон: [`.cursor/rules/project-context.mdc`](../../.cursor/rules/project-context.mdc) § Source-of-truth order. Не дублировать список здесь.
 
 Уточнения для документации (в рамках соответствующих уровней канона):
 - **`AGENTS.md`** — включая `apps/web/AGENTS.md` для web-кода
-- **Interim** (`docs/default_docs/`) — только до завершения миграции, на уровне PRD
+- **Interim** (`docs/my_specs/`) — только до завершения миграции, на уровне PRD
 - **ADR** (`docs/prds/07_governance/`) — на уровне PRD
 - **Wireframes / prototype** — визуальный эталон, subordinate to canonical routes, на уровне HTML prototype канона
 
@@ -239,9 +239,9 @@
 2. **MUST / SHOULD / MAY** — использовать RFC 2119 для однозначности.
 3. **Короткие абзацы**, таблицы для матриц (role × resource, state × transition).
 4. **Явные cross-links** — относительные пути Markdown: `[text](../path/file.md)`.
-5. **Не копировать Pulse reference продуктовые правила** — только архитектурные паттерны; домен Sunday School из `default_docs/` и user flows.
-6. **Interim → canonical:** при миграции сохранять смысл; в новом файле указать `Migrated from: docs/default_docs/...`.
-7. **Post-MVP:** nullable поля Stripe/Daily.co — не описывать как MVP scope.
+5. **Не копировать Pulse reference продуктовые правила** — только архитектурные паттерны; домен Sunday School из `docs/my_specs/` и user flows.
+6. **Interim → canonical:** при миграции сохранять смысл; в новом файле указать `Migrated from: docs/my_specs/...`.
+7. **Post-MVP:** таблицы и поля волн 1–3 (семьи, достижения и штрафы, голосовая проверка) присутствуют в схеме, но не описываются как MVP scope.
 8. **Язык:** русский для продуктового текста; идентификаторы кода, enum, пути — на английском.
 9. **Размер:** PRD/contract ≤ ~400 строк; wireframe ≤ ~150 строк; при превышении — split по поддомену.
 10. **Версионирование:** при material change — bump версии в front matter + строка в Change log.
@@ -255,7 +255,7 @@
    `| {новый файл} | {краткое назначение} |`
 3. Если в раннем файле был placeholder `*(planned)*` — заменить на рабочую ссылку.
 4. Обновить [`architecture_master_index.md`](../prds/architecture_master_index.md) — статус Planned → Canonical.
-5. **Не** редактировать `docs/default_docs/` (archive) без явной задачи миграции обратно.
+5. **Не** редактировать `docs/my_specs/` (interim) без явной задачи миграции обратно.
 
 ### 2.6 Верификация после каждого файла
 
@@ -278,8 +278,10 @@
 | Тема | Library | Что проверить |
 |------|---------|---------------|
 | Next.js 16 | `/vercel/next.js` | `proxy.ts`, async `cookies`/`headers`/`params` |
-| Auth.js v5 | `/websites/authjs_dev` | Credentials, JWT, role in token |
+| Auth.js v5 | `/websites/authjs_dev` | OIDC-провайдеры (Google; Telegram — custom OIDC), JWT, role in token |
 | Prisma + Neon | `/websites/prisma_io` | `DATABASE_URL`, `DIRECT_URL`, migrate deploy |
+
+Версии, закреплённые при bootstrap (P2, 2026-10-10): Next.js 16.4.x, Auth.js v5, Prisma v7 — источник `project-context.mdc`; **сверка с Context7 при P2 не выполнялась** (инструмент недоступен в сессии) и обязательна при написании ADR-001 / ADR-002 / ADR-003 (W1-F1, W1-F2, W4-01).
 
 Результат сверки фиксировать в front matter: `**Проверено по:** <lib>@<pin> — Context7, YYYY-MM-DD` (§2.2). Без этой строки runtime/auth/data документ не проходит §2.3.6.
 
@@ -330,7 +332,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 ## 5. Полный реестр документов по волнам
 
-> **Template note.** Структура волн и универсальные документы (governance, UX/UI, auth, runtime, data model, ops) — канон шаблона. Строки с доменными файлами (booking, trainer, wishlist, complaint …) — **пример Pulse**: в P2 заменить доменными аналогами Sunday School или удалить. Какие волны обязательны — по профилю качества проекта.
+> **Адаптация (P2).** Доменные строки Pulse (booking, trainer, wishlist, complaint …) заменены аналогами Sunday School. Какие волны и строки обязательны — по профилю [`project_quality_profile.md`](./project_quality_profile.md) (**lean**, §5.0). Строки с пометкой «не требуется на lean» сохранены для повышения уровня (профиль §8). Предварительные перечни W8 / W9 / W11 уточняются при подходе к волне.
 
 ### 5.0 Волны по уровню профиля качества
 
@@ -381,15 +383,17 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W1-F1 | `docs/prds/07_governance/adr_001_stack_and_runtime.md` | project-context, quality profile (модули) | architecture_master_index |
 | W1-F2 | `docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md` | шаблон `adr_002_nextjs_vercel_runtime_policy.template.md`, ADR-001 | adr_index |
 | W1-F3 | `docs/prds/architecture_master_index.md` | ADR-001, ADR-002 | AGENTS.md |
-| W1-F4 | `docs/prds/01_product_scope/user_flows/users_mvp/{role}_flow.md` — по одному на роль | interim brief, `admin, teacher`, prototype | architecture_master_index |
+| W1-F4 | `docs/prds/01_product_scope/user_flows/users_mvp/{role}_flow.md` — по одному на роль MVP (`admin`, `teacher`); `parent_flow.md` — post-MVP, по желанию | interim brief (`docs/my_specs/`), prototype | architecture_master_index |
 | W1-F5 | `docs/design/canonical_routes.md` — единственный инвентарь маршрутов | user flows, prototype | AGENTS.md, architecture_master_index |
-| W1-F6 | `docs/prds/03_data_model/database_schema_v1.md` — **DB-first**, до W3 / W8 | user flows, interim brief | architecture_master_index |
+| W1-F6 | `docs/prds/03_data_model/database_schema_v1.md` — **DB-first**, до W3 / W8; схема **целиком**, включая таблицы post-MVP (спец. С-1…С-7), Библия — по [`Bible/README.md`](../my_specs/Bible/README.md) | user flows, interim brief | architecture_master_index |
 | W1-01 | `docs/prds/07_governance/adr_index.md` | ADR-001, ADR-002, registry | `07_governance/README.md`, `architecture_master_index.md` |
 | W1-02 | `docs/prds/07_governance/decision_process.md` | adr_index | adr_index, methodology |
 | W1-03 | `docs/prds/01_product_scope/mvp_scope.md` | interim MVP brief (`docs/my_specs/`), user flows, ADR-001 | architecture_master_index, methodology checklist |
 | W1-04 | `docs/prds/01_product_scope/post_mvp_deferrals.md` | mvp_scope, database_schema_v1 | mvp_scope |
 | W1-05 | `docs/prds/01_product_scope/pages_functional_spec.md` | mvp_scope, canonical_routes, interim pages doc (`docs/my_specs/`) | architecture_master_index, canonical_routes |
-| W1-06 | `docs/prds/01_product_scope/email_notifications_matrix.md` | mvp_scope | Post-MVP email spec; schema-ready on MVP *(→ email contract W8)* |
+| W1-06 | `docs/prds/01_product_scope/email_notifications_matrix.md` | mvp_scope | **Не требуется:** модуль `email_jobs` выключен (post-MVP) |
+
+**Lean:** W1-F1…F6, W1-03, W1-04 (§5.0). W1-01, W1-02, W1-05, W1-06 — не требуется на lean.
 
 ---
 
@@ -399,9 +403,11 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 |----|------|------------|-------------------|
 | W2-01 | UX-01 `docs/design/ux_ui_principles.md` | pages_functional_spec, prototype HTML | pages_functional_spec, design/README |
 | W2-02 | UX-02 `docs/design/responsive_navigation_contract.md` | ux_ui_principles, canonical_routes, prototype | ux_ui_principles, canonical_routes |
-| W2-03 | UX-03 `docs/design/visual_identity_contract.md` | ux_ui_principles, design-system interim, typography guidelines | ux_ui_principles, docs/guidelines/README |
+| W2-03 | UX-03 `docs/design/visual_identity_contract.md` | ux_ui_principles, token dump прототипа (`<head>` прототипа), typography guidelines | ux_ui_principles, docs/guidelines/README |
 | W2-04 | UX-07 `docs/design/accessibility_requirements.md` | ux_ui_principles, ai_semantics_a11y guidelines | ux_ui_principles |
-| W2-05 | UX-08 `docs/design/prototype_route_mapping.md` | canonical_routes, prototype HTML | canonical_routes, ux_ui_principles |
+| W2-05 | UX-08 `docs/design/prototype_route_mapping.md` | canonical_routes, prototype HTML (`#screen-<view>` ids) | canonical_routes, ux_ui_principles |
+
+**Lean:** UX-03 (W2-03) + UX-02 (W2-02, mobile-first); W2-05 — рекомендуется (ключи экранов уже в прототипе); W2-01, W2-04 — не требуется на lean.
 
 ---
 
@@ -414,6 +420,8 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W3-03 | `docs/prds/02_domain_model/failure_modes_catalog.md` | lifecycle_models, user flows | lifecycle_models, architecture_master_index, AGENTS.md |
 | W3-04 | `docs/prds/02_domain_model/domain_invariants.md` | lifecycle_models, failure_modes_catalog, ADR-001 | AGENTS.md *(ссылка в Related)*, lifecycle_models, failure_modes_catalog |
 | W3-05 | `docs/prds/02_domain_model/use_cases_index.md` | lifecycle_models, failure_modes_catalog, mvp_scope | lifecycle_models, failure_modes_catalog |
+
+**Lean:** W3-02 `lifecycle_models` (учебный год, заявка на доступ, проверка ДЗ и корректировка, запрос на удаление, выдача кирпичиков) и W3-04 `domain_invariants` (5 инвариантов из `project-context.mdc`). W3-01, W3-03, W3-05 — не требуется на lean.
 
 **`failure_modes_catalog.md`** — канонический индекс сценариев `FM-xxx`:
 
@@ -434,11 +442,15 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 | ID | Файл | Зависит от | Обновить backlinks |
 |----|------|------------|-------------------|
-| W4-01 | `docs/prds/07_governance/adr_003_auth_credentials_jwt_rbac.md` | ADR-001, domain_invariants | adr_index, auth guideline |
-| W4-02 | `docs/prds/07_governance/adr_004_timezone_scheduling_model.md` | domain_invariants, lifecycle_models | adr_index, database_schema_v1 |
-| W4-03 | `docs/prds/07_governance/adr_005_mvp_booking_without_payment.md` | lifecycle_models, mvp_scope | adr_index, mvp_scope |
-| W4-04 | `docs/prds/07_governance/adr_006_idempotent_email_delivery.md` | email_notifications_matrix, domain_invariants | adr_index, ADR-001 |
-| W4-05 | `docs/prds/07_governance/adr_007_file_asset_blob_lifecycle.md` | ADR-001, blob-upload guideline | adr_index |
+| W4-01 | `docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md` | ADR-001, domain_invariants, [`telegram_authjs_oidc_portable_guide.md`](../my_specs/telegram_authjs_oidc_portable_guide.md) | adr_index, auth guideline |
+| W4-02 | `docs/prds/07_governance/adr_004_timezone_scheduling_model.md` — часовой пояс школы и даты уроков / проверок; создаётся, только если W3 подтвердит необходимость | domain_invariants, lifecycle_models | adr_index, database_schema_v1 |
+| W4-03 | `docs/prds/07_governance/adr_005_schema_complete_post_mvp_tables.md` — схема создаётся целиком, таблицы post-MVP без UI | lifecycle_models, mvp_scope, database_schema_v1 | adr_index, mvp_scope |
+| W4-04 | `docs/prds/07_governance/adr_006_idempotent_email_delivery.md` | email_notifications_matrix, domain_invariants | **не требуется:** модуль `email_jobs` выключен |
+| W4-05 | `docs/prds/07_governance/adr_007_file_asset_blob_lifecycle.md` | ADR-001, s3-upload guideline | **не требуется:** модуль `s3_uploads` выключен |
+| W4-06 | `docs/prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md` — модуль `i18n` включён | ADR-001, `ui-messages-and-copy`, [`copy_and_messages.md`](../guidelines/react/copy_and_messages.md) | adr_index |
+| W4-07 | `docs/prds/07_governance/adr_009_bible_translations_and_verse_numbering.md` — общая нумерация (ПБ-4, 12.2 п. 29), лицензия NIV (п. 30), модель таблиц | [`Bible/README.md`](../my_specs/Bible/README.md), спец. 3.10, database_schema_v1 | adr_index, Bible/README.md |
+
+**Lean:** только ADR включённых модулей — W4-01, W4-03, W4-06, W4-07 (+ W4-02 при необходимости). W4-04 и W4-05 — не требуется (модули выключены).
 
 ---
 
@@ -452,9 +464,11 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W5-04 | `docs/prds/04_authorization_privacy/privacy_data_handling.md` | authorization_matrix, database_schema_v1 | authorization_matrix |
 | W5-05 | `docs/prds/05_runtime/README.md` | ADR-001, ADR-002 | architecture_master_index |
 | W5-06 | `docs/prds/05_runtime/backend_requirements.md` | ADR-001, adr_006 | architecture_learning_pack/01 |
-| W5-07 | `docs/prds/05_runtime/monorepo_packages.md` | ADR-001, Pulse reference reference | AGENTS.md |
+| W5-07 | `docs/prds/05_runtime/monorepo_packages.md` | ADR-001, Pulse reference | AGENTS.md |
 | W5-08 | `docs/prds/05_runtime/auth_runtime_spec.md` | adr_003, authorization_matrix, ADR-002 | auth guideline |
 | W5-09 | `docs/prds/05_runtime/cache_revalidation_policy.md` | ADR-002, ai_loading_patterns | nextjs guidelines |
+
+**Lean:** W5-02 `authorization_matrix` (admin / teacher × ресурсы) и W5-08 `auth_runtime_spec` (OIDC callback, укорочение `state`, привязка провайдеров). Остальное — не требуется на lean.
 
 ---
 
@@ -464,7 +478,9 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 |----|------|------------|-------------------|
 | W6-01 | `docs/prds/03_data_model/data_access_patterns.md` | database_schema_v1, lifecycle_models | database_schema_v1 |
 | W6-02 | `docs/prds/03_data_model/indexing_strategy.md` | data_access_patterns | database_schema_v1 |
-| W6-03 | `docs/prds/03_data_model/seed_data_spec.md` | database_schema_v1, pages_functional_spec | pages_functional_spec |
+| W6-03 | `docs/prds/03_data_model/seed_data_spec.md` — справочники (Библия: RST / NIV, см. [`Bible/README.md`](../my_specs/Bible/README.md)), каталог достижений, dev-фикстуры из прототипа, `seed:dev` с защитой от prod (С-6) | database_schema_v1, pages_functional_spec | pages_functional_spec |
+
+**Lean:** W6-03. W6-01, W6-02 — не требуется на lean.
 
 ---
 
@@ -476,7 +492,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W7-02 | UX-05 `docs/design/ui_states_contract.md` | ux_ui_principles, ai_loading_patterns | pages_functional_spec, ux_ui_principles |
 | W7-03 | UX-06 `docs/design/forms_and_validation_ux.md` | ui_states_contract, ai_form_handling_pattern | interaction_design_contract |
 | W7-04 | UX-10 `docs/design/content_and_microcopy_contract.md` | copy_and_messages guideline | interaction_design_contract |
-| W7-05 | UX-09 `docs/design/styleguide.md` | visual_identity_contract, design-system interim | visual_identity_contract, design/README |
+| W7-05 | UX-09 `docs/design/styleguide.md` | visual_identity_contract, token dump прототипа (`<head>` прототипа) | visual_identity_contract, design/README |
 
 ---
 
@@ -486,13 +502,15 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 |----|------|------------|-------------------|
 | W8-01 | `docs/implementation/mvp/contracts/monorepo_boundaries_contract.md` | monorepo_packages | AGENTS.md, methodology §2.6 |
 | W8-02 | `docs/implementation/mvp/contracts/authorization_policy_contract.md` | policy_enforcement_contract, auth_runtime_spec | adr_003, policy rule |
-| W8-03 | `docs/implementation/mvp/contracts/schedule_slots_contract.md` | adr_004, lifecycle_models, data_access_patterns | lifecycle_models |
-| W8-04 | `docs/implementation/mvp/contracts/booking_lifecycle_contract.md` | lifecycle_models, adr_005, schedule_slots | lifecycle_models, domain_invariants |
-| W8-05 | `docs/implementation/mvp/contracts/wishlist_contract.md` | authorization_matrix, interaction_design | authorization_matrix |
-| W8-06 | `docs/implementation/mvp/contracts/trainer_verification_contract.md` | lifecycle_models, authorization_matrix | lifecycle_models |
-| W8-07 | `docs/implementation/mvp/contracts/file_upload_contract.md` | adr_007, authorization_matrix | blob-upload guideline |
-| W8-08 | `docs/implementation/mvp/contracts/review_moderation_contract.md` | lifecycle_models, authorization_matrix | lifecycle_models |
-| W8-09 | `docs/implementation/mvp/contracts/email_notifications_contract.md` | email_notifications_matrix, adr_006 | email_notifications_matrix |
+| W8-03 | `docs/implementation/mvp/contracts/access_requests_and_roles_contract.md` — заявки на доступ, роли admin / teacher, отключение, объединение дубликатов (РГ-1…РГ-6) | adr_003, authorization_matrix, lifecycle_models | lifecycle_models, authorization_matrix |
+| W8-04 | `docs/implementation/mvp/contracts/school_year_and_groups_contract.md` — учебный год, группы, зачисление и перевод (БП-6, БП-7) | lifecycle_models, domain_invariants | lifecycle_models, domain_invariants |
+| W8-05 | `docs/implementation/mvp/contracts/homework_check_contract.md` — проверка ДЗ и корректировка (БП-1…БП-4, БП-10, БП-12) | lifecycle_models, school_year_and_groups_contract | lifecycle_models |
+| W8-06 | `docs/implementation/mvp/contracts/bricks_ledger_contract.md` — журнал кирпичиков (БП-11) | homework_check_contract, domain_invariants | lifecycle_models |
+| W8-07 | `docs/implementation/mvp/contracts/change_log_contract.md` — журнал изменений (БП-8, перечень 3.16) | authorization_matrix | authorization_matrix |
+| W8-08 | `docs/implementation/mvp/contracts/deletion_requests_contract.md` — запросы на удаление (УД-1…УД-11) | lifecycle_models, privacy_data_handling | lifecycle_models |
+| W8-09 | `docs/implementation/mvp/contracts/bible_seed_contract.md` — скрипты загрузки переводов (ПБ-1…ПБ-5) | adr_009, seed_data_spec, `Bible/README.md` | seed_data_spec |
+
+**Lean:** W8-01 + контракты мутаций с признаком S / N: W8-03…W8-08; W8-09 — перед написанием скриптов загрузки. W8-02 — при необходимости (модуль `auth`). `file_upload_contract` и `email_notifications_contract` не требуются (модули `s3_uploads`, `email_jobs` выключены).
 
 ---
 
@@ -500,15 +518,16 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 | ID | Файл | Зависит от | Обновить backlinks |
 |----|------|------------|-------------------|
-| W9-01 | `docs/implementation/mvp/specs/global_shell_spec.md` | responsive_navigation_contract, visual_identity | ux_ui_principles |
-| W9-02 | `docs/implementation/mvp/specs/password_reset_spec.md` | auth_runtime_spec, email_notifications_contract | auth_runtime_spec |
-| W9-03 | `docs/implementation/mvp/specs/catalog_discovery_spec.md` | pages_functional_spec, wishlist_contract | pages_functional_spec |
-| W9-04 | `docs/implementation/mvp/specs/trainer_onboarding_spec.md` | trainer_verification_contract, forms_and_validation_ux | trainer_flow, pages_functional_spec |
-| W9-05 | `docs/implementation/mvp/specs/booking_wizard_spec.md` | booking_lifecycle_contract, schedule_slots, ui_states | client_flow, pages_functional_spec |
-| W9-06 | `docs/implementation/mvp/specs/trainer_schedule_spec.md` | schedule_slots_contract, adr_004 | trainer_flow |
-| W9-07 | `docs/implementation/mvp/specs/admin_verification_spec.md` | trainer_verification_contract, ui_states | admin_flow |
-| W9-08 | `docs/implementation/mvp/specs/complaint_refund_spec.md` | lifecycle_models, authorization_matrix | admin_flow |
-| W9-09 | `docs/implementation/mvp/specs/admin_people_ops_spec.md` | admin_verification_spec, trainer_verification_contract | admin_flow, canonical_routes |
+| W9-01 | `docs/implementation/mvp/specs/global_shell_spec.md` — оболочка из прототипа (`#shell`, header, drawer, role switcher только в dev) | responsive_navigation_contract, visual_identity | ux_ui_principles |
+| W9-02 | `docs/implementation/mvp/specs/access_and_registration_spec.md` — вход Google / Telegram, регистрация с согласием, ожидание заявки | auth_runtime_spec, access_requests_and_roles_contract, forms_and_validation_ux | auth_runtime_spec, admin_flow |
+| W9-03 | `docs/implementation/mvp/specs/lesson_form_and_golden_verses_spec.md` | school_year_and_groups_contract, bible_seed_contract, forms_and_validation_ux | pages_functional_spec, teacher_flow |
+| W9-04 | `docs/implementation/mvp/specs/homework_check_flow_spec.md` — последовательная проверка + сводная таблица | homework_check_contract, ui_states | teacher_flow, pages_functional_spec |
+| W9-05 | `docs/implementation/mvp/specs/group_and_pupils_spec.md` | school_year_and_groups_contract, ui_states | admin_flow, teacher_flow |
+| W9-06 | `docs/implementation/mvp/specs/bricks_and_rating_spec.md` | bricks_ledger_contract | teacher_flow |
+| W9-07 | `docs/implementation/mvp/specs/analytics_screens_spec.md` — группа, ученик, школа (9.1…9.1.4, 9.5, 9.6) | homework_check_contract, bricks_ledger_contract | teacher_flow, admin_flow |
+| W9-08 | `docs/implementation/mvp/specs/admin_users_and_deletions_spec.md` | access_requests_and_roles_contract, deletion_requests_contract, change_log_contract | admin_flow, canonical_routes |
+
+**Lean:** global_shell (W9-01) + многошаговые flows: W9-04 (проверка ДЗ), W9-02 (вход / регистрация). Остальное — не требуется на lean.
 
 ---
 
@@ -534,7 +553,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W10-… | `.../mvp/{role}_{screen}.md` | кабинет каждой роли из `admin, teacher` (dashboard, списки, детали, формы) | `{role}_flow`, профильный spec / contract |
 | W10-… | `.../mvp/admin_{screen}.md` | `/admin/*` (если есть роль admin) | admin_flow, профильный spec |
 
-Один wireframe на маршрут из `canonical_routes.md`; нумерация — сквозная в порядке route_index. Пример полного списка (32 экрана) — Pulse registry W10.
+**Lean:** не требуется — достаточно HTML-прототипа (ключи экранов `#screen-<view>`, см. UX-08). Один wireframe на маршрут из `canonical_routes.md` — на standard+; нумерация — сквозная в порядке route_index. Пример полного списка (32 экрана) — Pulse registry W10.
 
 **Обновить backlinks после W10:** `canonical_routes.md` § Wireframe index, `design/README.md`, `prototype_route_mapping.md`.
 
@@ -544,21 +563,22 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 | ID | Файл | Зависит от | Обновить backlinks |
 |----|------|------------|-------------------|
-| W11-01 | `docs/implementation/mvp/phases_tasks_descriptions/P01_phase_description.md` | W8 contracts (01–02), monorepo_packages, global_shell_spec | methodology §2.5 |
+| W11-01 | `docs/implementation/mvp/phases_tasks_descriptions/P01_phase_description.md` — scaffold, БД, auth (Google / Telegram), оболочка | W8-01…03, monorepo_packages, global_shell_spec | methodology §2.5 |
 | W11-02 | `docs/implementation/mvp/tasks/P01_tasks.md` | P01_phase_description | — |
-| W11-03 | `P02_phase_description.md` | P01, catalog_discovery_spec, wireframes public/* | methodology |
+| W11-03 | `P02_phase_description.md` — учебный год, группы, ученики | P01, school_year_and_groups_contract, group_and_pupils_spec | methodology |
 | W11-04 | `P02_tasks.md` | P02_phase | — |
-| W11-05 | `P03_phase_description.md` | booking_*, client wireframes | methodology |
+| W11-05 | `P03_phase_description.md` — уроки и золотые стихи | lesson_form_and_golden_verses_spec, bible_seed_contract | methodology |
 | W11-06 | `P03_tasks.md` | P03_phase | — |
-| W11-07 | `P04_phase_description.md` | trainer specs/contracts | methodology |
+| W11-07 | `P04_phase_description.md` — проверка ДЗ | homework_check_contract, homework_check_flow_spec | methodology |
 | W11-08 | `P04_tasks.md` | P04_phase | — |
-| W11-09 | `P05_phase_description.md` | admin specs | methodology |
+| W11-09 | `P05_phase_description.md` — кирпичики, рейтинг, аналитика | bricks_ledger_contract, bricks_and_rating_spec, analytics_screens_spec | methodology |
 | W11-10 | `P05_tasks.md` | P05_phase | — |
-| W11-11 | `P06_phase_description.md` | email_notifications_contract, adr_006 | methodology |
+| W11-11 | `P06_phase_description.md` — журнал изменений, запросы на удаление, локализация | change_log_contract, deletion_requests_contract, adr_008 | methodology |
 | W11-12 | `P06_tasks.md` | P06_phase | — |
-| W11-13 | `P07_phase_description.md` | accessibility_requirements, ui_states | methodology |
+| W11-13 | `P07_phase_description.md` — миграция из действующего приложения, prod-готовность | migration_runbook, seed_data_spec, accessibility_requirements | methodology |
 | W11-14 | `P07_tasks.md` | P07_phase | — |
 
+Деление на фазы **предварительное**, фиксируется при написании W11; нумерация фаз реализации (P01…) не путается с промптами bootstrap P0…P6.
 
 ---
 
@@ -569,12 +589,14 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W12-01 | `docs/prds/06_operations/README.md` | backend_requirements | architecture_master_index |
 | W12-02 | `docs/prds/06_operations/migration_runbook.md` | database_schema_v1, ADR-001, Context7 Prisma | database_schema_v1 |
 | W12-03 | `docs/prds/06_operations/observability_plan.md` | backend_requirements | backend_requirements |
-| W12-04 | `docs/prds/06_operations/cron_jobs_registry.md` | email_notifications_contract, P21 | adr_006 |
+| W12-04 | `docs/prds/06_operations/cron_jobs_registry.md` | email_notifications_contract | **не требуется:** модуль `email_jobs` выключен |
 | W12-05 | `docs/implementation/mvp/guides/local_dev_setup.md` | migration_runbook, seed_data_spec | implementation/mvp/README |
 | W12-06 | `guides/vercel_deploy_guide.md` | ADR-001, auth_runtime_spec | ADR-001 |
 | W12-07 | `guides/neon_prisma_migrations_guide.md` | migration_runbook | migration_runbook |
 | W12-08 | `guides/seed_and_fixtures_guide.md` | seed_data_spec | seed_data_spec |
-| W12-09 | `guides/cron_jobs_setup_guide.md` | cron_jobs_registry, P21 | cron_jobs_registry |
+| W12-09 | `guides/cron_jobs_setup_guide.md` | cron_jobs_registry | **не требуется:** модуль `email_jobs` выключен |
+
+**Lean:** W12-05 `local_dev_setup`, W12-06 `vercel_deploy_guide`, W12-07 `neon_prisma_migrations_guide`; W12-02 `migration_runbook` — как зависимость W12-05 / W12-07 и для фазы миграции из старого приложения.
 
 ---
 
@@ -583,9 +605,11 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | ID | File | Зависит от | Обновить backlinks |
 |----|------|------------|-------------------|
 | W13-00 | `docs/architecture_learning_pack/01_architecture_overview.md` | architecture_master_index, monorepo_boundaries_contract | AGENTS.md |
-| W13-01 | `docs/architecture_learning_pack/02_booking_lifecycle_layers.md` | booking_lifecycle_contract, data_access_patterns | 01_architecture_overview |
-| W13-02 | `03_trainer_verification_layers.md` | trainer_verification_contract | 01_architecture_overview |
-| W13-03 | `04_email_jobs_layers.md` | email_notifications_contract, cron_jobs_registry | 01_architecture_overview |
+| W13-01 | `docs/architecture_learning_pack/02_homework_check_layers.md` | homework_check_contract, data_access_patterns | 01_architecture_overview |
+| W13-02 | `03_bricks_ledger_layers.md` | bricks_ledger_contract | 01_architecture_overview |
+| W13-03 | `04_bible_seed_and_numbering.md` | bible_seed_contract, adr_009 | 01_architecture_overview |
+
+**Lean:** не требуется (W13 — с уровня standard: W13-00; strict — все).
 
 ---
 
@@ -599,6 +623,8 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W14-04 | Обновить [`ai_first_project_methodology.md`](./ai_first_project_methodology.md) § checklist — отметить выполненное |
 | W14-05 | Обновить [`AGENTS.md`](../../AGENTS.md) — добавить ссылку на этот реестр в § Документация |
 | W14-06 | Обновить [`implementation/mvp/README.md`](../implementation/mvp/README.md) — список contracts/specs/guides |
+
+**Lean:** облегчённый — W14-01, W14-04, W14-05; остальное — по факту созданных документов.
 
 ---
 
@@ -674,7 +700,26 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 ## 8. Сводная статистика
 
-Заполняется в P2 после адаптации волн. Ориентир — Pulse (профиль Strict): ~115 новых markdown-файлов в W0–W14.
+Ориентир для профиля **lean** (после адаптации в P2); точный состав уточняется при подходе к волне. Ориентир Pulse (профиль Strict): ~115 файлов.
+
+| Волна | Файлов (lean) | Состав |
+|-------|---------------|--------|
+| W0 | 2 | registry, model routing (уже есть) |
+| W1 | 8 | F1–F6, mvp_scope, post_mvp_deferrals |
+| W2 | 2–3 | UX-03, UX-02, (UX-08) |
+| W3 | 2 | lifecycle_models, domain_invariants |
+| W4 | 4–5 | ADR-003, 005, 008, 009 (+004) |
+| W5 | 2 | authorization_matrix, auth_runtime_spec |
+| W6 | 1 | seed_data_spec |
+| W7 | 2 | UX-05, UX-06 |
+| W8 | 7–9 | monorepo_boundaries, W8-03…W8-09 |
+| W9 | 2 | global_shell, homework_check_flow |
+| W15 | 1 | design_system_lab_spec |
+| W11 | 14 | 7 фаз × (description + tasks) |
+| W12 | 4 | migration_runbook, local_dev_setup, vercel_deploy, neon_prisma_migrations |
+| W14 | — | облегчённый проход |
+
+Итого ≈ 50 файлов (против ~115 на strict).
 
 ---
 
@@ -691,6 +736,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 | Date | Change |
 |------|--------|
+| 2026-10-10 | v1.2 — P2: Canonical для Sunday School (lean); Pulse-строки W4 / W8 / W9 / W11 / W13 заменены доменными; `default_docs` → `my_specs`; добавлены ADR-008 (i18n), ADR-009 (Bible); ADR-003 → `adr_003_auth_oidc_jwt_rbac.md` |
 | 2026-10-10 | Template cleanup — removed Pulse project history (waves W16, W22–W24, completion log, MVP status); W10 as generic patterns; domain rows marked as Pulse examples |
 | 2026-05-23 | v1.1 — §2.3 path coverage (happy/negative/security/races/drift), contract/spec templates, `failure_modes_catalog` in W3 |
 | 2026-05-23 | v1.0 — full wave plan, UX/UI block, agent requirements |

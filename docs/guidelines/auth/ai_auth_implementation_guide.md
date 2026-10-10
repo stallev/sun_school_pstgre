@@ -3,7 +3,7 @@
 **Stack:** Next.js **16.4** (App Router) | Auth.js v5 | Prisma v7 | Neon | Vercel  
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
 **Runtime:** [ADR-002](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — **`proxy.ts`**, not `middleware.ts`  
-**Auth canon:** [ADR-003](../../prds/07_governance/adr_003_auth_credentials_jwt_rbac.md) — Credentials, JWT, RBAC, four-layer model  
+**Auth canon:** [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) — Credentials, JWT, RBAC, four-layer model  
 **Schema:** [`database_schema_v1.md`](../../prds/03_data_model/database_schema_v1.md)
 
 ---
@@ -103,7 +103,7 @@ Update docs and imports to match ADR-002.
 ## 7. Related
 
 - [ADR-002](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
-- [ADR-003](../../prds/07_governance/adr_003_auth_credentials_jwt_rbac.md)
+- [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)
 - [`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md) — auth flows spec (W5)
 - [`authorization_matrix.md`](../../prds/04_authorization_privacy/authorization_matrix.md)
 - Cursor: [`auth-security.mdc`](../../../.cursor/rules/auth-security.mdc), [`security-xss-csrf.mdc`](../../../.cursor/rules/security-xss-csrf.mdc), [`policy-packages.mdc`](../../../.cursor/rules/policy-packages.mdc)
