@@ -65,3 +65,7 @@ packages/db/prisma/taxonomy-map-overrides.json
 # Bible seed: NIV kept local until licence decision (docs/my_specs/Bible/README.md §5)
 /docs/my_specs/Bible/data/niv_src/
 /docs/my_specs/Bible/data/RelSQLData/niv/
+
+# Local dev secrets and config (never committed)
+/.local/
+*.local.json

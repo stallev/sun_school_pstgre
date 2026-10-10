@@ -67,7 +67,8 @@ Scope пакетов — `@sunschool/*`. `apps/workers` не создаётся 
 | | `dev` | `prod` |
 |---|---|---|
 | Переменная | `APP_ENV=dev` | `APP_ENV=prod` |
-| База | отдельный Neon-проект | отдельный Neon-проект |
+| База | отдельный Neon-проект (решено: два проекта) | отдельный Neon-проект |
+| Первый admin | `FIRST_ADMIN_EMAIL` (свой) | `FIRST_ADMIN_EMAIL` (свой) |
 | Секреты, `AUTH_SECRET`, приложения Google / Telegram | свои | свои |
 | Содержимое | схема + справочники + фейковые данные (`seed:dev`) | схема + справочники + первый admin |
 | Переключатель роли «смотреть как» | есть | **нет в сборке** |
@@ -121,8 +122,8 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 |----|--------|----------|-----------|
 | Q-01 | Какой driver adapter для Neon в Prisma 7 (`@prisma/adapter-neon` или `@prisma/adapter-pg` с pooled URL): страница документации Neon найдена только для v6 | architect | P01 (scaffold БД), `neon_prisma_migrations_guide` |
 | Q-02 | Точный patch-пин Next.js 16.4.x на дату scaffold | исполнитель P5 | P01-T1 |
-| Q-03 | Один или два Neon-проекта (спец. 12.2 п. 34: предложено два) | владелец | `local_dev_setup`, `vercel_deploy_guide` |
-| Q-04 | Первый admin по email из env (12.2 п. 32) — подтверждение | владелец | ADR-003, `seed_data_spec` |
+| Q-03 | ~~Один или два Neon-проекта~~ — **решено 2026-10-10: два** (отдельные проекты dev и prod; спец. 12.2 п. 34) | владелец | — |
+| Q-04 | ~~Первый admin по email из env~~ — **решено 2026-10-10**: email в переменной `FIRST_ADMIN_EMAIL` (значение — только в локальном, не коммитимом конфиге и в env Vercel); первый вход с этим email создаёт активного admin один раз (спец. 12.2 п. 32, ОК-3) | владелец | — |
 
 ## 9. Related documents
 

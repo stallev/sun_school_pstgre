@@ -96,7 +96,7 @@
 | `bible_book` | `sort_order int`, `testament text` (`OT` / `NT`), `title_ru`, `title_en`, `short_ru`, `short_en`, `chapters_count int` | `UNIQUE (sort_order)`; 66 записей |
 | `bible_verse` | `translation_id`, `book_id`, `chapter_number int`, `verse_number int`, `text text`, `verse_order int` | `UNIQUE (translation_id, book_id, chapter_number, verse_number)`; индекс по тому же ключу (чтение на каждом экране урока) |
 | `golden_verse` | `organization_id`, `book_id`, `start_chapter`, `start_verse`, `end_chapter`, `end_verse` (общая нумерация, ПБ-4), `label text · null` | уникален по диапазону; изменение ссылки у использованного запрещено |
-| `bible_verse_map` | `translation_id`, `book_id`, `chapter_number`, `verse_number`, `common_chapter`, `common_verse` | **условная**: нужна, если ADR-009 выберет общую нумерацию, отличную от нумерации перевода (Q-02) |
+| `bible_verse_map` | `translation_id`, `book_id`, `chapter_number`, `verse_number` (0 — надписание), `common_chapter`, `common_verse` | **обязательна** (ADR-009 §3.3): только исключения, нет строки = тождество; общая нумерация — Синодальная |
 
 ### 5.5 Уроки и проверка
 
@@ -204,12 +204,12 @@
 | ID | Вопрос | Владелец | Блокирует |
 |----|--------|----------|-----------|
 | Q-01 | Нужна ли `bible_chapter` (в seed-скриптах есть, в спец. нет) — принято «нет», подтвердить | владелец | `bible_seed_contract` §модель |
-| Q-02 | Общая нумерация стихов и необходимость `bible_verse_map` (12.2 п. 29) | владелец | ADR-009, §5.4 |
-| Q-03 | Лицензия английского перевода (12.2 п. 30): хранить `license` в карточке перевода — формат | владелец | ADR-009, `bible_seed_contract` |
+| Q-02 | ~~Общая нумерация~~ — **решено 2026-10-10**: нумерация Синодального перевода; `bible_verse_map` нужна и хранит только исключения (165 глав) — [ADR-009](../07_governance/adr_009_bible_translations_and_verse_numbering.md) §3.1, §3.3 | — | — |
+| Q-03 | ~~Лицензия английского перевода~~ — NIV лицензируется (Biblica), в приложение без лицензии не загружается; выбор перевода (рекомендуется BSB) — ADR-009 §3.2, Q-01 | владелец | `bible_seed_contract` |
 | Q-04 | Часовой пояс школы и хранение времени проверки (ADR-004 нужен ли) | architect | `homework_check` §5.5, W4-02 |
 | Q-05 | Neon + Prisma 7: драйвер-адаптер и pooled URL — подтвердить по документации v7 | architect | P01 |
 | Q-06 | БП-5: формула баллов, хранение вычисляемого итога (`weights jsonb` — ориентир) | владелец | `homework_check_contract` |
-| Q-07 | Организация: достаточно одной записи или таблица не нужна в MVP | architect | §5.1 |
+| Q-07 | ~~Организация~~ — **решено 2026-10-10**: достаточно одной записи; таблица `organization` остаётся (задел, спец. §11) | — | — |
 
 ## 13. Related documents
 

@@ -57,7 +57,7 @@
 | ADR-003 Auth (OIDC, JWT, RBAC) | `07_governance/adr_003_auth_oidc_jwt_rbac.md` | W4-01 | Planned |
 | ADR-005 Схема целиком | `07_governance/adr_005_schema_complete_post_mvp_tables.md` | W4-03 | Planned |
 | ADR-008 i18n | `07_governance/adr_008_i18n_ru_en_dictionary_slices.md` | W4-06 | Planned |
-| ADR-009 Библия: нумерация и лицензия | `07_governance/adr_009_bible_translations_and_verse_numbering.md` | W4-07 | Planned |
+| ADR-009 Библия: нумерация и лицензия | [`07_governance/adr_009_bible_translations_and_verse_numbering.md`](./07_governance/adr_009_bible_translations_and_verse_numbering.md) | W4-07 | Canonical (§3.2 — Proposed) |
 | Authorization matrix | `04_authorization_privacy/authorization_matrix.md` | W5-02 | Planned |
 | Auth runtime spec | `05_runtime/auth_runtime_spec.md` | W5-08 | Planned |
 
@@ -106,3 +106,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-10 | v1.0 — Canonical (W1-F3); ADR-001 / ADR-002 созданы |
 | 2026-10-10 | v1.1 — W1-F4, W1-F5, W1-03, W1-04 → Canonical |
 | 2026-10-10 | v1.2 — W1-F6 `database_schema_v1.md` → Canonical |
+| 2026-10-10 | v1.3 — ADR-009 создан раньше волны (решения владельца по Библии) |
