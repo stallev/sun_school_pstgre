@@ -123,8 +123,8 @@
 
 | Документ | Что меняется |
 |----------|--------------|
-| `authorization_matrix.md` (W5-02) | Опирается на роли и статусы §4.3 |
-| `auth_runtime_spec.md` (W5-08) | Детализирует callbacks, cookie намерения, обходы Telegram |
+| [`authorization_matrix.md`](../04_authorization_privacy/authorization_matrix.md) (W5-02) | Опирается на роли и статусы §4.3 |
+| [`auth_runtime_spec.md`](../05_runtime/auth_runtime_spec.md) (W5-08) | Детализирует callbacks, cookie намерения, обходы Telegram |
 | `access_requests_and_roles_contract.md` (W8-03) | Регистрация, одобрение, объединение |
 | `ai_auth_implementation_guide.md` | Адаптация под OIDC и без адаптера — в P4 |
 | `auth-security.mdc` | Актуализация правил — в P4 |

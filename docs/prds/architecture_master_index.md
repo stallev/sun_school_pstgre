@@ -62,7 +62,8 @@
 | ADR-008 i18n | [`07_governance/adr_008_i18n_ru_en_dictionary_slices.md`](./07_governance/adr_008_i18n_ru_en_dictionary_slices.md) | W4-06 | Canonical |
 | ADR-009 Библия: нумерация и лицензия | [`07_governance/adr_009_bible_translations_and_verse_numbering.md`](./07_governance/adr_009_bible_translations_and_verse_numbering.md) | W4-07 | Canonical (§3.2 — Proposed) |
 | Authorization matrix | [`04_authorization_privacy/authorization_matrix.md`](./04_authorization_privacy/authorization_matrix.md) | W5-02 | Canonical |
-| Auth runtime spec | `05_runtime/auth_runtime_spec.md` | W5-08 | Planned |
+| Auth runtime spec | [`05_runtime/auth_runtime_spec.md`](./05_runtime/auth_runtime_spec.md) | W5-08 | Canonical |
+| Policy enforcement, privacy handling, runtime README / backend / monorepo packages / cache policy | — | W5-01, W5-03…W5-07, W5-09 | Не требуется на lean (покрыто ADR-001/002/003, `authorization_matrix`, контрактами W8) |
 
 ## 7. UX/UI, контракты, фазы
 
@@ -116,3 +117,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.7 — ADR-004, ADR-005 → Canonical |
 | 2026-10-11 | v1.8 — ADR-008 → Canonical; ADR-006 / ADR-007 помечены «не требуется» |
 | 2026-10-11 | v1.9 — W5-02 `authorization_matrix` → Canonical |
+| 2026-10-11 | v1.10 — W5-08 `auth_runtime_spec` → Canonical; прочие W5 помечены «не требуется» |
