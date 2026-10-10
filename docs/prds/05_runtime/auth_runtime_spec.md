@@ -123,7 +123,7 @@
 | Cookie | `sunschool.link-intent`; значение — подписанный (HMAC на `AUTH_SECRET`) JSON `{ uid, provider, nonce, exp }`; `HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/api/auth`, TTL 10 минут |
 | Валидация | Подпись, срок, `provider` совпадает с `account.provider`, `uid` существует и `ACTIVE`/`PENDING`/`REJECTED` |
 | Одноразовость | После использования cookie очищается; повтор запроса — обычный вход, не привязка |
-| Результат | Идемпотентный успех / отказ с кодом `LINK_CONFLICT`; в журнал — привязка (без значения `providerAccountId`: INV-23) |
+| Результат | Идемпотентный успех / отказ с кодом `AUTH_LINK_CONFLICT` (отвязка последнего способа — `AUTH_LAST_IDENTITY`); в журнал — привязка (без значения `providerAccountId`: INV-23) |
 | Отвязка | Server Action `unlinkProvider(provider)`: транзакция, `SELECT … FOR UPDATE` по `login_identity` пользователя; отказ, если остался один способ; подтверждение в UI, без оптимистичного удаления |
 | Объединение | Только admin, контракт W8-03; не часть runtime входа |
 
