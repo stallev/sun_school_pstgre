@@ -118,7 +118,9 @@
 |----------|--------------|
 | [`admin_flow.md`](../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) | Потоки admin |
 | [`teacher_flow.md`](../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) | Потоки teacher |
-| *(planned)* `prototype_route_mapping.md` | Экран прототипа → маршрут (UX-08) |
+| [`prototype_route_mapping.md`](./prototype_route_mapping.md) | Экран прототипа → маршрут (UX-08) |
+| [`responsive_navigation_contract.md`](./responsive_navigation_contract.md) | Оболочка и навигация по ролям (UX-02) |
+| [`visual_identity_contract.md`](./visual_identity_contract.md) | Визуальный канон (UX-03) |
 | [`architecture_master_index.md`](../prds/architecture_master_index.md) | Карта документов |
 
 **Registry:** [`documentation_creation_registry.md`](../meta/documentation_creation_registry.md) — wave W1-F5

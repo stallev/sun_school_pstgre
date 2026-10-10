@@ -65,7 +65,7 @@
 
 | Слой | Документы | Волны | Статус |
 |------|-----------|-------|--------|
-| UX/UI | UX-02 `responsive_navigation_contract`, UX-03 `visual_identity_contract` (+ UX-08 `prototype_route_mapping`) | W2 | Planned |
+| UX/UI | [UX-02 `responsive_navigation_contract`](../design/responsive_navigation_contract.md), [UX-03 `visual_identity_contract`](../design/visual_identity_contract.md), [UX-08 `prototype_route_mapping`](../design/prototype_route_mapping.md) | W2 | Canonical |
 | UX interaction | UX-05 `ui_states_contract`, UX-06 `forms_and_validation_ux` | W7 | Planned |
 | Contracts | `monorepo_boundaries` и контракты мутаций | W8 | Planned |
 | Specs | `global_shell_spec`, `homework_check_flow_spec` (+ вход / регистрация) | W9 | Planned |
@@ -107,3 +107,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-10 | v1.1 — W1-F4, W1-F5, W1-03, W1-04 → Canonical |
 | 2026-10-10 | v1.2 — W1-F6 `database_schema_v1.md` → Canonical |
 | 2026-10-10 | v1.3 — ADR-009 создан раньше волны (решения владельца по Библии) |
+| 2026-10-10 | v1.4 — W2: UX-02, UX-03, UX-08 → Canonical |
