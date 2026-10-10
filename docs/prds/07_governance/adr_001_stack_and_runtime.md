@@ -133,7 +133,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 | [`architecture_master_index.md`](../architecture_master_index.md) | Карта документов |
 | [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) | Схема БД |
 | [`telegram_authjs_oidc_portable_guide.md`](../../my_specs/telegram_authjs_oidc_portable_guide.md) | Вход через Telegram |
-| *(planned)* `adr_003_auth_oidc_jwt_rbac.md` | Модель auth и ролей (W4-01) |
+| [`adr_003_auth_oidc_jwt_rbac.md`](./adr_003_auth_oidc_jwt_rbac.md) | Модель auth и ролей (W4-01) |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W1-F1
 
