@@ -61,3 +61,7 @@ packages/db/prisma/taxonomy-map-overrides.json
 /docs/examples/pulse/**/.next/
 /docs/examples/pulse/packages/db/src/generated/
 /docs/examples/js-course/**/*
+
+# Bible seed: NIV kept local until licence decision (docs/my_specs/Bible/README.md §5)
+/docs/my_specs/Bible/data/niv_src/
+/docs/my_specs/Bible/data/RelSQLData/niv/

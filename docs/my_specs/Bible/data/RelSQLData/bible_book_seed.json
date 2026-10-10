@@ -1,0 +1,530 @@
+[
+  {
+    "edition_code": "RST",
+    "title": "Бытие",
+    "short_title": "Быт",
+    "testament": "OT",
+    "sort_order": 1,
+    "chapters_count": 50
+  },
+  {
+    "edition_code": "RST",
+    "title": "Исход",
+    "short_title": "Исх",
+    "testament": "OT",
+    "sort_order": 2,
+    "chapters_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "title": "Левит",
+    "short_title": "Лев",
+    "testament": "OT",
+    "sort_order": 3,
+    "chapters_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "title": "Числа",
+    "short_title": "Чис",
+    "testament": "OT",
+    "sort_order": 4,
+    "chapters_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "title": "Второзаконие",
+    "short_title": "Втор",
+    "testament": "OT",
+    "sort_order": 5,
+    "chapters_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иисус Навин",
+    "short_title": "Нав",
+    "testament": "OT",
+    "sort_order": 6,
+    "chapters_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "title": "Судьи",
+    "short_title": "Суд",
+    "testament": "OT",
+    "sort_order": 7,
+    "chapters_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "title": "Руфь",
+    "short_title": "Руф",
+    "testament": "OT",
+    "sort_order": 8,
+    "chapters_count": 4
+  },
+  {
+    "edition_code": "RST",
+    "title": "1 Царств",
+    "short_title": "1Цар",
+    "testament": "OT",
+    "sort_order": 9,
+    "chapters_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "title": "2 Царств",
+    "short_title": "2Цар",
+    "testament": "OT",
+    "sort_order": 10,
+    "chapters_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "title": "3 Царств",
+    "short_title": "3Цар",
+    "testament": "OT",
+    "sort_order": 11,
+    "chapters_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "title": "4 Царств",
+    "short_title": "4Цар",
+    "testament": "OT",
+    "sort_order": 12,
+    "chapters_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "title": "1 Паралипоменон",
+    "short_title": "1Пар",
+    "testament": "OT",
+    "sort_order": 13,
+    "chapters_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "title": "2 Паралипоменон",
+    "short_title": "2Пар",
+    "testament": "OT",
+    "sort_order": 14,
+    "chapters_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "title": "Ездра",
+    "short_title": "Езд",
+    "testament": "OT",
+    "sort_order": 15,
+    "chapters_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "title": "Неемия",
+    "short_title": "Неем",
+    "testament": "OT",
+    "sort_order": 16,
+    "chapters_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "title": "Есфирь",
+    "short_title": "Есф",
+    "testament": "OT",
+    "sort_order": 17,
+    "chapters_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иов",
+    "short_title": "Иов",
+    "testament": "OT",
+    "sort_order": 18,
+    "chapters_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "title": "Псалтирь",
+    "short_title": "Пс",
+    "testament": "OT",
+    "sort_order": 19,
+    "chapters_count": 150
+  },
+  {
+    "edition_code": "RST",
+    "title": "Притчи",
+    "short_title": "Прит",
+    "testament": "OT",
+    "sort_order": 20,
+    "chapters_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "title": "Екклесиаст",
+    "short_title": "Еккл",
+    "testament": "OT",
+    "sort_order": 21,
+    "chapters_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "title": "Песнь Песней",
+    "short_title": "Песн",
+    "testament": "OT",
+    "sort_order": 22,
+    "chapters_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "title": "Исаия",
+    "short_title": "Ис",
+    "testament": "OT",
+    "sort_order": 23,
+    "chapters_count": 66
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иеремия",
+    "short_title": "Иер",
+    "testament": "OT",
+    "sort_order": 24,
+    "chapters_count": 52
+  },
+  {
+    "edition_code": "RST",
+    "title": "Плач Иеремии",
+    "short_title": "Плач",
+    "testament": "OT",
+    "sort_order": 25,
+    "chapters_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иезекииль",
+    "short_title": "Иез",
+    "testament": "OT",
+    "sort_order": 26,
+    "chapters_count": 48
+  },
+  {
+    "edition_code": "RST",
+    "title": "Даниил",
+    "short_title": "Дан",
+    "testament": "OT",
+    "sort_order": 27,
+    "chapters_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "title": "Осия",
+    "short_title": "Ос",
+    "testament": "OT",
+    "sort_order": 28,
+    "chapters_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иоиль",
+    "short_title": "Иоил",
+    "testament": "OT",
+    "sort_order": 29,
+    "chapters_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "title": "Амос",
+    "short_title": "Ам",
+    "testament": "OT",
+    "sort_order": 30,
+    "chapters_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "title": "Авдий",
+    "short_title": "Авд",
+    "testament": "OT",
+    "sort_order": 31,
+    "chapters_count": 1
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иона",
+    "short_title": "Ион",
+    "testament": "OT",
+    "sort_order": 32,
+    "chapters_count": 4
+  },
+  {
+    "edition_code": "RST",
+    "title": "Михей",
+    "short_title": "Мих",
+    "testament": "OT",
+    "sort_order": 33,
+    "chapters_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "title": "Наум",
+    "short_title": "Наум",
+    "testament": "OT",
+    "sort_order": 34,
+    "chapters_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "title": "Аввакум",
+    "short_title": "Авв",
+    "testament": "OT",
+    "sort_order": 35,
+    "chapters_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "title": "Софония",
+    "short_title": "Соф",
+    "testament": "OT",
+    "sort_order": 36,
+    "chapters_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "title": "Аггей",
+    "short_title": "Агг",
+    "testament": "OT",
+    "sort_order": 37,
+    "chapters_count": 2
+  },
+  {
+    "edition_code": "RST",
+    "title": "Захария",
+    "short_title": "Зах",
+    "testament": "OT",
+    "sort_order": 38,
+    "chapters_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "title": "Малахия",
+    "short_title": "Мал",
+    "testament": "OT",
+    "sort_order": 39,
+    "chapters_count": 4
+  },
+  {
+    "edition_code": "RST",
+    "title": "От Матфея",
+    "short_title": "Мф",
+    "testament": "NT",
+    "sort_order": 40,
+    "chapters_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "title": "От Марка",
+    "short_title": "Мк",
+    "testament": "NT",
+    "sort_order": 41,
+    "chapters_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "title": "От Луки",
+    "short_title": "Лк",
+    "testament": "NT",
+    "sort_order": 42,
+    "chapters_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "title": "От Иоанна",
+    "short_title": "Ин",
+    "testament": "NT",
+    "sort_order": 43,
+    "chapters_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "title": "Деяния",
+    "short_title": "Деян",
+    "testament": "NT",
+    "sort_order": 44,
+    "chapters_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Римлянам",
+    "short_title": "Рим",
+    "testament": "NT",
+    "sort_order": 45,
+    "chapters_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "title": "1 Коринфянам",
+    "short_title": "1Кор",
+    "testament": "NT",
+    "sort_order": 46,
+    "chapters_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "title": "2 Коринфянам",
+    "short_title": "2Кор",
+    "testament": "NT",
+    "sort_order": 47,
+    "chapters_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Галатам",
+    "short_title": "Гал",
+    "testament": "NT",
+    "sort_order": 48,
+    "chapters_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Ефесянам",
+    "short_title": "Еф",
+    "testament": "NT",
+    "sort_order": 49,
+    "chapters_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Филиппийцам",
+    "short_title": "Флп",
+    "testament": "NT",
+    "sort_order": 50,
+    "chapters_count": 4
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Колоссянам",
+    "short_title": "Кол",
+    "testament": "NT",
+    "sort_order": 51,
+    "chapters_count": 4
+  },
+  {
+    "edition_code": "RST",
+    "title": "1 Фессалоникийцам",
+    "short_title": "1Фес",
+    "testament": "NT",
+    "sort_order": 52,
+    "chapters_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "title": "2 Фессалоникийцам",
+    "short_title": "2Фес",
+    "testament": "NT",
+    "sort_order": 53,
+    "chapters_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "title": "1 Тимофею",
+    "short_title": "1Тим",
+    "testament": "NT",
+    "sort_order": 54,
+    "chapters_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "title": "2 Тимофею",
+    "short_title": "2Тим",
+    "testament": "NT",
+    "sort_order": 55,
+    "chapters_count": 4
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Титу",
+    "short_title": "Тит",
+    "testament": "NT",
+    "sort_order": 56,
+    "chapters_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Филимону",
+    "short_title": "Флм",
+    "testament": "NT",
+    "sort_order": 57,
+    "chapters_count": 1
+  },
+  {
+    "edition_code": "RST",
+    "title": "К Евреям",
+    "short_title": "Евр",
+    "testament": "NT",
+    "sort_order": 58,
+    "chapters_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иакова",
+    "short_title": "Иак",
+    "testament": "NT",
+    "sort_order": 59,
+    "chapters_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "title": "1 Петра",
+    "short_title": "1Пет",
+    "testament": "NT",
+    "sort_order": 60,
+    "chapters_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "title": "2 Петра",
+    "short_title": "2Пет",
+    "testament": "NT",
+    "sort_order": 61,
+    "chapters_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "title": "1 Иоанна",
+    "short_title": "1Ин",
+    "testament": "NT",
+    "sort_order": 62,
+    "chapters_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "title": "2 Иоанна",
+    "short_title": "2Ин",
+    "testament": "NT",
+    "sort_order": 63,
+    "chapters_count": 1
+  },
+  {
+    "edition_code": "RST",
+    "title": "3 Иоанна",
+    "short_title": "3Ин",
+    "testament": "NT",
+    "sort_order": 64,
+    "chapters_count": 1
+  },
+  {
+    "edition_code": "RST",
+    "title": "Иуды",
+    "short_title": "Иуд",
+    "testament": "NT",
+    "sort_order": 65,
+    "chapters_count": 1
+  },
+  {
+    "edition_code": "RST",
+    "title": "Откровение",
+    "short_title": "Откр",
+    "testament": "NT",
+    "sort_order": 66,
+    "chapters_count": 22
+  }
+]
