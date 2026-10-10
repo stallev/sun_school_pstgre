@@ -8,6 +8,55 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!--
+  PROTOTYPE TOKEN DUMP (P1 ingest) — вход для W2 visual_identity_contract.md (UX-03) и P6 globals.css.
+  Прототип = visual reference only; при конфликте с PRD / contracts побеждают они.
+
+  ОТКЛОНЕНИЕ ОТ КОНТРАКТА P1 (решение владельца, 2026-10-10):
+    - цвета заданы напрямую в @theme static (--color-*), без семантического слоя :root / .dark + @theme inline;
+    - тёмной темы нет — dark вне MVP;
+    - семантические алиасы вводятся в W2 / P6 (таблица соответствия ниже).
+
+  ЦВЕТА (--color-*)
+    paper #F8FAFC · surface #FFFFFF · ink #0F172A · ink-2 #475569 · muted #64748B · line #E2E8F0 · line-strong #CBD5E1
+    cobalt #3370FF · cobalt-ink #1D4ED8 · cobalt-soft #EBF1FF
+    ruby #0F172A · ruby-soft #F1F5F9
+    amber #F59E0B · amber-ink #B45309 · amber-soft #FEF3C7 · edit #F97316
+    ok #15803D · ok-soft #DCFCE7 · warn #B45309 · warn-soft #FEF9C3 · danger #DC2626 · danger-soft #FEE2E2
+    penalty #1E3A8A · penalty-soft #E0E7FF
+    bronze #EA580C · silver #94A3B8 · gold #EAB308
+    series-1 #3370FF · series-2 #EA580C · series-3 #0D9488
+  ТИПОГРАФИКА
+    --font-display "Alegreya", Georgia, serif (500 / 700 / 400 italic) · --font-body "Alegreya Sans", system-ui, sans-serif (400 / 500 / 700)
+    html { font-size: 106.25% } (базовый кегль 17px)
+  ДВИЖЕНИЕ  --ease-out-soft cubic-bezier(0.22, 1, 0.36, 1) · transition 100–300 ms · motion-reduce / reduce-transparency учтены
+  ОБОЛОЧКА  max-w-[1400px] · header h-14 sticky · drawer w-[min(20rem,86vw)] (< lg) · bottom-sheet диалог max-h-[92dvh] · toast
+  БРЕЙКПОИНТЫ  mobile-first 390 px; sm / md / lg (навигация переходит из drawer в topnav на lg)
+
+  СООТВЕТСТВИЕ ПРОТОТИПНЫЙ ТОКЕН → СЕМАНТИЧЕСКАЯ РОЛЬ (предложение для W2)
+    paper → background · surface → card / popover · ink → foreground · ink-2 → secondary-foreground · muted → muted-foreground
+    line → border / input · line-strong → border-strong · cobalt → primary · cobalt-soft → primary-soft / accent
+    cobalt-ink → primary-foreground-on-soft · danger → destructive · ok → success · warn / amber → warning
+    penalty → penalty (штрафы, achievements_spec) · series-1..3 → chart-1..3 · bronze / silver / gold → tier-1..3 (достижения)
+-->
+<!--
+  GAP-СПИСОК P1 (сверка с docs/my_specs/mvp_scope.md §2; дорисовывались только токены и оболочка)
+  Обозначения: [+] экран есть · [~] есть частично / проверить в W10 · [-] нет · [post] post-MVP, оставлено как референс волны 2
+
+  Вход и доступ        [+] login (Google / Telegram), register, pending, approvals, users, userProfile (отключение доступа, объединение дубликатов)
+  Персональные данные  [+] profile, deletions, childConsent (согласие отмечает admin)
+  Школа и группы       [+] school, year, groups, groupEdit (язык группы и перевод Библии — ЯГ-1)
+  Ученики              [+] people, pupil (зачисление, перевод между группами, «без группы»)
+  Уроки                [+] lessons, lesson, lessonForm, verses, calendar; [~] диапазон золотых стихов — форма выбора стиха, проверить диапазоны
+  Проверка ДЗ          [+] check, lessonTable (сдано позже, корректировка проверенных уроков)
+  Кирпичики, рейтинг   [+] bricks, rating
+  Аналитика            [+] analytics, school; [~] «кто какие уроки провёл» (9.1.4), динамика успеваемости (9.1.3), строка качества данных (9.1) — присутствуют фрагментарно
+  Журнал изменений     [+] audit
+  Локализация          [+] settings (словари ru / en); тексты в JS-словарях прототипа — в приложении переносятся в @/lib/messages
+  Окружения            [~] role switcher существует только в прототипе; в приложении — только APP_ENV=dev (ОК-5)
+  Миграция             [-] интерфейса нет по спецификации (С-4)
+  post-MVP             [post] роль parent и экраны child, verse, verseDebts, verseLesson, childData, family; achievements (достижения и штрафы); голосовая проверка
+-->
 <style type="text/tailwindcss">
   @custom-variant reduce-transparency (@media (prefers-reduced-transparency: reduce));
 
@@ -162,7 +211,7 @@ const I18N = {
     common: {
       brand:'Воскресная школа', role:'Роль', view_as:'Смотреть как (только в прототипе)', view_as_short:'Смотреть как (прототип)',
       profile:'Профиль', logout:'Выйти', user_menu:'Меню пользователя', menu_open:'Открыть меню', menu_close:'Закрыть меню', skip:'К содержимому',
-      roles:{ teacher:'Учитель', parent:'Родитель', admin:'Админ', subscriber:'Новый' },
+      roles:{ teacher:'Учитель', parent:'Родитель · post-MVP', admin:'Админ', subscriber:'Новый' },
       role_names:{ admin:'администратор', teacher:'учитель', parent:'родитель', subscriber:'новый пользователь' },
       nav:{ today:'Сегодня', lessons:'Уроки', lessons_all:'Все уроки', check:'Проверка ДЗ', verses:'Золотые стихи', group:'Группа', group_members:'Состав группы',
         bricks:'Кирпичики', rating:'Рейтинг', calendar:'Календарь', analytics:'Аналитика', child:'Успехи ребёнка', verses_p:'Стихи', verse_week:'Стих недели',
@@ -222,7 +271,7 @@ const I18N = {
     common: {
       brand:'Sunday School', role:'Role', view_as:'View as (prototype only)', view_as_short:'View as (prototype)',
       profile:'Profile', logout:'Sign out', user_menu:'User menu', menu_open:'Open menu', menu_close:'Close menu', skip:'Skip to content',
-      roles:{ teacher:'Teacher', parent:'Parent', admin:'Admin', subscriber:'New' },
+      roles:{ teacher:'Teacher', parent:'Parent · post-MVP', admin:'Admin', subscriber:'New' },
       role_names:{ admin:'administrator', teacher:'teacher', parent:'parent', subscriber:'new user' },
       nav:{ today:'Today', lessons:'Lessons', lessons_all:'All lessons', check:'Homework check', verses:'Memory verses', group:'Group', group_members:'Group members',
         bricks:'Bricks', rating:'Ranking', calendar:'Calendar', analytics:'Analytics', child:'Child progress', verses_p:'Verses', verse_week:'Verse of the week',
@@ -306,7 +355,7 @@ const TODAY = '31.10';
 const TODAY_LABEL = 'Суббота, 31 октября';
 const YEAR = '2026–2027';
 
-const ROLES = [['teacher','Учитель'],['parent','Родитель'],['admin','Админ'],['subscriber','Новый']];
+const ROLES = [['teacher','Учитель'],['parent','Родитель · post-MVP'],['admin','Админ'],['subscriber','Новый']];
 const ROLE_NAME = { admin:'администратор', teacher:'учитель', parent:'родитель', subscriber:'новый пользователь' };
 const ME = {
   teacher:    { name:'Павел Ким',      sub:'Учитель · Средняя группа', prov:['google','telegram'], email:'p.kim@gmail.com', tg:'@pkim' },
@@ -960,7 +1009,7 @@ function navHTML(){
 }
 
 function loginHTML(){
-  return `<div class="grid min-h-dvh place-items-center px-4 py-10">
+  return `<div id="screen-login" class="grid min-h-dvh place-items-center px-4 py-10">
     <div class="w-full max-w-sm">
       <div class="flex items-center gap-3">${LOGO}<p class="font-display text-2xl font-medium">${t('common.brand')}</p></div>
       <h1 class="mt-10 font-display text-[2.25rem] font-medium leading-[1.05] tracking-[-0.015em]">${t('auth.login_title')}</h1>
@@ -3125,7 +3174,7 @@ function render(){
   chartSeq = 0; for (const k in CHARTS) delete CHARTS[k];
   renderChrome();
   guardView(); renderChrome();
-  document.getElementById('view').innerHTML = (APP.lang==='en' ? `<p class="mb-4 rounded-lg bg-cobalt-soft px-3 py-2 text-sm text-cobalt-ink">${t('common.en_notice')}</p>` : '') + VIEWS[S.view]();
+  document.getElementById('view').innerHTML = (APP.lang==='en' ? `<p class="mb-4 rounded-lg bg-cobalt-soft px-3 py-2 text-sm text-cobalt-ink">${t('common.en_notice')}</p>` : '') + `<div id="screen-${S.view}" data-role="${S.role}">${VIEWS[S.view]()}</div>`;
   document.documentElement.lang = APP.lang;
   document.title = TITLES[S.view] + ' — ' + t('common.brand');
   drawCharts();
