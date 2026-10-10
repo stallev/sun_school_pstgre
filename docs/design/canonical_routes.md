@@ -82,6 +82,12 @@
 | `/audit` | `audit` | Журнал изменений |
 | `/settings` | `settings` | Настройки приложения (язык интерфейса) |
 
+### 4.5 Dev-only
+
+| Маршрут | Экран | Назначение |
+|---------|-------|------------|
+| `/design-system` | — | Каталог компонентов (Design System Lab); только `APP_ENV=dev`, в prod — 404; без оболочки; [`design_system_lab_spec.md`](../implementation/mvp/specs/design_system_lab_spec.md) |
+
 ## 5. Инвентарь post-MVP (референс волны 2–3, без реализации в MVP)
 
 | Маршрут | Экран | Волна | Назначение |
@@ -99,7 +105,7 @@
 
 ## 6. Защищённые зоны
 
-Для `proxy.ts`: публичны только `/login` и `/privacy`; остальные требуют сессии. Оптимистичная проверка роли по префиксу — в `proxy.ts` ([ADR-002](../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §3); окончательная — на сервере (security floor).
+Для `proxy.ts`: публичны только `/login` и `/privacy` (и `/design-system` при `APP_ENV=dev`); остальные требуют сессии. Оптимистичная проверка роли по префиксу — в `proxy.ts` ([ADR-002](../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §3); окончательная — на сервере (security floor).
 
 ## 7. Acceptance criteria
 
