@@ -62,7 +62,7 @@
 
 - **Предусловия:** вход провайдером подтверждён, `login_identity` не найдена ([`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §5.1 п. 4).
 - **Транзакция:** создать `app_user` (`REGISTRATION`, `first_login_at`) и `login_identity`.
-- **Исключение — первый admin:** Google, `email_verified`, email = `FIRST_ADMIN_EMAIL`, в школе нет ни одного `ADMIN` → пользователь создаётся сразу `ACTIVE` с ролью `ADMIN`, `privacy_consent` не создаётся (**решение по умолчанию, Q-01**); запись в журнале `access.first_admin_created`.
+- **Исключение — первый admin:** Google, `email_verified`, email = `FIRST_ADMIN_EMAIL`, в школе нет ни одного `ADMIN` → пользователь создаётся `ACTIVE` с ролью `ADMIN` один раз; **до начала работы он проходит экран согласия** (как РГ-5), после чего создаётся `privacy_consent` (решено 2026-10-11, Q-01); запись в журнале `access.first_admin_created`.
 - **Постусловия:** пользователь перенаправляется на `/register` (или `/school` для первого admin).
 
 ### 5.2 `submitRegistration`
@@ -194,7 +194,7 @@
 
 | ID | Вопрос | Предложение по умолчанию | Владелец | Блокирует |
 |----|--------|--------------------------|----------|-----------|
-| Q-01 | Первый admin без `privacy_consent`: показывать ли ему экран согласия при первом входе | Да, как РГ-5 (экран согласия до работы), запись `privacy_consent` создаётся | владелец | `access_and_registration_spec` |
+| Q-01 | ✔ **Решено 2026-10-11.** Первый admin: показывать ли ему экран согласия при первом входе | Да, как РГ-5 (экран согласия до работы), запись `privacy_consent` создаётся | владелец | `access_and_registration_spec` |
 | Q-02 | При снятии роли `TEACHER` назначения активного года удаляются или закрываются датой | Удаляются из активного года, прошлые годы не затрагиваются | architect | W8-04 |
 | Q-03 | Можно ли объединять, когда у дубликата есть `ADMIN`, а у оставляемого нет | Нет, сначала `changeRoles` | architect | P01 |
 | Q-04 | Нужен ли отдельный код `AUTH_STATUS_INVALID` вместо `ACCESS_STATUS_INVALID` | Один код `ACCESS_STATUS_INVALID` | architect | — |
