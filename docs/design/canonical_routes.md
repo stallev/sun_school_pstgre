@@ -27,6 +27,7 @@
 4. Пользователь без активной учётной записи видит только `/login`, `/register`, `/pending` и публичную `/privacy` (РГ-1).
 5. Перенаправление после входа — по роли: `teacher` → `/today`, `admin` → `/school`, статус «Заявка…» → `/pending`, «Регистрация» → `/register`.
 6. Layout-группы: `(auth)` — без оболочки; `(app)` — оболочка (header, drawer < `lg`, topnav ≥ `lg`).
+7. Каждый маршрут имеет состояния loading / empty / error / forbidden — [`ui_states_contract.md`](./ui_states_contract.md) §7.
 
 ## 4. Инвентарь MVP
 
