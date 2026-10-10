@@ -55,7 +55,8 @@
 | ADR-001 Стек и окружения | [`07_governance/adr_001_stack_and_runtime.md`](./07_governance/adr_001_stack_and_runtime.md) | W1-F1 | Canonical |
 | ADR-002 Next.js runtime | [`07_governance/adr_002_nextjs_vercel_runtime_policy.md`](./07_governance/adr_002_nextjs_vercel_runtime_policy.md) | W1-F2 | Canonical |
 | ADR-003 Auth (OIDC, JWT, RBAC) | [`07_governance/adr_003_auth_oidc_jwt_rbac.md`](./07_governance/adr_003_auth_oidc_jwt_rbac.md) | W4-01 | Canonical |
-| ADR-005 Схема целиком | `07_governance/adr_005_schema_complete_post_mvp_tables.md` | W4-03 | Planned |
+| ADR-004 Часовой пояс | [`07_governance/adr_004_timezone_scheduling_model.md`](./07_governance/adr_004_timezone_scheduling_model.md) | W4-02 | Canonical |
+| ADR-005 Схема целиком | [`07_governance/adr_005_schema_complete_post_mvp_tables.md`](./07_governance/adr_005_schema_complete_post_mvp_tables.md) | W4-03 | Canonical |
 | ADR-008 i18n | `07_governance/adr_008_i18n_ru_en_dictionary_slices.md` | W4-06 | Planned |
 | ADR-009 Библия: нумерация и лицензия | [`07_governance/adr_009_bible_translations_and_verse_numbering.md`](./07_governance/adr_009_bible_translations_and_verse_numbering.md) | W4-07 | Canonical (§3.2 — Proposed) |
 | Authorization matrix | `04_authorization_privacy/authorization_matrix.md` | W5-02 | Planned |
@@ -110,3 +111,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-10 | v1.4 — W2: UX-02, UX-03, UX-08 → Canonical |
 | 2026-10-10 | v1.5 — W3: lifecycle_models, domain_invariants → Canonical |
 | 2026-10-11 | v1.6 — ADR-003 → Canonical |
+| 2026-10-11 | v1.7 — ADR-004, ADR-005 → Canonical |

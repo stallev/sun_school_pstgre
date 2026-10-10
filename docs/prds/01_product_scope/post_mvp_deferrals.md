@@ -68,7 +68,7 @@
 
 | Что | Где |
 |-----|-----|
-| Таблицы волн 1–3 | `database_schema_v1.md` (схема целиком, С-1…С-5) |
+| Таблицы волн 1–3 | `database_schema_v1.md` (схема целиком, С-1…С-5; [ADR-005](../07_governance/adr_005_schema_complete_post_mvp_tables.md)) |
 | Экраны post-MVP | прототип и `canonical_routes.md` §5 — референс, без реализации |
 | Флаги `features.achievements`, `features.parents`, `features.voice` | выключены по умолчанию |
 | Выданные достижения из старого приложения | в базе после миграции, в интерфейсе скрыты |

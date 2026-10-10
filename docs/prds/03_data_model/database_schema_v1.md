@@ -117,7 +117,7 @@
 | `grade_event` | `grade_id`, `event_date`, `type GRADE_EVENT_TYPE`, `title`, `description · null`, `lesson_id · null` | `lesson_id` только для типа `LESSON` |
 | `audit_log` | `occurred_at`, `actor_user_id · null`, `source` (`USER` / `SYSTEM`), `entity_type`, `entity_id`, `action`, `old_value jsonb · null`, `new_value jsonb · null`, `reason · null` | **только добавление**; ссылки, не имена; поля значений очищаются только при УД-7 |
 | `deletion_request` | `type`, `subject_user_id · null`, `subject_pupil_id · null`, `requested_by`, `requested_at`, `reason · null`, `status`, `due_on date`, `taken_by · null`, `resolved_by · null`, `resolved_at · null`, `reject_reason · null`, `summary jsonb · null` | не более одного открытого на субъект; субъект — ровно один из двух |
-| `app_setting` | `key text`, `value jsonb` | `UNIQUE (key)`; ключи: `ui_locale`, `features.achievements`, `features.parents`, `features.voice`, `consent_text_version` |
+| `app_setting` | `key text`, `value jsonb` | `UNIQUE (key)`; ключи: `ui_locale`, `school_timezone` (IANA, [ADR-004](../07_governance/adr_004_timezone_scheduling_model.md); до выбора — `UTC`), `features.achievements`, `features.parents`, `features.voice` ([ADR-005](../07_governance/adr_005_schema_complete_post_mvp_tables.md)), `consent_text_version` |
 
 ## 6. Таблицы post-MVP (создаются сразу, без UI)
 
@@ -206,7 +206,7 @@
 | Q-01 | Нужна ли `bible_chapter` (в seed-скриптах есть, в спец. нет) — принято «нет», подтвердить | владелец | `bible_seed_contract` §модель |
 | Q-02 | ~~Общая нумерация~~ — **решено 2026-10-10**: нумерация Синодального перевода; `bible_verse_map` нужна и хранит только исключения (165 глав) — [ADR-009](../07_governance/adr_009_bible_translations_and_verse_numbering.md) §3.1, §3.3 | — | — |
 | Q-03 | ~~Лицензия английского перевода~~ — **решено: NIV загружается** по решению владельца (ADR-009 §3.2); в `license` — копирайт Biblica; лицензию подтвердить до prod | владелец | prod-загрузка |
-| Q-04 | Часовой пояс школы и хранение времени проверки (ADR-004 нужен ли) | architect | `homework_check` §5.5, W4-02 |
+| Q-04 | ~~Часовой пояс школы~~ — **решено 2026-10-11**: единый пояс школы, выбирается admin в настройках (`app_setting.school_timezone`), [ADR-004](../07_governance/adr_004_timezone_scheduling_model.md) | — | — |
 | Q-05 | Neon + Prisma 7: драйвер-адаптер и pooled URL — подтвердить по документации v7 | architect | P01 |
 | Q-06 | ~~БП-5~~ — **решено 2026-10-10: вариант А** (баллы замораживаются при выставлении; `points_total` + `scoring_snapshot`), веса по умолчанию 1 | — | — |
 | Q-08 | ~~Баллы за спевку по умолчанию~~ — **решено 2026-10-10: 1** (веса по умолчанию 1) | — | — |
