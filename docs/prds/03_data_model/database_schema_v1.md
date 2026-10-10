@@ -115,7 +115,7 @@
 | Таблица | Колонки | Ограничения |
 |---------|---------|-------------|
 | `grade_event` | `grade_id`, `event_date`, `type GRADE_EVENT_TYPE`, `title`, `description · null`, `lesson_id · null` | `lesson_id` только для типа `LESSON` |
-| `audit_log` | `occurred_at`, `actor_user_id · null`, `source` (`USER` / `SYSTEM`), `entity_type`, `entity_id`, `action`, `old_value jsonb · null`, `new_value jsonb · null`, `reason · null` | **только добавление**; ссылки, не имена; поля значений очищаются только при УД-7 |
+| `audit_log` | `occurred_at`, `actor_user_id · null`, `source` (`USER` / `SYSTEM`), `entity_type`, `entity_id`, `action`, `old_value jsonb · null`, `new_value jsonb · null`, `reason · null`, `request_id text · null` | **только добавление**; ссылки, не имена; поля значений очищаются только при УД-7 |
 | `deletion_request` | `type`, `subject_user_id · null`, `subject_pupil_id · null`, `requested_by`, `requested_at`, `reason · null`, `status`, `due_on date`, `taken_by · null`, `resolved_by · null`, `resolved_at · null`, `reject_reason · null`, `summary jsonb · null` | не более одного открытого на субъект; субъект — ровно один из двух |
 | `app_setting` | `key text`, `value jsonb` | `UNIQUE (key)`; ключи: `ui_locale`, `school_timezone` (IANA, [ADR-004](../07_governance/adr_004_timezone_scheduling_model.md); до выбора — `UTC`), `features.achievements`, `features.parents`, `features.voice` ([ADR-005](../07_governance/adr_005_schema_complete_post_mvp_tables.md)), `consent_text_version` |
 
