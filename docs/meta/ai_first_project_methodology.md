@@ -110,7 +110,7 @@ docs/implementation/mvp/
 └── tasks/P{N}_tasks.md
 ```
 
-Образец фаз P01–P14: `docs/examples/pulse/docs/implementation/mvp/phases_tasks_descriptions/`
+Фазы проекта: [`docs/implementation/mvp/phases_tasks_descriptions/`](../implementation/mvp/phases_tasks_descriptions/) (P01–P07, W11). Образец структуры: `docs/examples/pulse/docs/implementation/mvp/phases_tasks_descriptions/`
 
 Задачи фазы — по шаблону [`phase_tasks.template.md`](./phase_tasks.template.md): Commit plan (commit units) задаётся **при планировании фазы**, а не в момент коммита. Перед первой задачей фазы — **Phase DoR audit** ([`ai_agent_model_routing.md`](./ai_agent_model_routing.md) § DoR). Задачи пишутся только по документам, прошедшим registry §2.3.6.
 

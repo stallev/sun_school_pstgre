@@ -74,7 +74,7 @@
 | Contracts | [W8-01 `monorepo_boundaries_contract`](../implementation/mvp/contracts/monorepo_boundaries_contract.md); контракты мутаций W8-03…W8-09 ([W8-03](../implementation/mvp/contracts/access_requests_and_roles_contract.md), [W8-04](../implementation/mvp/contracts/school_year_and_groups_contract.md), [W8-05](../implementation/mvp/contracts/homework_check_contract.md), [W8-06](../implementation/mvp/contracts/bricks_ledger_contract.md), [W8-07](../implementation/mvp/contracts/change_log_contract.md), [W8-08](../implementation/mvp/contracts/deletion_requests_contract.md), [W8-09](../implementation/mvp/contracts/bible_seed_contract.md)) | W8 | W8-01, W8-03, W8-04, W8-05, W8-06, W8-07, W8-08, W8-09 Canonical (W8-02 не требуется) |
 | Specs | [W9-01 `global_shell_spec`](../implementation/mvp/specs/global_shell_spec.md); [W9-04 `homework_check_flow_spec`](../implementation/mvp/specs/homework_check_flow_spec.md), [W9-02 `access_and_registration_spec`](../implementation/mvp/specs/access_and_registration_spec.md); W9-03, W9-05…W9-08 — не требуются на lean | W9 | W9-01, W9-02, W9-04 Canonical |
 | Design System Lab | [`design_system_lab_spec`](../implementation/mvp/specs/design_system_lab_spec.md) | W15 | Canonical |
-| Phases + tasks | `P01…P07` description + tasks | W11 | Planned |
+| Phases + tasks | [P01](../implementation/mvp/phases_tasks_descriptions/P01_phase_description.md) · [P02](../implementation/mvp/phases_tasks_descriptions/P02_phase_description.md) · [P03](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md) · [P04](../implementation/mvp/phases_tasks_descriptions/P04_phase_description.md) · [P05](../implementation/mvp/phases_tasks_descriptions/P05_phase_description.md) · [P06](../implementation/mvp/phases_tasks_descriptions/P06_phase_description.md) · [P07](../implementation/mvp/phases_tasks_descriptions/P07_phase_description.md) (description + tasks в `implementation/mvp/tasks/`) | W11 | Canonical |
 | Operations | `local_dev_setup`, `vercel_deploy_guide`, `neon_prisma_migrations_guide` | W12 | Planned |
 
 ## 8. Визуальный эталон
@@ -133,3 +133,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.23 — W9-04 `homework_check_flow_spec` → Canonical |
 | 2026-10-11 | v1.24 — W9-02 `access_and_registration_spec` → Canonical; W9 lean завершена |
 | 2026-10-11 | v1.25 — W15-01 `design_system_lab_spec` → Canonical; `/design-system` dev-only в canonical_routes |
+| 2026-10-11 | v1.26 — W11 P01…P07 phase descriptions and tasks → Canonical |
