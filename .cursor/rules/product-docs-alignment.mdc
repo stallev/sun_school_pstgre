@@ -34,7 +34,7 @@ When code **cannot** follow an existing doc verbatim — or you choose a differe
 
 | Topic | Files |
 |-------|--------|
-| Scope / MVP | interim brief in `{{INTERIM_DOCS_GLOB}}`, then [`mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) |
+| Scope / MVP | interim brief in `docs/my_specs/`, then [`mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) |
 | User journeys | [`docs/prds/01_product_scope/user_flows/users_mvp/`](docs/prds/01_product_scope/user_flows/users_mvp/) |
 | Routes / IA | [`docs/design/canonical_routes.md`](docs/design/canonical_routes.md) |
 | Contracts | [`docs/implementation/mvp/contracts/`](docs/implementation/mvp/contracts/) |

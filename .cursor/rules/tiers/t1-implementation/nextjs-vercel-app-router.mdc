@@ -36,7 +36,7 @@ Next.js 16 renames `middleware.ts` → **`proxy.ts`** (still canonical on 16.3):
 - **`middleware.ts`:** temporary migration only — do not add new features
 - **Codemod:** `npx @next/codemod@canary middleware-to-proxy .`
 - **Auth in proxy:** import **`auth.config.ts`** only (no Prisma); never import `auth.ts`
-- **Policy:** `@{{PACKAGE_SCOPE}}/policy-edge` only — never `@{{PACKAGE_SCOPE}}/policy-server` in proxy/middleware
+- **Policy:** `@sunschool/policy-edge` only — never `@sunschool/policy-server` in proxy/middleware
 
 ## Required practices
 

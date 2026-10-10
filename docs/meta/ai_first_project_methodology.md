@@ -1,7 +1,7 @@
-﻿# AI-First Project Methodology — {{PROJECT_NAME}}
+﻿# AI-First Project Methodology — Sunday School
 ## Архитектура, методология разработки и система документации
 
-**Проект:** {{PROJECT_NAME}} — {{PRODUCT_DESCRIPTION}}  
+**Проект:** Sunday School — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
 **Версия:** 1.0  
 **Статус:** Template — заполнить при bootstrap (промпт P2)  
 **Референс:** Pulse (fitapp) — [`docs/examples/pulse/`](../examples/pulse/) · [`pulse_project_reference.md`](../reference/pulse_project_reference.md)
@@ -12,7 +12,7 @@
 
 ## Введение
 
-Документ описывает AI-first подход к разработке **{{PROJECT_NAME}}**. Структура наследуется из Pulse reference, адаптируется под домен и interim docs в [`{{INTERIM_DOCS_GLOB}}`](../default_docs/) и [`docs/prototypes/`](../prototypes/).
+Документ описывает AI-first подход к разработке **Sunday School**. Структура наследуется из Pulse reference, адаптируется под домен и interim docs в [`docs/my_specs/`](../default_docs/) и [`docs/prototypes/`](../prototypes/).
 
 **Цель:** AI-агенты следуют задокументированным контрактам, а не изобретают архитектуру.
 
@@ -56,11 +56,11 @@ monorepo/
 
 ### 1.3 Domain invariants (заполнить в W3)
 
-1. {{DOMAIN_INVARIANT_1}}
-2. {{DOMAIN_INVARIANT_2}}
-3. {{DOMAIN_INVARIANT_3}}
-4. {{DOMAIN_INVARIANT_4}}
-5. {{DOMAIN_INVARIANT_5}}
+1. В школе не более одного активного учебного года; уроки создаются только в активном году; закрытый год — только чтение для teacher, admin правит с записью в журнал (БП-6)
+2. Журнал изменений и журнал кирпичиков — только добавление; ошибки исправляются компенсирующими записями; удаление — только по запросу на удаление данных (БП-8, БП-11)
+3. Отметки ДЗ привязаны к уроку и группе, где выставлены; история зачислений сохраняется при переводе; кирпичики и достижения считаются по ученику и году, не по группе (БП-7, БП-11)
+4. Фоновые задачи и email — post-MVP, в MVP нет `apps/workers`; будущая задача идемпотентна (idempotency key)
+5. Схема БД создаётся сразу целиком, включая post-MVP (семьи, достижения, штрафы, голосовая проверка); post-MVP таблицы без интерфейса и не ломают MVP-сценарии
 
 ---
 
@@ -141,7 +141,7 @@ PRD · ADR · Contract · Spec · Phase · Tasks · Guideline · Cursor Rule · 
 
 ## Agent notes
 
-- HTML prototype — **не** канон; путь `docs/prototypes/{{MAIN_PROTOTYPE_HTML}}`; при конфликте — PRD/schema
+- HTML prototype — **не** канон; путь `docs/prototypes/sunday_school_prototype.html`; при конфликте — PRD/schema
 - Context7 перед runtime docs: Next.js **16.4**, Auth.js v5, Prisma v7; прототип: Tailwind v4 Play CDN (`/websites/tailwindcss`).
 - Одна сессия = одна doc wave или 1–3 файла внутри волны
 - DB-first: `database_schema_v1.md` до domain contracts

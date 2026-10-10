@@ -1,4 +1,4 @@
-﻿# Design System Lab Spec — {{PROJECT_NAME}} MVP
+﻿# Design System Lab Spec — Sunday School MVP
 
 **Тип:** Spec  
 **Статус:** Canonical  
@@ -17,11 +17,11 @@
 
 ## Purpose
 
-Implementation-spec для AI-агента: реализация **shared UI primitives** (typography atoms, tokenized Button/Link/Card) в `apps/web` **из канонических design contracts** и HTML-прототипа {{PROJECT_NAME}}, дополнение **design tokens** в `globals.css`, и создание **Design Lab page** — dev-only маршрута для визуальной сверки всех вариантов компонентов с прототипом.
+Implementation-spec для AI-агента: реализация **shared UI primitives** (typography atoms, tokenized Button/Link/Card) в `apps/web` **из канонических design contracts** и HTML-прототипа Sunday School, дополнение **design tokens** в `globals.css`, и создание **Design Lab page** — dev-only маршрута для визуальной сверки всех вариантов компонентов с прототипом.
 
 **Аудитория:** AI-агенты фазы P01; frontend implementers; design QA.
 
-**Цель продукта:** единый визуальный фундамент **{{DESIGN_SYSTEM_NAME}}** **до** массовой реализации экранов P02–P05; снижение drift между generic shadcn и прототипом {{PROJECT_NAME}}.
+**Цель продукта:** единый визуальный фундамент **Slate Cobalt** **до** массовой реализации экранов P02–P05; снижение drift между generic shadcn и прототипом Sunday School.
 
 **Не цель:** копирование дизайн-системы или `example_components` референсного проекта (Pulse). Референс — **pattern library** для архитектуры Design Lab и CVA-паттернов; визуал и токены — только из контрактов и прототипа текущего проекта.
 
@@ -37,7 +37,7 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 
 | Шаг | Действие агента |
 |-----|-----------------|
-| **КОНТЕКСТ** | Прочитать этот spec + `visual_identity_contract.md` + открыть соответствующий экран в [`{{MAIN_PROTOTYPE_HTML}}`](../../../prototypes/{{MAIN_PROTOTYPE_HTML}}); для новых primitives — **Context7** (§ Component catalog placement) |
+| **КОНТЕКСТ** | Прочитать этот spec + `visual_identity_contract.md` + открыть соответствующий экран в [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html); для новых primitives — **Context7** (§ Component catalog placement) |
 | **ФАЗА** | P01 — не расширять scope за пределы spec без ADR/contract |
 | **КОНТРАКТ** | Этот документ + Cursor Rules (§ Enforcement ниже) |
 | **ЗАДАЧИ** | Чеклист § Implementation tasks (ordered) |
@@ -122,7 +122,7 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 
 | Rule file | Что проверять при реализации |
 |-----------|------------------------------|
-| [`project-context.mdc`](../../../../.cursor/rules/project-context.mdc) | Next.js **16.4**, {{DESIGN_SYSTEM_NAME}}, не расширять beyond P01 без фазы |
+| [`project-context.mdc`](../../../../.cursor/rules/project-context.mdc) | Next.js **16.4**, Slate Cobalt, не расширять beyond P01 без фазы |
 | [`product-docs-alignment.mdc`](../../../../.cursor/rules/product-docs-alignment.mdc) | Обновить `canonical_routes.md` при добавлении `/design-system` |
 | [`typescript-monorepo-types.mdc`](../../../../.cursor/rules/typescript-monorepo-types.mdc) | `npm run typecheck` после scaffold packages; no ad-hoc types in atoms |
 | [`ai-dry-deduplication.mdc`](../../../../.cursor/rules/ai-dry-deduplication.mdc) | Один CVA source (`buttonVariants`, `contentTextVariants`); matrix in `lib/design-lab/` |
@@ -179,26 +179,26 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 
 ## Reference adaptation policy (MUST)
 
-Референсный проект (Pulse) и его design kit — **не** source of truth для визуала {{PROJECT_NAME}}.
+Референсный проект (Pulse) и его design kit — **не** source of truth для визуала Sunday School.
 
 | Источник | Роль | Агент |
 |----------|------|-------|
 | [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) | **Primary** — token names, typography, semantic colors | MUST implement |
-| [`{{MAIN_PROTOTYPE_HTML}}`](../../../prototypes/{{MAIN_PROTOTYPE_HTML}}) | **Primary** — visual ground truth для MVP screens | MUST match via semantic tokens |
-| [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../../../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) | Detail when contract silent | SHOULD read |
-| Pulse reference [`{{REFERENCE_EXAMPLE_COMPONENTS_REL_PATH}}`](../../../{{REFERENCE_EXAMPLE_COMPONENTS_REL_PATH}}) | **Optional** — CVA/layout patterns only | MAY read; **MUST NOT** verbatim copy tokens, colors, or domain variants |
+| [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) | **Primary** — visual ground truth для MVP screens | MUST match via semantic tokens |
+| [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) | Detail when contract silent | SHOULD read |
+| Pulse reference [`examples/pulse/docs/example_components/`](../../../examples/pulse/docs/example_components/) | **Optional** — CVA/layout patterns only | MAY read; **MUST NOT** verbatim copy tokens, colors, or domain variants |
 
 **MUST NOT:**
 
-- Copy-paste `globals.css` brand values from Pulse / reference kit without mapping to {{PROJECT_NAME}} contract.
+- Copy-paste `globals.css` brand values from Pulse / reference kit without mapping to Sunday School contract.
 - Import reference component names (`PulseCard`, `BsfyCard`, domain-specific Button variants) into `apps/web`.
-- Treat interim docs in `{{INTERIM_DOCS_GLOB}}` as canonical for {{PROJECT_NAME}}.
+- Treat interim docs in `docs/my_specs/` as canonical for Sunday School.
 
 **MUST:**
 
-- Map every visual parameter to semantic token or atom variant from {{PROJECT_NAME}} contracts.
+- Map every visual parameter to semantic token or atom variant from Sunday School contracts.
 - Remove reference-only CVA variants on adaptation (§ Reference kit cleanup).
-- When reference code and {{PROJECT_NAME}} Cursor Rules conflict — **{{PROJECT_NAME}} Rules win** (см. [`pulse_project_reference.md`](../../../reference/pulse_project_reference.md) §Priority).
+- When reference code and Sunday School Cursor Rules conflict — **Sunday School Rules win** (см. [`pulse_project_reference.md`](../../../reference/pulse_project_reference.md) §Priority).
 
 ---
 
@@ -207,11 +207,11 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 | Source | Path | Role |
 |--------|------|------|
 | Visual tokens (canonical) | [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) | Token names, typography, semantic color roles |
-| Prototype | [`docs/prototypes/{{MAIN_PROTOTYPE_HTML}}`](../../../prototypes/{{MAIN_PROTOTYPE_HTML}}) | Visual ground truth for MVP screens |
+| Prototype | [`docs/prototypes/sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) | Visual ground truth for MVP screens |
 | Prototype mapping | [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md) | screen ID → L3 pattern anchor |
-| Interim DS archive | [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../../../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) | Detail when contract silent |
+| Interim DS archive | [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) | Detail when contract silent |
 | Component recipes | [`styleguide.md`](../../../design/styleguide.md) | L3 composed patterns |
-| Reference pattern library (optional) | [`{{REFERENCE_EXAMPLE_COMPONENTS_REL_PATH}}`](../../../{{REFERENCE_EXAMPLE_COMPONENTS_REL_PATH}}) | CVA structure inspiration — **not** default copy source |
+| Reference pattern library (optional) | [`examples/pulse/docs/example_components/`](../../../examples/pulse/docs/example_components/) | CVA structure inspiration — **not** default copy source |
 
 ### Prototype fidelity workflow (MUST per component)
 
@@ -226,9 +226,9 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 
 ## Token migration — `globals.css`
 
-Текущий `apps/web/src/app/globals.css` содержит shadcn semantic mapping для **{{DESIGN_SYSTEM_NAME}}**, но может **не хватать** tokens для SurfaceCard/Button hover shadows и elevation.
+Текущий `apps/web/src/app/globals.css` содержит shadcn semantic mapping для **Slate Cobalt**, но может **не хватать** tokens для SurfaceCard/Button hover shadows и elevation.
 
-**MUST derive values from** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) + [`{{MAIN_PROTOTYPE_HTML}}`](../../../prototypes/{{MAIN_PROTOTYPE_HTML}}) — **not** from reference `example_components` README.
+**MUST derive values from** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) + [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) — **not** from reference `example_components` README.
 
 **MUST add** to `:root` and `.dark` per contract (illustrative categories — exact names from `visual_identity_contract`):
 
@@ -243,7 +243,7 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 
 **MUST add** to `@theme inline` (if used as Tailwind colors): utilities named in `visual_identity_contract` (e.g. `text-subtle-foreground`, primary container pairs).
 
-**MUST NOT:** hardcode reference-project hex (e.g. Pulse forest green) in component TSX — only semantic classes or `var(--token)` from {{PROJECT_NAME}} contract.
+**MUST NOT:** hardcode reference-project hex (e.g. Pulse forest green) in component TSX — only semantic classes or `var(--token)` from Sunday School contract.
 
 **SHOULD:** migrate elevation constants to `apps/web/src/lib/ui/elevation.ts` per styleguide note.
 
@@ -261,7 +261,7 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 | **Typography atoms** | `apps/web/src/components/atoms/` | `@/components/atoms` |
 | **Tokenized primitives** | `apps/web/src/components/ui/` | `@/components/ui/{Component}` |
 | **App shell (layout chrome)** | `apps/web/src/components/shell/` | `@/components/shell/*` — см. [`global_shell_spec.md`](./global_shell_spec.md) |
-| **Domain molecules** | `apps/web/src/components/{domain}/` | `@/components/{{DOMAIN_COMPONENT_FOLDER}}/*` — пути из phase specs |
+| **Domain molecules** | `apps/web/src/components/{domain}/` | `@/components/lessons/*` — пути из phase specs |
 | **Design tokens** | `apps/web/src/app/globals.css` | semantic Tailwind / CSS variables |
 | **UI helpers (non-JSX)** | `apps/web/src/lib/ui/` | status maps, elevation — не product UI-import как компонент |
 | **Variant matrices (reference)** | `apps/web/src/lib/design-lab/` | read-only для сверки; не UI-import |
@@ -287,7 +287,7 @@ Implementation-spec для AI-агента: реализация **shared UI pri
 | From (optional reference) | To (`apps/web/src/`) | Action |
 |-----------------------------|----------------------|--------|
 | `components/atoms/**` in reference kit | `components/atoms/**` | **Implement** from contract; MAY adapt CVA structure |
-| reference `button.tsx` patterns | `components/ui/button.tsx` | **Replace** shadcn default with {{PROJECT_NAME}} tokenized version |
+| reference `button.tsx` patterns | `components/ui/button.tsx` | **Replace** shadcn default with Sunday School tokenized version |
 | reference `CustomLink.tsx` | `components/ui/CustomLink.tsx` | **Add** per styleguide |
 | reference surface card CVA | `components/ui/card.tsx` | **Merge**: keep shadcn `Card*` slots + add `SurfaceCard` |
 | `lib/utils.ts` | `lib/utils.ts` | Skip if identical `cn()` exists |
@@ -303,12 +303,12 @@ Neutral catalog name — **не** префикс референсного про
 
 ### Reference kit cleanup (MUST on adaptation)
 
-При адаптации из optional reference kit — **удалить** variants, не входящие в {{PROJECT_NAME}} MVP:
+При адаптации из optional reference kit — **удалить** variants, не входящие в Sunday School MVP:
 
 - **Button** — domain-specific variants from reference (e.g. fitness/onboarding CTAs not in wireframes)
 - **ContentText** — domain-specific variants from reference (e.g. reading/streak/passage roles)
 
-**Add later (Phase 2+)** only when {{PROJECT_NAME}} wireframe requires them.
+**Add later (Phase 2+)** only when Sunday School wireframe requires them.
 
 ---
 
@@ -321,16 +321,16 @@ Neutral catalog name — **не** префикс референсного про
 | `Heading` | `as`, `visualLevel?`, `variant?` | `visualLevel`: display, h1–h6; `variant`: default, brand |
 | `SectionEyebrow` | `tone?` | Outline pill for marketing section labels (P16 landing); `components/atoms/SectionEyebrow/` |
 | `SectionTitle` | `as?`, `variant?` | Composes Heading; centered marketing titles |
-| `ContentText` | `as?`, `variant?` | See § ContentText variants ({{PROJECT_NAME}} MVP set) |
+| `ContentText` | `as?`, `variant?` | See § ContentText variants (Sunday School MVP set) |
 | `AlertText` | — | Fixed `role="alert"`; form-level errors |
 
 **Barrel:** `components/atoms/index.ts` — `export { Heading, … } from …`
 
 **Golden rule:** new repeating text role → add variant in `content-text-variants.ts`; **never** override `text-*` from product `className` (layout only).
 
-#### ContentText variants — {{PROJECT_NAME}} MVP canonical set
+#### ContentText variants — Sunday School MVP canonical set
 
-| Variant | Usage in {{PROJECT_NAME}} |
+| Variant | Usage in Sunday School |
 |---------|----------------|
 | `body` | Primary paragraph |
 | `bodyMuted` | Default secondary body |
@@ -397,7 +397,7 @@ import { Button } from "@/components/ui/button";
 
 ### Form controls (`components/ui/` — Phase 2)
 
-Tokenize shadcn primitives to **{{DESIGN_SYSTEM_NAME}}** / prototype parity. Composition via `Field` + `FieldLabel` + `FieldError` per [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md).
+Tokenize shadcn primitives to **Slate Cobalt** / prototype parity. Composition via `Field` + `FieldLabel` + `FieldError` per [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md).
 
 | Component | Key props | Variants / notes |
 |-----------|-----------|------------------|
@@ -418,14 +418,14 @@ Tokenize shadcn primitives to **{{DESIGN_SYSTEM_NAME}}** / prototype parity. Com
 **Применяется:** Phase 2–3 Design Lab + **P03–P13** product UI  
 **Связанные UX-контракты:** [`ux_ui_principles.md`](../../../design/ux_ui_principles.md), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md), [`accessibility_requirements.md`](../../../design/accessibility_requirements.md), [`styleguide.md`](../../../design/styleguide.md)
 
-Нормы зрелых consumer/enterprise продуктов (informally «FAANG-level») адаптированы для {{PROJECT_NAME}} из [`ux_ui_principles.md`](../../../design/ux_ui_principles.md). **Visual canon** — **Warm Forest** + HTML-прототип {{PROJECT_NAME}}; FAANG-контракт задаёт **поведение, состояния и a11y**, не подменяя токены прототипа. Pulse reference UX doc — optional pattern library only ([`docs/examples/pulse/`](../../../examples/pulse/)); **MUST NOT** override {{PROJECT_NAME}} contracts.
+Нормы зрелых consumer/enterprise продуктов (informally «FAANG-level») адаптированы для Sunday School из [`ux_ui_principles.md`](../../../design/ux_ui_principles.md). **Visual canon** — **Warm Forest** + HTML-прототип Sunday School; FAANG-контракт задаёт **поведение, состояния и a11y**, не подменяя токены прототипа. Pulse reference UX doc — optional pattern library only ([`docs/examples/pulse/`](../../../examples/pulse/)); **MUST NOT** override Sunday School contracts.
 
 ### Agent prerequisites — Context7 (MUST)
 
 Перед реализацией **любого** компонента из inventory ниже агент **MUST**:
 
 1. **`resolve-library-id`** → **`query-docs`** (Context7 MCP) для актуальных API — не полагаться только на training data.
-2. Сверить визуал с [`{{MAIN_PROTOTYPE_HTML}}`](../../../prototypes/{{MAIN_PROTOTYPE_HTML}}) (§ Prototype column) + [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../../../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}).
+2. Сверить визуал с [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (§ Prototype column) + [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html).
 3. Пройти § **FAANG UX/UI contract** и § **Per-component verification** для строки inventory.
 
 | Задача | Context7 library (приоритет) | Query focus |
@@ -446,9 +446,9 @@ Typography text role only?           → components/atoms/
 shadcn/Base UI or tokenized control? → components/ui/ (tokenize in place if exists)
 Cross-role composed block (≥2 roles)? → components/ui/ (catalog L3) OR styleguide recipe
 Global nav / top bar / app chrome?   → components/shell/
-Domain-specific card/row/wizard?     → components/{{DOMAIN_COMPONENT_FOLDER}}/
+Domain-specific card/row/wizard?     → components/lessons/
 Design Lab matrix / fixtures only?   → components/design-lab/ (never product import)
-Status/domain maps, elevation?       → lib/ui/ or @{{PACKAGE_SCOPE}}/domain (no JSX)
+Status/domain maps, elevation?       → lib/ui/ or @sunschool/domain (no JSX)
 ```
 
 **MUST NOT** создавать `components/patterns/` — cross-role L3 живёт в `ui/` (прецедент: `KpiCard`) или в domain folder.
@@ -459,11 +459,11 @@ Status/domain maps, elevation?       → lib/ui/ or @{{PACKAGE_SCOPE}}/domain (n
 
 Каждый компонент из таблиц ниже **MUST** удовлетворять **все** применимые строки:
 
-| ID | Принцип | Требование | {{PROJECT_NAME}} enforcement |
+| ID | Принцип | Требование | Sunday School enforcement |
 |----|---------|------------|-------------------|
 | **FX-1** | Predictability | Одинаковые паттерны на sibling routes (CTA placement, labels) | [`ux_ui_principles.md`](../../../design/ux_ui_principles.md) P4; `@/lib/messages` |
 | **FX-2** | Hierarchy | Один primary focus; secondary не конкурирует | P4 One Primary Action; `Button` variant `default` |
-| **FX-3** | Progressive disclosure | Сложность по шагам (wizard, tabs, sheet) | P1; per {{PROJECT_NAME}} user flows |
+| **FX-3** | Progressive disclosure | Сложность по шагам (wizard, tabs, sheet) | P1; per Sunday School user flows |
 | **FX-4** | Production states | `default`, `hover`, `focus`, `disabled`, `error`, `empty`, `loading` — где применимо | [`ui_states_contract.md`](../../../design/ui_states_contract.md); Lab matrix |
 | **FX-5** | Accessibility | WCAG 2.1 AA: names, contrast, keyboard, focus visible | **ui-semantics-a11y**; shadcn (Base UI) first |
 | **FX-6** | Mobile-first | Base = 390px; touch ≥ **44×44px**; thumb-zone CTAs | **ui-mobile-first** |
@@ -496,7 +496,7 @@ Status/domain maps, elevation?       → lib/ui/ or @{{PACKAGE_SCOPE}}/domain (n
 | `FilterChip` | `FilterChip.tsx` | 2c | catalog/filter mobile chips | FX-7 instant filter response; selected state clear |
 | `PhotoSlot` | `PhotoSlot.tsx` | 2b | profile/media upload patterns | Empty/upload states; meaningful `alt` when image |
 | `Tabs` (pill) | `tabs.tsx` | 2b | tabbed detail views | FX-3; mobile `overflow-x-auto`; Context7 Tabs |
-| `Badge` / `StatusBadge` | `badge.tsx` or `StatusBadge.tsx` | 2b | list/status screens | Domain status from `@{{PACKAGE_SCOPE}}/domain`; labels `@/lib/messages` |
+| `Badge` / `StatusBadge` | `badge.tsx` or `StatusBadge.tsx` | 2b | list/status screens | Domain status from `@sunschool/domain`; labels `@/lib/messages` |
 | `Avatar` | `avatar.tsx` | 2b | everywhere | Size matrix xs→2xl; fallback initials |
 | `VerifiedBadge` | `VerifiedBadge.tsx` | 2b | trust/verification UI | Decorative icon `aria-hidden`; trust signal in text nearby |
 | `Sheet`, `Dialog` | `sheet.tsx`, `dialog.tsx` | 2c | filters mobile, new service | FX-6 bottom sheet `< md`; focus trap; Escape |
@@ -542,13 +542,13 @@ Spec: [`global_shell_spec.md`](./global_shell_spec.md). Shell **MUST NOT** impor
 
 ### Appendix A — Domain molecule inventory (populate per phase specs)
 
-**Не копировать** inventory референсного проекта (fitness marketplace). Заполнить из [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md), wireframes MVP и `P{N}_tasks.md` для {{PROJECT_NAME}}.
+**Не копировать** inventory референсного проекта (fitness marketplace). Заполнить из [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md), wireframes MVP и `P{N}_tasks.md` для Sunday School.
 
 Domain folders **MUST** compose only from `atoms/`, `ui/`, `shell/`. Design Lab показывает **fixture import**, не копию JSX.
 
-| Pattern | Folder (example) | Phase | Source for {{PROJECT_NAME}} |
+| Pattern | Folder (example) | Phase | Source for Sunday School |
 |---------|------------------|-------|-----------------------------|
-| Catalog/list card molecule | `components/{{DOMAIN_COMPONENT_FOLDER}}/` | P05+ | wireframe + phase spec |
+| Catalog/list card molecule | `components/lessons/` | P05+ | wireframe + phase spec |
 | List row molecule | same | P08+ | list wireframes |
 | Multi-step wizard | same | P07+ | wizard wireframe |
 | Review/rating form | same | P09+ | review flow spec |
@@ -561,7 +561,7 @@ Domain folders **MUST** compose only from `atoms/`, `ui/`, `shell/`. Design Lab 
 | Module | Purpose |
 |--------|---------|
 | `lib/ui/elevation.ts` | Shadow/radius constants |
-| `lib/ui/status-badge.ts` | Map domain status → Badge variant (types from `@{{PACKAGE_SCOPE}}/domain`) |
+| `lib/ui/status-badge.ts` | Map domain status → Badge variant (types from `@sunschool/domain`) |
 
 ### Phase roadmap (Design Lab sections)
 
@@ -681,16 +681,16 @@ Composed blocks from [`styleguide.md`](../../../design/styleguide.md) — **not*
 
 #### L3 — Marketing / Landing (P16, `#marketing`)
 
-**Showcase:** `/design-system` → `DesignLabMarketing` (`id="marketing"`). **Product import:** `@/components/atoms`, `@/components/ui/*`, `@/components/{{DOMAIN_COMPONENT_FOLDER}}/*` only — **MUST NOT** import `@/components/design-lab/**` on product routes.
+**Showcase:** `/design-system` → `DesignLabMarketing` (`id="marketing"`). **Product import:** `@/components/atoms`, `@/components/ui/*`, `@/components/lessons/*` only — **MUST NOT** import `@/components/design-lab/**` on product routes.
 
 | Wave | Components | Path |
 |------|------------|------|
 | **Wave A** | `SectionEyebrow`, `Container` (`variant="marketing"`), `MarketingSectionHeader`, `TrustFeaturePill`, `StepCard`, `DiscoveryPill`, `TestimonialCard`, `StatMetricCell`, `StatsBar`, `BenefitRow`, `DarkStatTile`, `BrandSection`, `CtaBand`, `Reveal`, `MarketingAccordion` | `components/atoms/`, `components/ui/` |
-| **L3 patterns** | Featured/marketing card molecule (per landing spec) | `components/{{DOMAIN_COMPONENT_FOLDER}}/` |
+| **L3 patterns** | Featured/marketing card molecule (per landing spec) | `components/lessons/` |
 | **Hooks** | `use-reveal-on-scroll`, `use-count-up`, `use-landing-scrolled`, `use-prefers-reduced-motion` | `lib/ui/` |
 | **Fixtures (showcase)** | `marketing-fixtures.ts` | `lib/design-lab/` (dev-only) |
 
-**Prototype:** [`{{PROJECT_NAME}} Landing Page -Standalone-.html`](../../../prototypes/{{PROJECT_NAME}} Landing Page -Standalone-.html) · **Spec:** [`public_landing_spec.md`](./public_landing_spec.md)
+**Prototype:** [`Sunday School Landing Page -Standalone-.html`](../../../prototypes/Sunday School Landing Page -Standalone-.html) · **Spec:** [`public_landing_spec.md`](./public_landing_spec.md)
 
 Phase 2 (partial — Forms L2): Input/Field/Textarea/Checkbox/Radio/Switch tokenization + `DesignLabForms` section.
 
@@ -735,7 +735,7 @@ apps/web/src/components/design-lab/
 
 ## Prototype anchors (L2/L3)
 
-Populate from [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md) and MVP wireframes for {{PROJECT_NAME}} — **не** из fitness-marketplace reference.
+Populate from [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md) and MVP wireframes for Sunday School — **не** из fitness-marketplace reference.
 
 | Lab section | Mapping source | Wireframe source |
 |-------------|----------------|------------------|
@@ -766,8 +766,8 @@ Populate from [`prototype_route_mapping.md`](../../../design/prototype_route_map
 
 ### Step 2 — Atoms
 
-- [ ] Create `components/atoms/` from {{PROJECT_NAME}} contracts (with reference kit cleanup if adapted)
-- [ ] `content-text-variants.ts` — {{PROJECT_NAME}} MVP set only
+- [ ] Create `components/atoms/` from Sunday School contracts (with reference kit cleanup if adapted)
+- [ ] `content-text-variants.ts` — Sunday School MVP set only
 - [ ] `components/atoms/index.ts` barrel
 
 ### Step 3 — UI primitives
@@ -808,7 +808,7 @@ Populate from [`prototype_route_mapping.md`](../../../design/prototype_route_map
 
 - [ ] No raw hex/rgba in new component TSX (semantic tokens only)
 - [ ] `components/atoms/` exports all four typography atoms
-- [ ] `Button` matches prototype: dimensions, loading state, {{DESIGN_SYSTEM_NAME}} hover per contract
+- [ ] `Button` matches prototype: dimensions, loading state, Slate Cobalt hover per contract
 - [ ] `SurfaceCard` uses neutral naming; all CVA variants render on lab page
 - [ ] `CustomLink` three modes demonstrated
 - [ ] Reference-only variants removed from Button and ContentText (if kit was adapted)
@@ -869,7 +869,7 @@ Shared-компоненты продукта (atoms / ui): `Paths: n/a — prese
 | Generic shadcn re-install overwrites tokens | PR review + pin customized files |
 | Two Button implementations | **Replace**, never duplicate |
 | Lab not updated when CVA changes | `matrices.ts` must import variant keys from CVA or duplicate const with comment «sync with buttonVariants» |
-| Reference kit diverges from web | After merge, note in PR: implemented from {{PROJECT_NAME}} contract |
+| Reference kit diverges from web | After merge, note in PR: implemented from Sunday School contract |
 | Lab strings bypass `@/lib/messages` | Allowed only in `components/design-lab/**` |
 | Agent skips Context7 for shadcn/Base UI | Reject on verification; § Agent prerequisites — Context7 |
 | Component in wrong folder (`patterns/`, duplicate tile) | § Catalog layers decision tree |
@@ -893,11 +893,11 @@ Shared-компоненты продукта (atoms / ui): `Paths: n/a — prese
 | [`styleguide.md`](../../../design/styleguide.md) | L3 pattern recipes |
 | [`ui_states_contract.md`](../../../design/ui_states_contract.md) | Empty/loading/error demos Phase 2 |
 | [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) | Canonical token source |
-| [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../../../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) | Interim DS detail |
-| [`{{REFERENCE_EXAMPLE_COMPONENTS_REL_PATH}}`](../../../{{REFERENCE_EXAMPLE_COMPONENTS_REL_PATH}}) | Optional CVA pattern library (not copy source) |
+| [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) | Interim DS detail |
+| [`examples/pulse/docs/example_components/`](../../../examples/pulse/docs/example_components/) | Optional CVA pattern library (not copy source) |
 | [`P01_tasks.md`](../tasks/P01_tasks.md) | Phase checklist (Lab QA) |
 | [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) | Form controls UX (Phase 2a+) |
-| [`ux_ui_principles.md`](../../../design/ux_ui_principles.md) | FAANG-adapted {{PROJECT_NAME}} UX (FX contract) |
+| [`ux_ui_principles.md`](../../../design/ux_ui_principles.md) | FAANG-adapted Sunday School UX (FX contract) |
 | [`ai_component_guidelines.md`](../../../guidelines/react/ai_component_guidelines.md) | Folder layout §6; catalog imports |
 | [`docs/guidelines/README.md`](../../../guidelines/README.md) | Full rules index | [`documentation_creation_registry.md`](../../../meta/documentation_creation_registry.md) — wave W15-01
 
@@ -912,10 +912,10 @@ Shared-компоненты продукта (atoms / ui): `Paths: n/a — prese
 - **MUST** satisfy FAANG UX contract FX-1–FX-10 per component where applicable.
 - **MUST** match prototype visual params via semantic tokens (§ Prototype fidelity workflow) — prototype wins for look; PRD wins for behavior.
 - **Prefer** Server Components for lab sections; client only for `DesignLabControls` and interactive demos.
-- When adapting from Pulse reference — **{{PROJECT_NAME}} Cursor Rules win** over reference code.
+- When adapting from Pulse reference — **Sunday School Cursor Rules win** over reference code.
 - Rating stars use **`text-secondary`** accent — not primary ([`visual_identity_contract.md`](../../../design/visual_identity_contract.md)).
 - After implementation, feature routes P02+ **must import** atoms/Button/SurfaceCard from catalog paths — no one-off typography strings. See §Product UI catalog contract.
-- Domain molecules: `components/{{DOMAIN_COMPONENT_FOLDER}}/` per phase specs; Lab imports fixtures — never duplicate markup in product from `design-lab/`.
+- Domain molecules: `components/lessons/` per phase specs; Lab imports fixtures — never duplicate markup in product from `design-lab/`.
 
 ---
 
@@ -924,7 +924,7 @@ Shared-компоненты продукта (atoms / ui): `Paths: n/a — prese
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.4 — восстановлен текст после порчи кодировки (кириллица, `—`, `≤`/`≥`); пин Next.js 16.4; § Security paths и § Open questions по registry §2.3.2a / §2.3.6; поле `Проверено по` |
-| 2026-06-19 | v1.3 — contract-first DS bootstrap: {{DESIGN_SYSTEM_NAME}} placeholders, SurfaceCard/KpiCard neutral naming, Reference adaptation policy, Appendix A domain inventory, remove mandatory copy from reference kit |
+| 2026-06-19 | v1.3 — contract-first DS bootstrap: Slate Cobalt placeholders, SurfaceCard/KpiCard neutral naming, Reference adaptation policy, Appendix A domain inventory, remove mandatory copy from reference kit |
 | 2026-05-23 | v1.2 — §Component catalog placement & Phase 2–3 inventory: folder map, FAANG UX contract (FX-1–FX-10), Context7 MUST, per-component verification |
 | 2026-05-23 | v1.1 — §Product UI catalog contract: mandatory catalog imports for P02+ |
 | 2026-05-23 | v1.0 — Design System Lab + shared UI primitives spec (W15-01) |

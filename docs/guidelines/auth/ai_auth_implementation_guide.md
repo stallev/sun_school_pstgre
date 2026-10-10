@@ -15,8 +15,8 @@ Browser
   → proxy.ts (Layer 1 — JWT gate via auth.config.ts, NO Prisma)
   → layout guards (Layer 2 — optional UX redirect)
   → Route Handlers / Server Actions (Layer 3 — auth())
-  → @{{PACKAGE_SCOPE}}/policy-server (Layer 4)
-  → @{{PACKAGE_SCOPE}}/domain → @{{PACKAGE_SCOPE}}/db → Neon
+  → @sunschool/policy-server (Layer 4)
+  → @sunschool/domain → @sunschool/db → Neon
 ```
 
 **Critical Next.js 16 difference from v15:**
@@ -70,7 +70,7 @@ export const config = {
 };
 ```
 
-Use `@{{PACKAGE_SCOPE}}/policy-edge` for path classification helpers if needed.
+Use `@sunschool/policy-edge` for path classification helpers if needed.
 
 ---
 

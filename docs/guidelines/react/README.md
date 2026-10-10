@@ -3,7 +3,7 @@
 Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **shadcn/ui**, **sonner**.
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
-**Design system:** [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}})  
+**Design system:** [`sunday_school_prototype.html`](../../prototypes/sunday_school_prototype.html)  
 **Typography:** [`typography_text_guidelines.md`](../typography_text_guidelines.md)  
 **Reference:** Pulse [`docs/examples/pulse/docs/guidelines/react/`](../../examples/pulse/docs/guidelines/react/) — **Guidelines текущего проекта override Pulse reference code** ([`pulse_project_reference.md`](../../reference/pulse_project_reference.md)).
 
@@ -14,7 +14,7 @@ Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwi
 | Area | Packages |
 |------|----------|
 | Framework | `next` **16.4** (pinned), `react` / `react-dom` 19.x |
-| Styling | `tailwindcss` 4.x, {{DESIGN_SYSTEM_NAME}} tokens |
+| Styling | `tailwindcss` 4.x, Slate Cobalt tokens |
 | UI | shadcn/ui, `lucide-react`, `next-themes`, `sonner` |
 | Dates | `date-fns`; timezone from **`TrainerProfile.timezone`** |
 
@@ -44,7 +44,7 @@ Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwi
 ## Principles
 
 1. **Types** — explicit props; avoid `React.FC`.
-2. **Domain literals** — `@{{PACKAGE_SCOPE}}/domain` / `@/lib/...`; no magic strings.
+2. **Domain literals** — `@sunschool/domain` / `@/lib/...`; no magic strings.
 3. **Boundaries** — `'use client'` only for interactivity/hooks; logic/presentation split (**react-logic-presentation**).
 4. **Feedback** — toast + pending UI for mutations; optimistic for toggles.
 5. **Accessibility** — semantic HTML, WCAG 2.1 AA, keyboard + screen reader names (**ui-semantics-a11y**).

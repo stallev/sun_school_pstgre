@@ -15,7 +15,7 @@ alwaysApply: false
 1. **Exact versions** во всех `package.json` монорепо (root, `apps/*`, `packages/*`) в `dependencies`, `devDependencies`, `optionalDependencies`, `overrides`: `"next": "16.4.2"`.
    **Запрещено:** `^`, `~`, `>=`, `*`, `x`, `latest` / dist-tags, git / http / `file:` источники без ADR.
 2. **Исключения:**
-   - внутренние пакеты workspace (`@{{PACKAGE_SCOPE}}/*`) — `"*"` (npm workspaces резолвит локально);
+   - внутренние пакеты workspace (`@sunschool/*`) — `"*"` (npm workspaces резолвит локально);
    - `peerDependencies` — диапазоны допустимы (только для пакета, который публикуется в registry);
    - alias — `"npm:<name>@<exact>"`.
 3. **`.npmrc` в корне** — `save-exact=true` (шаблон: [`scaffold/.npmrc`](scaffold/.npmrc)). `npm install <pkg>` сам пишет точную версию.

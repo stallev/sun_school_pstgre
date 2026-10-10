@@ -36,7 +36,7 @@ Cursor rule: **react-naming-conventions**.
 
 No inline **`"trainer"`**, **`"pending"`**, **`"confirmed"`** at call sites.
 
-- **Declare once** in `@/lib/...` or import from **`@{{PACKAGE_SCOPE}}/domain`**
+- **Declare once** in `@/lib/...` or import from **`@sunschool/domain`**
 - After parsing untrusted strings — **type guards**, not `as UserRole`
 - **User-visible copy** → `@/lib/messages` ([copy_and_messages.md](./copy_and_messages.md))
 
@@ -45,7 +45,7 @@ No inline **`"trainer"`**, **`"pending"`**, **`"confirmed"`** at call sites.
 if (status === 'pending') { … }
 
 // Prefer
-import { BOOKING_STATUS } from '@{{PACKAGE_SCOPE}}/domain'
+import { BOOKING_STATUS } from '@sunschool/domain'
 if (status === BOOKING_STATUS.PENDING) { … }
 ```
 

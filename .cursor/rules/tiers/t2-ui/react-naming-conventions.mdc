@@ -40,8 +40,8 @@ alwaysApply: true
 
 ## Domain literals
 
-- Roles/statuses — **`@{{PACKAGE_SCOPE}}/domain`** constants (`USER_ROLE`, `BOOKING_STATUSES`, …), не inline `"trainer"` / `"pending"`.
-- Mutation error codes — **`AUTH_MUTATION_ERROR_CODES`**, **`MUTATION_ERROR_CODES`** из `@{{PACKAGE_SCOPE}}/domain`; см. **domain-literals-and-codes**.
+- Roles/statuses — **`@sunschool/domain`** constants (`USER_ROLE`, `BOOKING_STATUSES`, …), не inline `"trainer"` / `"pending"`.
+- Mutation error codes — **`AUTH_MUTATION_ERROR_CODES`**, **`MUTATION_ERROR_CODES`** из `@sunschool/domain`; см. **domain-literals-and-codes**.
 - User-visible strings — **`@/lib/messages`**.
 
 ## Антипаттерны

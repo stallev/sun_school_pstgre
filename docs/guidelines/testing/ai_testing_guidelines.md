@@ -38,7 +38,7 @@
 ## 4. Правила написания
 
 1. **Тест следует contract, а не реализации.** Ожидаемый исход берётся из `§`-раздела contract / spec, на который ссылается задача; при расхождении — сначала docs (**product-docs-alignment**).
-2. **N / S пути** — отдельные тесты с явным ожидаемым кодом: `MUTATION_ERROR_CODES.*` из `@{{PACKAGE_SCOPE}}/domain`, не строковый литерал (**domain-literals-and-codes**).
+2. **N / S пути** — отдельные тесты с явным ожидаемым кодом: `MUTATION_ERROR_CODES.*` из `@sunschool/domain`, не строковый литерал (**domain-literals-and-codes**).
 3. **Unit-тест не ходит в сеть и в реальную БД.** Внешние сервисы (S3, email, Auth.js) — через порты домена и фейки.
 4. **DAL-интеграция** — один выбор на проект, фиксируется в P5 (ADR или `local_dev_setup`): отдельная Neon branch для тестов **или** моки Prisma-клиента. `import "server-only"` в тестах — `vi.mock("server-only", () => ({}))`.
 5. **E2E** — локаторы по роли и доступному имени (`getByRole`, `getByLabel`), не по CSS-классам; тексты — из `@/lib/messages`, не дублировать строки.

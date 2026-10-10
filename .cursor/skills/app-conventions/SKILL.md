@@ -66,7 +66,7 @@ apps/web/src/
 | Data / mutations | `data-server-actions-and-api.mdc` | DAL in `data/**`; `MutationResult` |
 | Logic vs UI | `react-logic-presentation.mdc` | No fetch + hooks in one file |
 | One component/file | `react-one-component-per-file.mdc` | Named export; skeleton = sibling file |
-| Domain codes | `domain-literals-and-codes.mdc` | `@{{PACKAGE_SCOPE}}/domain` |
+| Domain codes | `domain-literals-and-codes.mdc` | `@sunschool/domain` |
 | Mutations UX | `ui-mutation-pending`, `ui-toast-mutations`, `ui-optimistic-mutations` | Sonner, aria-busy |
 | Design system | `ui-design-system-shadcn.mdc` | Design Lab catalog only |
 

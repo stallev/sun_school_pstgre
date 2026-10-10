@@ -28,7 +28,7 @@ UI-специфичные уточнения к канону:
 - **Этот документ** — операционный чеклист для агентов, ниже Guidelines.
 - **HTML-прототип** — visual reference only, как в каноне (subordinate to routes and MVP scope).
 
-**Visual canon:** `{{INTERIM_DESIGN_SYSTEM_DOC}}` + `{{MAIN_PROTOTYPE_HTML}}`.
+**Visual canon:** `sunday_school_prototype.html` + `sunday_school_prototype.html`.
 
 ---
 
@@ -519,7 +519,7 @@ className="md:rounded-3xl md:p-6"
 
 ### Design Thinking
 - [ ] Purpose сформулирован: кто пользователь, какая задача
-- [ ] Aesthetic direction — {{DESIGN_SYSTEM_NAME}} tokens, не generic fallback
+- [ ] Aesthetic direction — Slate Cobalt tokens, не generic fallback
 - [ ] Один primary action на экран определён
 
 ### States
@@ -572,7 +572,7 @@ className="md:rounded-3xl md:p-6"
 | `type="time"` без locale control | Masked input / Select columns |
 | Success toast на каждое локальное изменение | Toast только при server commit |
 | Decoration without purpose | Убрать или обосновать |
-| Generic Inter + purple gradient | {{DESIGN_SYSTEM_NAME}} tokens и шрифты из `visual_identity_contract.md` |
+| Generic Inter + purple gradient | Slate Cobalt tokens и шрифты из `visual_identity_contract.md` |
 | `import * as Icons from 'lucide-react'` | `import { Search, User } from 'lucide-react'` |
 | Status/error только цветом | Icon + text + цвет |
 | Дублировать Design Lab примитив | Расширить CVA/atom variant, добавить Lab-секцию |
@@ -638,7 +638,7 @@ className="md:rounded-3xl md:p-6"
 | `docs/guidelines/security/ai_security_xss_csrf_guidelines.md` | XSS, CSRF, CSP |
 | `docs/reference/pulse_project_reference.md` | Pulse reference priority |
 | `docs/general/README.md` | General → Guidelines mapping |
-| `docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}` | {{DESIGN_SYSTEM_NAME}} visual canon |
+| `docs/prototypes/sunday_school_prototype.html` | Slate Cobalt visual canon |
 
 ---
 

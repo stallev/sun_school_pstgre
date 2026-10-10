@@ -23,14 +23,14 @@ alwaysApply: false
 - **`middleware.ts`:** legacy/transitional only — do not implement new auth gates here
 - **Layer 2:** optional layout UX redirects
 - **Layer 3:** mandatory `auth()` in Route Handlers and Server Actions
-- **Layer 4:** `@{{PACKAGE_SCOPE}}/policy-server` object-level authorization
+- **Layer 4:** `@sunschool/policy-server` object-level authorization
 
 Split Auth.js config is **mandatory**: `auth.config.ts` for proxy; `auth.ts` (+ PrismaAdapter) for server `auth()` only.
 
 ## MVP auth model
 
 - Credentials (email + password); `passwordHash` on `User`
-- Role (`{{USER_ROLES}}`) in JWT + session
+- Role (`admin, teacher`) in JWT + session
 - Password reset via `password_reset_token` + Resend
 
 ## Session typing
@@ -43,7 +43,7 @@ Split Auth.js config is **mandatory**: `auth.config.ts` for proxy; `auth.ts` (+ 
 
 - [ ] Route protection in **`proxy.ts`**, not new `middleware.ts` logic
 - [ ] Session verified on every mutation and protected read
-- [ ] No `@{{PACKAGE_SCOPE}}/policy-server` in proxy/middleware
+- [ ] No `@sunschool/policy-server` in proxy/middleware
 
 - [ ] XSS/CSRF/CSP — **security-xss-csrf** + [`ai_security_xss_csrf_guidelines.md`](docs/guidelines/security/ai_security_xss_csrf_guidelines.md)
 

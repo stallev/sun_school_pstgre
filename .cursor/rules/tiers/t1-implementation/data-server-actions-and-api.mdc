@@ -34,12 +34,12 @@ alwaysApply: false
 
 - Mutation logic → **`apps/web/src/data/**`** with `import "server-only"`.
 - **`apps/web/src/actions/**`** thin: call DAL, then `revalidatePath` / `revalidateTag` / `redirect`.
-- Shared Zod → `lib/validation/` or `@{{PACKAGE_SCOPE}}/domain`.
-- **Mutation returns:** `MutationResult<T>` from `@{{PACKAGE_SCOPE}}/domain` — no new error shape variants.
+- Shared Zod → `lib/validation/` or `@sunschool/domain`.
+- **Mutation returns:** `MutationResult<T>` from `@sunschool/domain` — no new error shape variants.
 
 ## Practice
 
-- Authorization in DAL via `auth()` + `@{{PACKAGE_SCOPE}}/policy-server`.
+- Authorization in DAL via `auth()` + `@sunschool/policy-server`.
 - Next.js 16.4.x: `await cookies()`, `await headers()`, `await params`.
 - **Class B critical submits** (`/book/*`, onboarding, admin approve): dual transport per **ios-safari-mutation-transport** — shared DAL, `MutationResult`, no logic fork.
 

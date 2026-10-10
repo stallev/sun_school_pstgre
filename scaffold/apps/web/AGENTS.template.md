@@ -1,9 +1,9 @@
-# {{PROJECT_NAME}} Web — Agent Instructions
+# Sunday School Web — Agent Instructions
 
 > Monorepo context: [`../../AGENTS.md`](../../AGENTS.md)
 
-**{{PROJECT_NAME}} Web** — Next.js **16.4** App Router, тонкий BFF для {{PROJECT_NAME}}.  
-Hosting: **Vercel** · UI: **shadcn/ui + Tailwind CSS v4** ({{DESIGN_SYSTEM_NAME}}).
+**Sunday School Web** — Next.js **16.4** App Router, тонкий BFF для Sunday School.  
+Hosting: **Vercel** · UI: **shadcn/ui + Tailwind CSS v4** (Slate Cobalt).
 
 <!-- BEGIN:nextjs-agent-rules -->
 ## Next.js 16 — read before coding
@@ -54,13 +54,13 @@ Enforceable details live in Cursor Rules — summary only:
 | RSC boundary | `'use client'` only for hooks / browser APIs |
 | Thin BFF | Route Handlers & Server Actions → `packages/domain` + `src/data/**` |
 | Auth in proxy | **`auth.config.ts` only** — no Prisma, never import `auth.ts` |
-| Policy in proxy | `@{{PACKAGE_SCOPE}}/policy-edge` only — **never** `@{{PACKAGE_SCOPE}}/policy-server` |
+| Policy in proxy | `@sunschool/policy-edge` only — **never** `@sunschool/policy-server` |
 | Cache invalidation | `updateTag`, `revalidateTag`, `revalidatePath` — см. ADR-002 |
 | Background work | Vercel Cron + jobs — **not** `unstable_after` |
 | Data layer | [`ai_nextjs_db_data_handle.md`](../../docs/guidelines/nextjs/ai_nextjs_db_data_handle.md) §7 |
 | iOS Safari mutations | [`ios-safari-mutation-transport-pattern.md`](../../docs/incidents/ios-safari-mutation-transport-pattern.md) — rule: `ios-safari-mutation-transport.mdc` |
 | Forms | [`ai_form_handling_pattern.md`](../../docs/guidelines/react/ai_form_handling_pattern.md) §7 |
-| Domain literals & error codes | `@{{PACKAGE_SCOPE}}/domain` constants — rule: `domain-literals-and-codes.mdc` |
+| Domain literals & error codes | `@sunschool/domain` constants — rule: `domain-literals-and-codes.mdc` |
 
 ## UI & UX
 
@@ -69,8 +69,8 @@ Visual and interaction canon — **do not invent** ad-hoc styles:
 | Topic | Source |
 |-------|--------|
 | **UI component catalog** | `/design-system` (local dev) — import `@/components/atoms`, `@/components/ui/*`; spec: [`design_system_lab_spec.md`](../../docs/implementation/mvp/specs/design_system_lab_spec.md) |
-| Design tokens, typography | [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../../docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}), [`typography_text_guidelines.md`](../../docs/guidelines/typography_text_guidelines.md) |
-| Page layout reference | [`{{MAIN_PROTOTYPE_HTML}}`](../../docs/prototypes/{{MAIN_PROTOTYPE_HTML}}) |
+| Design tokens, typography | [`sunday_school_prototype.html`](../../docs/prototypes/sunday_school_prototype.html), [`typography_text_guidelines.md`](../../docs/guidelines/typography_text_guidelines.md) |
+| Page layout reference | [`sunday_school_prototype.html`](../../docs/prototypes/sunday_school_prototype.html) |
 | User-visible copy | `@/lib/messages` (when wired) — rules: `ui-messages-and-copy.mdc`, `ui-messages-bundle-splitting.mdc` |
 | Toast after mutations | Sonner — rule: `ui-toast-mutations.mdc` |
 | Pending controls | rule: `ui-mutation-pending.mdc` |
@@ -159,18 +159,18 @@ Lab PSI is **orthogonal**: `npm run psi:lab` against a **deployed** origin when 
 
 - [ ] `next` pinned to **16.4** in `package.json`
 - [ ] New interception in **`src/proxy.ts`**, not Next 15 `middleware.ts` patterns
-- [ ] No `@{{PACKAGE_SCOPE}}/policy-server` import in `proxy.ts` / `middleware.ts`
+- [ ] No `@sunschool/policy-server` import in `proxy.ts` / `middleware.ts`
 - [ ] Routes match [`canonical_routes.md`](../../docs/design/canonical_routes.md)
-- [ ] UI follows {{DESIGN_SYSTEM_NAME}} tokens — no arbitrary Tailwind color strings for product UI
+- [ ] UI follows Slate Cobalt tokens — no arbitrary Tailwind color strings for product UI
 - [ ] Product UI uses Design Lab catalog imports (`@/components/atoms`, `@/components/ui/*`) — no `@/components/design-lab/**` in routes
-- [ ] Mutation/error codes and roles from `@{{PACKAGE_SCOPE}}/domain` — no inline magic strings (**domain-literals-and-codes**)
+- [ ] Mutation/error codes and roles from `@sunschool/domain` — no inline magic strings (**domain-literals-and-codes**)
 - [ ] Mutations: pending UI + toast per mutation rules
 - [ ] Runtime dual-view (`next-dev-loop`) — **only if the user requested it**
 - [ ] Lab PSI (`npm run psi:lab`) — **only if the user requested a deployed-origin score**
 
 ## Do NOT
 
-- Import `@{{PACKAGE_SCOPE}}/policy-server` from `proxy.ts` or Edge runtime
+- Import `@sunschool/policy-server` from `proxy.ts` or Edge runtime
 - Add routes outside [`canonical_routes.md`](../../docs/design/canonical_routes.md) without updating that doc
 - Put business logic in Route Handlers — delegate to `packages/domain`
 - Bypass PRD with client-side-only business rules

@@ -14,7 +14,7 @@ alwaysApply: false
 - Write the tests the profile level requires — no more by default, no less. Missing required test for a task = task not done.
 - Unit test sits next to the code (`*.test.ts`); e2e — `apps/web/e2e/<flow>.spec.ts`.
 - Expected outcomes come from the contract / spec `§` the task links, not from the implementation.
-- N / S paths assert domain codes (`MUTATION_ERROR_CODES.*` from `@{{PACKAGE_SCOPE}}/domain`) — no string literals.
+- N / S paths assert domain codes (`MUTATION_ERROR_CODES.*` from `@sunschool/domain`) — no string literals.
 - Unit tests touch no network and no real database; external services go through domain ports and fakes.
 - E2E locators — `getByRole` / `getByLabel`; copy from `@/lib/messages`.
 - Flaky test → fix the cause; do not add retries to hide it.

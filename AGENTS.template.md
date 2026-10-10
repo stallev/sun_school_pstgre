@@ -1,6 +1,6 @@
-# {{PROJECT_NAME}} — Monorepo Agent Instructions
+# Sunday School — Monorepo Agent Instructions
 
-**{{PROJECT_NAME}}** — {{PRODUCT_DESCRIPTION}}  
+**Sunday School** — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
 Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
 
 **Methodology (обязательно):** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md) — цикл КОНТЕКСТ → TIER/DoR → ФАЗА → КОНТРАКТ → ЗАДАЧИ (CU) → [SPEC-GAP] → РЕАЛИЗАЦИЯ → ВЕРИФИКАЦИЯ → REVIEW (CU) → COMMIT. **Маршрутизация моделей:** [`docs/meta/ai_agent_model_routing.md`](docs/meta/ai_agent_model_routing.md) + `model-routing.mdc`.
@@ -18,7 +18,7 @@ Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
 
 **Instant Navigations:** `cacheComponents` + `partialPrefetching`; динамика за Suspense / `'use cache'`.
 
-**Правило:** если в документе {{PROJECT_NAME}} нет явного отличия — следовать Pulse reference architecture. Отличия стека и домена — ADR-001, ADR-002.
+**Правило:** если в документе Sunday School нет явного отличия — следовать Pulse reference architecture. Отличия стека и домена — ADR-001, ADR-002.
 
 **Приоритет над Pulse:** Cursor Rules и Guidelines **текущего проекта** важнее snapshot Pulse.
 
@@ -37,7 +37,7 @@ Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
 
 - `apps/*` handlers = тонкие адаптеры. Логика в `packages/`
 - **Запрещено** импортировать `packages/policy/server` из `proxy.ts` / `middleware.ts`
-- Domain literals — `@{{PACKAGE_SCOPE}}/domain`; user-visible текст — `@/lib/messages`. Клиентский бандл получает срез словаря своей группы маршрутов и текущей локали, не полный словарь — **ui-messages-bundle-splitting** и [`docs/guidelines/react/copy_and_messages.md`](docs/guidelines/react/copy_and_messages.md) §Срезы словаря
+- Domain literals — `@sunschool/domain`; user-visible текст — `@/lib/messages`. Клиентский бандл получает срез словаря своей группы маршрутов и текущей локали, не полный словарь — **ui-messages-bundle-splitting** и [`docs/guidelines/react/copy_and_messages.md`](docs/guidelines/react/copy_and_messages.md) §Срезы словаря
 - Долгие операции — **не в request path** → workers/cron
 - Post-MVP поля — nullable в схеме с первого дня
 
@@ -58,7 +58,7 @@ Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
 | Database schema | [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) |
 | Guidelines + Rules | [`docs/guidelines/README.md`](docs/guidelines/README.md) |
 | Prompt orchestration | [`prompts/00-orchestration.md`](prompts/00-orchestration.md) |
-| HTML-прототип (visual) | [`docs/prototypes/{{MAIN_PROTOTYPE_HTML}}`](docs/prototypes/{{MAIN_PROTOTYPE_HTML}}) |
+| HTML-прототип (visual) | [`docs/prototypes/sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html) |
 | Pulse reference | [`docs/examples/pulse/`](docs/examples/pulse/) |
 
 ## Цикл работы агента
@@ -111,4 +111,4 @@ Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 · Resend (post-
 
 ## Repository status
 
-**Текущая фаза:** {{CURRENT_PHASE}}. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) для статуса документации.
+**Текущая фаза:** Bootstrap — P0. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) для статуса документации.

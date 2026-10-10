@@ -44,7 +44,7 @@ The web app deploys on **Vercel**. Framework and hosting choices must align with
 ## 4. Practical guidance for AI agents
 
 - Assume **Vercel + Next.js 16.4** per ADR-002
-- New interception → **`proxy.ts`** with `@{{PACKAGE_SCOPE}}/policy-edge` + `auth.config.ts` only
+- New interception → **`proxy.ts`** with `@sunschool/policy-edge` + `auth.config.ts` only
 - Use **Suspense** / **`loading.tsx`** for UX (Instant Navigations Stream — ADR-002 §9)
 - Do **not** apply Netlify-only or AWS Amplify SSR caveats to this codebase
 - Hosting limits → [Vercel docs](https://vercel.com/docs), not legacy Amplify limits

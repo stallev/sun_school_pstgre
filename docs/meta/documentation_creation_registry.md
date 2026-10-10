@@ -1,6 +1,6 @@
-﻿# Documentation Creation Registry — {{PROJECT_NAME}}
+﻿# Documentation Creation Registry — Sunday School
 
-**Проект:** {{PROJECT_NAME}} — {{PRODUCT_DESCRIPTION}}  
+**Проект:** Sunday School — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
 **Версия реестра:** 1.1 (template) — DoR-ready: §2.3.2a пути H/N/S, §2.3.6 checklist, commit units в phase tasks  
 **Статус:** Template — адаптировать под домен в промпте P2; полный образец волн W0–W14: `docs/examples/pulse/docs/meta/documentation_creation_registry.md`  
 **Аудитория:** AI-агенты (Cursor, Claude, GPT)
@@ -11,7 +11,7 @@
 - Карта архитектуры: [`architecture_master_index.md`](../prds/architecture_master_index.md)
 - Точка входа monorepo: [`AGENTS.md`](../../AGENTS.md)
 - Референс Pulse reference: [`pulse_project_reference.md`](../reference/pulse_project_reference.md)
-- Прототип (визуальный эталон): [`{{MAIN_PROTOTYPE_HTML}}`](../prototypes/{{MAIN_PROTOTYPE_HTML}})
+- Прототип (визуальный эталон): [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html)
 - Interim PRD (источник миграции): [`default_docs/`](../default_docs/)
 
 > **Правило для агентов:** этот файл — **единственный источник порядка** создания документов.  
@@ -84,7 +84,7 @@
 |--------|----------------|------------|
 | **Purpose** | ✅ | 2–4 предложения: зачем файл, кто читает |
 | **Scope / Out of scope** | ✅ | Что покрывает и что явно не покрывает |
-| **Definitions** | при domain/auth | Термины, enum-ы из `@{{PACKAGE_SCOPE}}/domain` |
+| **Definitions** | при domain/auth | Термины, enum-ы из `@sunschool/domain` |
 | **Requirements / Rules** | ✅ | Нумерованный список MUST/SHOULD/MAY |
 | **Flows / Diagrams** | при spec/contract | Mermaid или ASCII sequence |
 | **Acceptance criteria** | ✅ | Чеклист верификации для агента; у каждого пункта — ожидаемый исход |
@@ -119,7 +119,7 @@
 | Путь | Обязателен, если | Что описать |
 |------|------------------|-------------|
 | **H — Happy** | Документ/задача вводит или меняет **наблюдаемое поведение**: маршрут/страница, user flow, Server Action, API route, DAL-функция, фоновая задача, письмо | Предусловие → действие → исход: UI-состояние, redirect, toast-ключ `@/lib/messages`, запись в БД / side effect |
-| **N — Negative** | **≥ 1 признак:** (1) внешний ввод — форма, query/route params, тело запроса, upload; (2) мутация данных или переход состояния (lifecycle, модерация); (3) I/O, который может упасть — БД, внешний API, email, storage; (4) данные, которых может не быть — not found, пустой список | Применимые случаи: validation · not found · conflict/duplicate · недопустимый переход · сбой I/O / timeout · empty. Для каждого: **код** (`MUTATION_ERROR_CODES` / `AUTH_MUTATION_ERROR_CODES` из `@{{PACKAGE_SCOPE}}/domain`) · **ключ сообщения** · **UI-состояние** (error / empty / forbidden / retry CTA) |
+| **N — Negative** | **≥ 1 признак:** (1) внешний ввод — форма, query/route params, тело запроса, upload; (2) мутация данных или переход состояния (lifecycle, модерация); (3) I/O, который может упасть — БД, внешний API, email, storage; (4) данные, которых может не быть — not found, пустой список | Применимые случаи: validation · not found · conflict/duplicate · недопустимый переход · сбой I/O / timeout · empty. Для каждого: **код** (`MUTATION_ERROR_CODES` / `AUTH_MUTATION_ERROR_CODES` из `@sunschool/domain`) · **ключ сообщения** · **UI-состояние** (error / empty / forbidden / retry CTA) |
 | **S — Security** | **≥ 1 признак:** (1) runtime-код в sensitive zone ([`agent-code-review-subagent.mdc`](../../.cursor/rules/agent-code-review-subagent.mdc) § Sensitive zones); (2) доступ к данным зависит от пользователя/роли — ownership, RBAC, кабинеты; (3) мутация пользовательских данных; PII, секреты, сессия/токены; (4) новый публичный endpoint, upload, redirect по пользовательскому URL, webhook | Применимые случаи: аноним → login / 401 · чужая роль → 403 / forbidden state · чужой ресурс (IDOR) → 404 / 403 · подмена id/полей в запросе → отказ **на сервере** (policy в Server Action / Route Handler, не только UI) · DTO не отдаёт лишних полей. Ссылка на строку `authorization_matrix` |
 
 **Освобождены** (запись `Paths: n/a — <причина>` в задаче, `N/A — <причина>` в секции документа): T0 copy / CSS · docs-only · tooling · рефакторинг без изменения поведения · презентационный компонент без данных и мутаций. «N/A» **без** причины из этого списка = документ не complete.
@@ -228,7 +228,7 @@
 1. **Якоря:** нумерованные разделы `§N.M` (§2.3.1) — на них ссылаются задачи.
 2. **Нет неопределённости в MUST:** ни `TBD`, ни `?`, ни «уточнить позже» в Requirements / путях / Acceptance; всё нерешённое — в Open questions с владельцем.
 3. **Пути H / N / S** — по признакам §2.3.2a; каждое `N/A` — с причиной из списка освобождений.
-4. **Коды и тексты названы:** коды ошибок — из `@{{PACKAGE_SCOPE}}/domain` constants (новый код помечен «добавить в domain»), user-visible тексты — ключи `@/lib/messages`, не готовые строки.
+4. **Коды и тексты названы:** коды ошибок — из `@sunschool/domain` constants (новый код помечен «добавить в domain»), user-visible тексты — ключи `@/lib/messages`, не готовые строки.
 5. **Acceptance проверяема:** у каждого пункта есть способ проверки (smoke / тест / ручной шаг) и ожидаемый исход.
 6. **Версии сверены:** `Проверено по` заполнено для тем §2.7; пины совпадают с `package.json` (после P5).
 7. **Touchpoints:** spec — Files / area; contract — Policy & layer touchpoints; ADR — Affected documents (§6.2).
@@ -239,7 +239,7 @@
 2. **MUST / SHOULD / MAY** — использовать RFC 2119 для однозначности.
 3. **Короткие абзацы**, таблицы для матриц (role × resource, state × transition).
 4. **Явные cross-links** — относительные пути Markdown: `[text](../path/file.md)`.
-5. **Не копировать Pulse reference продуктовые правила** — только архитектурные паттерны; домен {{PROJECT_NAME}} из `default_docs/` и user flows.
+5. **Не копировать Pulse reference продуктовые правила** — только архитектурные паттерны; домен Sunday School из `default_docs/` и user flows.
 6. **Interim → canonical:** при миграции сохранять смысл; в новом файле указать `Migrated from: docs/default_docs/...`.
 7. **Post-MVP:** nullable поля Stripe/Daily.co — не описывать как MVP scope.
 8. **Язык:** русский для продуктового текста; идентификаторы кода, enum, пути — на английском.
@@ -305,9 +305,9 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 Документы регламентируют UX/UI на основе:
 
-- HTML-прототип [`{{MAIN_PROTOTYPE_HTML}}`](../prototypes/{{MAIN_PROTOTYPE_HTML}})
-- Interim design system [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}})
-- UX-прinciples из interim pages doc в `{{INTERIM_DOCS_GLOB}}` § UX-прinciples
+- HTML-прототип [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html)
+- Interim design system [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html)
+- UX-прinciples из interim pages doc в `docs/my_specs/` § UX-прinciples
 - Cursor Rules: `ui-design-system-shadcn`, `ui-mobile-first`, `ui-prototype-fidelity`, `ui-semantics-a11y`, `ui-toast-mutations`, `ui-mutation-pending`, `ui-optimistic-mutations`
 - Guidelines: [`typography_text_guidelines.md`](../guidelines/typography_text_guidelines.md), [`ai_semantics_a11y_guidelines.md`](../guidelines/react/ai_semantics_a11y_guidelines.md)
 
@@ -315,7 +315,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 |----|------|------------|
 | UX-01 | `docs/design/ux_ui_principles.md` | Канон UX-прinciples: Progressive Disclosure, Zero Dead Ends, Thumb Zone, One Primary Action |
 | UX-02 | `docs/design/responsive_navigation_contract.md` | Bottom nav / sidebar, breakpoints md/lg, route groups |
-| UX-03 | `docs/design/visual_identity_contract.md` | {{DESIGN_SYSTEM_NAME}} tokens, typography atoms, shadcn mapping |
+| UX-03 | `docs/design/visual_identity_contract.md` | Slate Cobalt tokens, typography atoms, shadcn mapping |
 | UX-04 | `docs/design/interaction_design_contract.md` | Toast, optimistic UI, pending/busy, confirm dialogs |
 | UX-05 | `docs/design/ui_states_contract.md` | Empty / loading / error / forbidden — first-class для каждого типа экрана |
 | UX-06 | `docs/design/forms_and_validation_ux.md` | Field errors, labels, focus, submit pending |
@@ -330,7 +330,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 ## 5. Полный реестр документов по волнам
 
-> **Template note.** Структура волн и универсальные документы (governance, UX/UI, auth, runtime, data model, ops) — канон шаблона. Строки с доменными файлами (booking, trainer, wishlist, complaint …) — **пример Pulse**: в P2 заменить доменными аналогами {{PROJECT_NAME}} или удалить. Какие волны обязательны — по профилю качества проекта.
+> **Template note.** Структура волн и универсальные документы (governance, UX/UI, auth, runtime, data model, ops) — канон шаблона. Строки с доменными файлами (booking, trainer, wishlist, complaint …) — **пример Pulse**: в P2 заменить доменными аналогами Sunday School или удалить. Какие волны обязательны — по профилю качества проекта.
 
 ### 5.0 Волны по уровню профиля качества
 
@@ -381,14 +381,14 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W1-F1 | `docs/prds/07_governance/adr_001_stack_and_runtime.md` | project-context, quality profile (модули) | architecture_master_index |
 | W1-F2 | `docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md` | шаблон `adr_002_nextjs_vercel_runtime_policy.template.md`, ADR-001 | adr_index |
 | W1-F3 | `docs/prds/architecture_master_index.md` | ADR-001, ADR-002 | AGENTS.md |
-| W1-F4 | `docs/prds/01_product_scope/user_flows/users_mvp/{role}_flow.md` — по одному на роль | interim brief, `{{USER_ROLES}}`, prototype | architecture_master_index |
+| W1-F4 | `docs/prds/01_product_scope/user_flows/users_mvp/{role}_flow.md` — по одному на роль | interim brief, `admin, teacher`, prototype | architecture_master_index |
 | W1-F5 | `docs/design/canonical_routes.md` — единственный инвентарь маршрутов | user flows, prototype | AGENTS.md, architecture_master_index |
 | W1-F6 | `docs/prds/03_data_model/database_schema_v1.md` — **DB-first**, до W3 / W8 | user flows, interim brief | architecture_master_index |
 | W1-01 | `docs/prds/07_governance/adr_index.md` | ADR-001, ADR-002, registry | `07_governance/README.md`, `architecture_master_index.md` |
 | W1-02 | `docs/prds/07_governance/decision_process.md` | adr_index | adr_index, methodology |
-| W1-03 | `docs/prds/01_product_scope/mvp_scope.md` | interim MVP brief (`{{INTERIM_DOCS_GLOB}}`), user flows, ADR-001 | architecture_master_index, methodology checklist |
+| W1-03 | `docs/prds/01_product_scope/mvp_scope.md` | interim MVP brief (`docs/my_specs/`), user flows, ADR-001 | architecture_master_index, methodology checklist |
 | W1-04 | `docs/prds/01_product_scope/post_mvp_deferrals.md` | mvp_scope, database_schema_v1 | mvp_scope |
-| W1-05 | `docs/prds/01_product_scope/pages_functional_spec.md` | mvp_scope, canonical_routes, interim pages doc (`{{INTERIM_DOCS_GLOB}}`) | architecture_master_index, canonical_routes |
+| W1-05 | `docs/prds/01_product_scope/pages_functional_spec.md` | mvp_scope, canonical_routes, interim pages doc (`docs/my_specs/`) | architecture_master_index, canonical_routes |
 | W1-06 | `docs/prds/01_product_scope/email_notifications_matrix.md` | mvp_scope | Post-MVP email spec; schema-ready on MVP *(→ email contract W8)* |
 
 ---
@@ -531,7 +531,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W10-02 | `.../mvp/public_landing.md` | `/` | pages_functional_spec, prototype mapping |
 | W10-03… | `.../mvp/public_{screen}.md` | публичные маршруты из `canonical_routes` | pages_functional_spec, профильный spec |
 | W10-… | `.../mvp/auth_{login,register…}.md` | `/auth/*` | auth_runtime_spec |
-| W10-… | `.../mvp/{role}_{screen}.md` | кабинет каждой роли из `{{USER_ROLES}}` (dashboard, списки, детали, формы) | `{role}_flow`, профильный spec / contract |
+| W10-… | `.../mvp/{role}_{screen}.md` | кабинет каждой роли из `admin, teacher` (dashboard, списки, детали, формы) | `{role}_flow`, профильный spec / contract |
 | W10-… | `.../mvp/admin_{screen}.md` | `/admin/*` (если есть роль admin) | admin_flow, профильный spec |
 
 Один wireframe на маршрут из `canonical_routes.md`; нумерация — сквозная в порядке route_index. Пример полного списка (32 экрана) — Pulse registry W10.

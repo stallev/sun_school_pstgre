@@ -45,7 +45,7 @@
 | `data-server-actions-and-api.mdc` | DAL, Actions vs Route Handlers |
 | `javascript-fundamentals.mdc` | Closures, map/filter/reduce, generators, ESM modules, TS generics |
 | `ios-safari-mutation-transport.mdc` | iOS Safari `Load failed` — Class A/B dual transport |
-| `policy-packages.mdc` | `@{{PACKAGE_SCOPE}}/policy-*` boundaries |
+| `policy-packages.mdc` | `@sunschool/policy-*` boundaries |
 | `auth-security.mdc` | Auth.js, defense in depth |
 | `security-xss-csrf.mdc` | XSS, CSRF, CSP, DOMPurify, Origin checks |
 | `ui-animation-performance.mdc` | GPU animations, layout thrashing, will-change |
@@ -77,7 +77,7 @@
 
 [`docs/examples/pulse/docs/guidelines/`](../examples/pulse/docs/guidelines/) — полный набор guides из fitapp; дополнительные паттерны переносятся по необходимости.
 
-**Principle:** если guideline {{PROJECT_NAME}} молчит — следовать Pulse reference **architecture and feature patterns** с учётом ADR-001/ADR-002. **{{PROJECT_NAME}} Cursor Rules и Guidelines имеют больший приоритет**, чем reference-код Pulse — см. [`pulse_project_reference.md`](../reference/pulse_project_reference.md).
+**Principle:** если guideline Sunday School молчит — следовать Pulse reference **architecture and feature patterns** с учётом ADR-001/ADR-002. **Sunday School Cursor Rules и Guidelines имеют больший приоритет**, чем reference-код Pulse — см. [`pulse_project_reference.md`](../reference/pulse_project_reference.md).
 
 ### Practices from `docs/general/` (integrated)
 

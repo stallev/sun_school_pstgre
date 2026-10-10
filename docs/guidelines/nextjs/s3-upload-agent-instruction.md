@@ -1,4 +1,4 @@
-# S3 file upload via presigned URLs — {{PROJECT_NAME}} (`file_asset`)
+# S3 file upload via presigned URLs — Sunday School (`file_asset`)
 
 > **Канонический guideline (bootstrap + AWS setup):** [`ai_s3_file_upload_guidelines.md`](./ai_s3_file_upload_guidelines.md)  
 > Этот файл — **детальная имплементация** с code samples. Cursor rule: **s3-file-asset-uploads**.
@@ -23,13 +23,13 @@ This file is an **implementation guide** for AI agents and developers. It is **s
 
 - **App:** [`apps/web`](../../../apps/web) — paths below are under `apps/web/src/`.
 - **Auth:** Auth.js v5 — `import { auth } from "@/auth"`; resolve session and **enforce policy** before presign or DB writes.
-- **Database:** `import { getPrisma } from "@{{PACKAGE_SCOPE}}/db"` — never instantiate a second Prisma client for uploads.
-- **Domain:** MIME/size/purpose validation and object-key helpers from `@{{PACKAGE_SCOPE}}/domain`:
+- **Database:** `import { getPrisma } from "@sunschool/db"` — never instantiate a second Prisma client for uploads.
+- **Domain:** MIME/size/purpose validation and object-key helpers from `@sunschool/domain`:
   - `FILE_UPLOAD_PURPOSE`, `validateUploadRequest`, `validateFileAssetReadyForLink`
-  - **`FILE_UPLOAD_OBJECT_KEY_PREFIX`** — project-specific root prefix for every S3 key (currently `{{S3_KEY_PREFIX}}`)
+  - **`FILE_UPLOAD_OBJECT_KEY_PREFIX`** — project-specific root prefix for every S3 key (currently `sunschool/`)
   - `buildFileUploadObjectKey(ownerUserId, purpose, fileId)` — canonical key builder
   - `isFileUploadObjectKey(objectKey)` — prefix guard on confirm/read paths
-- **Policy:** `@{{PACKAGE_SCOPE}}/policy-server` — `assertCanInitiateUpload(ctx, purpose)` on every initiate mutation.
+- **Policy:** `@sunschool/policy-server` — `assertCanInitiateUpload(ctx, purpose)` on every initiate mutation.
 - **Model `FileAsset`:** `blobPathname` (S3 **object key**, server-chosen), optional `blobUrl` (non-expiring public URL when applicable), `mimeType`, `sizeBytes`, `uploadStatus` (`pending` | `ready` | `failed`), `ownerUserId`.
 - **Canonical upload lifecycle:** INSERT **`pending`** with server **`blobPathname`** → presigned **PUT** → client uploads to S3 → server **HeadObject** → UPDATE **`ready`** (or **`failed`**). Product FKs only after **`ready`** (**INV-11** / **FM-012**).
 - **Reading files:** presigned **GET** only when **`uploadStatus === ready`**; never persist presigned URLs in the DB.
@@ -50,7 +50,7 @@ pulse/550e8400-e29b-41d4-a716-446655440000/certificate/a1b2c3d4-e5f6-7890-abcd-e
 
 | Segment | Source |
 |---------|--------|
-| Prefix | `@{{PACKAGE_SCOPE}}/domain` → `FILE_UPLOAD_OBJECT_KEY_PREFIX` (`{{S3_KEY_PREFIX}}`) |
+| Prefix | `@sunschool/domain` → `FILE_UPLOAD_OBJECT_KEY_PREFIX` (`sunschool/`) |
 | `ownerUserId` | Session / policy context |
 | `purpose` | `FILE_UPLOAD_PURPOSE.*` (`profile_photo`, `certificate`, `verification_doc`) |
 | `uuid` | Server-generated (`crypto.randomUUID()`) |
@@ -147,7 +147,7 @@ import {
   FILE_UPLOAD_OBJECT_KEY_PREFIX,
   buildFileUploadObjectKey,
   isFileUploadObjectKey,
-} from "@{{PACKAGE_SCOPE}}/domain";
+} from "@sunschool/domain";
 
 // initiateUpload (server-only DAL)
 const objectKey = buildFileUploadObjectKey(ownerUserId, purpose, randomUUID());
@@ -166,7 +166,7 @@ Source: [`packages/domain/src/constants/file-upload-purpose.ts`](../../../packag
 Pattern matches existing [`initiate-upload.server.ts`](../../../apps/web/src/data/file-asset/initiate-upload.server.ts):
 
 1. `getPolicySessionContext()` + `assertCanInitiateUpload(ctx, purpose)`
-2. `validateUploadRequest(purpose, mimeType, sizeBytes)` from `@{{PACKAGE_SCOPE}}/domain`
+2. `validateUploadRequest(purpose, mimeType, sizeBytes)` from `@sunschool/domain`
 3. `buildFileUploadObjectKey(ownerUserId, purpose, randomUUID())`
 4. INSERT `file_asset` with `uploadStatus: "pending"`, `blobPathname: objectKey`
 5. Return `{ fileAssetId, pathname: objectKey }` as `MutationResult`
@@ -178,8 +178,8 @@ Pattern matches existing [`initiate-upload.server.ts`](../../../apps/web/src/dat
 
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { isFileUploadObjectKey } from "@{{PACKAGE_SCOPE}}/domain";
-import { getPrisma } from "@{{PACKAGE_SCOPE}}/db";
+import { isFileUploadObjectKey } from "@sunschool/domain";
+import { getPrisma } from "@sunschool/db";
 import { s3Client } from "@/lib/s3/s3-client";
 
 const UPLOAD_URL_TTL = 300; // 5 minutes — do not increase without security review
@@ -276,7 +276,7 @@ Orphan: S3 object or `pending` row where client dropped after PUT but before con
 **Upload**
 
 1. Authenticate and enforce **policy** before presign or any `file_asset` mutation.
-2. Validate **MIME** and **size** via `@{{PACKAGE_SCOPE}}/domain` — never trust the client.
+2. Validate **MIME** and **size** via `@sunschool/domain` — never trust the client.
 3. Create **`FileAsset`** with **`pending`** before presigned PUT; use **`buildFileUploadObjectKey()`** — never client-supplied keys.
 4. After PUT, use **`HeadObjectCommand`** before marking **`ready`**.
 5. Validate prefix with **`isFileUploadObjectKey()`** on confirm and read paths.

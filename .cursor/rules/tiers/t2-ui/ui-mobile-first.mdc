@@ -9,8 +9,8 @@ alwaysApply: false
 # Mobile-first (`apps/web`)
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
-**Design system:** [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) §2 Responsive Strategy  
-**User flows:** [`docs/prds/01_product_scope/user_flows/users_mvp/`](docs/prds/01_product_scope/user_flows/users_mvp/) — по одному flow на роль из `{{USER_ROLES}}`
+**Design system:** [`sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html) §2 Responsive Strategy  
+**User flows:** [`docs/prds/01_product_scope/user_flows/users_mvp/`](docs/prds/01_product_scope/user_flows/users_mvp/) — по одному flow на роль из `admin, teacher`
 
 ## Контракт
 

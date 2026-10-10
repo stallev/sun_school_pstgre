@@ -1,6 +1,6 @@
 # React component guidelines — Pulse
 
-**Stack:** Next.js **16.4** App Router, React 19, shadcn/ui, {{DESIGN_SYSTEM_NAME}} tokens  
+**Stack:** Next.js **16.4** App Router, React 19, shadcn/ui, Slate Cobalt tokens  
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
 **Cursor rules:** **react-ui-components**, **react-one-component-per-file**, **ui-design-system-shadcn**
 
@@ -64,9 +64,9 @@ Spec: [`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system
 ## 3. Styling
 
 - **`cn()`** + **cva** for variants
-- Semantic tokens from [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) (until UX-03)
+- Semantic tokens from [`sunday_school_prototype.html`](../../prototypes/sunday_school_prototype.html) (until UX-03)
 - **Mobile-first** — base = mobile; `md:` / `lg:` expand (see **ui-mobile-first**, design system §2)
-- **Prototype fidelity** — fonts, sizes, weights, colors from [`{{MAIN_PROTOTYPE_HTML}}`](../../prototypes/{{MAIN_PROTOTYPE_HTML}}) + design system (**ui-prototype-fidelity**)
+- **Prototype fidelity** — fonts, sizes, weights, colors from [`sunday_school_prototype.html`](../../prototypes/sunday_school_prototype.html) + design system (**ui-prototype-fidelity**)
 
 ---
 
@@ -77,7 +77,7 @@ Primitives are **Base UI**. Cursor rule: **ui-design-system-shadcn**.
 1. `shadcn init -b base` once; `components.json` `"style": "base-vega"`; dependency `@base-ui/react`
 2. Search shadcn MCP / registry before custom primitives
 3. Install to `components/ui/`
-4. Tokenize with {{DESIGN_SYSTEM_NAME}} CSS variables in `globals.css`
+4. Tokenize with Slate Cobalt CSS variables in `globals.css`
 5. Compose with the Base UI `render` prop (`<Button render={<Link href="…" />}>`), not `asChild`
 
 ---

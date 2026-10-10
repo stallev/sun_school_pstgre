@@ -50,7 +50,7 @@
 | `nextjs-vercel-app-router.mdc` | — | Next.js 16.4 (exact patch, no caret), `proxy.ts`, Instant Navigations |
 | `auth-security.mdc` | `auth` | Auth.js v5, JWT, defense in depth |
 | `security-xss-csrf.mdc` | — | XSS, CSRF, CSP, DOMPurify |
-| `policy-packages.mdc` | `auth` | `@{{PACKAGE_SCOPE}}/policy-*` boundaries |
+| `policy-packages.mdc` | `auth` | `@sunschool/policy-*` boundaries |
 | `data-server-actions-and-api.mdc` | — | DAL, Actions vs Route Handlers |
 | `app-router-streaming-loading.mdc` | — | Suspense, `loading.tsx`, cache |
 | `ios-safari-mutation-transport.mdc` | `ios_safari_transport` | iOS Safari dual transport |

@@ -21,7 +21,7 @@ alwaysApply: false
 - Validation and server-action errors, form-level `formError`, alerts.
 - Button labels, page titles, help text, toast strings.
 - Default `metadata` title/description.
-- **Display labels** for `<option>`; **domain/API values** — shared `@/lib/...` constants or `@{{PACKAGE_SCOPE}}/domain`.
+- **Display labels** for `<option>`; **domain/API values** — shared `@/lib/...` constants or `@sunschool/domain`.
 
 ## Пример namespaces (Pulse MVP)
 

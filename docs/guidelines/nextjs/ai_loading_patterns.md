@@ -112,7 +112,7 @@ apps/web/src/app/
 │   └── _components/
 ```
 
-Skeleton should match page chrome ({{DESIGN_SYSTEM_NAME}} spacing, `Container` variant from catalog).
+Skeleton should match page chrome (Slate Cobalt spacing, `Container` variant from catalog).
 
 ### 3.2 Manual Suspense (within page)
 
@@ -425,7 +425,7 @@ async function ParentContent({ userId }) {
 // ✅ Prefer parallel start or independent Suspense if trainerId is known from params/session
 ```
 
-Use `@{{PACKAGE_SCOPE}}/db` / `getPrisma()` from DAL — **never** ad-hoc `@/lib/db`. Queries live in `apps/web/src/data/**`.
+Use `@sunschool/db` / `getPrisma()` from DAL — **never** ad-hoc `@/lib/db`. Queries live in `apps/web/src/data/**`.
 
 ---
 
@@ -533,7 +533,7 @@ Wrap expensive read functions so they **do not run twice** in one RSC tree:
 
 ```tsx
 import { cache } from 'react'
-import { getPrisma } from '@{{PACKAGE_SCOPE}}/db'
+import { getPrisma } from '@sunschool/db'
 
 export const cachedLoadTrainerServices = cache(async (trainerProfileId: string) => {
   const prisma = getPrisma()
@@ -554,7 +554,7 @@ Colocate cached read functions in `src/data/**` with `import 'server-only'`. Tag
 import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
-import { getPrisma } from '@{{PACKAGE_SCOPE}}/db'
+import { getPrisma } from '@sunschool/db'
 
 /** Public approved trainer catalog — cross-request cache. */
 export async function getCachedTrainersCatalog() {
@@ -671,7 +671,7 @@ See [`neon_prisma_migrations_guide.md`](../../implementation/mvp/guides/neon_pri
 
 **2. Suspend timeout** — tune in Neon Console for production traffic patterns.
 
-**3. Transient errors (P1001)** — wrap critical read paths with retry when implementing auth/DB hot paths (pattern: small helper in `apps/web/src/lib/db/` — add when `@{{PACKAGE_SCOPE}}/db` lands in P01+).
+**3. Transient errors (P1001)** — wrap critical read paths with retry when implementing auth/DB hot paths (pattern: small helper in `apps/web/src/lib/db/` — add when `@sunschool/db` lands in P01+).
 
 **4. Streaming shell as UX buffer** — even on cold start, user sees nav and skeletons immediately; DB latency hides behind visible fallbacks, not a blank screen.
 

@@ -26,7 +26,7 @@ When adding or editing **client-triggered mutations** on canonical routes (regis
 
 ## Do
 
-1. **Single DAL** in `apps/web/src/data/**` — both Action and Route Handler call it; return **`MutationResult<T>`** from `@{{PACKAGE_SCOPE}}/domain`.
+1. **Single DAL** in `apps/web/src/data/**` — both Action and Route Handler call it; return **`MutationResult<T>`** from `@sunschool/domain`.
 2. **Class B on mobile-first flows** — implement fallback before shipping the main mobile mutation flows (Pulse: booking, trainer onboarding, admin approve).
 3. **`isIosSafari()`** + **`resilientPostFetch`** — colocate in `apps/web/src/lib/ui/` when first flow lands (see pattern doc).
 4. Preserve **ui-mutation-pending** (`disabled`, `aria-busy`, gerund labels) and **ui-toast-mutations** on **both** transports.
@@ -47,4 +47,4 @@ When adding or editing **client-triggered mutations** on canonical routes (regis
 - [ ] Desktop still uses Server Action primary
 - [ ] `npm run typecheck` (root)
 
-Reference: Pulse (docs/examples/pulse) incidents — adapted Vercel, Pulse routes, `@{{PACKAGE_SCOPE}}/domain`.
+Reference: Pulse (docs/examples/pulse) incidents — adapted Vercel, Pulse routes, `@sunschool/domain`.

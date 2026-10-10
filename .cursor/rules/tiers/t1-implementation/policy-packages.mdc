@@ -1,5 +1,5 @@
 ﻿---
-description: Policy packages — @{{PACKAGE_SCOPE}}/policy-server vs @{{PACKAGE_SCOPE}}/policy-edge
+description: Policy packages — @sunschool/policy-server vs @sunschool/policy-edge
 globs:
   - packages/policy/**
   - apps/web/src/data/**
@@ -10,23 +10,23 @@ globs:
 alwaysApply: false
 ---
 
-# Policy packages (`@{{PACKAGE_SCOPE}}/policy-server`, `@{{PACKAGE_SCOPE}}/policy-edge`)
+# Policy packages (`@sunschool/policy-server`, `@sunschool/policy-edge`)
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
 **Runtime:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — **`proxy.ts`** is canonical interception file
 
-## `@{{PACKAGE_SCOPE}}/policy-server`
+## `@sunschool/policy-server`
 
 - **Use for:** Prisma-backed object-level checks
 - **Import from:** Route Handlers, Server Actions, RSC loaders, `apps/web/src/data/**`
 - **Forbidden:** `proxy.ts`, `middleware.ts`, Edge runtime, `'use client'`
 - **API shape:** Pure functions — no `redirect()` inside policy-server
-- **Types:** `PolicySessionContext` / `UserRole` from `@{{PACKAGE_SCOPE}}/domain`
+- **Types:** `PolicySessionContext` / `UserRole` from `@sunschool/domain`
 
-## `@{{PACKAGE_SCOPE}}/policy-edge`
+## `@sunschool/policy-edge`
 
 - **Use for:** JWT/path classification **without DB**
-- **Must not** depend on `@{{PACKAGE_SCOPE}}/db` or `@{{PACKAGE_SCOPE}}/policy-server`
+- **Must not** depend on `@sunschool/db` or `@sunschool/policy-server`
 - **Allowed in:** **`proxy.ts`** (Next.js 16 canonical) and transitional `middleware.ts`
 
 ## Next.js 16 note

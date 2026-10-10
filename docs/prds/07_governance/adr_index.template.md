@@ -2,7 +2,7 @@
 
 **Статус:** TEMPLATE — после волны W1 (`documentation_creation_registry.md` → W1-01) скопировать в `adr_index.md`; заполнить как минимум ADR-001, ADR-002.
 
-**Проект:** {{PROJECT_NAME}}  
+**Проект:** Sunday School  
 **Owner:** Architecture
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)
@@ -13,7 +13,7 @@
 
 ## Purpose
 
-Единый реестр Architecture Decision Records (ADR) для {{PROJECT_NAME}}. Агенты **MUST** проверять этот индекс перед принятием архитектурных решений.
+Единый реестр Architecture Decision Records (ADR) для Sunday School. Агенты **MUST** проверять этот индекс перед принятием архитектурных решений.
 
 ---
 
@@ -31,7 +31,7 @@
 |----|------|--------|-------|---------|
 | ADR-001 | `adr_001_stack_and_runtime.md` | **PLANNED** — создать в волне W1 | Stack & hosting | Зафиксировать дефолтный стек методологии (см. [`ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md) §1.1): Vercel, Neon PostgreSQL + Prisma, Auth.js Credentials JWT, S3, Sentry; monorepo `apps/*` + `packages/*` |
 | ADR-002 | [`adr_002_nextjs_vercel_runtime_policy.template.md`](./adr_002_nextjs_vercel_runtime_policy.template.md) | **TEMPLATE ready** — скопировать в `adr_002_nextjs_vercel_runtime_policy.md` | Next.js runtime | Pin Next.js 16.4.x; канон `proxy.ts`; `cacheComponents` + `partialPrefetching` (Instant Navigations); `catchError`; async Request APIs |
-| ADR-003+ | `adr_{NNN}_*.md` | **PLANNED** — домен-специфичные, волна W4 | Domain decisions | Auth-модель, timezone/scheduling, MVP scope boundaries, jobs idempotency, file storage lifecycle — конкретные темы зависят от домена {{PROJECT_NAME}} |
+| ADR-003+ | `adr_{NNN}_*.md` | **PLANNED** — домен-специфичные, волна W4 | Domain decisions | Auth-модель, timezone/scheduling, MVP scope boundaries, jobs idempotency, file storage lifecycle — конкретные темы зависят от домена Sunday School |
 
 ### Pulse reference (иллюстрация диапазона, не канон)
 
@@ -55,7 +55,7 @@
 
 Перед изменением ADR-002 или auth ADR агент **MUST** сверить актуальные API:
 
-| Topic | Context7 library | Проверить для {{PROJECT_NAME}} |
+| Topic | Context7 library | Проверить для Sunday School |
 |-------|------------------|-------------------|
 | `proxy.ts` | `/vercel/next.js` | `middleware.ts` deprecated; export `proxy`; Node runtime only в proxy |
 | Instant Navigations / Partial Prefetching / `catchError` | `/vercel/next.js` | `cacheComponents` + `partialPrefetching`; App Shell prefetch; `catchError` из `next/error` |
@@ -97,4 +97,4 @@
 
 - Не создавать `middleware.ts` как канон — только `proxy.ts` (ADR-002, Context7 `/vercel/next.js`).
 - Planned ADR **не** реализовать в коде до статуса ACCEPTED.
-- Доменные ADR Pulse (auth roles, booking, timezone, i18n) — иллюстрация процесса, не источник решений для {{PROJECT_NAME}}.
+- Доменные ADR Pulse (auth roles, booking, timezone, i18n) — иллюстрация процесса, не источник решений для Sunday School.

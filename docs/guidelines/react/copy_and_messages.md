@@ -44,7 +44,7 @@ Nested objects by domain:
 | `locale` | Switcher labels, language names (P17) |
 
 - **Validation** vs **server** errors separated where helpful (`booking.validation`, `booking.server`).
-- **Enum/API values** (`client`, `pending`, `confirmed`) — `@{{PACKAGE_SCOPE}}/domain` or `@/lib/...` constants; **labels** in `messages`.
+- **Enum/API values** (`client`, `pending`, `confirmed`) — `@sunschool/domain` or `@/lib/...` constants; **labels** in `messages`.
 - **Mutation pending labels** — short gerund-style per locale (“Saving…”, “Сохраняем…”). See [`ai_form_handling_pattern.md`](./ai_form_handling_pattern.md) §4.
 - **Plurals** — keyed branches (`one`, `few`, `many`) per [`content_and_microcopy_contract.md`](../../design/content_and_microcopy_contract.md) §C8; no string concatenation with fixed word order.
 

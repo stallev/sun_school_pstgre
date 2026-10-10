@@ -23,17 +23,17 @@ alwaysApply: true
 
 | Значение | Источник | Примеры |
 |----------|----------|---------|
-| Коды ошибок мутаций | `@{{PACKAGE_SCOPE}}/domain` | `AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES` |
-| Роли | `@{{PACKAGE_SCOPE}}/domain` | `USER_ROLE`, `USER_ROLES` |
-| Статусы сущностей домена | `@{{PACKAGE_SCOPE}}/domain` | `<ENTITY>_STATUSES` (Pulse: `BOOKING_STATUSES`, `TRAINER_STATUSES`) |
+| Коды ошибок мутаций | `@sunschool/domain` | `AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES` |
+| Роли | `@sunschool/domain` | `USER_ROLE`, `USER_ROLES` |
+| Статусы сущностей домена | `@sunschool/domain` | `<ENTITY>_STATUSES` (Pulse: `BOOKING_STATUSES`, `TRAINER_STATUSES`) |
 | UI-копирайт | `@/lib/messages` | `MESSAGES.auth.login.invalidCredentials` |
 
-Новый код ошибки → **сначала** добавить в `@{{PACKAGE_SCOPE}}/domain` (`packages/domain/src/constants/mutation-error-codes.ts` или доменный namespace), затем использовать в DAL/actions/UI.
+Новый код ошибки → **сначала** добавить в `@sunschool/domain` (`packages/domain/src/constants/mutation-error-codes.ts` или доменный namespace), затем использовать в DAL/actions/UI.
 
 ## Паттерн
 
 ```ts
-import { AUTH_MUTATION_ERROR_CODES, USER_ROLE } from "@{{PACKAGE_SCOPE}}/domain";
+import { AUTH_MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
 
 return {
   ok: false,
@@ -53,7 +53,7 @@ if (state.code === AUTH_MUTATION_ERROR_CODES.DUPLICATE_EMAIL) { … }
 ## Agent checklist
 
 - [ ] Нет новых `"INVALID_*"`, `"DUPLICATE_*"`, `"VALIDATION"` inline в actions/DAL/UI
-- [ ] `MutationErr.code` типизирован через `MutationErrorCode` из `@{{PACKAGE_SCOPE}}/domain`
+- [ ] `MutationErr.code` типизирован через `MutationErrorCode` из `@sunschool/domain`
 - [ ] Роли/статусы — `USER_ROLE.*`, не `"client"` / `"pending"` на call site
 - [ ] Новый код добавлен в domain constants **до** использования
 
@@ -64,4 +64,4 @@ if (state.code === AUTH_MUTATION_ERROR_CODES.DUPLICATE_EMAIL) { … }
 - [data-server-actions-and-api.mdc](data-server-actions-and-api.mdc)
 - [ui-messages-and-copy.mdc](ui-messages-and-copy.mdc)
 
-Reference: Pulse (docs/examples/pulse) domain literal discipline — Pulse `@{{PACKAGE_SCOPE}}/domain` mutation codes.
+Reference: Pulse (docs/examples/pulse) domain literal discipline — Pulse `@sunschool/domain` mutation codes.
