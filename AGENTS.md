@@ -1,45 +1,114 @@
-# AI-First Monorepo Starter — сопровождение шаблона
+# Sunday School — Monorepo Agent Instructions
 
-Этот репозиторий — **стартовый шаблон**, а не продукт. Здесь нет кода приложения и продуктовой документации; есть методология, правила агента, guidelines, промпты bootstrap и scaffold.
+**Sunday School** — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
+Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
 
-- **Начать новый проект:** [`BOOTSTRAP.md`](BOOTSTRAP.md). В созданном проекте этот файл заменяется на [`AGENTS.template.md`](AGENTS.template.md) (шаг 3 BOOTSTRAP / P0).
-- **Этот файл** — инструкции для агента, который **правит сам шаблон**.
+**Methodology (обязательно):** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md) — цикл КОНТЕКСТ → TIER/DoR → ФАЗА → КОНТРАКТ → ЗАДАЧИ (CU) → [SPEC-GAP] → РЕАЛИЗАЦИЯ → ВЕРИФИКАЦИЯ → REVIEW (CU) → COMMIT. **Маршрутизация моделей:** [`docs/meta/ai_agent_model_routing.md`](docs/meta/ai_agent_model_routing.md) + `model-routing.mdc`.
 
-## Что где лежит
+## Профиль качества (обязательно)
+
+[`docs/meta/project_quality_profile.md`](docs/meta/project_quality_profile.md) — уровень строгости проекта и включённые модули стека. Объём документации, глубина DoR и путей H/N/S, тесты, review-гейт, a11y и perf берутся **оттуда**, а не по максимуму методологии. Матрица уровней — [`project_quality_profile.template.md`](docs/meta/project_quality_profile.template.md); security floor (§5) — на любом уровне.
+
+## Референсный проект (обязательно)
+
+Архитектурные подходы, структура документации и паттерны разработки **наследуются** из референсного проекта **Pulse** (fitapp):
+
+- Код и документация референса: [`docs/examples/pulse/`](docs/examples/pulse/)
+- Сводка: [`docs/reference/pulse_project_reference.md`](docs/reference/pulse_project_reference.md)
+
+**Instant Navigations:** `cacheComponents` + `partialPrefetching`; динамика за Suspense / `'use cache'`.
+
+**Правило:** если в документе Sunday School нет явного отличия — следовать Pulse reference architecture. Отличия стека и домена — ADR-001, ADR-002.
+
+**Приоритет над Pulse:** Cursor Rules и Guidelines **текущего проекта** важнее snapshot Pulse.
+
+## Monorepo structure (целевая)
 
 | Путь | Назначение |
 |------|------------|
-| `.cursor/rules/tiers/` | **SoT всех правил** (T0 / T1 / T2). Манифест: [`.cursor/rules/README.md`](.cursor/rules/README.md) |
-| `.cursor/rules/*.mdc` | Активированные копии — в шаблоне только T0 |
-| `.claude/rules/` | Generated mirror (`npm run rules:sync`) — не править руками |
-| `.cursor/agents/` | Субагенты `architect` / `implementer` / `reviewer` (SoT) |
-| `.claude/agents/` | Generated для Claude Code (`npm run rules:sync`) — не править руками |
-| `docs/meta/` | Методология, registry, routing, шаблон задач фазы (статус «Template») |
-| `docs/guidelines/` | Канон реализации (HOW) |
-| `prompts/` | P0–P6 bootstrap; карта — [`prompts/00-orchestration.md`](prompts/00-orchestration.md) |
-| `scaffold/`, `specs/` | Заготовки, которые копирует P5 / P6 |
-| `docs/examples/pulse/` | Read-only snapshot референса Pulse — **не канон**, не править |
+| [`apps/web`](apps/web/AGENTS.md) | Next.js App Router (тонкий BFF) |
+| `apps/workers` | Фоновые задачи — post-MVP (модуль `email_jobs` выключен) |
+| `packages/domain` | Чистые бизнес-правила |
+| `packages/policy/edge` | JWT-only проверки. **Без DB.** |
+| `packages/policy/server` | Object-level проверки с Prisma |
+| `packages/db` | Prisma schema — канон: [`database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) |
 
-## Правила правки шаблона
+## Cross-package rules
 
-1. **Правило агента** — править копию в `tiers/<tier>/`; если правило из T0 — скопировать её в корень `.cursor/rules/`; затем `npm run rules:sync`. Корневая копия, расходящаяся с tier-копией, роняет `rules:check`.
-2. **Не заполнять placeholders** (`Sunday School` и др.) и не добавлять доменную специфику: шаблон остаётся параметризованным. Примеры из Pulse помечать как примеры.
-3. **Single source:** списки и количества правил — только в манифесте; уровни строгости, модули и security floor — только в `docs/meta/project_quality_profile.template.md`; критерии H/N/S — только в registry §2.3.2a; уровни review — только в `agent-code-review-subagent.mdc`. Остальные документы ссылаются, не копируют.
-4. **Ссылки** — правила (`.mdc`) пишут пути от корня репозитория; markdown-документы — относительные пути. Ссылки на документы, которые создаются волнами (`docs/prds/`, `docs/design/`, `docs/implementation/` …), допустимы.
-5. **Кодировка** — только UTF-8.
-6. Изменение, затрагивающее поведение bootstrap, синхронно отражать в `BOOTSTRAP.md`, `prompts/00-orchestration.md` и затронутых промптах (**product-docs-alignment**).
+- `apps/*` handlers = тонкие адаптеры. Логика в `packages/`
+- **Запрещено** импортировать `packages/policy/server` из `proxy.ts` / `middleware.ts`
+- Domain literals — `@sunschool/domain`; user-visible текст — `@/lib/messages`. Клиентский бандл получает срез словаря своей группы маршрутов и текущей локали, не полный словарь — **ui-messages-bundle-splitting** и [`docs/guidelines/react/copy_and_messages.md`](docs/guidelines/react/copy_and_messages.md) §Срезы словаря
+- Долгие операции — **не в request path** → workers/cron
+- Post-MVP поля — nullable в схеме с первого дня
 
-## Проверки перед коммитом
+## Иерархия источников истины
 
-```bash
-npm run rules:check
-npm run deps:check
-npm run encoding:check
-npm run docs:links
+Полный канонический список — [`.cursor/rules/tiers/t0-always/project-context.template.mdc`](.cursor/rules/tiers/t0-always/project-context.template.mdc) § Source-of-truth order (после bootstrap: `project-context.mdc`). Не дублировать список здесь.
+
+## Документация — точки входа
+
+| Область | Документ |
+|---------|----------|
+| Методология | [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md) |
+| **Маршрутизация моделей** | [`docs/meta/ai_agent_model_routing.md`](docs/meta/ai_agent_model_routing.md) — task tier T0–T3, Definition of Ready, commit units; runtime: `model-routing.mdc` |
+| **Реестр создания docs** | [`docs/meta/documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) — §2.3.2a пути H / N / S, §2.3.6 DoR-ready документы |
+| Шаблон задач фазы | [`docs/meta/phase_tasks.template.md`](docs/meta/phase_tasks.template.md) — commit units, `Tier`, `Paths` |
+| Карта архитектуры | [`docs/prds/architecture_master_index.md`](docs/prds/architecture_master_index.md) |
+| MVP scope | [`docs/prds/01_product_scope/mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) |
+| Database schema | [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) |
+| Guidelines + Rules | [`docs/guidelines/README.md`](docs/guidelines/README.md) |
+| Prompt orchestration | [`prompts/00-orchestration.md`](prompts/00-orchestration.md) |
+| HTML-прототип (visual) | [`docs/prototypes/sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html) |
+| Pulse reference | [`docs/examples/pulse/`](docs/examples/pulse/) |
+
+## Цикл работы агента
+
+```
+КОНТЕКСТ → TIER/DoR → ФАЗА → КОНТРАКТ → ЗАДАЧИ (CU) → [SPEC-GAP] → РЕАЛИЗАЦИЯ → ВЕРИФИКАЦИЯ → REVIEW (CU) → COMMIT
 ```
 
-Коммиты — по **agent-commit-pipeline** (`<branch>: type(scope): subject`); изменения шаблона — docs / config / tooling, уровень review `diff-only`, если нет runtime-кода.
+1. Прочитать этот файл + `project-context.mdc` + профиль качества. Классифицировать задачу (`Tier: T0|T1|T2|T3 — … · CU: P{N}-CU{k}`) и проверить Definition of Ready по [`ai_agent_model_routing.md`](docs/meta/ai_agent_model_routing.md) до правок. DoR пройден — код пишет оркестратор; не пройден — `architect` spec-gap правит документы.
+2. Определить фазу (`docs/implementation/mvp/phases_tasks_descriptions/P{N}_*.md`). Перед первой задачей фазы — **Phase DoR audit** в `P{N}_tasks.md` (один вызов `architect` spec-gap на фазу).
+3. Прочитать разделы contracts / specs / ADR, на которые ссылается задача (`§N.M`), а не документы целиком.
+4. **Перед написанием/правкой кода** — прочитать применимые `.cursor/rules/*.mdc` для затрагиваемой области (индекс: [`.cursor/rules/README.md`](.cursor/rules/README.md) или таблица в `app-conventions` skill). Эти файлы — enforceable и имеют приоритет над `docs/examples/pulse/**` при конфликте (Pulse — донор/референс, не источник истины). Claude Code грузит зеркало `.claude/rules/*.md`, не `.mdc` (§ Cursor vs Claude Code rules).
+   Индекс в `.cursor/skills/app-conventions` может быть не виден Claude Code — при сомнении читать `.cursor/rules/` (или `.claude/rules/`) напрямую, не полагаясь только на skill.
+5. Выполнить задачи `docs/implementation/mvp/tasks/P{N}_tasks.md` по commit units (§ Commit plan), включая пути H / N / S из `Paths` задачи.
+6. `npm run typecheck` + `npm run lint` + CU DoD (обязательная ВЕРИФИКАЦИЯ). Runtime dual-view (`next-dev-loop`) и lab PSI (`npm run psi:lab`) — **только если пользователь явно попросил**; не auto.
+7. На границе CU — review и auto-commit (§ Commit & review).
 
-## Claude Code
+## Cursor vs Claude Code rules
 
-[`CLAUDE.md`](CLAUDE.md) импортирует этот файл и загружает зеркало `.claude/rules/`. Playbook синхронизации: [`docs/claude-code-cursor-rules-sync.md`](docs/claude-code-cursor-rules-sync.md).
+**SoT MUST:** `.cursor/rules/*.mdc` only (not `tiers/` until copied to the rules root). After any `.mdc` edit in this task: `npm run rules:sync`. Before commit: `npm run rules:check`. Mirror: `.claude/rules/*.md` — generated, in git, never hand-edit. Playbook: [`docs/claude-code-cursor-rules-sync.md`](docs/claude-code-cursor-rules-sync.md).
+
+Cursor `alwaysApply: false` without `globs` (e.g. `agent-code-review-subagent.mdc`) is requestable in Cursor; Claude Code treats a missing `paths` as always-on — do not “fix” the Claude file by hand.
+
+## Commit & review
+
+| Задача | Rule |
+|--------|------|
+| Commit на границе commit unit или по запросу (verify → review → message → hook) | **`.cursor/rules/agent-commit-pipeline.mdc`** (always) |
+| Review: протокол, уровни, sensitive zones; standalone («review diff», проверка перед PR) | **`.cursor/rules/agent-code-review-subagent.mdc`** (requestable) |
+
+Кратко: prefix = `git branch --show-current`; формат `<branch-name>: type(scope): subject`.
+
+Review: проблема → ожидаемая форма → diff; уровень (`skip` / `diff-only` / `reviewer`) задаёт содержимое diff, не type коммита. Runtime-код в CU — субагент `reviewer` (pinned, readonly), один на commit, re-review только delta. Коммит на границе CU — автоматически после зелёной ВЕРИФИКАЦИИ и review без blockers; задача вне CU не коммитится. В ответе всегда trace-блок `Review: …`. Таблицы и prompt — [`docs/guidelines/ai_code_review_protocol.md`](docs/guidelines/ai_code_review_protocol.md).
+
+## Agent skills (`.cursor/skills/`)
+
+| Skill | When |
+|-------|------|
+| **`app-conventions`** | New features, routes, components — project layout + RSC patterns (single project skill) |
+| **`next-dev-loop`** (user skill) | **Only when the user explicitly asks** for runtime / live / browser verify — dual-view (`/_next/mcp` + `agent-browser`), 4 layers (compile → errors → UX → React). Not auto after edits or in commit pipeline. |
+| **Lab PSI** (`psi-lab-testing.mdc`) | **Only when the user explicitly asks** to score a **deployed** origin (`npm run psi:lab`, `PAGE_SPEED_API_KEY`). Not localhost; not MCP as primary; not commit pipeline. |
+
+**Do not install** external Next.js **architecture** skills (`npx skills install …`). Patterns from [nextjs-app-architecture-skill](https://github.com/aurorascharff/nextjs-app-architecture-skill) are in-repo only: [`docs/reference/adr_010_nextjs_app_architecture_skill.md`](docs/reference/adr_010_nextjs_app_architecture_skill.md) · spec: [`docs/project-react-skill-requirements.md`](docs/project-react-skill-requirements.md). Workflow verification skill `next-dev-loop` is allowed as a Cursor user skill (**opt-in by user request**); it is not an architecture-skill install and does not replace `app-conventions`.
+
+Web detail: [`apps/web/AGENTS.md`](apps/web/AGENTS.md) § Skills.
+
+## Stack (full Pulse)
+
+Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Google + Telegram) · Sentry · shadcn/ui · Tailwind v4 · Sonner · i18n ru/en (Resend и AWS S3 — post-MVP / выключены профилем)
+
+## Repository status
+
+**Текущая фаза:** Bootstrap — P0. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) для статуса документации.

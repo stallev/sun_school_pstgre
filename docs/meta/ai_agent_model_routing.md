@@ -5,7 +5,7 @@
 **Версия:** 2.0  
 **Дата:** 2026-10-10  
 **Зависит от:** [`ai_first_project_methodology.md`](./ai_first_project_methodology.md) §2.2–§2.5, [`.cursor/rules/model-routing.mdc`](../../.cursor/rules/model-routing.mdc), [`documentation_creation_registry.md`](./documentation_creation_registry.md) §2.3.2a / §2.3.6  
-**Связанные документы:** [`AGENTS.md`](../../AGENTS.md) (после bootstrap; до него — [`AGENTS.template.md`](../../AGENTS.template.md)), [`phase_tasks.template.md`](./phase_tasks.template.md), [`docs/guidelines/ai_code_review_protocol.md`](../guidelines/ai_code_review_protocol.md)
+**Связанные документы:** [`AGENTS.md`](../../AGENTS.md), [`phase_tasks.template.md`](./phase_tasks.template.md), [`docs/guidelines/ai_code_review_protocol.md`](../guidelines/ai_code_review_protocol.md)
 
 ---
 
