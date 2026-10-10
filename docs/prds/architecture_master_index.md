@@ -72,7 +72,7 @@
 | UX/UI | [UX-02 `responsive_navigation_contract`](../design/responsive_navigation_contract.md), [UX-03 `visual_identity_contract`](../design/visual_identity_contract.md), [UX-08 `prototype_route_mapping`](../design/prototype_route_mapping.md) | W2 | Canonical |
 | UX interaction | [UX-05 `ui_states_contract`](../design/ui_states_contract.md), [UX-06 `forms_and_validation_ux`](../design/forms_and_validation_ux.md) | W7 | Canonical |
 | Contracts | [W8-01 `monorepo_boundaries_contract`](../implementation/mvp/contracts/monorepo_boundaries_contract.md); контракты мутаций W8-03…W8-09 ([W8-03](../implementation/mvp/contracts/access_requests_and_roles_contract.md), [W8-04](../implementation/mvp/contracts/school_year_and_groups_contract.md), [W8-05](../implementation/mvp/contracts/homework_check_contract.md), [W8-06](../implementation/mvp/contracts/bricks_ledger_contract.md), [W8-07](../implementation/mvp/contracts/change_log_contract.md), [W8-08](../implementation/mvp/contracts/deletion_requests_contract.md), [W8-09](../implementation/mvp/contracts/bible_seed_contract.md)) | W8 | W8-01, W8-03, W8-04, W8-05, W8-06, W8-07, W8-08, W8-09 Canonical (W8-02 не требуется) |
-| Specs | `global_shell_spec`, `homework_check_flow_spec` (+ вход / регистрация) | W9 | Planned |
+| Specs | [W9-01 `global_shell_spec`](../implementation/mvp/specs/global_shell_spec.md); `homework_check_flow_spec` (W9-04), `access_and_registration_spec` (W9-02); W9-03, W9-05…W9-08 — не требуются на lean | W9 | W9-01 Canonical; W9-02, W9-04 Planned |
 | Design System Lab | `design_system_lab_spec` | W15 | Planned |
 | Phases + tasks | `P01…P07` description + tasks | W11 | Planned |
 | Operations | `local_dev_setup`, `vercel_deploy_guide`, `neon_prisma_migrations_guide` | W12 | Planned |
@@ -129,3 +129,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.19 — W8-07 `change_log_contract` → Canonical; `audit_log.request_id` |
 | 2026-10-11 | v1.20 — W8-08 `deletion_requests_contract` → Canonical |
 | 2026-10-11 | v1.21 — W8-09 `bible_seed_contract` → Canonical; W8-02 «не требуется на lean» |
+| 2026-10-11 | v1.22 — W9-01 `global_shell_spec` → Canonical; UX-02 §6: disclosure вместо role=menu |
