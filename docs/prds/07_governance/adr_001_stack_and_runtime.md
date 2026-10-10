@@ -46,7 +46,7 @@ packages/policy/server   — проверки с обращением к БД
 packages/db              — Prisma schema, миграции, seed-скрипты (единственное DDL)
 ```
 
-Scope пакетов — `@sunschool/*`. `apps/workers` не создаётся (post-MVP). Правила импорта — `monorepo_boundaries_contract.md` (W8-01).
+Scope пакетов — `@sunschool/*`. `apps/workers` не создаётся (post-MVP). Правила импорта — [`monorepo_boundaries_contract.md`](../../implementation/mvp/contracts/monorepo_boundaries_contract.md) (W8-01).
 
 ### 3.3 Модули по профилю качества
 
