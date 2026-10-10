@@ -70,7 +70,7 @@
 | Слой | Документы | Волны | Статус |
 |------|-----------|-------|--------|
 | UX/UI | [UX-02 `responsive_navigation_contract`](../design/responsive_navigation_contract.md), [UX-03 `visual_identity_contract`](../design/visual_identity_contract.md), [UX-08 `prototype_route_mapping`](../design/prototype_route_mapping.md) | W2 | Canonical |
-| UX interaction | [UX-05 `ui_states_contract`](../design/ui_states_contract.md), UX-06 `forms_and_validation_ux` | W7 | UX-05 Canonical; UX-06 Planned |
+| UX interaction | [UX-05 `ui_states_contract`](../design/ui_states_contract.md), [UX-06 `forms_and_validation_ux`](../design/forms_and_validation_ux.md) | W7 | Canonical |
 | Contracts | `monorepo_boundaries` и контракты мутаций | W8 | Planned |
 | Specs | `global_shell_spec`, `homework_check_flow_spec` (+ вход / регистрация) | W9 | Planned |
 | Design System Lab | `design_system_lab_spec` | W15 | Planned |
@@ -120,3 +120,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.10 — W5-08 `auth_runtime_spec` → Canonical; прочие W5 помечены «не требуется» |
 | 2026-10-11 | v1.11 — W6-03 `seed_data_spec` → Canonical; W6-01 / W6-02 «не требуется» |
 | 2026-10-11 | v1.12 — W7-02 UX-05 `ui_states_contract` → Canonical; W7-01 / W7-04 / W7-05 «не требуется на lean» |
+| 2026-10-11 | v1.13 — W7-03 UX-06 `forms_and_validation_ux` → Canonical |
