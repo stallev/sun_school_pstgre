@@ -29,6 +29,9 @@
 | D-3 | В `globals.css` токены задаются как CSS-переменные и мапятся через `@theme inline` (схема shadcn); прототипная запись `@theme static` — временная | Контракт P1; shadcn-компоненты ожидают семантические имена |
 | D-4 | Тёмной темы нет — **вне MVP**; `.dark` не создаётся | Решение владельца (P1) |
 | D-5 | Базовый кегль 17 px (`html { font-size: 106.25% }`), размеры — в `rem` | Читаемость на мобильных; прототип |
+| D-6 | Основная кнопка — заливка `cobalt-ink` (6.70:1), hover — новый токен `cobalt-deep` | Решение владельца 2026-10-10; AA для текста кнопки |
+| D-7 | Границы полей и чипов выбора — `muted` (4.76:1) | Решение владельца: нетекстовый контраст ≥ 3:1 |
+| D-8 | Баннер ошибки: иконка `danger`, жирный заголовок, текст `ink` на `danger-soft` | Решение владельца; контраст текста 14.61:1 |
 
 ## 4. Токены цвета
 
@@ -43,8 +46,9 @@
 | `muted` | `#64748B` | `muted-foreground` | Подписи, метаданные |
 | `line` | `#E2E8F0` | `border` | Разделители, границы карточек |
 | `line-strong` | `#CBD5E1` | `input` | Границы полей и контурных кнопок |
-| `cobalt` | `#3370FF` | `primary`, `ring` | Главные действия, фокус |
-| `cobalt-ink` | `#1D4ED8` | `primary` (hover), `accent-foreground` | Hover, текст на `cobalt-soft` |
+| `cobalt` | `#3370FF` | `ring` | Фокус, декоративные акценты, графики; **не текст** |
+| `cobalt-ink` | `#1D4ED8` | `primary`, `accent-foreground` | Заливка основной кнопки, ссылки, текст на `cobalt-soft` |
+| `cobalt-deep` | `#1E40AF` | `primary` (hover) | Hover основной кнопки |
 | `cobalt-soft` | `#EBF1FF` | `accent` | Активный пункт, выделение |
 | `ruby`, `ruby-soft` | `#0F172A`, `#F1F5F9` | — (совпадает с `ink` / фоном) | В прототипе не обязательны; не переносить |
 | `amber`, `amber-ink`, `amber-soft` | `#F59E0B`, `#B45309`, `#FEF3C7` | `warning` (custom) | Внимание, правка |
@@ -79,20 +83,26 @@
 | `penalty` / `penalty-soft` | 8.41 | ✔ |
 | `surface` / `penalty` | 10.36 | ✔ |
 | `surface` / `cobalt-ink` | 6.70 | ✔ |
-| `surface` / `cobalt` (кнопка `B_PRIMARY`) | **4.28** | ✘ обычный текст; ✔ крупный |
-| `cobalt` / `surface` (ссылка, текст) | **4.28** | ✘ |
-| `cobalt` / `paper` | **4.09** | ✘ |
-| `danger` / `danger-soft` | **3.95** | ✘ |
-| `surface` / `bronze` | **3.56** | ✘ обычный текст |
-| `line-strong` / `surface` (граница поля) | **1.48** | ✘ нетекстовый контраст (нужно ≥ 3) |
-| `edit` / `surface` (маркер) | **2.80** | ✘ нетекстовый контраст |
+| `surface` / `cobalt-ink` (кнопка `B_PRIMARY`, D-6) | 6.70 | ✔ |
+| `surface` / `cobalt-deep` (hover) | 8.72 | ✔ |
+| `muted` / `surface` (граница поля, D-7) | 4.76 | ✔ нетекстовый ≥ 3 |
+| `ink` / `danger-soft` (текст баннера, D-8) | 14.61 | ✔ |
+| `surface` / `cobalt` | **4.28** | ✘ обычный текст — **не использовать** как фон с текстом |
+| `cobalt` / `surface` (ссылка, текст) | **4.28** | ✘ — использовать `cobalt-ink` |
+| `cobalt` / `paper` | **4.09** | ✘ — использовать `cobalt-ink` |
+| `danger` / `danger-soft` | **3.95** | ✘ текст; ✔ только иконка и крупный жирный заголовок |
+| `surface` / `bronze` | **3.56** | ✘ обычный текст — подпись уровня текстом `ink` |
+| `line-strong` / `surface` | **1.48** | ✘ как граница поля — **не использовать**; допустим для контурной кнопки с текстом и разделителей |
+| `edit` / `surface` (маркер) | **2.80** | ✘ нетекстовый — только вместе с текстовой меткой |
 
-**Правила до решения владельца (Q-01):**
+**Правила (решения владельца 2026-10-10):**
 1. `cobalt` как цвет **текста** запрещён; ссылки и акценты — `cobalt-ink`.
-2. Заливка `bg-cobalt` с белым текстом допустима только при тексте ≥ 18.66 px bold или с заменой фона на `cobalt-ink` (6.70). Прототип использует 15 px / medium — **не соответствует AA**; в приложении P6 применяет `bg-cobalt-ink` для `B_PRIMARY` либо владелец принимает отклонение.
-3. Сообщения об ошибке — текст `danger` на `surface`, не на `danger-soft`.
-4. Граница интерактивных полей — не `line-strong`; требуется ≥ 3:1 (например, `ink-2`, 7.58), либо поле выделяется фоном и фокус-кольцом.
+2. Основная кнопка — `bg-cobalt-ink text-surface hover:bg-cobalt-deep` (D-6); `bg-cobalt` с белым текстом запрещён.
+3. Баннер ошибки: иконка `danger`, заголовок жирный, текст сообщения `ink` на `danger-soft` (D-8); сообщение `danger` на `surface` допустимо.
+4. Граница поля, текстовой области и чипа выбора — `muted` (D-7); `line-strong` — только контурные кнопки с текстом и разделители.
 5. Маркер `edit` — только вместе с текстовой меткой; сам по себе информацию не несёт.
+
+Прототип приведён к этим правилам (кнопка, граница полей, токен `cobalt-deep`).
 
 ## 6. Типографика
 
@@ -123,12 +133,12 @@
 
 | Компонент | Рецепт (прототип) | shadcn |
 |-----------|-------------------|--------|
-| Кнопка основная | `BTN` + `bg-cobalt text-surface hover:bg-cobalt-ink` (см. §5 п. 2) | `Button` `default` |
+| Кнопка основная | `BTN` + `bg-cobalt-ink text-surface hover:bg-cobalt-deep` (D-6) | `Button` `default` |
 | Кнопка контурная | `border border-line-strong bg-surface text-ink hover:bg-paper` | `Button` `outline` |
 | Кнопка текстовая | `text-ink hover:bg-line/60` | `Button` `ghost` |
 | Кнопка опасная | `border border-danger/60 text-danger hover:bg-danger-soft`; заливка `bg-danger text-surface` | `Button` `destructive` |
 | Кнопка штрафа (post-MVP) | `bg-penalty text-surface` | custom |
-| Поле | `h-10 w-full rounded-lg border border-line-strong bg-surface px-3 focus:border-cobalt` + `label` над полем (`mb-1.5 text-sm font-medium`) | `Input`, `Label` |
+| Поле | `h-10 w-full rounded-lg border border-muted bg-surface px-3 focus:border-cobalt-ink` + `label` над полем (`mb-1.5 text-sm font-medium`) | `Input`, `Label` |
 | Карточка | `rounded-xl border border-line bg-surface p-4 sm:p-5` | `Card` |
 | Меню (drawer) | панель слева `w-[min(20rem,86vw)]`, `bg-surface`, затемнение `bg-ink/40` | `Sheet` |
 | Диалог | bottom-sheet `bg-surface`, затемнение `bg-ink/45`, `role="dialog" aria-modal` | `Dialog` / `Drawer` |
@@ -174,16 +184,14 @@
 - [ ] Каждый токен §4 присутствует в token dump прототипа — исход: нет «лишних» и пропущенных значений.
 - [ ] В `globals.css` (P6) все токены §4 заданы переменными и доступны как utility (`bg-primary`, `text-muted-foreground`) — исход: `/design-system` показывает палитру.
 - [ ] Для каждой используемой пары текст/фон есть значение в §5 — исход: нет пары без числа.
-- [ ] Пары со статусом ✘ либо запрещены правилом §5, либо отклонение принято владельцем (Q-01) — исход: запись в Open questions.
+- [ ] Пары со статусом ✘ запрещены правилом §5 — исход: в прототипе и коде нет таких пар (grep `bg-cobalt text-surface`, `border-line-strong` у полей).
 - [ ] В коде нет hex и `style=""` — исход: grep и lint пусты.
 
 ## 13. Open questions
 
 | ID | Вопрос | Владелец | Блокирует |
 |----|--------|----------|-----------|
-| Q-01 | `B_PRIMARY` белый на `cobalt` — 4.28:1 (< 4.5). Заменить заливку на `cobalt-ink` (6.70) или принять отклонение | владелец | P6, `ui-design-system-shadcn` |
-| Q-02 | Граница полей `line-strong` — 1.48:1 (< 3). Усилить до `ink-2` или полагаться на фон и фокус | владелец | P6 `Input` |
-| Q-03 | `danger` на `danger-soft` — 3.95:1: допустим ли такой баннер только с иконкой и жирным текстом | владелец | UX-05 (W7) |
+| — | Вопросы Q-01…Q-03 (кнопка, границы полей, баннер) закрыты решениями владельца 2026-10-10: D-6, D-7, D-8 | — | — |
 
 ## 14. Related documents
 
@@ -208,3 +216,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W2-03); контраст рассчитан; шрифты Alegreya |
+| 2026-10-10 | v1.1 — решения владельца: D-6 (primary = cobalt-ink, hover cobalt-deep), D-7 (границы полей muted), D-8 (баннер ошибки); прототип приведён |

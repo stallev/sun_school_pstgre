@@ -17,9 +17,12 @@
     - тёмной темы нет — dark вне MVP;
     - семантические алиасы вводятся в W2 / P6 (таблица соответствия ниже).
 
+  РЕШЕНИЯ ВЛАДЕЛЬЦА 2026-10-10 (UX-03): основная кнопка — заливка cobalt-ink (6.70:1), hover — новый токен cobalt-deep #1E40AF;
+    границы полей и чипов выбора — muted (4.76:1, было line-strong 1.48:1); баннер danger — иконка + жирный заголовок, текст ink.
+
   ЦВЕТА (--color-*)
     paper #F8FAFC · surface #FFFFFF · ink #0F172A · ink-2 #475569 · muted #64748B · line #E2E8F0 · line-strong #CBD5E1
-    cobalt #3370FF · cobalt-ink #1D4ED8 · cobalt-soft #EBF1FF
+    cobalt #3370FF · cobalt-ink #1D4ED8 · cobalt-soft #EBF1FF · cobalt-deep #1E40AF
     ruby #0F172A · ruby-soft #F1F5F9
     amber #F59E0B · amber-ink #B45309 · amber-soft #FEF3C7 · edit #F97316
     ok #15803D · ok-soft #DCFCE7 · warn #B45309 · warn-soft #FEF9C3 · danger #DC2626 · danger-soft #FEE2E2
@@ -73,6 +76,7 @@
     --color-cobalt: #3370FF;
     --color-cobalt-ink: #1D4ED8;
     --color-cobalt-soft: #EBF1FF;
+    --color-cobalt-deep: #1E40AF;
     --color-ruby: #0F172A;
     --color-ruby-soft: #F1F5F9;
     --color-amber: #F59E0B;
@@ -376,8 +380,8 @@ const NAV = {
     ['calendar',n_('calendar'),'i-cal'],['childData',n_('child_data'),'i-shield']],
   admin:   [['school',n_('school'),'i-school'],
     { id:'a-ana', label:n_('analytics'), icon:'i-chart', items:[['analytics',n_('analytics_groups'),'i-chart',d_('analytics_groups')],['rating',n_('rating'),'i-rank',d_('rating_a')],['audit',n_('audit'),'i-log',d_('audit')]] },
-    { id:'a-people', label:n_('people'), icon:'i-users', items:[['approvals',n_('approvals'),'i-key',d_('approvals')],['users',n_('users'),'i-person',d_('users')],['people',n_('people_cards'),'i-users',d_('people_cards')],['deletions',n_('deletions'),'i-shield',d_('deletions')]] },
-    { id:'a-study', label:n_('study'), icon:'i-grid', items:[['groups',n_('groups'),'i-grid',d_('groups')],['year',n_('year'),'i-cal',d_('year')],['achievements',n_('achievements'),'i-award',d_('achievements')],['verses',n_('verses'),'i-scroll',d_('verses')],['settings',n_('settings'),'i-globe',d_('settings')]] }],
+    { id:'a-people', label:n_('people'), icon:'i-users', items:[['approvals',n_('approvals'),'i-key',d_('approvals')],['users',n_('users'),'i-person',d_('users')],['people',n_('people_cards'),'i-users',d_('people_cards')],['deletions',n_('deletions'),'i-shield',d_('deletions')],['bricks',n_('bricks'),'i-brick',d_('bricks')]] },
+    { id:'a-study', label:n_('study'), icon:'i-grid', items:[['groups',n_('groups'),'i-grid',d_('groups')],['year',n_('year'),'i-cal',d_('year')],['calendar',n_('calendar'),'i-cal',d_('calendar')],['achievements',n_('achievements'),'i-award',d_('achievements')],['verses',n_('verses'),'i-scroll',d_('verses')],['settings',n_('settings'),'i-globe',d_('settings')]] }],
   subscriber: [['pending',n_('request'),'i-lock']]
 };
 const FIRST_VIEW = { teacher:'today', parent:'child', admin:'school', subscriber:'pending' };
@@ -669,7 +673,7 @@ const SCHOOL_ATT = {
    ========================================================= */
 const ic = (id, cls='size-5') => `<svg class="${cls} shrink-0 fill-none stroke-current" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#${id}"/></svg>`;
 const BTN = 'inline-flex h-10 whitespace-nowrap items-center justify-center gap-2 rounded-lg px-3.5 text-[0.9375rem] font-medium select-none transition-[background-color,border-color,color,transform] duration-100 active:scale-[0.97] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt disabled:opacity-45 disabled:active:scale-100';
-const B_PRIMARY = BTN + ' bg-cobalt text-surface hover:bg-cobalt-ink';
+const B_PRIMARY = BTN + ' bg-cobalt-ink text-surface hover:bg-cobalt-deep';
 const B_OUTLINE = BTN + ' border border-line-strong bg-surface text-ink hover:bg-paper';
 const B_GHOST   = BTN + ' text-ink hover:bg-line/60';
 const B_DANGER  = BTN + ' border border-danger/60 text-danger hover:bg-danger-soft';
@@ -678,7 +682,7 @@ const B_PENALTY = BTN + ' bg-penalty text-surface hover:opacity-90';
 const B_PENALTY_OUTLINE = BTN + ' border border-penalty text-penalty hover:bg-penalty-soft';
 const CARD = 'rounded-xl border border-line bg-surface';
 const H2 = 'font-display text-[1.25rem] font-medium leading-snug';
-const FIELD = 'h-10 w-full rounded-lg border border-line-strong bg-surface px-3 text-base focus:border-cobalt focus:outline-none';
+const FIELD = 'h-10 w-full rounded-lg border border-muted bg-surface px-3 text-base focus:border-cobalt focus:outline-none';
 const LABEL = 'mb-1.5 block text-sm font-medium';
 const SEG_ON = 'border-ink bg-ink text-surface';
 const SEG_OFF = 'border-line-strong bg-surface text-ink hover:border-ink-2';
@@ -1121,7 +1125,7 @@ function vLessonForm(){
         <select id="lf-teacher" data-lf="teacher" class="${FIELD}"><option value="" ${f.teacher?'':'selected'} disabled>Выберите учителя</option>${groupTeachers('Средняя').map(t=>`<option value="${t}" ${f.teacher===t?'selected':''}>${t}${t===ME[S.role].name?' (вы)':''}</option>`).join('')}</select>
         <p class="mt-1.5 text-sm text-muted">Только учителя группы на ${YEAR}. По умолчанию — вы${groupTeachers('Средняя').includes(ME[S.role].name)?'':'; вы не назначены на эту группу, выберите учителя'}. Проверять ДЗ может любой учитель группы.</p>${err('teacher')}</div>
       <div><label for="lf-c" class="${LABEL}">План урока <span class="font-normal text-muted">— необязательно</span></label>
-        <textarea id="lf-c" data-lf="content" rows="5" class="w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Вопросы для обсуждения, задание в тетрадь">${f.content}</textarea>
+        <textarea id="lf-c" data-lf="content" rows="5" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Вопросы для обсуждения, задание в тетрадь">${f.content}</textarea>
         <p class="mt-1.5 text-sm text-muted">В приложении здесь будет редактор с заголовками и списками.</p></div>
       <label class="flex items-start gap-3"><input type="checkbox" data-lf="cal" ${f.cal?'checked':''} class="mt-1 size-5 accent-cobalt"><span>Добавить урок в календарь группы</span></label>
     </section>
@@ -1202,7 +1206,7 @@ function vLesson(){
   </div>`}`;
 }
 
-const SEL = 'h-8 rounded-md border border-line-strong bg-surface px-1 text-sm tabular-nums focus:border-cobalt focus:outline-none';
+const SEL = 'h-8 rounded-md border border-muted bg-surface px-1 text-sm tabular-nums focus:border-cobalt focus:outline-none';
 function selOpts(max, val){ return `<option value="" ${val==null?'selected':''}>—</option>` + Array.from({length:max+1},(_,i)=>`<option ${val===i?'selected':''}>${i}</option>`).join(''); }
 function vLessonTable(){
   const L = lessonById(S.lessonId), recs = S.hc[L.id] || {}, rv = recVerses(L.id), corr = isCorrection(L.id);
@@ -1917,8 +1921,8 @@ function vChildData(){
     </section>
     <section class="${CARD} space-y-4 p-4 sm:p-5">
       <h2 class="${H2}">${name}: здоровье</h2>
-      <div><label for="cd-al" class="${LABEL}">Аллергии</label><textarea id="cd-al" rows="2" class="w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none">${id===1?'Орехи — сильная реакция':''}</textarea></div>
-      <div><label for="cd-lim" class="${LABEL}">Ограничения и что важно знать учителю</label><textarea id="cd-lim" rows="2" class="w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none"></textarea></div>
+      <div><label for="cd-al" class="${LABEL}">Аллергии</label><textarea id="cd-al" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none">${id===1?'Орехи — сильная реакция':''}</textarea></div>
+      <div><label for="cd-lim" class="${LABEL}">Ограничения и что важно знать учителю</label><textarea id="cd-lim" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none"></textarea></div>
       <p class="text-sm text-muted">Видят только учителя группы и администратор.</p>
     </section>
     <section class="${CARD} p-4 sm:p-5 lg:col-span-2">
@@ -2279,7 +2283,7 @@ function vRegister(){
         <ul class="mt-3 space-y-1.5 text-sm text-ink-2">${['what','why','who','del'].map(li).join('')}</ul>
         <details class="group mt-3"><summary class="inline-flex h-9 cursor-pointer list-none items-center gap-1 text-sm font-medium text-cobalt-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} ${t('auth.c_full', { v:CONSENT_V })}</summary>
           <p class="mt-1 max-w-[70ch] text-sm text-ink-2">${t('auth.c_full_t')}</p></details>
-        <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-lg border border-line-strong p-3 has-[:checked]:border-ink">
+        <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-lg border border-muted p-3 has-[:checked]:border-ink">
           <input id="rg-ok" type="checkbox" name="ok" data-input="rg-ok" class="mt-0.5 size-5 shrink-0 accent-cobalt">
           <span>${t('auth.c_check')}</span></label>
         <p class="mt-2 text-xs text-muted">${t('auth.c_not_kids')}</p>
@@ -2393,7 +2397,7 @@ function vChildConsent(){
     </ul>
     <details class="group mt-3"><summary class="inline-flex h-9 cursor-pointer list-none items-center gap-1 text-sm font-medium text-cobalt-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} Полный текст согласия · версия 1.0</summary>
       <p class="mt-1 text-sm text-ink-2">В приложении здесь будет полный текст, утверждённый церковью.</p></details>
-    <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-lg border border-line-strong p-3 has-[:checked]:border-ink">
+    <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-lg border border-muted p-3 has-[:checked]:border-ink">
       <input type="checkbox" name="ok" class="mt-0.5 size-5 shrink-0 accent-cobalt"><span>Я опекун ребёнка и даю согласие на обработку и хранение его персональных данных на условиях выше</span></label>
     <p data-err class="hidden mt-2 text-sm text-danger"></p>
     <div class="mt-4 flex flex-col-reverse gap-2 sm:flex-row">
@@ -2418,7 +2422,7 @@ function vSettings(){
     <form data-form="settings" class="${CARD} p-4 sm:p-5" novalidate>
       <h2 class="${H2}">${t('admin.st_lang')}</h2>
       <p class="mt-1 text-sm text-ink-2">${t('admin.st_lang_t')}</p>
-      <div class="mt-4 grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="${t('admin.st_lang')}">${Object.entries(LANG_NAME).map(([k,l])=>`<label class="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-line-strong text-[0.9375rem] has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="lang" value="${k}" ${APP.lang===k?'checked':''} class="sr-only">${l}</label>`).join('')}</div>
+      <div class="mt-4 grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="${t('admin.st_lang')}">${Object.entries(LANG_NAME).map(([k,l])=>`<label class="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-muted text-[0.9375rem] has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="lang" value="${k}" ${APP.lang===k?'checked':''} class="sr-only">${l}</label>`).join('')}</div>
       <button class="${B_PRIMARY} mt-4">${t('admin.st_save')}</button>
     </form>
     <section class="${CARD} p-4 sm:p-5">
@@ -2605,7 +2609,7 @@ function delRunDialog(r){
 function reasonDialog(kind, id, title, sub, label){
   openDialog(dlgHead(title, sub) + `
   <form data-form="${kind}" data-id="${id}" class="mt-5 space-y-4" novalidate>
-    <div><label for="rs-r" class="${LABEL}">Причина <span class="font-normal text-muted">— её увидит пользователь</span></label><textarea id="rs-r" name="reason" rows="3" class="w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none"></textarea></div>
+    <div><label for="rs-r" class="${LABEL}">Причина <span class="font-normal text-muted">— её увидит пользователь</span></label><textarea id="rs-r" name="reason" rows="3" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none"></textarea></div>
     ${dlgFoot(label, B_DANGER_FILL)}
   </form>`);
 }
@@ -2726,7 +2730,7 @@ function parentLinkBlock(u){
     <p class="font-medium">Семья и дети <span class="font-normal text-muted">— для роли «родитель»</span></p>
     ${mine.length ? `<p class="mt-1 text-sm text-ink-2">Сейчас: ${mine.map(f=>`${famLink(f)} (${adultOf(f,u.id).type}; ${kidsTxt(f)})`).join(', ')}</p>` : ''}
     ${m ? `<p class="mt-1 text-sm text-cobalt">Совпало ${m.by}: похоже, это ${m.a.fio} — ${m.a.type} в семье ${m.f.name} (${kidsTxt(m.f)}).</p>` : !u.email ? '<p class="mt-1 text-sm text-muted">Telegram не передаёт email — сопоставили только по ФИО.</p>' : ''}
-    <div class="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-${modes.length}" role="radiogroup" aria-label="Как связать с детьми">${modes.map(([v,l])=>`<label class="flex min-h-10 cursor-pointer items-center justify-center rounded-lg border border-line-strong bg-surface px-2 py-1.5 text-center text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="fmode" value="${v}" ${v===def?'checked':''} data-input="fmode" class="sr-only">${l}</label>`).join('')}</div>
+    <div class="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-${modes.length}" role="radiogroup" aria-label="Как связать с детьми">${modes.map(([v,l])=>`<label class="flex min-h-10 cursor-pointer items-center justify-center rounded-lg border border-muted bg-surface px-2 py-1.5 text-center text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="fmode" value="${v}" ${v===def?'checked':''} data-input="fmode" class="sr-only">${l}</label>`).join('')}</div>
     <div data-mode="link" class="${def==='link'?'':'hidden'} mt-3">
       <label class="${LABEL}" for="fl-${u.id}">Взрослый без учётной записи</label>
       <select id="fl-${u.id}" name="adult" class="${FIELD}">${free.map(({f,a})=>`<option value="${f.id}|${a.id}" ${m && m.a.id===a.id?'selected':''}>${a.fio} — ${a.type} · ${f.name} (${kidsTxt(f)})</option>`).join('')}</select>
@@ -2839,7 +2843,7 @@ function adultDialog(f, a){
   openDialog(dlgHead(a ? a.fio : 'Взрослый в семье '+f.name, 'Учётная запись не обязательна: контакты нужны учителю уже сейчас.') + `
   <form data-form="adult" data-id="${f.id}" data-aid="${a?a.id:''}" class="mt-5 space-y-4" novalidate>
     <div><label for="ad-n" class="${LABEL}">ФИО</label><input id="ad-n" name="fio" value="${a?a.fio:''}" class="${FIELD}"></div>
-    <div><p class="${LABEL}">Кем приходится детям семьи</p><div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип связи">${FTYPES.map(([v,l])=>`<label class="flex h-10 cursor-pointer items-center justify-center rounded-lg border border-line-strong text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="type" value="${v}" ${(a?a.type:'мать')===v?'checked':''} class="sr-only">${l}</label>`).join('')}</div></div>
+    <div><p class="${LABEL}">Кем приходится детям семьи</p><div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип связи">${FTYPES.map(([v,l])=>`<label class="flex h-10 cursor-pointer items-center justify-center rounded-lg border border-muted text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="type" value="${v}" ${(a?a.type:'мать')===v?'checked':''} class="sr-only">${l}</label>`).join('')}</div></div>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="ad-p" class="${LABEL}">Телефон</label><input id="ad-p" name="phone" value="${a?a.phone:''}" inputmode="tel" class="${FIELD}"></div>
       <div><label for="ad-e" class="${LABEL}">Email</label><input id="ad-e" name="email" value="${a?a.email:''}" inputmode="email" class="${FIELD}"></div></div>
     ${dlgFoot(a ? 'Сохранить' : 'Добавить')}
@@ -2945,7 +2949,7 @@ function penaltyDialog(pid, lid){
       <select id="pn-t" name="code" data-input="pen-type" class="${FIELD}">${PEN.filter(x=>x.active).map(x=>`<option value="${x.code}" data-pts="${-x.pts}">${x.name} · ${sgnInt(x.pts)}</option>`).join('')}</select></div>
     <div><label for="pn-q" class="${LABEL}">Сколько кирпичиков снять</label><input id="pn-q" name="qty" inputmode="numeric" value="${-first.pts}" class="${FIELD} tabular-nums sm:w-32">
       <p id="pn-hint" class="mt-1.5 text-sm text-muted">По каталогу: ${-first.pts}. Меньше — можно, больше — нельзя.</p></div>
-    <div><label for="pn-r" class="${LABEL}">Что произошло</label><textarea id="pn-r" name="reason" rows="3" class="w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="О поступке, а не о ребёнке: «перебивал, на замечания не реагировал»"></textarea>
+    <div><label for="pn-r" class="${LABEL}">Что произошло</label><textarea id="pn-r" name="reason" rows="3" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="О поступке, а не о ребёнке: «перебивал, на замечания не реагировал»"></textarea>
       <p class="mt-1.5 text-sm text-muted">Видят родители этого ребёнка, учителя группы и администратор.</p></div>
     ${dlgFoot('Выдать штраф', B_PENALTY)}
   </form>`);
@@ -3010,7 +3014,7 @@ function awardDialog(pid){
       <select id="aw-a" name="ach" data-input="award-re" class="${FIELD}">${opts}</select></div>
     <div><p class="${LABEL}">За какие уроки <span class="font-normal text-muted">— система отметила последние подходящие</span></p>
       <div id="aw-ev">${evRows(p0, first.code, 0)}</div></div>
-    <div><label for="aw-r" class="${LABEL}">Причина</label><textarea id="aw-r" name="reason" rows="2" class="w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Обязательно: попадёт в журнал"></textarea></div>
+    <div><label for="aw-r" class="${LABEL}">Причина</label><textarea id="aw-r" name="reason" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Обязательно: попадёт в журнал"></textarea></div>
     ${dlgFoot('Выдать')}
   </form>`);
   setTimeout(evCount, 0);
@@ -3071,10 +3075,10 @@ function eventDialog(ev, date){
   <form data-form="event" data-id="${ev?ev.id:''}" class="mt-5 space-y-4" novalidate>
     <div><label for="ev-d" class="${LABEL}">Дата</label><input id="ev-d" name="d" type="date" value="${isoOf(e.d)}" class="${FIELD}"></div>
     <div><p class="${LABEL}">Тип</p>
-      <div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип события">${Object.entries(TYPE_META).map(([k,[i,l,c]])=>`<label class="flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-line-strong text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface">
+      <div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип события">${Object.entries(TYPE_META).map(([k,[i,l,c]])=>`<label class="flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-muted text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface">
         <input type="radio" name="type" value="${k}" ${e.type===k?'checked':''} class="sr-only">${ic(i,'size-4')}${l}</label>`).join('')}</div></div>
     <div><label for="ev-t" class="${LABEL}">Название</label><input id="ev-t" name="t" value="${e.t}" placeholder="Например: Осенний выезд в лесопарк" class="${FIELD}"></div>
-    <div><label for="ev-ds" class="${LABEL}">Описание <span class="font-normal text-muted">— необязательно</span></label><textarea id="ev-ds" name="desc" rows="2" class="w-full rounded-lg border border-line-strong bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none">${e.desc||''}</textarea></div>
+    <div><label for="ev-ds" class="${LABEL}">Описание <span class="font-normal text-muted">— необязательно</span></label><textarea id="ev-ds" name="desc" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none">${e.desc||''}</textarea></div>
     ${e.lesson ? `<button type="button" data-act="lesson-open" data-lid="${e.lesson}" class="inline-flex h-9 items-center gap-1 text-sm text-cobalt hover:text-cobalt-ink">${ic('i-book','size-4')} Открыть урок ${lessonById(e.lesson).n}</button>` : ''}
     <p data-err class="hidden text-sm text-danger"></p>
     <div class="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:items-center">

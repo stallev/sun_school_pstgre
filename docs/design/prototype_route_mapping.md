@@ -42,7 +42,7 @@
 | `lessonTable` | `vLessonTable` | `/lessons/[lessonId]/table` | teacher | `homework_check_flow_spec` |
 | `check` | `vCheck` | `/check`, `/lessons/[lessonId]/check` | teacher | `homework_check_flow_spec` |
 | `group` | `vGroup` | `/group` | teacher | `group_and_pupils_spec` |
-| `bricks` | `vBricks` | `/bricks` | teacher | `bricks_and_rating_spec` |
+| `bricks` | `vBricks` | `/bricks` | teacher, admin | `bricks_and_rating_spec` |
 | `rating` | `vRating` | `/rating` | teacher, admin | `bricks_and_rating_spec` |
 | `calendar` | `vCalendar` | `/calendar` | teacher, admin | `lesson_form_and_golden_verses_spec` |
 | `verses` | `vVerses` | `/verses` | teacher, admin | `lesson_form_and_golden_verses_spec` |
@@ -59,6 +59,8 @@
 | `deletions` | `vDeletions` | `/deletions` | admin | `admin_users_and_deletions_spec` |
 | `audit` | `vAudit` | `/audit` | admin | `admin_users_and_deletions_spec` |
 | `settings` | `vSettings` | `/settings` | admin | `global_shell_spec` |
+
+Маршруты без экрана прототипа: `/privacy` (публичный текст согласия, статичная страница; spec — `access_and_registration_spec`).
 
 ## 5. Таблица соответствия (post-MVP, референс)
 
