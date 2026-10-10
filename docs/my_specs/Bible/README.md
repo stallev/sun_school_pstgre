@@ -57,6 +57,8 @@
 
 ## 4. Расхождения с спецификацией и открытые вопросы
 
+> Модель таблиц принята в [`database_schema_v1.md`](../../prds/03_data_model/database_schema_v1.md) §5.4: общий `bible_book`, `bible_translation`, `bible_verse`; `bible_chapter` не вводится (Q-01).
+
 Эти пункты нужно закрыть до написания финальных скриптов в проекте (W3, `packages/db`).
 
 | # | Расхождение | Что делать |

@@ -42,7 +42,7 @@
 
 | Документ | Путь | Волна | Статус |
 |----------|------|-------|--------|
-| Database schema v1 | [`03_data_model/database_schema_v1.md`](./03_data_model/database_schema_v1.md) | W1-F6 | Planned |
+| Database schema v1 | [`03_data_model/database_schema_v1.md`](./03_data_model/database_schema_v1.md) | W1-F6 | Canonical |
 | Lifecycle models | `02_domain_model/lifecycle_models.md` | W3-02 | Planned |
 | Domain invariants | `02_domain_model/domain_invariants.md` | W3-04 | Planned |
 | Seed data spec | `03_data_model/seed_data_spec.md` | W6-03 | Planned |
@@ -105,3 +105,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W1-F3); ADR-001 / ADR-002 созданы |
 | 2026-10-10 | v1.1 — W1-F4, W1-F5, W1-03, W1-04 → Canonical |
+| 2026-10-10 | v1.2 — W1-F6 `database_schema_v1.md` → Canonical |
