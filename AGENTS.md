@@ -55,6 +55,7 @@ Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
 | Шаблон задач фазы | [`docs/meta/phase_tasks.template.md`](docs/meta/phase_tasks.template.md) — commit units, `Tier`, `Paths` |
 | Карта архитектуры | [`docs/prds/architecture_master_index.md`](docs/prds/architecture_master_index.md) |
 | MVP scope | [`docs/prds/01_product_scope/mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) |
+| Маршруты (единственный инвентарь) | [`docs/design/canonical_routes.md`](docs/design/canonical_routes.md) |
 | Database schema | [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) |
 | Guidelines + Rules | [`docs/guidelines/README.md`](docs/guidelines/README.md) |
 | Prompt orchestration | [`prompts/00-orchestration.md`](prompts/00-orchestration.md) |

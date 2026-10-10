@@ -30,10 +30,10 @@
 
 | Документ | Путь | Волна | Статус |
 |----------|------|-------|--------|
-| MVP scope | [`01_product_scope/mvp_scope.md`](./01_product_scope/mvp_scope.md) | W1-03 | Planned |
-| Post-MVP deferrals | [`01_product_scope/post_mvp_deferrals.md`](./01_product_scope/post_mvp_deferrals.md) | W1-04 | Planned |
-| User flows (admin, teacher) | [`01_product_scope/user_flows/users_mvp/`](./01_product_scope/user_flows/users_mvp/) | W1-F4 | Planned |
-| Canonical routes | [`../design/canonical_routes.md`](../design/canonical_routes.md) | W1-F5 | Planned |
+| MVP scope | [`01_product_scope/mvp_scope.md`](./01_product_scope/mvp_scope.md) | W1-03 | Canonical |
+| Post-MVP deferrals | [`01_product_scope/post_mvp_deferrals.md`](./01_product_scope/post_mvp_deferrals.md) | W1-04 | Canonical |
+| User flows (admin, teacher) | [`01_product_scope/user_flows/users_mvp/`](./01_product_scope/user_flows/users_mvp/) | W1-F4 | Canonical |
+| Canonical routes | [`../design/canonical_routes.md`](../design/canonical_routes.md) | W1-F5 | Canonical |
 | Спецификация (interim) | [`../my_specs/sunday_school_data_analytics_spec.md`](../my_specs/sunday_school_data_analytics_spec.md) | — | Interim |
 | MVP и post-MVP (interim) | [`../my_specs/mvp_scope.md`](../my_specs/mvp_scope.md) | — | Interim |
 | Достижения и штрафы (interim, post-MVP) | [`../my_specs/achievements_spec.md`](../my_specs/achievements_spec.md) | — | Interim |
@@ -104,3 +104,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W1-F3); ADR-001 / ADR-002 созданы |
+| 2026-10-10 | v1.1 — W1-F4, W1-F5, W1-03, W1-04 → Canonical |
