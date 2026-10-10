@@ -33,14 +33,14 @@
 
 ## 4. Инварианты
 
-Колонка **Enforcement** — где правило обеспечивается: `DB` (ограничение), `domain` (чистая функция), `DAL` (транзакция), `policy`. **Drift guard** — как обнаружить нарушение. Контракты W8 (`planned`) раскрывают детали и сценарии отказа.
+Колонка **Enforcement** — где правило обеспечивается: `DB` (ограничение), `domain` (чистая функция), `DAL` (транзакция), `policy`. **Drift guard** — как обнаружить нарушение. [Контракты W8](../../implementation/mvp/contracts/monorepo_boundaries_contract.md) раскрывают детали и сценарии отказа.
 
 ### 4.1 Учебный год и время
 
 | ID | Rule | Enforcement | Drift guard |
 |----|------|-------------|-------------|
 | **INV-01** | В школе не более одного `ACTIVE` учебного года (БП-6) | `DB` partial unique (R-1) | тест миграции; проверка в review изменений `academic_year` |
-| **INV-02** | Урок создаётся только в `ACTIVE` году, дата урока — в границах года | `domain` + `DAL` (R-3) | unit-тест `createLesson`; контракт `school_year_and_groups` *(planned)* |
+| **INV-02** | Урок создаётся только в `ACTIVE` году, дата урока — в границах года | `domain` + `DAL` (R-3) | unit-тест `createLesson`; контракт [`school_year_and_groups`](../../implementation/mvp/contracts/school_year_and_groups_contract.md), [`homework_check`](../../implementation/mvp/contracts/homework_check_contract.md) |
 | **INV-03** | Даты уроков и событий — `date` без времени; моменты (`checked_at`, журнал) — `timestamptz` UTC; «день» для правил (`late`, «Сегодня», просрочка) определяется в **поясе школы** `app_setting.school_timezone` ([ADR-004](../07_governance/adr_004_timezone_scheduling_model.md)) | схема, `domain` (`computeLate`) | тест границ полуночи и перехода на летнее время |
 
 ### 4.2 Доступ и роли
@@ -48,7 +48,7 @@
 | ID | Rule | Enforcement | Drift guard |
 |----|------|-------------|-------------|
 | **INV-04** | Права определяются парой «роль + принадлежность ресурса»; одной роли недостаточно: `TEACHER` работает только со своими группами | `policy` на сервере | тест policy на чужую группу → 404/403; [`authorization_matrix.md`](../04_authorization_privacy/authorization_matrix.md) (AZ-D3, AZ-D4, AZ-P6) |
-| **INV-05** | Нельзя снять роль `ADMIN` у последнего admin и у самого себя | `DAL` (R-8, блокировка строк) | тест «снять у последнего»; контракт `access_requests_and_roles` *(planned)* |
+| **INV-05** | Нельзя снять роль `ADMIN` у последнего admin и у самого себя | `DAL` (R-8, блокировка строк) | тест «снять у последнего»; контракт [`access_requests_and_roles`](../../implementation/mvp/contracts/access_requests_and_roles_contract.md) |
 | **INV-06** | Пользователь без `ACTIVE` учётной записи не имеет ни одного права, кроме регистрации, ожидания, профиля, запроса на удаление и выхода | `policy`, `proxy.ts` (оптимистично) | тест перенаправлений UX-02 §7 |
 
 ### 4.3 Ученики, группы, зачисление
@@ -90,7 +90,7 @@
 
 | ID | Rule | Enforcement | Drift guard |
 |----|------|-------------|-------------|
-| **INV-22** | Данные ребёнка по запросу опекуна удаляются **полностью**; данные взрослого — удаляются или обезличиваются (УД-7); выполнение — только по запросу, с планом и подтверждением | процедура `executeDeletion` (`DAL`) | тест плана удаления; контракт `deletion_requests` *(planned)* |
+| **INV-22** | Данные ребёнка по запросу опекуна удаляются **полностью**; данные взрослого — удаляются или обезличиваются (УД-7); выполнение — только по запросу, с планом и подтверждением | процедура `executeDeletion` (`DAL`) | тест плана удаления; контракт [`deletion_requests`](../../implementation/mvp/contracts/deletion_requests_contract.md) |
 | **INV-23** | Журналы хранят **ссылки** на пользователя и ученика, имена подставляются при показе; поля «старое/новое значение» не содержат ПД | `domain` (сериализация записи журнала) | тест: очистка пользователя не требует правки журнала |
 
 ### 4.8 Окружения и фоновые операции
@@ -139,7 +139,7 @@
 | [`lifecycle_models.md`](./lifecycle_models.md) | Допустимые переходы |
 | [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) | Ограничения и правила R-x |
 | [`mvp_scope.md`](../01_product_scope/mvp_scope.md) | Правила С-1…С-7 |
-| *(planned)* контракты W8 | Сценарии отказов и race |
+| [Контракты W8](../../implementation/mvp/contracts/monorepo_boundaries_contract.md) | Сценарии отказов и race |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W3-04
 

@@ -294,8 +294,8 @@ stateDiagram-v2
 |----------|--------------|
 | [`domain_invariants.md`](./domain_invariants.md) | Неизменяемые правила |
 | [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) | Enum-ы и ограничения |
-| *(planned)* `authorization_matrix.md` | Права актора (W5-02) |
-| *(planned)* контракты W8 | Реализация переходов |
+| [`authorization_matrix.md`](../04_authorization_privacy/authorization_matrix.md) | Права актора (W5-02) |
+| Контракты W8: [`access_requests_and_roles`](../../implementation/mvp/contracts/access_requests_and_roles_contract.md), [`school_year_and_groups`](../../implementation/mvp/contracts/school_year_and_groups_contract.md), [`homework_check`](../../implementation/mvp/contracts/homework_check_contract.md), [`bricks_ledger`](../../implementation/mvp/contracts/bricks_ledger_contract.md), [`deletion_requests`](../../implementation/mvp/contracts/deletion_requests_contract.md), [`bible_seed`](../../implementation/mvp/contracts/bible_seed_contract.md) | Реализация переходов |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W3-02
 

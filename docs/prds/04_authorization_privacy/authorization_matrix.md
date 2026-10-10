@@ -201,7 +201,7 @@
 | [`adr_003_auth_oidc_jwt_rbac.md`](../07_governance/adr_003_auth_oidc_jwt_rbac.md) | Роли, статусы, JWT |
 | [`canonical_routes.md`](../../design/canonical_routes.md) | Маршруты |
 | [`domain_invariants.md`](../02_domain_model/domain_invariants.md) | INV-04…INV-06 |
-| *(planned)* `policy_enforcement_contract` (W5-03), контракты W8 | Реализация проверок — на lean не требуется отдельным файлом |
+| Контракты W8: [`access_requests_and_roles`](../../implementation/mvp/contracts/access_requests_and_roles_contract.md), [`school_year_and_groups`](../../implementation/mvp/contracts/school_year_and_groups_contract.md), [`homework_check`](../../implementation/mvp/contracts/homework_check_contract.md), [`bricks_ledger`](../../implementation/mvp/contracts/bricks_ledger_contract.md), [`change_log`](../../implementation/mvp/contracts/change_log_contract.md), [`deletion_requests`](../../implementation/mvp/contracts/deletion_requests_contract.md) | Реализация проверок и отказов (AZ-NN) |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W5-02
 
