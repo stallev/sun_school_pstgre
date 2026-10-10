@@ -219,7 +219,7 @@
 | [`mvp_scope.md`](../01_product_scope/mvp_scope.md) | Состав MVP, правила С-1…С-7 |
 | [`admin_flow.md`](../01_product_scope/user_flows/users_mvp/admin_flow.md), [`teacher_flow.md`](../01_product_scope/user_flows/users_mvp/teacher_flow.md) | Потоки, ссылающиеся на enum-ы |
 | [`Bible/README.md`](../../my_specs/Bible/README.md) | Данные и скрипты Библии (§ 4 — расхождения) |
-| *(planned)* `lifecycle_models.md`, `domain_invariants.md` | W3 |
+| [`lifecycle_models.md`](../02_domain_model/lifecycle_models.md), [`domain_invariants.md`](../02_domain_model/domain_invariants.md) | Жизненные циклы и инварианты (W3) |
 | *(planned)* `seed_data_spec.md` | Справочники и dev-фикстуры (W6-03) |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W1-F6

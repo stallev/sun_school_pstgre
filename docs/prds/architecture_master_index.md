@@ -43,8 +43,8 @@
 | Документ | Путь | Волна | Статус |
 |----------|------|-------|--------|
 | Database schema v1 | [`03_data_model/database_schema_v1.md`](./03_data_model/database_schema_v1.md) | W1-F6 | Canonical |
-| Lifecycle models | `02_domain_model/lifecycle_models.md` | W3-02 | Planned |
-| Domain invariants | `02_domain_model/domain_invariants.md` | W3-04 | Planned |
+| Lifecycle models | [`02_domain_model/lifecycle_models.md`](./02_domain_model/lifecycle_models.md) | W3-02 | Canonical |
+| Domain invariants | [`02_domain_model/domain_invariants.md`](./02_domain_model/domain_invariants.md) | W3-04 | Canonical |
 | Seed data spec | `03_data_model/seed_data_spec.md` | W6-03 | Planned |
 | Данные и скрипты Библии (interim) | [`../my_specs/Bible/README.md`](../my_specs/Bible/README.md) | — | Interim |
 
@@ -108,3 +108,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-10 | v1.2 — W1-F6 `database_schema_v1.md` → Canonical |
 | 2026-10-10 | v1.3 — ADR-009 создан раньше волны (решения владельца по Библии) |
 | 2026-10-10 | v1.4 — W2: UX-02, UX-03, UX-08 → Canonical |
+| 2026-10-10 | v1.5 — W3: lifecycle_models, domain_invariants → Canonical |
