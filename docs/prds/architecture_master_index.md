@@ -45,7 +45,7 @@
 | Database schema v1 | [`03_data_model/database_schema_v1.md`](./03_data_model/database_schema_v1.md) | W1-F6 | Canonical |
 | Lifecycle models | [`02_domain_model/lifecycle_models.md`](./02_domain_model/lifecycle_models.md) | W3-02 | Canonical |
 | Domain invariants | [`02_domain_model/domain_invariants.md`](./02_domain_model/domain_invariants.md) | W3-04 | Canonical |
-| Seed data spec | `03_data_model/seed_data_spec.md` | W6-03 | Planned |
+| Seed data spec | [`03_data_model/seed_data_spec.md`](./03_data_model/seed_data_spec.md) | W6-03 | Canonical |
 | Данные и скрипты Библии (interim) | [`../my_specs/Bible/README.md`](../my_specs/Bible/README.md) | — | Interim |
 
 ## 6. Governance и runtime
@@ -118,3 +118,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.8 — ADR-008 → Canonical; ADR-006 / ADR-007 помечены «не требуется» |
 | 2026-10-11 | v1.9 — W5-02 `authorization_matrix` → Canonical |
 | 2026-10-11 | v1.10 — W5-08 `auth_runtime_spec` → Canonical; прочие W5 помечены «не требуется» |
+| 2026-10-11 | v1.11 — W6-03 `seed_data_spec` → Canonical; W6-01 / W6-02 «не требуется» |

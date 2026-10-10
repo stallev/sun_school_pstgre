@@ -70,7 +70,7 @@
 | [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) §6 | Таблицы post-MVP |
 | [`post_mvp_deferrals.md`](../01_product_scope/post_mvp_deferrals.md) §4 | «Что уже заложено» |
 | [`domain_invariants.md`](../02_domain_model/domain_invariants.md) | PKG-03 |
-| `seed_data_spec.md` (W6-03) | Справочники prod |
+| [`seed_data_spec.md`](../03_data_model/seed_data_spec.md) (W6-03) | Справочники prod |
 
 ## 9. Acceptance criteria
 

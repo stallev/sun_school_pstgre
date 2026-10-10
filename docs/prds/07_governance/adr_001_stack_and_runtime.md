@@ -113,7 +113,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 
 - [ ] Все компоненты §3.1 имеют пин или правило пина; в `package.json` нет `^` у `next` — исход: `npm run deps:check` проходит.
 - [ ] §3.3 совпадает с `project_quality_profile.md` — исход: расхождений нет.
-- [ ] Правила §3.4 повторены в `seed_data_spec` (W6-03) и `local_dev_setup` (W12-05) ссылками, не копиями.
+- [ ] Правила §3.4 повторены в [`seed_data_spec`](../03_data_model/seed_data_spec.md) (W6-03) и `local_dev_setup` (W12-05) ссылками, не копиями.
 - [ ] ADR-002 не противоречит §3.1 — исход: версия и runtime совпадают.
 
 ## 8. Open questions

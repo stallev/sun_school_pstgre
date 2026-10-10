@@ -116,7 +116,7 @@
 | [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) | Модель таблиц Библии |
 | [`Bible/README.md`](../../my_specs/Bible/README.md) | Данные и скрипты |
 | *(planned)* `bible_seed_contract.md` | Контракт загрузки (W8-09) |
-| *(planned)* `seed_data_spec.md` | Справочники и сверка (W6-03) |
+| [`seed_data_spec.md`](../03_data_model/seed_data_spec.md) | Справочники и сверка (W6-03) |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W4-07
 
