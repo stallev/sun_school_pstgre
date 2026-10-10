@@ -23,7 +23,7 @@
 
 1. **MUST** одна страница = одна строка; новый маршрут сначала добавляется сюда.
 2. Путь — kebab-case, на английском; динамические сегменты — `[lessonId]`, `[pupilId]`, `[groupId]`, `[userId]`.
-3. Доступ определяет `authorization_matrix` (W5-02), здесь указаны только роли-кандидаты. Проверка — на сервере.
+3. Доступ определяет [`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md) (W5-02), здесь указаны только роли-кандидаты. Проверка — на сервере.
 4. Пользователь без активной учётной записи видит только `/login`, `/register`, `/pending` и публичную `/privacy` (РГ-1).
 5. Перенаправление после входа — по роли: `teacher` → `/today`, `admin` → `/school`, статус «Заявка…» → `/pending`, «Регистрация» → `/register`.
 6. Layout-группы: `(auth)` — без оболочки; `(app)` — оболочка (header, drawer < `lg`, topnav ≥ `lg`).
@@ -43,7 +43,7 @@
 
 | Маршрут | Экран | Роли | Назначение |
 |---------|-------|------|------------|
-| `/profile` | `profile` | все активные | Профиль, запрос на удаление своей учётной записи |
+| `/profile` | `profile` | статусы «Заявка на рассмотрении», «Отклонена», «Активна» | Профиль, запрос на удаление своей учётной записи ([`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md) §6) |
 | `/calendar` | `calendar` | teacher, admin | События группы (admin — в меню «Учёба») |
 | `/rating` | `rating` | teacher, admin | Рейтинг группы / школы |
 | `/verses` | `verses` | teacher, admin | Золотые стихи (справочник) |
