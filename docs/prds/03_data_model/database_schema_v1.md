@@ -104,7 +104,7 @@
 |---------|---------|-------------|
 | `lesson` | `grade_id`, `academic_year_id`, `title`, `lesson_date date`, `ordinal int`, `lead_teacher_id`, `kind LESSON_KIND`, `body text · null`, `has_test bool`, `status LESSON_STATUS` | урок только в `ACTIVE` году; дата в границах года; `lead_teacher_id` назначен на группу (УЧ-1); обзорный — без стихов и теста |
 | `lesson_golden_verse` | `lesson_id`, `golden_verse_id`, `position int` | `UNIQUE (lesson_id, position)`; ≤ `max_verses_per_lesson` |
-| `homework_check` | `lesson_id`, `pupil_id`, `present bool` (по умолчанию `false`), `homework_checked bool`, `test_score int · null` (0–10), `notebook_score int · null` (0–10), `singing bool`, `comment text · null`, `late bool` (вычисляется), `checked_by`, `checked_at` | `UNIQUE (lesson_id, pupil_id)`; «не оценивалось» = `NULL`, не 0 (БП-4) |
+| `homework_check` | `lesson_id`, `pupil_id`, `present bool` (по умолчанию `false`), `homework_checked bool`, `test_score int · null` (0–10), `notebook_score int · null` (0–10), `singing bool`, `comment text · null`, `late bool` (вычисляется), `points_total int · null`, `scoring_snapshot jsonb · null` (веса и переключатели на момент выставления, БП-5 вариант А), `checked_by`, `checked_at` | `UNIQUE (lesson_id, pupil_id)`; «не оценивалось» = `NULL`, не 0 (БП-4) |
 | `homework_verse_score` | `check_id`, `lesson_verse_id` (стих, заданный на предыдущем уроке), `score int` (0–2), `source SCORE_SOURCE`, `scored_at`, `scored_by` | `UNIQUE (check_id, lesson_verse_id)` |
 | `brick_ledger` | `pupil_id`, `academic_year_id`, `quantity int`, `issued_on date`, `issued_by`, `note text · null` | **только добавление** (БП-11); отрицательное количество — только корректировка с `note`; нулевое запрещено |
 
@@ -205,10 +205,11 @@
 |----|--------|----------|-----------|
 | Q-01 | Нужна ли `bible_chapter` (в seed-скриптах есть, в спец. нет) — принято «нет», подтвердить | владелец | `bible_seed_contract` §модель |
 | Q-02 | ~~Общая нумерация~~ — **решено 2026-10-10**: нумерация Синодального перевода; `bible_verse_map` нужна и хранит только исключения (165 глав) — [ADR-009](../07_governance/adr_009_bible_translations_and_verse_numbering.md) §3.1, §3.3 | — | — |
-| Q-03 | ~~Лицензия английского перевода~~ — NIV лицензируется (Biblica), в приложение без лицензии не загружается; выбор перевода (рекомендуется BSB) — ADR-009 §3.2, Q-01 | владелец | `bible_seed_contract` |
+| Q-03 | ~~Лицензия английского перевода~~ — **решено: NIV загружается** по решению владельца (ADR-009 §3.2); в `license` — копирайт Biblica; лицензию подтвердить до prod | владелец | prod-загрузка |
 | Q-04 | Часовой пояс школы и хранение времени проверки (ADR-004 нужен ли) | architect | `homework_check` §5.5, W4-02 |
 | Q-05 | Neon + Prisma 7: драйвер-адаптер и pooled URL — подтвердить по документации v7 | architect | P01 |
-| Q-06 | БП-5: формула баллов, хранение вычисляемого итога (`weights jsonb` — ориентир) | владелец | `homework_check_contract` |
+| Q-06 | ~~БП-5~~ — **решено 2026-10-10: вариант А** (баллы замораживаются при выставлении; `points_total` + `scoring_snapshot`), веса по умолчанию 1 | — | — |
+| Q-08 | Значение по умолчанию баллов за спевку (в действующем приложении — из настроек; взять 1?) | владелец | `homework_check_contract`, миграция настроек |
 | Q-07 | ~~Организация~~ — **решено 2026-10-10**: достаточно одной записи; таблица `organization` остаётся (задел, спец. §11) | — | — |
 
 ## 13. Related documents
