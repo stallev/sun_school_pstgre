@@ -1,4 +1,4 @@
-﻿# Typography and text content — Pulse
+﻿# Typography and text content — Sunday School
 
 Typography for **`apps/web`** using shared atoms (on scaffold), semantic HTML, Slate Cobalt font tokens, and accessibility.
 
@@ -11,9 +11,11 @@ Typography for **`apps/web`** using shared atoms (on scaffold), semantic HTML, S
 
 | Role | Font | CSS token |
 |------|------|-----------|
-| Headings / display | **Source Serif 4** | `font-heading` |
-| UI / body | **Manrope** | `font-sans` |
-| Code / times / IDs | **JetBrains Mono** | `font-mono` |
+| Headings / display | **Alegreya** | `font-display` |
+| UI / body | **Alegreya Sans** | `font-body` |
+| Code / times / IDs | system monospace (`ui-monospace`) — отдельный шрифт не подключается | `font-mono` |
+
+Канон шрифтов и токенов — [`visual_identity_contract.md`](../design/visual_identity_contract.md) (D-2): Alegreya / Alegreya Sans из прототипа заменили Source Serif 4 / Manrope шаблона.
 
 Wire via `next/font/google` in root `layout.tsx`; map in `globals.css` `@theme inline`.
 
