@@ -1,0 +1,38 @@
+---
+description: AI agents — avoid duplicating identical logic; extract helpers; search before copy-paste
+alwaysApply: true
+---
+
+# DRY for AI agents (deduplication)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)
+
+## When this applies
+
+Before pasting the **same** non-trivial logic twice (desktop vs mobile branches, repeated formatters), **stop and deduplicate**.
+
+## Required habits
+
+1. **Search first** — repo search for existing helpers in `@/lib/*` or `packages/domain`.
+2. **Extract locally** — small `function` in the same module when only that file needs it.
+3. **Promote when shared** — two+ modules → `@/lib/...` or `packages/domain` per monorepo boundaries.
+
+## SOLID (разумно, без over-engineering)
+
+- **SRP** — один модуль/компонент = одна ответственность (fetch **или** form **или** presentational).
+- **OCP** — расширять через props/variants (`cva`), не копировать ветки desktop/mobile.
+- **DIP** — UI зависит от DTO/view-model, не от Prisma shapes напрямую.
+
+Подробнее: **react-logic-presentation**, [ai_component_guidelines.md](docs/guidelines/react/ai_component_guidelines.md).
+
+## Scope boundary
+
+- Apply DRY to **code you are editing** for the task. No repo-wide cleanups unless requested.
+- Trivial one-liners duplicated once — optional to extract.
+
+## Related
+
+- Components: [`ai_component_guidelines.md`](docs/guidelines/react/ai_component_guidelines.md)
+- Types: [typescript-monorepo-types.mdc](typescript-monorepo-types.mdc)
+
+Reference: lampto `ai-dry-deduplication.mdc`.

@@ -1,0 +1,59 @@
+---
+alwaysApply: true
+---
+# UI: Warm Forest + shadcn + Tailwind v4
+
+**Source of truth:** [`docs/default_docs/fitness-platform-design-system.md`](docs/default_docs/fitness-platform-design-system.md)  
+**Typography:** [`docs/guidelines/typography_text_guidelines.md`](docs/guidelines/typography_text_guidelines.md)  
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)
+
+**Theme:** semantic CSS variables in `apps/web/src/app/globals.css` — `:root` and `.dark` on `<html>` (`next-themes`), plus `@theme inline` for Tailwind v4.
+
+## Principles
+
+- **Trust + energy:** forest greens, gold accents — not cold SaaS gray.
+- **Typography:** **Source Serif 4** (`font-heading`) for titles; **Manrope** for UI; **JetBrains Mono** for codes/times (`next/font` in root layout; `latin` + `cyrillic` subsets).
+- **Material You (M3):** rounded corners, elevation, expressive hierarchy per design system.
+- **Mobile-first:** bottom nav `< md`, sidebar `≥ md` per user flows — full contract: **ui-mobile-first**.
+- **Prototype fidelity:** fonts, sizes, weights, colors from prototype + design system — **ui-prototype-fidelity**.
+
+## Tokens
+
+- Semantic classes: `bg-background`, `text-foreground`, `border-border`, `bg-card`, `text-muted-foreground`, `bg-primary`, `text-primary-foreground`, `ring-ring`.
+- **Primary** — main CTAs; **accent** — badges/highlights; do not swap roles.
+- New colors: define in `:root` / `.dark` **and** map in `@theme inline`.
+
+## States (first-class UX)
+
+Design explicitly: **empty**, **loading**, **error**, **forbidden**.
+
+- Loading: skeletons / Suspense ([ai_loading_patterns.md](docs/guidelines/nextjs/ai_loading_patterns.md)).
+- Field errors: `border-destructive`, error text per design system §forms.
+
+## Agent checklist
+
+- One **Primary CTA** per screen — `Button` `default` variant.
+- Do not bypass PRD with client-side business logic.
+- **Accessibility:** contrast, focus, labels, semantic HTML — full contract: **ui-semantics-a11y** (WCAG 2.1 AA).
+- **Responsive:** edge-to-edge mobile patterns from design system where specified.
+
+## Primitives
+
+shadcn: Card, Button, Tabs, Dialog, Sheet, Table, Form/Field/Label, Alert, Skeleton — install via shadcn MCP, then tokenize.
+
+## Design Lab catalog (product UI — MUST)
+
+Product screens **MUST** compose UI from the **canonical shared catalog** visualized on the dev-only **Design Lab** at `/design-system` (`apps/web/src/app/(dev)/design-system/`). Spec: [`design_system_lab_spec.md`](docs/implementation/mvp/specs/design_system_lab_spec.md).
+
+| Layer | Catalog path | Import alias | Examples |
+|-------|--------------|--------------|----------|
+| Typography atoms | `apps/web/src/components/atoms/` | `@/components/atoms` | `Heading`, `SectionTitle`, `ContentText`, `AlertText` |
+| Tokenized primitives | `apps/web/src/components/ui/` | `@/components/ui/*` | `Button`, `CustomLink`, `PulseCard`, `Card`, `Container`, shadcn primitives |
+| Design tokens | `apps/web/src/app/globals.css` | semantic Tailwind classes | `bg-primary`, `text-muted-foreground`, elevation/radius vars |
+| L3 composed patterns | Design Lab L3 sections + [`styleguide.md`](docs/design/styleguide.md) | reuse recipes from catalog | KPI card, empty state, section header |
+
+**MUST NOT:** import showcase wrappers from `@/components/design-lab/**` in product routes; duplicate primitive markup already on Design Lab — extend CVA/atom variant and add a Lab section first.
+
+**Workflow:** open `/design-system` locally → pick catalog import → verify variant on 390px and `md`.
+
+Reference: lampto `ui-calm-editorial-shadcn.mdc` — Warm Forest adaptation.

@@ -1,0 +1,498 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  client
+  trainer
+  admin
+
+  @@map("user_role")
+}
+
+enum UiTheme {
+  light
+  dark
+  system
+
+  @@map("ui_theme")
+}
+
+enum TrainerStatus {
+  pending
+  approved
+  rejected
+
+  @@map("trainer_status")
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+
+  @@map("booking_status")
+}
+
+enum ComplaintPriority {
+  low
+  medium
+  high
+
+  @@map("complaint_priority")
+}
+
+enum ComplaintStatus {
+  open
+  in_review
+  closed
+
+  @@map("complaint_status")
+}
+
+enum ComplaintResolution {
+  no_action
+  warning_to_trainer
+  refund_recommended
+  duplicate
+  spam
+
+  @@map("complaint_resolution")
+}
+
+enum RefundStatus {
+  pending
+  approved
+  rejected
+
+  @@map("refund_status")
+}
+
+enum FileUploadStatus {
+  pending
+  ready
+  failed
+
+  @@map("file_upload_status")
+}
+
+enum JobStatus {
+  pending
+  running
+  completed
+  failed
+
+  @@map("job_status")
+}
+
+enum DeliveryChannel {
+  email
+
+  @@map("delivery_channel")
+}
+
+enum DeliveryStatus {
+  pending
+  sent
+  failed
+
+  @@map("delivery_status")
+}
+
+model User {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified") @db.Timestamptz
+  fullName      String    @map("full_name")
+  passwordHash  String?   @map("password_hash")
+  role          UserRole  @default(client)
+  locale        String    @default("en")
+  uiTheme       UiTheme   @default(system) @map("ui_theme")
+  avatarUrl     String?   @map("avatar_url")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  passwordResetTokens PasswordResetToken[]
+  trainerProfile      TrainerProfile?
+  clientBookings      Booking[]            @relation("BookingClient")
+  cancelledBookings   Booking[]            @relation("BookingCancelledBy")
+  completedBookings   Booking[]            @relation("BookingCompletedBy")
+  wishlistEntries     Wishlist[]
+  clientReviews       Review[]             @relation("ReviewClient")
+  hiddenReviews       Review[]             @relation("ReviewHiddenBy")
+  trainerClientNotes  TrainerClientNote[]  @relation("TrainerClientNoteClient")
+  complaintsReported  Complaint[]          @relation("ComplaintReporter")
+  complaintsResolved  Complaint[]          @relation("ComplaintResolvedBy")
+  refundRequests      RefundRequest[]
+  refundProcessed     RefundRequest[]      @relation("RefundProcessedBy")
+  fileAssets          FileAsset[]
+  deliveryLogs        DeliveryLog[]
+  auditLogs           AuditLog[]           @relation("AuditLogActor")
+  reviewedTrainers    TrainerProfile[]     @relation("TrainerReviewedBy")
+
+  @@index([role], map: "idx_user_role")
+  @@map("user")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  tokenHash String    @map("token_hash")
+  expiresAt DateTime  @map("expires_at") @db.Timestamptz
+  usedAt    DateTime? @map("used_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tokenHash], map: "idx_password_reset_token_hash")
+  @@index([userId], map: "idx_password_reset_user")
+  @@map("password_reset_token")
+}
+
+model TrainerProfile {
+  id               String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String        @unique @map("user_id") @db.Uuid
+  status           TrainerStatus @default(pending)
+  timezone         String
+  bio              String?
+  photoUrl         String?       @map("photo_url")
+  experienceYears  Int?          @map("experience_years") @db.SmallInt
+  ratingAvg        Decimal       @default(0) @map("rating_avg") @db.Decimal(3, 2)
+  ratingCount      Int           @default(0) @map("rating_count")
+  submittedAt      DateTime?     @map("submitted_at") @db.Timestamptz
+  reviewedAt       DateTime?     @map("reviewed_at") @db.Timestamptz
+  reviewedById     String?       @map("reviewed_by_id") @db.Uuid
+  rejectionReason  String?       @map("rejection_reason")
+  stripeAccountId  String?       @unique @map("stripe_account_id")
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  user                  User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy            User?                    @relation("TrainerReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+  specializations       TrainerSpecialization[]
+  certificates          TrainerCertificate[]
+  verificationDocuments VerificationDocument[]
+  services              TrainerService[]
+  weeklyIntervals       TrainerWeeklyInterval[]
+  scheduleExceptions    TrainerScheduleException[]
+  bookings              Booking[]
+  wishlistEntries       Wishlist[]
+  reviews               Review[]
+  clientNotes           TrainerClientNote[]
+  complaints            Complaint[]
+
+  @@index([status], map: "idx_trainer_profile_status")
+  @@map("trainer_profile")
+}
+
+model Specialization {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug String @unique
+  name String
+
+  trainers TrainerSpecialization[]
+
+  @@map("specialization")
+}
+
+model TrainerSpecialization {
+  trainerProfileId  String @map("trainer_profile_id") @db.Uuid
+  specializationId  String @map("specialization_id") @db.Uuid
+
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+  specialization Specialization @relation(fields: [specializationId], references: [id], onDelete: Restrict)
+
+  @@id([trainerProfileId, specializationId])
+  @@map("trainer_specialization")
+}
+
+model TrainerCertificate {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  title            String
+  fileAssetId      String?  @map("file_asset_id") @db.Uuid
+  sortOrder        Int      @default(0) @map("sort_order") @db.SmallInt
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+  fileAsset      FileAsset?     @relation(fields: [fileAssetId], references: [id], onDelete: SetNull)
+
+  @@index([trainerProfileId], map: "idx_trainer_certificate_profile")
+  @@map("trainer_certificate")
+}
+
+model VerificationDocument {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  docType          String   @map("doc_type")
+  fileAssetId      String   @map("file_asset_id") @db.Uuid
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+  fileAsset      FileAsset      @relation(fields: [fileAssetId], references: [id], onDelete: Restrict)
+
+  @@index([trainerProfileId], map: "idx_verification_doc_profile")
+  @@map("verification_document")
+}
+
+model TrainerService {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  name             String
+  description      String?
+  durationMinutes  Int      @map("duration_minutes") @db.SmallInt
+  priceCents       Int      @map("price_cents")
+  currency         String   @default("USD") @db.Char(3)
+  isActive         Boolean  @default(true) @map("is_active")
+  sortOrder        Int      @default(0) @map("sort_order") @db.SmallInt
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+  bookings       Booking[]
+
+  @@index([trainerProfileId, isActive], map: "idx_trainer_service_profile_active")
+  @@map("trainer_service")
+}
+
+model TrainerWeeklyInterval {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  dayOfWeek        Int      @map("day_of_week") @db.SmallInt
+  startTime        DateTime @map("start_time") @db.Time
+  endTime          DateTime @map("end_time") @db.Time
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+
+  @@index([trainerProfileId, dayOfWeek], map: "idx_weekly_interval_profile_day")
+  @@map("trainer_weekly_interval")
+}
+
+model TrainerScheduleException {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  exceptionDate    DateTime @map("exception_date") @db.Date
+  isBlocked        Boolean  @default(true) @map("is_blocked")
+  reason           String?
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([trainerProfileId, exceptionDate])
+  @@map("trainer_schedule_exception")
+}
+
+model Booking {
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clientId              String        @map("client_id") @db.Uuid
+  trainerProfileId      String        @map("trainer_profile_id") @db.Uuid
+  trainerServiceId      String        @map("trainer_service_id") @db.Uuid
+  status                BookingStatus @default(pending)
+  startsAt              DateTime      @map("starts_at") @db.Timestamptz
+  durationMinutes       Int           @map("duration_minutes") @db.SmallInt
+  priceCents            Int           @map("price_cents")
+  currency              String        @default("USD") @db.Char(3)
+  serviceNameSnapshot   String        @map("service_name_snapshot")
+  clientMessage         String?       @map("client_message")
+  cancelledAt           DateTime?     @map("cancelled_at") @db.Timestamptz
+  cancelledById         String?       @map("cancelled_by_id") @db.Uuid
+  completedAt           DateTime?     @map("completed_at") @db.Timestamptz
+  completedById         String?       @map("completed_by_id") @db.Uuid
+  stripePaymentIntentId String?       @unique @map("stripe_payment_intent_id")
+  stripeRefundId        String?       @map("stripe_refund_id")
+  dailyRoomName         String?       @map("daily_room_name")
+  dailyRoomUrl          String?       @map("daily_room_url")
+  createdAt             DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  client         User           @relation("BookingClient", fields: [clientId], references: [id], onDelete: Restrict)
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Restrict)
+  trainerService TrainerService @relation(fields: [trainerServiceId], references: [id], onDelete: Restrict)
+  cancelledBy    User?          @relation("BookingCancelledBy", fields: [cancelledById], references: [id], onDelete: SetNull)
+  completedBy    User?          @relation("BookingCompletedBy", fields: [completedById], references: [id], onDelete: SetNull)
+  review         Review?
+  complaints     Complaint[]
+  refundRequests RefundRequest[]
+  deliveryLogs   DeliveryLog[]
+
+  @@index([clientId, status, startsAt(sort: Desc)], map: "idx_booking_client_status")
+  @@index([trainerProfileId, startsAt], map: "idx_booking_trainer_starts")
+  @@index([trainerProfileId, startsAt], map: "idx_booking_trainer_day")
+  @@map("booking")
+}
+
+model Wishlist {
+  clientId         String   @map("client_id") @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  client         User           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+
+  @@id([clientId, trainerProfileId])
+  @@index([trainerProfileId], map: "idx_wishlist_trainer")
+  @@map("wishlist")
+}
+
+model Review {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId        String   @unique @map("booking_id") @db.Uuid
+  clientId         String   @map("client_id") @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  rating           Int      @db.SmallInt
+  body             String
+  isHidden         Boolean  @default(false) @map("is_hidden")
+  hiddenById       String?  @map("hidden_by_id") @db.Uuid
+  hiddenAt         DateTime? @map("hidden_at") @db.Timestamptz
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  booking        Booking        @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  client         User           @relation("ReviewClient", fields: [clientId], references: [id], onDelete: Restrict)
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Restrict)
+  hiddenBy       User?          @relation("ReviewHiddenBy", fields: [hiddenById], references: [id], onDelete: SetNull)
+
+  @@index([trainerProfileId, createdAt(sort: Desc)], map: "idx_review_trainer_visible")
+  @@map("review")
+}
+
+model TrainerClientNote {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  trainerProfileId String   @map("trainer_profile_id") @db.Uuid
+  clientId         String   @map("client_id") @db.Uuid
+  notes            String   @default("")
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  trainerProfile TrainerProfile @relation(fields: [trainerProfileId], references: [id], onDelete: Cascade)
+  client         User           @relation("TrainerClientNoteClient", fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([trainerProfileId, clientId])
+  @@map("trainer_client_note")
+}
+
+model Complaint {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reporterId      String            @map("reporter_id") @db.Uuid
+  targetTrainerId String?           @map("target_trainer_id") @db.Uuid
+  targetBookingId String?           @map("target_booking_id") @db.Uuid
+  priority        ComplaintPriority @default(medium)
+  status          ComplaintStatus   @default(open)
+  resolution      ComplaintResolution?
+  reason          String
+  adminNotes      String?           @map("admin_notes")
+  resolvedById    String?           @map("resolved_by_id") @db.Uuid
+  resolvedAt      DateTime?         @map("resolved_at") @db.Timestamptz
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+
+  reporter      User            @relation("ComplaintReporter", fields: [reporterId], references: [id], onDelete: Restrict)
+  targetTrainer TrainerProfile? @relation(fields: [targetTrainerId], references: [id], onDelete: SetNull)
+  targetBooking Booking?        @relation(fields: [targetBookingId], references: [id], onDelete: SetNull)
+  resolvedBy    User?           @relation("ComplaintResolvedBy", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([status, priority, createdAt(sort: Desc)], map: "idx_complaint_status_priority")
+  @@map("complaint")
+}
+
+model RefundRequest {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId       String       @map("booking_id") @db.Uuid
+  clientId        String       @map("client_id") @db.Uuid
+  amountCents     Int          @map("amount_cents")
+  currency        String       @default("USD") @db.Char(3)
+  status          RefundStatus @default(pending)
+  reason          String?
+  adminComment    String?      @map("admin_comment")
+  processedById   String?      @map("processed_by_id") @db.Uuid
+  processedAt     DateTime?    @map("processed_at") @db.Timestamptz
+  stripeRefundId  String?      @unique @map("stripe_refund_id")
+  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz
+
+  booking     Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  client      User    @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  processedBy User?   @relation("RefundProcessedBy", fields: [processedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt(sort: Desc)], map: "idx_refund_status")
+  @@map("refund_request")
+}
+
+model FileAsset {
+  id           String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerUserId  String           @map("owner_user_id") @db.Uuid
+  blobUrl      String?          @map("blob_url")
+  blobPathname String           @map("blob_pathname")
+  mimeType     String           @map("mime_type")
+  sizeBytes    Int?             @map("size_bytes")
+  uploadStatus FileUploadStatus @default(pending) @map("upload_status")
+  createdAt    DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime         @updatedAt @map("updated_at") @db.Timestamptz
+
+  owner                 User                   @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  trainerCertificates   TrainerCertificate[]
+  verificationDocuments VerificationDocument[]
+
+  @@index([ownerUserId], map: "idx_file_asset_owner")
+  @@map("file_asset")
+}
+
+model JobExecution {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  idempotencyKey String    @unique @map("idempotency_key")
+  jobType        String    @map("job_type")
+  status         JobStatus @default(pending)
+  payloadJson    Json?     @map("payload_json")
+  error          String?
+  startedAt      DateTime? @map("started_at") @db.Timestamptz
+  finishedAt     DateTime? @map("finished_at") @db.Timestamptz
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([status, jobType], map: "idx_job_status_type")
+  @@map("job_execution")
+}
+
+model DeliveryLog {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  idempotencyKey    String          @unique @map("idempotency_key")
+  channel           DeliveryChannel @default(email)
+  userId            String?         @map("user_id") @db.Uuid
+  bookingId         String?         @map("booking_id") @db.Uuid
+  target            String?
+  templateKey       String          @map("template_key")
+  providerMessageId String?         @map("provider_message_id")
+  status            DeliveryStatus  @default(pending)
+  error             String?
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz
+
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  booking Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt(sort: Desc)], map: "idx_delivery_user_created")
+  @@index([bookingId], map: "idx_delivery_booking")
+  @@map("delivery_log")
+}
+
+model AuditLog {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorUserId  String?  @map("actor_user_id") @db.Uuid
+  action       String
+  targetType   String   @map("target_type")
+  targetId     String   @map("target_id") @db.Uuid
+  metadataJson Json?    @map("metadata_json")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  actor User? @relation("AuditLogActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId, createdAt(sort: Desc)], map: "idx_audit_actor_created")
+  @@index([targetType, targetId], map: "idx_audit_target")
+  @@map("audit_log")
+}

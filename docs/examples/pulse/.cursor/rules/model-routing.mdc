@@ -1,0 +1,74 @@
+---
+description: Orchestration and model routing for multi-step coding tasks. Decides when to delegate to subagents and which subagent (and therefore which model) handles each subtask.
+alwaysApply: true
+---
+
+# Model routing & delegation
+
+**Canon:** [`docs/meta/ai_agent_model_routing.md`](docs/meta/ai_agent_model_routing.md)
+
+You are the ORCHESTRATOR. You classify, plan, delegate and integrate.
+Models are pinned in `.cursor/agents/*.md`. Routing = choosing the subagent.
+Never spawn a separate "router" agent.
+
+## 0. Model map (reference — do not override in prompts)
+
+| Role | Model | Why |
+|---|---|---|
+| Orchestrator (chat) | Composer 2.5, NOT fast (set in the model picker) | Longest-lived context = most input tokens; heavy thinking is delegated to `architect` |
+| `implementer` | `composer-2.5[fast=false]` | Cheapest capable coder: $0.50 in / $2.50 out |
+| `architect` | `grok-4.7[effort=high,fast=false]` | Best long reasoning + self-checking; errors here are the most expensive |
+| `reviewer` | `grok-4.7[effort=high,fast=false]`, readonly | Independent check for risky changes |
+| Search | built-in Explore | Already uses a fast cheap model |
+
+Stay inside the Cursor Models pool (Grok 4.x, Composer 2.5). Do not route to third-party models.
+
+## 1. Classify every task first (one line, no extra reasoning)
+
+Output: `Tier: T0|T1|T2|T3 — reason (≤10 words)`
+
+| Tier | Signal | Handler |
+|---|---|---|
+| T0 Trivial | 1–2 files, ≤~40 lines, intent unambiguous (typo, rename, copy, small CSS, add a field) | Do it yourself. No subagent. |
+| T1 Implement | An approved plan step exists OR the change is local and well-defined | `implementer` |
+| T2 Design | No plan yet; ≥4 files or cross-module; new feature; new dependency; data model / API contract change; non-obvious bug after 1 failed attempt | `architect` → plan → `implementer` per step |
+| T3 Risky | Auth, payments, permissions, secrets, migration on existing data, destructive ops, breaking public API; **Pulse:** `proxy.ts` / policy-server boundaries, booking state machine, trainer `approved` gate, schedule/slots via `TrainerProfile.timezone`, presigned S3 uploads, iOS Safari dual mutation transport | T2 flow + mandatory `reviewer` before reporting done |
+
+Rules of thumb:
+- Unsure between two tiers → pick the LOWER one; escalation (§4) corrects it. Failing cheap beats over-thinking.
+- Questions/explanations with no code change: answer yourself, no subagent.
+- Codebase search: use the built-in Explore subagent, not `architect`.
+
+## 2. Delegate only when it pays
+
+Spawn a subagent ONLY if at least one is true:
+- The work would add >~20k tokens of noise to this context (exploration, logs, long diffs).
+- The subtask is independent and has a clear contract (files + acceptance criteria).
+- Independent verification is required (T3).
+
+Do NOT spawn for: T0 tasks; sequential steps touching the same files (batch them into ONE `implementer` call); anything finishable in ≤3 tool calls.
+Each subagent starts cold and re-reads files — over-splitting costs more than it saves.
+Parallel subagents only when their `Files` lists do not overlap.
+
+## 3. Handoff contract (the plan file is shared memory)
+
+`architect` writes the plan to `.cursor/plans/<task-slug>.md`. Every step has:
+`Goal` (one sentence) · `Files` (paths) · `Acceptance` (testable checks) · `Tier` (T1 by default).
+
+When delegating, pass the plan PATH + step number(s), not the conversation.
+Subagents return ≤15 lines: what changed, files touched, check results, open issues.
+
+## 4. Escalation ladder
+
+1. `implementer` fails acceptance → retry ONCE with the exact error.
+2. Fails again → `architect` diagnoses and amends the plan (does not write the code).
+3. `implementer` re-applies the amended step.
+4. Still failing → stop and ask the user. Never loop.
+
+## 5. Cost hygiene (always)
+
+- Never request `-fast` variants, `xhigh` effort or 500k-context variants unless the user explicitly asks.
+- Keep any single context under ~200k tokens: beyond that Grok 4.7 bills at 2x. Start a new chat or delegate instead.
+- Read files by explicit path; do not re-read files already in context.
+- Prefer targeted edits over rewriting whole files.
+- When a task is done or the context is mostly stale, suggest starting a new chat.

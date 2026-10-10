@@ -1,68 +1,126 @@
-# Sunday School App
+# AI-First Monorepo Starter
 
-Веб-приложение для воскресной школы: ведение уроков, проверка домашних заданий, посещаемость, «кирпичики» (поощрительные баллы) и аналитика успеваемости. Заменяет действующее приложение на Amplify / DynamoDB; данные хранятся в PostgreSQL.
+**Стартовый шаблон** (не продукт) для создания новых проектов на стеке **Next.js 16.4 + Vercel + Neon PostgreSQL + Prisma v7 + Auth.js v5 + shadcn/ui + Tailwind v4**.
 
-> **Статус:** стадия проектирования. В репозитории пока только документация и HTML-прототип; код приложения ещё не написан.
+**Методология:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Bootstrap (пошагово):** [`BOOTSTRAP.md`](BOOTSTRAP.md)  
+**Оркестрация промптов:** [`prompts/00-orchestration.md`](prompts/00-orchestration.md)
 
-## Документация
+---
 
-| Файл | Содержание |
-|---|---|
-| [docs/sunday_school_data_analytics_spec.md](docs/sunday_school_data_analytics_spec.md) | Функциональная спецификация (v3.1): роли и права, сущности, бизнес-правила, голосовая проверка стихов, рейтинг, аналитика, миграция, локализация |
-| [docs/mvp_scope.md](docs/mvp_scope.md) | Границы MVP и три волны post-MVP, временные правила MVP, правила создания схемы БД |
-| [docs/sunday_school_prototype.html](docs/sunday_school_prototype.html) | Статичный интерактивный прототип интерфейса (открывается в браузере) |
+## Референсный проект: Pulse
 
-Спецификация ссылается также на `achievements_spec.md` (достижения и штрафы) и `DESIGN_SYSTEM.md` (дизайн-система) — в репозитории их пока нет.
+Полная реализация **Pulse** (fitapp) — read-only эталон архитектуры, AI-first docs и feature-паттернов:
 
-## Предметная область
+- Код и документация: [`docs/examples/pulse/`](docs/examples/pulse/)
+- Сводка и приоритеты: [`docs/reference/pulse_project_reference.md`](docs/reference/pulse_project_reference.md)
+- Stack-паттерны: [`docs/reference/stack_patterns_from_pulse.md`](docs/reference/stack_patterns_from_pulse.md)
 
-- **Группа** — постоянная (например, «Младшая группа»); состав, преподаватели и настройки оценивания привязаны к **учебному году**.
-- **Урок** — обычный или обзорный; к нему привязаны золотые стихи (диапазоны Синодального перевода).
-- **Проверка ДЗ** — на каждого ученика: присутствие, стихи (0–2), тест (0–10), тетрадь (0–10), спевка, комментарий. Стихи урока N рассказывают на следующем обычном уроке.
-- **Кирпичики** — журнал фактически выданных физических кирпичиков (1 балл = 1 кирпичик).
-- **Аналитика** — графики группы, карточка ученика, динамика успеваемости, сводка по школе, строка качества данных.
-- **Журнал изменений** — неизменяемый, хранит ссылки, а не имена.
+**Важно:** **Cursor Rules** и **Guidelines** boilerplate **важнее** reference-кода Pulse. Pulse — образец структуры и flows; при конфликте следовать Rules/Guidelines текущего проекта.
 
-### Роли
+> Snapshot Pulse уже включён в шаблон. Сопровождение самого шаблона — [`AGENTS.md`](AGENTS.md).
 
-| Роль | Доступ |
-|---|---|
-| `admin` | вся школа: группы, пользователи, заявки, запросы на удаление, журнал, настройки |
-| `teacher` | свои группы: уроки, проверка ДЗ, кирпичики, рейтинг, аналитика |
-| `parent` | свои дети (post-MVP, волна 2) |
+---
 
-У детей учётных записей нет. Вход — через Google или Telegram (Auth.js); первый вход — регистрация с согласием на обработку персональных данных и заявка на доступ, которую одобряет admin.
+## Быстрый старт
 
-## Объём работ
+Полная инструкция: **[`BOOTSTRAP.md`](BOOTSTRAP.md)**
 
-**MVP** — замена действующего приложения для учителей и администратора:
+1. Создайте репозиторий из шаблона (GitHub **Use this template** или `git clone`)
+2. **Выберите профиль качества** — [`prompts/P00-quality-profile.md`](prompts/P00-quality-profile.md): `prototype` / `lean` / `standard` / `strict` определяет объём документации, тестов, review и модули стека
+3. Заполните placeholders (см. [`PLACEHOLDERS.md`](PLACEHOLDERS.md))
+4. **Рекомендуется:** visual seed в `docs/prototypes/` ([`prompts/P1-html-prototype-claude-desktop.md`](prompts/P1-html-prototype-claude-desktop.md))
+5. Запустите промпты по порядку: **P0 → P1 → P2 → P3-W* → P4 → P5 → P6 → P7+**
+6. Rules T1 / T2 активируются промптами P4 / P6 по манифесту [`.cursor/rules/README.md`](.cursor/rules/README.md)
 
-- вход, регистрация, заявки, роли admin и teacher;
-- учебные годы, группы, ученики, зачисления;
-- уроки, золотые стихи, календарь событий;
-- проверка ДЗ и посещаемости, корректировка проверенных уроков;
-- кирпичики, рейтинг, аналитика, журнал изменений;
-- удаление персональных данных, бумажное согласие на данные ребёнка;
-- локализация ru / en;
-- миграция данных из старого приложения.
+---
 
-**Post-MVP**, по волнам:
+## Структура
 
-1. достижения и штрафы;
-2. семьи и роль родителя, электронные согласия, дайджест;
-3. голосовая проверка стихов с помощью AI (после теста распознавания на реальных записях).
+```
+├── AGENTS.md                         → сопровождение шаблона (заменяется в проекте)
+├── BOOTSTRAP.md                      → пошаговый bootstrap нового проекта
+├── AGENTS.template.md                → AGENTS.md проекта после bootstrap
+├── CLAUDE.md                         → @AGENTS.md + Claude rules pointer
+├── package.json                      → rules:sync / rules:check / deps:check / encoding:check / docs:links / psi:lab
+├── scripts/sync-claude-rules.mjs
+├── scripts/psi-lab/                  → lab PageSpeed Insights (REST, deployed origin)
+├── .claude/rules/                    → generated from .mdc (git)
+├── PLACEHOLDERS.md                   → список {{PLACEHOLDER}} для замены
+├── .cursor/rules/                    → T0–T2 rules (Pulse stack + psi-lab-testing)
+│   ├── tiers/                        → t0 / t1 / t2 — SoT правил
+│   └── README.md                     → manifest
+├── docs/
+│   ├── guidelines/                   → канон реализации (индекс: README.md)
+│   │   ├── security/                 → XSS, CSRF, CSP
+│   │   ├── nextjs/                   → data, loading, lazy load, S3, lab PSI
+│   │   └── react/                    → components, a11y, rendering perf
+│   ├── general/                      → Senior deep dives (теория → guidelines)
+│   ├── meta/                         → methodology + registry templates
+│   ├── reference/                    → pulse_project_reference.md, stack patterns
+│   ├── claude-code-cursor-rules-sync.md
+│   └── examples/pulse/               → snapshot референса (заполнить вручную)
+├── prompts/                          → P00 (профиль качества), P0–P6, Claude Desktop seed, orchestration
+├── specs/                            → design_system_lab_spec.template.md
+└── scaffold/                         → пустой monorepo skeleton
+```
 
-Схема базы данных создаётся сразу целиком, включая таблицы post-MVP; функции post-MVP скрыты флагами `features.achievements`, `features.parents`, `features.voice`. Подробности — в [docs/mvp_scope.md](docs/mvp_scope.md).
+---
 
-## Технологии (по документации)
+## Документация для агентов
 
-- PostgreSQL (Neon) — база данных
-- Auth.js — вход через Google и Telegram
-- shadcn/ui — интерфейс
-- Локализация — словари `common`, `auth`, `teacher`, `admin`, `analytics` (+ `parent` позже) на ru и en
+| Каталог | Назначение |
+|---------|------------|
+| [`guidelines/`](docs/guidelines/README.md) | Операционные нормы реализации (Next.js, React, Auth, Security, TypeScript) |
+| [`.cursor/rules/`](.cursor/rules/README.md) | MUST для агента — tiers T0 / T1 / T2 |
+| [`docs/general/`](docs/general/README.md) | Senior deep dives; нормы синтезированы в docs/guidelines/rules |
+| [`docs/general/ai_agent_ui_ux_guideline.md`](docs/general/ai_agent_ui_ux_guideline.md) | FX-1–FX-10, overlay tree, pre-merge UI checklist |
+| [`docs/examples/pulse/`](docs/examples/pulse/) | Reference: architecture, contracts, phases, code patterns |
+| [`CLAUDE.md`](CLAUDE.md) | Claude Code: `@AGENTS.md` + generated `.claude/rules/` (не править зеркало) |
+| [`docs/claude-code-cursor-rules-sync.md`](docs/claude-code-cursor-rules-sync.md) | Playbook Cursor `.mdc` → Claude `.md` (`rules:sync` / `rules:check`) |
 
-Конкретные версии и структура проекта будут зафиксированы вместе с кодом.
+### Practices из `docs/general/` → guidelines
 
-## Персональные данные
+| Deep dive | Guideline | Cursor rule |
+|-----------|-----------|-------------|
+| [Security (XSS/CSRF)](docs/general/01-security-xss-csrf.md) | [`docs/guidelines/security/`](docs/guidelines/security/) | **security-xss-csrf** |
+| [Data fetching](docs/general/02-data-fetching.md) | [`ai_data_fetching_patterns.md`](docs/guidelines/nextjs/ai_data_fetching_patterns.md) | **data-server-actions-and-api** |
+| [Accessibility](docs/general/03-accessibility.md) | [`ai_semantics_a11y_guidelines.md`](docs/guidelines/react/ai_semantics_a11y_guidelines.md) | **ui-semantics-a11y** |
+| [Code splitting](docs/general/04-code-splitting.md) | [`ai_client_lazy_loading.md`](docs/guidelines/nextjs/ai_client_lazy_loading.md) | **react-ui-components** |
+| [Browser rendering](docs/general/05-browser-rendering.md) | [`ai_browser_rendering_performance.md`](docs/guidelines/react/ai_browser_rendering_performance.md) | **ui-animation-performance** |
 
-Приложение обрабатывает данные детей, поэтому в спецификацию заложены согласия (на обработку ПД, на данные ребёнка, на голос и фото), право на удаление с полным удалением данных ребёнка, ограничение доступа по роли и принадлежности ресурса, а также резервные копии с учётом выполненных запросов на удаление. См. разделы 2.4–2.6 спецификации.
+---
+
+## Cursor Rules — tiers
+
+| Tier | Когда активировать | Назначение |
+|------|-------------------|------------|
+| **T0** | Активен в шаблоне (состояние «после P0») | Оркестрация, commit/review, docs alignment, типы |
+| **T1** | P4 (после W1) | Implementation: Next.js, auth, data, security, deps |
+| **T2** | P6 (Design System Lab) | UI / React |
+
+Состав tiers — только в манифесте: [`.cursor/rules/README.md`](.cursor/rules/README.md). SoT правила — его копия в `tiers/`.
+
+---
+
+## Stack (full Pulse)
+
+| Компонент | Технология |
+|-----------|-----------|
+| Framework | Next.js **16.4.x** (exact current patch, baseline **16.4**), App Router, `proxy.ts` |
+| Hosting | Vercel |
+| DB | Neon PostgreSQL 17 + Prisma v7 |
+| Auth | Auth.js v5, Credentials, JWT |
+| Email | Resend (post-MVP; schema-ready on MVP) |
+| Storage | AWS S3 (presigned PUT/GET) |
+| Observability | Sentry (`@sentry/nextjs`) |
+| UI | shadcn/ui + Tailwind CSS v4 |
+| Toasts | Sonner |
+
+---
+
+## Иерархия источников истины
+
+Полный канонический список — [`.cursor/rules/project-context.mdc`](.cursor/rules/project-context.mdc) § Source-of-truth order. Не дублировать список здесь.
+
+Подробнее: [`docs/reference/pulse_project_reference.md`](docs/reference/pulse_project_reference.md)

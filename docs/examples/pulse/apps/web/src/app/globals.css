@@ -1,0 +1,303 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), ui-serif, Georgia, serif;
+  --font-heading: var(--font-display), ui-serif, Georgia, serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, monospace;
+  --color-subtle-foreground: hsl(var(--color-ink-3));
+  --color-brand-band: hsl(var(--color-brand-band));
+  --color-on-brand-band: hsl(var(--color-on-brand-band));
+  --color-brand-band-muted: hsl(var(--color-brand-band-muted));
+  --color-brand-cta-band: hsl(var(--color-brand-cta-band));
+  --color-on-brand-cta-band: hsl(var(--color-on-brand-cta-band));
+  --color-hero-glow: hsl(var(--color-hero-glow));
+  --color-primary-container: hsl(var(--color-primary-container));
+  --color-on-primary-container: hsl(var(--color-on-primary-container));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-chart-5: hsl(var(--chart-5));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-ring: hsl(var(--ring));
+  --color-input: hsl(var(--input));
+  --color-border: hsl(var(--border));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card: hsl(var(--card));
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Prototype tokens (HSL components) — source: lib/tokens.ts */
+  --color-primary: 145 33% 26%; /* #2D5A40 */
+  --color-primary-hover: 158 30% 15%; /* #1A3028 */
+  --color-primary-light: 147 33% 36%; /* #3D7A58 */
+  --color-primary-container: 140 29% 92%; /* #E4F0E8 */
+  --color-on-primary-container: 158 30% 15%; /* #1A3028 */
+  --color-secondary: 40 54% 50%; /* #C4973A */
+  --color-secondary-hover: 41 61% 40%; /* #A37D28 */
+  --color-secondary-light: 40 72% 67%; /* #E8C070 */
+  --color-secondary-container: 40 69% 87%; /* #F5E6C8 */
+  --color-on-secondary-container: 37 64% 22%; /* #5C4014 */
+  --color-bg: 37 39% 94%; /* #F5F0E8 */
+  --color-surface: 0 0% 100%; /* #FFFFFF */
+  --color-surface-variant: 41 41% 88%; /* #EDE5D4 */
+  --color-surface-container: 41 39% 84%; /* #E6DCC6 */
+  --color-surface-dim: 40 32% 78%; /* #D8CCB4 */
+  --color-ink: 158 30% 15%; /* #1A3028 */
+  --color-ink-2: 142 10% 32%; /* #4A5A50 */
+  --color-ink-3: 43 7% 51%; /* #8A8578 */
+  --color-success: 142 56% 23%; /* #1A5C32 */
+  --color-success-container: 140 29% 92%; /* #E4F0E8 */
+  --color-error: 0 51% 46%; /* #B23A3A */
+  --color-error-container: 0 51% 92%; /* #F5E0E0 */
+  --color-warning: 32 63% 42%; /* #B07028 */
+  --color-warning-container: 40 69% 87%; /* #F5E6C8 */
+  --color-info: 198 42% 30%; /* #2D5A6E */
+  --color-info-container: 203 35% 91%; /* #E0EAF0 */
+
+  /* Landing brand bands — not interchangeable with --color-primary-hover */
+  --color-brand-band: 158 30% 15%; /* #1A3028 forest dark */
+  --color-on-brand-band: 0 0% 100%; /* white */
+  --color-brand-band-muted: 140 22% 78%; /* muted on dark band */
+  --color-brand-cta-band: 145 33% 26%; /* --color-primary */
+  --color-on-brand-cta-band: 0 0% 100%; /* white */
+  --color-hero-glow: 140 29% 92%; /* --color-primary-container */
+
+  /* shadcn semantic tokens */
+  --background: 37 39% 94%; /* --color-bg */
+  --foreground: 158 30% 15%; /* --color-ink */
+  --card: 0 0% 100%; /* --color-surface */
+  --card-foreground: 158 30% 15%; /* --color-ink */
+  --popover: 0 0% 100%; /* --color-surface */
+  --popover-foreground: 158 30% 15%; /* --color-ink */
+  --primary: 145 33% 26%; /* --color-primary */
+  --primary-foreground: 0 0% 100%; /* white */
+  --secondary: 40 69% 87%; /* --color-secondary-container */
+  --secondary-foreground: 37 64% 22%; /* --color-on-secondary-container */
+  --muted: 41 41% 88%; /* --color-surface-variant */
+  --muted-foreground: 142 10% 32%; /* --color-ink-2 */
+  --accent: 140 29% 92%; /* --color-primary-container */
+  --accent-foreground: 158 30% 15%; /* --color-on-primary-container */
+  --destructive: 0 51% 46%; /* --color-error */
+  --destructive-foreground: 0 0% 100%; /* white */
+  --border: 40 32% 78%; /* --color-surface-dim */
+  --input: 40 32% 78%; /* --color-surface-dim */
+  --ring: 145 33% 26%; /* --color-primary */
+  --radius: 0.75rem; /* --radius-md (12px) */
+
+  /* Charts & sidebar — derived from Warm Forest palette */
+  --chart-1: 145 33% 26%; /* --color-primary */
+  --chart-2: 40 54% 50%; /* --color-secondary */
+  --chart-3: 142 56% 23%; /* --color-success */
+  --chart-4: 198 42% 30%; /* --color-info */
+  --chart-5: 32 63% 42%; /* --color-warning */
+  --sidebar: 0 0% 100%; /* --color-surface */
+  --sidebar-foreground: 158 30% 15%; /* --color-ink */
+  --sidebar-primary: 145 33% 26%; /* --color-primary */
+  --sidebar-primary-foreground: 0 0% 100%; /* white */
+  --sidebar-accent: 140 29% 92%; /* --color-primary-container */
+  --sidebar-accent-foreground: 158 30% 15%; /* --color-on-primary-container */
+  --sidebar-border: 40 32% 78%; /* --color-surface-dim */
+  --sidebar-ring: 145 33% 26%; /* --color-primary */
+
+  /* Brand refs for CVA (design kit) */
+  --forest: #1a3028;
+  --forest-mid: #2d5a40;
+  --gold: #c4973a;
+  --gold-light: #e8c070;
+  --cream: #f5f0e8;
+  --cream-border: #d8ccb4;
+  --green-soft: #e4f0e8;
+  --amber-soft: #f5e6c8;
+  --green-text: #1a5c32;
+
+  /* Elevation */
+  --shadow-card: 0 1px 2px rgba(26, 48, 40, 0.08);
+  --shadow-hover: 0 4px 16px rgba(26, 48, 40, 0.1);
+  --shadow-overlay: 0 8px 32px rgba(26, 48, 40, 0.18);
+  --shadow-float-card: 0 16px 48px rgba(26, 48, 40, 0.18),
+    0 4px 12px rgba(26, 48, 40, 0.1);
+  --shadow-button-hover: 0 2px 10px rgba(26, 48, 40, 0.35);
+  --shadow-destructive-hover: 0 2px 10px rgba(178, 58, 58, 0.35);
+
+  /* PulseCard geometry */
+  --card-radius-sm: 10px;
+  --card-radius-md: 14px;
+  --card-radius-lg: 16px;
+  --card-radius-xl: 20px;
+  --card-p-sm: 12px;
+  --card-p-kpi: 14px;
+  --card-p-md: 16px;
+  --card-p-lg: 20px;
+}
+
+.dark {
+  /* Prototype tokens (HSL components) — source: lib/tokens.ts */
+  --color-primary: 145 25% 55%; /* #6EA886 */
+  --color-primary-hover: 145 31% 64%; /* #87C09F */
+  --color-primary-light: 145 31% 64%; /* #87C09F */
+  --color-primary-container: 144 30% 17%; /* #1F3A2A */
+  --color-on-primary-container: 140 30% 83%; /* #C5E0CE */
+  --color-secondary: 40 72% 67%; /* #E8C070 */
+  --color-secondary-hover: 41 82% 78%; /* #F5D89A */
+  --color-secondary-light: 41 82% 78%; /* #F5D89A */
+  --color-secondary-container: 38 51% 16%; /* #3D2E14 */
+  --color-on-secondary-container: 40 69% 87%; /* #F5E6C8 */
+  --color-bg: 156 26% 7%; /* #0E1814 */
+  --color-surface: 146 21% 13%; /* #1A2820 */
+  --color-surface-variant: 140 17% 17%; /* #243329 */
+  --color-surface-container: 142 17% 21%; /* #2D4034 */
+  --color-surface-dim: 147 19% 30%; /* #3D5A4A */
+  --color-ink: 45 44% 89%; /* #F0EAD8 */
+  --color-ink-2: 138 10% 74%; /* #B5C2B9 */
+  --color-ink-3: 138 8% 62%; /* bumped for small-text AA on dark surfaces */
+  --color-success: 145 72% 67%; /* #6EE7A0 */
+  --color-success-container: 131 30% 17%; /* #1F3A24 */
+  --color-error: 0 100% 76%; /* #FF8585 */
+  --color-error-container: 0 30% 17%; /* #3A1F1F */
+  --color-warning: 38 87% 69%; /* #F5C26B */
+  --color-warning-container: 39 38% 16%; /* #3A2F1A */
+  --color-info: 202 80% 71%; /* #7AC4F0 */
+  --color-info-container: 203 38% 16%; /* #1A2E3A */
+
+  /* Landing brand bands — stay dark/elevated; do not follow --color-primary-hover */
+  --color-brand-band: 146 21% 13%; /* --color-surface */
+  --color-on-brand-band: 45 44% 89%; /* --color-ink */
+  --color-brand-band-muted: 138 10% 74%; /* --color-ink-2 */
+  --color-brand-cta-band: 142 17% 21%; /* --color-surface-container */
+  --color-on-brand-cta-band: 45 44% 89%; /* --color-ink */
+  --color-hero-glow: 145 25% 55%; /* --color-primary at low opacity in hero */
+
+  /* shadcn semantic tokens */
+  --background: 156 26% 7%; /* --color-bg */
+  --foreground: 45 44% 89%; /* --color-ink */
+  --card: 146 21% 13%; /* --color-surface */
+  --card-foreground: 45 44% 89%; /* --color-ink */
+  --popover: 146 21% 13%; /* --color-surface */
+  --popover-foreground: 45 44% 89%; /* --color-ink */
+  --primary: 145 25% 55%; /* --color-primary */
+  --primary-foreground: 45 44% 89%; /* --color-ink */
+  --secondary: 38 51% 16%; /* --color-secondary-container */
+  --secondary-foreground: 40 69% 87%; /* --color-on-secondary-container */
+  --muted: 140 17% 17%; /* --color-surface-variant */
+  --muted-foreground: 138 10% 74%; /* --color-ink-2 */
+  --accent: 144 30% 17%; /* --color-primary-container */
+  --accent-foreground: 140 30% 83%; /* --color-on-primary-container */
+  --destructive: 0 100% 76%; /* --color-error */
+  --destructive-foreground: 0 0% 100%; /* white */
+  --border: 147 19% 30%; /* --color-surface-dim */
+  --input: 147 19% 30%; /* --color-surface-dim */
+  --ring: 145 25% 55%; /* --color-primary */
+  --radius: 0.75rem; /* --radius-md (12px) */
+
+  /* Charts & sidebar — derived from Warm Forest palette */
+  --chart-1: 145 25% 55%; /* --color-primary */
+  --chart-2: 40 72% 67%; /* --color-secondary */
+  --chart-3: 145 72% 67%; /* --color-success */
+  --chart-4: 202 80% 71%; /* --color-info */
+  --chart-5: 38 87% 69%; /* --color-warning */
+  --sidebar: 146 21% 13%; /* --color-surface */
+  --sidebar-foreground: 45 44% 89%; /* --color-ink */
+  --sidebar-primary: 145 25% 55%; /* --color-primary */
+  --sidebar-primary-foreground: 45 44% 89%; /* --color-ink */
+  --sidebar-accent: 144 30% 17%; /* --color-primary-container */
+  --sidebar-accent-foreground: 140 30% 83%; /* --color-on-primary-container */
+  --sidebar-border: 147 19% 30%; /* --color-surface-dim */
+  --sidebar-ring: 145 25% 55%; /* --color-primary */
+
+  /* Brand refs for CVA (design kit) */
+  --forest: #87c09f;
+  --forest-mid: #6ea886;
+  --gold: #e8c070;
+  --gold-light: #f5d89a;
+  --cream: #0e1814;
+  --cream-border: #3d5a4a;
+  --green-soft: #1f3a2a;
+  --amber-soft: #3a2f1a;
+  --green-text: #6ee7a0;
+
+  /* Elevation — same structure, forest-tinted */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.32);
+  --shadow-overlay: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-float-card: 0 16px 48px rgba(0, 0, 0, 0.32),
+    0 4px 12px rgba(0, 0, 0, 0.24);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  .cn-toast {
+    @apply rounded-xl border border-border bg-popover text-popover-foreground font-sans shadow-[var(--shadow-overlay)];
+  }
+
+  [data-sonner-toaster][data-sonner-theme="light"] {
+    --normal-bg: hsl(var(--popover));
+    --normal-text: hsl(var(--popover-foreground));
+    --normal-border: hsl(var(--border));
+    --border-radius: var(--radius-lg);
+  }
+
+  [data-sonner-toaster][data-sonner-theme="dark"] {
+    --normal-bg: hsl(var(--popover));
+    --normal-text: hsl(var(--popover-foreground));
+    --normal-border: hsl(var(--border));
+    --border-radius: var(--radius-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

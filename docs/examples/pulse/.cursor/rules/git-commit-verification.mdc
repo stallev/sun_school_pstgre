@@ -1,0 +1,40 @@
+---
+description: Перед git commit — локальная production-сборка (и typecheck при затронутых packages)
+alwaysApply: true
+---
+
+# Git commit — обязательная верификация
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md) — шаг ВЕРИФИКАЦИЯ до коммита.
+
+## Контракт
+
+Перед **`git commit`** (когда пользователь явно просит закоммитить), агент **MUST** успешно выполнить локальную **production-сборку**, если в коммите есть изменения, влияющие на сборку или runtime:
+
+- `apps/web/**`
+- `packages/**`
+- корневые `package.json`, lockfile, `next.config.*`, Prisma schema
+
+Команда с корня monorepo:
+
+```bash
+npm run build
+```
+
+(эквивалент Vercel: `db:generate` + `next build` для `apps/web`).
+
+## Дополнительно (рекомендуется в том же цикле)
+
+| Затронуто | Команда |
+|-----------|---------|
+| TypeScript вне одного файла UI | `npm run typecheck` (корень) |
+| Любой код в `apps/web` или `packages/**` | `npm run lint` (корень) |
+
+## Исключения
+
+- Коммит **только** документации / `.md` без изменений кода и конфигов сборки — `npm run build` не обязателен.
+- Пользователь явно просит пропустить сборку — зафиксировать в ответе, почему.
+
+## Антипаттерн
+
+Коммитить правки в React/Next без прогона `npm run build` и надеяться на CI/Vercel как на первый сигнал ошибки Turbopack/RSC boundaries.

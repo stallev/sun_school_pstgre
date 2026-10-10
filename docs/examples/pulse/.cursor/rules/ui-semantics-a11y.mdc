@@ -1,0 +1,61 @@
+---
+description: Semantic HTML markup and WCAG 2.1 AA accessibility — apps/web
+globs:
+  - apps/web/src/**/*.tsx
+  - apps/web/src/app/**/layout.tsx
+alwaysApply: false
+---
+
+# Semantic markup & a11y (`apps/web`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Guide:** [`ai_semantics_a11y_guidelines.md`](docs/guidelines/react/ai_semantics_a11y_guidelines.md)  
+**Design system:** [`fitness-platform-design-system.md`](docs/default_docs/fitness-platform-design-system.md) §15 Checklist
+
+**Target:** **WCAG 2.1 Level AA** — contrast, keyboard, names, structure.
+
+## Semantic HTML (обязательно)
+
+- **Landmarks:** `<main>`, `<nav>`, `<header>`, `<footer>`, `<section>` / `<article>` — не заменять на `<div>` без причины.
+- **Интерактив:** `<button type="button|submit">`, `<a href>` — **не** `<div onClick>` / `<span role="button">` для стандартных действий.
+- **Формы:** `<label htmlFor>` + `id` на control; группы — `Field` / `Fieldset` / `Legend` (shadcn Form).
+- **Заголовки:** **один `<h1>`** на страницу; иерархия `h1→h2→h3` без пропусков ради стиля — см. **typography_text_guidelines**.
+- **Списки и таблицы:** `<ul>`/`<ol>`/`<li>` для списков; `<table>`, `<thead>`, `<th scope>` для tabular data (admin tables).
+- **Изображения:** meaningful `alt`; декоративные — `alt=""` или `aria-hidden`.
+- **Язык:** `lang` на `<html>` в root layout.
+
+## A11y (обязательно)
+
+| Область | Требование |
+|---------|------------|
+| **Names** | У каждого интерактива — visible label или `aria-label`; icon-only → `aria-label` + `sr-only` fallback |
+| **Icons** | Декоративные lucide — `aria-hidden`; смысл — в текст/label (**ui-icons-lucide**) |
+| **Focus** | Видимый `focus-visible:` (`ring-ring`); порядок табуляции = визуальный порядок |
+| **Modals/Sheets** | Focus trap, Escape закрывает — shadcn/Radix primitives |
+| **Forms** | `aria-invalid`, `aria-describedby` / `FieldError` при ошибках |
+| **Mutations** | `disabled` + `aria-busy` — **ui-mutation-pending** |
+| **Contrast** | AA: текст 4.5:1, UI 3:1 — Warm Forest tokens, light + dark |
+| **Motion** | `prefers-reduced-motion` — без обязательной анимации для понимания |
+| **Touch** | Targets ≥ 44×44px — **ui-mobile-first** |
+| **Color alone** | Статус/error — не только цвет; текст, icon, или badge |
+
+## Приоритет primitives
+
+1. **Native element** с правильной семантикой  
+2. **shadcn/ui (Radix)** — Dialog, Sheet, Select, Tabs  
+3. Custom ARIA — только если 1–2 недостаточно; не дублировать поведение браузера
+
+## Agent checklist (перед merge UI)
+
+- [ ] Landmarks и heading hierarchy корректны
+- [ ] Нет div-button / div-link антипаттернов
+- [ ] Формы связаны с labels; ошибки доступны screen reader
+- [ ] Keyboard: Tab через интерактив; Enter/Space на кнопках; Escape в overlay
+- [ ] Icon-only controls именованы
+- [ ] Проверка light + dark contrast на primary text/CTA
+
+## Связанные правила
+
+- **ui-warm-forest-shadcn**, **ui-mobile-first**, **ui-mutation-pending**, **typography_text_guidelines**
+
+Reference: lampto `ux_ui_faang_principles_for_agents.md` §2.5 — Pulse Warm Forest adaptation.

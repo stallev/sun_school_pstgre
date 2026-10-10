@@ -1,0 +1,104 @@
+﻿---
+description: React 19 — RSC/client boundaries, components, cn(), hooks — apps/web
+globs:
+  - apps/web/src/components/**
+  - apps/web/src/hooks/**
+alwaysApply: false
+---
+
+# React / components (`apps/web`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Guides:** [ai_component_guidelines.md](docs/guidelines/react/ai_component_guidelines.md), [ai_react_hooks_guidelines.md](docs/guidelines/react/ai_react_hooks_guidelines.md), [ai_react_utilities_guidelines.md](docs/guidelines/react/ai_react_utilities_guidelines.md), [ai_react_state_management_guidelines.md](docs/guidelines/react/ai_react_state_management_guidelines.md)
+**Client lazy loading:** [ai_client_lazy_loading.md](docs/guidelines/nextjs/ai_client_lazy_loading.md) — `next/dynamic` for heavy deps in shared `components/ui/*`  
+**Naming:** **react-naming-conventions** · **Logic/presentation:** **react-logic-presentation**
+
+## Server vs client
+
+- **Server Components by default** — no `'use client'`.
+- **`'use client'`** only for hooks, DOM events, client-only APIs; directive at **top of file**.
+- Prefer `.client.tsx` / `.client.ts` for new client-entry modules.
+- **Heavy client libs** (`react-day-picker`, `recharts`, editors) in shared UI → **`next/dynamic`** per [ai_client_lazy_loading.md](docs/guidelines/nextjs/ai_client_lazy_loading.md) — not static import in cross-route modules.
+- **Extract the interactive leaf** — one interactive element does not justify `'use client'` on the whole page; isolate it in a small client component. **Fetch once on the server**, pass down as props — don't re-fetch client-side via `useEffect` for data the Server Component already had.
+
+## Domain literals
+
+- **No inline domain strings** — roles, entity statuses, enum codes.
+- Import from `@/lib/...` or `@{{PACKAGE_SCOPE}}/domain`.
+- **User-visible text** → `@/lib/messages` (**ui-messages-and-copy**).
+
+## Components
+
+- Explicit **props interfaces**; **no `React.FC`** for new components.
+- Arrow components `const X = (props: Props) => …` (exceptions: `page.tsx`, `layout.tsx`, `'use server'`).
+- Destructure props with defaults in the signature; early `return` per UI state (loading/error/empty/success), not nested ternaries; stable `key={item.id}` (never `index` on reorderable lists, never `Math.random()`) — full rationale: [ai_component_guidelines.md](docs/guidelines/react/ai_component_guidelines.md) §2.3.
+- Primitives in `components/ui/`; typography atoms in `components/atoms/`; features in dedicated folders.
+- **Design Lab catalog:** product UI **MUST** import from paths listed on `/design-system` — `@/components/atoms`, `@/components/ui/*` — not from `@/components/design-lab/**` (showcase-only). See **ui-design-system-shadcn** §Design Lab catalog.
+
+## Styling
+
+- Tailwind + **`cn()`** from `@/lib/utils`; variants via **cva**.
+- Semantic tokens per **ui-design-system-shadcn** and [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}).
+
+## Equal-height card rows (обязательно)
+
+Когда **2+ карточки** стоят в одном ряду (`grid` / `flex` на `md+`), **высота каждой карточки в ряду должна совпадать** — нижние края выровнены.
+
+**Паттерн (3 уровня):**
+
+1. **Grid-контейнер:** `grid … items-stretch` (явно, не полагаться только на default).
+2. **Обёртка** (`Reveal`, `<li>`, link-wrapper): `h-full` / `min-h-full`, если между grid и card есть промежуточный элемент.
+3. **Card:** `flex h-full flex-col`; переменный контент — `flex-1`; footer/CTA/chips — `mt-auto` при необходимости.
+
+**Пример (Pulse):** `StepCard`, `TestimonialCard`, `FeaturedTrainerCardView`, `FeatureCardGrid`, `PulseCardKpi` — канон проекта задаёт каталог Design Lab.
+
+**Антипаттерн:** карточки «по контенту» в multi-column grid без `h-full` — ломает визуальный ритм landing и admin queue grids.
+
+**Приёмка:** сверить ряд на **390px** (stack) и **`md+`** (equal height) перед merge UI-задачи с card grid.
+
+## Structure
+
+- **One feature component per file:** **react-one-component-per-file** (≤ **140 lines** target)
+- **Maximize shared components** — search Design Lab (`/design-system`) + `components/ui/`, `components/atoms/`, domain folders before inline JSX; extract on 2+ routes (**react-logic-presentation**)
+- Named exports for shared components; avoid deep barrel chains.
+
+## Forms & mutations
+
+- [ai_form_handling_pattern.md](docs/guidelines/react/ai_form_handling_pattern.md)
+- Toast: **ui-toast-mutations**; pending: **ui-mutation-pending**
+
+## Hooks discipline (MUST)
+
+Full contract: [ai_react_hooks_guidelines.md](docs/guidelines/react/ai_react_hooks_guidelines.md).
+
+- **Rules of Hooks** — top level only, only from components/custom hooks; component body stays a pure render (no `fetch`/`localStorage`/timers outside `useEffect`).
+- **`useState`** — never mutate directly (`prev => ...` / new array/object); derived values (`fullName`, formatted totals) computed in render, not synced via `useEffect`.
+- **`useEffect`** — never pass an `async` function directly; declare it inside and invoke. Always clean up subscriptions/timers/in-flight requests (`AbortController` for fetch — [ai_data_fetching_patterns.md](docs/guidelines/nextjs/ai_data_fetching_patterns.md) §4).
+- **`useRef`** — for mutable values that must not trigger a re-render (render counters, prev-prop tracking, DOM refs); do not model them with `useState`.
+- **`use()`** — Promise must be stable across renders (parent-created/memoized); consumer wrapped in `<Suspense>` + `ErrorBoundary`.
+- Hand-rolled async UI state (rare — prefer `useActionState`/RSC) → discriminated union (`{ status: 'idle'|'loading'|'success'|'error' }`), not independent `isLoading`/`isError` booleans.
+- **Memoization** — measure before `useMemo`/`useCallback`/`memo` (no default use); always memoize Context Provider `value`. **`useLayoutEffect`** — default to `useEffect`, switch only for a measured pre-paint flash. **`useTransition`** — never disable/block the triggering input while `isPending`. **`useId`** — SSR-safe DOM/aria ids, never a list `key`. **`useSyncExternalStore`** — required for subscribing to non-React sources (avoids tearing). Full detail: [ai_react_hooks_guidelines.md](docs/guidelines/react/ai_react_hooks_guidelines.md) §11–§14.
+- **Custom hooks** — one concern per hook (no "god hooks"); return a named object once 3+ values; never return JSX.
+
+## State management
+
+Default to `useState`/`useReducer` + Server Components — reach for a client store only for genuinely cross-cutting state. Decision table + full rules: **react-state-management**, [ai_react_state_management_guidelines.md](docs/guidelines/react/ai_react_state_management_guidelines.md).
+
+- **Zustand/Redux Toolkit — always select narrowly** (`useStore(s => s.count)` / `useSelector`), never destructure the whole store.
+- **Never a module-level store singleton on the server** in Next.js App Router — per-request/per-user state must use a store-per-request pattern (`useRef` in a Provider), or it leaks between users.
+
+## React Compiler
+
+When `reactCompiler: true` in `next.config.ts` — do not add `memo` / `useCallback` / `useMemo` without profiled need. Follow [Rules of React](https://react.dev/reference/rules).
+
+## shadcn/ui
+
+Use **shadcn MCP** before hand-rolling primitives. Adapt to {{DESIGN_SYSTEM_NAME}} tokens. Primitives are **Base UI** (`shadcn init -b base`, style `base-vega`) — **ui-design-system-shadcn**, a11y in **ui-semantics-a11y**.
+
+## Semantics & a11y
+
+- **Semantic HTML + WCAG 2.1 AA** — **ui-semantics-a11y**; guide: [ai_semantics_a11y_guidelines.md](docs/guidelines/react/ai_semantics_a11y_guidelines.md)
+- Native `<button>`, `<a>`, `<label>`, landmarks — not div-as-button
+- Icon-only: `aria-label`; decorative lucide: `aria-hidden`
+
+Reference: Pulse (docs/examples/pulse) `react-ui-components.mdc` — Pulse design system paths.

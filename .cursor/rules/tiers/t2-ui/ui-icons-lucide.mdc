@@ -1,0 +1,31 @@
+﻿---
+description: Prefer lucide-react for UI icons — apps/web
+globs:
+  - apps/web/src/**/*.tsx
+alwaysApply: false
+---
+
+# Icons (`lucide-react`)
+
+Package in `apps/web/package.json`; aligns with shadcn/ui and tree-shakable imports.
+
+## Rule
+
+- For **UI icons** (navigation, buttons, forms, empty states), **use `lucide-react`** — import **individual icons** for tree-shaking (`import { Heart } from "lucide-react"`).
+- **Do not** add ad-hoc inline SVG for standard UI glyphs when a Lucide icon exists.
+
+## Exceptions
+
+- **Brand assets** (official multi-color logos if required).
+- **Illustrations** or non-icon artwork.
+- **Design-system mandates** from [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) for pixel parity.
+
+## Usage
+
+```tsx
+import { Heart } from "lucide-react";
+```
+
+Size/stroke via `className` (`size-4`, `text-muted-foreground`) — {{DESIGN_SYSTEM_NAME}} tokens per [ui-design-system-shadcn.mdc](ui-design-system-shadcn.mdc).
+
+Reference: Pulse (docs/examples/pulse) `ui-icons-lucide.mdc`.

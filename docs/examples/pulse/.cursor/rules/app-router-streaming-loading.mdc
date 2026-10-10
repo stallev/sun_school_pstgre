@@ -1,0 +1,44 @@
+---
+description: App Router streaming — Suspense, loading.tsx, Instant Navigations, page performance (ai_loading_patterns §4–§18)
+globs: apps/web/src/app/**/*
+alwaysApply: false
+---
+
+# App Router: streaming, loading & page performance (mandatory for route work)
+
+**Normative doc:** [`docs/guidelines/nextjs/ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) — loading UX **and** page performance (adapted from lampto `ai_page_performance_streaming.md`).  
+**Runtime:** [ADR-002](docs/prds/07_governance/adr_002_next162_vercel_runtime_policy.md) — Next.js **16.3.0**, Vercel streaming + Instant Navigations  
+**Cache tags:** [`cache_revalidation_policy.md`](docs/prds/05_runtime/cache_revalidation_policy.md)
+
+When you **add or edit** `page.tsx`, segment `layout.tsx`, colocated `loading.tsx`, or `error.tsx` under `apps/web/src/app/`:
+
+## Do
+
+1. **Multiple independent Prisma queries** for **different UI sections** → separate async Server Components (prefer `*.server.tsx`), each in **`<Suspense fallback={<RegionSkeleton />}>`**. Avoid blocking the whole page with one top-level `Promise.all` unless a [§18 exception](docs/guidelines/nextjs/ai_loading_patterns.md#18-documented-exceptions) is documented.
+2. **New or materially changed data-heavy route** → colocated **`loading.tsx`** (skeleton matching page chrome) per §10.
+3. Keep **`page.tsx` light** (§4): `await params` / `searchParams`, fast `auth()` + redirects, static shell; defer heavy work to Suspense children in `src/data/**` or `*.server.tsx`.
+4. **Independent queries in one async child** → `Promise.all`, not sequential awaits (§7). For independent **UI regions**, prefer sibling Suspense over one `Promise.all` that fails atomically (§5).
+5. **Repeated session/DB reads in one request** → React `cache()` (§6, §8); cross-request public reads → **`'use cache'`** + `cacheTag()` per cache policy (§8) — **not** `unstable_cache`.
+6. Pair Suspense with segment **`error.tsx`** where failure is possible (§12). Skeletons match final layout — CLS target < 0.1 (§11).
+7. **Instant Navigations (16.3):** Suspense / `'use cache'` leave a reusable **App Shell** under `partialPrefetching: true`; do not set `export const instant = false` without a documented blocking reason. Use **`catchError`** only for component-level recovery when segment `error.tsx` is too coarse (prefer `retry()`).
+
+## Do not
+
+- Duplicate the **same** full-page loading UI via both `loading.tsx` and wrapping Suspense for identical content (§3.3).
+- Leave long DB work only in layout/`page` top level when UI could stream in regions (§4).
+- Use false nested Suspense when IDs are already in `params` (§5).
+- Cache authorization, use **`unstable_cache`** in new code, or skip `updateTag` after mutations that affect tagged reads (§8).
+- Treat `<Link prefetch={true}>` as the old full-page default under Partial Prefetching — deeper prefetch only when intentional.
+
+## Pulse examples
+
+- `/trainers` catalog: filter shell + Suspense trainer grid
+- `/trainers/[id]`: profile, reviews, schedule — sibling Suspense regions
+- `/client/bookings`: upcoming vs past in separate Suspense regions
+- `/admin/trainers/pending`: `loading.tsx` + table Suspense
+
+## Before you finish
+
+Run full checklist in **ai_loading_patterns.md §16** (sections A–E). Review **§17 anti-patterns**. Verify on Vercel preview when available.
+
+Reference: lampto `ai_page_performance_streaming.md` + `app-router-streaming-loading.mdc` — adapted Vercel, `@pulse/db`, Pulse domain.

@@ -1,0 +1,63 @@
+# dependencies
+/node_modules/
+/apps/**/node_modules/
+/packages/**/node_modules/
+/apps/**/.pnp
+/apps/**/.pnp.*
+/apps/**/.yarn/*
+!.yarn/patches
+/apps/**/.yarn/plugins
+/apps/**/.yarn/releases
+/apps/**/.yarn/versions
+
+# testing
+/apps/**/coverage/
+/coverage/
+/apps/**/playwright-report/
+/apps/**/test-results/
+/.playwright-mcp/
+
+# next.js
+/apps/**/.next/
+/apps/**/out/
+
+# text data — local dev credentials (see seed_data_spec §Local credentials JSON)
+/apps/**/text_data/
+
+# production
+/apps/**/build/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+/apps/**/npm-debug.log*
+/apps/**/yarn-debug.log*
+/apps/**/yarn-error.log*
+.pnpm-debug.log*
+
+# Prisma v7 generated client
+packages/db/src/generated/
+
+# Локальные привязки таксономии (копия example → не коммитить)
+packages/db/prisma/taxonomy-map-overrides.json
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+/apps/**/next-env.d.ts
+/docs/stakeholders_docs/
+/docs/prototype/reports/
+
+# Pulse reference snapshot (docs/examples/pulse/.gitignore — local excludes)
+/docs/examples/pulse/**/node_modules/
+/docs/examples/pulse/**/.next/
+/docs/examples/pulse/packages/db/src/generated/
+/docs/examples/js-course/**/*

@@ -1,0 +1,66 @@
+---
+description: Design system tokens, shadcn primitives and the Design Lab catalog for product UI
+alwaysApply: true
+---
+# UI: {{DESIGN_SYSTEM_NAME}} + shadcn + Tailwind v4
+
+**Source of truth:** [`docs/design/visual_identity_contract.md`](docs/design/visual_identity_contract.md) (UX-03, W2); до него — interim [`docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}})
+**Typography:** [`docs/guidelines/typography_text_guidelines.md`](docs/guidelines/typography_text_guidelines.md)  
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)
+
+**Theme:** semantic CSS variables in `apps/web/src/app/globals.css` — `:root` and `.dark` on `<html>` (`next-themes`), plus `@theme inline` for Tailwind v4.
+
+## Principles
+
+- **Character:** palette, mood and shape language — from the visual identity contract, not shadcn defaults or generic SaaS gray.
+- **Typography:** heading / UI / mono font roles via `next/font` in the root layout (`font-heading` for titles); families and subsets — from the visual identity contract.
+- **Hierarchy:** corners, elevation and emphasis per design system.
+- *Pulse example (Warm Forest):* forest greens + gold accents; Source Serif 4 / Manrope / JetBrains Mono; Material You shapes.
+- **Mobile-first:** bottom nav `< md`, sidebar `≥ md` per user flows — full contract: **ui-mobile-first**.
+- **Prototype fidelity:** fonts, sizes, weights, colors from prototype + design system — **ui-prototype-fidelity**.
+
+## Tokens
+
+- Semantic classes: `bg-background`, `text-foreground`, `border-border`, `bg-card`, `text-muted-foreground`, `bg-primary`, `text-primary-foreground`, `ring-ring`.
+- **Primary** — main CTAs; **accent** — badges/highlights; do not swap roles.
+- New colors: define in `:root` / `.dark` **and** map in `@theme inline`.
+
+## States (first-class UX)
+
+Design explicitly: **empty**, **loading**, **error**, **forbidden**.
+
+- Loading: skeletons / Suspense ([ai_loading_patterns.md](docs/guidelines/nextjs/ai_loading_patterns.md)).
+- Field errors: `border-destructive`, error text per design system §forms.
+
+## Agent checklist
+
+- One **Primary CTA** per screen — `Button` `default` variant.
+- Do not bypass PRD with client-side business logic.
+- **Accessibility:** contrast, focus, labels, semantic HTML — full contract: **ui-semantics-a11y** (WCAG 2.1 AA).
+- **Responsive:** edge-to-edge mobile patterns from design system where specified.
+
+## Primitives
+
+shadcn on **Base UI**: Card, Button, Tabs, Dialog, Sheet, Table, Form/Field/Label, Alert, Skeleton — install via shadcn MCP, then tokenize.
+
+- Init: `shadcn init -b base`. In `components.json`, `"style": "base-vega"`.
+- Primitive package: `@base-ui/react`.
+- Compose with the Base UI `render` prop.
+- **MUST NOT:** `shadcn init -b radix`, a `radix-*` style, or `@radix-ui/*` as the shadcn primitive layer.
+
+## Design Lab catalog (product UI — MUST)
+
+Product screens **MUST** compose UI from the **canonical shared catalog** visualized on the dev-only **Design Lab** at `/design-system` (`apps/web/src/app/(dev)/design-system/`). Spec: [`design_system_lab_spec.md`](docs/implementation/mvp/specs/design_system_lab_spec.md).
+
+| Layer | Catalog path | Import alias | Examples |
+|-------|--------------|--------------|----------|
+| Typography atoms | `apps/web/src/components/atoms/` | `@/components/atoms` | `Heading`, `SectionTitle`, `ContentText`, `AlertText` |
+| Tokenized primitives | `apps/web/src/components/ui/` | `@/components/ui/*` | `Button`, `CustomLink`, `Card`, `Container`, project card primitive (Pulse: `PulseCard`), shadcn primitives |
+| Design tokens | `apps/web/src/app/globals.css` | semantic Tailwind classes | `bg-primary`, `text-muted-foreground`, elevation/radius vars |
+| L3 composed patterns | Design Lab L3 sections + [`styleguide.md`](docs/design/styleguide.md) | reuse recipes from catalog | KPI card, empty state, section header |
+
+**MUST NOT:** import showcase wrappers from `@/components/design-lab/**` in product routes; duplicate primitive markup already on Design Lab — extend CVA/atom variant and add a Lab section first.
+
+**Workflow:** open `/design-system` locally → pick catalog import → verify variant on 390px and `md`.
+
+Reference: Pulse (docs/examples/pulse) `ui-calm-editorial-shadcn.mdc` — Warm Forest adaptation.

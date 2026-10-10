@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pulse — Find Your Certified Personal Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+  @theme {
+    --color-primary:              #2D5A40;
+    --color-primary-hover:        #1A3028;
+    --color-primary-light:        #3D7A58;
+    --color-primary-container:    #E4F0E8;
+    --color-on-primary-container: #1A3028;
+    --color-secondary:            #C4973A;
+    --color-secondary-hover:      #A37D28;
+    --color-secondary-light:      #E8C070;
+    --color-secondary-container:  #F5E6C8;
+    --color-on-secondary-container: #5C4014;
+    --color-bg:                   #F5F0E8;
+    --color-surface:              #FFFFFF;
+    --color-surface-variant:      #EDE5D4;
+    --color-surface-container:    #E6DCC6;
+    --color-surface-dim:          #D8CCB4;
+    --color-ink:                  #1A3028;
+    --color-ink-2:                #4A5A50;
+    --color-ink-3:                #8A8578;
+    --font-display: "DM Serif Display", ui-serif, Georgia, serif;
+    --font-sans:    "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    --radius-xs: 4px;  --radius-sm: 6px;
+    --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px;
+  }
+  html, body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  body { font-feature-settings: "ss01","cv11"; }
+  p, h1, h2, h3, h4 { text-wrap: pretty; }
+</style>
+
+<!-- class-registry for dynamic tailwind scanning -->
+<div hidden class="
+  opacity-0 translate-y-5 transition-[opacity,transform] duration-700 ease-out
+  data-[revealed]:opacity-100 data-[revealed]:translate-y-0
+  delay-100 delay-200 delay-300 delay-400 delay-500
+  rotate-45 bg-primary text-white bg-primary-container text-primary
+  bg-bg/95 backdrop-blur-xl shadow-[0_1px_0_rgba(26,48,40,0.09)]
+"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body class="min-h-screen">
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+
+/* ── TWEAKS DEFAULTS ── */
+const TWEAKS = /*EDITMODE-BEGIN*/{"primaryColor":"#2D5A40","heroVariant":"split","showTrustBar":true}/*EDITMODE-END*/;
+
+/* ── DATA ── */
+const HERO_CARDS = [
+  { name:"Maria P.", spec:"Yoga & Pilates", cert:"NASM-CPT", rating:"5.0", price:"From $32/hr",
+    grad:"linear-gradient(145deg,#3D7A58,#2D5A40)", init:"MP",
+    pos:{ position:"absolute", top:"10px",  left:"0px",   transform:"rotate(-4.5deg)", zIndex:1, width:"215px" } },
+  { name:"Anna V.",  spec:"Stretching",     cert:"ACE-CPT",  rating:"4.8", price:"From $35/hr",
+    grad:"linear-gradient(145deg,#C4973A,#A37D28)", init:"AV",
+    pos:{ position:"absolute", top:"90px",  left:"150px", transform:"rotate(2.5deg)",  zIndex:3, width:"215px" } },
+  { name:"Sergey K.", spec:"Strength",      cert:"NSCA-CSCS",rating:"4.9", price:"From $48/hr",
+    grad:"linear-gradient(145deg,#5A7265,#3A4E45)", init:"SK",
+    pos:{ position:"absolute", top:"265px", left:"22px",  transform:"rotate(-1.5deg)", zIndex:2, width:"215px" } },
+];
+
+const DISCIPLINES = [
+  { name:"Personal Training", ct:"64 trainers" }, { name:"Yoga", ct:"48 trainers" },
+  { name:"Pilates", ct:"35 trainers" },           { name:"HIIT", ct:"29 trainers" },
+  { name:"Strength & Conditioning", ct:"52 trainers" }, { name:"Stretching", ct:"41 trainers" },
+  { name:"CrossFit", ct:"22 trainers" },          { name:"Running", ct:"18 trainers" },
+];
+
+const TRAINERS = [
+  { id:1, name:"Maria Pilates", cert:"NASM-CPT", spec:"Pilates & Flexibility", rating:"5.0", reviews:1,  price:"32", tags:["Pilates","Stretching"],    grad:"linear-gradient(145deg,#3D7A58,#2D5A40)", init:"MP" },
+  { id:2, name:"Sergey Power",  cert:"NSCA-CSCS",spec:"Strength & Conditioning",rating:"4.9",reviews:28, price:"48", tags:["Strength Training"],       grad:"linear-gradient(145deg,#5A7265,#3A4E45)", init:"SP" },
+  { id:3, name:"Anna Yoga",     cert:"RYT-200",  spec:"Yoga & Pilates",         rating:"4.8",reviews:32, price:"35", tags:["Yoga","Pilates"],           grad:"linear-gradient(145deg,#C4973A,#A37D28)", init:"AY" },
+];
+
+const TESTIMONIALS = [
+  { text:"Lost 18 lbs in 3 months with Anna. I used to think fitness wasn't for me — now I train 5 days a week and feel the best I have in years.",
+    author:"Maria S.", meta:"29 · New York City",   color:"#2D5A40", stars:"★★★★★" },
+  { text:"Sergey fixed my deadlift form and eliminated the back pain I'd had for years. Six months in, zero injuries, and I've hit three personal bests.",
+    author:"Alex V.",  meta:"34 · Los Angeles",      color:"#C4973A", stars:"★★★★★" },
+  { text:"Flexible scheduling, 100% online, not a single missed session in half a year. Pulse completely changed my relationship with working out.",
+    author:"Kate L.",  meta:"26 · Austin, TX",        color:"#3D7A58", stars:"★★★★★" },
+];
+
+const FAQS = [
+  { q:"Are all trainers background-checked and certified?",
+    a:"Yes. Every trainer on Pulse undergoes identity verification, credential confirmation (NASM, ACE, NSCA, RYT, and others), and a background screening. Only fully approved specialists appear in the catalog." },
+  { q:"How do online sessions work?",
+    a:"Sessions happen through a built-in video call — no Zoom or third-party apps needed. Just click 'Join Session' at the scheduled time. Reminders are sent automatically." },
+  { q:"Can I cancel or reschedule a session?",
+    a:"Yes. You can cancel or reschedule up to 24 hours before your session at no charge. For late cancellations, policies vary by trainer and are shown on their profile before you book." },
+  { q:"What are the payment options?",
+    a:"We accept all major US credit and debit cards (Visa, Mastercard, Amex) and Apple Pay. Payment is processed securely at booking; funds are only released to the trainer after a successful session." },
+  { q:"Is there a subscription or commitment required?",
+    a:"No subscriptions, no contracts. You pay per session — book as few or as many as you like, and cancel anytime with no hidden fees." },
+  { q:"How do I find the right trainer for my goals?",
+    a:"Use filters by specialty, format (online or in-person), price, and rating. Every profile includes a short intro video, certifications, real schedule, and verified reviews from actual clients." },
+];
+
+/* ── ICONS ── */
+const Svg = ({ sz=20, ch, className="" }) => (
+  <svg width={sz} height={sz} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">{ch}</svg>
+);
+const I = {
+  Search:  (p) => <Svg {...p} ch={<><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></>}/>,
+  Check:   (p) => <Svg {...p} ch={<path d="m5 12 5 5L20 7"/>}/>,
+  Arrow:   (p) => <Svg {...p} ch={<><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></>}/>,
+  Calendar:(p) => <Svg {...p} ch={<><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></>}/>,
+  Users:   (p) => <Svg {...p} ch={<><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7"/><circle cx="17" cy="9" r="3"/><path d="M22 20c0-3-2-5-5-5"/></>}/>,
+  Dollar:  (p) => <Svg {...p} ch={<><path d="M12 3v18"/><path d="M17 6H10a3.5 3.5 0 0 0 0 7h4a3.5 3.5 0 0 1 0 7H7"/></>}/>,
+  Shield:  (p) => <Svg {...p} ch={<path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z"/>}/>,
+  Lock:    (p) => <Svg {...p} ch={<><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></>}/>,
+  Plus:    (p) => <Svg {...p} ch={<><path d="M12 5v14"/><path d="M5 12h14"/></>}/>,
+  StarFill:(p) => <svg width={p.sz||16} height={p.sz||16} viewBox="0 0 24 24" fill="#C4973A" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/></svg>,
+};
+
+/* ── HOOKS ── */
+function useScrolled() {
+  const [s, setS] = useState(false);
+  useEffect(() => {
+    const fn = () => setS(window.scrollY > 8);
+    window.addEventListener('scroll', fn, { passive:true }); fn();
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+  return s;
+}
+
+function useReveal() {
+  useEffect(() => {
+    const reveal = el => {
+      if (el.dataset.delay) el.style.transitionDelay = el.dataset.delay;
+      el.setAttribute('data-revealed','');
+    };
+    const ob = new IntersectionObserver(entries =>
+      entries.forEach(e => { if (e.isIntersecting) { reveal(e.target); ob.unobserve(e.target); } }),
+      { threshold:0.08, rootMargin:'0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      el.getBoundingClientRect().top < window.innerHeight * 1.05 ? reveal(el) : ob.observe(el);
+    });
+    return () => ob.disconnect();
+  }, []);
+}
+
+function useCount(target, go) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!go) return;
+    const dur = 1600, t0 = Date.now();
+    const tick = () => {
+      const p = Math.min(1, (Date.now()-t0)/dur);
+      setN(Math.round((1-Math.pow(1-p,3))*target));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [go, target]);
+  return n;
+}
+
+/* ── REVEAL WRAPPER ── */
+const Rv = ({ delay, className="", children, as:Tag="div", ...rest }) => (
+  <Tag data-reveal data-delay={delay}
+    className={`opacity-0 translate-y-5 transition-[opacity,transform] duration-700 ease-out data-[revealed]:opacity-100 data-[revealed]:translate-y-0 ${className}`}
+    {...rest}>
+    {children}
+  </Tag>
+);
+
+/* ── SECTION LABEL ── */
+const Label = ({ children }) => (
+  <span className="inline-block text-[11px] font-bold tracking-[0.1em] uppercase text-primary bg-primary-container px-4 py-1.5 rounded-full mb-5">
+    {children}
+  </span>
+);
+
+/* ── SECTION HEAD ── */
+const SHead = ({ label, title, sub }) => (
+  <div className="text-center mb-16">
+    <Rv><Label>{label}</Label></Rv>
+    <Rv delay="100ms" className="font-display text-[clamp(36px,4vw,52px)] text-ink leading-[1.05] tracking-tight mb-3.5"
+        as="h2">{title}</Rv>
+    {sub && <Rv delay="200ms" className="text-[18px] text-ink-2 leading-relaxed max-w-[540px] mx-auto" as="p">{sub}</Rv>}
+  </div>
+);
+
+/* ── NAV ── */
+function Nav() {
+  const scrolled = useScrolled();
+  return (
+    <nav className={`fixed top-0 inset-x-0 z-50 h-[72px] px-12 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-bg/95 backdrop-blur-xl shadow-[0_1px_0_rgba(26,48,40,0.09)]' : ''}`}>
+      <a href="#" className="font-display text-[22px] tracking-tight text-ink">Pulse</a>
+      <ul className="hidden md:flex gap-8 list-none m-0 p-0">
+        {[["#how","How It Works"],["#trainers","Trainers"],["#reviews","Reviews"],["#faq","FAQ"]].map(([h,l])=>(
+          <li key={h}><a href={h} className="text-[14px] font-medium text-ink-2 hover:text-primary transition-colors whitespace-nowrap">{l}</a></li>
+        ))}
+      </ul>
+      <div className="flex items-center gap-2.5">
+        <button className="text-[14px] font-medium text-ink-2 px-3.5 py-2 rounded-full hover:bg-primary-container hover:text-primary transition-all">Sign In</button>
+        <button className="text-[14px] font-semibold text-white bg-primary px-[22px] py-2.5 rounded-full hover:bg-primary-hover transition-all hover:-translate-y-px hover:shadow-[0_2px_12px_rgba(26,48,40,0.3)]">Get Started</button>
+      </div>
+    </nav>
+  );
+}
+
+/* ── FLOATING TRAINER CARD ── */
+function FloatCard({ d }) {
+  return (
+    <div style={d.pos} className="bg-surface rounded-[20px] overflow-hidden shadow-[0_16px_48px_rgba(26,48,40,0.18),0_4px_12px_rgba(26,48,40,0.10)] hover:-translate-y-2.5 transition-transform duration-300 cursor-default">
+      <div className="h-32 flex items-center justify-center relative overflow-hidden" style={{background:d.grad}}>
+        <span className="font-display text-[44px] italic" style={{color:'rgba(255,255,255,0.55)'}}>{d.init}</span>
+        <div className="absolute top-2 right-2 bg-surface rounded-full px-2 py-0.5 text-[11px] font-semibold text-primary flex items-center gap-0.5 shadow-sm z-10">
+          <I.Check sz={9}/>Verified
+        </div>
+      </div>
+      <div className="p-3.5">
+        <div className="text-[14px] font-bold text-ink mb-0.5">{d.name}</div>
+        <div className="text-[12px] text-ink-3 mb-2">{d.spec}</div>
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-1 text-[13px] font-medium text-ink-2"><I.StarFill sz={12}/>{d.rating}</div>
+          <span className="text-[11px] font-semibold text-primary bg-primary-container px-1.5 py-0.5 rounded-full">{d.cert}</span>
+        </div>
+        <div className="text-[13px] font-bold text-primary">{d.price}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── HERO ── */
+function Hero({ variant }) {
+  return (
+    <section className="min-h-screen flex items-center pt-[72px] overflow-hidden relative">
+      <div className="absolute -top-48 -right-48 w-[800px] h-[800px] rounded-full pointer-events-none"
+           style={{background:'radial-gradient(ellipse at center, rgba(228,240,232,0.7) 0%, transparent 65%)'}}></div>
+      <div className="max-w-[1280px] mx-auto px-14 w-full grid gap-16 items-center" style={{gridTemplateColumns: variant==='split' ? '1.15fr 0.85fr' : '1fr'}}>
+        <div>
+          <Rv className="mb-7">
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-primary bg-primary-container border border-primary/10 px-4 py-1.5 rounded-full">
+              <I.Shield sz={14}/>Background-Checked Personal Trainers
+            </span>
+          </Rv>
+          <Rv delay="100ms">
+            <h1 className="font-display text-[clamp(50px,5.8vw,82px)] text-ink leading-[0.97] tracking-[-0.045em] mb-6">
+              Find a trainer,<br/><em className="text-primary">who changes everything</em>
+            </h1>
+          </Rv>
+          <Rv delay="200ms">
+            <p className="text-[18px] text-ink-2 leading-relaxed max-w-[460px] mb-10">
+              Book online or in-person sessions with NASM, ACE & NSCA certified specialists. No phone calls, no waitlists.
+            </p>
+          </Rv>
+          <Rv delay="300ms" className="flex items-center gap-3.5 mb-5 flex-wrap">
+            <button className="inline-flex items-center gap-2 bg-primary text-white text-[16px] font-semibold px-9 py-4 rounded-full hover:bg-primary-hover transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_24px_rgba(26,48,40,0.35)] active:scale-[0.97]">
+              Find My Trainer <I.Arrow sz={18}/>
+            </button>
+            <button className="inline-flex items-center gap-2 text-ink text-[16px] font-medium px-8 py-[15px] rounded-full border border-surface-dim hover:bg-surface-variant transition-all">
+              Become a Trainer
+            </button>
+          </Rv>
+          <Rv delay="400ms" className="flex items-center gap-2.5 mb-6 flex-wrap">
+            {[["check","Background-checked"],["check","Cancel anytime"],["lock","Secure checkout"]].map(([ic,l])=>(
+              <span key={l} className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-2 bg-surface border border-surface-dim px-3 py-1.5 rounded-full shadow-sm">
+                {ic==="lock" ? <I.Lock sz={12}/> : <I.Check sz={12}/>}{l}
+              </span>
+            ))}
+          </Rv>
+          <Rv delay="500ms" className="flex items-center gap-4 flex-wrap">
+            <span className="flex items-center gap-1.5 text-[14px] font-medium text-ink-2"><I.StarFill sz={15}/>4.9 rated</span>
+            <span className="w-1 h-1 rounded-full bg-surface-dim"></span>
+            <span className="text-[14px] font-medium text-ink-3">200+ certified trainers</span>
+            <span className="w-1 h-1 rounded-full bg-surface-dim"></span>
+            <span className="text-[14px] font-medium text-ink-3">10,000+ sessions booked</span>
+          </Rv>
+        </div>
+
+        {variant === 'split' && (
+          <Rv delay="200ms" className="relative h-[540px]">
+            <div className="absolute inset-[-60px] pointer-events-none"
+                 style={{background:'radial-gradient(ellipse 75% 75% at 55% 50%, rgba(228,240,232,0.85) 0%, transparent 65%)', borderRadius:'60% 40% 50% 50% / 50% 50% 60% 40%'}}></div>
+            {HERO_CARDS.map(d => <FloatCard key={d.name} d={d}/>)}
+          </Rv>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ── TRUST BAR ── */
+function TrustBar({ show }) {
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    if (!show || !ref.current) return;
+    const ob = new IntersectionObserver(([e]) => { if(e.isIntersecting){setVis(true);ob.disconnect();} }, {threshold:0.4});
+    ob.observe(ref.current);
+    return () => ob.disconnect();
+  }, [show]);
+  const c1=useCount(200,vis), c2=useCount(10000,vis), c3=useCount(98,vis), c4=useCount(49,vis);
+  if (!show) return null;
+  return (
+    <div className="bg-primary-hover" ref={ref}>
+      <div className="max-w-[1280px] mx-auto px-14 grid grid-cols-2 md:grid-cols-4">
+        {[[`${c1}+`,"Certified Trainers"],[`${c2.toLocaleString('en-US')}+`,"Sessions Booked"],[`${c3}%`,"Client Satisfaction"],[`${(c4/10).toFixed(1)}★`,"Average Rating"]].map(([n,l])=>(
+          <div key={l} className="py-9 px-5 text-center border-r border-white/10 last:border-r-0">
+            <span className="font-display text-[46px] text-white block leading-none tracking-tight mb-1.5">{n}</span>
+            <span className="text-[13px]" style={{color:'rgba(255,255,255,0.5)'}}>{l}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── HOW IT WORKS ── */
+function HowItWorks() {
+  const steps = [
+    { n:"01", icon:<I.Search sz={22}/>, title:"Choose Your Goal",
+      desc:"Yoga, strength, HIIT, pilates — filter by goal, format (online or in-person), and budget." },
+    { n:"02", icon:<I.Users sz={22}/>,  title:"Find Your Trainer",
+      desc:"Browse certified profiles, video intros, real client reviews, and live availability." },
+    { n:"03", icon:<I.Calendar sz={22}/>, title:"Book Your Session",
+      desc:"Online or in-person. Pay securely in one click and get an automatic reminder." },
+  ];
+  return (
+    <section className="py-24 px-14 bg-surface" id="how">
+      <div className="max-w-[1280px] mx-auto">
+        <SHead label="How It Works" title="Get started in 3 minutes" sub="From choosing your goal to your first session — it's that simple."/>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+          {steps.map((s,i) => (
+            <Rv key={i} delay={`${(i+1)*100}ms`} className="bg-bg rounded-[22px] p-9 border border-ink/5">
+              <div className="font-display text-[88px] leading-[0.88] tracking-tight mb-6 text-primary-container">{s.n}</div>
+              <div className="w-12 h-12 bg-primary-container rounded-[14px] flex items-center justify-center text-primary mb-4">{s.icon}</div>
+              <h3 className="text-[20px] font-bold tracking-tight mb-2.5 text-ink">{s.title}</h3>
+              <p className="text-[15px] text-ink-2 leading-relaxed">{s.desc}</p>
+            </Rv>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── DISCIPLINES ── */
+function Disciplines() {
+  return (
+    <section className="py-24 px-14">
+      <div className="max-w-[1280px] mx-auto">
+        <SHead label="Specialties" title="Every goal. Every style." sub="Hundreds of certified specialists across every fitness discipline, in one place."/>
+        <Rv delay="100ms" className="flex flex-wrap gap-3 justify-center">
+          {DISCIPLINES.map((d,i) => (
+            <div key={i} className="group flex items-center gap-2.5 bg-surface border border-surface-dim px-[26px] py-3.5 rounded-full text-[15px] font-medium cursor-pointer shadow-sm hover:bg-primary hover:text-white hover:border-primary hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
+              <span>{d.name}</span>
+              <span className="text-[12px] text-ink-3 group-hover:text-white/60 transition-colors">{d.ct}</span>
+            </div>
+          ))}
+        </Rv>
+      </div>
+    </section>
+  );
+}
+
+/* ── FEATURED TRAINERS ── */
+function FeaturedTrainers() {
+  return (
+    <section className="py-24 px-14 bg-surface" id="trainers">
+      <div className="max-w-[1280px] mx-auto">
+        <SHead label="Trainers" title="Trainers clients trust" sub="Every trainer is background-checked and holds a nationally recognized certification."/>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {TRAINERS.map((t,i) => (
+            <Rv key={t.id} delay={`${(i+1)*100}ms`} className="bg-surface rounded-[22px] overflow-hidden shadow-sm border border-ink/5 hover:-translate-y-2 hover:shadow-[0_8px_32px_rgba(26,48,40,0.13)] transition-all duration-250 cursor-pointer">
+              <div className="h-[200px] relative flex items-center justify-center overflow-hidden" style={{background:t.grad}}>
+                <span className="font-display text-[56px] italic" style={{color:'rgba(255,255,255,0.45)'}}>{t.init}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/40 to-transparent z-10"></div>
+                <div className="absolute bottom-3.5 right-3.5 bg-surface rounded-full px-3.5 py-1.5 text-[13px] font-bold shadow-sm z-20 text-ink">From ${t.price}/hr</div>
+              </div>
+              <div className="p-5">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[17px] font-bold text-ink">{t.name}</span>
+                  <div className="w-[22px] h-[22px] bg-primary-container rounded-full flex items-center justify-center text-primary flex-shrink-0"><I.Check sz={12}/></div>
+                </div>
+                <div className="flex items-center gap-2 mb-2.5">
+                  <span className="text-[13px] text-ink-3">{t.spec}</span>
+                  <span className="text-[11px] font-semibold text-primary bg-primary-container px-1.5 py-0.5 rounded-full flex-shrink-0">{t.cert}</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[13px] text-ink-2 mb-3">
+                  <I.StarFill sz={14}/><strong>{t.rating}</strong>
+                  <span className="text-ink-3">· {t.reviews} review{t.reviews!==1?'s':''}</span>
+                </div>
+                <div className="flex gap-1.5 flex-wrap">
+                  {t.tags.map(tg=><span key={tg} className="text-[12px] font-medium text-primary bg-primary-container px-2.5 py-1 rounded-full">{tg}</span>)}
+                </div>
+              </div>
+            </Rv>
+          ))}
+        </div>
+        <Rv className="text-center mt-10">
+          <button className="inline-flex items-center gap-2 text-ink text-[16px] font-medium px-8 py-[15px] rounded-full border border-surface-dim hover:bg-surface-variant transition-all">
+            Browse All Trainers <I.Arrow sz={18}/>
+          </button>
+        </Rv>
+      </div>
+    </section>
+  );
+}
+
+/* ── TESTIMONIALS ── */
+function Testimonials() {
+  return (
+    <section className="py-24 px-14" id="reviews">
+      <div className="max-w-[1280px] mx-auto">
+        <SHead label="Client Reviews" title="Real people, real results" sub="Verified reviews from clients who found their trainer on Pulse."/>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {TESTIMONIALS.map((t,i) => (
+            <Rv key={i} delay={`${(i+1)*100}ms`} className="bg-surface rounded-[22px] p-9 shadow-sm border border-ink/5 flex flex-col">
+              <div className="font-display text-[72px] text-primary-container leading-[0.65] mb-4">"</div>
+              <div className="text-secondary text-[14px] tracking-[2px] mb-3.5">{t.stars}</div>
+              <p className="text-[16px] text-ink leading-relaxed flex-1 mb-7">{t.text}</p>
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full flex items-center justify-center font-bold text-[15px] text-white flex-shrink-0" style={{background:t.color}}>{t.author[0]}</div>
+                <div>
+                  <div className="text-[14px] font-bold text-ink">{t.author}</div>
+                  <div className="text-[12px] text-ink-3 mt-0.5">{t.meta}</div>
+                </div>
+              </div>
+            </Rv>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FOR TRAINERS ── */
+function ForTrainers() {
+  const benefits = [
+    { icon:<I.Users sz={20}/>,    title:"Grow your client base",
+      desc:"Create your profile and receive booking requests from thousands of potential clients across the US." },
+    { icon:<I.Calendar sz={20}/>, title:"Own your schedule",
+      desc:"Flexible calendar with automated reminders. Set your hours, rates, and availability your way." },
+    { icon:<I.Dollar sz={20}/>,   title:"Get paid reliably",
+      desc:"Direct deposits to your US bank account. No cash, no invoicing, no payment chasing." },
+  ];
+  const stats = [
+    ["200+","active trainers on the platform"],
+    ["10K+","sessions delivered each month"],
+    ["98%","of clients rebook within 30 days"],
+    ["$3.5K–8K","avg. monthly trainer earnings"],
+  ];
+  return (
+    <section className="py-24 px-14 bg-primary-hover">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-20 items-center">
+        <div>
+          <span className="inline-block text-[11px] font-bold tracking-[0.1em] uppercase px-4 py-1.5 rounded-full mb-5" style={{color:'rgba(255,255,255,0.5)',background:'rgba(255,255,255,0.1)'}}>For Trainers</span>
+          <h2 className="font-display text-[clamp(36px,4vw,52px)] text-white leading-[1.05] tracking-tight mb-3.5">
+            Grow your practice <em className="text-secondary-light">with Pulse</em>
+          </h2>
+          <p className="text-[18px] leading-relaxed max-w-[480px] mb-9" style={{color:'rgba(255,255,255,0.6)'}}>
+            Join a community of NASM, ACE, and NSCA certified professionals. You focus on training — we handle everything else.
+          </p>
+          <div className="flex flex-col gap-6 mb-9">
+            {benefits.map((b,i)=>(
+              <div key={i} className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-[12px] flex items-center justify-center flex-shrink-0" style={{background:'rgba(255,255,255,0.08)',color:'#E8C070'}}>{b.icon}</div>
+                <div>
+                  <div className="text-[16px] font-semibold text-white mb-1">{b.title}</div>
+                  <div className="text-[14px] leading-snug" style={{color:'rgba(255,255,255,0.52)'}}>{b.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button className="inline-flex items-center gap-2 bg-surface text-primary-hover text-[16px] font-semibold px-9 py-4 rounded-full hover:bg-bg hover:-translate-y-px transition-all hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
+            Apply as a Trainer <I.Arrow sz={18}/>
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          {stats.map(([n,l],i)=>(
+            <div key={i} className="rounded-[18px] p-7 border" style={{background:'rgba(255,255,255,0.06)',borderColor:'rgba(255,255,255,0.1)'}}>
+              <div className="font-display text-[40px] text-white tracking-tight leading-none mb-2">{n}</div>
+              <div className="text-[13px] leading-snug" style={{color:'rgba(255,255,255,0.42)'}}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FAQ ── */
+function FAQ() {
+  const [open, setOpen] = useState(null);
+  return (
+    <section className="py-24 px-14 bg-surface" id="faq">
+      <div className="max-w-[1280px] mx-auto">
+        <SHead label="FAQ" title="Common questions"/>
+        <div className="max-w-[720px] mx-auto flex flex-col gap-1.5">
+          {FAQS.map((f,i)=>(
+            <div key={i} className="bg-bg rounded-[18px] overflow-hidden border border-ink/6">
+              <div className="flex items-center justify-between px-7 py-[22px] cursor-pointer hover:bg-surface-variant transition-colors select-none"
+                   onClick={()=>setOpen(open===i?null:i)}>
+                <span className="text-[16px] font-semibold text-ink pr-4">{f.q}</span>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${open===i ? 'bg-primary text-white rotate-45' : 'bg-primary-container text-primary'}`}>
+                  <I.Plus sz={14}/>
+                </div>
+              </div>
+              <div style={{maxHeight: open===i ? '220px' : '0', overflow:'hidden', transition:'max-height 0.35s ease'}}>
+                <div className="px-7 pb-[22px] text-[15px] text-ink-2 leading-relaxed">{f.a}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FINAL CTA ── */
+function FinalCTA() {
+  return (
+    <section className="bg-primary py-[104px] px-14 text-center relative overflow-hidden">
+      <div className="absolute w-[700px] h-[700px] -top-[280px] -right-[200px] rounded-full pointer-events-none" style={{background:'rgba(255,255,255,0.05)'}}></div>
+      <div className="absolute w-[350px] h-[350px] -bottom-[140px] -left-[100px] rounded-full pointer-events-none" style={{background:'rgba(255,255,255,0.05)'}}></div>
+      <div className="relative z-10 max-w-[680px] mx-auto">
+        <span className="inline-block text-[11px] font-bold tracking-[0.1em] uppercase px-4 py-1.5 rounded-full mb-5" style={{background:'rgba(255,255,255,0.14)',color:'rgba(255,255,255,0.8)'}}>Start Today</span>
+        <h2 className="font-display text-[clamp(44px,5.5vw,70px)] text-white leading-[0.97] tracking-[-0.045em] mb-5">
+          Your first session — <em className="text-secondary-light">this week</em>
+        </h2>
+        <p className="text-[18px] leading-relaxed mb-12" style={{color:'rgba(255,255,255,0.68)'}}>
+          Choose a certified trainer, book your session, and take the first real step toward your goal.
+        </p>
+        <div className="flex items-center justify-center gap-4 flex-wrap mb-7">
+          <button className="inline-flex items-center gap-2 bg-surface text-primary-hover text-[16px] font-semibold px-9 py-4 rounded-full hover:bg-bg hover:-translate-y-px transition-all hover:shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
+            Find My Trainer <I.Arrow sz={18}/>
+          </button>
+          <button className="inline-flex items-center gap-2 text-white text-[16px] font-medium px-8 py-4 rounded-full border hover:bg-white/10 transition-all" style={{borderColor:'rgba(255,255,255,0.35)'}}>
+            Apply as a Trainer
+          </button>
+        </div>
+        <div className="flex items-center justify-center gap-6 flex-wrap">
+          {["No subscription required","Cancel anytime","Secure US payments"].map(t=>(
+            <div key={t} className="flex items-center gap-1.5 text-[13px]" style={{color:'rgba(255,255,255,0.6)'}}>
+              <I.Check sz={14}/>{t}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FOOTER ── */
+function Footer() {
+  return (
+    <footer className="bg-surface-variant py-11 px-14 border-t border-surface-dim">
+      <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <div className="font-display text-[20px] tracking-tight text-ink">Pulse</div>
+          <div className="text-[12px] text-ink-3 mt-1">Personal Trainer Marketplace · United States</div>
+        </div>
+        <div className="flex gap-7 flex-wrap justify-center">
+          {["About","For Trainers","Privacy Policy","Terms of Service"].map(l=>(
+            <a key={l} href="#" className="text-[13px] text-ink-3 hover:text-primary transition-colors">{l}</a>
+          ))}
+        </div>
+        <div className="text-[12px] text-ink-3">© 2025 Pulse, Inc. All rights reserved.</div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── TWEAKS PANEL ── */
+function TweaksPanel({ t, set, onClose }) {
+  const COLORS = [{ v:'#2D5A40',label:'Forest'},{v:'#1A3D5C',label:'Ocean'},{v:'#3D2A5C',label:'Amethyst'}];
+  return (
+    <div className="fixed bottom-6 right-6 z-[1000] bg-surface rounded-[20px] shadow-[0_16px_48px_rgba(26,48,40,0.18)] p-5 w-[258px] border border-ink/8">
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-[13px] font-bold text-ink">⚙ Tweaks</span>
+        <button onClick={onClose} className="w-6 h-6 rounded-full bg-bg flex items-center justify-center text-[11px] text-ink-2 hover:bg-surface-container transition-colors">✕</button>
+      </div>
+      <div className="mb-4">
+        <div className="text-[11px] font-semibold text-ink-3 tracking-[0.06em] uppercase mb-2.5">Brand Color</div>
+        <div className="flex gap-2.5">
+          {COLORS.map(c=>(
+            <div key={c.v} title={c.label} onClick={()=>set('primaryColor',c.v)}
+              className={`w-7 h-7 rounded-full cursor-pointer transition-all shadow-sm ${t.primaryColor===c.v?'ring-2 ring-offset-2 ring-ink scale-110':''}`}
+              style={{background:c.v}}></div>
+          ))}
+        </div>
+      </div>
+      <div className="mb-4">
+        <div className="text-[11px] font-semibold text-ink-3 tracking-[0.06em] uppercase mb-2.5">Hero Layout</div>
+        <div className="flex gap-2 flex-wrap">
+          {[['split','Split'],['centered','Centered']].map(([v,l])=>(
+            <div key={v} onClick={()=>set('heroVariant',v)}
+              className={`text-[12px] font-medium px-3 py-1.5 rounded-full cursor-pointer border transition-all ${t.heroVariant===v?'bg-primary-container text-primary border-transparent':'bg-bg text-ink-2 border-surface-dim'}`}>
+              {l}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex items-center justify-between text-[13px] text-ink-2">
+        <span>Stats Bar</span>
+        <div onClick={()=>set('showTrustBar',!t.showTrustBar)}
+          className={`w-10 h-[22px] rounded-full cursor-pointer relative transition-colors ${t.showTrustBar?'bg-primary':'bg-surface-dim'}`}>
+          <div className={`absolute top-[3px] w-4 h-4 rounded-full bg-surface shadow transition-transform ${t.showTrustBar?'translate-x-[22px]':'translate-x-[3px]'}`}></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── APP ── */
+function App() {
+  const [tweaks, setTweaks] = useState(TWEAKS);
+  const [panelOpen, setPanelOpen] = useState(false);
+  useReveal();
+
+  function set(key, val) {
+    setTweaks(prev => ({...prev,[key]:val}));
+    window.parent.postMessage({type:'__edit_mode_set_keys',edits:{[key]:val}},'*');
+  }
+
+  useEffect(() => {
+    const handler = e => {
+      if (e.data?.type==='__activate_edit_mode')   setPanelOpen(true);
+      if (e.data?.type==='__deactivate_edit_mode') setPanelOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  // Apply dynamic primary color via CSS variable override
+  useEffect(() => {
+    document.documentElement.style.setProperty('--color-primary', tweaks.primaryColor);
+  }, [tweaks.primaryColor]);
+
+  return (
+    <>
+      <Nav/>
+      <Hero variant={tweaks.heroVariant}/>
+      <TrustBar show={tweaks.showTrustBar}/>
+      <HowItWorks/>
+      <Disciplines/>
+      <FeaturedTrainers/>
+      <Testimonials/>
+      <ForTrainers/>
+      <FAQ/>
+      <FinalCTA/>
+      <Footer/>
+      {panelOpen && (
+        <TweaksPanel t={tweaks} set={set} onClose={()=>{
+          setPanelOpen(false);
+          window.parent.postMessage({type:'__edit_mode_dismissed'},'*');
+        }}/>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

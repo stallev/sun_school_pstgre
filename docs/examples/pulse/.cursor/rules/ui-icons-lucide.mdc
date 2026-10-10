@@ -1,0 +1,31 @@
+---
+description: Prefer lucide-react for UI icons — apps/web
+globs:
+  - apps/web/src/**/*.tsx
+alwaysApply: false
+---
+
+# Icons (`lucide-react`)
+
+Package in `apps/web/package.json`; aligns with shadcn/ui and tree-shakable imports.
+
+## Rule
+
+- For **UI icons** (navigation, buttons, forms, empty states), **use `lucide-react`** — import **individual icons** for tree-shaking (`import { Heart } from "lucide-react"`).
+- **Do not** add ad-hoc inline SVG for standard UI glyphs when a Lucide icon exists.
+
+## Exceptions
+
+- **Brand assets** (official multi-color logos if required).
+- **Illustrations** or non-icon artwork.
+- **Design-system mandates** from [`fitness-platform-design-system.md`](docs/default_docs/fitness-platform-design-system.md) for pixel parity.
+
+## Usage
+
+```tsx
+import { Heart } from "lucide-react";
+```
+
+Size/stroke via `className` (`size-4`, `text-muted-foreground`) — Warm Forest tokens per [ui-warm-forest-shadcn.mdc](ui-warm-forest-shadcn.mdc).
+
+Reference: lampto `ui-icons-lucide.mdc`.

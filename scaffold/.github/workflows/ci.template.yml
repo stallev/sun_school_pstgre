@@ -1,0 +1,63 @@
+# Project CI — P5 copies it to `.github/workflows/ci.yml` and keeps the jobs required by the quality profile (D7):
+#   prototype, lean — `verify` only
+#   standard        — `verify`, `test`, `e2e` (smoke)
+#   strict          — `verify`, `test`, `e2e` (full H / N / S + axe)
+# Profile: docs/meta/project_quality_profile.md · guide: docs/guidelines/testing/ai_testing_guidelines.md
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run rules:check
+      - run: npm run deps:check
+      - run: npm run encoding:check
+
+  # standard, strict
+  test:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage
+
+  # standard (smoke), strict (full)
+  e2e:
+    needs: verify
+    runs-on: ubuntu-latest
+    env:
+      # Secrets for a test database / preview URL — set in the repository settings, never in this file.
+      DATABASE_URL: ${{ secrets.E2E_DATABASE_URL }}
+      AUTH_SECRET: ${{ secrets.E2E_AUTH_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report

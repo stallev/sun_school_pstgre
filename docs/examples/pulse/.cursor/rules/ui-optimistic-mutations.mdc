@@ -1,0 +1,42 @@
+---
+description: useOptimistic для toggle/list-append мутаций — apps/web
+globs:
+  - apps/web/src/**/*.tsx
+  - apps/web/src/hooks/**/*.ts
+alwaysApply: true
+---
+
+# Optimistic UI с `useOptimistic` (React 19)
+
+**Guide:** [`docs/guidelines/react/ai_optimistic_ui_pattern.md`](docs/guidelines/react/ai_optimistic_ui_pattern.md)
+
+## Когда применять (Pulse MVP)
+
+- **Wishlist toggle** — добавить/убрать тренера из избранного
+- **Service active toggle** — тренер вкл/выкл услугу
+- **List-append** — быстрое добавление элемента в список с `sending: true`
+
+## Когда НЕ применять
+
+| Сценарий | Что использовать |
+|---|---|
+| Форма с редиректом (создать бронирование, onboarding) | `useActionState` / `useTransition` |
+| Деструктивное (отмена брони, удаление) + confirm | `useTransition` без optimistic |
+| Ответ сервера содержит нужные данные (ID, slot) | `useActionState` |
+| Валидационные ошибки от сервера | `useActionState` |
+
+## Обязательно
+
+1. `setOptimisticState` — **только внутри `startTransition`**
+2. `isPending` из `useTransition` → **`disabled`** + **`aria-busy`** (правило **ui-mutation-pending**)
+3. **`toast.error` при ошибке — всегда**
+
+## Toast при optimistic
+
+| Ситуация | toast |
+|---|---|
+| Успех, визуальная смена достаточна | `toast.success` опционален |
+| Успех, нужно явное подтверждение | `toast.success` обязателен |
+| Ошибка (откат) | `toast.error` **всегда** |
+
+Reference: lampto `ui-optimistic-mutations.mdc` — Pulse domain examples.

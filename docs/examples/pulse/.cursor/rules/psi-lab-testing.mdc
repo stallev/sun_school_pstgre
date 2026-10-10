@@ -1,0 +1,32 @@
+---
+description: Lab PageSpeed Insights — REST v5 via PAGE_SPEED_API_KEY, never MCP as primary
+alwaysApply: true
+---
+
+# Lab PSI (Pulse)
+
+**Canon:** [`docs/guidelines/psi-lab-testing.md`](docs/guidelines/psi-lab-testing.md)  
+**Pulse bindings:** [`docs/implementation/mvp/guides/ai_psi_lab_testing.md`](docs/implementation/mvp/guides/ai_psi_lab_testing.md)  
+**Journal:** [`docs/ops/psi-lab-journal.md`](docs/ops/psi-lab-journal.md)
+
+## MUST
+
+- Запускать PSI **только по явной просьбе** пользователя. Не auto после UI-diff, не в commit/CI gate.
+- Канал: `npm run psi:lab` → [`scripts/psi-lab/run-pagespeed.mjs`](scripts/psi-lab/run-pagespeed.mjs) и REST v5 `runPagespeed`.
+- Ключ: `PAGE_SPEED_API_KEY` в `apps/web/.env.local`. **MUST NOT** `NEXT_PUBLIC_*`, не в git, не в JSON-отчёте.
+- Отказ на `localhost` / `127.0.0.1` / `*.localhost` / `next dev`. Цель — задеплоенный origin (`PSI_ORIGIN` или `--url`).
+- Четыре категории в одном запросе: Performance, Accessibility, Best Practices, SEO. **Без PWA**.
+- **MUST NOT** использовать MCP `user-pagespeed` / `pagespeed` как основной канал и **MUST NOT** параллелить MCP и REST.
+
+## MAY / MUST NOT (правки кода)
+
+- Чинить продукт **только** если категория < 90 и аудит назван в JSON **после** flake-повтора.
+- **MUST NOT** чинить contrast / unused JS / preload, пока категория зелёная.
+- Второй зелёный прогон при том же LCP — flake, не регресс. Нет CrUX — не регресс.
+
+## CLI
+
+```bash
+npm run psi:lab -- --url https://example.vercel.app/
+npm run psi:lab -- --suite
+```

@@ -1,0 +1,30 @@
+---
+description: Один React-компонент на файл; типографика через design system
+alwaysApply: true
+---
+
+# Один компонент на TSX-файл (`apps/web`)
+
+## Контракт
+
+- В одном `*.tsx` с UI-компонентом фичи — **ровно один** именованный экспорт React-комponent (default только в `page.tsx` / `layout.tsx`).
+- Подкомпоненты — **соседние файлы** через `import`.
+- **Исключения:** чистые константы/хелперы/types без второго компонента; `*.ts` без JSX; `index.ts` только с реэкспортом.
+
+## Размер файла
+
+- **Целевой лимит: ≤ 140 строк** на feature UI-компонент (`*.tsx` с JSX).
+- Превышение — **разбить** на sibling presentational modules (см. **react-logic-presentation**).
+- Исключения: `page.tsx` / `layout.tsx` (thin compose only), generated files, `components/ui/` shadcn upstream.
+
+## Типографика
+
+- Пользовательский текст — через typography atoms или design-system scale из [`typography_text_guidelines.md`](docs/guidelines/typography_text_guidelines.md) и [`fitness-platform-design-system.md`](docs/default_docs/fitness-platform-design-system.md).
+- Не дублировать произвольные heading/body Tailwind strings across routes.
+
+## Связанные правила
+
+- React: [react-ui-components.mdc](react-ui-components.mdc)
+- DRY: [ai-dry-deduplication.mdc](ai-dry-deduplication.mdc)
+
+Reference: lampto `react-one-component-per-file.mdc`.

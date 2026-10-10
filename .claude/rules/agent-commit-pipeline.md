@@ -1,0 +1,189 @@
+---
+description: Commit pipeline: auto-commit at a commit-unit boundary or on explicit request → verify → review (problem → expected shape → diff; pinned reviewer for runtime code) → branch-prefixed conventional commit + git tooling setup
+---
+# Agent commit pipeline
+
+**Review spec:** [`agent-code-review-subagent.mdc`](agent-code-review-subagent.mdc)  
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md) §2.2 ВЕРИФИКАЦИЯ
+
+## Trigger
+
+Коммит выполняется в двух случаях:
+
+1. **Граница commit unit (auto):** завершена последняя задача CU, объявленного в `P{N}_tasks.md` § Commit plan ([`model-routing.mdc`](model-routing.mdc) §3a). Пользователь заранее разрешил такие коммиты, когда утвердил Commit plan; отдельный вопрос не нужен.
+2. **Явный запрос пользователя.**
+
+Во всех остальных случаях не коммитить. Задача вне CU (мелкая ad-hoc правка) отдельно **не** коммитится: она ждёт границы CU или явного запроса.
+
+**Ограничители auto-commit** — все обязательны, иначе коммита нет и агент докладывает пользователю:
+
+- ВЕРИФИКАЦИЯ (§1) зелёная, CU DoD выполнен;
+- review (§3) без blockers (допускается ≤ 1 re-review delta);
+- в stage только файлы задач CU; нет `.env*`, credentials, секретов;
+- commit subject = заголовок CU (`type(scope): subject`) с branch prefix (§4);
+- **никогда:** `git push`, `--amend`, `--no-verify`, force-операции, правка git config.
+
+## Pipeline (порядок обязателен)
+
+```
+граница CU | запрос → ВЕРИФИКАЦИЯ → stage → review (уровень по diff) → compose message → git commit → commitlint (hook)
+```
+
+### 1. Deterministic verification
+
+Перед коммитом, если затронут код:
+
+- `npm run typecheck` (root monorepo) — когда workspaces уже есть (после P5)
+- `npm run lint` — когда скрипт есть
+- `npm run rules:check` — если есть `.claude/rules/` (после `rules:sync`)
+- `npm run deps:check` — если в diff есть `package.json` / `package-lock.json` / `.npmrc` (`dependency-pinning.mdc`)
+- Тесты — по профилю качества ([`project_quality_profile.md`](docs/meta/project_quality_profile.md) D4 / D5 / D7; нет профиля → `standard`): `lean`+ — `npm run test`, если CU затрагивает код с тестами. `test:coverage` (пороги D4) и `test:e2e` — в CI с `standard`; e2e локально — когда CU меняет критичный flow
+- CU DoD из `P{N}_tasks.md` (и Phase DoD — на последнем CU фазы)
+
+Если в задаче правили `.cursor/rules/*.mdc` — в **той же задаче** `npm run rules:sync` и закоммитить `.claude/rules/`. Не править зеркало руками.
+
+При fail — исправить, не коммитить.
+
+**Runtime dual-view (`next-dev-loop`):** только по **явному запросу пользователя** — не часть обязательной ВЕРИФИКАЦИИ перед commit и не auto на UI-diff. Модель: `/_next/mcp` + `agent-browser`, 4 слоя (compile → runtime errors → browser UX → React). См. methodology §2.2 / `docs/guidelines/nextjs/README.md` § Agent runtime verification.
+
+**Lab PSI (`psi-lab-testing`):** только по **явному запросу** на задеплоенный origin (`npm run psi:lab`). Не часть обязательной ВЕРИФИКАЦИИ перед commit. Не смешивать с `next-dev-loop` и не мерить `localhost`.
+
+### 2. Collect git context
+
+Параллельно:
+
+- `git status`
+- `git diff` (staged + unstaged)
+- `git log --oneline -10`
+
+Stage только релевантные файлы (`git add`). Не коммитить `.env`, credentials.
+
+### 3. Pre-commit review
+
+Выполнить **[`agent-code-review-subagent.mdc`](agent-code-review-subagent.mdc)** в режиме **pre-commit** (уровни и бюджет — там; таблицы и prompt — [`docs/guidelines/ai_code_review_protocol.md`](docs/guidelines/ai_code_review_protocol.md), читать на уровне `reviewer`):
+
+1. **Уровень** — § Depth: `skip` → `diff-only` → `reviewer`. Определяет **содержимое staged diff** (§ Sensitive zones — единственный список), а не type из будущего commit message. Runtime-код в CU (включая T3) → `reviewer`.
+2. **Три прохода** (`reviewer`): проблема → ожидаемая форма → diff. Проблема — из задач CU в `P{N}_tasks.md` и просьбы пользователя, не из diff и не из собственного message; неясна → спросить до review
+3. **`reviewer`** — pinned субагент ([`.cursor/agents/reviewer.md`](../agents/reviewer.md), readonly), получает только проблему и scope, не summary автора. **Не** `bugbot` (платный), **не** `generalPurpose`. Один на CU.
+4. **Trace-блок** (`Review: …`) в ответе — всегда, включая `skip`
+5. **Blocker** → исправить → re-review **только delta**, не более одного раза (§ Budget); blocker остался → не коммитить, доложить пользователю
+6. **Suggestions only / no findings** → продолжить §4
+
+### 4. Compose commit message
+
+**Branch prefix = имя текущей ветки** (`git branch --show-current`), без изменений:
+
+```
+<branch-name>: type(scope): subject
+
+[optional body — WHY, not WHAT]
+
+[optional footer — BREAKING CHANGE]
+```
+
+#### Types
+
+| Type | Когда |
+|------|-------|
+| `feat` | Новая функциональность для пользователя |
+| `fix` | Исправление бага |
+| `refactor` | Рефакторинг без изменения поведения |
+| `perf` | Оптимизация производительности |
+| `docs` | Только документация |
+| `test` | Тесты |
+| `chore` | Зависимости, конфиги, тулинг |
+| `ci` | CI/CD |
+| `revert` | Откат коммита |
+| `style` | Форматирование без логики |
+
+#### Scopes (optional, lowercase, hyphens ok)
+
+`web` · `domain` · `db` · `policy` · `auth` · `ui` · `docs` · `config` · `ci` · `deps` · `dal` · `types` · `hooks` · `i18n`
+
+#### Rules
+
+- Imperative mood · lowercase subject · no trailing `.` · header ≤ 120 chars
+- Body объясняет **ПОЧЕМУ**, не что
+- Breaking: `type(scope)!:` + footer `BREAKING CHANGE: ...`
+- На `main` / `develop` commitlint допускает commit **без** prefix — агенту **предпочтительно** `<branch-name>:`
+
+#### Examples
+
+```
+feature/P6-auth: feat(auth): add google oauth provider
+P6-add-google-auth: fix(web): resolve filter re-render
+main: chore(docs): sync canonical routes
+```
+
+#### Anti-patterns
+
+- ❌ `feat(auth): add oauth` — нет branch prefix (на feature-ветке)
+- ❌ `feature/P6-auth feat(auth): ...` — нет `: ` после branch name
+- ❌ `feature/P6-auth: Fixed the bug` — неверный регистр/время
+- ❌ Один коммит на несколько несвязанных фич
+
+### 5. Execute commit
+
+- HEREDOC для message (Windows/PowerShell: эквивалент без интерактива)
+- После commit — `git status` для verify
+- Hook fail → исправить message → **новый commit**, не `--amend` (кроме случаев из user rule)
+
+---
+
+## Git tooling setup (P5 scaffold)
+
+Boilerplate: [`scaffold/commitlint.config.mjs`](scaffold/commitlint.config.mjs), [`scaffold/.husky/`](scaffold/.husky/) → копировать в корень monorepo.
+
+### Dependencies
+
+```bash
+npm install --save-dev @commitlint/cli @commitlint/config-conventional husky conventional-changelog-cli
+npm install --save-dev lint-staged  # recommended
+```
+
+### commitlint.config.mjs
+
+Optional branch prefix (= git branch name), then conventional header. Config — [`scaffold/commitlint.config.mjs`](scaffold/commitlint.config.mjs). Использовать `.mjs` (без ts-node).
+
+### husky
+
+```bash
+npx husky init
+```
+
+`.husky/commit-msg`: `npx --no -- commitlint --edit "$1"`  
+`.husky/pre-commit` *(recommended)*: `npx --no -- lint-staged`
+
+```json
+{
+  "scripts": { "prepare": "husky", "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0" },
+  "lint-staged": { "*.{ts,tsx,js,jsx,mjs}": "eslint --fix --max-warnings=0" }
+}
+```
+
+**Vercel / CI:** `HUSKY=0` в env **или** cross-platform `prepare`:
+
+```json
+"prepare": "node -e \"try{require('fs').accessSync('.git');require('child_process').execSync('husky',{stdio:'inherit'})}catch(e){}\""
+```
+
+**`.gitignore`:** не игнорировать `.husky/`.
+
+### Verify commitlint
+
+```bash
+echo "feature/P6-auth: add google oauth" | npx commitlint   # fail
+echo "feature/P6-auth: chore: test setup" | npx commitlint  # pass
+```
+
+### CHANGELOG caveat
+
+`conventional-changelog-cli` не парсит `<branch-name>:` prefix по умолчанию.
+
+---
+
+## Related
+
+- **agent-code-review-subagent** — review protocol: standalone или pre-commit
+- User rule: git safety (no force push, no skip hooks); commit only at a declared CU boundary or when asked (§ Trigger)
+- **typescript-monorepo-types** · **product-docs-alignment**

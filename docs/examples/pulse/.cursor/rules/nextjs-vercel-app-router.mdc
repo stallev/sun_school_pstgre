@@ -1,0 +1,61 @@
+---
+description: Next.js 16.3.0 App Router, Vercel, proxy.ts, Instant Navigations — apps/web
+globs: apps/web/**
+alwaysApply: false
+---
+
+# Next.js 16.3.0 + Vercel (`apps/web`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Runtime (mandatory):** [ADR-002](docs/prds/07_governance/adr_002_next162_vercel_runtime_policy.md) — **pin `next@16.3.0`**  
+**Stack:** [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md)  
+**Guidelines:** [`docs/guidelines/nextjs/README.md`](docs/guidelines/nextjs/README.md)
+
+## Version pin (hard requirement)
+
+```json
+"next": "16.3.0"
+```
+
+No Next.js 15.x patterns. No floating `^16` without ADR.
+
+## Request interception — `proxy.ts` (NOT `middleware.ts`)
+
+Next.js 16 renames `middleware.ts` → **`proxy.ts`** (Context7 `/vercel/next.js` / official v16 upgrade guide):
+
+| Next.js 15 (legacy) | Next.js 16.3.0 (Pulse) |
+|---------------------|-------------------------|
+| `middleware.ts` | **`proxy.ts`** |
+| `export function middleware()` | **`export function proxy()`** |
+| Edge runtime common | **`proxy` runtime = `nodejs`** (Edge **not** supported in proxy) |
+
+- **Canonical:** `apps/web/src/proxy.ts`
+- **`middleware.ts`:** temporary migration only — do not add new features
+- **Codemod:** `npx @next/codemod@canary middleware-to-proxy .`
+- **Auth in proxy:** import **`auth.config.ts`** only (no Prisma); never import `auth.ts`
+- **Policy:** `@pulse/policy-edge` only — never `@pulse/policy-server` in proxy/middleware
+
+## Required practices
+
+- **Async Request APIs:** `await cookies()`, `await headers()`, `await params`, `await searchParams`
+- **Server Components by default** — `'use client'` only for hooks/browser APIs
+- **Thin BFF:** handlers/actions → `packages/domain` + DAL `src/data/**`
+- **Cache invalidation:** `updateTag` (Server Actions, read-your-own-writes), `revalidateTag`, `revalidatePath` — see ADR-002
+- **Cross-request reads:** **`'use cache'`** + `cacheTag()` + `cacheLife()` — **not** `unstable_cache`; requires `cacheComponents: true` — see [`ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) §8
+- **Instant Navigations (16.3):** `cacheComponents: true` + **`partialPrefetching: true`**. Default `<Link>` warms an **App Shell** per route. Use `<Link prefetch={true}>` only for intentional deeper per-link prefetch. Prefer Suspense / `'use cache'` for instant routes; `export const instant = false` only with documented reason.
+- **Errors:** segment **`error.tsx`** canon; component-level **`catchError`** (`next/error`) + prefer **`retry()`** when a segment boundary is too coarse.
+- **Background work:** Vercel Cron + jobs — **not** `unstable_after`
+- **Bundler:** Turbopack default
+
+## Data layer
+
+- [ai_nextjs_db_data_handle.md](docs/guidelines/nextjs/ai_nextjs_db_data_handle.md)
+- [data-server-actions-and-api.mdc](data-server-actions-and-api.mdc)
+
+## Domain invariants
+
+- `TrainerProfile.timezone` for schedule/slots
+- Booking transitions via domain use-cases only
+- Public trainers only when `status = approved`
+
+Reference: lampto `nextjs-vercel-app-router.mdc` — Pulse uses **Vercel + 16.3.0** per ADR-002.

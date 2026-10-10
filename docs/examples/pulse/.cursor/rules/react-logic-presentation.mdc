@@ -1,0 +1,52 @@
+---
+description: Separation of logic and presentation; maximize shared components
+globs:
+  - apps/web/src/**
+alwaysApply: false
+---
+
+# Logic ↔ presentation separation (`apps/web`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Guides:** [ai_component_guidelines.md](docs/guidelines/react/ai_component_guidelines.md), [ai_nextjs_db_data_handle.md](docs/guidelines/nextjs/ai_nextjs_db_data_handle.md)
+
+## Контракт
+
+**Не смешивать** fetch/policy/business logic с интерактивным UI в одном модуле.
+
+## Слои (куда класть код)
+
+| Слой | Расположение | Ответственность |
+|------|--------------|-----------------|
+| **Data / composition** | `src/data/**`, `src/server/**/composition.ts` | Prisma, policy, domain use-cases (`import "server-only"`) |
+| **Server UI shell** | RSC: `page.tsx`, `*.server.tsx` | Auth guard, fetch, передать serializable props |
+| **Client interactivity** | `*.client.tsx` | `useActionState`, `useTransition`, events, toast |
+| **Presentational** | `*-skeleton.tsx`, cards, badges, atoms | Props in → JSX out; **без** fetch и **без** `useActionState` |
+| **Actions** | `src/actions/**` | Thin adapter: validate → policy → domain → revalidate |
+
+## Запрещено
+
+- Один компонент одновременно **fetch'ит данные** и содержит **`useActionState` / mutation hooks**.
+- Дублировать UI-блоки на двух routes — **извлечь shared component** в `components/`.
+
+## Shared components (обязательно максимизировать)
+
+1. **Перед новым UI** — открыть **Design Lab** `/design-system` и проверить каталог: `components/atoms/`, `components/ui/`, затем `components/{domain}/`.
+2. **Повтор на 2+ экранах** — вынести в shared; named export; один компонент — один файл.
+3. **Иерархия:** `ui/` primitives → `atoms/` typography → feature molecules → route composition. Каталог и import paths — **ui-warm-forest-shadcn** §Design Lab catalog.
+4. **Route files thin** — `page.tsx` только compose + metadata; логика не раздувает page.
+5. **MUST NOT** импортировать `@/components/design-lab/**` в product routes — только showcase; новый primitive → сначала в каталог + секция Design Lab.
+
+## SOLID (практично для UI)
+
+- **SRP:** один файл — одна роль (fetch **или** form **или** skeleton).
+- **OCP:** варианты через props / `cva`, не копипаста веток.
+- **DIP:** presentational зависит от props/DTO, не от Prisma types напрямую — mapper в `@/lib/` или data layer.
+
+DRY — **ai-dry-deduplication** (always applied).
+
+## Связанные правила
+
+- **react-one-component-per-file**, **react-ui-components**, **data-server-actions-and-api**
+
+Reference: lampto P30 phase — logic/presentation split; Pulse canon in Cursor Rules.

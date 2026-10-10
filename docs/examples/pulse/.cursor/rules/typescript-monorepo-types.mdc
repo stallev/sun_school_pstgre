@@ -1,0 +1,41 @@
+---
+description: TypeScript monorepo — typecheck, shared domain types, mutation ADT (Pulse AI agents)
+alwaysApply: true
+---
+
+# TypeScript monorepo — Pulse
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Canon:** [`docs/guidelines/typescript/ai_typescript_monorepo_guidelines.md`](docs/guidelines/typescript/ai_typescript_monorepo_guidelines.md)
+
+## Before finishing a task (after scaffold)
+
+1. **`npm run typecheck`** (root) or `npx tsc --noEmit` in each touched workspace (`apps/web`, `@pulse/domain`, `@pulse/db`, `@pulse/policy-server`, `@pulse/policy-edge`).
+2. **`npm run lint`** (root — `apps/web` + все `packages/*` с `lint`-скриптом).
+
+Web-only `tsc` **does not** replace package checks.
+
+## Where types live
+
+| Layer | Types |
+|-------|--------|
+| `@pulse/domain` | `UserRole`, `BookingStatus`, ports, `MutationResult`, shared Zod DTOs |
+| `@pulse/policy-server` | **`PolicySessionContext` / `UserRole`**, not `next-auth` `Session` |
+| `apps/web` | Auth.js augmentation, UI props, session → domain mappers |
+
+**Forbidden in `packages/**`:** `import type { Session } from "next-auth"`, new ad-hoc mutation error shapes.
+
+## Domain literals
+
+- Roles/statuses from `@pulse/domain` or typed constants — no inline `"trainer"` / `"pending"`.
+- **Mutation error codes** — import from `@pulse/domain` (`AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES`); no inline `"INVALID_CREDENTIALS"` / `"DUPLICATE_EMAIL"`. Full contract: **domain-literals-and-codes**.
+- Use type guards after string validation, not unsafe `as`.
+
+## Related rules
+
+- [domain-literals-and-codes.mdc](domain-literals-and-codes.mdc)
+- [data-server-actions-and-api.mdc](data-server-actions-and-api.mdc)
+- [auth-security.mdc](auth-security.mdc)
+- [policy-packages.mdc](policy-packages.mdc)
+
+Reference patterns: [`docs/examples/lampto/.cursor/rules/typescript-monorepo-types.mdc`](docs/examples/lampto/.cursor/rules/typescript-monorepo-types.mdc)

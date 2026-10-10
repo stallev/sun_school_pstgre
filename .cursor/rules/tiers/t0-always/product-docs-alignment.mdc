@@ -1,0 +1,53 @@
+﻿---
+description: Keep product docs aligned when behavior changes
+alwaysApply: true
+---
+
+# Product documentation alignment
+
+When you **add** or **materially change** user-facing or cross-cutting behavior (routes, permissions, data flows, booking lifecycle, admin flows), update project docs in the **same task** unless the user explicitly limits scope to code only.
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md) — §3.4 product-docs-alignment, §2.2 agent cycle VERIFICATION step.
+
+## What to do
+
+1. **Compare** implemented behavior with PRD, user flows, and design artifacts.
+2. **Update the smallest set** of files that describe that surface.
+3. If behavior intentionally diverges — update docs to match new truth.
+
+## Implementation vs documentation (mandatory)
+
+When code **cannot** follow an existing doc verbatim — or you choose a different approach because another canon is authoritative (e.g. DDL over sample snippets) — **do not leave silent drift**.
+
+**MUST** in the **same task** as the code change:
+
+1. **Identify** which docs still describe the old approach (grep the outdated term/pattern).
+2. **Update** those docs to the implemented truth — ADRs, runtime specs, guides, interim archives, phase descriptions, contracts as needed.
+3. **Prefer amending** the conflicting doc over adding only a code comment; if two docs conflict, follow source-of-truth order in [`project-context.mdc`](project-context.mdc) and align the lower-precedence file to the winner.
+4. **Record** intentional decisions in the governing doc (e.g. ADR Decision + Rejected alternatives), not only in PR/commit text.
+
+**Example (Pulse P02):** MVP Auth.js uses JWT + `getPrisma()` in `authorize()` — **no** `@auth/prisma-adapter`, because [`database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) has no `Account`/`Session` tables. Any doc that still shows `PrismaAdapter` **must** be corrected in the P02 PR — not deferred as “known drift”.
+
+**Anti-pattern:** Implement one way, document another, or mark divergence “optional footnote later”.
+
+## Where to look and update
+
+| Topic | Files |
+|-------|--------|
+| Scope / MVP | interim brief in `{{INTERIM_DOCS_GLOB}}`, then [`mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) |
+| User journeys | [`docs/prds/01_product_scope/user_flows/users_mvp/`](docs/prds/01_product_scope/user_flows/users_mvp/) |
+| Routes / IA | [`docs/design/canonical_routes.md`](docs/design/canonical_routes.md) |
+| Contracts | [`docs/implementation/mvp/contracts/`](docs/implementation/mvp/contracts/) |
+| Database | [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) |
+| Authorization | [`docs/prds/04_authorization_privacy/`](docs/prds/04_authorization_privacy/) (when created) |
+| Governance | ADRs in [`docs/prds/07_governance/`](docs/prds/07_governance/) |
+| Auth / runtime | [`auth_runtime_spec.md`](docs/prds/05_runtime/auth_runtime_spec.md), [`ai_auth_implementation_guide.md`](docs/guidelines/auth/ai_auth_implementation_guide.md), [`adr_003_auth_credentials_jwt_rbac.md`](docs/prds/07_governance/adr_003_auth_credentials_jwt_rbac.md) |
+| Phase tasks / DoD | [`docs/implementation/mvp/tasks/`](docs/implementation/mvp/tasks/), [`phases_tasks_descriptions/`](docs/implementation/mvp/phases_tasks_descriptions/) |
+
+## Precedence
+
+Follow source-of-truth order in [`project-context.mdc`](project-context.mdc).
+
+## Scope boundary
+
+Pure refactors with no observable behavior change — doc updates optional unless fixing factual errors.

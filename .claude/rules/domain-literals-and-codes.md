@@ -1,0 +1,65 @@
+---
+description: Domain literals, mutation error codes, and API string values — no inline magic strings
+---
+# Domain literals and codes
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Canon:** [`docs/guidelines/typescript/ai_typescript_monorepo_guidelines.md`](docs/guidelines/typescript/ai_typescript_monorepo_guidelines.md) §3–§4  
+**Copy:** [`ui-messages-and-copy.mdc`](ui-messages-and-copy.mdc)
+
+## Контракт
+
+**Запрещено** inline magic strings для доменных/API значений в `apps/web` и `packages/**`:
+
+- коды ошибок мутаций (`MutationResult.code`);
+- роли, статусы, enum-like значения домена;
+- сравнения и ветвления по этим значениям (`if (result.code === …)`).
+
+**User-visible текст** — только из `@/lib/messages`, не дублировать в action и UI.
+
+## Где брать константы
+
+| Значение | Источник | Примеры |
+|----------|----------|---------|
+| Коды ошибок мутаций | `@{{PACKAGE_SCOPE}}/domain` | `AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES` |
+| Роли | `@{{PACKAGE_SCOPE}}/domain` | `USER_ROLE`, `USER_ROLES` |
+| Статусы сущностей домена | `@{{PACKAGE_SCOPE}}/domain` | `<ENTITY>_STATUSES` (Pulse: `BOOKING_STATUSES`, `TRAINER_STATUSES`) |
+| UI-копирайт | `@/lib/messages` | `MESSAGES.auth.login.invalidCredentials` |
+
+Новый код ошибки → **сначала** добавить в `@{{PACKAGE_SCOPE}}/domain` (`packages/domain/src/constants/mutation-error-codes.ts` или доменный namespace), затем использовать в DAL/actions/UI.
+
+## Паттерн
+
+```ts
+import { AUTH_MUTATION_ERROR_CODES, USER_ROLE } from "@{{PACKAGE_SCOPE}}/domain";
+
+return {
+  ok: false,
+  code: AUTH_MUTATION_ERROR_CODES.INVALID_CREDENTIALS,
+  message: MESSAGES.auth.login.invalidCredentials,
+};
+
+if (state.code === AUTH_MUTATION_ERROR_CODES.DUPLICATE_EMAIL) { … }
+```
+
+## Исключения
+
+- **Prisma / vendor codes** (`P2002`, HTTP status) — сравнивать с documented vendor literal; не смешивать с `MutationErrorCode`.
+- **Auth.js provider id** (`"credentials"`) — framework contract; не выносить в domain без ADR.
+- **Test fixtures** — допустимо inline только в `*.test.*` / seed при явной изоляции.
+
+## Agent checklist
+
+- [ ] Нет новых `"INVALID_*"`, `"DUPLICATE_*"`, `"VALIDATION"` inline в actions/DAL/UI
+- [ ] `MutationErr.code` типизирован через `MutationErrorCode` из `@{{PACKAGE_SCOPE}}/domain`
+- [ ] Роли/статусы — `USER_ROLE.*`, не `"client"` / `"pending"` на call site
+- [ ] Новый код добавлен в domain constants **до** использования
+
+## Связанные правила
+
+- [typescript-monorepo-types.mdc](typescript-monorepo-types.mdc)
+- [react-naming-conventions.mdc](react-naming-conventions.mdc)
+- [data-server-actions-and-api.mdc](data-server-actions-and-api.mdc)
+- [ui-messages-and-copy.mdc](ui-messages-and-copy.mdc)
+
+Reference: Pulse (docs/examples/pulse) domain literal discipline — Pulse `@{{PACKAGE_SCOPE}}/domain` mutation codes.

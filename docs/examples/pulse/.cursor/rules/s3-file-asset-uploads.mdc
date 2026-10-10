@@ -1,0 +1,33 @@
+---
+description: S3 presigned uploads and FileAsset — pending to ready, object key prefix
+globs:
+  - apps/web/src/**/*upload*
+  - apps/web/src/lib/s3/**
+  - apps/web/src/actions/**
+  - apps/web/src/data/**
+alwaysApply: false
+---
+
+# S3 / `file_asset` (Pulse)
+
+**Normative guide:** [`docs/guidelines/nextjs/s3-upload-agent-instruction.md`](docs/guidelines/nextjs/s3-upload-agent-instruction.md)  
+**Schema:** [`database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) — `file_asset`, `file_upload_status`  
+**Contract:** [`file_upload_contract.md`](docs/implementation/mvp/contracts/file_upload_contract.md)
+
+## Required alignment
+
+- **Single registry:** Prisma **`FileAsset`** only (`blob_pathname` = S3 object key, `upload_status`, …). No parallel file tables.
+- **Object key prefix:** **`FILE_UPLOAD_OBJECT_KEY_PREFIX`** from `@pulse/domain` (`pulse/`); build keys with **`buildFileUploadObjectKey()`**; guard with **`isFileUploadObjectKey()`** on confirm/read.
+- **Lifecycle:** **`pending`** row with server-chosen key → client PUT to S3 (presigned) → **HeadObject** verify → **`ready`** or **`failed`**. Link FKs only after **`ready`**.
+- **Auth and policy:** `auth()` + `@pulse/policy-server` on every upload mutation.
+- **Reads:** presigned GET only when **`upload_status = ready`**; do not persist expiring URLs as source of truth.
+- **Paths:** code under `apps/web/src/`; Prisma via `@pulse/db`; domain validation via `@pulse/domain`.
+- **Next.js 16:** Server Actions vs Route Handlers per [ai_nextjs_db_data_handle.md](docs/guidelines/nextjs/ai_nextjs_db_data_handle.md); cache: `updateTag` / `revalidateTag` per ADR-002.
+
+## Storage (ADR-001)
+
+- **AWS S3** — presigned PUT/GET via `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner`.
+- Env (server-only): `AWS_IAM_USER_ACCESS_KEY`, `AWS_IAM_USER_SECRET_ACCESS_KEY`, `S3_BUCKET_REGION`, `S3_BUCKET_NAME`.
+- **MUST NOT** use `@vercel/blob` or `BLOB_READ_WRITE_TOKEN` in new code.
+
+Reference: lampto S3 FileAsset pattern — adapted for Pulse schema column names (`blob_pathname`).

@@ -1,0 +1,49 @@
+---
+alwaysApply: true
+---
+# Naming conventions (`apps/web`)
+
+**Guides:** [ai_react_utilities_guidelines.md](docs/guidelines/react/ai_react_utilities_guidelines.md), [ai_react_hooks_guidelines.md](docs/guidelines/react/ai_react_hooks_guidelines.md)  
+**React canon:** [Rules of Hooks](https://react.dev/reference/rules) — verified via Context7 `/reactjs/react.dev`
+
+## React components
+
+- **PascalCase** — `TrainerCard`, `BookingWizardStep`.
+- **Named export** для shared/feature components; `default` только `page.tsx` / `layout.tsx`.
+- **File name = component name** — `TrainerCard.tsx` exports `TrainerCard`.
+
+## Custom hooks
+
+- **`use` + PascalCase** — `useBookingWizard`, `useMediaQuery`.
+- **Только если внутри есть вызов Hook** — иначе обычная функция (`getSorted`, not `useSorted`).
+- **File:** `use-booking-wizard.ts` или `use-media-query.ts` (kebab-case file, PascalCase export).
+
+## Functions & variables
+
+- **camelCase** — `trainerProfileId`, `isSubmitting`, `handleSubmit`.
+- **Boolean** — prefix `is`, `has`, `can`, `should` (`isPending`, `hasSlots`).
+- **Event handlers** — `handle` + Event (`handleClick`, `handleFormSubmit`).
+- **Module constants** — **SCREAMING_SNAKE_CASE** (`PRODUCT_TOAST_DURATION_MS`).
+
+## Files (non-component)
+
+| Kind | Pattern | Example |
+|------|---------|---------|
+| Server data | kebab-case | `trainer-profile.server.ts` |
+| Client entry | `*.client.tsx` | `booking-form.client.tsx` |
+| Pure util | kebab-case `.ts` | `format-booking-time.ts` |
+| Types-only | kebab-case `.ts` | `booking-types.ts` |
+
+## Domain literals
+
+- Roles/statuses — **`@pulse/domain`** constants (`USER_ROLE`, `BOOKING_STATUSES`, …), не inline `"trainer"` / `"pending"`.
+- Mutation error codes — **`AUTH_MUTATION_ERROR_CODES`**, **`MUTATION_ERROR_CODES`** из `@pulse/domain`; см. **domain-literals-and-codes**.
+- User-visible strings — **`@/lib/messages`**.
+
+## Антипаттерны
+
+- `data`, `item`, `temp` для non-trivial bindings.
+- `useFoo` для функции без React Hooks внутри.
+- Смешение snake_case и camelCase в TS/React code (DB `@map` — исключение в Prisma schema).
+
+Reference: lampto `ai_react_utilities_guidelines.md` §2.1; React.dev custom hooks naming.

@@ -1,0 +1,36 @@
+---
+description: Policy packages — @pulse/policy-server vs @pulse/policy-edge
+globs:
+  - packages/policy/**
+  - apps/web/src/data/**
+  - apps/web/src/actions/**
+  - apps/web/src/app/api/**
+  - apps/web/src/proxy.ts
+  - apps/web/src/middleware.ts
+alwaysApply: false
+---
+
+# Policy packages (`@pulse/policy-server`, `@pulse/policy-edge`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Runtime:** [ADR-002](docs/prds/07_governance/adr_002_next162_vercel_runtime_policy.md) — **`proxy.ts`** is canonical interception file
+
+## `@pulse/policy-server`
+
+- **Use for:** Prisma-backed object-level checks
+- **Import from:** Route Handlers, Server Actions, RSC loaders, `apps/web/src/data/**`
+- **Forbidden:** `proxy.ts`, `middleware.ts`, Edge runtime, `'use client'`
+- **API shape:** Pure functions — no `redirect()` inside policy-server
+- **Types:** `PolicySessionContext` / `UserRole` from `@pulse/domain`
+
+## `@pulse/policy-edge`
+
+- **Use for:** JWT/path classification **without DB**
+- **Must not** depend on `@pulse/db` or `@pulse/policy-server`
+- **Allowed in:** **`proxy.ts`** (Next.js 16 canonical) and transitional `middleware.ts`
+
+## Next.js 16 note
+
+`proxy.ts` runs on **Node.js runtime**, not Edge — still must not import Prisma/policy-server. JWT-only checks via policy-edge + auth.config.
+
+Reference: lampto `policy-packages.mdc` — paths updated for Pulse `proxy.ts`.

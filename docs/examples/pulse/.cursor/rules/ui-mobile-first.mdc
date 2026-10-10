@@ -1,0 +1,50 @@
+---
+description: Mobile-first responsive UI — breakpoints, touch targets, native-feel patterns
+globs:
+  - apps/web/src/**/*.tsx
+  - apps/web/src/**/*.css
+alwaysApply: false
+---
+
+# Mobile-first (`apps/web`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Design system:** [`fitness-platform-design-system.md`](docs/default_docs/fitness-platform-design-system.md) §2 Responsive Strategy  
+**User flows:** [`client_flow.md`](docs/prds/01_product_scope/user_flows/users_mvp/client_flow.md), [`trainer_flow.md`](docs/prds/01_product_scope/user_flows/users_mvp/trainer_flow.md)
+
+## Контракт
+
+Разработка UI **начинается с мобильного viewport** (320–390px). Breakpoints — **расширение**, не «урезание desktop».
+
+## Breakpoints (Tailwind v4 defaults)
+
+| Token | Min width | Поведение Pulse |
+|-------|-----------|-----------------|
+| default | 0 | Base layout, bottom nav, sheets |
+| `md` | 768px | Sidebar вместо bottom nav; tablet padding |
+| `lg` | 1024px | Filter sidebars, multi-column, wider sidebar |
+| `xl` / `2xl` | 1280 / 1536px | Wide layouts, `max-w-[1400px]` containers |
+
+## Обязательные паттерны
+
+1. **Base styles = mobile** — без `max-md:` для того, что должно быть на телефоне; desktop через `md:`, `lg:`.
+2. **Bottom nav** sticky `< md`; **sidebar** `≥ md` — per role layouts.
+3. **Modals:** bottom **Sheet** на mobile; centered **Dialog** `≥ md`.
+4. **Edge-to-edge mobile** — cover photos, chip scroll: `-mx-4 md:mx-0`, `overflow-x-auto no-scrollbar`.
+5. **Touch targets** — интерактивные элементы **≥ 44×44px** (`min-h-11 min-w-11` или эквивалент padding).
+6. **Safe area** — bottom nav: `paddingBottom: env(safe-area-inset-bottom)`; контент над nav: `pb-6` минимум.
+7. **Приёмка** — проверять экран на **390px**, затем `md` и `lg` перед merge UI-задачи.
+
+## Антипаттерны
+
+- Desktop-first: base = wide grid, `max-md:` «ломает» layout.
+- Горизонтальный scroll всей страницы (кроме chip-рядов).
+- Hover-only affordances без tap-альтернативы на mobile.
+
+## Связанные правила
+
+- Tokens/states: **ui-warm-forest-shadcn**
+- Prototype parity: **ui-prototype-fidelity**
+- Shared nav/shell: **react-logic-presentation**
+
+Reference: lampto mobile-first acceptance in EUI-V2-P1 tasks — Pulse adaptation.

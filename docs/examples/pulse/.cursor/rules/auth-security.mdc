@@ -1,0 +1,48 @@
+---
+description: Auth — defense-in-depth, auth() in handlers; align with ADR-002
+globs:
+  - apps/web/**/auth/**
+  - apps/web/src/app/api/auth/**
+  - apps/web/**/auth.ts
+  - apps/web/**/auth.config.ts
+  - apps/web/src/proxy.ts
+  - apps/web/src/middleware.ts
+alwaysApply: false
+---
+
+# Authentication and security — Pulse
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Guide:** [`docs/guidelines/auth/ai_auth_implementation_guide.md`](docs/guidelines/auth/ai_auth_implementation_guide.md)  
+**Schema:** [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md)  
+**Runtime:** [ADR-002](docs/prds/07_governance/adr_002_next162_vercel_runtime_policy.md) — Next.js **16.3.0**, **`proxy.ts`**
+
+## Next.js 16 interception (not middleware-first)
+
+- **Layer 1:** **`proxy.ts`** — JWT role gate via **`auth.config.ts`** (no Prisma, no full `auth.ts`)
+- **`middleware.ts`:** legacy/transitional only — do not implement new auth gates here
+- **Layer 2:** optional layout UX redirects
+- **Layer 3:** mandatory `auth()` in Route Handlers and Server Actions
+- **Layer 4:** `@pulse/policy-server` object-level authorization
+
+Split Auth.js config is **mandatory**: `auth.config.ts` for proxy; `auth.ts` (+ PrismaAdapter) for server `auth()` only.
+
+## MVP auth model
+
+- Credentials (email + password); `passwordHash` on `User`
+- Role (`client` | `trainer` | `admin`) in JWT + session
+- Password reset via `password_reset_token` + Resend
+
+## Session typing
+
+- Auth.js module augmentation — **only in `apps/web`**
+- Map session → `PolicySessionContext` before policy-server
+- See [typescript-monorepo-types.mdc](typescript-monorepo-types.mdc)
+
+## Checklist
+
+- [ ] Route protection in **`proxy.ts`**, not new `middleware.ts` logic
+- [ ] Session verified on every mutation and protected read
+- [ ] No `@pulse/policy-server` in proxy/middleware
+
+Reference: lampto `auth-security.mdc` — adapted for Pulse ADR-002.

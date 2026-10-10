@@ -1,0 +1,82 @@
+---
+description: Pulse snapshot context — stack, self-contained reference, document precedence
+alwaysApply: true
+---
+
+# Pulse — project context
+
+> **Banner:** Pulse `.mdc` namesakes in this snapshot are **not** boilerplate canon. Remaining “lampto” mentions in deep snapshot files are **provenance** only. The tree `docs/examples/lampto/` is **not vendored**. For a **new** product use root Rules/Guidelines and [`docs/reference/pulse_project_reference.md`](../../../../../docs/reference/pulse_project_reference.md).
+
+## Product
+
+**Pulse** — маркетплейс фитнес-тренеров. Роли: **client**, **trainer**, **admin**.  
+MVP: discovery, booking (без оплаты), trainer onboarding, admin moderation.
+
+## Snapshot (self-contained)
+
+This tree is the Pulse **code and domain** reference. It does **not** inherit a missing `lampto` tree.
+
+- Historical stub: [`docs/reference/lampto_project_reference.md`](docs/reference/lampto_project_reference.md)
+- Boilerplate agents: [`docs/reference/pulse_project_reference.md`](../../../../../docs/reference/pulse_project_reference.md)
+
+When Pulse docs are silent on a **Pulse** feature — search **this snapshot**. Do not follow `docs/examples/lampto/**`.
+
+## Stack (baseline)
+
+- **Next.js** **16.3.0** (pinned) App Router, **TypeScript** — [ADR-002](docs/prds/07_governance/adr_002_next162_vercel_runtime_policy.md)
+- **Instant Navigations:** `cacheComponents` + `partialPrefetching` (P22 complete in this snapshot)
+- **Request interception:** **`proxy.ts`** (Next.js 16); `middleware.ts` — только временная миграция
+- **Hosting:** Vercel · **UI:** shadcn/ui + Tailwind CSS v4 (Warm Forest tokens)
+- **Database:** Neon **PostgreSQL 17** + **Prisma v7** (pooled `DATABASE_URL`, `DIRECT_URL` for migrations)
+- **Auth:** Auth.js v5, **Credentials** (email + password), JWT sessions, role in token
+- **Email:** Resend — **post-MVP** (MVP: schema `job_execution`/`delivery_log` only)
+- **Storage:** **AWS S3** — profile photos, certificates, verification docs (presigned PUT/GET) — [ADR-007](docs/prds/07_governance/adr_007_file_asset_blob_lifecycle.md)
+- **Monorepo:** `apps/web`, `apps/workers` (planned), `packages/{domain,policy,db}`
+
+Runtime policy: [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md), [ADR-002](docs/prds/07_governance/adr_002_next162_vercel_runtime_policy.md).
+
+## Source-of-truth order when documents conflict
+
+1. **Cursor Rules** (`.cursor/rules/*.mdc`)
+2. **[`AGENTS.md`](AGENTS.md)** — monorepo entry
+3. **Contracts** (`docs/implementation/mvp/contracts/`)
+4. **PRD** (`docs/prds/`) — when created; interim: [`docs/default_docs/`](docs/default_docs/)
+5. **[`docs/design/canonical_routes.md`](docs/design/canonical_routes.md)** — single route inventory
+6. **Guidelines** (`docs/guidelines/` **in this snapshot**) — index in [`README.md`](docs/guidelines/README.md)
+7. **HTML prototype** — visual reference only, subordinate to canonical docs
+
+## Domain invariants (do not break)
+
+1. **`TrainerProfile.timezone`** — source of truth for schedule, slots, reminders, display
+2. **Booking state machine** — transitions only via documented use-cases (see future lifecycle PRD)
+3. **Trainer verification** — public profile live only when `status = approved`
+4. **Background jobs (post-MVP email)** — `idempotency_key` + `delivery_log`; MVP: tables in schema, no Resend/Cron sends
+5. **Post-MVP columns** — Stripe/Daily.co fields stay nullable until feature ships
+
+## Where to find norms
+
+| Area | Document |
+|------|----------|
+| Methodology | [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md) |
+| Architecture map | [`docs/prds/architecture_master_index.md`](docs/prds/architecture_master_index.md) |
+| Agent onboarding | [`docs/architecture_learning_pack/01_architecture_overview.md`](docs/architecture_learning_pack/01_architecture_overview.md) |
+| MVP scope (interim) | [`docs/default_docs/fitness-platform-mvp.md`](docs/default_docs/fitness-platform-mvp.md) |
+| User flows (canonical) | [`docs/prds/01_product_scope/user_flows/users_mvp/`](docs/prds/01_product_scope/user_flows/users_mvp/) |
+| Database schema | [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) |
+| Guidelines | [`docs/guidelines/README.md`](docs/guidelines/README.md) |
+| Pages spec | [`docs/default_docs/fitness-platform-pages.md`](docs/default_docs/fitness-platform-pages.md) |
+| Design system | [`docs/default_docs/fitness-platform-design-system.md`](docs/default_docs/fitness-platform-design-system.md) |
+| **UI component catalog (Design Lab)** | `/design-system` → `apps/web/src/components/atoms/`, `components/ui/` — spec: [`design_system_lab_spec.md`](docs/implementation/mvp/specs/design_system_lab_spec.md) |
+| Snapshot layout | [`README.md`](../../README.md) |
+| Historical lampto notice | [`docs/reference/lampto_project_reference.md`](docs/reference/lampto_project_reference.md) |
+
+## Cursor rules (beyond this file)
+
+Always applied: `product-docs-alignment.mdc`, `typescript-monorepo-types.mdc`, `domain-literals-and-codes.mdc`, `ai-dry-deduplication.mdc`, UI mutation rules (`ui-toast-mutations`, `ui-mutation-pending`, `ui-optimistic-mutations`), `react-one-component-per-file.mdc`.  
+Implementation: `data-server-actions-and-api.mdc`, `ios-safari-mutation-transport.mdc`, `policy-packages.mdc`, `auth-security.mdc`, `nextjs-vercel-app-router.mdc`, `app-router-streaming-loading.mdc`, `s3-file-asset-uploads.mdc`, `react-logic-presentation.mdc`, `react-naming-conventions.mdc`.  
+UI (on scaffold): `react-ui-components.mdc`, `ui-warm-forest-shadcn.mdc`, `ui-mobile-first.mdc`, `ui-prototype-fidelity.mdc`, `ui-semantics-a11y.mdc`, `ui-messages-and-copy.mdc`, `ui-icons-lucide.mdc`, `admin-forms-layout.mdc`, `patterns-tables-dnd.mdc`.  
+Full list: [`docs/guidelines/README.md`](docs/guidelines/README.md).
+
+## Repository status
+
+**Текущая фаза:** P14 complete (quality gate). **Post-P14:** P16 landing v2, **P17 UI i18n complete**, P19 complaints, P18 people ops (spec), P21 email (deferral), **P22 Instant Navigations** (implementation complete). Не расширять реализацию без явной фазы и contract.

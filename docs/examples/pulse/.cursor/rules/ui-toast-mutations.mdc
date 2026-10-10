@@ -1,0 +1,47 @@
+---
+description: Toast после мутаций данных (create/update/delete) — apps/web
+globs:
+  - apps/web/src/**/*.tsx
+  - apps/web/src/actions/**/*.ts
+  - apps/web/src/data/**/*.ts
+alwaysApply: true
+---
+
+# Toast при изменении данных (обязательно)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Guide:** [`docs/guidelines/react/copy_and_messages.md`](docs/guidelines/react/copy_and_messages.md)
+
+## Контракт
+
+- После **успешной** операции, которая **создаёт, обновляет или удаляет** пользовательские данные (Server Action, клиентский `fetch` к мутации), пользователь получает **явную обратную связь** через **Sonner** (`toast` из `sonner`), если UX не предполагает иной канал (зафиксировать исключение комментарием).
+
+## Длительность
+
+- Стандарт: **`2000` ms (2 s)** для success/error toasts после мутаций.
+- Константа: `apps/web/src/lib/ui/product-toast.ts` → `PRODUCT_TOAST_DURATION_MS`.
+
+## Реализация
+
+- Глобальный `Toaster` в корневом layout; не дублировать провайдеры.
+- При **редиректе после Server Action** toast из того же обработчика не сработает — **query-параметр** на целевом URL + клиентский компонент с `useSearchParams` + `toast` + `router.replace` без query.
+- Тексты — из `@/lib/messages`, не дублировать строки в action и UI.
+
+## Pulse-примеры
+
+- Бронирование создано → toast + redirect на `/client/bookings/[id]`
+- Профиль тренера сохранён → toast или query `?saved=1` после redirect
+- Модерация (admin approve/reject) → toast на той же странице
+
+## Исключения
+
+- Чистые редиректы без изменения данных, read-only действия.
+- **Optimistic UI:** `toast.success` опционален, если визуальная смена состояния достаточна; **`toast.error` обязателен всегда** при откате.
+
+## Связанные правила
+
+- Pending UI: [ui-mutation-pending.mdc](ui-mutation-pending.mdc)
+- Optimistic: [ui-optimistic-mutations.mdc](ui-optimistic-mutations.mdc)
+- Копирайт: [ui-messages-and-copy.mdc](ui-messages-and-copy.mdc)
+
+Reference: lampto `ui-toast-mutations.mdc` — adapted for Pulse paths.

@@ -1,0 +1,31 @@
+{
+  "name": "pulse",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/policy/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "vercel-build": "npm run build -w web",
+    "start": "npm run start -w web",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:all": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present",
+    "lint:web": "npm run lint -w web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npm run db:generate -w @pulse/db",
+    "db:migrate": "npm run db:migrate -w @pulse/db",
+    "db:migrate:deploy": "npm run db:migrate:deploy -w @pulse/db",
+    "db:migrate:status": "npm run db:migrate:status -w @pulse/db",
+    "db:seed": "npm run db:seed -w @pulse/db",
+    "db:studio": "npm run db:studio -w @pulse/db"
+  },
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "4.3.0",
+    "lightningcss-linux-x64-gnu": "1.32.0"
+  }
+}

@@ -1,0 +1,2349 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Fitness Platform — Mobile Prototype</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+<style type="text/tailwindcss">
+  @theme {
+    /* Brand — Forest */
+    --color-primary: #2D5A40;          /* forest-mid */
+    --color-primary-hover: #1A3028;    /* forest */
+    --color-primary-light: #3D7A58;    /* forest-light */
+    --color-primary-container: #E4F0E8;/* forest-faint */
+    --color-on-primary-container: #1A3028;
+
+    /* Secondary — Gold */
+    --color-secondary: #C4973A;        /* gold */
+    --color-secondary-hover: #A37D28;
+    --color-secondary-light: #E8C070;  /* gold-light */
+    --color-secondary-container: #F5E6C8; /* amber-soft */
+    --color-on-secondary-container: #5C4014;
+
+    /* Surfaces — Cream */
+    --color-bg: #F5F0E8;               /* cream */
+    --color-surface: #FFFFFF;          /* white */
+    --color-surface-variant: #EDE5D4;  /* cream-dark */
+    --color-surface-container: #E6DCC6;
+    --color-surface-dim: #D8CCB4;      /* cream-border */
+
+    /* Text */
+    --color-ink: #1A3028;              /* forest */
+    --color-ink-2: #4A5A50;
+    --color-ink-3: #8A8578;
+
+    /* Semantic */
+    --color-success: #1A5C32;          /* green-text */
+    --color-success-container: #E4F0E8;/* green-soft */
+    --color-error: #B23A3A;
+    --color-error-container: #F5E0E0;
+    --color-warning: #B07028;
+    --color-warning-container: #F5E6C8;
+    --color-info: #2D5A6E;
+    --color-info-container: #E0EAF0;
+
+    /* Fonts */
+    --font-display: "DM Serif Display", ui-serif, Georgia, serif;
+    --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+    /* Radius (M3) */
+    --radius-xs: 4px;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  /* Dark theme override */
+  .dark {
+    --color-primary: #6EA886;
+    --color-primary-hover: #87C09F;
+    --color-primary-light: #87C09F;
+    --color-primary-container: #1F3A2A;
+    --color-on-primary-container: #C5E0CE;
+
+    --color-secondary: #E8C070;
+    --color-secondary-hover: #F5D89A;
+    --color-secondary-light: #F5D89A;
+    --color-secondary-container: #3D2E14;
+    --color-on-secondary-container: #F5E6C8;
+
+    --color-bg: #0E1814;
+    --color-surface: #1A2820;
+    --color-surface-variant: #243329;
+    --color-surface-container: #2D4034;
+    --color-surface-dim: #3D5A4A;
+
+    --color-ink: #F0EAD8;
+    --color-ink-2: #B5C2B9;
+    --color-ink-3: #7A857E;
+
+    --color-success: #6EE7A0;
+    --color-success-container: #1F3A24;
+    --color-error: #FF8585;
+    --color-error-container: #3A1F1F;
+    --color-warning: #F5C26B;
+    --color-warning-container: #3A2F1A;
+    --color-info: #7AC4F0;
+    --color-info-container: #1A2E3A;
+  }
+
+  /* Globals */
+  html, body { background: var(--color-bg); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+  body { font-feature-settings: "ss01","cv11"; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+
+  /* Pretty wrap default */
+  p, h1, h2, h3, h4 { text-wrap: pretty; }
+
+  /* Hide scrollbar (mobile-like) */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+
+<body class="min-h-dvh">
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef, useCallback, createContext, useContext, Fragment } = React;
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  I18N — chrome strings only (data stays English)                           */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+const DICT = {
+  // Roles
+  "Client":"Клиент", "Trainer":"Тренер", "Admin":"Админ", "Administrator":"Администратор",
+  // Nav
+  "Home":"Главная", "Trainers":"Тренеры", "Sessions":"Сессии", "Profile":"Профиль",
+  "Today":"Сегодня", "Schedule":"График", "Services":"Услуги", "Clients":"Клиенты", "Income":"Доход",
+  "Overview":"Обзор", "Complaints":"Жалобы", "Refunds":"Возвраты",
+  // Top bar
+  "fitness platform":"фитнес платформа",
+  "Switch to dark":"Переключить на тёмную", "Switch to light":"Переключить на светлую",
+  "Notifications":"Уведомления", "No new notifications":"Нет новых уведомлений",
+  "Mark all as read":"Прочитать всё", "View all":"Все уведомления",
+  // Screen titles
+  "Catalog":"Каталог", "My sessions":"Мои сессии", "Working schedule":"График работы",
+  "Verification":"Верификация", "Control":"Контроль",
+  // Sections
+  "Next session":"Ближайшая сессия", "Categories":"Категории", "Top trainers":"Топ тренеры",
+  "New reviews":"Новые отзывы", "Needs attention":"Требует внимания", "Statistics":"Статистика",
+  "Transactions":"Транзакции", "Filters":"Фильтры",
+  // Buttons
+  "Join session":"Войти в сессию", "Join":"Войти", "Book now":"Забронировать", "Find a trainer":"Найти тренера",
+  "Save":"Сохранить", "Cancel":"Отмена", "Edit":"Изменить", "Delete":"Удалить",
+  "Apply":"Применить", "Clear":"Сбросить", "Next":"Далее", "Back":"Назад",
+  "Approve":"Одобрить", "Reject":"Отклонить", "Select":"Выбрать", "View profile":"К профилю",
+  "Sign out":"Выйти", "All":"Все", "Pay":"Оплатить", "New":"Новая",
+  "Export CSV":"Экспорт CSV", "Open details":"Открыть детали",
+  // Tabs
+  "Upcoming":"Предстоящие", "Past":"Прошедшие", "Cancelled":"Отменённые",
+  "About":"О тренере", "Reviews":"Отзывы", "Regular":"Регулярный", "Exceptions":"Исключения",
+  "Approved":"Одобренные", "Rejected":"Отклонённые",
+  // Status
+  "Confirmed":"Подтверждено", "Completed":"Завершено", "Pending":"Ожидает",
+  "High":"Высокий", "Medium":"Средний", "Low":"Низкий", "Paid out":"Выплачено", "Refunded":"Возврат",
+  "Open":"Открыто", "In review":"В работе",
+  // Common
+  "Good morning,":"Доброе утро,", "Welcome back,":"С возвращением,",
+  "Find a trainer or specialty":"Найти тренера или специализацию",
+  "trainers found":"тренеров найдено", "reviews":"отзывов", "sessions":"сессий",
+  "By rating":"По рейтингу", "Any":"Любой", "Search by name":"Поиск по имени",
+  // Video session
+  "End session":"Завершить сессию", "Chat":"Чат", "Send":"Отправить",
+  "Type a message…":"Введите сообщение…", "Connected":"На связи",
+  "Mute":"Микрофон", "Camera":"Камера",
+};
+
+const LangCtx = createContext({ lang: "en" });
+function useT() {
+  const { lang } = useContext(LangCtx);
+  return useCallback((s) => (lang === "ru" ? (DICT[s] ?? s) : s), [lang]);
+}
+function T({ children }) {
+  const t = useT();
+  if (typeof children === "string") return t(children);
+  return children;
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  ICONS — minimal Lucide-style stroke set                                   */
+/* ────────────────────────────────────────────────────────────────────────── */
+const Svg = ({ size = 20, stroke = 1.75, children, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round"
+       className={className} aria-hidden="true">{children}</svg>
+);
+const I = {
+  Search:  (p) => <Svg {...p}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></Svg>,
+  Home:    (p) => <Svg {...p}><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></Svg>,
+  Calendar:(p) => <Svg {...p}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></Svg>,
+  User:    (p) => <Svg {...p}><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></Svg>,
+  Users:   (p) => <Svg {...p}><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7"/><circle cx="17" cy="9" r="3"/><path d="M22 20c0-3-2-5-5-5"/></Svg>,
+  Dollar:  (p) => <Svg {...p}><path d="M12 3v18"/><path d="M17 6H10a3.5 3.5 0 0 0 0 7h4a3.5 3.5 0 0 1 0 7H7"/></Svg>,
+  Shield:  (p) => <Svg {...p}><path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z"/></Svg>,
+  Star:    (p) => <Svg {...p}><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/></Svg>,
+  StarFill:(p) => <svg width={p.size||20} height={p.size||20} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={p.className||""}><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/></svg>,
+  Check:   (p) => <Svg {...p}><path d="m5 12 5 5L20 7"/></Svg>,
+  CheckCircle:(p) => <Svg {...p}><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></Svg>,
+  X:       (p) => <Svg {...p}><path d="M6 6l12 12M18 6 6 18"/></Svg>,
+  ChevronLeft: (p) => <Svg {...p}><path d="m15 6-6 6 6 6"/></Svg>,
+  ChevronRight:(p) => <Svg {...p}><path d="m9 6 6 6-6 6"/></Svg>,
+  ChevronDown:(p) => <Svg {...p}><path d="m6 9 6 6 6-6"/></Svg>,
+  Filter:  (p) => <Svg {...p}><path d="M4 5h16M7 12h10M10 19h4"/></Svg>,
+  Plus:    (p) => <Svg {...p}><path d="M12 5v14M5 12h14"/></Svg>,
+  Bell:    (p) => <Svg {...p}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9Z"/><path d="M10 21a2 2 0 0 0 4 0"/></Svg>,
+  Clock:   (p) => <Svg {...p}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></Svg>,
+  Video:   (p) => <Svg {...p}><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></Svg>,
+  Edit:    (p) => <Svg {...p}><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></Svg>,
+  Trash:   (p) => <Svg {...p}><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></Svg>,
+  Flag:    (p) => <Svg {...p}><path d="M4 21V4"/><path d="M4 4h13l-2 4 2 4H4"/></Svg>,
+  RefreshCw:(p) => <Svg {...p}><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></Svg>,
+  Settings:(p) => <Svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.6 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9c.6.5 1.3.9 2 1.2L10 21h4l.6-2.6c.7-.3 1.4-.7 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z"/></Svg>,
+  ArrowRight:(p) => <Svg {...p}><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></Svg>,
+  Menu:    (p) => <Svg {...p}><path d="M4 6h16M4 12h16M4 18h16"/></Svg>,
+  Dot:     (p) => <svg width="6" height="6" viewBox="0 0 6 6" aria-hidden="true"><circle cx="3" cy="3" r="3" fill="currentColor"/></svg>,
+  Yoga:    (p) => <Svg {...p}><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><path d="M5 11h14"/><path d="M9 11c0 4-3 6-3 10"/><path d="M15 11c0 4 3 6 3 10"/></Svg>,
+  Dumbbell:(p) => <Svg {...p}><path d="M4 9v6"/><path d="M2 11v2"/><path d="M20 9v6"/><path d="M22 11v2"/><path d="M6 8v8"/><path d="M18 8v8"/><path d="M6 12h12"/></Svg>,
+  Heart:   (p) => <Svg {...p}><path d="M12 20s-7-4.5-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.5-9 9-9 9Z"/></Svg>,
+  Flame:   (p) => <Svg {...p}><path d="M12 21c4 0 7-3 7-7 0-3-2-5-3-6 0 2-2 3-3 3 1-3-1-7-4-8 0 4-4 5-4 11 0 4 3 7 7 7Z"/></Svg>,
+  Target:  (p) => <Svg {...p}><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></Svg>,
+  MapPin:  (p) => <Svg {...p}><path d="M12 22s7-7 7-12a7 7 0 0 0-14 0c0 5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></Svg>,
+  CreditCard:(p) => <Svg {...p}><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></Svg>,
+  Camera:  (p) => <Svg {...p}><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7l1.5-3h3L15 7"/><circle cx="12" cy="13.5" r="3.5"/></Svg>,
+  Mic:     (p) => <Svg {...p}><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></Svg>,
+  Sun:     (p) => <Svg {...p}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></Svg>,
+  Moon:    (p) => <Svg {...p}><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></Svg>,
+  Globe:   (p) => <Svg {...p}><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></Svg>,
+  PhoneOff:(p) => <Svg {...p}><path d="M10.7 13.3a8 8 0 0 1-2-2L11 9.3 9.3 5.5a1 1 0 0 0-1-.5C6 5.3 4 7 4 9c0 1 .3 2.5 1.2 4M22 22 2 2M14 6.5a8 8 0 0 1 3.5 3.5M20 10c0 1-.3 2.5-1.2 4L17 13l-2 2c-1.5-.5-2.8-1.4-4-2.5"/></Svg>,
+  Send:    (p) => <Svg {...p}><path d="m4 12 17-8-8 17-2-7-7-2Z"/></Svg>,
+  MessageSquare:(p) => <Svg {...p}><path d="M21 11c0 4-3 7-7 7H8l-5 3V8a5 5 0 0 1 5-5h8c4 0 5 3 5 5v3Z"/></Svg>,
+};
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  PRIMITIVES — Button, Card, Badge, Input, Avatar, Rating, Tabs             */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+const cn = (...xs) => xs.filter(Boolean).join(" ");
+
+const Button = ({ variant = "filled", size = "md", className = "", as: As = "button", children, ...rest }) => {
+  const base = "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-[transform,background-color,box-shadow,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:pointer-events-none disabled:opacity-40 active:scale-[0.97] select-none";
+  const variants = {
+    filled: "bg-primary text-white hover:bg-primary-hover hover:shadow-[0_2px_10px_rgba(26,48,40,0.35)]",
+    tonal: "bg-primary-container text-on-primary-container hover:bg-[#D4E5DA]",
+    outlined: "border border-surface-dim bg-transparent text-primary hover:bg-primary-container/60",
+    ghost: "text-primary hover:bg-primary-container/60",
+    neutral: "bg-surface-variant text-ink hover:bg-surface-container",
+    destructive: "bg-error text-white hover:brightness-95 hover:shadow-[0_2px_10px_rgba(178,58,58,0.35)]",
+  };
+  const sizes = {
+    sm: "h-9 px-4 text-[13px]",
+    md: "h-11 px-5 text-[14px]",
+    lg: "h-12 px-6 text-[15px]",
+    icon: "h-10 w-10 p-0",
+    "icon-sm": "h-8 w-8 p-0",
+  };
+  return <As className={cn(base, variants[variant], sizes[size], className)} {...rest}>{children}</As>;
+};
+
+const Card = ({ variant = "elevated", className = "", children, ...rest }) => {
+  const v = {
+    elevated: "bg-surface rounded-2xl shadow-[0_1px_2px_rgba(26,48,40,0.08)]",
+    filled: "bg-surface-variant rounded-2xl",
+    outlined: "bg-surface rounded-2xl border border-surface-dim",
+  }[variant];
+  return <div className={cn(v, className)} {...rest}>{children}</div>;
+};
+
+const Badge = ({ status = "neutral", className = "", children, icon }) => {
+  const map = {
+    confirmed: "bg-success-container text-success",
+    completed: "bg-surface-variant text-ink-2",
+    cancelled: "bg-error-container text-error",
+    pending: "bg-warning-container text-warning",
+    verified: "bg-primary-container text-on-primary-container",
+    info: "bg-info-container text-info",
+    no_show: "bg-error-container/60 text-error",
+    neutral: "bg-surface-variant text-ink-2",
+  };
+  return (
+    <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-medium leading-5", map[status], className)}>
+      {icon}{children}
+    </span>
+  );
+};
+
+const Field = ({ label, hint, error, children, className = "" }) => (
+  <label className={cn("block", className)}>
+    {label && <span className="mb-1.5 block text-[13px] font-medium text-ink-2">{label}</span>}
+    {children}
+    {(hint || error) && (
+      <span className={cn("mt-1.5 block text-[12px]", error ? "text-error" : "text-ink-2")}>{error || hint}</span>
+    )}
+  </label>
+);
+
+const Input = ({ className = "", error, ...rest }) => (
+  <input
+    {...rest}
+    className={cn(
+      "w-full h-12 rounded-lg border bg-surface px-3.5 text-[15px] text-ink placeholder:text-ink-3",
+      "focus:outline-none focus:ring-1 transition-colors",
+      error ? "border-error focus:border-error focus:ring-error/30" : "border-surface-dim focus:border-primary focus:ring-primary/30 hover:border-ink-2",
+      className,
+    )}
+  />
+);
+
+const Textarea = ({ className = "", rows = 4, ...rest }) => (
+  <textarea rows={rows} {...rest}
+    className={cn(
+      "w-full rounded-lg border border-surface-dim bg-surface px-3.5 py-3 text-[15px] text-ink placeholder:text-ink-3",
+      "focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 hover:border-ink-2 transition-colors resize-none",
+      className,
+    )}
+  />
+);
+
+const Avatar = ({ name = "?", size = "md", src, className = "" }) => {
+  const sz = { xs:"h-6 w-6 text-[10px]", sm:"h-8 w-8 text-xs", md:"h-10 w-10 text-sm", lg:"h-14 w-14 text-base", xl:"h-20 w-20 text-xl", "2xl":"h-28 w-28 text-2xl" }[size];
+  const initials = name.split(" ").map(s=>s[0]).slice(0,2).join("").toUpperCase();
+  return (
+    <div className={cn("relative inline-flex shrink-0 items-center justify-center rounded-full bg-primary-container text-on-primary-container font-semibold select-none overflow-hidden", sz, className)}>
+      {src ? <img src={src} alt="" className="h-full w-full object-cover"/> : initials}
+    </div>
+  );
+};
+
+const PhotoSlot = ({ label, className = "", aspect = "1/1", icon }) => (
+  <div className={cn("relative overflow-hidden rounded-2xl bg-surface-variant", className)} style={{ aspectRatio: aspect }}>
+    <div className="absolute inset-0 opacity-50" style={{ backgroundImage: "repeating-linear-gradient(45deg, transparent 0 8px, rgba(45,90,64,0.07) 8px 9px)" }} />
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-ink-3">
+      <span className="text-primary/70">{icon || <I.Camera size={28} stroke={1.5}/>}</span>
+      <span className="font-mono text-[11px] tracking-wide">{label}</span>
+    </div>
+  </div>
+);
+
+const RatingStars = ({ value = 0, size = 14, max = 5 }) => {
+  return (
+    <span className="inline-flex items-center gap-0.5 text-secondary">
+      {Array.from({ length: max }).map((_, i) => (
+        i < Math.round(value)
+          ? <I.StarFill key={i} size={size}/>
+          : <span key={i} className="text-surface-dim"><I.Star size={size} stroke={2}/></span>
+      ))}
+    </span>
+  );
+};
+
+const Tabs = ({ tabs, value, onChange, className = "" }) => (
+  <div role="tablist" className={cn("inline-flex rounded-full bg-surface-variant p-1", className)}>
+    {tabs.map(t => (
+      <button key={t.value} role="tab" aria-selected={value === t.value}
+        onClick={() => onChange(t.value)}
+        className={cn(
+          "h-9 px-4 rounded-full text-[13px] font-medium transition-colors",
+          value === t.value ? "bg-surface text-ink shadow-[0_1px_2px_rgba(26,48,40,0.08)]" : "text-ink-2 hover:text-ink"
+        )}>
+        {t.label}
+      </button>
+    ))}
+  </div>
+);
+
+const Switch = ({ checked, onChange }) => (
+  <button onClick={() => onChange(!checked)} role="switch" aria-checked={checked}
+    className={cn("relative h-7 w-12 rounded-full transition-colors", checked ? "bg-primary" : "bg-surface-container")}>
+    <span className={cn("absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.2)] transition-[left]", checked ? "left-[22px]" : "left-0.5")}/>
+  </button>
+);
+
+const Section = ({ title, action, children, className = "" }) => (
+  <section className={cn("space-y-3", className)}>
+    {(title || action) && (
+      <div className="flex items-center justify-between gap-3">
+        {title && <h2 className="font-display text-[22px] leading-7 tracking-tight">{title}</h2>}
+        {action}
+      </div>
+    )}
+    {children}
+  </section>
+);
+
+const SpecChip = ({ children }) => (
+  <span className="inline-flex items-center rounded-full bg-surface-variant text-ink-2 px-2.5 py-1 text-[12px] font-medium">{children}</span>
+);
+
+const Sheet = ({ open, onClose, title, children }) => {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center">
+      <div className="absolute inset-0 bg-black/40 animate-[fadeIn_.2s_ease]" onClick={onClose}/>
+      <div className="relative w-full sm:max-w-md bg-surface rounded-t-3xl sm:rounded-3xl p-5 shadow-[0_-8px_32px_rgba(26,48,40,0.18)] animate-[slideUp_.25s_cubic-bezier(0,0,0,1)]">
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-surface-dim sm:hidden"/>
+        {title && <h3 className="font-display text-[22px] leading-7 mb-3">{title}</h3>}
+        {children}
+      </div>
+      <style>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}`}</style>
+    </div>
+  );
+};
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  SEED DATA                                                                 */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+const SPECS = [
+  { id: "strength", name: "Strength", icon: <I.Dumbbell/> },
+  { id: "hiit", name: "HIIT", icon: <I.Flame/> },
+  { id: "cardio", name: "Cardio", icon: <I.Heart/> },
+  { id: "pilates", name: "Pilates", icon: <I.Target/> },
+  { id: "stretch", name: "Stretching", icon: <I.Yoga/> },
+];
+
+const TRAINERS = [
+  { id:"t1", name:"Anna Romanova",   tagline:"Hatha · Vinyasa · Mindfulness", specs:["Yoga","Pilates","Stretching"], rating:4.9, reviews:124, price:40, exp:8, verified:true, city:"New York", bio:"Certified yoga teacher (RYT-500). I work with posture, breathing and stress recovery. My approach is gentle, mindful, never forceful." },
+  { id:"t2", name:"Dmitry Sokolov", tagline:"Strength · Hypertrophy · Powerbuilding", specs:["Strength","HIIT","Functional"], rating:4.8, reviews:88,  price:55, exp:10, verified:true, city:"St. Petersburg", bio:"Strength coach. Powerlifting Master of Sport candidate. I help you build mass or prepare for competition. Programs strictly tailored to goals." },
+  { id:"t3", name:"Maria Lebedeva",   tagline:"Pilates · Therapeutic training", specs:["Pilates","Stretching"], rating:4.95, reviews:201, price:50, exp:12, verified:true, city:"Kazan", bio:"Rehab specialist + Pilates instructor. I work with back pain, scoliosis, post-partum. We move slowly and precisely." },
+  { id:"t4", name:"Igor Severov",   tagline:"HIIT · Fat burning · CrossFit", specs:["HIIT","Cardio"], rating:4.7, reviews:65, price:35, exp:6, verified:true, city:"New York", bio:"High-intensity intervals, jump series, metabolic protocols. Best if you value short, dense workouts." },
+  { id:"t5", name:"Elena Timchenko",   tagline:"Barre · Stretching · Dance", specs:["Stretching","Pilates"], rating:4.85, reviews:142, price:45, exp:9, verified:false, city:"New York", bio:"Former ballerina. Barre, stretching, spine relief. I teach you to carry yourself beautifully and move with ease." },
+  { id:"t6", name:"Artem Karpov",    tagline:"Boxing · Cardio · Combat sports", specs:["Cardio","HIIT"], rating:4.6, reviews:54, price:38, exp:7, verified:true, city:"Yekaterinburg", bio:"Boxing Master of Sport candidate. Punch technique, footwork, aerobic base. Sparring optional." },
+];
+
+const BOOKINGS = [
+  { id:"b1", trainer:"t1", service:"Morning yoga · 60 min", date:"Tomorrow, 08:00", status:"confirmed", price:40 },
+  { id:"b2", trainer:"t3", service:"Pilates for back · 45 min", date:"Fri May 24, 19:00", status:"confirmed", price:38 },
+  { id:"b3", trainer:"t2", service:"Strength · 60 min", date:"May 15, 18:30", status:"completed", price:55 },
+  { id:"b4", trainer:"t4", service:"HIIT 30 · 30 min", date:"May 10, 07:30", status:"completed", price:25 },
+  { id:"b5", trainer:"t5", service:"Barre · 45 min", date:"May 3, 11:00", status:"cancelled", price:45 },
+];
+
+const CLIENTS = [
+  { id:"c1", name:"Ivan Petrov",   sessions:12, last:"2 days ago", goal:"Gain mass" },
+  { id:"c2", name:"Olga Kudrina", sessions:24, last:"5 days ago", goal:"Back recovery" },
+  { id:"c3", name:"Alisa Shkurko",  sessions:6,  last:"yesterday",         goal:"Tone & posture" },
+  { id:"c4", name:"Kirill Norov",  sessions:3,  last:"3 weeks ago",goal:"Weight loss" },
+];
+
+const APPLICATIONS = [
+  { id:"a1", name:"Sergey Ivanov",  email:"sergey@pulse.dev",  submitted:"5 days ago", specs:["Strength","HIIT"] },
+  { id:"a2", name:"Yulia Orlova",    email:"yulia@pulse.dev",   submitted:"3 days ago",   specs:["Yoga","Pilates"] },
+  { id:"a3", name:"Timur Bakiev",   email:"timur@pulse.dev",   submitted:"yesterday",         specs:["Boxing","Cardio"] },
+];
+
+const COMPLAINTS = [
+  { id:"co1", from:"Client · Denis K.",   target:"Trainer · Artem K.",   category:"Didn't show up",   when:"yesterday",    priority:"high",  status:"open" },
+  { id:"co2", from:"Trainer · Anna R.",    target:"Client · Victor M.",  category:"Rude behavior",   when:"3 days ago", priority:"med",   status:"open" },
+  { id:"co3", from:"Client · Maria T.",   target:"Trainer · Igor S.",   category:"Mismatch with description", when:"5 days ago", priority:"low", status:"in_review" },
+];
+
+const REFUNDS = [
+  { id:"r1", client:"Denis K.",  trainer:"Artem K.",  amount:38, reason:"No-show", when:"yesterday", status:"pending" },
+  { id:"r2", client:"Victor M.", trainer:"Dmitry S.", amount:55, reason:"Technical issues",   when:"2 days ago", status:"pending" },
+];
+
+const trainerById = (id) => TRAINERS.find(t => t.id === id);
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  APP STATE                                                                 */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+const AppCtx = createContext(null);
+const useApp = () => useContext(AppCtx);
+
+function Toast({ msg }) {
+  if (!msg) return null;
+  return (
+    <div className="fixed left-1/2 -translate-x-1/2 bottom-24 z-[60] bg-primary text-white text-[13px] px-4 py-2.5 rounded-full shadow-[0_4px_16px_rgba(26,48,40,0.3)] animate-[fadeIn_.2s_ease]">
+      {msg}
+    </div>
+  );
+}
+
+const NOTIFICATIONS = [
+  { id:1, icon:<I.Calendar/>, title:"Session in 1 hour",         body:"Yoga with Anna Romanova at 19:00", time:"5m",       unread:true,  tone:"primary" },
+  { id:2, icon:<I.Star/>,     title:"New 5-star review",          body:"Lena K. left feedback on yesterday’s session", time:"2h", unread:true,  tone:"secondary" },
+  { id:3, icon:<I.Dollar/>,   title:"Payment received",           body:"$40 from Olga K. — service fee deducted",      time:"yesterday", unread:false, tone:"success" },
+  { id:4, icon:<I.CheckCircle/>, title:"Booking confirmed",       body:"Pilates for back · Fri May 24, 19:00",          time:"2d", unread:false, tone:"primary" },
+  { id:5, icon:<I.Bell/>,     title:"Welcome to Pulse",           body:"Complete your profile to get personal recommendations", time:"3d", unread:false, tone:"info" },
+];
+
+function NotificationsPopover() {
+  const { notifOpen, setNotifOpen } = useApp();
+  const t = useT();
+  if (!notifOpen) return null;
+  const toneMap = {
+    primary:   "bg-primary-container text-on-primary-container",
+    secondary: "bg-secondary-container text-on-secondary-container",
+    success:   "bg-success-container text-success",
+    info:      "bg-info-container text-info",
+  };
+  return (
+    <>
+      <div className="fixed inset-0 z-[55]" onClick={() => setNotifOpen(false)}/>
+      <div className="fixed top-[60px] md:top-[72px] right-3 md:right-6 z-[56] w-[calc(100vw-1.5rem)] sm:w-96 max-h-[70vh] bg-surface rounded-2xl shadow-[0_8px_32px_rgba(26,48,40,0.18)] border border-surface-dim flex flex-col overflow-hidden animate-[popIn_.18s_cubic-bezier(0,0,0,1)]">
+        <div className="flex items-center justify-between px-4 h-12 border-b border-surface-dim/60">
+          <h3 className="font-display text-[18px]">{t("Notifications")}</h3>
+          <button onClick={() => setNotifOpen(false)} className="text-[12px] font-medium text-primary hover:underline">{t("Mark all as read")}</button>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {NOTIFICATIONS.map((n, i) => (
+            <button key={n.id} className={cn("w-full text-left flex items-start gap-3 px-4 py-3 hover:bg-surface-variant transition-colors", i > 0 && "border-t border-surface-dim/40")}>
+              <span className={cn("h-9 w-9 inline-flex shrink-0 items-center justify-center rounded-xl", toneMap[n.tone])}>{n.icon}</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="text-[13.5px] font-medium leading-tight">{n.title}</div>
+                  <div className="font-mono text-[10.5px] text-ink-3 shrink-0">{n.time}</div>
+                </div>
+                <div className="text-[12px] text-ink-2 mt-1 leading-snug">{n.body}</div>
+              </div>
+              {n.unread && <span className="mt-1.5 h-2 w-2 rounded-full bg-primary shrink-0"/>}
+            </button>
+          ))}
+        </div>
+        <div className="p-3 border-t border-surface-dim/60 bg-surface-variant/40">
+          <button className="w-full h-9 inline-flex items-center justify-center rounded-full text-[13px] font-medium text-primary hover:bg-primary-container/40">{t("View all")}</button>
+        </div>
+      </div>
+      <style>{`@keyframes popIn{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}`}</style>
+    </>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  TOP BAR — Role Switcher                                                   */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function RoleSwitcher() {
+  const { role, setRole, setScreen, theme, setTheme, notifOpen, setNotifOpen } = useApp();
+  const { lang, setLang } = useContext(LangCtx);
+  const t = useT();
+  const roles = [
+    { id:"client",  label:"Client",  icon: <I.User size={16}/> },
+    { id:"trainer", label:"Trainer",  icon: <I.Dumbbell size={16}/> },
+    { id:"admin",   label:"Admin",   icon: <I.Shield size={16}/> },
+  ];
+  return (
+    <div className="sticky top-0 z-40 bg-bg/85 backdrop-blur-md border-b border-surface-dim/60">
+      <div className="mx-auto max-w-[1400px] flex items-center justify-between px-4 md:px-6 lg:px-8 h-14 md:h-16">
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+            <I.Flame size={18}/>
+          </span>
+          <span className="font-display text-[20px] leading-none">Pulse</span>
+          <span className="hidden md:inline-block ml-2 text-[11px] font-mono uppercase tracking-wide text-ink-3">{t("fitness platform")}</span>
+        </div>
+        <div className="flex items-center gap-1.5 md:gap-3">
+          <div className="inline-flex items-center rounded-full bg-surface-variant p-0.5">
+            {roles.map(r => (
+              <button key={r.id} onClick={() => { setRole(r.id); setScreen(defaultScreen(r.id)); }}
+                className={cn("h-8 md:h-9 px-2 md:px-3.5 rounded-full inline-flex items-center gap-1.5 text-[12px] md:text-[13px] font-medium transition-colors",
+                  role === r.id ? "bg-surface text-ink shadow-[0_1px_2px_rgba(26,48,40,0.08)]" : "text-ink-2 hover:text-ink")}>
+                {r.icon}
+                <span className="hidden sm:inline">{t(r.label)}</span>
+              </button>
+            ))}
+          </div>
+          <button onClick={() => setLang(lang === "en" ? "ru" : "en")}
+            className="inline-flex h-8 md:h-9 px-2 md:px-2.5 items-center justify-center gap-1 rounded-full bg-surface border border-surface-dim text-ink-2 hover:text-ink transition-colors text-[11px] md:text-[12px] font-mono font-medium uppercase"
+            title="Toggle language">
+            <I.Globe size={14}/> {lang}
+          </button>
+          <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="inline-flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-surface border border-surface-dim text-ink-2 hover:text-ink transition-colors"
+            title={theme === "dark" ? t("Switch to light") : t("Switch to dark")}>
+            {theme === "dark" ? <I.Sun size={16}/> : <I.Moon size={16}/>}
+          </button>
+          <button onClick={() => setNotifOpen(!notifOpen)}
+            className="inline-flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-surface border border-surface-dim text-ink-2 hover:text-ink relative"
+            title={t("Notifications")}>
+            <I.Bell size={16}/>
+            <span className="absolute top-1 right-1 md:top-1.5 md:right-1.5 h-2 w-2 rounded-full bg-primary"/>
+          </button>
+          <span className="hidden md:inline-flex"><Avatar name="Alyona Sokolova" size="sm"/></span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const defaultScreen = (role) => ({ client:"c.home", trainer:"t.home", admin:"a.home" }[role]);
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  BOTTOM NAV                                                                */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+/* Shared nav items for both BottomNav and SideNav */
+const navItemsFor = (role) => ({
+    client: [
+      { id:"c.home",     label:"Home",      icon:<I.Home/> },
+      { id:"c.catalog",  label:"Trainers",  icon:<I.Search/> },
+      { id:"c.bookings", label:"Sessions",  icon:<I.Calendar/> },
+      { id:"c.profile",  label:"Profile",   icon:<I.User/> },
+    ],
+    trainer: [
+      { id:"t.home",     label:"Today",     icon:<I.Home/> },
+      { id:"t.schedule", label:"Schedule",  icon:<I.Calendar/> },
+      { id:"t.services", label:"Services",  icon:<I.Dumbbell/> },
+      { id:"t.clients",  label:"Clients",   icon:<I.Users/> },
+      { id:"t.income",   label:"Income",    icon:<I.Dollar/> },
+    ],
+    admin: [
+      { id:"a.home",       label:"Overview",   icon:<I.Home/> },
+      { id:"a.trainers",   label:"Trainers",   icon:<I.Shield/>,    badge:3 },
+      { id:"a.complaints", label:"Complaints", icon:<I.Flag/>,      badge:2 },
+      { id:"a.refunds",    label:"Refunds",    icon:<I.RefreshCw/>, badge:2 },
+    ],
+  }[role]);
+
+function BottomNav() {
+  const { role, screen, setScreen } = useApp();
+  const items = navItemsFor(role);
+  const t = useT();
+
+  return (
+    <nav className="md:hidden sticky bottom-0 z-40 bg-surface/95 backdrop-blur-md border-t border-surface-dim/70" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+      <div className="mx-auto w-full max-w-md grid" style={{ gridTemplateColumns: `repeat(${items.length}, 1fr)` }}>
+        {items.map(it => {
+          const active = screen === it.id;
+          return (
+            <button key={it.id} onClick={() => setScreen(it.id)}
+              className="relative flex flex-col items-center justify-center gap-0.5 py-2.5 group">
+              <span className={cn("relative flex h-7 w-12 items-center justify-center rounded-full transition-colors",
+                active ? "bg-primary-container text-on-primary-container" : "text-ink-2 group-hover:text-ink")}>
+                {it.icon}
+                {it.badge && (
+                  <span className="absolute -top-0.5 right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-error text-white text-[10px] font-bold leading-4 text-center">{it.badge}</span>
+                )}
+              </span>
+              <span className={cn("text-[10.5px] font-medium", active ? "text-ink" : "text-ink-2")}>{t(it.label)}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
+function SideNav() {
+  const { role, screen, setScreen } = useApp();
+  const items = navItemsFor(role);
+  const t = useT();
+  const sectionTitle = { client:t("Client"), trainer:t("Trainer"), admin:t("Administrator") }[role];
+  return (
+    <aside className="hidden md:flex sticky top-16 self-start h-[calc(100dvh-4rem)] w-52 lg:w-60 shrink-0 flex-col px-3 py-6 gap-1 border-r border-surface-dim/60">
+      <div className="px-4 mb-2 text-[11px] font-mono uppercase tracking-[0.08em] text-ink-3">{sectionTitle}</div>
+      {items.map(it => {
+        const active = screen === it.id;
+        return (
+          <button key={it.id} onClick={() => setScreen(it.id)}
+            className={cn(
+              "h-11 px-3 rounded-full flex items-center gap-3 text-[14px] font-medium transition-colors text-left",
+              active ? "bg-primary-container text-on-primary-container" : "text-ink-2 hover:bg-surface-variant hover:text-ink"
+            )}>
+            <span className={cn(active ? "text-on-primary-container" : "text-ink-2")}>{it.icon}</span>
+            <span className="flex-1 text-left">{t(it.label)}</span>
+            {it.badge && (
+              <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-error text-white text-[11px] font-bold leading-5 text-center">{it.badge}</span>
+            )}
+          </button>
+        );
+      })}
+      <div className="mt-auto">
+        <Card variant="filled" className="p-3.5">
+          <div className="flex items-center gap-1.5 text-[12px] font-medium text-ink mb-1">
+            <I.Flame size={14} className="text-primary"/> Prototype
+          </div>
+          <div className="text-[11px] text-ink-2 leading-relaxed">Switch roles in the top bar.</div>
+        </Card>
+      </div>
+    </aside>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  SHARED — Trainer Card, Booking Card, KPI Card                             */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function TrainerCard({ t, onOpen, compact = false }) {
+  return (
+    <Card className="overflow-hidden transition-all duration-200 hover:shadow-[0_4px_16px_rgba(26,48,40,0.10)] cursor-pointer active:scale-[0.99]" onClick={onOpen}>
+      <div className="flex gap-3 p-3">
+        <PhotoSlot label={`PHOTO · ${t.name.split(" ")[0].toUpperCase()}`} className={compact ? "w-20 shrink-0" : "w-24 shrink-0"} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="font-display text-[17px] leading-tight truncate">{t.name}</h3>
+              <p className="text-[12px] text-ink-2 mt-0.5 line-clamp-1">{t.tagline}</p>
+            </div>
+            {t.verified && (
+              <span className="shrink-0 inline-flex items-center gap-0.5 rounded-full bg-primary-container text-on-primary-container text-[11px] font-medium px-1.5 py-0.5">
+                <I.Check size={12} stroke={2.5}/>
+              </span>
+            )}
+          </div>
+          <div className="mt-1.5 flex items-center gap-1.5 text-[12px] text-ink-2">
+            <RatingStars value={t.rating} size={12}/>
+            <span className="font-mono text-[11px] text-ink">{t.rating}</span>
+            <span className="text-ink-3">·</span>
+            <span>{t.reviews} reviews</span>
+          </div>
+          <div className="mt-2 flex items-center justify-between">
+            <div className="flex flex-wrap gap-1">
+              {t.specs.slice(0, 2).map(s => <SpecChip key={s}>{s}</SpecChip>)}
+              {t.specs.length > 2 && <SpecChip>+{t.specs.length - 2}</SpecChip>}
+            </div>
+            <div className="text-right">
+              <div className="text-[11px] text-ink-2 leading-none">from</div>
+              <div className="font-display text-[18px] leading-none mt-0.5">${t.price}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function KpiCard({ label, value, sub, icon, tone = "primary" }) {
+  const tones = {
+    primary: "bg-primary-container text-on-primary-container",
+    secondary: "bg-secondary-container text-on-secondary-container",
+    success: "bg-success-container text-success",
+    info: "bg-info-container text-info",
+  };
+  return (
+    <Card className="p-3.5">
+      <div className="flex items-center gap-2.5">
+        <span className={cn("inline-flex h-9 w-9 items-center justify-center rounded-xl", tones[tone])}>{icon}</span>
+        <div className="min-w-0">
+          <div className="font-display text-[20px] leading-none">{value}</div>
+          <div className="text-[12px] text-ink-2 mt-1 leading-tight">{label}</div>
+        </div>
+      </div>
+      {sub && <div className="mt-2 text-[11px] text-ink-3">{sub}</div>}
+    </Card>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  CLIENT — Home                                                             */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function ClientHome() {
+  const { setScreen, openTrainer } = useApp();
+  const t = useT();
+  const upcoming = BOOKINGS.find(b => b.status === "confirmed");
+  const tr = upcoming && trainerById(upcoming.trainer);
+  const featured = TRAINERS.slice(0, 6);
+
+  return (
+    <div className="space-y-6 pb-6">
+      <header>
+        <p className="text-[13px] text-ink-2">Good morning,</p>
+        <h1 className="font-display text-[30px] md:text-[44px] leading-tight">Alyona 👋</h1>
+      </header>
+
+      {/* Search */}
+      <button onClick={() => setScreen("c.catalog")}
+        className="w-full flex items-center gap-2.5 h-12 md:h-14 px-4 md:px-5 rounded-full bg-surface border border-surface-dim text-ink-2 hover:border-ink-3 transition-colors">
+        <I.Search size={18}/> <span className="text-[14px] md:text-[15px]">Find a trainer or specialty</span>
+      </button>
+
+      <div className="md:grid md:grid-cols-3 md:gap-6 space-y-6 md:space-y-0">
+        <div className="md:col-span-2 space-y-6">
+          {/* Upcoming */}
+          {upcoming && (
+            <Section title="Next session">
+              <Card className="overflow-hidden">
+                <div className="p-4 md:p-5 flex items-center gap-3 md:gap-4">
+                  <Avatar name={tr.name} size="lg"/>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[12px] text-primary font-medium uppercase tracking-wide">{upcoming.date}</div>
+                    <h3 className="font-display text-[18px] md:text-[22px] leading-tight mt-0.5">{tr.name}</h3>
+                    <p className="text-[13px] text-ink-2 mt-0.5 truncate">{upcoming.service}</p>
+                  </div>
+                </div>
+                <div className="px-4 md:px-5 pb-4 md:pb-5 flex gap-2">
+                  <Button variant="filled" size="md" className="flex-1" onClick={() => setScreen("c.session")}><I.Video size={16}/> {t("Join session")}</Button>
+                  <Button variant="outlined" size="icon"><I.X size={18}/></Button>
+                </div>
+              </Card>
+            </Section>
+          )}
+
+          {/* Featured */}
+          <Section title="Top trainers" action={
+            <button onClick={() => setScreen("c.catalog")} className="text-[13px] font-medium text-primary inline-flex items-center gap-0.5">
+              All <I.ChevronRight size={14}/>
+            </button>}>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-2.5">
+              {featured.map(tr => <TrainerCard key={tr.id} t={tr} onOpen={() => openTrainer(tr.id)} />)}
+            </div>
+          </Section>
+        </div>
+
+        <div className="space-y-6">
+          {/* Specializations */}
+          <Section title="Categories">
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-2.5">
+              {SPECS.map(s => (
+                <button key={s.id} onClick={() => setScreen("c.catalog")}
+                  className="flex flex-col items-center justify-center gap-1.5 aspect-square rounded-2xl bg-surface border border-surface-dim hover:bg-surface-variant transition-colors">
+                  <span className="text-primary">{s.icon}</span>
+                  <span className="text-[12px] font-medium text-ink">{s.name}</span>
+                </button>
+              ))}
+            </div>
+          </Section>
+
+          {/* Social proof */}
+          <Card variant="filled" className="p-5 grid grid-cols-3 md:grid-cols-1 gap-3 text-center md:text-left">
+            <div><div className="font-display text-[22px] leading-none">1 240+</div><div className="text-[11px] text-ink-2 mt-1">trainers</div></div>
+            <div><div className="font-display text-[22px] leading-none">52K</div><div className="text-[11px] text-ink-2 mt-1">sessions</div></div>
+            <div><div className="font-display text-[22px] leading-none text-secondary">★ 4.8</div><div className="text-[11px] text-ink-2 mt-1">average</div></div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  CLIENT — Catalog                                                          */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function ClientCatalog() {
+  const { openTrainer } = useApp();
+  const [activeSpec, setActiveSpec] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceMax, setPriceMax] = useState(80);
+  const [minRating, setMinRating] = useState(0);
+
+  const list = useMemo(() => {
+    return TRAINERS.filter(t => {
+      if (activeSpec !== "all" && !t.specs.some(s => s.toLowerCase().includes(activeSpec))) return false;
+      if (t.price > priceMax) return false;
+      if (t.rating < minRating) return false;
+      return true;
+    });
+  }, [activeSpec, priceMax, minRating]);
+
+  const chips = [
+    { id:"all", label:"All" },
+    { id:"yoga", label:"Yoga" },
+    { id:"strength", label:"Strength" },
+    { id:"hiit", label:"HIIT" },
+    { id:"pilates", label:"Pilates" },
+    { id:"stretching", label:"Stretching" },
+    { id:"cardio", label:"Cardio" },
+  ];
+
+  return (
+    <div className="space-y-4 pb-6">
+      <header className="flex items-center justify-between">
+        <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Catalog</h1>
+        <button onClick={() => setShowFilters(true)} className="lg:hidden relative h-10 w-10 inline-flex items-center justify-center rounded-full bg-surface border border-surface-dim hover:bg-surface-variant">
+          <I.Filter size={18}/>
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary"/>
+        </button>
+      </header>
+
+      <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-6">
+        {/* Desktop filter sidebar */}
+        <aside className="hidden lg:block">
+          <Card className="p-4 sticky top-24 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-display text-[18px]">Filters</h3>
+              <button onClick={() => { setActiveSpec("all"); setPriceMax(80); setMinRating(0); }} className="text-[12px] text-primary font-medium">Clear</button>
+            </div>
+            <Field label={`Max price: $${priceMax}`}>
+              <input type="range" min="20" max="100" value={priceMax} onChange={e => setPriceMax(+e.target.value)} className="w-full accent-primary"/>
+              <div className="flex justify-between text-[11px] text-ink-3 mt-1 font-mono"><span>$20</span><span>$100</span></div>
+            </Field>
+            <Field label="Rating">
+              <div className="grid grid-cols-2 gap-1.5">
+                {[0, 3, 4, 4.5].map(r => (
+                  <button key={r} onClick={() => setMinRating(r)}
+                    className={cn("h-9 rounded-lg border text-[12px] font-medium transition-colors",
+                      minRating === r ? "bg-primary text-white border-primary" : "bg-surface text-ink-2 border-surface-dim hover:border-ink-3")}>
+                    {r === 0 ? "Any" : `★ ${r}+`}
+                  </button>
+                ))}
+              </div>
+            </Field>
+            <Field label="Specialty">
+              <div className="space-y-1">
+                {chips.map(c => (
+                  <button key={c.id} onClick={() => setActiveSpec(c.id)}
+                    className={cn("w-full h-9 px-3 rounded-lg text-left text-[13px] transition-colors",
+                      activeSpec === c.id ? "bg-primary-container text-on-primary-container font-medium" : "text-ink-2 hover:bg-surface-variant")}>
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </Field>
+          </Card>
+        </aside>
+
+        <div className="space-y-4">
+          <div className="relative">
+            <I.Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-3"/>
+            <input placeholder="Search by name or specialty"
+              className="w-full h-11 md:h-12 pl-10 pr-4 rounded-full bg-surface border border-surface-dim text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"/>
+          </div>
+
+          {/* Mobile/tablet chips */}
+          <div className="lg:hidden flex gap-2 overflow-x-auto no-scrollbar -mx-4 md:-mx-6 px-4 md:px-6">
+            {chips.map(c => (
+              <button key={c.id} onClick={() => setActiveSpec(c.id)}
+                className={cn("shrink-0 h-9 px-4 rounded-full text-[13px] font-medium border transition-colors",
+                  activeSpec === c.id ? "bg-primary text-white border-primary" : "bg-surface text-ink-2 border-surface-dim hover:border-ink-3")}>
+                {c.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between text-[12px] text-ink-2">
+            <span>{list.length} trainers found</span>
+            <button className="inline-flex items-center gap-1 font-medium text-ink">
+              By rating <I.ChevronDown size={14}/>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            {list.length > 0
+              ? list.map(t => <TrainerCard key={t.id} t={t} onOpen={() => openTrainer(t.id)} />)
+              : (
+                <Card className="p-8 text-center md:col-span-2">
+                  <div className="text-ink-3 mb-3 inline-block"><I.Search size={48} stroke={1.2}/></div>
+                  <h3 className="font-display text-[18px] mb-1">No results</h3>
+                  <p className="text-[13px] text-ink-2 mb-4">Try clearing filters</p>
+                  <Button variant="tonal" onClick={() => { setActiveSpec("all"); setPriceMax(80); setMinRating(0); }}>Clear</Button>
+                </Card>
+              )
+            }
+          </div>
+        </div>
+      </div>
+
+      <Sheet open={showFilters} onClose={() => setShowFilters(false)} title="Filters">
+        <div className="space-y-5">
+          <Field label={`Max price: $${priceMax}`}>
+            <input type="range" min="20" max="100" value={priceMax} onChange={e => setPriceMax(+e.target.value)}
+              className="w-full accent-primary"/>
+            <div className="flex justify-between text-[11px] text-ink-3 mt-1 font-mono"><span>$20</span><span>$100</span></div>
+          </Field>
+          <Field label="Minimum rating">
+            <div className="flex gap-2">
+              {[0, 3, 4, 4.5].map(r => (
+                <button key={r} onClick={() => setMinRating(r)}
+                  className={cn("flex-1 h-10 rounded-lg border text-[13px] font-medium transition-colors",
+                    minRating === r ? "bg-primary text-white border-primary" : "bg-surface text-ink-2 border-surface-dim")}>
+                  {r === 0 ? "Any" : `★ ${r}+`}
+                </button>
+              ))}
+            </div>
+          </Field>
+          <div className="flex gap-2 pt-2">
+            <Button variant="outlined" className="flex-1" onClick={() => { setActiveSpec("all"); setPriceMax(80); setMinRating(0); }}>Clear</Button>
+            <Button variant="filled" className="flex-1" onClick={() => setShowFilters(false)}>Apply</Button>
+          </div>
+        </div>
+      </Sheet>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  CLIENT — Trainer Profile                                                  */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function TrainerProfile() {
+  const { selectedTrainer, setScreen, goBack } = useApp();
+  const t = trainerById(selectedTrainer) || TRAINERS[0];
+  const [tab, setTab] = useState("about");
+  const services = [
+    { id:"s1", name:"Morning yoga", dur:60, price:40, desc:"Gentle wake-up, breathing and basic asanas." },
+    { id:"s2", name:"Vinyasa flow",  dur:75, price:55, desc:"Dynamic sequence focused on breath." },
+    { id:"s3", name:"Yoga for back", dur:45, price:35, desc:"Therapeutic practice to relieve the spine." },
+  ];
+
+  return (
+    <div className="-mx-4 -mt-4 md:mx-0 md:mt-0 pb-6">
+      {/* Hero */}
+      <div className="relative">
+        <PhotoSlot label={`COVER · ${t.name.toUpperCase()}`} aspect="4/3" className="w-full rounded-none md:rounded-3xl md:aspect-[16/6]"/>
+        <button onClick={goBack} className="absolute top-3 left-3 h-10 w-10 inline-flex items-center justify-center rounded-full bg-surface/95 backdrop-blur shadow-[0_1px_4px_rgba(0,0,0,0.15)]">
+          <I.ChevronLeft size={20}/>
+        </button>
+        <button className="absolute top-3 right-3 h-10 w-10 inline-flex items-center justify-center rounded-full bg-surface/95 backdrop-blur shadow-[0_1px_4px_rgba(0,0,0,0.15)] text-primary">
+          <I.Heart size={20}/>
+        </button>
+      </div>
+
+      <div className="px-4 md:px-0 -mt-6 md:mt-6 relative">
+        <div className="md:grid md:grid-cols-[1fr_360px] md:gap-6 space-y-5 md:space-y-0">
+          <div className="space-y-5">
+            <Card className="p-4 md:p-6">
+              <div className="flex items-start gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h1 className="font-display text-[26px] md:text-[34px] leading-tight">{t.name}</h1>
+                    {t.verified && <Badge status="verified" icon={<I.Check size={12} stroke={3}/>}>Verified</Badge>}
+                  </div>
+                  <p className="text-[13px] md:text-[14px] text-ink-2 mt-1">{t.tagline}</p>
+                  <div className="mt-2 flex items-center gap-2 text-[13px]">
+                    <RatingStars value={t.rating} size={14}/>
+                    <span className="font-mono text-ink">{t.rating}</span>
+                    <span className="text-ink-2">· {t.reviews} reviews</span>
+                  </div>
+                  <div className="mt-1.5 flex items-center gap-1.5 text-[12px] text-ink-2">
+                    <I.MapPin size={13}/> {t.city} · {t.exp} years experience
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Tabs */}
+            <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar">
+              <Tabs value={tab} onChange={setTab} tabs={[
+                { value:"about",    label:"About" },
+                { value:"services", label:"Services" },
+                { value:"schedule", label:"Schedule" },
+                { value:"reviews",  label:"Reviews" },
+              ]}/>
+            </div>
+
+            {tab === "about" && (
+              <div className="space-y-4">
+                <Card className="p-4 md:p-6">
+                  <h3 className="font-display text-[18px] md:text-[22px] mb-1.5">About me</h3>
+                  <p className="text-[14px] text-ink-2 leading-relaxed">{t.bio}</p>
+                </Card>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Card className="p-4 md:p-6 space-y-3">
+                    <h3 className="font-display text-[18px]">Categories</h3>
+                    <div className="flex flex-wrap gap-1.5">{t.specs.map(s => <SpecChip key={s}>{s}</SpecChip>)}</div>
+                  </Card>
+                  <Card className="p-4 md:p-6">
+                    <h3 className="font-display text-[18px] mb-2">Certificates</h3>
+                    <ul className="space-y-2.5">
+                      {["RYT-500 Yoga Alliance · 2019", "Reab. Pilates Method · 2021", "First Aid Certified · 2024"].map((c,i)=>(
+                        <li key={i} className="flex items-start gap-2.5 text-[13px]">
+                          <span className="mt-0.5 text-success"><I.CheckCircle size={16}/></span>
+                          <span className="text-ink-2">{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </Card>
+                </div>
+              </div>
+            )}
+
+            {tab === "services" && (
+              <div className="grid md:grid-cols-2 gap-2.5">
+                {services.map(s => (
+                  <Card key={s.id} className="p-4 md:p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h3 className="font-display text-[17px] md:text-[19px] leading-tight">{s.name}</h3>
+                        <p className="text-[12.5px] text-ink-2 mt-1 leading-relaxed">{s.desc}</p>
+                        <div className="mt-2 flex items-center gap-1.5 text-[12px] text-ink-2">
+                          <I.Clock size={13}/> {s.dur} min
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className="font-display text-[20px] leading-none">${s.price}</div>
+                      </div>
+                    </div>
+                    <Button variant="tonal" size="sm" className="mt-3 w-full" onClick={() => setScreen("c.book")}>Select</Button>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {tab === "schedule" && <ScheduleGrid onPick={() => setScreen("c.book")}/>}
+
+            {tab === "reviews" && (
+              <div className="space-y-3">
+                <Card className="p-4 md:p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="font-display text-[42px] md:text-[56px] leading-none">{t.rating}</div>
+                    <div className="flex-1">
+                      <RatingStars value={t.rating} size={16}/>
+                      <div className="text-[12px] text-ink-2 mt-1">{t.reviews} reviews</div>
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-1.5">
+                    {[5,4,3,2,1].map(n => (
+                      <div key={n} className="flex items-center gap-2 text-[11px] text-ink-2 font-mono">
+                        <span className="w-4">{n}</span>
+                        <div className="flex-1 h-1.5 rounded-full bg-surface-container overflow-hidden">
+                          <div className="h-full bg-secondary" style={{ width: n===5?"78%": n===4?"15%": n===3?"5%":"1%" }}/>
+                        </div>
+                        <span className="w-8 text-right">{n===5?"78%":n===4?"15%":n===3?"5%":"1%"}</span>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {[
+                    { name:"Lena K.",     when:"3 days ago",   text:"Calm, attentive, explains every technique. Felt a difference from the very first session." },
+                    { name:"Dmitry V.",  when:"a week ago",  text:"Great approach to working with injuries. No unnecessary pressure, straight to the point." },
+                    { name:"Olga N.",    when:"2 weeks ago", text:"Started falling asleep without pills after a month of practice. Seriously." },
+                  ].map((r,i)=>(
+                    <Card key={i} className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <Avatar name={r.name} size="sm"/>
+                          <div>
+                            <div className="text-[13px] font-medium">{r.name}</div>
+                            <div className="text-[11px] text-ink-3">{r.when}</div>
+                          </div>
+                        </div>
+                        <RatingStars value={5} size={12}/>
+                      </div>
+                      <p className="text-[13px] text-ink-2 mt-2.5 leading-relaxed">{r.text}</p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop booking sidebar */}
+          <aside className="hidden md:block">
+            <Card className="p-5 sticky top-24 space-y-4">
+              <div>
+                <div className="text-[11px] text-ink-2 leading-none uppercase tracking-wide">From</div>
+                <div className="font-display text-[36px] leading-none mt-1">${t.price}<span className="text-[14px] text-ink-2 font-sans"> / session</span></div>
+              </div>
+              <Field label="Service">
+                <select className="w-full h-11 rounded-lg border border-surface-dim bg-surface px-3 text-[14px] focus:outline-none focus:border-primary">
+                  {services.map(s => <option key={s.id} value={s.id}>{s.name} · {s.dur}min · ${s.price}</option>)}
+                </select>
+              </Field>
+              <Button variant="filled" size="lg" className="w-full" onClick={() => setScreen("c.book")}>Book now</Button>
+              <div className="flex items-center gap-2 text-[12px] text-ink-2">
+                <I.Shield size={14} className="text-success"/> Free cancellation up to 24h
+              </div>
+              <div className="flex items-center gap-2 text-[12px] text-ink-2">
+                <I.Video size={14} className="text-primary"/> Online session in video room
+              </div>
+            </Card>
+          </aside>
+        </div>
+      </div>
+
+      {/* Mobile sticky CTA */}
+      <div className="md:hidden sticky bottom-0 -mx-4 mt-6 px-4 py-3 bg-surface/95 backdrop-blur-md border-t border-surface-dim/70">
+        <div className="flex items-center gap-3">
+          <div>
+            <div className="text-[11px] text-ink-2 leading-none">from</div>
+            <div className="font-display text-[20px] leading-none mt-0.5">${t.price}</div>
+          </div>
+          <Button variant="filled" size="lg" className="flex-1" onClick={() => setScreen("c.book")}>Book now</Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ScheduleGrid({ onPick }) {
+  const days = ["Mon 20", "Tue 21", "Wed 22", "Thu 23", "Fri 24", "Sat 25", "Sun 26"];
+  const slots = ["07:00","08:30","10:00","11:30","13:00","15:00","17:30","19:00","20:30"];
+  const free = (d, s) => (d + s).length % 3 !== 0;
+  const [activeDay, setActiveDay] = useState(0);
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-display text-[18px]">This week</h3>
+        <div className="text-[11px] text-ink-2 font-mono">UTC−5</div>
+      </div>
+      <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1">
+        {days.map((d,i) => (
+          <button key={i} onClick={() => setActiveDay(i)}
+            className={cn("shrink-0 flex flex-col items-center justify-center h-16 w-14 rounded-2xl border text-center transition-colors",
+              activeDay === i ? "bg-primary text-white border-primary" : "bg-surface border-surface-dim text-ink-2 hover:bg-surface-variant")}>
+            <span className="text-[11px] uppercase">{d.split(" ")[0]}</span>
+            <span className="font-display text-[18px] leading-tight">{d.split(" ")[1]}</span>
+          </button>
+        ))}
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        {slots.map(s => {
+          const ok = free(activeDay, s);
+          return (
+            <button key={s} disabled={!ok} onClick={onPick}
+              className={cn("h-11 rounded-lg text-[13px] font-mono transition-colors",
+                ok ? "bg-surface border border-surface-dim text-ink hover:border-primary hover:text-primary"
+                   : "bg-surface-container text-ink-3 cursor-not-allowed line-through")}>
+              {s}
+            </button>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  CLIENT — Booking flow                                                     */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function BookingFlow() {
+  const { selectedTrainer, setScreen, goBack, toast } = useApp();
+  const t = trainerById(selectedTrainer) || TRAINERS[0];
+  const [step, setStep] = useState(1);
+  const [service, setService] = useState("s1");
+  const [slot, setSlot] = useState(null);
+  const [message, setMessage] = useState("");
+
+  const services = [
+    { id:"s1", name:"Morning yoga", dur:60, price:40 },
+    { id:"s2", name:"Vinyasa flow",  dur:75, price:55 },
+    { id:"s3", name:"Yoga for back", dur:45, price:35 },
+  ];
+  const chosenSvc = services.find(s => s.id === service);
+  const fee = +(chosenSvc.price * 0.06).toFixed(2);
+  const total = chosenSvc.price + fee;
+
+  return (
+    <div className="-mx-4 -mt-4 md:mx-0 md:mt-0 min-h-[calc(100dvh-3rem-72px)] md:min-h-0 bg-bg">
+      <div className="sticky top-14 md:top-16 z-30 bg-bg/95 backdrop-blur-md border-b border-surface-dim/60 md:rounded-2xl md:border md:mb-4">
+        <div className="flex items-center gap-2 px-3 md:px-4 h-12 md:h-14">
+          <button onClick={() => step > 1 ? setStep(step-1) : goBack()} className="h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-surface-variant">
+            <I.ChevronLeft size={20}/>
+          </button>
+          <div className="flex-1">
+            <div className="text-[11px] text-ink-2 font-mono">STEP {step} OF 4</div>
+            <div className="text-[14px] md:text-[15px] font-medium">{["Service","Time","Confirmation","Payment"][step-1]}</div>
+          </div>
+          <div className="font-display text-[14px] md:text-[16px]">${total.toFixed(2)}</div>
+        </div>
+        <div className="h-1 bg-surface-container md:rounded-b-2xl overflow-hidden">
+          <div className="h-full bg-primary transition-[width] duration-300" style={{ width: `${step*25}%` }}/>
+        </div>
+      </div>
+
+      <div className="md:grid md:grid-cols-[1fr_340px] md:gap-6">
+        <div className="px-4 md:px-0 py-5 md:py-0 space-y-5">
+        <div className="flex items-center gap-3">
+          <Avatar name={t.name} size="md"/>
+          <div className="min-w-0">
+            <div className="font-medium text-[15px] truncate">{t.name}</div>
+            <div className="text-[12px] text-ink-2">{t.specs.join(" · ")}</div>
+          </div>
+        </div>
+
+        {step === 1 && (
+          <div className="space-y-2.5">
+            <h2 className="font-display text-[22px]">Choose a service</h2>
+            {services.map(s => (
+              <button key={s.id} onClick={() => setService(s.id)}
+                className={cn("w-full text-left rounded-2xl border-2 p-4 transition-colors",
+                  service === s.id ? "border-primary bg-primary-container/30" : "border-surface-dim bg-surface")}>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-display text-[17px] leading-tight">{s.name}</div>
+                    <div className="text-[12px] text-ink-2 mt-1 inline-flex items-center gap-1.5"><I.Clock size={12}/> {s.dur} min</div>
+                  </div>
+                  <div className="font-display text-[20px] leading-none">${s.price}</div>
+                </div>
+              </button>
+            ))}
+            <Button variant="filled" size="lg" className="w-full mt-2" onClick={() => setStep(2)}>Next</Button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-3">
+            <h2 className="font-display text-[22px]">Pick a time slot</h2>
+            <ScheduleGrid onPick={() => { setSlot("Thu 23 · 10:00"); setStep(3); }}/>
+            {slot && <Button variant="filled" size="lg" className="w-full" onClick={() => setStep(3)}>Next</Button>}
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-4">
+            <h2 className="font-display text-[22px]">Confirmation</h2>
+            <Card className="p-4 space-y-3">
+              {[
+                ["Trainer", t.name],
+                ["Service", chosenSvc.name],
+                ["Duration", `${chosenSvc.dur} min`],
+                ["Date and time", slot || "Thu, May 23 · 10:00"],
+              ].map(([k,v]) => (
+                <div key={k} className="flex justify-between text-[14px]">
+                  <span className="text-ink-2">{k}</span>
+                  <span className="font-medium">{v}</span>
+                </div>
+              ))}
+            </Card>
+            <Field label="Message to trainer (optional)">
+              <Textarea rows={3} placeholder="Share your goals, constraints, experience…" value={message} onChange={e=>setMessage(e.target.value)} maxLength={500}/>
+              <div className="text-right text-[11px] text-ink-3 mt-1 font-mono">{message.length}/500</div>
+            </Field>
+            <Button variant="filled" size="lg" className="w-full" onClick={() => setStep(4)}>Go to payment</Button>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className="space-y-4">
+            <h2 className="font-display text-[22px]">Payment</h2>
+            <Card className="p-4 space-y-2.5">
+              <div className="flex justify-between text-[14px]"><span className="text-ink-2">Service</span><span>${chosenSvc.price.toFixed(2)}</span></div>
+              <div className="flex justify-between text-[14px]"><span className="text-ink-2">Service fee (6%)</span><span>${fee.toFixed(2)}</span></div>
+              <div className="h-px bg-surface-dim my-1.5"/>
+              <div className="flex justify-between font-display text-[18px]"><span>Total</span><span>${total.toFixed(2)}</span></div>
+            </Card>
+            <Card className="p-4 space-y-3">
+              <div className="flex items-center gap-2 text-[13px] font-medium text-ink-2"><I.CreditCard size={16}/> Payment method</div>
+              <Field label="Card number">
+                <Input placeholder="4242 4242 4242 4242" defaultValue="4242 4242 4242 4242"/>
+              </Field>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Expiry"><Input placeholder="MM/YY" defaultValue="12/27"/></Field>
+                <Field label="CVC"><Input placeholder="123" defaultValue="123"/></Field>
+              </div>
+            </Card>
+            <p className="text-[11px] text-ink-3 leading-relaxed">
+              By tapping "Pay" you agree to the cancellation policy: free cancellation up to 24 hours before the session.
+            </p>
+            <Button variant="filled" size="lg" className="w-full" onClick={() => {
+              toast("Booking confirmed ✓");
+              setScreen("c.bookings");
+            }}>Pay ${total.toFixed(2)}</Button>
+          </div>
+        )}
+        </div>
+
+        {/* Desktop summary sidebar */}
+        <aside className="hidden md:block px-0 py-0">
+          <Card className="p-5 sticky top-32 space-y-4">
+            <h3 className="font-display text-[20px]">Summary</h3>
+            <div className="flex items-center gap-3 pb-3 border-b border-surface-dim/60">
+              <Avatar name={t.name} size="md"/>
+              <div className="min-w-0">
+                <div className="font-medium text-[14px] truncate">{t.name}</div>
+                <div className="text-[11.5px] text-ink-2 truncate">{t.specs.join(" · ")}</div>
+              </div>
+            </div>
+            <div className="space-y-2.5">
+              {[
+                ["Service", chosenSvc.name],
+                ["Duration", `${chosenSvc.dur} min`],
+                ["Time", slot || "Not selected"],
+              ].map(([k,v]) => (
+                <div key={k} className="flex justify-between text-[13px]">
+                  <span className="text-ink-2">{k}</span>
+                  <span className="font-medium text-right max-w-[60%] truncate">{v}</span>
+                </div>
+              ))}
+            </div>
+            <div className="pt-3 border-t border-surface-dim/60 space-y-1.5">
+              <div className="flex justify-between text-[13px]"><span className="text-ink-2">Service</span><span>${chosenSvc.price.toFixed(2)}</span></div>
+              <div className="flex justify-between text-[13px]"><span className="text-ink-2">Fee 6%</span><span>${fee.toFixed(2)}</span></div>
+              <div className="flex justify-between font-display text-[20px] pt-1"><span>Total</span><span>${total.toFixed(2)}</span></div>
+            </div>
+            <div className="flex items-center gap-2 text-[11.5px] text-ink-2 pt-2 border-t border-surface-dim/60">
+              <I.Shield size={14} className="text-success"/> Free cancellation up to 24h
+            </div>
+          </Card>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  CLIENT — Bookings                                                         */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function ClientBookings() {
+  const { openTrainer } = useApp();
+  const [tab, setTab] = useState("upcoming");
+  const map = { upcoming:["confirmed"], past:["completed"], cancelled:["cancelled"] };
+  const list = BOOKINGS.filter(b => map[tab].includes(b.status));
+  return (
+    <div className="space-y-4 pb-6 md:max-w-5xl">
+      <h1 className="font-display text-[26px] md:text-[36px] leading-tight">My sessions</h1>
+      <Tabs value={tab} onChange={setTab} tabs={[
+        { value:"upcoming",  label:"Upcoming" },
+        { value:"past",      label:"Past" },
+        { value:"cancelled", label:"Cancelled" },
+      ]}/>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+        {list.length === 0 && (
+          <Card className="p-8 text-center md:col-span-2">
+            <div className="text-ink-3 mb-3 inline-block"><I.Calendar size={48} stroke={1.2}/></div>
+            <h3 className="font-display text-[18px] mb-1">Nothing here yet</h3>
+            <p className="text-[13px] text-ink-2">No sessions in this category</p>
+          </Card>
+        )}
+        {list.map(b => {
+          const t = trainerById(b.trainer);
+          return (
+            <Card key={b.id} className="p-4" onClick={() => openTrainer(b.trainer)}>
+              <div className="flex items-start gap-3">
+                <Avatar name={t.name} size="md"/>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-medium text-[15px] truncate">{t.name}</h3>
+                    <Badge status={b.status}>
+                      {b.status === "confirmed" && "Confirmed"}
+                      {b.status === "completed" && "Completed"}
+                      {b.status === "cancelled" && "Cancelled"}
+                    </Badge>
+                  </div>
+                  <p className="text-[12.5px] text-ink-2 mt-0.5">{b.service}</p>
+                  <div className="text-[12px] text-primary font-medium mt-1.5">{b.date}</div>
+                </div>
+              </div>
+              {b.status === "confirmed" && (
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" variant="filled" className="flex-1"><I.Video size={14}/> Join</Button>
+                  <Button size="sm" variant="outlined">Cancel</Button>
+                </div>
+              )}
+              {b.status === "completed" && (
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" variant="tonal" className="flex-1"><I.Star size={14}/> Leave a review</Button>
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  CLIENT — Profile                                                          */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function ClientProfileScreen() {
+  return (
+    <div className="space-y-5 pb-6 md:max-w-2xl">
+      <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Profile</h1>
+      <Card className="p-4 flex items-center gap-3">
+        <Avatar name="Alyona Sokolova" size="lg"/>
+        <div className="flex-1">
+          <div className="font-display text-[19px]">Alyona Sokolova</div>
+          <div className="text-[12px] text-ink-2">alyona@example.com</div>
+        </div>
+        <Button variant="outlined" size="icon-sm"><I.Edit size={16}/></Button>
+      </Card>
+      <Card>
+        {[
+          { i:<I.Bell/>, l:"Notifications" },
+          { i:<I.CreditCard/>, l:"Payment methods" },
+          { i:<I.Shield/>, l:"Security" },
+          { i:<I.Settings/>, l:"Settings" },
+        ].map((it,idx)=>(
+          <div key={idx} className={cn("flex items-center gap-3 p-4 hover:bg-surface-variant cursor-pointer", idx > 0 && "border-t border-surface-dim/60")}>
+            <span className="text-ink-2">{it.i}</span>
+            <span className="flex-1 text-[14px]">{it.l}</span>
+            <I.ChevronRight size={16} className="text-ink-3"/>
+          </div>
+        ))}
+      </Card>
+      <Button variant="outlined" className="w-full">Sign out</Button>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  TRAINER — Home                                                            */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function TrainerHome() {
+  const { setScreen } = useApp();
+  const todaySessions = [
+    { t:"09:00", c:"Ivan P.", s:"Strength · 60 min" },
+    { t:"11:30", c:"Olga K.", s:"Recovery · 45 min" },
+    { t:"17:00", c:"Alisa Sh.", s:"Tone · 60 min" },
+  ];
+  return (
+    <div className="space-y-5 pb-6">
+      <header>
+        <p className="text-[13px] text-ink-2">Welcome back,</p>
+        <h1 className="font-display text-[28px] md:text-[40px] leading-tight">Dmitry</h1>
+      </header>
+
+      <Card className="p-3.5 bg-warning-container border-l-4 border-warning rounded-l-md flex items-start gap-3">
+        <span className="text-warning mt-0.5"><I.Clock size={20}/></span>
+        <div className="flex-1">
+          <div className="text-[13px] font-medium text-warning">Profile under review</div>
+          <div className="text-[12px] text-ink-2 mt-0.5">Typically 1–3 business days. You won't appear in search until approved.</div>
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+        <KpiCard label="Sessions this week" value="14" icon={<I.Calendar size={18}/>} tone="primary"/>
+        <KpiCard label="Active clients" value="22" icon={<I.Users size={18}/>} tone="info"/>
+        <KpiCard label="Income this month" value="$1 240" icon={<I.Dollar size={18}/>} tone="success"/>
+        <KpiCard label="Average rating" value="4.8" sub="88 reviews" icon={<I.Star size={18}/>} tone="secondary"/>
+      </div>
+
+      <div className="md:grid md:grid-cols-2 md:gap-5 space-y-5 md:space-y-0">
+        <Section title="Today" action={<button onClick={()=>setScreen("t.schedule")} className="text-[13px] font-medium text-primary inline-flex items-center gap-0.5">All <I.ChevronRight size={14}/></button>}>
+        <Card>
+          {todaySessions.map((x,i) => (
+            <div key={i} className={cn("flex items-center gap-3 p-3.5", i>0 && "border-t border-surface-dim/60")}>
+              <div className="font-mono text-[13px] font-medium text-primary w-14">{x.t}</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[14px] font-medium truncate">{x.c}</div>
+                <div className="text-[12px] text-ink-2 truncate">{x.s}</div>
+              </div>
+              <Button variant="tonal" size="sm"><I.Video size={14}/></Button>
+            </div>
+          ))}
+        </Card>
+      </Section>
+
+      <Section title="New reviews">
+        <Card className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <Avatar name="Lena K." size="sm"/>
+              <div>
+                <div className="text-[13px] font-medium">Lena K.</div>
+                <div className="text-[11px] text-ink-3">today</div>
+              </div>
+            </div>
+            <RatingStars value={5} size={12}/>
+          </div>
+          <p className="text-[13px] text-ink-2 mt-2.5 leading-relaxed">Clear programs, always on time, noticeable progress. Highly recommend.</p>
+        </Card>
+      </Section>
+      </div>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  TRAINER — Schedule                                                        */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function TrainerSchedule() {
+  const days = [
+    { d:"Mon", on:true,  slots:["09:00–13:00","15:00–19:00"] },
+    { d:"Tue", on:true,  slots:["09:00–13:00","15:00–19:00"] },
+    { d:"Wed", on:true,  slots:["10:00–14:00"] },
+    { d:"Thu", on:true,  slots:["09:00–13:00","15:00–19:00"] },
+    { d:"Fri", on:true,  slots:["09:00–13:00"] },
+    { d:"Sat", on:false, slots:[] },
+    { d:"Sun", on:false, slots:[] },
+  ];
+  const [mode, setMode] = useState("regular");
+  const [state, setState] = useState(days);
+
+  return (
+    <div className="space-y-4 pb-6 md:max-w-4xl">
+      <header>
+        <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Working schedule</h1>
+        <p className="text-[12.5px] text-ink-2 mt-1">UTC−5 · New York</p>
+      </header>
+      <Tabs value={mode} onChange={setMode} tabs={[
+        { value:"regular",   label:"Regular" },
+        { value:"overrides", label:"Exceptions" },
+      ]}/>
+
+      {mode === "regular" && (
+        <Card>
+          {state.map((d, i) => (
+            <div key={d.d} className={cn("p-4", i>0 && "border-t border-surface-dim/60")}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={cn("h-10 w-10 rounded-full inline-flex items-center justify-center font-display text-[16px]",
+                    d.on ? "bg-primary-container text-on-primary-container" : "bg-surface-variant text-ink-3")}>{d.d}</div>
+                  <div>
+                    <div className="text-[14px] font-medium">{["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"][i]}</div>
+                    <div className="text-[11.5px] text-ink-2">{d.on ? `${d.slots.length} interval(s)` : "Day off"}</div>
+                  </div>
+                </div>
+                <Switch checked={d.on} onChange={(v) => setState(s => s.map((x,j) => j===i ? {...x, on:v} : x))}/>
+              </div>
+              {d.on && d.slots.length > 0 && (
+                <div className="mt-3 ml-13 flex flex-wrap gap-1.5">
+                  {d.slots.map((s, k) => (
+                    <span key={k} className="inline-flex items-center gap-1 rounded-full bg-surface-variant text-ink-2 px-2.5 py-1 text-[12px] font-mono">
+                      {s}
+                      <button className="text-ink-3 hover:text-error"><I.X size={12}/></button>
+                    </span>
+                  ))}
+                  <button className="inline-flex items-center gap-1 rounded-full border border-dashed border-surface-dim text-ink-2 px-2.5 py-1 text-[12px]">
+                    <I.Plus size={12}/> Slot
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </Card>
+      )}
+
+      {mode === "overrides" && (
+        <div className="space-y-3">
+          <Card className="p-4">
+            <h3 className="font-display text-[18px] mb-3">May 2026</h3>
+            <CalendarMini blocked={[5, 12]}/>
+          </Card>
+          <Card className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-[14px] font-medium">May 12</div>
+                <div className="text-[12px] text-error">Blocked · vacation</div>
+              </div>
+              <Button variant="ghost" size="icon-sm"><I.Trash size={16}/></Button>
+            </div>
+          </Card>
+          <Button variant="tonal" className="w-full"><I.Plus size={16}/> Add exception</Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CalendarMini({ blocked = [] }) {
+  const days = Array.from({ length: 35 }, (_, i) => i - 3);
+  return (
+    <div className="grid grid-cols-7 gap-1 text-center">
+      {["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d => (
+        <div key={d} className="text-[11px] font-medium text-ink-3 pb-1">{d}</div>
+      ))}
+      {days.map((d, i) => {
+        if (d < 1 || d > 31) return <div key={i}/>;
+        const isBlocked = blocked.includes(d);
+        const isToday = d === 20;
+        return (
+          <button key={i}
+            className={cn("h-9 w-9 mx-auto rounded-full text-[12.5px] transition-colors",
+              isBlocked ? "bg-error-container text-error line-through" :
+              isToday   ? "bg-primary text-white font-semibold" :
+                          "hover:bg-surface-variant text-ink"
+            )}>{d}</button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  TRAINER — Services                                                        */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function TrainerServices() {
+  const { toast } = useApp();
+  const [list, setList] = useState([
+    { id:"sv1", name:"Strength · basics",   dur:60, price:55, active:true, desc:"Bench, row, squat — technique + volume." },
+    { id:"sv2", name:"HIIT 30",          dur:30, price:30, active:true, desc:"Intense intervals, minimal equipment." },
+    { id:"sv3", name:"Functional",   dur:45, price:40, active:false, desc:"Body control, coordination, balance." },
+  ]);
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="space-y-4 pb-6">
+      <header className="flex items-center justify-between">
+        <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Services</h1>
+        <Button variant="tonal" size="sm" onClick={() => setOpen(true)}><I.Plus size={16}/> New</Button>
+      </header>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+        {list.map(s => (
+          <Card key={s.id} className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-display text-[17px] leading-tight">{s.name}</h3>
+                  {!s.active && <Badge status="neutral">hidden</Badge>}
+                </div>
+                <p className="text-[12.5px] text-ink-2 mt-1">{s.desc}</p>
+                <div className="mt-2 flex items-center gap-3 text-[12px] text-ink-2">
+                  <span className="inline-flex items-center gap-1"><I.Clock size={12}/> {s.dur} min</span>
+                  <span className="inline-flex items-center gap-1"><I.Dollar size={12}/> {s.price}</span>
+                </div>
+              </div>
+              <Switch checked={s.active} onChange={(v) => setList(L => L.map(x => x.id===s.id ? {...x, active:v} : x))}/>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <Button size="sm" variant="outlined" className="flex-1"><I.Edit size={14}/> Edit</Button>
+              <Button size="sm" variant="ghost" className="text-error hover:bg-error-container"><I.Trash size={14}/></Button>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <Sheet open={open} onClose={() => setOpen(false)} title="New service">
+        <div className="space-y-3">
+          <Field label="Name"><Input placeholder="e.g. Morning stretch"/></Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Duration"><Input placeholder="60 min"/></Field>
+            <Field label="Price, $"><Input placeholder="40"/></Field>
+          </div>
+          <Field label="Description"><Textarea rows={3} placeholder="What's included, who it's for…"/></Field>
+          <div className="flex gap-2 pt-2">
+            <Button variant="outlined" className="flex-1" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="filled" className="flex-1" onClick={() => { setOpen(false); toast("Service created ✓"); }}>Save</Button>
+          </div>
+        </div>
+      </Sheet>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  TRAINER — Clients                                                         */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function TrainerClients() {
+  const [q, setQ] = useState("");
+  const filtered = CLIENTS.filter(c => c.name.toLowerCase().includes(q.toLowerCase()));
+  const [open, setOpen] = useState(null);
+  return (
+    <div className="space-y-4 pb-6">
+      <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Clients</h1>
+      <div className="relative md:max-w-md">
+        <I.Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-3"/>
+        <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search by name"
+          className="w-full h-11 pl-10 pr-4 rounded-full bg-surface border border-surface-dim text-[14px] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30"/>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        {filtered.map(c => (
+          <Card key={c.id} className="p-4" onClick={() => setOpen(c)}>
+            <div className="flex items-center gap-3">
+              <Avatar name={c.name} size="md"/>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <div className="font-medium text-[15px] truncate">{c.name}</div>
+                  <div className="font-mono text-[12px] text-ink-2">{c.sessions} sessions</div>
+                </div>
+                <div className="text-[12px] text-ink-2 mt-0.5">Goal: {c.goal}</div>
+                <div className="text-[11px] text-ink-3 mt-0.5">Last — {c.last}</div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+      <Sheet open={!!open} onClose={() => setOpen(null)} title={open?.name}>
+        {open && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <Card className="p-3"><div className="font-display text-[18px]">{open.sessions}</div><div className="text-[11px] text-ink-2 mt-0.5">sessions</div></Card>
+              <Card className="p-3"><div className="font-display text-[18px]">3 mo</div><div className="text-[11px] text-ink-2 mt-0.5">with us</div></Card>
+              <Card className="p-3"><div className="font-display text-[18px]">★ 5.0</div><div className="text-[11px] text-ink-2 mt-0.5">their rating</div></Card>
+            </div>
+            <Field label="Private notes (visible only to you)">
+              <Textarea rows={4} placeholder="Goals, constraints, progress…" defaultValue={`Goal: ${open.goal}. Right shoulder issue — no overhead pressing.`}/>
+            </Field>
+            <div className="text-[11px] text-ink-3">Saved automatically</div>
+          </div>
+        )}
+      </Sheet>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  TRAINER — Income                                                          */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function TrainerIncome() {
+  const rows = [
+    { d:"May 12", c:"Ivan P.",   s:"60 min session", a:60, f:6, p:54, st:"paid" },
+    { d:"May 11", c:"Olga K.",  s:"45 min recovery", a:38, f:3.8, p:34.2, st:"paid" },
+    { d:"May 10", c:"Alisa Sh.",  s:"HIIT 30",       a:25, f:2.5, p:22.5, st:"pending" },
+    { d:"May 8", c:"Kirill N.", s:"60 min session", a:60, f:6, p:54, st:"paid" },
+    { d:"May 3", c:"Lena K.",   s:"Functional",    a:40, f:4, p:36, st:"refunded" },
+  ];
+  return (
+    <div className="space-y-4 pb-6">
+      <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Income</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+        <KpiCard label="This month" value="$1 240" sub="+18% vs last" icon={<I.Dollar size={18}/>} tone="success"/>
+        <KpiCard label="Pending payout" value="$220" sub="3 sessions" icon={<I.Clock size={18}/>} tone="primary"/>
+        <KpiCard label="Last month" value="$1 048" icon={<I.Calendar size={18}/>} tone="info"/>
+        <KpiCard label="Total paid out" value="$8 942" icon={<I.CheckCircle size={18}/>} tone="secondary"/>
+      </div>
+      <Card className="p-3.5">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-display text-[17px]">Transactions</h3>
+          <button className="text-[12px] font-medium text-primary">Export CSV</button>
+        </div>
+        <div className="divide-y divide-surface-dim/60">
+          {rows.map((r, i) => (
+            <div key={i} className="py-3 flex items-center gap-3">
+              <div className="font-mono text-[11px] text-ink-3 w-12 shrink-0">{r.d}</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13px] font-medium truncate">{r.c}</div>
+                <div className="text-[11px] text-ink-2 truncate">{r.s}</div>
+              </div>
+              <div className="text-right shrink-0">
+                <div className="font-mono text-[13px] font-medium">${r.p.toFixed(2)}</div>
+                <Badge status={r.st === "paid" ? "completed" : r.st === "pending" ? "pending" : "cancelled"} className="mt-0.5">
+                  {r.st === "paid" ? "Paid out" : r.st === "pending" ? "Pending" : "Refunded"}
+                </Badge>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  ADMIN — Home                                                              */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function AdminHome() {
+  const { setScreen } = useApp();
+  return (
+    <div className="space-y-5 pb-6">
+      <header>
+        <p className="text-[13px] text-ink-2">Platform · last 30 days</p>
+        <h1 className="font-display text-[26px] md:text-[40px] leading-tight">Control</h1>
+      </header>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+        <KpiCard label="New signups" value="142" sub="+12% vs last week" icon={<I.Users size={18}/>} tone="info"/>
+        <KpiCard label="Apps in queue" value="3"   sub="oldest — 5 days" icon={<I.Shield size={18}/>} tone="primary"/>
+        <KpiCard label="Open complaints" value="2"     icon={<I.Flag size={18}/>} tone="secondary"/>
+        <KpiCard label="GMV (30d)" value="$42K"  sub="+8.3%" icon={<I.Dollar size={18}/>} tone="success"/>
+      </div>
+
+      <Section title="Needs attention">
+        <Card>
+          {[
+            { i:<I.Shield/>, l:"3 trainer applications",  s:"oldest waiting 5 days",   to:"a.trainers" },
+            { i:<I.Flag/>,   l:"2 complaints",            s:"one high-priority", to:"a.complaints" },
+            { i:<I.RefreshCw/>, l:"2 refund requests", s:"$93 total", to:"a.refunds" },
+          ].map((it, i) => (
+            <button key={i} onClick={() => setScreen(it.to)}
+              className={cn("w-full text-left flex items-center gap-3 p-4 hover:bg-surface-variant", i > 0 && "border-t border-surface-dim/60")}>
+              <span className="h-10 w-10 inline-flex items-center justify-center rounded-xl bg-primary-container text-on-primary-container">{it.i}</span>
+              <div className="flex-1">
+                <div className="text-[14px] font-medium">{it.l}</div>
+                <div className="text-[11.5px] text-ink-2 mt-0.5">{it.s}</div>
+              </div>
+              <I.ChevronRight size={16} className="text-ink-3"/>
+            </button>
+          ))}
+        </Card>
+      </Section>
+
+      <Section title="Statistics">
+        <Card className="p-4 space-y-3">
+          {[
+            { l:"Trainers (approved)", v:"1 187" },
+            { l:"Trainers (pending)",  v:"3" },
+            { l:"Trainers (rejected)", v:"42" },
+            { l:"Total clients",      v:"24 503" },
+            { l:"Sessions (30d)",   v:"6 412" },
+          ].map((r,i)=>(
+            <div key={i} className="flex items-center justify-between text-[14px]">
+              <span className="text-ink-2">{r.l}</span>
+              <span className="font-mono font-medium">{r.v}</span>
+            </div>
+          ))}
+        </Card>
+      </Section>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  ADMIN — Trainers Queue                                                    */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function AdminTrainers() {
+  const [tab, setTab] = useState("pending");
+  const [open, setOpen] = useState(null);
+  const { toast } = useApp();
+  return (
+    <div className="space-y-4 pb-6">
+      <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Verification</h1>
+      <Tabs value={tab} onChange={setTab} tabs={[
+        { value:"pending",  label:"Pending · 3" },
+        { value:"approved", label:"Approved" },
+        { value:"rejected", label:"Rejected" },
+      ]}/>
+      {tab === "pending" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2.5">
+          {APPLICATIONS.map(a => (
+            <Card key={a.id} className="p-4" onClick={() => setOpen(a)}>
+              <div className="flex items-center gap-3">
+                <Avatar name={a.name} size="md"/>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-[15px]">{a.name}</div>
+                  <div className="text-[12px] text-ink-2 truncate">{a.email}</div>
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {a.specs.map(s => <SpecChip key={s}>{s}</SpecChip>)}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between text-[11.5px] text-ink-2">
+                <span>Submitted: {a.submitted}</span>
+                <span className="inline-flex items-center gap-1 text-warning"><I.Clock size={12}/> waiting {a.submitted}</span>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+      {tab !== "pending" && (
+        <Card className="p-8 text-center">
+          <div className="text-ink-3 mb-3 inline-block"><I.Shield size={48} stroke={1.2}/></div>
+          <h3 className="font-display text-[18px] mb-1">Section under development</h3>
+          <p className="text-[13px] text-ink-2">Processed applications will appear here</p>
+        </Card>
+      )}
+
+      <Sheet open={!!open} onClose={() => setOpen(null)} title="Trainer application">
+        {open && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <Avatar name={open.name} size="lg"/>
+              <div>
+                <div className="font-display text-[19px]">{open.name}</div>
+                <div className="text-[12px] text-ink-2">{open.email}</div>
+                <Badge status="pending" className="mt-1">Pending review</Badge>
+              </div>
+            </div>
+            <Card variant="outlined" className="p-4 space-y-2">
+              <div className="text-[12px] font-medium text-ink-2 uppercase tracking-wide">Documents</div>
+              <div className="text-[13px]">✓ Trainer certificate (PDF)</div>
+              <div className="text-[13px]">✓ ID document (JPG)</div>
+              <div className="text-[13px]">✓ Experience proof</div>
+            </Card>
+            <Field label="Comment">
+              <Textarea rows={3} placeholder="Reason for decision, if applicable…"/>
+            </Field>
+            <div className="flex gap-2">
+              <Button variant="destructive" className="flex-1" onClick={() => { setOpen(null); toast("Application rejected"); }}>Reject</Button>
+              <Button variant="filled" className="flex-1" onClick={() => { setOpen(null); toast("Trainer approved ✓"); }}>Approve</Button>
+            </div>
+          </div>
+        )}
+      </Sheet>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  ADMIN — Complaints                                                        */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function AdminComplaints() {
+  const [tab, setTab] = useState("open");
+  const list = COMPLAINTS.filter(c => tab === "open" ? c.status === "open" : c.status === "in_review");
+  return (
+    <div className="space-y-4 pb-6">
+      <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Complaints</h1>
+      <Tabs value={tab} onChange={setTab} tabs={[
+        { value:"open",    label:"Open · 2" },
+        { value:"review",  label:"In review" },
+      ]}/>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+        {list.map(c => (
+          <Card key={c.id} className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  {c.priority === "high"   && <Badge status="cancelled">High</Badge>}
+                  {c.priority === "med"    && <Badge status="pending">Medium</Badge>}
+                  {c.priority === "low"    && <Badge status="info">Low</Badge>}
+                  <span className="text-[11.5px] text-ink-3">· {c.when}</span>
+                </div>
+                <div className="mt-2 text-[13px]"><span className="text-ink-2">From:</span> {c.from}</div>
+                <div className="text-[13px]"><span className="text-ink-2">On:</span> {c.target}</div>
+                <div className="mt-1.5 text-[14px] font-medium">{c.category}</div>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <Button size="sm" variant="outlined" className="flex-1">Open details</Button>
+              <Button size="sm" variant="tonal">Close</Button>
+            </div>
+          </Card>
+        ))}
+        {list.length === 0 && (
+          <Card className="p-8 text-center md:col-span-2">
+            <div className="text-success mb-3 inline-block"><I.CheckCircle size={48} stroke={1.2}/></div>
+            <h3 className="font-display text-[18px] mb-1">All clear</h3>
+            <p className="text-[13px] text-ink-2">No complaints in this category</p>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  ADMIN — Refunds                                                           */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function AdminRefunds() {
+  const { toast } = useApp();
+  const [list, setList] = useState(REFUNDS);
+  return (
+    <div className="space-y-4 pb-6">
+      <h1 className="font-display text-[26px] md:text-[36px] leading-tight">Refunds</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+        <KpiCard label="In progress" value={list.filter(r=>r.status==="pending").length} icon={<I.Clock size={18}/>} tone="primary"/>
+        <KpiCard label="Pending amount" value={`$${list.filter(r=>r.status==="pending").reduce((s,r)=>s+r.amount,0)}`} icon={<I.Dollar size={18}/>} tone="secondary"/>
+        <KpiCard label="Approved this month" value="12" icon={<I.CheckCircle size={18}/>} tone="success"/>
+        <KpiCard label="Avg time" value="4h" sub="to process" icon={<I.RefreshCw size={18}/>} tone="info"/>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+        {list.map(r => (
+          <Card key={r.id} className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <Avatar name={r.client} size="sm"/>
+                  <div>
+                    <div className="text-[13px] font-medium">{r.client}</div>
+                    <div className="text-[11px] text-ink-3">trainer: {r.trainer}</div>
+                  </div>
+                </div>
+                <div className="mt-2 text-[13px] text-ink-2">Reason: <span className="text-ink">{r.reason}</span></div>
+                <div className="text-[11px] text-ink-3 mt-0.5">{r.when}</div>
+              </div>
+              <div className="text-right shrink-0">
+                <div className="font-display text-[20px] leading-none">${r.amount}</div>
+                <Badge status={r.status === "pending" ? "pending" : r.status === "approved" ? "confirmed" : "cancelled"} className="mt-1.5">
+                  {r.status === "pending" ? "Pending" : r.status === "approved" ? "Approved" : "Rejected"}
+                </Badge>
+              </div>
+            </div>
+            {r.status === "pending" && (
+              <div className="mt-3 flex gap-2">
+                <Button size="sm" variant="outlined" className="flex-1" onClick={() => { setList(L => L.map(x => x.id===r.id ? {...x, status:"rejected"} : x)); toast("Refund rejected"); }}>Reject</Button>
+                <Button size="sm" variant="filled" className="flex-1" onClick={() => { setList(L => L.map(x => x.id===r.id ? {...x, status:"approved"} : x)); toast("Refund approved ✓"); }}>Approve</Button>
+              </div>
+            )}
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  VIDEO SESSION                                                             */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function VideoSession() {
+  const { selectedTrainer, goBack, setScreen, toast } = useApp();
+  const t = useT();
+  const trainer = trainerById(selectedTrainer) || TRAINERS[0];
+  const [muted, setMuted] = useState(false);
+  const [cameraOff, setCameraOff] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([
+    { id:1, from:"trainer", text:"Hi! Ready to start?", time:"19:00" },
+    { id:2, from:"me",      text:"Yes, just adjusting the mat.", time:"19:01" },
+    { id:3, from:"trainer", text:"Take your time. Today we’ll focus on hip mobility and the lower back.", time:"19:01" },
+  ]);
+
+  useEffect(() => {
+    const id = setInterval(() => setElapsed(e => e + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const mm = String(Math.floor(elapsed/60)).padStart(2,"0");
+  const ss = String(elapsed%60).padStart(2,"0");
+
+  const send = () => {
+    if (!input.trim()) return;
+    setMessages(m => [...m, { id:Date.now(), from:"me", text:input.trim(), time:`${mm}:${ss}` }]);
+    setInput("");
+  };
+
+  const endCall = () => {
+    toast("Session ended");
+    setScreen("c.bookings");
+  };
+
+  return (
+    <div className="-mx-4 -mt-4 md:-mx-6 md:-mt-6 lg:-mx-8">
+      <div className="md:grid md:grid-cols-[1fr_360px] lg:grid-cols-[1fr_400px] md:gap-0 bg-[#0E1814] text-white min-h-[calc(100dvh-3.5rem-72px)] md:min-h-[calc(100dvh-4rem)] md:rounded-3xl md:overflow-hidden md:mx-2 md:my-2">
+        {/* Video area */}
+        <div className="relative flex flex-col">
+          {/* Top bar */}
+          <div className="absolute top-0 inset-x-0 z-10 flex items-center justify-between p-3 md:p-4 bg-gradient-to-b from-black/50 to-transparent">
+            <button onClick={goBack} className="h-9 w-9 inline-flex items-center justify-center rounded-full bg-black/30 backdrop-blur text-white hover:bg-black/50">
+              <I.ChevronLeft size={20}/>
+            </button>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur">
+              <span className="h-2 w-2 rounded-full bg-[#FF5C5C] animate-pulse"/>
+              <span className="font-mono text-[12px] tabular-nums">{mm}:{ss}</span>
+              <span className="text-[11px] text-white/70 hidden sm:inline">· {t("Connected")}</span>
+            </div>
+            <button onClick={() => setChatOpen(!chatOpen)} className="md:hidden relative h-9 w-9 inline-flex items-center justify-center rounded-full bg-black/30 backdrop-blur text-white hover:bg-black/50">
+              <I.MessageSquare size={18}/>
+              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary-light"/>
+            </button>
+          </div>
+
+          {/* Main video (trainer's feed placeholder) */}
+          <div className="flex-1 relative flex items-center justify-center min-h-[320px] md:min-h-[480px]">
+            <div className="absolute inset-0" style={{
+              backgroundImage: "radial-gradient(ellipse at 50% 30%, #1F3A2A 0%, #0E1814 70%), repeating-linear-gradient(45deg, transparent 0 24px, rgba(255,255,255,0.015) 24px 25px)",
+            }}/>
+            <div className="relative flex flex-col items-center gap-4">
+              <Avatar name={trainer.name} size="2xl" className="ring-4 ring-white/10"/>
+              <div className="text-center space-y-2">
+                <div className="font-display text-[22px] md:text-[28px] leading-tight">{trainer.name}</div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 backdrop-blur text-[10.5px] text-white/80 font-mono uppercase tracking-wider">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#6EE7A0]"/> camera on
+                </div>
+              </div>
+            </div>
+            {/* Self preview */}
+            <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 w-20 h-28 md:w-36 md:h-48 rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.4)] border-2 border-white/20" style={{
+              background: "linear-gradient(135deg, #243329, #1A2820)",
+            }}>
+              {cameraOff ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-white/60">
+                  <I.Camera size={20}/>
+                  <span className="text-[10px] font-mono">CAMERA OFF</span>
+                </div>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Avatar name="Alyona Sokolova" size="md" className="ring-2 ring-white/20 md:!h-14 md:!w-14"/>
+                </div>
+              )}
+              <div className="absolute bottom-1.5 left-1.5 text-[10px] font-medium bg-black/40 backdrop-blur px-1.5 py-0.5 rounded-md">You</div>
+            </div>
+          </div>
+
+          {/* Control bar */}
+          <div className="relative z-10 flex items-center justify-center gap-2 md:gap-3 p-4 md:p-6 bg-gradient-to-t from-black/60 to-transparent">
+            <button onClick={() => setMuted(!muted)}
+              className={cn("relative h-12 w-12 md:h-14 md:w-14 inline-flex items-center justify-center rounded-full transition-colors",
+                muted ? "bg-white text-[#0E1814]" : "bg-white/15 text-white hover:bg-white/25")}
+              title={t("Mute")}>
+              <I.Mic size={20}/>
+              {muted && <span className="absolute h-[1.5px] w-7 bg-error rotate-45"/>}
+            </button>
+            <button onClick={() => setCameraOff(!cameraOff)}
+              className={cn("h-12 w-12 md:h-14 md:w-14 inline-flex items-center justify-center rounded-full transition-colors",
+                cameraOff ? "bg-white text-[#0E1814]" : "bg-white/15 text-white hover:bg-white/25")}
+              title={t("Camera")}>
+              <I.Camera size={20}/>
+            </button>
+            <button onClick={endCall}
+              className="h-12 md:h-14 px-5 md:px-7 inline-flex items-center gap-2 rounded-full bg-[#FF5C5C] text-white font-medium hover:bg-[#E04545] transition-colors text-[13px] md:text-[14px]">
+              <I.PhoneOff size={18}/>
+              <span className="hidden sm:inline">{t("End session")}</span>
+            </button>
+            <button onClick={() => setChatOpen(!chatOpen)}
+              className={cn("hidden md:inline-flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full transition-colors",
+                chatOpen ? "bg-white text-[#0E1814]" : "bg-white/15 text-white hover:bg-white/25")}
+              title={t("Chat")}>
+              <I.MessageSquare size={20}/>
+            </button>
+            <button className="h-12 w-12 md:h-14 md:w-14 inline-flex items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25 transition-colors">
+              <I.Settings size={20}/>
+            </button>
+          </div>
+        </div>
+
+        {/* Chat panel (desktop side, mobile sheet) */}
+        <aside className="hidden md:flex bg-[#1A2820] text-white border-l border-white/10 flex-col">
+          <ChatPanel messages={messages} input={input} setInput={setInput} send={send} t={t}/>
+        </aside>
+      </div>
+
+      {/* Mobile chat sheet */}
+      {chatOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex items-end">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setChatOpen(false)}/>
+          <div className="relative w-full bg-[#1A2820] text-white rounded-t-3xl max-h-[75vh] flex flex-col animate-[slideUp_.25s_cubic-bezier(0,0,0,1)]">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+              <h3 className="font-display text-[18px]">{t("Chat")}</h3>
+              <button onClick={() => setChatOpen(false)} className="h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-white/10">
+                <I.X size={18}/>
+              </button>
+            </div>
+            <ChatPanel messages={messages} input={input} setInput={setInput} send={send} t={t}/>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ChatPanel({ messages, input, setInput, send, t }) {
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+  }, [messages]);
+  return (
+    <div className="flex-1 flex flex-col min-h-0">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+        {messages.map(m => (
+          <div key={m.id} className={cn("flex", m.from === "me" ? "justify-end" : "justify-start")}>
+            <div className={cn(
+              "max-w-[80%] px-3 py-2 rounded-2xl text-[13.5px] leading-snug",
+              m.from === "me" ? "bg-primary text-white rounded-br-sm" : "bg-white/10 text-white rounded-bl-sm"
+            )}>
+              {m.text}
+              <div className="text-[10px] opacity-60 mt-0.5 font-mono">{m.time}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <form onSubmit={e => { e.preventDefault(); send(); }} className="p-3 border-t border-white/10 flex items-center gap-2">
+        <input value={input} onChange={e => setInput(e.target.value)} placeholder={t("Type a message…")}
+          className="flex-1 h-11 px-4 rounded-full bg-white/10 text-white placeholder-white/40 text-[13.5px] focus:outline-none focus:bg-white/15"/>
+        <button type="submit" disabled={!input.trim()}
+          className="h-11 w-11 inline-flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-hover disabled:opacity-30 disabled:pointer-events-none">
+          <I.Send size={18}/>
+        </button>
+      </form>
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  ROUTER                                                                    */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function ScreenRouter() {
+  const { screen } = useApp();
+  switch (screen) {
+    case "c.home":      return <ClientHome/>;
+    case "c.catalog":   return <ClientCatalog/>;
+    case "c.trainer":   return <TrainerProfile/>;
+    case "c.book":      return <BookingFlow/>;
+    case "c.session":   return <VideoSession/>;
+    case "c.bookings":  return <ClientBookings/>;
+    case "c.profile":   return <ClientProfileScreen/>;
+    case "t.home":      return <TrainerHome/>;
+    case "t.schedule":  return <TrainerSchedule/>;
+    case "t.services":  return <TrainerServices/>;
+    case "t.clients":   return <TrainerClients/>;
+    case "t.income":    return <TrainerIncome/>;
+    case "a.home":      return <AdminHome/>;
+    case "a.trainers":  return <AdminTrainers/>;
+    case "a.complaints":return <AdminComplaints/>;
+    case "a.refunds":   return <AdminRefunds/>;
+    default: return <ClientHome/>;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/*  APP                                                                       */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+function App() {
+  const [role, setRole] = useState("client");
+  const [screen, setScreen] = useState("c.home");
+  const [history, setHistory] = useState([]);
+  const [selectedTrainer, setSelectedTrainer] = useState("t1");
+  const [toastMsg, setToastMsg] = useState(null);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [lang, setLangRaw] = useState(() => {
+    try { return localStorage.getItem("pulse.lang") || "en"; } catch { return "en"; }
+  });
+  const setLang = useCallback((l) => {
+    setLangRaw(l);
+    try { localStorage.setItem("pulse.lang", l); } catch {}
+  }, []);
+  const [theme, setThemeRaw] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("pulse.theme");
+      if (saved) return saved;
+      return window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ? "dark" : "light";
+    }
+    return "light";
+  });
+  const toastTimer = useRef();
+
+  const setTheme = useCallback((t) => {
+    setThemeRaw(t);
+    try { localStorage.setItem("pulse.theme", t); } catch {}
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.style.colorScheme = theme;
+  }, [theme]);
+
+  const toast = useCallback((msg) => {
+    setToastMsg(msg);
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToastMsg(null), 2200);
+  }, []);
+
+  const setScreenWithHistory = useCallback((s) => {
+    setHistory(h => [...h, screen]);
+    setScreen(s);
+  }, [screen]);
+
+  const goBack = useCallback(() => {
+    setHistory(h => {
+      if (h.length === 0) { setScreen(defaultScreen(role)); return []; }
+      const prev = h[h.length - 1];
+      setScreen(prev);
+      return h.slice(0, -1);
+    });
+  }, [role]);
+
+  const openTrainer = useCallback((id) => {
+    setSelectedTrainer(id);
+    setScreenWithHistory("c.trainer");
+  }, [setScreenWithHistory]);
+
+  const ctx = {
+    role, setRole,
+    screen, setScreen: setScreenWithHistory,
+    selectedTrainer, setSelectedTrainer,
+    openTrainer, goBack, toast,
+    theme, setTheme,
+    notifOpen, setNotifOpen,
+  };
+
+  return (
+    <LangCtx.Provider value={{ lang, setLang }}>
+    <AppCtx.Provider value={ctx}>
+      <div className="min-h-dvh bg-bg flex flex-col">
+        <RoleSwitcher/>
+        <div className="flex-1 md:flex md:max-w-[1400px] md:w-full md:mx-auto md:px-4 lg:px-6">
+          <SideNav/>
+          <main className="flex-1 min-w-0 mx-auto md:mx-0 w-full max-w-md md:max-w-none px-4 md:px-6 lg:px-8 pt-4 md:pt-6 pb-6">
+            <ScreenRouter/>
+          </main>
+        </div>
+        <BottomNav/>
+        <Toast msg={toastMsg}/>
+        <NotificationsPopover/>
+      </div>
+    </AppCtx.Provider>
+    </LangCtx.Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

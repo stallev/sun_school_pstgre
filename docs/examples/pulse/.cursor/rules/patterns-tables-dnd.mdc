@@ -1,0 +1,20 @@
+---
+description: Tables and drag-and-drop — responsive patterns and @dnd-kit
+globs:
+  - apps/web/src/components/ui/table.tsx
+  - apps/web/src/app/**/admin/**
+alwaysApply: false
+---
+
+# Tables and DnD
+
+When extending **tables**, **sortable rows**, or **drag-and-drop**, follow:
+
+- [`ai_responsive_table_guidelines.md`](docs/guidelines/react/ai_responsive_table_guidelines.md) — responsive tables, dense list patterns (admin moderation queues).
+- Lampto [`ai_drag_drop_guidelines.md`](docs/examples/lampto/docs/guidelines/react/ai_drag_drop_guidelines.md) — **@dnd-kit** when dependencies installed (trainer schedule ordering — post-MVP if not in scope).
+
+Do not copy HTML prototype pixel-perfect — **shadcn Table** and guides define structure.
+
+**Pulse admin surfaces:** pending trainers, bookings list, user search — mobile card fallback per guidelines.
+
+Reference: lampto `patterns-tables-dnd.mdc`.
