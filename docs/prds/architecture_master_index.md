@@ -57,7 +57,9 @@
 | ADR-003 Auth (OIDC, JWT, RBAC) | [`07_governance/adr_003_auth_oidc_jwt_rbac.md`](./07_governance/adr_003_auth_oidc_jwt_rbac.md) | W4-01 | Canonical |
 | ADR-004 Часовой пояс | [`07_governance/adr_004_timezone_scheduling_model.md`](./07_governance/adr_004_timezone_scheduling_model.md) | W4-02 | Canonical |
 | ADR-005 Схема целиком | [`07_governance/adr_005_schema_complete_post_mvp_tables.md`](./07_governance/adr_005_schema_complete_post_mvp_tables.md) | W4-03 | Canonical |
-| ADR-008 i18n | `07_governance/adr_008_i18n_ru_en_dictionary_slices.md` | W4-06 | Planned |
+| ADR-006 Email (идемпотентная доставка) | — | W4-04 | Не требуется (модуль `email_jobs` выключен) |
+| ADR-007 Файлы / S3 | — | W4-05 | Не требуется (модуль `s3_uploads` выключен) |
+| ADR-008 i18n | [`07_governance/adr_008_i18n_ru_en_dictionary_slices.md`](./07_governance/adr_008_i18n_ru_en_dictionary_slices.md) | W4-06 | Canonical |
 | ADR-009 Библия: нумерация и лицензия | [`07_governance/adr_009_bible_translations_and_verse_numbering.md`](./07_governance/adr_009_bible_translations_and_verse_numbering.md) | W4-07 | Canonical (§3.2 — Proposed) |
 | Authorization matrix | `04_authorization_privacy/authorization_matrix.md` | W5-02 | Planned |
 | Auth runtime spec | `05_runtime/auth_runtime_spec.md` | W5-08 | Planned |
@@ -112,3 +114,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-10 | v1.5 — W3: lifecycle_models, domain_invariants → Canonical |
 | 2026-10-11 | v1.6 — ADR-003 → Canonical |
 | 2026-10-11 | v1.7 — ADR-004, ADR-005 → Canonical |
+| 2026-10-11 | v1.8 — ADR-008 → Canonical; ADR-006 / ADR-007 помечены «не требуется» |
