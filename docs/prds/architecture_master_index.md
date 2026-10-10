@@ -71,7 +71,7 @@
 |------|-----------|-------|--------|
 | UX/UI | [UX-02 `responsive_navigation_contract`](../design/responsive_navigation_contract.md), [UX-03 `visual_identity_contract`](../design/visual_identity_contract.md), [UX-08 `prototype_route_mapping`](../design/prototype_route_mapping.md) | W2 | Canonical |
 | UX interaction | [UX-05 `ui_states_contract`](../design/ui_states_contract.md), [UX-06 `forms_and_validation_ux`](../design/forms_and_validation_ux.md) | W7 | Canonical |
-| Contracts | [W8-01 `monorepo_boundaries_contract`](../implementation/mvp/contracts/monorepo_boundaries_contract.md); контракты мутаций W8-03…W8-09 ([W8-03 `access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md)) | W8 | W8-01, W8-03 Canonical; остальные Planned |
+| Contracts | [W8-01 `monorepo_boundaries_contract`](../implementation/mvp/contracts/monorepo_boundaries_contract.md); контракты мутаций W8-03…W8-09 ([W8-03](../implementation/mvp/contracts/access_requests_and_roles_contract.md), [W8-04](../implementation/mvp/contracts/school_year_and_groups_contract.md)) | W8 | W8-01, W8-03, W8-04 Canonical; остальные Planned |
 | Specs | `global_shell_spec`, `homework_check_flow_spec` (+ вход / регистрация) | W9 | Planned |
 | Design System Lab | `design_system_lab_spec` | W15 | Planned |
 | Phases + tasks | `P01…P07` description + tasks | W11 | Planned |
@@ -123,3 +123,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.13 — W7-03 UX-06 `forms_and_validation_ux` → Canonical |
 | 2026-10-11 | v1.14 — W8-01 `monorepo_boundaries_contract` → Canonical |
 | 2026-10-11 | v1.15 — W8-03 `access_requests_and_roles_contract` → Canonical |
+| 2026-10-11 | v1.16 — W8-04 `school_year_and_groups_contract` → Canonical |
