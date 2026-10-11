@@ -25,5 +25,17 @@
     "encoding:check": "node scripts/check-text-encoding.mjs",
     "docs:links": "node scripts/check-doc-links.mjs",
     "psi:lab": "node scripts/psi-lab/run-pagespeed.mjs"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-conventional": "21.2.3",
+    "@eslint/js": "9.39.5",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.0",
+    "husky": "9.1.7",
+    "lint-staged": "17.6.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.1",
+    "vitest": "5.0.3"
   }
 }
