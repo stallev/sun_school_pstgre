@@ -96,4 +96,4 @@ Task classification T0–T3 (orchestrator) is a different axis from this table: 
 
 ## Repository status
 
-**Текущая фаза:** Bootstrap — P5 завершена (каркас монорепо, схема БД, Auth.js-скелет, CI); следующая — P6 (Design Lab, T2-правила), затем фазы реализации P01…P07. Реализация — по фазам [`P01…P07`](docs/implementation/mvp/README.md). Не расширять реализацию без явной фазы и contract.
+**Текущая фаза:** Bootstrap — P6 завершена (Design Lab `/design-system`, T2-правила, shadcn на Base UI `base-vega`; гейт G5); следующая — фазы реализации P01…P07. Реализация — по фазам [`P01…P07`](docs/implementation/mvp/README.md). Не расширять реализацию без явной фазы и contract.

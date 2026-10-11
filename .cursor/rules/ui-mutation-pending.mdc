@@ -1,0 +1,38 @@
+﻿---
+description: Busy/pending UX на контролах при мутациях (до ответа сервера) — apps/web
+globs:
+  - apps/web/src/**/*.tsx
+  - apps/web/src/actions/**/*.ts
+  - apps/web/src/data/**/*.ts
+alwaysApply: true
+---
+
+# In-flight мутации: busy / pending UI (обязательно)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Guide:** [`docs/guidelines/react/ai_form_handling_pattern.md`](docs/guidelines/react/ai_form_handling_pattern.md) §4
+
+Работает **в паре** с **ui-toast-mutations**: **busy** — пока запрос выполняется; **toast** — после успеха или ошибки.
+
+## Минимум (обязательно)
+
+- Источник `pending`: `useActionState`, `useFormStatus`, `useTransition`, или **`useOptimistic` + `useTransition`**.
+- **`disabled={pending}`** на submit (и на полях, если блокируем ввод).
+- **`aria-busy={pending}`** на кнопке или `<form>`.
+- Подпись ожидания — **короткий герундий** из `@/lib/messages`.
+
+## Рекомендовано
+
+- Inline **`Spinner`** / **`Loader2Icon`** на primary submit (`aria-hidden` при видимом тексте).
+
+## Антипаттерн
+
+- Единственный сигнал — смена фона кнопки **без** `aria-busy` и **без** смены подписи.
+
+## Связанные правила
+
+- Toast: **ui-toast-mutations**
+- Optimistic: **ui-optimistic-mutations** + [`ai_optimistic_ui_pattern.md`](docs/guidelines/react/ai_optimistic_ui_pattern.md)
+- Route loading vs mutation: [`ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) §6
+
+Reference: Pulse (docs/examples/pulse) `ui-mutation-pending.mdc`.

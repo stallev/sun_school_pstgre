@@ -38,7 +38,8 @@ apps/web/src/
 ├── lib/              — auth/, messages/, cache-tags.ts, env.server.ts, UI helpers
 └── components/
     ├── atoms/        — Typography atoms (Heading, ContentText, …) — catalog: /design-system
-    ├── ui/           — Tokenized shadcn primitives (Button, Card, Link, …)
+    ├── ui/           — Tokenized shadcn (Base UI, base-vega) primitives (Button, Card, CustomLink, …)
+    ├── patterns/     — L3 composed patterns (PageHeader, EmptyState, Banner, ConfirmDialog, …)
     └── design-lab/   — Design Lab showcase only — MUST NOT import in product routes
 ```
 
@@ -83,7 +84,7 @@ Visual and interaction canon — **do not invent** ad-hoc styles:
 
 ## Cursor rules (scoped to `apps/web/**`)
 
-T0 + T1 rules are active. The `react-*`, `ui-*`, `admin-forms-layout` and `patterns-tables-dnd` rows below are **T2** — activated in bootstrap P6 (Design Lab); until then they are reference only. `s3-file-asset-uploads` is not active (module `s3_uploads` is off).
+T0 + T1 + T2 rules are active (T2 — `react-*`, `ui-*`, `admin-forms-layout`, `patterns-tables-dnd` — activated in bootstrap P6, Design Lab). `s3-file-asset-uploads` is not active (module `s3_uploads` is off).
 
 | Rule | Focus |
 |------|-------|

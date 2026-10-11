@@ -1,0 +1,50 @@
+﻿---
+description: Mobile-first responsive UI — breakpoints, touch targets, native-feel patterns
+globs:
+  - apps/web/src/**/*.tsx
+  - apps/web/src/**/*.css
+alwaysApply: false
+---
+
+# Mobile-first (`apps/web`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Design system:** [`sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html) §2 Responsive Strategy  
+**User flows:** [`docs/prds/01_product_scope/user_flows/users_mvp/`](docs/prds/01_product_scope/user_flows/users_mvp/) — по одному flow на роль из `admin, teacher`
+
+## Контракт
+
+Разработка UI **начинается с мобильного viewport** (320–390px). Breakpoints — **расширение**, не «урезание desktop».
+
+## Breakpoints (Tailwind v4 defaults)
+
+| Token | Min width | Поведение |
+|-------|-----------|-----------------|
+| default | 0 | Base layout, bottom nav, sheets |
+| `md` | 768px | Sidebar вместо bottom nav; tablet padding |
+| `lg` | 1024px | Filter sidebars, multi-column, wider sidebar |
+| `xl` / `2xl` | 1280 / 1536px | Wide layouts, `max-w-[1400px]` containers |
+
+## Обязательные паттерны
+
+1. **Base styles = mobile** — без `max-md:` для того, что должно быть на телефоне; desktop через `md:`, `lg:`.
+2. **Bottom nav** sticky `< md`; **sidebar** `≥ md` — per role layouts.
+3. **Modals:** bottom **Sheet** на mobile; centered **Dialog** `≥ md`.
+4. **Edge-to-edge mobile** — cover photos, chip scroll: `-mx-4 md:mx-0`, `overflow-x-auto no-scrollbar`.
+5. **Touch targets** — интерактивные элементы **≥ 44×44px** (`min-h-11 min-w-11` или эквивалент padding).
+6. **Safe area** — bottom nav: `paddingBottom: env(safe-area-inset-bottom)`; контент над nav: `pb-6` минимум.
+7. **Приёмка** — проверять экран на **390px**, затем `md` и `lg` перед merge UI-задачи.
+
+## Антипаттерны
+
+- Desktop-first: base = wide grid, `max-md:` «ломает» layout.
+- Горизонтальный scroll всей страницы (кроме chip-рядов).
+- Hover-only affordances без tap-альтернативы на mobile.
+
+## Связанные правила
+
+- Tokens/states: **ui-design-system-shadcn**
+- Prototype parity: **ui-prototype-fidelity**
+- Shared nav/shell: **react-logic-presentation**
+
+Reference: Pulse (docs/examples/pulse) mobile-first acceptance in EUI-V2-P1 tasks — Pulse adaptation.
