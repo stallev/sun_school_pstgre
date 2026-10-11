@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+/*
+ * Slate Cobalt — token placeholders (docs/design/visual_identity_contract.md §4).
+ * Light theme only: there is no `.dark` and no theme switching (UX-03).
+ * The full semantic mapping (shadcn variables) is added in P6 together with the Design Lab.
+ */
+@theme {
+  --color-paper: #f8fafc;
+  --color-surface: #ffffff;
+  --color-ink: #0f172a;
+  --color-ink-2: #475569;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-cobalt: #3370ff;
+  --color-cobalt-ink: #1d4ed8;
+  --color-cobalt-deep: #1e40af;
+  --color-cobalt-soft: #ebf1ff;
+  --color-ok: #15803d;
+  --color-ok-soft: #dcfce7;
+  --color-warn: #b45309;
+  --color-warn-soft: #fef9c3;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fee2e2;
+}
+
+html {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
