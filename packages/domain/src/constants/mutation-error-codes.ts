@@ -13,12 +13,30 @@ export const MUTATION_ERROR_CODES = {
   CONFLICT: "CONFLICT",
   RATE_LIMITED: "RATE_LIMITED",
   INTERNAL: "INTERNAL",
+  // ACCESS_ — access_requests_and_roles_contract.md §6
+  ACCESS_STATUS_INVALID: "ACCESS_STATUS_INVALID",
+  ACCESS_ALREADY_PENDING: "ACCESS_ALREADY_PENDING",
+  ACCESS_REQUEST_DECIDED: "ACCESS_REQUEST_DECIDED",
+  ACCESS_ROLE_UNAVAILABLE: "ACCESS_ROLE_UNAVAILABLE",
+  ACCESS_LAST_ADMIN: "ACCESS_LAST_ADMIN",
+  ACCESS_SELF_FORBIDDEN: "ACCESS_SELF_FORBIDDEN",
   // AUTH_ — docs/prds/05_runtime/auth_runtime_spec.md §7
   AUTH_LINK_CONFLICT: "AUTH_LINK_CONFLICT",
   AUTH_LAST_IDENTITY: "AUTH_LAST_IDENTITY",
 } as const;
 
 export type MutationErrorCode = (typeof MUTATION_ERROR_CODES)[keyof typeof MUTATION_ERROR_CODES];
+
+/**
+ * Non-error outcomes carried in `MutationOk.warnings` (a successful result the UI should flag).
+ * Not part of MUTATION_ERROR_CODES: the operation succeeded.
+ */
+export const MUTATION_WARNING_CODES = {
+  /** Approved TEACHER has no groups yet (access_requests §5.4, decision 2026-10-11). */
+  NO_GROUPS: "NO_GROUPS",
+} as const;
+
+export type MutationWarningCode = (typeof MUTATION_WARNING_CODES)[keyof typeof MUTATION_WARNING_CODES];
 
 /** Allowed prefixes of module codes (contract §8.2). */
 export const MUTATION_ERROR_CODE_PREFIXES = [

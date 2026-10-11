@@ -17,36 +17,35 @@
 ## Phase DoR audit (lean: оркестратор inline)
 
 - [x] Bootstrap P5 и P6 завершены (gates G4, G5); `npm run typecheck`, `lint`, `test` зелёные на чистом дереве — проверено 2026-10-11, ветка P0006
-- [ ] Все задачи ниже проходят DoR (ссылки `§` открываются; пути H/N/S указаны; версии библиотек сверены с `Проверено по` документов; пометить дату и исполнителя)
-- [ ] Open questions фазы: Q-01 решён (2026-10-11: одобрение `TEACHER` без групп — с предупреждением `NO_GROUPS`); Q-03 `global_shell_spec` (dev-вход) решён или отложен
+- [x] Все задачи ниже проходят DoR (ссылки `§` открываются; пути H/N/S указаны; версии библиотек сверены с `Проверено по` документов; пометить дату и исполнителя) — проверено inline 2026-10-11, оркестратор (Claude)
+- [x] Open questions фазы: Q-01 решён (2026-10-11: одобрение `TEACHER` без групп — с предупреждением `NO_GROUPS`); Q-03 `global_shell_spec` (dev-вход) решён или отложен — Q-03 отложен на CU6 (дефолт: dev-вход фикстур по `APP_ENV=dev`)
 - [ ] Внешняя настройка: приложения Google и Telegram для dev, `AUTH_*` в `.local`, `FIRST_ADMIN_EMAIL` в `.local/dev-secrets.json`
 
 ## Commit plan
 
 Формат задачи — [`phase_tasks.template.md`](../../../meta/phase_tasks.template.md). Пути `packages/*/src` и `apps/web/src` — по [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md) §3, §5.
 
-### P01-CU1 — feat(domain): add roles, statuses, error codes and audit actions · Review: diff-only · Commit: auto
+### P01-CU1 — feat(domain): add roles, statuses, error codes and audit actions · Review: diff-only · Commit: auto · ✔ выполнен 2026-10-11
 
-- [ ] P01-T1 · T1 · Contract: [monorepo_boundaries §8](../contracts/monorepo_boundaries_contract.md) · Schema: [database_schema_v1 §4](../../../prds/03_data_model/database_schema_v1.md)
+- [x] P01-T1 · T1 · Contract: [monorepo_boundaries §8](../contracts/monorepo_boundaries_contract.md) · Schema: [database_schema_v1 §4](../../../prds/03_data_model/database_schema_v1.md)
       Files: `packages/domain/src/constants/{user-role,account-status,login-provider,access-request-status}.ts`
       Acceptance: значения совпадают с enum схемы §4 (тест сверки списков) → тест зелёный
+      Сделано: тест сверки лежит в `packages/db/src/enums-schema.test.ts` (в domain нет типов Node — читать `schema.prisma` оттуда нельзя)
       Paths: n/a — константы без поведения
-      Статус: частично (2026-10-11) — `packages/domain/src/constants/enums.ts` (каркас P5) есть; нет отдельных файлов по Files и теста сверки со схемой
-- [ ] P01-T2 · T1 · Contract: [monorepo_boundaries §7–§8](../contracts/monorepo_boundaries_contract.md), [access_requests §6](../contracts/access_requests_and_roles_contract.md)
+- [x] P01-T2 · T1 · Contract: [monorepo_boundaries §7–§8](../contracts/monorepo_boundaries_contract.md), [access_requests §6](../contracts/access_requests_and_roles_contract.md)
       Files: `packages/domain/src/constants/mutation-error-codes.ts`, `types/mutation-result.ts`
       Acceptance: общие коды + `ACCESS_*`, `AUTH_*`; `MutationResult` с `fields?` → typecheck, тест типов
       Paths: n/a — реестр кодов
-      Статус: частично (2026-10-11) — `mutation-error-codes.ts`, `mutation-result.ts` (каркас P5) есть, общие коды и `AUTH_*` заданы; нет `ACCESS_*` и теста типов
-- [ ] P01-T3 · T1 · Contract: [change_log §3–§4](../contracts/change_log_contract.md)
+- [x] P01-T3 · T1 · Contract: [change_log §3–§4](../contracts/change_log_contract.md)
       Files: `packages/domain/src/constants/audit-action.ts`, `audit/serialize-audit-values.ts`
       Acceptance: реестр содержит `access.*`, `auth.*`, `seed.run`, `settings.*`; сериализация отбрасывает ФИО/email/`providerAccountId` → unit-тест (INV-23)
       Paths: H [change_log §3] · N [§5 L-3, L-7: ПД не попадают]
-- [ ] P01-T4 · T1 · Contract: [access_requests §4](../contracts/access_requests_and_roles_contract.md) · UX: [forms §5](../../../design/forms_and_validation_ux.md)
+- [x] P01-T4 · T1 · Contract: [access_requests §4](../contracts/access_requests_and_roles_contract.md) · UX: [forms §5](../../../design/forms_and_validation_ux.md)
       Files: `packages/domain/src/schemas/person-name.ts`, `registration.ts`, `account/can-transition-account.ts`
       Acceptance: ФИО по РГ-3; переходы статусов по [lifecycle §5.1](../../../prds/02_domain_model/lifecycle_models.md) → unit-тесты допустимых и недопустимых
       Paths: H [lifecycle §5.1] · N [invalid transitions]
 
-**CU DoD:** `npm run typecheck` · `npm run lint` · `npm run test` · домен не импортирует Next/Prisma (lint boundaries)
+**CU DoD:** `npm run typecheck` · `npm run lint` · `npm run test` · домен не импортирует Next/Prisma (lint boundaries) — ✔ 2026-10-11
 
 ### P01-CU2 — feat(db): add client factory, environment guard, audit writer and reference seed · Review: reviewer · Commit: auto
 
