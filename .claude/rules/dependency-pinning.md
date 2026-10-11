@@ -1,0 +1,57 @@
+---
+description: npm dependencies: exact versions (no ^ / ~), save-exact via .npmrc, committed lockfile + npm ci, controlled updates as chore(deps) commit units, deps:check in verification
+paths:
+  - "**/package.json"
+  - "**/package-lock.json"
+  - "**/.npmrc"
+---
+# Dependency pinning (npm)
+
+**Next.js pin policy:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) · **Routing:** [`model-routing.mdc`](model-routing.mdc) · **Commit:** [`agent-commit-pipeline.mdc`](agent-commit-pipeline.mdc)
+
+**Зачем:** `package.json` должен показывать **ту версию, что реально установлена**. Агент сверяет API и `Проверено по` в документации с `package.json`; диапазон `^16.4.0` делает эту сверку бессмысленной. Обновление зависимости — явное действие с review, а не побочный эффект `npm install`.
+
+## Контракт
+
+1. **Exact versions** во всех `package.json` монорепо (root, `apps/*`, `packages/*`) в `dependencies`, `devDependencies`, `optionalDependencies`, `overrides`: `"next": "16.4.2"`.
+   **Запрещено:** `^`, `~`, `>=`, `*`, `x`, `latest` / dist-tags, git / http / `file:` источники без ADR.
+2. **Исключения:**
+   - внутренние пакеты workspace (`@sunschool/*`) — `"*"` (npm workspaces резолвит локально);
+   - `peerDependencies` — диапазоны допустимы (только для пакета, который публикуется в registry);
+   - alias — `"npm:<name>@<exact>"`.
+3. **`.npmrc` в корне** — `save-exact=true` (шаблон: [`scaffold/.npmrc`](scaffold/.npmrc)). `npm install <pkg>` сам пишет точную версию.
+4. **Lockfile** — `package-lock.json` в git, один на монорепо (в корне). CI и деплой — **`npm ci`**, не `npm install` (Vercel: Install Command = `npm ci`).
+5. **Транзитивные зависимости** держит только lockfile. Уязвимость в транзитивной — `overrides` с exact-версией, причина в body коммита.
+
+## Добавление зависимости
+
+- Новая зависимость = task tier **T2** (`model-routing.mdc` §1): нужна причина в задаче / spec.
+- Версию определить явно: `npm view <pkg> version` (+ Context7 для runtime/auth/data библиотек), затем `npm install <pkg>@<exact> -w <workspace>`.
+- Пакет из тем registry §2.7 (Next.js, Auth.js, Prisma и т. п.) — в том же изменении `Проверено по` в затронутых docs.
+
+## Обновление зависимостей
+
+| Вид | Как | Commit unit |
+|-----|-----|-------------|
+| Patch / minor (не framework) | Renovate / Dependabot группой или `npm install <pkg>@<exact>` | `chore(deps): …` — отдельный CU, review по diff |
+| Security patch | В той же задаче, где обнаружен | Может входить в текущий CU |
+| Major / framework minor (`next` 16.5+, Prisma, Auth.js) | Отдельный CU; Next.js — ADR-002 amend | T2/T3 по routing; `Проверено по` обновить |
+
+- **MUST NOT:** `npm update` или пересоздание lockfile «заодно» в несвязанном CU; `--force` / `--legacy-peer-deps` без записи причины в ADR / задаче.
+- Связанные пакеты двигать **одной** правкой: `next` + `eslint-config-next` + `@next/third-parties` на один patch (ADR-002); `prisma` + `@prisma/client`.
+
+## ВЕРИФИКАЦИЯ
+
+- `npm run deps:check` ([`scripts/check-exact-deps.mjs`](scripts/check-exact-deps.mjs)) — когда в diff есть `package.json` / `package-lock.json` / `.npmrc`; в CI — всегда.
+- `package.json` и `package-lock.json` в одном коммите; lockfile без изменения `package.json` — только в `chore(deps)` CU.
+
+## Agent checklist
+
+- [ ] Нет `^` / `~` / `latest` в изменённых `package.json` (`npm run deps:check` зелёный)
+- [ ] Версия новой зависимости проверена (`npm view`, Context7 для runtime-библиотек)
+- [ ] Lockfile в том же коммите; CI / деплой на `npm ci`
+- [ ] Связанные пакеты на одной версии; `Проверено по` обновлено при смене runtime-библиотеки
+
+## Related
+
+**model-routing** · **agent-commit-pipeline** · **nextjs-vercel-app-router** · **typescript-monorepo-types**

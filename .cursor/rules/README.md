@@ -57,7 +57,7 @@
 | `s3-file-asset-uploads.mdc` | `s3_uploads` | FileAsset + AWS S3 presigned |
 | `javascript-fundamentals.mdc` | — | Closures, map/filter/reduce, generators, ESM modules, TS generics |
 | `psi-lab-testing.mdc` | — | Requestable — lab PSI on deployed origin (REST, not MCP / localhost) |
-| `testing.mdc` | — | Vitest / Playwright: объём по профилю D4 / D5, раскладка, проверки по contract. Globs: `*.test.*`, `e2e/**`, configs |
+| `testing.mdc` | — | Vitest: объём по профилю D4 / D5, раскладка, проверки по contract. Globs: `*.test.*`, `e2e/**`, configs |
 | `dependency-pinning.mdc` | — | Exact npm versions (no `^` / `~`), `.npmrc` `save-exact`, lockfile + `npm ci`, `chore(deps)` CU; `npm run deps:check`. Globs: `package.json`, lockfile, `.npmrc` |
 
 Файлы: [`tiers/t1-implementation/`](tiers/t1-implementation/)

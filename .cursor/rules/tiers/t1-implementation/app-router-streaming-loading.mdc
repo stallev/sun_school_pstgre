@@ -8,8 +8,8 @@ alwaysApply: false
 
 **Normative doc:** [`docs/guidelines/nextjs/ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) — loading UX **and** page performance (Pulse merged former `ai_page_performance_streaming.md` into §4–§18).  
 **Client JS (orthogonal layer):** [`ai_client_lazy_loading.md`](docs/guidelines/nextjs/ai_client_lazy_loading.md) — `next/dynamic`, heavy client deps; Suspense does **not** defer `react-day-picker` / `recharts`.  
-**Runtime:** [ADR-002 template](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md) — Next.js **16.4** (exact patch pin), Instant Navigations **required** (§5.1 / loading §8.1)  
-**Cache tags:** [`cache_revalidation_policy.md`](docs/prds/05_runtime/cache_revalidation_policy.md) (после W5)
+**Runtime:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — Next.js **16.4** (exact patch pin), Instant Navigations **required** (§5.1 / loading §8.1)  
+**Cache tags:** the tag registry lives in code (`apps/web/src/lib/cache-tags.ts`, created in P5); policy — [`ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) §8
 
 When you **add or edit** `page.tsx`, segment `layout.tsx`, colocated `loading.tsx`, or `error.tsx` under `apps/web/src/app/`:
 
@@ -36,7 +36,7 @@ When you **add or edit** `page.tsx`, segment `layout.tsx`, colocated `loading.ts
 
 ## Pulse snapshot examples (not product routes)
 
-See `docs/examples/pulse/` catalog/booking/admin streaming regions — copy **patterns**, not Pulse URLs.
+See `docs/examples/pulse/` streaming regions — copy **patterns**, not Pulse URLs; project routes are in [`canonical_routes.md`](docs/design/canonical_routes.md).
 
 ## Before you finish
 

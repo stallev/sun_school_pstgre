@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Dependency pinning (npm)
 
-**Next.js pin policy:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md) (после W4 — `adr_002_….md`) · **Routing:** [`model-routing.mdc`](model-routing.mdc) · **Commit:** [`agent-commit-pipeline.mdc`](agent-commit-pipeline.mdc)
+**Next.js pin policy:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) · **Routing:** [`model-routing.mdc`](model-routing.mdc) · **Commit:** [`agent-commit-pipeline.mdc`](agent-commit-pipeline.mdc)
 
 **Зачем:** `package.json` должен показывать **ту версию, что реально установлена**. Агент сверяет API и `Проверено по` в документации с `package.json`; диапазон `^16.4.0` делает эту сверку бессмысленной. Обновление зависимости — явное действие с review, а не побочный эффект `npm install`.
 

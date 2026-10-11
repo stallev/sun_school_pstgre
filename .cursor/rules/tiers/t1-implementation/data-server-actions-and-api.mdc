@@ -12,8 +12,8 @@ alwaysApply: false
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
 **Normative doc:** [`docs/guidelines/nextjs/ai_nextjs_db_data_handle.md`](docs/guidelines/nextjs/ai_nextjs_db_data_handle.md) (§7 iOS Safari)  
-**Data fetching:** [`docs/guidelines/nextjs/ai_data_fetching_patterns.md`](docs/guidelines/nextjs/ai_data_fetching_patterns.md) — no self-fetch, `cache()`, `'use cache'`, parent?child DTO (§7)  
-**Incidents:** [`docs/incidents/ios-safari-mutation-transport-pattern.md`](docs/incidents/ios-safari-mutation-transport-pattern.md)
+**Data fetching:** [`docs/guidelines/nextjs/ai_data_fetching_patterns.md`](docs/guidelines/nextjs/ai_data_fetching_patterns.md) — no self-fetch, `cache()`, `'use cache'`, parent→child DTO (§7)  
+**Incidents / transport:** **ios-safari-mutation-transport** (pattern doc is added with the first Class B flow; origin: [`docs/examples/pulse/`](docs/examples/pulse/))
 
 ## Core behavior
 
@@ -26,7 +26,7 @@ alwaysApply: false
 |----------|--------|
 | Form submit; list/detail refresh | **Server Action** (+ iOS fallback on Class B — **ios-safari-mutation-transport**) |
 | Modal close updating parent | **Server Action** |
-| Optimistic toggle (Pulse: wishlist, service active) | **Route Handler** primary (Class A) |
+| Optimistic toggle (e.g. mark a notification read) | **Route Handler** primary (Class A) |
 | JSON/polling/external API | **Route Handler** |
 | Frequent / debounced save | **Route Handler** + `resilientPostFetch` — not Server Action |
 
@@ -39,9 +39,10 @@ alwaysApply: false
 
 ## Practice
 
-- Authorization in DAL via `auth()` + `@sunschool/policy-server`.
+- Authorization in DAL via `requireActiveUser()` + `@sunschool/policy-server`; foreign resource → `NOT_FOUND`, wrong role → `FORBIDDEN` (authorization matrix AZ-D3/AZ-D4).
+- Use-case = domain rules + DAL transaction + audit record **in the same transaction**.
 - Next.js 16.4.x: `await cookies()`, `await headers()`, `await params`.
-- **Class B critical submits** (`/book/*`, onboarding, admin approve): dual transport per **ios-safari-mutation-transport** — shared DAL, `MutationResult`, no logic fork.
+- **Class B critical submits** (registration, access request approve, homework check save): dual transport per **ios-safari-mutation-transport** — shared DAL, `MutationResult`, no logic fork.
 
 ## Async & error handling (MUST)
 
