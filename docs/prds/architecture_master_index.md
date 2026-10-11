@@ -137,3 +137,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.26 — W11 P01…P07 phase descriptions and tasks → Canonical |
 | 2026-10-11 | v1.27 — ADR-011 (переходный период согласий); решения владельца по W11: одобрение teacher без групп, метрика рейтинга, сдвиг оценок за стихи; правки промптов P4/P5/P6 |
 | 2026-10-11 | v1.28 — W12: migration_runbook, local_dev_setup, vercel_deploy_guide, neon_prisma_migrations_guide → Canonical; перенос данных из старого приложения вне проекта (реализует владелец) |
+| 2026-10-11 | v1.29 — P07 переименована (переходный период согласий и prod-готовность): перенос данных вне проекта по решению владельца |

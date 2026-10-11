@@ -575,7 +575,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W11-10 | `P05_tasks.md` | P05_phase | — |
 | W11-11 | `P06_phase_description.md` — журнал изменений, запросы на удаление, локализация | change_log_contract, deletion_requests_contract, adr_008 | methodology |
 | W11-12 | `P06_tasks.md` | P06_phase | — |
-| W11-13 | `P07_phase_description.md` — миграция из действующего приложения, prod-готовность | migration_runbook, seed_data_spec, accessibility_requirements | methodology |
+| W11-13 | `P07_phase_description.md` — переходный период согласий, prod-готовность (**перенос данных из действующего приложения вне проекта**, решение владельца 2026-10-11) | migration_runbook, seed_data_spec, adr_011, accessibility (правило `ui-semantics-a11y`) | methodology |
 | W11-14 | `P07_tasks.md` | P07_phase | — |
 
 Деление на фазы **предварительное**, фиксируется при написании W11; нумерация фаз реализации (P01…) не путается с промптами bootstrap P0…P6.
