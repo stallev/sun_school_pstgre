@@ -61,6 +61,7 @@
 | ADR-007 Файлы / S3 | — | W4-05 | Не требуется (модуль `s3_uploads` выключен) |
 | ADR-008 i18n | [`07_governance/adr_008_i18n_ru_en_dictionary_slices.md`](./07_governance/adr_008_i18n_ru_en_dictionary_slices.md) | W4-06 | Canonical |
 | ADR-009 Библия: нумерация и лицензия | [`07_governance/adr_009_bible_translations_and_verse_numbering.md`](./07_governance/adr_009_bible_translations_and_verse_numbering.md) | W4-07 | Canonical (§3.2 — Proposed) |
+| ADR-011 Переходный период согласий (перенесённые дети) | [`07_governance/adr_011_transitional_child_consent.md`](./07_governance/adr_011_transitional_child_consent.md) | W11 / P07 | Canonical |
 | Authorization matrix | [`04_authorization_privacy/authorization_matrix.md`](./04_authorization_privacy/authorization_matrix.md) | W5-02 | Canonical |
 | Auth runtime spec | [`05_runtime/auth_runtime_spec.md`](./05_runtime/auth_runtime_spec.md) | W5-08 | Canonical |
 | Policy enforcement, privacy handling, runtime README / backend / monorepo packages / cache policy | — | W5-01, W5-03…W5-07, W5-09 | Не требуется на lean (покрыто ADR-001/002/003, `authorization_matrix`, контрактами W8) |
@@ -134,3 +135,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.24 — W9-02 `access_and_registration_spec` → Canonical; W9 lean завершена |
 | 2026-10-11 | v1.25 — W15-01 `design_system_lab_spec` → Canonical; `/design-system` dev-only в canonical_routes |
 | 2026-10-11 | v1.26 — W11 P01…P07 phase descriptions and tasks → Canonical |
+| 2026-10-11 | v1.27 — ADR-011 (переходный период согласий); решения владельца по W11: одобрение teacher без групп, метрика рейтинга, сдвиг оценок за стихи; правки промптов P4/P5/P6 |

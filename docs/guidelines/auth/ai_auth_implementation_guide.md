@@ -3,7 +3,8 @@
 **Stack:** Next.js **16.4** (App Router) | Auth.js v5 | Prisma v7 | Neon | Vercel  
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
 **Runtime:** [ADR-002](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — **`proxy.ts`**, not `middleware.ts`  
-**Auth canon:** [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) — Credentials, JWT, RBAC, four-layer model  
+**Auth canon:** [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) — **OIDC (Google + Telegram), JWT, RBAC**; [`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md)  
+> **Внимание:** разделы ниже унаследованы от референса Pulse и описывают Credentials + bcrypt + `@auth/prisma-adapter`. В проекте Credentials и пароли **не используются**; адаптация текста под ADR-003 выполняется в bootstrap P4 ([`prompts/P4-rules-guidelines.md`](../../../prompts/P4-rules-guidelines.md), п. 7). До адаптации ориентир — ADR-003 и `auth_runtime_spec`.  
 **Schema:** [`database_schema_v1.md`](../../prds/03_data_model/database_schema_v1.md)
 
 ---

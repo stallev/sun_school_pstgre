@@ -65,7 +65,7 @@
 | Сущность | Запись по умолчанию | Ключ upsert |
 |----------|---------------------|-------------|
 | `organization` | ровно одна; имя — константа seed (`Sunday School`), правится admin в интерфейсе | единственная строка |
-| `app_setting` | `ui_locale = "ru"`; `school_timezone = "UTC"` (ADR-004); `features.achievements` / `features.parents` / `features.voice` = `false` (ADR-005); `consent_text_version` = текущая версия текста `/privacy`; `db_environment` (§5) | `key` |
+| `app_setting` | `ui_locale = "ru"`; `school_timezone = "UTC"` (ADR-004); `features.achievements` / `features.parents` / `features.voice` = `false` (ADR-005); `consent_text_version`; `legacy_consent_deadline_on` создаётся только при миграции ([ADR-011](../07_governance/adr_011_transitional_child_consent.md)) = текущая версия текста `/privacy`; `db_environment` (§5) | `key` |
 | `bible_translation` | `ru-synodal` (RST, `locale RU`, `is_default`, `source`, `license`); `en-niv` (NIV, `locale EN`, `license` = копирайт Biblica, `is_default`) | `code` |
 | `bible_book` | 66 книг, `sort_order`, `testament`, названия ru/en, короткие названия, `chapters_count`; книги RST и NIV объединяются по `sort_order` (Bible/README §4 п. 3) | `sort_order` |
 | `achievement`, `achievement_tier` | 8 достижений стартового каталога | `code`, `(achievement_id, tier)` |

@@ -47,7 +47,7 @@
 | `updateOwnName` | `lastName`, `firstName`, `middleName` | как выше | форма |
 | `approveRequest` | `requestId` | id заявки в `PENDING` | форма |
 | | `roles` | непустое подмножество `{ADMIN, TEACHER}` | форма |
-| | `gradeIds` | обязательно непусто при `TEACHER`; группы активного года | форма |
+| | `gradeIds` | необязательно; если указаны — группы активного года; без групп `TEACHER` одобряется с предупреждением `NO_GROUPS` | форма |
 | `rejectRequest` | `requestId`, `reason` | причина обязательна, ≤ 500 | форма |
 | `changeRoles` | `userId`, `roles`, `gradeIds` | как при одобрении | форма |
 | `disableAccess`, `enableAccess` | `userId` | пользователь `ACTIVE` / `DISABLED` | форма |
@@ -80,7 +80,7 @@
 
 ### 5.4 `approveRequest`
 
-- **Предусловия:** заявка `PENDING`; `roles` непусто; для `TEACHER` — ≥ 1 группа активного года; роль `PARENT` недоступна (AZ-P3).
+- **Предусловия:** заявка `PENDING`; `roles` непусто; роль `PARENT` недоступна (AZ-P3). Для `TEACHER` группы **не обязательны**: без групп заявка одобряется с предупреждением `NO_GROUPS` (решено 2026-10-11, как в [`admin_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.2); переданные `gradeIds` должны быть группами активного года.
 - **Транзакция (порядок блокировок):** `access_request` → `app_user` пользователя заявки; записать `user_role`, `teacher_assignment` (UNIQUE `(user, grade, year)`); заявка → `APPROVED`, `decided_by`, `decided_at`; пользователь → `ACTIVE`.
 - **Журнал:** `access.request_approved` (роли, группы — идентификаторы).
 
@@ -130,7 +130,8 @@
 | Уже есть заявка | у пользователя `PENDING` | `ACCESS_ALREADY_PENDING` | `auth.register.already_pending` | возвращается текущая |
 | Заявка решена | `approve`/`reject` не `PENDING` | `ACCESS_REQUEST_DECIDED` | `admin.approvals.already_decided` | список обновляется |
 | Роль недоступна | в `roles` есть `PARENT` | `ACCESS_ROLE_UNAVAILABLE` | `admin.approvals.parent_unavailable` | отказ с причиной «доступ родителей откроется позже» |
-| Нет групп | `TEACHER` без `gradeIds` или группа не активного года | `ACCESS_GROUPS_REQUIRED` | `admin.approvals.groups_required` | не одобрено |
+| Нет групп у `TEACHER` | `gradeIds` пусто | — (не отказ) | `admin.approvals.no_groups_warning` | одобрено; результат содержит `warnings: ["NO_GROUPS"]`, admin видит предупреждение и назначает группу позже в `/groups/[groupId]` |
+| Группа не активного года | в `gradeIds` есть чужая/прошлая группа | `VALIDATION` (`fields.gradeIds`) | `admin.approvals.groups_invalid` | не одобрено |
 | Нет причины | `rejectRequest` без `reason` | `VALIDATION` (`fields.reason`) | `common.errors.reason_required` | без изменений |
 | Последний admin | снятие роли / отключение | `ACCESS_LAST_ADMIN` | `admin.users.last_admin` | без изменений |
 | Себя | снять `ADMIN` / отключить себя | `ACCESS_SELF_FORBIDDEN` | `admin.users.self_forbidden` | без изменений |
@@ -182,7 +183,7 @@
 ## 11. Acceptance criteria
 
 - [ ] `submitRegistration` создаёт согласие, заявку и статус `REQUEST_PENDING` атомарно — исход: тест use-case.
-- [ ] `approveRequest` без групп для `TEACHER` отклоняется — исход: тест (`ACCESS_GROUPS_REQUIRED`).
+- [ ] `approveRequest` для `TEACHER` без групп успешен и возвращает `warnings: ["NO_GROUPS"]`; группа не активного года отклоняется (`VALIDATION`) — исход: тест.
 - [ ] Заявка с `PARENT` отклоняется — исход: тест.
 - [ ] Параллельные решения по заявке дают один успех — исход: тест гонки.
 - [ ] Нельзя снять `ADMIN` у последнего и у себя — исход: тест (AZ-P1, AZ-P2).
@@ -198,6 +199,7 @@
 | Q-02 | При снятии роли `TEACHER` назначения активного года удаляются или закрываются датой | Удаляются из активного года, прошлые годы не затрагиваются | architect | W8-04 |
 | Q-03 | Можно ли объединять, когда у дубликата есть `ADMIN`, а у оставляемого нет | Нет, сначала `changeRoles` | architect | P01 |
 | Q-04 | Нужен ли отдельный код `AUTH_STATUS_INVALID` вместо `ACCESS_STATUS_INVALID` | Один код `ACCESS_STATUS_INVALID` | architect | — |
+| Q-05 | ✔ **Решено 2026-10-11.** Одобрение `TEACHER` без групп | Разрешено с предупреждением `NO_GROUPS`; код `ACCESS_GROUPS_REQUIRED` не используется | владелец | — |
 
 ## 13. Related documents
 

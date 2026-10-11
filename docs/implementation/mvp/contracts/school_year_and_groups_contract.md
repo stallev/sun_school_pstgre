@@ -30,7 +30,7 @@
 | `assignTeacher`, `unassignTeacher` | `ADMIN` | AZ-11 |
 | `updateGradeSettings` | `ADMIN` | AZ-10 |
 | `createPupil`, `updatePupil`, `deactivatePupil` | `ADMIN` | AZ-20 |
-| `recordPaperConsent`, `revokeConsent` | `ADMIN` | AZ-22 |
+| `recordPaperConsent`, `revokeConsent`, `extendLegacyDeadline` | `ADMIN` | AZ-22 |
 | `enrollPupil`, `unenrollPupil` | `ADMIN`, `TEACHER` (своя группа) | AZ-23 |
 | `transferPupil` | `ADMIN` | AZ-23 (Q-03 матрицы) |
 
@@ -47,7 +47,8 @@
 | `updateGradeSettings` | `gradeId`, `yearId`, `useVerses`, `useTest`, `useNotebook`, `useSinging`, `maxVersesPerLesson`, `labels`, `weights`, `recitationDaysN` | `maxVersesPerLesson` 0–10; веса — целые ≥ 0; год не `CLOSED` |
 | `createPupil`, `updatePupil` | `lastName`, `firstName`, `middleName`, `birthDate`, `isActive` | как РГ-3; дата рождения в прошлом |
 | `recordPaperConsent` | `pupilId`, `signerName`, `signedOn`, `textVersion`, `storageNote` | подписант и дата обязательны; версия текста существует |
-| `revokeConsent` | `consentId`, `reason` | согласие `ACTIVE` |
+| `revokeConsent` | `consentId`, `reason` | согласие `ACTIVE` или `LEGACY_PENDING` |
+| `extendLegacyDeadline` | `newDeadlineOn`, `reason` | `newDeadlineOn` позже текущего срока; причина обязательна ([ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md)) |
 | `enrollPupil` | `pupilId`, `gradeId`, `startsOn` | см. §5.9 |
 | `unenrollPupil` | `pupilId`, `endsOn` | активное зачисление есть |
 | `transferPupil` | `pupilId`, `toGradeId`, `onDate` | см. §5.11 |
@@ -86,7 +87,7 @@
 
 ### 5.7 `recordPaperConsent`
 
-- Создаётся `child_data_consent` (`channel = PAPER`, `ACTIVE`, `marked_by`). Журнал `school.consent_recorded` (ссылка на ребёнка и согласие; подписант — **не** в журнале текстом, он хранится в записи согласия).
+- Создаётся `child_data_consent` (`channel = PAPER`, `ACTIVE`, `marked_by`); если у ребёнка есть `LEGACY_PENDING` ([ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md)) — он переводится в `ACTIVE`. Журнал `school.consent_recorded` (ссылка на ребёнка и согласие; подписант — **не** в журнале текстом, он хранится в записи согласия).
 
 ### 5.8 `revokeConsent`
 
@@ -94,8 +95,12 @@
 
 ### 5.9 `enrollPupil`
 
-- **Предусловия:** есть действующее согласие (R-5, INV-08); нет активного зачисления (R-2, INV-07); группа активна; год `DRAFT`/`ACTIVE`; teacher — группа своя (AZ-P6).
+- **Предусловия:** есть действующее согласие: `ACTIVE`, либо `LEGACY_PENDING` у перенесённого ребёнка при `today ≤ legacy_consent_deadline_on` (R-5, INV-08, ADR-011); нет активного зачисления (R-2, INV-07); группа активна; год `DRAFT`/`ACTIVE`; teacher — группа своя (AZ-P6).
 - **Транзакция:** блокировка строки ученика; проверка; создание `enrollment` (`ends_on = NULL`). Журнал `school.pupil_enrolled`.
+
+### 5.9a `extendLegacyDeadline`
+
+- Только `ADMIN`: переносит общий срок `app_setting.legacy_consent_deadline_on` на более позднюю дату; причина обязательна. Журнал `school.legacy_deadline_extended`. После истечения срока и без продления зачисления `LEGACY_PENDING` не создаются; существующие остаются до решения admin (согласие / запрос на удаление). Автоудаления нет (INV-25).
 
 ### 5.10 `unenrollPupil`
 
@@ -114,7 +119,7 @@
 | Год не в нужном статусе | `activateYear` не из `DRAFT`, `closeYear` не из `ACTIVE` | `SCHOOL_YEAR_STATUS_INVALID` | `admin.year.status_invalid` | без изменений |
 | Язык недоступен | `EN` без `READY` перевода | `SCHOOL_LANGUAGE_UNAVAILABLE` | `admin.group.language_unavailable` | отказ |
 | Назначение не `TEACHER` | у пользователя нет роли | `SCHOOL_NOT_A_TEACHER` | `admin.group.not_teacher` | отказ |
-| Нет согласия | зачисление без `ACTIVE` согласия | `SCHOOL_CONSENT_REQUIRED` | `admin.people.consent_required` | не зачислен |
+| Нет согласия | зачисление без `ACTIVE`; `LEGACY_PENDING` после срока или у не-перенесённого | `SCHOOL_CONSENT_REQUIRED` | `admin.people.consent_required` | не зачислен |
 | Второе зачисление | есть активное | `SCHOOL_ALREADY_ENROLLED` | `admin.people.already_enrolled` | предложить перевод |
 | Нет активного зачисления | `unenroll`/`transfer` без него | `SCHOOL_NOT_ENROLLED` | `admin.people.not_enrolled` | без изменений |
 | Закрытый год | teacher изменяет данные закрытого года | `FORBIDDEN` | `common.errors.year_closed` | AZ-P5 |

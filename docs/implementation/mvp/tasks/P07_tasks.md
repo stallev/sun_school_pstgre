@@ -18,16 +18,16 @@
 
 - [ ] P06 DoD выполнен
 - [ ] Владелец предоставил экспорт старых данных (не в репозитории); формат известен
-- [ ] Q-01 (модель переходного согласия), Q-03 (сдвиг оценок за стихи) подтверждены владельцем
+- [ ] Q-01 (модель переходного согласия — ADR-011) и Q-03 (сдвиг оценок за стихи) приняты 2026-10-11; юридическая проверка переходного периода (ADR-011 Q-01) — до prod
 - [ ] Документы W12 (`migration_runbook`, `vercel_deploy_guide`, `neon_prisma_migrations_guide`) существуют или создаются перед CU3/CU7
 - [ ] Приложения Google/Telegram prod и домен настроены (ручной шаг владельца)
 
 ## Commit plan
 
-### P07-CU0 — docs(prds): add transitional consent ADR and contract amendments · Review: diff-only · Commit: auto
 
-- [ ] P07-T0 · T2 · Spec: [спец. СО-5, §13](../../../my_specs/sunday_school_data_analytics_spec.md) · Contract: [school_year §5.7–§5.9](../contracts/school_year_and_groups_contract.md)
-      Files: `docs/prds/07_governance/adr_010_transitional_child_consent.md`, правки `database_schema_v1.md` §4–§5.3, `lifecycle_models.md` §5.5, контракт W8-04, индекс
+
+- [x] P07-T0 · T2 · Spec: [спец. СО-5, §13](../../../my_specs/sunday_school_data_analytics_spec.md) · Contract: [school_year §5.7–§5.9](../contracts/school_year_and_groups_contract.md)
+      Files: `docs/prds/07_governance/adr_011_transitional_child_consent.md`, правки `database_schema_v1.md` §4–§5.3, `lifecycle_models.md` §5.5, контракт W8-04, индекс
       Acceptance: ADR с решением (статус `LEGACY_PENDING`, срок, правила зачисления/окончания периода), Paths, Affected docs → DoR §2.3.6
       Paths: n/a — docs-only
 
@@ -35,7 +35,7 @@
 
 ### P07-CU1 — feat(school): add legacy pending consent status and deadline handling · Review: reviewer · Commit: auto
 
-- [ ] P07-T1 · T3 · ADR: [adr_010](../../../prds/07_governance/adr_010_transitional_child_consent.md) (создаётся в CU0) · Invariants: INV-08
+- [ ] P07-T1 · T3 · ADR: [adr_011](../../../prds/07_governance/adr_011_transitional_child_consent.md) (создан 2026-10-11) · Invariants: INV-08
       Files: `packages/db/prisma/migrations/*`, `packages/domain/src/school/can-enroll.ts`, `apps/web/src/data/school/{list-legacy-pending,resolve-legacy-consent}.ts`
       Acceptance: `LEGACY_PENDING` допускает зачисление только для перенесённых; по окончании срока — решение admin (подтвердить бумажным согласием / продлить / создать запрос на удаление); журнал → тесты
       Paths: H · N [срок истёк, согласие отсутствует] · S [AZ-20, AZ-22: только admin; teacher видит «есть/нет»]

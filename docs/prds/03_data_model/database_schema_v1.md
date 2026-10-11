@@ -44,7 +44,7 @@
 | `SCORE_SOURCE` | `MANUAL`, `VOICE` | `homework_verse_score.source` |
 | `GRADE_EVENT_TYPE` | `LESSON`, `TRIP`, `CANCELLATION` | `grade_event.type` |
 | `CONSENT_CHANNEL` | `ELECTRONIC`, `PAPER` | `child_data_consent.channel` |
-| `CONSENT_STATUS` | `ACTIVE`, `REVOKED` | согласия |
+| `CONSENT_STATUS` | `ACTIVE`, `REVOKED`, `LEGACY_PENDING` | согласия; `LEGACY_PENDING` — перенесённый ребёнок, переходный период ([ADR-011](../07_governance/adr_011_transitional_child_consent.md)) |
 | `DELETION_REQUEST_TYPE` | `ACCOUNT`, `CHILD_DATA` | `deletion_request.type` |
 | `DELETION_REQUEST_STATUS` | `NEW`, `IN_PROGRESS`, `DONE`, `REJECTED`, `CANCELLED` | `deletion_request.status` |
 | `BIBLE_TRANSLATION_STATUS` | `NO_DATA`, `LOADING`, `READY` | `bible_translation.status` |
@@ -84,7 +84,7 @@
 |---------|---------|-------------|
 | `pupil` | `organization_id`, `last_name`, `first_name`, `middle_name · null`, `birth_date · null`, `photo_ref · null`, `is_active bool`, `family_id · null` (**post-MVP**, FK) | в MVP `family_id = NULL` |
 | `enrollment` | `pupil_id`, `grade_id`, `academic_year_id`, `starts_on date`, `ends_on date · null` | не более одного активного (`ends_on IS NULL`) на `pupil_id`; зачисление — только при действующем `child_data_consent` (СО-4, проверка в приложении) |
-| `child_data_consent` | `pupil_id`, `guardian_adult_id · null` (**post-MVP** FK `family_adult`), `signer_name text · null` (MVP: подписант текстом), `channel CONSENT_CHANNEL`, `text_version`, `signed_on date`, `paper_storage_note text · null`, `marked_by user_id`, `status CONSENT_STATUS`, `revoked_at · null` | запись создаёт admin (СО-3) |
+| `child_data_consent` | `pupil_id`, `guardian_adult_id · null` (**post-MVP** FK `family_adult`), `signer_name text · null` (MVP: подписант текстом), `channel CONSENT_CHANNEL`, `text_version`, `signed_on date · null` (NULL только при `LEGACY_PENDING`; CHECK), `paper_storage_note text · null`, `marked_by user_id`, `status CONSENT_STATUS`, `revoked_at · null` | запись создаёт admin (СО-3) |
 
 ### 5.4 Библия и золотые стихи
 
@@ -117,7 +117,7 @@
 | `grade_event` | `grade_id`, `event_date`, `type GRADE_EVENT_TYPE`, `title`, `description · null`, `lesson_id · null` | `lesson_id` только для типа `LESSON` |
 | `audit_log` | `occurred_at`, `actor_user_id · null`, `source` (`USER` / `SYSTEM`), `entity_type`, `entity_id`, `action`, `old_value jsonb · null`, `new_value jsonb · null`, `reason · null`, `request_id text · null` | **только добавление**; ссылки, не имена; поля значений очищаются только при УД-7 |
 | `deletion_request` | `type`, `subject_user_id · null`, `subject_pupil_id · null`, `requested_by`, `requested_at`, `reason · null`, `status`, `due_on date`, `taken_by · null`, `resolved_by · null`, `resolved_at · null`, `reject_reason · null`, `summary jsonb · null` | не более одного открытого на субъект; субъект — ровно один из двух |
-| `app_setting` | `key text`, `value jsonb` | `UNIQUE (key)`; ключи: `ui_locale`, `school_timezone` (IANA, [ADR-004](../07_governance/adr_004_timezone_scheduling_model.md); до выбора — `UTC`), `features.achievements`, `features.parents`, `features.voice` ([ADR-005](../07_governance/adr_005_schema_complete_post_mvp_tables.md)), `consent_text_version` |
+| `app_setting` | `key text`, `value jsonb` | `UNIQUE (key)`; ключи: `ui_locale`, `school_timezone` (IANA, [ADR-004](../07_governance/adr_004_timezone_scheduling_model.md); до выбора — `UTC`), `features.achievements`, `features.parents`, `features.voice` ([ADR-005](../07_governance/adr_005_schema_complete_post_mvp_tables.md)), `consent_text_version`, `legacy_consent_deadline_on` (`date`, появляется при миграции; [ADR-011](../07_governance/adr_011_transitional_child_consent.md)) |
 
 ## 6. Таблицы post-MVP (создаются сразу, без UI)
 
@@ -145,7 +145,7 @@
 | R-2 | У ученика не более одного активного зачисления | §3.8 | partial unique index `(pupil_id) where ends_on is null` |
 | R-3 | Урок создаётся только в активном году, дата — в границах года | §3.11 | транзакция в приложении + `CHECK` по возможности |
 | R-4 | Ведущий учитель назначен на группу в год урока | УЧ-1 | приложение, `teacher_assignment` |
-| R-5 | Зачисление требует действующего согласия по ребёнку | СО-4 | приложение |
+| R-5 | Зачисление требует действующего согласия по ребёнку: `ACTIVE`, либо `LEGACY_PENDING` для перенесённого до `app_setting.legacy_consent_deadline_on` ([ADR-011](../07_governance/adr_011_transitional_child_consent.md)) | СО-4, СО-5 | приложение |
 | R-6 | `brick_ledger` и `audit_log` — только добавление; в БД нет `UPDATE`/`DELETE` из приложения, кроме УД-7 | БП-8, БП-11 | роль БД / репозиторий без update |
 | R-7 | Остаток кирпичиков = набрано − выдано; выдача не превышает остаток | БП-11 | транзакция с блокировкой строк ученика+года |
 | R-8 | Не снять роль `ADMIN` у последнего admin и у себя | §2.4 | транзакция с `SELECT … FOR UPDATE` |

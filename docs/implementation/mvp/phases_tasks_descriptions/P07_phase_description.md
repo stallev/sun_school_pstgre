@@ -5,7 +5,7 @@
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-13  
-**Зависит от:** [`P06_phase_description.md`](./P06_phase_description.md) (DoD), [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) §13 (миграция), §15 (окружения), СО-5, `migration_runbook` (W12-02, *planned*), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md) §3.4, [`adr_009`](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md) §3.2, [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D9)  
+**Зависит от:** [`P06_phase_description.md`](./P06_phase_description.md) (DoD), [`adr_011_transitional_child_consent.md`](../../../prds/07_governance/adr_011_transitional_child_consent.md), [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) §13 (миграция), §15 (окружения), СО-5, `migration_runbook` (W12-02, *planned*), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md) §3.4, [`adr_009`](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md) §3.2, [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D9)  
 **Связанные документы:** [`P07_tasks.md`](../tasks/P07_tasks.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)
 
 ---
@@ -168,10 +168,10 @@ flowchart TD
 
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
-| Q-01 | Как смоделировать переходный период согласий (СО-5) в схеме | ADR (CU0): статус `LEGACY_PENDING` у `child_data_consent`, срок 60 дней в `app_setting`, зачисление допускает `LEGACY_PENDING` только для перенесённых | CU1 |
+| Q-01 | ✔ **Решено 2026-10-11.** Модель переходного периода согласий (СО-5) | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md): статус `LEGACY_PENDING`, общий срок 60 дней в `app_setting.legacy_consent_deadline_on`, зачисление допускает его только для перенесённых до срока; решение по истечении — admin | — |
 | Q-02 | Где хранить карту «старый id → новый» | Файл в `.local/` (вне git) + таблица не вводится | CU3 |
-| Q-03 | Оценки за стихи: сопоставление поле i урока N → стих i урока N−1 (12.2 п. 15) | Принять; подтверждение владельца до prod-импорта | CU2 |
-| Q-04 | Баллы за старые выдачи достижений задним числом | Не начислять (спец. §13) | CU2 |
+| Q-03 | ✔ **Решено 2026-10-11.** Оценки за стихи: поле i урока N → стих i урока N−1 (12.2 п. 15) | Принято владельцем; сверка на выборке при репетиции импорта | — |
+| Q-04 | Баллы за старые выдачи достижений задним числом | Не начислять (спец. §13) | — |
 | Q-05 | Окно обслуживания при cut-over | Короткое, вечером; старое приложение read-only | CU7 |
 
 ---

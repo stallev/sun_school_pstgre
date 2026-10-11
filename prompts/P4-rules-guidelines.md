@@ -24,7 +24,8 @@ Platform Architect.
    - Map rules ↔ guidelines
 5. Update `AGENTS.md` — cursor rules section
 6. Review `docs/reference/pulse_project_reference.md` — adapt «Что не копировать слепо» to the project domain
-7. **Do NOT** activate T2 UI rules yet
+7. **Адаптировать auth-слой под ADR-003:** правило `auth-security.mdc` и guideline [`ai_auth_implementation_guide.md`](../docs/guidelines/auth/ai_auth_implementation_guide.md) описывают Credentials (email + пароль, `passwordHash`) — заменить на OIDC Google + Telegram, JWT без адаптера, привязку без `@auth/prisma-adapter`; источник — [`auth_runtime_spec.md`](../docs/prds/05_runtime/auth_runtime_spec.md), [`telegram_authjs_oidc_portable_guide.md`](../docs/my_specs/telegram_authjs_oidc_portable_guide.md). Credentials и `passwordHash` из правил и гайдов удалить
+8. **Do NOT** activate T2 UI rules yet
 
 ## Forbidden
 - T2 rules before P6
@@ -36,6 +37,7 @@ Platform Architect.
 - [ ] docs/guidelines/README indexes every guide file
 - [ ] Each T1 rule references Context7 where applicable
 - [ ] pulse_project_reference.md complete
+- [ ] `auth-security.mdc` и `ai_auth_implementation_guide.md` без Credentials / `passwordHash` / `@auth/prisma-adapter` (ADR-003)
 
 ## Next
 → Continue P3 waves if incomplete, else [`P5-nextjs-scaffold.md`](P5-nextjs-scaffold.md) after G3

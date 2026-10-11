@@ -77,7 +77,7 @@ stateDiagram-v2
 |--------|----------|-------|-------------|-------------|
 | `∅ → REGISTRATION` | `firstLogin` | `USER` | вход через Google или Telegram; провайдер подтвердил личность | создан `app_user`, `login_identity` |
 | `REGISTRATION → REQUEST_PENDING` | `submitRegistration` | `USER` | ФИО валидно (РГ-3), отмечено согласие на ПД (РГ-2) | созданы `privacy_consent`, `access_request` (`PENDING`) |
-| `REQUEST_PENDING → ACTIVE` | `approveRequest` | `ADMIN` | выбрана ≥ 1 роль из `ADMIN`, `TEACHER`; для `TEACHER` — группы года | записаны `user_role`, `teacher_assignment`; заявка `APPROVED` |
+| `REQUEST_PENDING → ACTIVE` | `approveRequest` | `ADMIN` | выбрана ≥ 1 роль из `ADMIN`, `TEACHER`; для `TEACHER` группы года желательны (без них — предупреждение `NO_GROUPS`, решено 2026-10-11) | записаны `user_role`, `teacher_assignment` (если выбраны); заявка `APPROVED` |
 | `REQUEST_PENDING → REJECTED` | `rejectRequest` | `ADMIN` | причина обязательна | заявка `REJECTED` |
 | `REJECTED → REQUEST_PENDING` | `resubmitRegistration` | `USER` | ограничений нет (решение 2026-10-10) | новая `access_request` |
 | `ACTIVE → DISABLED` | `disableAccess` | `ADMIN` | не последний `ADMIN`; не себя при роли `ADMIN` | вход блокируется |
@@ -146,13 +146,18 @@ stateDiagram-v2
 ```mermaid
 stateDiagram-v2
   [*] --> ACTIVE: recordPaperConsent
+  [*] --> LEGACY_PENDING: importLegacyPupil
+  LEGACY_PENDING --> ACTIVE: recordPaperConsent
+  LEGACY_PENDING --> REVOKED: revokeConsent
   ACTIVE --> REVOKED: revokeConsent
 ```
 
 | Из → в | Use-case | Актор | Предусловия | Последствия |
 |--------|----------|-------|-------------|-------------|
+| `∅ → LEGACY_PENDING` | `importLegacyPupil` | `SYSTEM` (миграция) | ребёнок перенесён из действующего приложения без согласия ([ADR-011](../07_governance/adr_011_transitional_child_consent.md)) | зачисление сохранено; работа не блокируется; общий срок `legacy_consent_deadline_on` |
 | `∅ → ACTIVE` | `recordPaperConsent` | `ADMIN` | указаны подписант (текстом), дата, версия текста, место хранения | ребёнка можно зачислить |
-| `ACTIVE → REVOKED` | `revokeConsent` | `ADMIN` (по обращению) | если действующих согласий не остаётся — admin создаёт запрос на удаление данных ребёнка (СО-6) | зачисление блокируется |
+| `LEGACY_PENDING → ACTIVE` | `recordPaperConsent` | `ADMIN` | те же поля | перенесённый ребёнок получает действующее согласие |
+| `ACTIVE` / `LEGACY_PENDING` → `REVOKED` | `revokeConsent` | `ADMIN` (по обращению) | если действующих согласий не остаётся — admin создаёт запрос на удаление данных ребёнка (СО-6) | зачисление блокируется |
 
 **Invalid:** `REVOKED → ACTIVE` (новое согласие — новая запись).
 
