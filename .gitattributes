@@ -1,0 +1,2 @@
+# Shell hooks must keep LF line endings on every platform (Git for Windows runs them with sh).
+.husky/* text eol=lf
