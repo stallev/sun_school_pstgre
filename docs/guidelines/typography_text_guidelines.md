@@ -77,4 +77,4 @@ From design system — **mobile-first** (base = mobile, `md:`/`lg:` = desktop):
 
 All strings from **`@/lib/messages`** — not hardcoded in typography components except dev placeholders.
 
-**Reference:** Pulse snapshot [`typography_text_guidelines.md`](../examples/pulse/docs/guidelines/typography_text_guidelines.md) — Calm Editorial → Warm Forest.
+**Reference:** Pulse snapshot [`typography_text_guidelines.md`](../examples/pulse/docs/guidelines/typography_text_guidelines.md) — Calm Editorial → Slate Cobalt.

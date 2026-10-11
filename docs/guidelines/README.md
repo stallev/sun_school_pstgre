@@ -1,12 +1,12 @@
-﻿# Guidelines
+# Guidelines
 
-Нормы реализации — адаптированы из Pulse reference (fitapp) под Vercel, **Next.js 16.4** и design system проекта (Warm Forest).
+Нормы реализации — адаптированы из Pulse reference (fitapp) под Vercel, **Next.js 16.4** и design system проекта (Slate Cobalt).
 
 **Methodology (канон):** [`docs/meta/ai_first_project_methodology.md`](../meta/ai_first_project_methodology.md) — §2.7 Guidelines, §2.4 Cursor Rules.
 
 ## Приоритет источников (для агентов)
 
-Полный канонический список — [`.cursor/rules/tiers/t0-always/project-context.template.mdc`](../../.cursor/rules/tiers/t0-always/project-context.template.mdc) § Source-of-truth order (после bootstrap: `project-context.mdc`). Не дублировать список здесь; кратко: Cursor Rules → … → Guidelines (`guidelines/`) → prototype. Над Pulse snapshot всегда выигрывают корневые Rules **и** Guidelines.
+Полный канонический список — [`.cursor/rules/project-context.mdc`](../../.cursor/rules/project-context.mdc) § Source-of-truth order. Не дублировать список здесь; кратко: Cursor Rules → … → Guidelines (`guidelines/`) → prototype. Над Pulse snapshot всегда выигрывают корневые Rules **и** Guidelines.
 
 См. [`docs/reference/pulse_project_reference.md`](../reference/pulse_project_reference.md).
 
@@ -24,19 +24,21 @@
 | Typography | [`typography_text_guidelines.md`](typography_text_guidelines.md) |
 | Visual identity (canon) | [`../design/visual_identity_contract.md`](../design/visual_identity_contract.md) |
 | **UI component catalog (Design Lab)** | [`../implementation/mvp/specs/design_system_lab_spec.md`](../implementation/mvp/specs/design_system_lab_spec.md) — `/design-system` |
-| UX interaction & style (canon) | [`../design/interaction_design_contract.md`](../design/interaction_design_contract.md), [`ui_states_contract.md`](../design/ui_states_contract.md), [`styleguide.md`](../design/styleguide.md) |
-| Accessibility (canon) | [`../design/accessibility_requirements.md`](../design/accessibility_requirements.md) |
+| UX states, forms, navigation (canon) | [`../design/ui_states_contract.md`](../design/ui_states_contract.md), [`../design/forms_and_validation_ux.md`](../design/forms_and_validation_ux.md), [`../design/responsive_navigation_contract.md`](../design/responsive_navigation_contract.md) |
+| Accessibility | rule `ui-semantics-a11y` (T2, P6) + [`react/ai_semantics_a11y_guidelines.md`](react/ai_semantics_a11y_guidelines.md); профиль D8 |
 | Security (XSS/CSRF/CSP) | [`security/README.md`](security/README.md) |
 | Testing (Vitest / Playwright) | [`testing/ai_testing_guidelines.md`](testing/ai_testing_guidelines.md) — объём по профилю качества D4 / D5 / D7 |
 | **General deep dives** | [`../general/`](../general/) |
 | **UI/UX agent ops** | [`../general/ai_agent_ui_ux_guideline.md`](../general/ai_agent_ui_ux_guideline.md) |
-| **Incidents (mitigation patterns)** | [`../incidents/`](../incidents/) — iOS Safari Server Actions |
+| **Incidents (mitigation patterns)** | правило `ios-safari-mutation-transport`; инциденты Pulse — `docs/examples/pulse/` (проектный `docs/incidents/` пока пуст) |
 
 ## Cursor rules (`.cursor/rules/`)
 
 | Rule | Scope |
 |------|--------|
 | `project-context.mdc` | Always applied — stack, invariants |
+
+> Состав активных правил и tiers — в манифесте [`.cursor/rules/README.md`](../../.cursor/rules/README.md); таблица ниже — только соответствие правилу области. **T0 + T1 активны** (с P4); **T2 (UI) активируются в P6** — до этого строки `ui-*`, `react-*`, `admin-forms-layout`, `patterns-tables-dnd` справочные.
 | `model-routing.mdc` | Always applied — task tier T0–T3, субагенты, гигиена токенов; канон: [`../meta/ai_agent_model_routing.md`](../meta/ai_agent_model_routing.md) |
 | `product-docs-alignment.mdc` | Always applied — doc sync on behavior change |
 | `typescript-monorepo-types.mdc` | Always applied — monorepo types |
@@ -51,7 +53,7 @@
 | `ui-animation-performance.mdc` | GPU animations, layout thrashing, will-change |
 | `nextjs-vercel-app-router.mdc` | Next.js **16.4** + Vercel + **`proxy.ts`** + Instant Navigations |
 | `app-router-streaming-loading.mdc` | Suspense, `loading.tsx`, page performance (§4–§18) |
-| `s3-file-asset-uploads.mdc` | FileAsset + AWS S3 |
+| `s3-file-asset-uploads.mdc` | FileAsset + AWS S3 — **не активно** (модуль `s3_uploads` выключен профилем) |
 | `admin-forms-layout.mdc` | Admin forms layout |
 | `patterns-tables-dnd.mdc` | Responsive tables |
 | `react-ui-components.mdc` | RSC/client, components |
@@ -69,6 +71,8 @@
 | `ui-messages-and-copy.mdc` | `@/lib/messages` |
 | `ui-messages-bundle-splitting.mdc` | Срезы словаря по типу страницы и локали |
 | `ui-icons-lucide.mdc` | lucide-react icons |
+| `testing.mdc` | Vitest по профилю D4 / D5 / D7 (lean: unit в `domain`, policy S-путей, без e2e) |
+| `dependency-pinning.mdc` | Exact versions, `.npmrc`, lockfile, `npm run deps:check` |
 | `psi-lab-testing.mdc` | Requestable — lab PSI on deployed origin (`npm run psi:lab`) |
 
 ## Reference (Pulse snapshot)

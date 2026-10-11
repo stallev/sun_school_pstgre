@@ -1,4 +1,4 @@
-# React guidelines — Pulse
+# React guidelines — Sunday School
 
 Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **shadcn/ui**, **sonner**.
 
@@ -15,8 +15,8 @@ Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwi
 |------|----------|
 | Framework | `next` **16.4** (pinned), `react` / `react-dom` 19.x |
 | Styling | `tailwindcss` 4.x, Slate Cobalt tokens |
-| UI | shadcn/ui, `lucide-react`, `next-themes`, `sonner` |
-| Dates | `date-fns`; timezone from **`TrainerProfile.timezone`** |
+| UI | shadcn/ui (Base UI), `lucide-react`, `sonner` (no dark mode: `next-themes` is not used — UX-03) |
+| Dates | `date-fns`; time zone = **school time zone** ([ADR-004](../../prds/07_governance/adr_004_timezone_scheduling_model.md)) |
 
 ---
 
@@ -26,7 +26,7 @@ Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwi
 |----------|--------|
 | [copy_and_messages.md](./copy_and_messages.md) | `@/lib/messages`, i18n-ready copy, dictionary slices |
 | [ai_form_handling_pattern.md](./ai_form_handling_pattern.md) | Forms, Server Actions, busy UI §4, iOS Safari §7 |
-| [ai_optimistic_ui_pattern.md](./ai_optimistic_ui_pattern.md) | Wishlist, service toggle |
+| [ai_optimistic_ui_pattern.md](./ai_optimistic_ui_pattern.md) | Optimistic toggles |
 | [ai_react_hooks_guidelines.md](./ai_react_hooks_guidelines.md) | Hooks for mutations/data, memoization, concurrent/advanced hooks |
 | [ai_react_state_management_guidelines.md](./ai_react_state_management_guidelines.md) | useReducer/useContext/Zustand/Redux Toolkit — when to use which, SSR safety |
 | [ai_react_utilities_guidelines.md](./ai_react_utilities_guidelines.md) | Pure helpers, no magic strings |
@@ -37,7 +37,7 @@ Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwi
 | [ai_responsive_table_guidelines.md](./ai_responsive_table_guidelines.md) | Admin tables, mobile cards |
 | [TypeScript monorepo](../typescript/ai_typescript_monorepo_guidelines.md) | Cross-package types |
 
-**UX contracts (product canon):** [`interaction_design_contract.md`](../../design/interaction_design_contract.md), [`ui_states_contract.md`](../../design/ui_states_contract.md), [`forms_and_validation_ux.md`](../../design/forms_and_validation_ux.md), [`content_and_microcopy_contract.md`](../../design/content_and_microcopy_contract.md) — enforced via Cursor Rules above.
+**UX contracts (product canon):** [`ui_states_contract.md`](../../design/ui_states_contract.md), [`forms_and_validation_ux.md`](../../design/forms_and_validation_ux.md), [`responsive_navigation_contract.md`](../../design/responsive_navigation_contract.md), [`visual_identity_contract.md`](../../design/visual_identity_contract.md) — enforced via Cursor Rules below (T2 rules are activated in P6).
 
 ---
 
@@ -58,8 +58,7 @@ Patterns for **Next.js 16.4 App Router**, **React 19**, **TypeScript**, **Tailwi
 
 ## User flow references
 
-- Client: [`client_flow.md`](../../prds/01_product_scope/user_flows/users_mvp/client_flow.md)
-- Trainer: [`trainer_flow.md`](../../prds/01_product_scope/user_flows/users_mvp/trainer_flow.md)
+- Teacher: [`teacher_flow.md`](../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md)
 - Admin: [`admin_flow.md`](../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md)
 
 ---

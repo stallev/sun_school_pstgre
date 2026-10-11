@@ -6,7 +6,9 @@
 **Runtime:** [ADR-002 template](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md)  
 **Cursor rule:** **app-router-streaming-loading**
 
-> **Scope:** `apps/web/src/app/**` — loading UX, streaming shell, and page-level performance. Cross-request data cache: **`'use cache'`** (Next.js 16) — see §8; tag invalidation — [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`) (после W5).
+> **Примеры:** сущности и теги в кодовых блоках (`trainers:catalog`, `wishlist:*`, bookings) — из Pulse и показывают **паттерн**; имена сущностей и тегов проекта — из контрактов и реестра тегов в коде.
+>
+> **Scope:** `apps/web/src/app/**` — loading UX, streaming shell, and page-level performance. Cross-request data cache: **`'use cache'`** (Next.js 16) — see §8; tag invalidation — [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде: `apps/web/src/lib/cache-tags.ts`, создаётся в P5).
 
 Verify against Context7 `/vercel/next.js` and [Loading UI and Streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming).
 
@@ -548,7 +550,7 @@ Colocate role- or domain-specific cached loaders in `apps/web/src/lib/**` or `sr
 
 ### `'use cache'` — cross-request cache (Next.js 16)
 
-Colocate cached read functions in `src/data/**` with `import 'server-only'`. Tag names **must** match [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`).
+Colocate cached read functions in `src/data/**` with `import 'server-only'`. Tag names **must** match [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде: `apps/web/src/lib/cache-tags.ts`).
 
 ```tsx
 import 'server-only'
@@ -602,7 +604,7 @@ export async function approveTrainerAction(trainerId: string) {
 ### `'use cache'` rules
 
 - **No `unstable_cache` in new code** — migrate existing call sites to `'use cache'` when touched.
-- **Tags** — `cacheTag(...)` inside the function; strings **must** match the tag registry in `cache_revalidation_policy.md`.
+- **Tags** — `cacheTag(...)` inside the function; strings **must** come from the tag registry in code (`apps/web/src/lib/cache-tags.ts`) — no inline tag strings.
 - **Lifetime** — `cacheLife('minutes' | 'hours' | …)` or `cacheLife({ revalidate: N })`; deploy still busts caches — **`updateTag` after mutations is primary**.
 - **Cache keys** — automatic from function id + serializable arguments (no manual `keyParts`).
 - **Never cache authorization** — verify session on every read path; cache is a performance layer only.

@@ -74,7 +74,7 @@ Spec: [`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system
 
 Primitives are **Base UI**. Cursor rule: **ui-design-system-shadcn**.
 
-1. `shadcn init -b base` once; `components.json` `"style": "base-vega"`; dependency `@base-ui/react`
+1. `shadcn init -b base` once; `components.json` `"style"` — value from the init result (`base-vega` was **not verified** against current shadcn docs; decided and recorded in P6, see [`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system_lab_spec.md)); dependency `@base-ui/react`
 2. Search shadcn MCP / registry before custom primitives
 3. Install to `components/ui/`
 4. Tokenize with Slate Cobalt CSS variables in `globals.css`
@@ -145,6 +145,6 @@ Cursor rules: **react-ui-components**, **app-router-streaming-loading**.
 - Visible focus rings (`focus-visible:ring-ring`)
 - `aria-label` on icon-only buttons; `aria-hidden` on decorative icons
 - `aria-invalid` + `FieldError` on forms; `aria-busy` on mutations (**ui-mutation-pending**)
-- Contrast AA in light and dark; touch targets = 44px (**ui-mobile-first**)
+- Contrast AA (light theme only — no dark mode, UX-03); touch targets = 44px (**ui-mobile-first**)
 
 **Reference:** Pulse snapshot [`ai_component_guidelines.md`](../../examples/pulse/docs/guidelines/react/ai_component_guidelines.md) §8

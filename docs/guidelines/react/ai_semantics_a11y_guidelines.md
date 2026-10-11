@@ -3,7 +3,7 @@
 Norms for **semantic HTML** and **WCAG 2.1 AA** in `apps/web`.  
 **Cursor rule:** **ui-semantics-a11y**  
 **Deep dive:** [`docs/general/03-accessibility.md`](../../general/03-accessibility.md)  
-**Design system checklist:** [`visual_identity_contract.md`](../../design/visual_identity_contract.md), [`accessibility_requirements.md`](../../design/accessibility_requirements.md)
+**Design system checklist:** [`visual_identity_contract.md`](../../design/visual_identity_contract.md), [`ui_states_contract.md`](../../design/ui_states_contract.md)
 
 ---
 
@@ -174,7 +174,7 @@ Before finishing a UI task:
 | [`typography_text_guidelines.md`](../typography_text_guidelines.md) | Heading hierarchy, atoms |
 | [`ai_component_guidelines.md`](./ai_component_guidelines.md) | Component structure |
 | [`ai_form_handling_pattern.md`](./ai_form_handling_pattern.md) | Form a11y |
-| [`accessibility_requirements.md`](../../design/accessibility_requirements.md) | Product WCAG canon |
+| [`ui_states_contract.md`](../../design/ui_states_contract.md) | States and focus behavior (product canon; profile D8 → rule `ui-semantics-a11y`) |
 | [`docs/general/03-accessibility.md`](../../general/03-accessibility.md) | Deep dive — focus trap, keyboard patterns |
 | [`ai_browser_rendering_performance.md`](./ai_browser_rendering_performance.md) | Motion / prefers-reduced-motion |
 | [`visual_identity_contract.md`](../../design/visual_identity_contract.md) | Contrast tokens |
