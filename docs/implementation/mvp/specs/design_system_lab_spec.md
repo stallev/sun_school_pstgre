@@ -46,7 +46,7 @@
 | Файлы | `apps/web/src/app/(dev)/design-system/layout.tsx`, `page.tsx` (группа `(dev)` не входит в URL) |
 | Оболочка | **нет**: свой минимальный layout; `(app)`-оболочка не оборачивает |
 | Доступ | только `APP_ENV=dev`; иначе `notFound()` (в prod и в preview без `dev`) |
-| `proxy.ts` | в `APP_ENV=dev` маршрут разрешён без сессии (allowlist по значению env); в prod — как любой неизвестный маршрут (404) |
+| `proxy.ts` | в `APP_ENV=dev` маршрут разрешён без сессии (allowlist по значению env); в prod — как любой неизвестный маршрут (404). **Реализация P6:** `canVisitRoutePrefix` — заглушка «allow all» до P01-CU5, поэтому allowlist `/design-system` входит в таблицу статус × маршрут P01-CU5; доступ уже закрыт guard-ом `layout.tsx` (`process.env.APP_ENV !== "dev"` → `notFound()`; значение фиксируется при сборке, статическая пре-рендер-страница) |
 | SEO | `noindex`, не в sitemap |
 | Canonical routes | строка «dev-only» в [`canonical_routes.md`](../../../design/canonical_routes.md) §4.5 |
 | Бандл | код `components/design-lab/**` не импортируется из продуктовых маршрутов; проверка — lint (§10) |

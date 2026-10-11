@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/dialog";
 
 type ConfirmDialogProps = {
-  /** Trigger element (usually a `Button`); rendered through the Base UI `render` prop. */
-  trigger: ReactNode;
+  /** Trigger element — a `Button`; Base UI renders the trigger as this element. */
+  trigger: ReactElement;
   title: string;
   description: string;
   confirmLabel: string;
@@ -36,7 +36,7 @@ export const ConfirmDialog = ({
   pending = false,
 }: ConfirmDialogProps) => (
   <Dialog>
-    <DialogTrigger render={<span className="inline-flex" />}>{trigger}</DialogTrigger>
+    <DialogTrigger render={trigger} />
     <DialogContent>
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>

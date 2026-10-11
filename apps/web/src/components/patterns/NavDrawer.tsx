@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 
 type NavDrawerProps = {
-  trigger: ReactNode;
+  trigger: ReactElement;
   title: string;
   closeLabel: string;
   children: ReactNode;
@@ -19,7 +19,7 @@ type NavDrawerProps = {
 /** Left drawer menu: `w-[min(20rem,86vw)]` on `surface` with ink scrim (UX-03 §8). */
 export const NavDrawer = ({ trigger, title, closeLabel, children }: NavDrawerProps) => (
   <Sheet>
-    <SheetTrigger render={<span className="inline-flex" />}>{trigger}</SheetTrigger>
+    <SheetTrigger render={trigger} />
     <SheetContent side="left" closeLabel={closeLabel} className="w-[min(20rem,86vw)] bg-surface">
       <SheetHeader>
         <SheetTitle>{title}</SheetTitle>
