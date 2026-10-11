@@ -7,7 +7,7 @@ description: Sunday School project context — stack, reference Pulse, document 
 
 **Sunday School** — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
 Роли: **admin, teacher**.  
-MVP scope: см. [`docs/prds/01_product_scope/mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) (после W1); до этого — [`docs/my_specs/mvp_scope.md`](docs/my_specs/mvp_scope.md).
+MVP scope: см. [`docs/prds/01_product_scope/mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) (канон); входной материал владельца — [`docs/my_specs/mvp_scope.md`](docs/my_specs/mvp_scope.md).
 
 ## Quality profile (read with AGENTS.md)
 
@@ -26,7 +26,7 @@ When Sunday School docs are silent — follow Pulse reference **architecture, fe
 
 ## Stack (baseline — full Pulse stack; optional modules per quality profile §4)
 
-- **Next.js** **16.4** (exact patch pin, no caret) App Router, **TypeScript** — [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md) (после W4: скопировать в `adr_002_….md`)
+- **Next.js** **16.4** (exact patch pin, no caret) App Router, **TypeScript** — [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
 - **Instant Navigations:** `cacheComponents: true` + `partialPrefetching: true`; динамика за `<Suspense>` / `'use cache'`; `export const instant = false` только с задокументированной причиной
 - **Request interception:** **`proxy.ts`** (Next.js 16); `middleware.ts` — только временная миграция
 - **Node.js:** **24.x** — local, CI (`node-version: "24"`), Vercel (`engines.node`: `24.x`)
@@ -39,7 +39,7 @@ When Sunday School docs are silent — follow Pulse reference **architecture, fe
 - **i18n:** ru / en, срезы словарей (`common`, `auth`, `teacher`, `admin`, `analytics`) — модуль `i18n` включён
 - **Monorepo:** `apps/web`, `packages/{domain,policy,db}` (`apps/workers` — post-MVP)
 
-Runtime policy: [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md) (после W4), [ADR-002 template](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md).
+Runtime policy: [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md), [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md).
 
 ## Source-of-truth order when documents conflict
 
@@ -57,7 +57,7 @@ Runtime policy: [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md) 
 
 **Pulse namesakes are not authoritative.** Snapshot files with the *same names* as root rules/guidelines (e.g. `ui-design-system-shadcn.mdc`) are a read-only code/domain reference — they do not override this file.
 
-## Domain invariants (do not break — fill during W3/W4)
+## Domain invariants (do not break — полный список: [`domain_invariants.md`](docs/prds/02_domain_model/domain_invariants.md))
 
 1. **В школе не более одного активного учебного года; уроки создаются только в активном году; закрытый год — только чтение для teacher, admin правит с записью в журнал (БП-6)**
 2. **Журнал изменений и журнал кирпичиков — только добавление; ошибки исправляются компенсирующими записями; удаление — только по запросу на удаление данных (БП-8, БП-11)**
@@ -94,4 +94,4 @@ Task classification T0–T3 (orchestrator) is a different axis from this table: 
 
 ## Repository status
 
-**Текущая фаза:** Bootstrap — P0. Не расширять реализацию без явной фазы и contract.
+**Текущая фаза:** Bootstrap — P3 (документация, lean) завершена; следующая — P4 (активация T1-правил, адаптация auth-слоя), затем P5 (scaffold) и P6 (Design Lab). Реализация — по фазам [`P01…P07`](docs/implementation/mvp/README.md). Не расширять реализацию без явной фазы и contract.

@@ -112,4 +112,4 @@ Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Google + Telegr
 
 ## Repository status
 
-**Текущая фаза:** Bootstrap — P0. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) для статуса документации.
+**Текущая фаза:** Bootstrap — P3 завершена; следующая — P4. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) и [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).
