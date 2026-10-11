@@ -1,31 +1,150 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 /*
- * Slate Cobalt — token placeholders (docs/design/visual_identity_contract.md §4).
- * Light theme only: there is no `.dark` and no theme switching (UX-03).
- * The full semantic mapping (shadcn variables) is added in P6 together with the Design Lab.
+ * Slate Cobalt — docs/design/visual_identity_contract.md (UX-03) §4.
+ * Light theme only: there is no `.dark` and no theme switching (UX-03 D-4).
+ * Hex values live ONLY in `:root`; components use utilities (`bg-primary`, `text-muted-foreground`,
+ * `bg-cobalt-ink`) — never hex / `style=""`.
  */
-@theme {
-  --color-paper: #f8fafc;
-  --color-surface: #ffffff;
-  --color-ink: #0f172a;
-  --color-ink-2: #475569;
-  --color-muted: #64748b;
-  --color-line: #e2e8f0;
-  --color-line-strong: #cbd5e1;
-  --color-cobalt: #3370ff;
-  --color-cobalt-ink: #1d4ed8;
-  --color-cobalt-deep: #1e40af;
-  --color-cobalt-soft: #ebf1ff;
-  --color-ok: #15803d;
-  --color-ok-soft: #dcfce7;
-  --color-warn: #b45309;
-  --color-warn-soft: #fef9c3;
-  --color-danger: #dc2626;
-  --color-danger-soft: #fee2e2;
+:root {
+  /* Raw palette (UX-03 §4) */
+  --paper: #f8fafc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --ink-2: #475569;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --cobalt: #3370ff;
+  --cobalt-ink: #1d4ed8;
+  --cobalt-deep: #1e40af;
+  --cobalt-soft: #ebf1ff;
+  --amber: #f59e0b;
+  --amber-ink: #b45309;
+  --amber-soft: #fef3c7;
+  --edit: #f97316;
+  --ok: #15803d;
+  --ok-soft: #dcfce7;
+  --warn: #b45309;
+  --warn-soft: #fef9c3;
+  --danger: #dc2626;
+  --danger-soft: #fee2e2;
+  /* Reserved, unused in MVP (post-MVP penalties / achievement tiers; spec Q-03) */
+  --penalty: #1e3a8a;
+  --penalty-soft: #e0e7ff;
+  --tier-1: #ea580c;
+  --tier-2: #94a3b8;
+  --tier-3: #eab308;
+  --series-1: #3370ff;
+  --series-2: #ea580c;
+  --series-3: #0d9488;
+
+  /* Semantic roles (shadcn variables → palette) */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--cobalt-ink);
+  --primary-foreground: var(--surface);
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink-2);
+  --muted-foreground: var(--muted);
+  --accent: var(--cobalt-soft);
+  --accent-foreground: var(--cobalt-ink);
+  --destructive: var(--danger);
+  --border: var(--line);
+  --input: var(--muted);
+  --ring: var(--cobalt);
+  --chart-1: var(--series-1);
+  --chart-2: var(--series-2);
+  --chart-3: var(--series-3);
+
+  --radius: 0.5rem;
+  --float-shadow: 0 10px 30px rgb(15 23 42 / 0.12);
 }
 
-html {
-  background-color: var(--color-paper);
-  color: var(--color-ink);
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  /* `muted` is the palette slate text/border colour (UX-03); there is no shadcn `bg-muted` fill —
+     use `bg-paper` / `bg-line` for fills. */
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-cobalt: var(--cobalt);
+  --color-cobalt-ink: var(--cobalt-ink);
+  --color-cobalt-deep: var(--cobalt-deep);
+  --color-cobalt-soft: var(--cobalt-soft);
+  --color-amber: var(--amber);
+  --color-amber-ink: var(--amber-ink);
+  --color-amber-soft: var(--amber-soft);
+  --color-edit: var(--edit);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-penalty: var(--penalty);
+  --color-penalty-soft: var(--penalty-soft);
+  --color-tier-1: var(--tier-1);
+  --color-tier-2: var(--tier-2);
+  --color-tier-3: var(--tier-3);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+
+  --font-display: var(--font-alegreya), ui-serif, Georgia, serif;
+  --font-sans: var(--font-alegreya-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-sans);
+  --font-heading: var(--font-display);
+
+  --shadow-float: var(--float-shadow);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@custom-variant reduce-transparency (@media (prefers-reduced-transparency: reduce));
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    font-size: 106.25%; /* 17px base (UX-03 D-5) */
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }

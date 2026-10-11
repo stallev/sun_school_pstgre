@@ -1,0 +1,29 @@
+﻿---
+description: Admin UI — field widths, buttons, grids
+globs: apps/web/src/app/**/admin/**
+alwaysApply: false
+---
+
+# Admin interface: forms and layout
+
+**Normative doc:** [`docs/guidelines/nextjs/ai_admin_interface_requirements.md`](docs/guidelines/nextjs/ai_admin_interface_requirements.md)  
+**User flow:** [`admin_flow.md`](docs/prds/01_product_scope/user_flows/users_mvp/admin_flow.md)
+
+## Buttons
+
+- Width follows content: **`w-auto`** or default `inline-flex`.
+- **Do not** use `w-full` on standard actions unless intentional (primary in narrow modal).
+- Groups: `flex flex-wrap gap-2`.
+
+## Inputs
+
+- Short text (name, email, slug): **max width ~300px** (`max-w-[300px]`).
+- Long text / rejection reason: **max ~650px** (`max-w-[650px]`).
+
+## Forms
+
+- Vertical spacing `space-y-4` / `space-y-6`.
+- Group related fields; Label + Control from UI kit.
+- Moderation actions: confirm dialog for destructive ops.
+
+Reference: Pulse (docs/examples/pulse) `admin-forms-layout.mdc`.

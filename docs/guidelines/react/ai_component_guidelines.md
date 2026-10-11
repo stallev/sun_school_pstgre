@@ -74,7 +74,7 @@ Spec: [`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system
 
 Primitives are **Base UI**. Cursor rule: **ui-design-system-shadcn**.
 
-1. `shadcn init -b base` once; `components.json` `"style"` — value from the init result (`base-vega` was **not verified** against current shadcn docs; decided and recorded in P6, see [`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system_lab_spec.md)); dependency `@base-ui/react`
+1. `shadcn init -b base -p vega` once; `components.json` `"style": "base-vega"` (verified in P6 with shadcn CLI 4.21.4, see [`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system_lab_spec.md) Drift-2); dependency `@base-ui/react`
 2. Search shadcn MCP / registry before custom primitives
 3. Install to `components/ui/`
 4. Tokenize with Slate Cobalt CSS variables in `globals.css`

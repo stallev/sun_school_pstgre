@@ -1,0 +1,55 @@
+---
+---
+# Naming conventions (`apps/web`)
+
+**Guides:** [ai_react_utilities_guidelines.md](docs/guidelines/react/ai_react_utilities_guidelines.md), [ai_react_hooks_guidelines.md](docs/guidelines/react/ai_react_hooks_guidelines.md)  
+**React canon:** [Rules of Hooks](https://react.dev/reference/rules) — verified via Context7 `/reactjs/react.dev`
+
+> Примеры имён ниже — из Pulse (бронирование тренеров); в проекте подставлять сущности своего домена.
+
+## React components
+
+- **PascalCase** — `TrainerCard`, `BookingWizardStep`.
+- **Named export** для shared/feature components; `default` только `page.tsx` / `layout.tsx`.
+- **File name = component name** — `TrainerCard.tsx` exports `TrainerCard`.
+
+## Custom hooks
+
+- **`use` + PascalCase** — `useBookingWizard`, `useMediaQuery`.
+- **Только если внутри есть вызов Hook** — иначе обычная функция (`getSorted`, not `useSorted`).
+- **File:** `use-booking-wizard.ts` или `use-media-query.ts` (kebab-case file, PascalCase export).
+
+## Functions & variables
+
+- **camelCase** — `trainerProfileId`, `isSubmitting`, `handleSubmit`.
+- **Boolean** — prefix `is`, `has`, `can`, `should` (`isPending`, `hasSlots`, `canCancelBooking`).
+- **Event handlers** — `handle` + предметная область + событие (`handleBookingConfirm`, `handleSlotSelect`) — не просто `handleClick` без контекста.
+- **Функции** — **глагол + объект**, отражающие действие: `formatBookingTime`, `getTrainerProfile`, `validateSlotAvailability` — не `process`, `run`, `doAction`.
+- **Коллекции** — **во множественном числе**: `trainers`, `bookingSlots`, `upcomingEvents`.
+- **Module constants** — **SCREAMING_SNAKE_CASE** (`PRODUCT_TOAST_DURATION_MS`).
+
+## Files (non-component)
+
+| Kind | Pattern | Example |
+|------|---------|---------|
+| Server data | kebab-case | `trainer-profile.server.ts` |
+| Client entry | `*.client.tsx` | `booking-form.client.tsx` |
+| Pure util | kebab-case `.ts` | `format-booking-time.ts` |
+| Types-only | kebab-case `.ts` | `booking-types.ts` |
+
+## Domain literals
+
+- Roles/statuses — **`@sunschool/domain`** constants (`USER_ROLE`, `BOOKING_STATUSES`, …), не inline `"trainer"` / `"pending"`.
+- Mutation error codes — **`AUTH_MUTATION_ERROR_CODES`**, **`MUTATION_ERROR_CODES`** из `@sunschool/domain`; см. **domain-literals-and-codes**.
+- User-visible strings — **`@/lib/messages`**.
+
+## Антипаттерны
+
+- `data`, `item`, `temp`, `res`, `val`, `obj` для non-trivial bindings — использовать описательное имя.
+- `flag`, `check`, `status`, `info` без предметной области — использовать `isProfileComplete`, `hasActiveBookings`.
+- `handleClick`, `handleChange` без контекста — добавить предметную область: `handleAvatarUpload`, `handleSlotSelect`.
+- `process`, `run`, `doAction`, `getList` без объекта — называть что именно: `processBookingPayment`, `getTrainerList`.
+- `useFoo` для функции без React Hooks внутри — использовать `getFoo` / `formatFoo`.
+- Смешение snake_case и camelCase в TS/React code (DB `@map` — исключение в Prisma schema).
+
+Reference: Pulse (docs/examples/pulse) `ai_react_utilities_guidelines.md` §2.1; React.dev custom hooks naming.

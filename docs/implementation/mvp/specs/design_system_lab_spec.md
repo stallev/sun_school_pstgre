@@ -7,7 +7,7 @@
 **Волна:** W15-01  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) (UX-06), [`global_shell_spec.md`](./global_shell_spec.md), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md), [`canonical_routes.md`](../../../design/canonical_routes.md), [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D10), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`<head>`: token dump, gap-список; хелперы и константы), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
-**Проверено по:** shadcn/ui — ui.shadcn.com через WebFetch, 2026-10-11: `components.json` — `style` и `tailwind.cssVariables` **не меняются после init**; документация перечисляет только стиль `new-york`; страница установки для Next.js упоминает выбор «base» в мастере и команду `shadcn@latest init`, но **не документирует** флаг `-b base` и стиль `base-vega`, которые указаны в правиле `ui-design-system-shadcn.mdc`. Эти значения **не подтверждены документацией** — проверяются на шаге preflight P5/P6 через CLI/MCP shadcn (Open question Q-01). Токены, `@theme inline`, контраст — по [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (Tailwind v4, WebFetch 2026-10-10). Route groups и `notFound()` — Next.js App Router (nextjs.org; по [`ui_states_contract.md`](../../../design/ui_states_contract.md)). Context7 недоступен.
+**Проверено по:** shadcn/ui — ui.shadcn.com через WebFetch, 2026-10-11: `components.json` — `style` и `tailwind.cssVariables` **не меняются после init**; документация перечисляет только стиль `new-york`; страница установки для Next.js упоминает выбор «base» в мастере и команду `shadcn@latest init`, но **не документирует** флаг `-b base` и стиль `base-vega`, которые указаны в правиле `ui-design-system-shadcn.mdc`. Эти значения не были в документации — **подтверждены на preflight P6 (2026-10-11)** через CLI `shadcn@4.21.4`: `init -b base -p vega` → `"style": "base-vega"` (Q-01 закрыт). Токены, `@theme inline`, контраст — по [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (Tailwind v4, WebFetch 2026-10-10). Route groups и `notFound()` — Next.js App Router (nextjs.org; по [`ui_states_contract.md`](../../../design/ui_states_contract.md)). Context7 недоступен.
 
 ---
 
@@ -34,7 +34,7 @@
 | ID | Расхождение | Решение |
 |----|-------------|---------|
 | Drift-1 | Правило `ui-design-system-shadcn.mdc` описывает `:root` **и** `.dark` на `<html>` через `next-themes`; UX-03 D-4: тёмной темы нет | В P6 `.dark` и `next-themes` **не создаются**; правка правила — в P4 (T2 ещё не активирован) |
-| Drift-2 | Правило указывает `shadcn init -b base`, `"style": "base-vega"` — документация shadcn этого не подтверждает (см. «Проверено по») | Проверить CLI/MCP на preflight; результат записать в `components.json` и Open question Q-01 |
+| Drift-2 | Правило указывало `shadcn init -b base`, `"style": "base-vega"` — документация shadcn этого не подтверждала | **Решено P6 (2026-10-11):** CLI `shadcn@4.21.4` — `init -b base -p vega` создаёт `"style": "base-vega"`; реестр `ui.shadcn.com/r/styles/base-vega/*` отвечает 200. Значение записано в `apps/web/components.json` |
 | Drift-3 | Прототип рисует иконки SVG-спрайтом, правило `ui-icons-lucide` требует lucide | Использовать lucide; соответствие имён — таблица §5.5 |
 | Drift-4 | `styleguide.md` (UX-09) на lean не создаётся | Рецепты компонентов — [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) §8; **не копировать** в этот документ |
 
@@ -46,7 +46,7 @@
 | Файлы | `apps/web/src/app/(dev)/design-system/layout.tsx`, `page.tsx` (группа `(dev)` не входит в URL) |
 | Оболочка | **нет**: свой минимальный layout; `(app)`-оболочка не оборачивает |
 | Доступ | только `APP_ENV=dev`; иначе `notFound()` (в prod и в preview без `dev`) |
-| `proxy.ts` | в `APP_ENV=dev` маршрут разрешён без сессии (allowlist по значению env); в prod — как любой неизвестный маршрут (404) |
+| `proxy.ts` | в `APP_ENV=dev` маршрут разрешён без сессии (allowlist по значению env); в prod — как любой неизвестный маршрут (404). **Реализация P6:** `canVisitRoutePrefix` — заглушка «allow all» до P01-CU5, поэтому allowlist `/design-system` входит в таблицу статус × маршрут P01-CU5; доступ уже закрыт guard-ом `layout.tsx` (`process.env.APP_ENV !== "dev"` → `notFound()`; значение фиксируется при сборке, статическая пре-рендер-страница) |
 | SEO | `noindex`, не в sitemap |
 | Canonical routes | строка «dev-only» в [`canonical_routes.md`](../../../design/canonical_routes.md) §4.5 |
 | Бандл | код `components/design-lab/**` не импортируется из продуктовых маршрутов; проверка — lint (§10) |
@@ -249,7 +249,7 @@ apps/web/src/
 
 | ID | Вопрос | Предложение по умолчанию | Владелец | Блокирует |
 |----|--------|--------------------------|----------|-----------|
-| Q-01 | Подтвердить `shadcn init` с Base UI и значение `style` (в правиле — `base-vega`, документация подтверждает только `new-york`) | Проверить CLI/MCP на preflight; при недоступности Base UI — зафиксировать фактический стиль в `components.json`, обновить правило и `adr_001` | architect | P6 |
+| Q-01 | ~~Подтвердить `shadcn init` с Base UI и значение `style`~~ — **решено P6 2026-10-11**: `shadcn init -b base -p vega` → `base-vega` (CLI 4.21.4) | — | — | — |
 | Q-02 | Набор иконок: lucide vs спрайт | lucide (правило), таблица §5.5 | architect | P6 |
 | Q-03 | Токены `penalty`/`tier-*` в `globals.css` сейчас или с волной 1 | Объявить сейчас (зарезервированы), не использовать | architect | P6 |
 | Q-04 | Нужен ли в Lab показ состояний на `loading.tsx`/`error.tsx` | Имитация компонентами `EmptyState`/`ErrorState`, без реальных маршрутов | architect | P6 |
