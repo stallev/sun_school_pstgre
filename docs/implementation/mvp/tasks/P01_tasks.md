@@ -47,23 +47,23 @@
 
 **CU DoD:** `npm run typecheck` · `npm run lint` · `npm run test` · домен не импортирует Next/Prisma (lint boundaries) — ✔ 2026-10-11
 
-### P01-CU2 — feat(db): add client factory, environment guard, audit writer and reference seed · Review: reviewer · Commit: auto
+### P01-CU2 — feat(db): add client factory, environment guard, audit writer and reference seed · Review: reviewer · Commit: auto · ✔ выполнен 2026-10-11
 
-- [ ] P01-T5 · T3 · ADR: [adr_001 §3.4](../../../prds/07_governance/adr_001_stack_and_runtime.md) · Spec: [seed_data_spec §5](../../../prds/03_data_model/seed_data_spec.md)
+- [x] P01-T5 · T3 · ADR: [adr_001 §3.4](../../../prds/07_governance/adr_001_stack_and_runtime.md) · Spec: [seed_data_spec §5](../../../prds/03_data_model/seed_data_spec.md)
       Files: `packages/db/src/client.ts`, `env-guard.ts`
       Acceptance: клиент с driver adapter; при расхождении `APP_ENV` и `app_setting.db_environment` — отказ до записи → тест (мок маркера)
       Paths: H [seed_data_spec §5] · N [неизвестный `APP_ENV`, нет маркера в prod] · S [INV-24: prod-URL + dev]
-      Статус: частично (2026-10-11) — `packages/db/src/client.ts` — каркас P5; `env-guard.ts` и тест отсутствуют
-- [ ] P01-T6 · T3 · Contract: [change_log §5, §11](../contracts/change_log_contract.md)
+      Сделано: `env-guard.ts` (`decideEnvGuard`, `assertDbEnvironment`) + тесты на моках; проверка при старте приложения подключается в CU4/CU5 (guard вызывается из `instrumentation.ts` без маркера-записи)
+- [x] P01-T6 · T3 · Contract: [change_log §5, §11](../contracts/change_log_contract.md)
       Files: `packages/db/src/audit/write-audit.ts`
       Acceptance: единственная точка записи `audit_log`; требует транзакцию; нет `update`/`delete` → тест, grep-проверка в тесте
       Paths: H [change_log §8] · N [запись вне транзакции → ошибка] · S [R-6, INV-16]
-- [ ] P01-T7 · T2 · Spec: [seed_data_spec §3, §6](../../../prds/03_data_model/seed_data_spec.md)
-      Files: `packages/db/seed/reference/{organization,app-settings,bible-translations,bible-books,achievement-catalog}.ts`, `seed:reference` скрипт
-      Acceptance: на пустой БД — 1 организация, ключи `app_setting`, 66 книг, 8+3 записи каталога; повторный запуск не меняет счётчики; пишет `seed.run` → интеграционный тест на тестовой БД/ветке
+- [x] P01-T7 · T2 · Spec: [seed_data_spec §3, §6](../../../prds/03_data_model/seed_data_spec.md)
+      Files: `packages/db/src/seed/reference/{organization,app-settings,bible-translations,bible-books,achievement-catalog,index,run}.ts`, `seed:reference` скрипт (в `src/`, чтобы действовали typecheck и vitest-glob пакета)
+      Acceptance: на пустой БД — 1 организация, ключи `app_setting`, 66 книг, 8+3 записи каталога; повторный запуск не меняет счётчики; пишет `seed.run` только если что-то изменилось (L-6) → интеграционный тест на тестовой БД/ветке
       Paths: H [seed_data_spec §9] · N [два параллельных запуска — advisory lock] · S [маркер окружения записывается один раз]
 
-**CU DoD:** `typecheck` · `lint` · `test` · `prisma migrate` не требуется (схема из P5) · smoke: `db:migrate` + `seed:reference` на dev-ветке
+**CU DoD:** `typecheck` · `lint` · `test` · `prisma migrate` не требуется (схема из P5) · smoke: `db:migrate` + `seed:reference` на dev-ветке — ✔ 2026-10-11 (105 строк создано; повтор — 0; интеграционный тест на dev Neon зелёный)
 
 ### P01-CU3 — feat(auth): configure Google and Telegram OIDC providers with Telegram workarounds · Review: reviewer · Commit: auto
 
