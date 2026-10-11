@@ -220,6 +220,7 @@
 | [`admin_flow.md`](../01_product_scope/user_flows/users_mvp/admin_flow.md), [`teacher_flow.md`](../01_product_scope/user_flows/users_mvp/teacher_flow.md) | Потоки, ссылающиеся на enum-ы |
 | [`Bible/README.md`](../../my_specs/Bible/README.md) | Данные и скрипты Библии (§ 4 — расхождения) |
 | [`lifecycle_models.md`](../02_domain_model/lifecycle_models.md), [`domain_invariants.md`](../02_domain_model/domain_invariants.md) | Жизненные циклы и инварианты (W3) |
+| [`migration_runbook.md`](../06_operations/migration_runbook.md) | Порядок миграций схемы (W12-02) |
 | [`seed_data_spec.md`](./seed_data_spec.md) | Справочники и dev-фикстуры (W6-03) |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W1-F6
