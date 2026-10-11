@@ -201,7 +201,7 @@ Apply when adding or materially changing:
 2. **Do not** statically import heavy libs in **shared** client modules used by unrelated routes — split + `dynamic` or interaction-gated import.
 3. **`dynamic` placement:** as **low** in the tree as possible (page / form / field), not root layout — unless the widget is truly global (exception: global `Toaster` / `sonner` is lightweight).
 4. **`ssr: false`:** document in code comment **why** (browser API, library SSR break, intentional client-only).
-5. **`loading`:** provide a sized placeholder for `dynamic`; use `aria-hidden` when decorative during chunk load; match {{DESIGN_SYSTEM_NAME}} skeletons (`@/components/ui/skeleton`).
+5. **`loading`:** provide a sized placeholder for `dynamic`; use `aria-hidden` when decorative during chunk load; match Slate Cobalt skeletons (`@/components/ui/skeleton`).
 6. **One primary component per file** ([`react-one-component-per-file.mdc`](../../../.cursor/rules/react-one-component-per-file.mdc)); lazy **wrapper** may be a thin second file named `*-lazy.client.tsx` or colocated `dynamic` in the parent client file.
 7. **Design Lab catalog:** new heavy primitive → implement lazy pattern in catalog section **before** product routes import it ([`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system_lab_spec.md)).
 

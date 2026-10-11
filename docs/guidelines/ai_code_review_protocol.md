@@ -24,7 +24,7 @@ Project HOW для **commit / standalone review pipeline** (`agent-code-review-s
 
 | Изменение | Ожидаемая форма |
 |-----------|-----------------|
-| Мутация (Server Action) | валидация на границе; сессия/роль через policy; ревалидация; `MutationResult` + коды из `@{{PACKAGE_SCOPE}}/domain` (`domain-literals-and-codes`); тексты из `@/lib/messages`; toast + pending UI (`ui-toast-mutations`, `ui-mutation-pending`) |
+| Мутация (Server Action) | валидация на границе; сессия/роль через policy; ревалидация; `MutationResult` + коды из `@sunschool/domain` (`domain-literals-and-codes`); тексты из `@/lib/messages`; toast + pending UI (`ui-toast-mutations`, `ui-mutation-pending`) |
 | Route Handler / API | валидация входа; authn/authz на самом handler; корректные status codes; секреты не в ответе и не в логах (`auth-security`, `security-xss-csrf`) |
 | DAL / Prisma | БД только в DAL (`data-server-actions-and-api`); scoping по владельцу; в UI DTO из domain, не Prisma shapes |
 | Миграция / схема | migration + `schema.prisma` + `database_schema_v1.md` согласованы |

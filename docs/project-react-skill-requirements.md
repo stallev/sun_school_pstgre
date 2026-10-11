@@ -194,7 +194,7 @@ description: >
 | RSC vs client split | `react-ui-components.mdc` | `'use client'` only for hooks/browser APIs |
 | Mutation pending UI | `ui-mutation-pending.mdc` | `disabled` + `aria-busy` обязательны |
 | Toast after mutation | `ui-toast-mutations.mdc` | Sonner, 2000ms, из `@/lib/messages` |
-| Domain strings/codes | `domain-literals-and-codes.mdc` | Из `@{{PACKAGE_SCOPE}}/domain`, без inline |
+| Domain strings/codes | `domain-literals-and-codes.mdc` | Из `@sunschool/domain`, без inline |
 | UI tokens / Shadcn | `ui-design-system-shadcn.mdc` | `bg-primary`, Design Lab catalog |
 | Accessibility | `ui-semantics-a11y.mdc` | WCAG 2.1 AA |
 ```

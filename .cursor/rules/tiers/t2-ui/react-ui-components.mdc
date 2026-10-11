@@ -24,7 +24,7 @@ alwaysApply: false
 ## Domain literals
 
 - **No inline domain strings** — roles, entity statuses, enum codes.
-- Import from `@/lib/...` or `@{{PACKAGE_SCOPE}}/domain`.
+- Import from `@/lib/...` or `@sunschool/domain`.
 - **User-visible text** → `@/lib/messages` (**ui-messages-and-copy**).
 
 ## Components
@@ -38,7 +38,7 @@ alwaysApply: false
 ## Styling
 
 - Tailwind + **`cn()`** from `@/lib/utils`; variants via **cva**.
-- Semantic tokens per **ui-design-system-shadcn** and [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}).
+- Semantic tokens per **ui-design-system-shadcn** and [`sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html).
 
 ## Equal-height card rows (обязательно)
 
@@ -93,7 +93,7 @@ When `reactCompiler: true` in `next.config.ts` — do not add `memo` / `useCallb
 
 ## shadcn/ui
 
-Use **shadcn MCP** before hand-rolling primitives. Adapt to {{DESIGN_SYSTEM_NAME}} tokens. Primitives are **Base UI** (`shadcn init -b base`, style `base-vega`) — **ui-design-system-shadcn**, a11y in **ui-semantics-a11y**.
+Use **shadcn MCP** before hand-rolling primitives. Adapt to Slate Cobalt tokens. Primitives are **Base UI** (`shadcn init -b base`, style `base-vega`) — **ui-design-system-shadcn**, a11y in **ui-semantics-a11y**.
 
 ## Semantics & a11y
 

@@ -7,8 +7,8 @@ alwaysApply: false
 # Next.js 16.4 + Vercel (`apps/web`)
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
-**Runtime (mandatory until W4):** [ADR-002 template](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md) — **pin the current 16.4.x patch (no caret)**  
-**Stack:** [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md) (после W4)  
+**Runtime:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — **pin the current 16.4.x patch (no caret)**  
+**Stack:** [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md)  
 **Guidelines:** [`docs/guidelines/nextjs/README.md`](docs/guidelines/nextjs/README.md)
 
 ## Version pin (hard requirement)
@@ -36,7 +36,7 @@ Next.js 16 renames `middleware.ts` → **`proxy.ts`** (still canonical on 16.3):
 - **`middleware.ts`:** temporary migration only — do not add new features
 - **Codemod:** `npx @next/codemod@canary middleware-to-proxy .`
 - **Auth in proxy:** import **`auth.config.ts`** only (no Prisma); never import `auth.ts`
-- **Policy:** `@{{PACKAGE_SCOPE}}/policy-edge` only — never `@{{PACKAGE_SCOPE}}/policy-server` in proxy/middleware
+- **Policy:** `@sunschool/policy-edge` only — never `@sunschool/policy-server` in proxy/middleware
 
 ## Required practices
 
@@ -45,7 +45,7 @@ Next.js 16 renames `middleware.ts` → **`proxy.ts`** (still canonical on 16.3):
 - **Thin BFF:** handlers/actions → `packages/domain` + DAL `src/data/**`
 - **Cache invalidation:** `updateTag` (Server Actions, read-your-own-writes), `revalidateTag`, `revalidatePath` — see ADR-002
 - **Cross-request reads:** **`'use cache'`** + `cacheTag()` + `cacheLife()` — **not** `unstable_cache`; requires `cacheComponents: true` — see [`ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) §8
-- **Instant Navigations (required):** adopt **Cache Components first**, then **`partialPrefetching: true`**. Stream (`Suspense` / `loading.tsx`) / Cache (`'use cache'`) / Block (`export const instant = false` only with a reason). `'use cache: private'` is **browser** cache, not static shell / CDN. `<Link prefetch={true}>` only **per-link** after a live App Shell. ADR-002 template **§5.1**, loading **§8.1**
+- **Instant Navigations (required):** adopt **Cache Components first**, then **`partialPrefetching: true`**. Stream (`Suspense` / `loading.tsx`) / Cache (`'use cache'`) / Block (`export const instant = false` only with a reason). `'use cache: private'` is **browser** cache, not static shell / CDN. `<Link prefetch={true}>` only **per-link** after a live App Shell. ADR-002 **§5.1**, loading **§8.1**
 - **Background work:** Vercel Cron + jobs — **not** `unstable_after`
 - **Bundler:** Turbopack default
 - **Region errors (opt-in):** prefer **`catchError`** from `next/error` + `retry()` — §12.1
@@ -56,7 +56,7 @@ Next.js 16 renames `middleware.ts` → **`proxy.ts`** (still canonical on 16.3):
 
 - Instant Navigations config + Stream/Cache/Block on product routes
 - Instant Insights in **dev** = **warning**; production **build** = `blocking-prerender-*` (do not mix with `blocking-route`)
-- Playwright `instant()` **SHOULD** on critical product navigations when flags are on (do not copy Pulse `/trainers` as mandatory routes; Playwright package is **not** in this scaffold)
+- Playwright `instant()` **SHOULD** on critical product navigations when flags are on (profile `lean`: no e2e by default — D5; the Playwright package is not in the scaffold)
 - Commit Next `AGENTS.md` agent-rules block **or** set `agentRules: false` if monorepo `AGENTS.md` conflicts
 
 **MUST NOT** canonicalize:
@@ -74,6 +74,6 @@ Next.js 16 renames `middleware.ts` → **`proxy.ts`** (still canonical on 16.3):
 
 ## Domain invariants
 
-Fill from `project-context` after W3/W4 — do not invent Pulse domain literals here.
+Source: [`domain_invariants.md`](docs/prds/02_domain_model/domain_invariants.md) and `project-context.mdc` — do not restate invariants here; do not import Pulse domain literals.
 
 Reference: Pulse snapshot `nextjs-vercel-app-router.mdc` — **Vercel + 16.4.x** per ADR-002 (snapshot may lag the current patch). Root Rules/Guidelines override the snapshot.

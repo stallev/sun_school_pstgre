@@ -1,5 +1,5 @@
 ---
-description: Auth — defense-in-depth, auth() in handlers; align with ADR-002
+description: Auth — OIDC (Google + Telegram), JWT, defense in depth; align with ADR-003 and auth_runtime_spec
 globs:
   - apps/web/**/auth/**
   - apps/web/src/app/api/auth/**
@@ -12,39 +12,78 @@ alwaysApply: false
 
 # Authentication and security
 
-**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
-**Guide:** [`docs/guidelines/auth/ai_auth_implementation_guide.md`](docs/guidelines/auth/ai_auth_implementation_guide.md)  
-**Schema:** [`docs/prds/03_data_model/database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md)  
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)
+**Canon:** [ADR-003](docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · [`auth_runtime_spec.md`](docs/prds/05_runtime/auth_runtime_spec.md) · [`authorization_matrix.md`](docs/prds/04_authorization_privacy/authorization_matrix.md)
+**Guide:** [`docs/guidelines/auth/ai_auth_implementation_guide.md`](docs/guidelines/auth/ai_auth_implementation_guide.md)
+**Telegram workarounds:** [`telegram_authjs_oidc_portable_guide.md`](docs/my_specs/telegram_authjs_oidc_portable_guide.md) §6
+**Schema:** [`database_schema_v1.md`](docs/prds/03_data_model/database_schema_v1.md) §5.1
 **Runtime:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — Next.js **16.4** (exact patch pin), **`proxy.ts`**
 
-## Next.js 16 interception (not middleware-first)
+## Auth model (MVP)
 
-- **Layer 1:** **`proxy.ts`** — JWT role gate via **`auth.config.ts`** (no Prisma, no full `auth.ts`)
-- **`middleware.ts`:** legacy/transitional only — do not implement new auth gates here
-- **Layer 2:** optional layout UX redirects
-- **Layer 3:** mandatory `auth()` in Route Handlers and Server Actions
-- **Layer 4:** `@{{PACKAGE_SCOPE}}/policy-server` object-level authorization
+- Sign-in: **Google** and **Telegram (OIDC)** only. No password, no Credentials provider, no email-link.
+- Sessions: Auth.js v5 `strategy: "jwt"`, **no database adapter**. Identities live in `login_identity`, users in `app_user`.
+- Roles: `admin`, `teacher` (from `@sunschool/domain`). Status: `REGISTRATION` → `REQUEST_PENDING` → `ACTIVE` | `REJECTED` | `DISABLED` | `DELETED`.
+- Linking a second provider: **signed link-intent cookie** + client `signIn()` — not an adapter (`auth_runtime_spec` §7).
 
-Split Auth.js config is **mandatory**: `auth.config.ts` for proxy; `auth.ts` (+ PrismaAdapter) for server `auth()` only.
+## Layers (defense in depth)
 
-## MVP auth model
+| Layer | Where | What | Must not |
+|-------|-------|------|----------|
+| 1 | **`proxy.ts`** via `auth.config.ts` + `@sunschool/policy-edge` | Optimistic redirect by JWT `status` / path prefix | import `auth.ts`, `@sunschool/db`, `@sunschool/policy-server`; be the only protection |
+| 2 | Layout `(app)` | `requireActiveUser()` — status and roles **from the DB** | trust JWT `status` / `roles` for data access |
+| 3 | Route Handlers, Server Actions | `requireActiveUser()` / `requireRole()` as the **first** statement | take `userId` from client input |
+| 4 | `@sunschool/policy-server` in DAL | Object-level check: foreign resource → **404**, wrong role → **403** | return a different shape than `MutationResult` |
+| 5 | Use-case transaction | Domain rules + write + **audit record in the same transaction** | write audit outside the transaction |
 
-- Credentials (email + password); `passwordHash` on `User`
-- Role (`{{USER_ROLES}}`) in JWT + session
-- Password reset via `password_reset_token` + Resend
+`middleware.ts` is legacy/transitional only — no new gates there.
 
-## Session typing
+## Config split (mandatory)
 
-- Auth.js module augmentation — **only in `apps/web`**
-- Map session → `PolicySessionContext` before policy-server
-- See [typescript-monorepo-types.mdc](typescript-monorepo-types.mdc)
+- `auth.config.ts` — edge-safe: providers, `pages`, `authorized`. Imports only `next-auth` and `lib/auth/telegram-oidc-discovery-fetch`.
+- `auth.ts` — Node: `NextAuth(...)`, `callbacks`, `handlers`, `auth`, `signIn`, `signOut`; may import `@sunschool/db` and `@sunschool/policy-server`.
+- `proxy.ts` imports `auth.config.ts` only.
+
+## JWT and session
+
+- Token holds **only** `uid` (= `app_user.id`, resolved via `login_identity`, **not** the provider's id), `status`, `roles`.
+- **No** full name, email, phone or Telegram username in the JWT or in `session.user` (ADR-003 §4.3).
+- `jwt` callback does not hit the DB on every request; the token is an optimistic slice. Authoritative status and roles — `requireActiveUser()` per request, cached for **one request** with `React.cache`, never `'use cache'` for user data.
+- Session typing — Auth.js module augmentation **only in `apps/web`**; map session → `PolicySessionContext` before `policy-server` ([typescript-monorepo-types.mdc](typescript-monorepo-types.mdc)).
+- `redirect` callback: relative paths from `canonical_routes.md` only; external `callbackUrl` is ignored (open redirect).
+
+## Telegram (TG-1…TG-5)
+
+- Sign-in and linking — **client** `signIn("telegram")` from `next-auth/react`; **never** server-side `signIn()` from a Server Action.
+- Route handler wraps **both** `GET` and `POST` to shorten `state` to ≤ 256 characters; rewrite error → 500 without details.
+- `customFetch` is imported from `next-auth` (same package as `NextAuth`); synthetic `userinfo_endpoint`; `profile().email = null`; `allowDangerousEmailAccountLinking: false`.
+- No `AUTH_REDIRECT_PROXY_URL` / `redirectProxyUrl`. Pin `next-auth` and `@auth/core` to exact versions; upgrade as a separate task with the TG-5 acceptance test.
+- `TELEGRAM_BOT_TOKEN` is not used as `clientSecret`; use `AUTH_TELEGRAM_ID` / `AUTH_TELEGRAM_SECRET`.
+
+## Errors
+
+- Login failures go to `/login?error=<code>`; messages come from the `auth` dictionary slice (`@/lib/messages`), without tokens or other users' data.
+- Mutation codes use the `AUTH_` prefix from `@sunschool/domain` (e.g. `AUTH_LINK_CONFLICT`, `AUTH_LAST_IDENTITY`) — no inline strings ([domain-literals-and-codes.mdc](domain-literals-and-codes.mdc)).
+- Auth.js swallows OIDC exceptions: log through the `logger` in config so Sentry receives them.
+
+## Do not
+
+- Add `Credentials`, `passwordHash`, bcrypt, password reset, or `@auth/prisma-adapter` without amending ADR-001 and ADR-003.
+- Put personal data or extra roles into the JWT "for convenience".
+- Cache authorization results across requests.
+- Log `providerAccountId`, tokens, `AUTH_SECRET` or the link-intent cookie value (INV-23).
+- Merge users automatically when an identity belongs to another user — refuse with a code; merging is an admin contract operation.
 
 ## Checklist
 
-- [ ] Route protection in **`proxy.ts`**, not new `middleware.ts` logic
-- [ ] Session verified on every mutation and protected read
-- [ ] No `@{{PACKAGE_SCOPE}}/policy-server` in proxy/middleware
-
+- [ ] Route protection by prefix in **`proxy.ts`**; **no** `policy-server` / `@sunschool/db` import there
+- [ ] Every mutation and protected read calls `requireActiveUser()` before touching data; `userId` only from the session
+- [ ] First `ADMIN` created once (`FIRST_ADMIN_EMAIL`, `email_verified`, race-safe in one transaction)
+- [ ] Link / unlink: idempotent success, conflict code, last identity cannot be removed, `SELECT … FOR UPDATE`
+- [ ] Telegram: `state.length ≤ 256`, client `signIn`, both handler methods wrapped
+- [ ] Audit record written in the same transaction as the mutation
 - [ ] XSS/CSRF/CSP — **security-xss-csrf** + [`ai_security_xss_csrf_guidelines.md`](docs/guidelines/security/ai_security_xss_csrf_guidelines.md)
 
-Reference: Pulse (docs/examples/pulse) `auth-security.mdc` — **Guidelines override Pulse reference code**.
+**Review:** any CU touching these globs is T3 / `Paths: S` — `reviewer` under profile `lean` ([agent-code-review-subagent.mdc](agent-code-review-subagent.mdc)).
+
+Reference: Pulse (`docs/examples/pulse`) `auth-security.mdc` — Credentials-based; only the layer structure is inherited. **Project rules and guidelines override Pulse reference code.**

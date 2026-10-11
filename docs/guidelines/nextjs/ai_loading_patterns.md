@@ -6,7 +6,9 @@
 **Runtime:** [ADR-002 template](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md)  
 **Cursor rule:** **app-router-streaming-loading**
 
-> **Scope:** `apps/web/src/app/**` — loading UX, streaming shell, and page-level performance. Cross-request data cache: **`'use cache'`** (Next.js 16) — see §8; tag invalidation — [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md) (после W5).
+> **Примеры:** сущности и теги в кодовых блоках (`trainers:catalog`, `wishlist:*`, bookings) — из Pulse и показывают **паттерн**; имена сущностей и тегов проекта — из контрактов и реестра тегов в коде.
+>
+> **Scope:** `apps/web/src/app/**` — loading UX, streaming shell, and page-level performance. Cross-request data cache: **`'use cache'`** (Next.js 16) — see §8; tag invalidation — [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде: `apps/web/src/lib/cache-tags.ts`, создаётся в P5).
 
 Verify against Context7 `/vercel/next.js` and [Loading UI and Streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming).
 
@@ -112,7 +114,7 @@ apps/web/src/app/
 │   └── _components/
 ```
 
-Skeleton should match page chrome ({{DESIGN_SYSTEM_NAME}} spacing, `Container` variant from catalog).
+Skeleton should match page chrome (Slate Cobalt spacing, `Container` variant from catalog).
 
 ### 3.2 Manual Suspense (within page)
 
@@ -344,7 +346,7 @@ async function TrainerProfile({ id }: { id: string }) {
 
 ### Context (Pulse)
 
-Root `layout.tsx` may `await auth()` for session-aware chrome (nav, role). Pulse uses **JWT sessions** (Auth.js v5, Credentials) — see [ADR-003](../../prds/07_governance/adr_003_auth_credentials_jwt_rbac.md).
+Root `layout.tsx` may `await auth()` for session-aware chrome (nav, role). Pulse uses **JWT sessions** (Auth.js v5, Credentials) — see [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md).
 
 Typical JWT `auth()`:
 
@@ -425,7 +427,7 @@ async function ParentContent({ userId }) {
 // ✅ Prefer parallel start or independent Suspense if trainerId is known from params/session
 ```
 
-Use `@{{PACKAGE_SCOPE}}/db` / `getPrisma()` from DAL — **never** ad-hoc `@/lib/db`. Queries live in `apps/web/src/data/**`.
+Use `@sunschool/db` / `getPrisma()` from DAL — **never** ad-hoc `@/lib/db`. Queries live in `apps/web/src/data/**`.
 
 ---
 
@@ -533,7 +535,7 @@ Wrap expensive read functions so they **do not run twice** in one RSC tree:
 
 ```tsx
 import { cache } from 'react'
-import { getPrisma } from '@{{PACKAGE_SCOPE}}/db'
+import { getPrisma } from '@sunschool/db'
 
 export const cachedLoadTrainerServices = cache(async (trainerProfileId: string) => {
   const prisma = getPrisma()
@@ -548,13 +550,13 @@ Colocate role- or domain-specific cached loaders in `apps/web/src/lib/**` or `sr
 
 ### `'use cache'` — cross-request cache (Next.js 16)
 
-Colocate cached read functions in `src/data/**` with `import 'server-only'`. Tag names **must** match [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md).
+Colocate cached read functions in `src/data/**` with `import 'server-only'`. Tag names **must** match [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде: `apps/web/src/lib/cache-tags.ts`).
 
 ```tsx
 import 'server-only'
 
 import { cacheLife, cacheTag } from 'next/cache'
-import { getPrisma } from '@{{PACKAGE_SCOPE}}/db'
+import { getPrisma } from '@sunschool/db'
 
 /** Public approved trainer catalog — cross-request cache. */
 export async function getCachedTrainersCatalog() {
@@ -602,7 +604,7 @@ export async function approveTrainerAction(trainerId: string) {
 ### `'use cache'` rules
 
 - **No `unstable_cache` in new code** — migrate existing call sites to `'use cache'` when touched.
-- **Tags** — `cacheTag(...)` inside the function; strings **must** match the tag registry in `cache_revalidation_policy.md`.
+- **Tags** — `cacheTag(...)` inside the function; strings **must** come from the tag registry in code (`apps/web/src/lib/cache-tags.ts`) — no inline tag strings.
 - **Lifetime** — `cacheLife('minutes' | 'hours' | …)` or `cacheLife({ revalidate: N })`; deploy still busts caches — **`updateTag` after mutations is primary**.
 - **Cache keys** — automatic from function id + serializable arguments (no manual `keyParts`).
 - **Never cache authorization** — verify session on every read path; cache is a performance layer only.
@@ -671,7 +673,7 @@ See [`neon_prisma_migrations_guide.md`](../../implementation/mvp/guides/neon_pri
 
 **2. Suspend timeout** — tune in Neon Console for production traffic patterns.
 
-**3. Transient errors (P1001)** — wrap critical read paths with retry when implementing auth/DB hot paths (pattern: small helper in `apps/web/src/lib/db/` — add when `@{{PACKAGE_SCOPE}}/db` lands in P01+).
+**3. Transient errors (P1001)** — wrap critical read paths with retry when implementing auth/DB hot paths (pattern: small helper in `apps/web/src/lib/db/` — add when `@sunschool/db` lands in P01+).
 
 **4. Streaming shell as UX buffer** — even on cold start, user sees nav and skeletons immediately; DB latency hides behind visible fallbacks, not a blank screen.
 
@@ -919,7 +921,7 @@ Run before finishing any `page.tsx`, segment `layout.tsx`, or colocated `loading
 ### C. Cache
 
 - [ ] Repeated reads in one request — React `cache()` or shared cached loader
-- [ ] Cross-request public reads — **`'use cache'`** + `cacheTag()` + `cacheLife()` per [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md) — **not** `unstable_cache`
+- [ ] Cross-request public reads — **`'use cache'`** + `cacheTag()` + `cacheLife()` per [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`) — **not** `unstable_cache`
 - [ ] `cacheComponents: true` **and** `partialPrefetching: true` in `next.config.ts` (Instant Navigations best practice — §8.1)
 - [ ] Dynamic regions use Stream (`Suspense`) or Cache; Block (`instant = false`) only with a documented reason
 - [ ] With Instant Navigations on: Instant Insights overlay reviewed for the route; findings closed via Stream / Cache / Block (§8.1.1)
@@ -988,7 +990,7 @@ State briefly in PR/task which exception applies:
 
 | Document | Topic |
 |----------|-------|
-| [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md) | Tag registry, `updateTag` after mutations |
+| [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`) | Tag registry, `updateTag` after mutations |
 | [`ui_states_contract.md`](../../design/ui_states_contract.md) | Empty/loading/error matrix per route |
 | [`ai_auth_implementation_guide.md`](../auth/ai_auth_implementation_guide.md) | JWT, `proxy.ts`, split config |
 | [`ai_nextjs_db_data_handle.md`](./ai_nextjs_db_data_handle.md) | DAL, Server Actions vs Route Handlers |

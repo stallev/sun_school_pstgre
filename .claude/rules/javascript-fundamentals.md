@@ -1,0 +1,23 @@
+---
+description: Closures, map/filter/reduce, generators, ESM modules, TS generics — repo-wide JS/TS discipline
+paths:
+  - "apps/web/src/**"
+  - "packages/**/src/**"
+---
+# JavaScript/TypeScript fundamentals
+
+**Guide:** [ai_javascript_fundamentals_guidelines.md](docs/guidelines/typescript/ai_javascript_fundamentals_guidelines.md)
+**Related:** **typescript-monorepo-types** (package boundaries, mutation ADT — not repeated here)
+
+Scope: language-mechanics bugs TypeScript does not catch at compile time. Not a style guide — apply only where it prevents a real runtime bug.
+
+## MUST
+
+- **Closures:** module-level init flags → `once(fn)` factory, not a loose `let` boolean. `debounce`/`throttle` → one instance per caller, never shared across unrelated call sites.
+- **`reduce`** — always pass an explicit `initialValue`.
+- **`.map()` with async callbacks** — never fire-and-forget (`data.map(async x => ...)` unconsumed); use `for...of` for sequential, `await Promise.all(arr.map(fn))` for parallel. `.map()` returns new objects, never mutates in place.
+- **Generators** — only for streaming large DB result sets in batches (`async function*` + `for await`); not a general iteration idiom in this stack.
+- **Modules** — each workspace package uniformly ESM; `"sideEffects": false` (or explicit list) in `package.json`; named exports over `import * as ns`.
+- **TypeScript** — generics over `any` for reusable helpers; derive DTOs via `Pick`/`Omit`/`Partial` from the source type instead of hand-duplicating a near-identical interface.
+
+Full rationale + code: [ai_javascript_fundamentals_guidelines.md](docs/guidelines/typescript/ai_javascript_fundamentals_guidelines.md).

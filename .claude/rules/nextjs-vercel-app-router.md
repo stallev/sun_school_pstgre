@@ -1,0 +1,78 @@
+---
+description: Next.js 16.4 App Router, Vercel, proxy.ts, async APIs — apps/web
+paths:
+  - "apps/web/**"
+---
+# Next.js 16.4 + Vercel (`apps/web`)
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Runtime:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — **pin the current 16.4.x patch (no caret)**  
+**Stack:** [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md)  
+**Guidelines:** [`docs/guidelines/nextjs/README.md`](docs/guidelines/nextjs/README.md)
+
+## Version pin (hard requirement)
+
+Current 16.4.x patch (no caret). At P5 verify with `npm view next version` + Context7 `/vercel/next.js`; if latest is still 16.4.x, pin **that** exact patch.
+
+```json
+"next": "16.4.<patch>"
+```
+
+Also pin matching `@next/third-parties` and `eslint-config-next` to the **same** patch.  
+No Next.js 15.x patterns. No floating `^16` without ADR. New minor (16.5+) — ADR amend.
+
+## Request interception — `proxy.ts` (NOT `middleware.ts`)
+
+Next.js 16 renames `middleware.ts` → **`proxy.ts`** (still canonical on 16.3):
+
+| Next.js 15 (legacy) | Next.js 16.4 |
+|---------------------|----------------|
+| `middleware.ts` | **`proxy.ts`** |
+| `export function middleware()` | **`export function proxy()`** |
+| Edge runtime common | **`proxy` runtime = `nodejs`** (Edge **not** supported in proxy) |
+
+- **Canonical:** `apps/web/src/proxy.ts`
+- **`middleware.ts`:** temporary migration only — do not add new features
+- **Codemod:** `npx @next/codemod@canary middleware-to-proxy .`
+- **Auth in proxy:** import **`auth.config.ts`** only (no Prisma); never import `auth.ts`
+- **Policy:** `@sunschool/policy-edge` only — never `@sunschool/policy-server` in proxy/middleware
+
+## Required practices
+
+- **Async Request APIs:** `await cookies()`, `await headers()`, `await params`, `await searchParams`
+- **Server Components by default** — `'use client'` only for hooks/browser APIs
+- **Thin BFF:** handlers/actions → `packages/domain` + DAL `src/data/**`
+- **Cache invalidation:** `updateTag` (Server Actions, read-your-own-writes), `revalidateTag`, `revalidatePath` — see ADR-002
+- **Cross-request reads:** **`'use cache'`** + `cacheTag()` + `cacheLife()` — **not** `unstable_cache`; requires `cacheComponents: true` — see [`ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) §8
+- **Instant Navigations (required):** adopt **Cache Components first**, then **`partialPrefetching: true`**. Stream (`Suspense` / `loading.tsx`) / Cache (`'use cache'`) / Block (`export const instant = false` only with a reason). `'use cache: private'` is **browser** cache, not static shell / CDN. `<Link prefetch={true}>` only **per-link** after a live App Shell. ADR-002 **§5.1**, loading **§8.1**
+- **Background work:** Vercel Cron + jobs — **not** `unstable_after`
+- **Bundler:** Turbopack default
+- **Region errors (opt-in):** prefer **`catchError`** from `next/error` + `retry()` — §12.1
+
+## Next.js 16.4 — required vs defer (ADR-002 §5.1)
+
+**Required / recommended:**
+
+- Instant Navigations config + Stream/Cache/Block on product routes
+- Instant Insights in **dev** = **warning**; production **build** = `blocking-prerender-*` (do not mix with `blocking-route`)
+- Playwright `instant()` **SHOULD** on critical product navigations when flags are on (profile `lean`: no e2e by default — D5; the Playwright package is not in the scaffold)
+- Commit Next `AGENTS.md` agent-rules block **or** set `agentRules: false` if monorepo `AGENTS.md` conflicts
+
+**MUST NOT** canonicalize:
+
+- Blind `export const instant = false` on every route
+- `partialPrefetching` **before** / **without** `cacheComponents`
+- `typescript@^7`, `experimental.useOffline`, `experimental.turbopackRustReactCompiler`
+- `import.meta.glob` / `next/root-params` as default product patterns
+
+## Data layer
+
+- [ai_nextjs_db_data_handle.md](docs/guidelines/nextjs/ai_nextjs_db_data_handle.md)
+- [ai_client_lazy_loading.md](docs/guidelines/nextjs/ai_client_lazy_loading.md) — heavy client deps, `next/dynamic`
+- [data-server-actions-and-api.mdc](data-server-actions-and-api.mdc)
+
+## Domain invariants
+
+Source: [`domain_invariants.md`](docs/prds/02_domain_model/domain_invariants.md) and `project-context.mdc` — do not restate invariants here; do not import Pulse domain literals.
+
+Reference: Pulse snapshot `nextjs-vercel-app-router.mdc` — **Vercel + 16.4.x** per ADR-002 (snapshot may lag the current patch). Root Rules/Guidelines override the snapshot.

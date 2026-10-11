@@ -98,7 +98,7 @@
 ## Шаблон заполненного профиля (P00 копирует в `docs/meta/project_quality_profile.md`)
 
 ````markdown
-# Профиль качества — {{PROJECT_NAME}}
+# Профиль качества — Sunday School
 
 **Тип:** Meta · **Статус:** Canonical · **Канон матрицы:** [`project_quality_profile.template.md`](./project_quality_profile.template.md)
 

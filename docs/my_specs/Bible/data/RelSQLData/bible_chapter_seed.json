@@ -1,0 +1,7136 @@
+[
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 1,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 2,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 3,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 4,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 5,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 6,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 7,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 8,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 9,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 10,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 11,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 12,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 13,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 14,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 15,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 16,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 17,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 18,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 19,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 20,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 21,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 22,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 23,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 24,
+    "verses_count": 67
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 25,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 26,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 27,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 28,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 29,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 30,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 31,
+    "verses_count": 55
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 32,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 33,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 34,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 35,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 36,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 37,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 38,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 39,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 40,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 41,
+    "verses_count": 57
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 42,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 43,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 44,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 45,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 46,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 47,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 48,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 49,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 1,
+    "chapter_number": 50,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 1,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 2,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 3,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 4,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 5,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 6,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 7,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 8,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 9,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 10,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 11,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 12,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 13,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 14,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 15,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 16,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 17,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 18,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 19,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 20,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 21,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 22,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 23,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 24,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 25,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 26,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 27,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 28,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 29,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 30,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 31,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 32,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 33,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 34,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 35,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 36,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 37,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 38,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 39,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 2,
+    "chapter_number": 40,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 1,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 2,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 3,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 4,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 5,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 6,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 7,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 8,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 9,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 10,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 11,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 12,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 13,
+    "verses_count": 59
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 14,
+    "verses_count": 56
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 15,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 16,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 17,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 18,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 19,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 20,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 21,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 22,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 23,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 24,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 25,
+    "verses_count": 55
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 26,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 3,
+    "chapter_number": 27,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 1,
+    "verses_count": 54
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 2,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 3,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 4,
+    "verses_count": 49
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 5,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 6,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 7,
+    "verses_count": 89
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 8,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 9,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 10,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 11,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 12,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 13,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 14,
+    "verses_count": 45
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 15,
+    "verses_count": 41
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 16,
+    "verses_count": 50
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 17,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 18,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 19,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 20,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 21,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 22,
+    "verses_count": 41
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 23,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 24,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 25,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 26,
+    "verses_count": 65
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 27,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 28,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 29,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 30,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 31,
+    "verses_count": 54
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 32,
+    "verses_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 33,
+    "verses_count": 56
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 34,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 35,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 4,
+    "chapter_number": 36,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 1,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 2,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 3,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 4,
+    "verses_count": 49
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 5,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 6,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 7,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 8,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 9,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 10,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 11,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 12,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 13,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 14,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 15,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 16,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 17,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 18,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 19,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 20,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 21,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 22,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 23,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 24,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 25,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 26,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 27,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 28,
+    "verses_count": 68
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 29,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 30,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 31,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 32,
+    "verses_count": 52
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 33,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 5,
+    "chapter_number": 34,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 1,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 2,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 3,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 4,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 5,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 6,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 7,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 8,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 9,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 10,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 11,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 12,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 13,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 14,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 15,
+    "verses_count": 63
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 16,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 17,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 18,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 19,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 20,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 21,
+    "verses_count": 45
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 22,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 23,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 6,
+    "chapter_number": 24,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 1,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 2,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 3,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 4,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 5,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 6,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 7,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 8,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 9,
+    "verses_count": 57
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 10,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 11,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 12,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 13,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 14,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 15,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 16,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 17,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 18,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 19,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 20,
+    "verses_count": 48
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 7,
+    "chapter_number": 21,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 8,
+    "chapter_number": 1,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 8,
+    "chapter_number": 2,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 8,
+    "chapter_number": 3,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 8,
+    "chapter_number": 4,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 1,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 2,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 3,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 4,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 5,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 6,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 7,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 8,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 9,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 10,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 11,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 12,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 13,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 14,
+    "verses_count": 52
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 15,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 16,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 17,
+    "verses_count": 58
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 18,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 19,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 20,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 21,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 22,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 23,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 24,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 25,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 26,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 27,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 28,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 29,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 30,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 9,
+    "chapter_number": 31,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 1,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 2,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 3,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 4,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 5,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 6,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 7,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 8,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 9,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 10,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 11,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 12,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 13,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 14,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 15,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 16,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 17,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 18,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 19,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 20,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 21,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 22,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 23,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 10,
+    "chapter_number": 24,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 1,
+    "verses_count": 53
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 2,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 3,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 4,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 5,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 6,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 7,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 8,
+    "verses_count": 66
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 9,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 10,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 11,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 12,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 13,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 14,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 15,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 16,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 17,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 18,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 19,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 20,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 21,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 11,
+    "chapter_number": 22,
+    "verses_count": 53
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 1,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 2,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 3,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 4,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 5,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 6,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 7,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 8,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 9,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 10,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 11,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 12,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 13,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 14,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 15,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 16,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 17,
+    "verses_count": 41
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 18,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 19,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 20,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 21,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 22,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 23,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 24,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 12,
+    "chapter_number": 25,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 1,
+    "verses_count": 54
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 2,
+    "verses_count": 55
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 3,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 4,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 5,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 6,
+    "verses_count": 81
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 7,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 8,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 9,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 10,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 11,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 12,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 13,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 14,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 15,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 16,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 17,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 18,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 19,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 20,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 21,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 22,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 23,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 24,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 25,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 26,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 27,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 28,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 13,
+    "chapter_number": 29,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 1,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 2,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 3,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 4,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 5,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 6,
+    "verses_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 7,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 8,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 9,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 10,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 11,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 12,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 13,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 14,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 15,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 16,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 17,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 18,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 19,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 20,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 21,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 22,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 23,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 24,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 25,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 26,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 27,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 28,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 29,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 30,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 31,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 32,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 33,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 34,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 35,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 14,
+    "chapter_number": 36,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 1,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 2,
+    "verses_count": 70
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 3,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 4,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 5,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 6,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 7,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 8,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 9,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 15,
+    "chapter_number": 10,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 1,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 2,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 3,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 4,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 5,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 6,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 7,
+    "verses_count": 73
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 8,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 9,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 10,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 11,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 12,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 16,
+    "chapter_number": 13,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 1,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 2,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 3,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 4,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 5,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 6,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 7,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 8,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 9,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 17,
+    "chapter_number": 10,
+    "verses_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 1,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 2,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 3,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 4,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 5,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 6,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 7,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 8,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 9,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 10,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 11,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 12,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 13,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 14,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 15,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 16,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 17,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 18,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 19,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 20,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 21,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 22,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 23,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 24,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 25,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 26,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 27,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 28,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 29,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 30,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 31,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 32,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 33,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 34,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 35,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 36,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 37,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 38,
+    "verses_count": 41
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 39,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 40,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 41,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 18,
+    "chapter_number": 42,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 1,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 2,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 3,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 4,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 5,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 6,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 7,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 8,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 9,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 10,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 11,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 12,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 13,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 14,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 15,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 16,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 17,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 18,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 19,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 20,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 21,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 22,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 23,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 24,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 25,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 26,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 27,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 28,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 29,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 30,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 31,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 32,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 33,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 34,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 35,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 36,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 37,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 38,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 39,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 40,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 41,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 42,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 43,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 44,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 45,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 46,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 47,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 48,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 49,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 50,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 51,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 52,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 53,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 54,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 55,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 56,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 57,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 58,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 59,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 60,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 61,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 62,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 63,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 64,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 65,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 66,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 67,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 68,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 69,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 70,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 71,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 72,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 73,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 74,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 75,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 76,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 77,
+    "verses_count": 72
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 78,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 79,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 80,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 81,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 82,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 83,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 84,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 85,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 86,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 87,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 88,
+    "verses_count": 53
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 89,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 90,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 91,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 92,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 93,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 94,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 95,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 96,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 97,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 98,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 99,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 100,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 101,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 102,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 103,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 104,
+    "verses_count": 45
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 105,
+    "verses_count": 48
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 106,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 107,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 108,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 109,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 110,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 111,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 112,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 113,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 114,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 115,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 116,
+    "verses_count": 2
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 117,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 118,
+    "verses_count": 176
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 119,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 120,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 121,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 122,
+    "verses_count": 4
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 123,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 124,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 125,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 126,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 127,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 128,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 129,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 130,
+    "verses_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 131,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 132,
+    "verses_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 133,
+    "verses_count": 3
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 134,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 135,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 136,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 137,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 138,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 139,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 140,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 141,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 142,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 143,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 144,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 145,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 146,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 147,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 148,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 149,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 19,
+    "chapter_number": 150,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 1,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 2,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 3,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 4,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 5,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 6,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 7,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 8,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 9,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 10,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 11,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 12,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 13,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 14,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 15,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 16,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 17,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 18,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 19,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 20,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 21,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 22,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 23,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 24,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 25,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 26,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 27,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 28,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 29,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 30,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 20,
+    "chapter_number": 31,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 1,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 2,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 3,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 4,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 5,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 6,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 7,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 8,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 9,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 10,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 11,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 21,
+    "chapter_number": 12,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 1,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 2,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 3,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 4,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 5,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 6,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 7,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 22,
+    "chapter_number": 8,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 1,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 2,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 3,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 4,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 5,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 6,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 7,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 8,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 9,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 10,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 11,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 12,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 13,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 14,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 15,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 16,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 17,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 18,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 19,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 20,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 21,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 22,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 23,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 24,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 25,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 26,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 27,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 28,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 29,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 30,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 31,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 32,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 33,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 34,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 35,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 36,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 37,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 38,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 39,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 40,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 41,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 42,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 43,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 44,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 45,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 46,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 47,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 48,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 49,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 50,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 51,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 52,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 53,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 54,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 55,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 56,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 57,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 58,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 59,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 60,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 61,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 62,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 63,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 64,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 65,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 23,
+    "chapter_number": 66,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 1,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 2,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 3,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 4,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 5,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 6,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 7,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 8,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 9,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 10,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 11,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 12,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 13,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 14,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 15,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 16,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 17,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 18,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 19,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 20,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 21,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 22,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 23,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 24,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 25,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 26,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 27,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 28,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 29,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 30,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 31,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 32,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 33,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 34,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 35,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 36,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 37,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 38,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 39,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 40,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 41,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 42,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 43,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 44,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 45,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 46,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 47,
+    "verses_count": 7
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 48,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 49,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 50,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 51,
+    "verses_count": 64
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 24,
+    "chapter_number": 52,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 25,
+    "chapter_number": 1,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 25,
+    "chapter_number": 2,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 25,
+    "chapter_number": 3,
+    "verses_count": 66
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 25,
+    "chapter_number": 4,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 25,
+    "chapter_number": 5,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 1,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 2,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 3,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 4,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 5,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 6,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 7,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 8,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 9,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 10,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 11,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 12,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 13,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 14,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 15,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 16,
+    "verses_count": 63
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 17,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 18,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 19,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 20,
+    "verses_count": 49
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 21,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 22,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 23,
+    "verses_count": 49
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 24,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 25,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 26,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 27,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 28,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 29,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 30,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 31,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 32,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 33,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 34,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 35,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 36,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 37,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 38,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 39,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 40,
+    "verses_count": 49
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 41,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 42,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 43,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 44,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 45,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 46,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 47,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 26,
+    "chapter_number": 48,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 1,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 2,
+    "verses_count": 49
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 3,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 4,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 5,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 6,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 7,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 8,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 9,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 10,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 11,
+    "verses_count": 45
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 27,
+    "chapter_number": 12,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 1,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 2,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 3,
+    "verses_count": 5
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 4,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 5,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 6,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 7,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 8,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 9,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 10,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 11,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 12,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 13,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 28,
+    "chapter_number": 14,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 29,
+    "chapter_number": 1,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 29,
+    "chapter_number": 2,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 29,
+    "chapter_number": 3,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 1,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 2,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 3,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 4,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 5,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 6,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 7,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 8,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 30,
+    "chapter_number": 9,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 31,
+    "chapter_number": 1,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 32,
+    "chapter_number": 1,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 32,
+    "chapter_number": 2,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 32,
+    "chapter_number": 3,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 32,
+    "chapter_number": 4,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 33,
+    "chapter_number": 1,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 33,
+    "chapter_number": 2,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 33,
+    "chapter_number": 3,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 33,
+    "chapter_number": 4,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 33,
+    "chapter_number": 5,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 33,
+    "chapter_number": 6,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 33,
+    "chapter_number": 7,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 34,
+    "chapter_number": 1,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 34,
+    "chapter_number": 2,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 34,
+    "chapter_number": 3,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 35,
+    "chapter_number": 1,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 35,
+    "chapter_number": 2,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 35,
+    "chapter_number": 3,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 36,
+    "chapter_number": 1,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 36,
+    "chapter_number": 2,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 36,
+    "chapter_number": 3,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 37,
+    "chapter_number": 1,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 37,
+    "chapter_number": 2,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 1,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 2,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 3,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 4,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 5,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 6,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 7,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 8,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 9,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 10,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 11,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 12,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 13,
+    "verses_count": 9
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 38,
+    "chapter_number": 14,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 39,
+    "chapter_number": 1,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 39,
+    "chapter_number": 2,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 39,
+    "chapter_number": 3,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 39,
+    "chapter_number": 4,
+    "verses_count": 6
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 1,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 2,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 3,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 4,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 5,
+    "verses_count": 48
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 6,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 7,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 8,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 9,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 10,
+    "verses_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 11,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 12,
+    "verses_count": 50
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 13,
+    "verses_count": 58
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 14,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 15,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 16,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 17,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 18,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 19,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 20,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 21,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 22,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 23,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 24,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 25,
+    "verses_count": 46
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 26,
+    "verses_count": 75
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 27,
+    "verses_count": 66
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 40,
+    "chapter_number": 28,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 1,
+    "verses_count": 45
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 2,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 3,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 4,
+    "verses_count": 41
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 5,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 6,
+    "verses_count": 56
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 7,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 8,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 9,
+    "verses_count": 50
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 10,
+    "verses_count": 52
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 11,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 12,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 13,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 14,
+    "verses_count": 72
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 15,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 41,
+    "chapter_number": 16,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 1,
+    "verses_count": 80
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 2,
+    "verses_count": 52
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 3,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 4,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 5,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 6,
+    "verses_count": 49
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 7,
+    "verses_count": 50
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 8,
+    "verses_count": 56
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 9,
+    "verses_count": 62
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 10,
+    "verses_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 11,
+    "verses_count": 54
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 12,
+    "verses_count": 59
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 13,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 14,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 15,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 16,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 17,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 18,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 19,
+    "verses_count": 48
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 20,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 21,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 22,
+    "verses_count": 71
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 23,
+    "verses_count": 56
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 42,
+    "chapter_number": 24,
+    "verses_count": 53
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 1,
+    "verses_count": 51
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 2,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 3,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 4,
+    "verses_count": 54
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 5,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 6,
+    "verses_count": 71
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 7,
+    "verses_count": 53
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 8,
+    "verses_count": 59
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 9,
+    "verses_count": 41
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 10,
+    "verses_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 11,
+    "verses_count": 57
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 12,
+    "verses_count": 50
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 13,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 14,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 15,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 16,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 17,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 18,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 19,
+    "verses_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 20,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 43,
+    "chapter_number": 21,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 1,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 2,
+    "verses_count": 47
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 3,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 4,
+    "verses_count": 37
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 5,
+    "verses_count": 42
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 6,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 7,
+    "verses_count": 60
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 8,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 9,
+    "verses_count": 43
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 10,
+    "verses_count": 48
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 11,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 12,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 13,
+    "verses_count": 52
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 14,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 15,
+    "verses_count": 41
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 16,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 17,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 18,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 19,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 20,
+    "verses_count": 38
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 21,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 22,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 23,
+    "verses_count": 35
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 24,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 25,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 26,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 27,
+    "verses_count": 44
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 44,
+    "chapter_number": 28,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 1,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 2,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 3,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 4,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 5,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 6,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 7,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 8,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 9,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 10,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 11,
+    "verses_count": 36
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 12,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 13,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 14,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 15,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 45,
+    "chapter_number": 16,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 1,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 2,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 3,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 4,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 5,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 6,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 7,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 8,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 9,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 10,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 11,
+    "verses_count": 34
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 12,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 13,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 14,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 15,
+    "verses_count": 58
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 46,
+    "chapter_number": 16,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 1,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 2,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 3,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 4,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 5,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 6,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 7,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 8,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 9,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 10,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 11,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 12,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 47,
+    "chapter_number": 13,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 48,
+    "chapter_number": 1,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 48,
+    "chapter_number": 2,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 48,
+    "chapter_number": 3,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 48,
+    "chapter_number": 4,
+    "verses_count": 31
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 48,
+    "chapter_number": 5,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 48,
+    "chapter_number": 6,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 49,
+    "chapter_number": 1,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 49,
+    "chapter_number": 2,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 49,
+    "chapter_number": 3,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 49,
+    "chapter_number": 4,
+    "verses_count": 32
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 49,
+    "chapter_number": 5,
+    "verses_count": 33
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 49,
+    "chapter_number": 6,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 50,
+    "chapter_number": 1,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 50,
+    "chapter_number": 2,
+    "verses_count": 30
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 50,
+    "chapter_number": 3,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 50,
+    "chapter_number": 4,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 51,
+    "chapter_number": 1,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 51,
+    "chapter_number": 2,
+    "verses_count": 23
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 51,
+    "chapter_number": 3,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 51,
+    "chapter_number": 4,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 52,
+    "chapter_number": 1,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 52,
+    "chapter_number": 2,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 52,
+    "chapter_number": 3,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 52,
+    "chapter_number": 4,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 52,
+    "chapter_number": 5,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 53,
+    "chapter_number": 1,
+    "verses_count": 12
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 53,
+    "chapter_number": 2,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 53,
+    "chapter_number": 3,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 54,
+    "chapter_number": 1,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 54,
+    "chapter_number": 2,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 54,
+    "chapter_number": 3,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 54,
+    "chapter_number": 4,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 54,
+    "chapter_number": 5,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 54,
+    "chapter_number": 6,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 55,
+    "chapter_number": 1,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 55,
+    "chapter_number": 2,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 55,
+    "chapter_number": 3,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 55,
+    "chapter_number": 4,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 56,
+    "chapter_number": 1,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 56,
+    "chapter_number": 2,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 56,
+    "chapter_number": 3,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 57,
+    "chapter_number": 1,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 1,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 2,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 3,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 4,
+    "verses_count": 16
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 5,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 6,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 7,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 8,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 9,
+    "verses_count": 28
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 10,
+    "verses_count": 39
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 11,
+    "verses_count": 40
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 12,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 58,
+    "chapter_number": 13,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 59,
+    "chapter_number": 1,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 59,
+    "chapter_number": 2,
+    "verses_count": 26
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 59,
+    "chapter_number": 3,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 59,
+    "chapter_number": 4,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 59,
+    "chapter_number": 5,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 60,
+    "chapter_number": 1,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 60,
+    "chapter_number": 2,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 60,
+    "chapter_number": 3,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 60,
+    "chapter_number": 4,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 60,
+    "chapter_number": 5,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 61,
+    "chapter_number": 1,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 61,
+    "chapter_number": 2,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 61,
+    "chapter_number": 3,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 62,
+    "chapter_number": 1,
+    "verses_count": 10
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 62,
+    "chapter_number": 2,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 62,
+    "chapter_number": 3,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 62,
+    "chapter_number": 4,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 62,
+    "chapter_number": 5,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 63,
+    "chapter_number": 1,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 64,
+    "chapter_number": 1,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 65,
+    "chapter_number": 1,
+    "verses_count": 25
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 1,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 2,
+    "verses_count": 29
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 3,
+    "verses_count": 22
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 4,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 5,
+    "verses_count": 14
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 6,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 7,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 8,
+    "verses_count": 13
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 9,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 10,
+    "verses_count": 11
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 11,
+    "verses_count": 19
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 12,
+    "verses_count": 17
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 13,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 14,
+    "verses_count": 20
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 15,
+    "verses_count": 8
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 16,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 17,
+    "verses_count": 18
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 18,
+    "verses_count": 24
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 19,
+    "verses_count": 21
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 20,
+    "verses_count": 15
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 21,
+    "verses_count": 27
+  },
+  {
+    "edition_code": "RST",
+    "book_sort_order": 66,
+    "chapter_number": 22,
+    "verses_count": 21
+  }
+]

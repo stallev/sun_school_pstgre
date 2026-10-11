@@ -1,0 +1,44 @@
+---
+description: App Router streaming — Suspense, loading.tsx, page performance (ai_loading_patterns §4–§18)
+paths:
+  - "apps/web/src/app/**/*"
+---
+# App Router: streaming, loading & page performance (mandatory for route work)
+
+**Normative doc:** [`docs/guidelines/nextjs/ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) — loading UX **and** page performance (Pulse merged former `ai_page_performance_streaming.md` into §4–§18).  
+**Client JS (orthogonal layer):** [`ai_client_lazy_loading.md`](docs/guidelines/nextjs/ai_client_lazy_loading.md) — `next/dynamic`, heavy client deps; Suspense does **not** defer `react-day-picker` / `recharts`.  
+**Runtime:** [ADR-002](docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — Next.js **16.4** (exact patch pin), Instant Navigations **required** (§5.1 / loading §8.1)  
+**Cache tags:** the tag registry lives in code (`apps/web/src/lib/cache-tags.ts`, created in P5); policy — [`ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) §8
+
+When you **add or edit** `page.tsx`, segment `layout.tsx`, colocated `loading.tsx`, or `error.tsx` under `apps/web/src/app/`:
+
+## Do
+
+1. **Design for Instant Navigations:** adopt Cache Components **then** Partial Prefetching; prefer Stream (`<Suspense>` / `loading.tsx`) or Cache (`'use cache'`) so navigations stay instant; use `export const instant = false` only with an explicit product reason (Block) — §8.1.
+2. **Instant Insights (dev):** overlay is **warning** (not general QA, ≠ `next-dev-loop`). Close findings with Stream / Cache / Block — [`ai_loading_patterns.md`](docs/guidelines/nextjs/ai_loading_patterns.md) §8.1.1. Production build uses `blocking-prerender-*` — do not mix with `blocking-route`.
+3. **Multiple independent Prisma queries** for **different UI sections** → separate async Server Components (prefer `*.server.tsx`), each in **`<Suspense fallback={<RegionSkeleton />}>`**. Avoid blocking the whole page with one top-level `Promise.all` unless a [§18 exception](docs/guidelines/nextjs/ai_loading_patterns.md#18-documented-exceptions) is documented.
+4. **New or materially changed data-heavy route** → colocated **`loading.tsx`** (skeleton matching page chrome) per §10.
+5. Keep **`page.tsx` light** (§4): `await params` / `searchParams`, fast `auth()` + redirects, static shell; defer heavy work to Suspense children in `src/data/**` or `*.server.tsx`. **Opt-in:** sync page + `params.then()` when `cacheComponents: true` — see `ai_loading_patterns.md` §4.1 / ADR-010.
+6. **Independent queries in one async child** → `Promise.all`, not sequential awaits (§7). For independent **UI regions**, prefer sibling Suspense over one `Promise.all` that fails atomically (§5).
+7. **Repeated session/DB reads in one request** → React `cache()` (§6, §8); cross-request public reads → **`'use cache'`** + `cacheTag()` per cache policy (§8) — **not** `unstable_cache`. **`'use cache: private'`** is browser-only — not static shell / CDN.
+8. Pair Suspense with segment **`error.tsx`** where failure is possible (§12). Optional **region** boundaries: `catchError` per `ai_loading_patterns.md` §12.1. Skeletons match final layout — CLS target < 0.1 (§11). **`<Link prefetch={true}>`** only per-link after a live App Shell.
+
+## Do not
+
+- Duplicate the **same** full-page loading UI via both `loading.tsx` and wrapping Suspense for identical content (§3.3).
+- Leave long DB work only in layout/`page` top level when UI could stream in regions (§4).
+- Use false nested Suspense when IDs are already in `params` (§5).
+- Cache authorization, use **`unstable_cache`** in new code, or skip `updateTag` after mutations that affect tagged reads (§8).
+- Enable **`partialPrefetching`** without **`cacheComponents`**.
+- Blind **`export const instant = false`** on every route (defeats Instant Navigations).
+- Leave empty shells (`fallback={null}` / Suspense around the entire page body) that Instant Insights would treat as “instant” but show nothing — §8.1.1.
+
+## Pulse snapshot examples (not product routes)
+
+See `docs/examples/pulse/` streaming regions — copy **patterns**, not Pulse URLs; project routes are in [`canonical_routes.md`](docs/design/canonical_routes.md).
+
+## Before you finish
+
+Run full checklist in **ai_loading_patterns.md §16** (sections A–E). Review **§17 anti-patterns**. Verify on Vercel preview when available.
+
+Reference: Pulse snapshot `ai_loading_patterns.md` §4–§18 + `app-router-streaming-loading.mdc`. Root Guidelines override the snapshot.

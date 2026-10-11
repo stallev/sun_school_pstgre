@@ -93,7 +93,7 @@ Always pair mutations with **ui-mutation-pending** + **ui-toast-mutations**.
 ## 9. URL state
 
 - Prefer **`nuqs`** or Next.js `searchParams` for filters (catalog, admin lists) when scaffolded
-- Sync filter state with shareable URLs per client_flow
+- Sync filter state with shareable URLs per [`teacher_flow.md`](../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md)
 
 ---
 

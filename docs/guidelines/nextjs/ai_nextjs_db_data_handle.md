@@ -85,8 +85,8 @@ apps/web/src/actions/**              ← thin: FormData → DAL → cache / redi
 apps/web/src/app/api/**/route.ts     ← thin: JSON → DAL → NextResponse.json(result)
 ```
 
-- Return **`MutationResult<T>`** from `@{{PACKAGE_SCOPE}}/domain` — no parallel error shapes.
-- Shared Zod in `lib/validation/` or `@{{PACKAGE_SCOPE}}/domain`.
+- Return **`MutationResult<T>`** from `@sunschool/domain` — no parallel error shapes.
+- Shared Zod in `lib/validation/` or `@sunschool/domain`.
 - **Never** duplicate business logic between Action and Route Handler.
 
 ### Utilities (add with first Class B flow)

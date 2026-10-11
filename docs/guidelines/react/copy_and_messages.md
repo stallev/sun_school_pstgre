@@ -4,7 +4,7 @@ All user-visible product copy for **`apps/web`** lives in **`apps/web/src/lib/me
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
 **Cursor rules:** **ui-messages-and-copy** (`.cursor/rules/ui-messages-and-copy.mdc`) · **ui-messages-bundle-splitting** (`.cursor/rules/ui-messages-bundle-splitting.mdc`)  
-**Locale strategy:** [`adr_009_ui_locale_strategy.md`](../../prds/07_governance/adr_009_ui_locale_strategy.md) · **Runtime:** [`i18n_runtime_spec.md`](../../implementation/mvp/contracts/i18n_runtime_spec.md)
+**Locale strategy:** [`adr_008_i18n_ru_en_dictionary_slices.md`](../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md) · **Runtime:** ADR-008 §4 (отдельного runtime-spec нет)
 
 ---
 
@@ -44,9 +44,9 @@ Nested objects by domain:
 | `locale` | Switcher labels, language names (P17) |
 
 - **Validation** vs **server** errors separated where helpful (`booking.validation`, `booking.server`).
-- **Enum/API values** (`client`, `pending`, `confirmed`) — `@{{PACKAGE_SCOPE}}/domain` or `@/lib/...` constants; **labels** in `messages`.
+- **Enum/API values** (`client`, `pending`, `confirmed`) — `@sunschool/domain` or `@/lib/...` constants; **labels** in `messages`.
 - **Mutation pending labels** — short gerund-style per locale (“Saving…”, “Сохраняем…”). See [`ai_form_handling_pattern.md`](./ai_form_handling_pattern.md) §4.
-- **Plurals** — keyed branches (`one`, `few`, `many`) per [`content_and_microcopy_contract.md`](../../design/content_and_microcopy_contract.md) §C8; no string concatenation with fixed word order.
+- **Plurals** — keyed branches (`one`, `few`, `many`) per [ADR-008](../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md); no string concatenation with fixed word order.
 
 ---
 

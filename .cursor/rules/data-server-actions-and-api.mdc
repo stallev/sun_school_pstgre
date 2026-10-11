@@ -1,0 +1,55 @@
+---
+description: Data layer — Server Actions vs Route Handlers, DAL pattern
+globs:
+  - apps/web/src/app/**
+  - apps/web/src/lib/**
+  - apps/web/src/actions/**
+  - apps/web/src/data/**
+alwaysApply: false
+---
+
+# Data access: Server Actions and API routes
+
+**Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
+**Normative doc:** [`docs/guidelines/nextjs/ai_nextjs_db_data_handle.md`](docs/guidelines/nextjs/ai_nextjs_db_data_handle.md) (§7 iOS Safari)  
+**Data fetching:** [`docs/guidelines/nextjs/ai_data_fetching_patterns.md`](docs/guidelines/nextjs/ai_data_fetching_patterns.md) — no self-fetch, `cache()`, `'use cache'`, parent→child DTO (§7)  
+**Incidents / transport:** **ios-safari-mutation-transport** (pattern doc is added with the first Class B flow; origin: [`docs/examples/pulse/`](docs/examples/pulse/))
+
+## Core behavior
+
+- **Server Action** from client → Next.js **re-renders Server Components on the current page** (cannot disable).
+- **Route Handler** + client `fetch()` → **no automatic RSC re-render**.
+
+## When to use which
+
+| Scenario | Prefer |
+|----------|--------|
+| Form submit; list/detail refresh | **Server Action** (+ iOS fallback on Class B — **ios-safari-mutation-transport**) |
+| Modal close updating parent | **Server Action** |
+| Optimistic toggle (e.g. mark a notification read) | **Route Handler** primary (Class A) |
+| JSON/polling/external API | **Route Handler** |
+| Frequent / debounced save | **Route Handler** + `resilientPostFetch` — not Server Action |
+
+## DAL and server-only
+
+- Mutation logic → **`apps/web/src/data/**`** with `import "server-only"`.
+- **`apps/web/src/actions/**`** thin: call DAL, then `revalidatePath` / `revalidateTag` / `redirect`.
+- Shared Zod → `lib/validation/` or `@sunschool/domain`.
+- **Mutation returns:** `MutationResult<T>` from `@sunschool/domain` — no new error shape variants.
+
+## Practice
+
+- Authorization in DAL via `requireActiveUser()` + `@sunschool/policy-server`; foreign resource → `NOT_FOUND`, wrong role → `FORBIDDEN` (authorization matrix AZ-D3/AZ-D4).
+- Use-case = domain rules + DAL transaction + audit record **in the same transaction**.
+- Next.js 16.4.x: `await cookies()`, `await headers()`, `await params`.
+- **Class B critical submits** (registration, access request approve, homework check save): dual transport per **ios-safari-mutation-transport** — shared DAL, `MutationResult`, no logic fork.
+
+## Async & error handling (MUST)
+
+- Every promise chain ends in `.catch()` / `try-catch` — no unhandled rejections.
+- Independent parallel sources where one may non-critically fail → `Promise.allSettled`, not `Promise.all` (which discards the other results' work on first rejection).
+- Multi-step DAL calls with distinct failure meanings → explicit Result shape (`MutationResult<T>` / discriminated union), not nested try/catch.
+
+Full detail: [ai_data_fetching_patterns.md](docs/guidelines/nextjs/ai_data_fetching_patterns.md) §3.1–§3.2.
+
+Reference: [`docs/examples/pulse/.cursor/rules/data-server-actions-and-api.mdc`](docs/examples/pulse/.cursor/rules/data-server-actions-and-api.mdc)

@@ -1,9 +1,9 @@
-# Form handling pattern — Pulse
+# Form handling pattern — Sunday School
 
 Client forms: **`Field`** / **`Label`** / **`Input`** from `@/components/ui`, **`sonner`** for feedback, **Server Actions** for mutations. Prefer **`useActionState`** when server returns validation state; otherwise **`useTransition`** + toast. **Busy UI** while in flight — §4.
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
-**Stack:** Next.js **16.4**, React 19, `@{{PACKAGE_SCOPE}}/domain` `MutationResult`  
+**Stack:** Next.js **16.4**, React 19, `@sunschool/domain` `MutationResult`  
 **Cursor rules:** **ui-mutation-pending**, **ui-toast-mutations**, **ios-safari-mutation-transport** (Class B critical forms)
 
 ```mermaid
@@ -21,16 +21,19 @@ flowchart TD
 'use server'
 
 import { redirect } from 'next/navigation'
-import type { MutationResult } from '@{{PACKAGE_SCOPE}}/domain'
+import type { MutationResult } from '@sunschool/domain'
 
-export async function createBooking(
+export async function createLesson(
   _prev: MutationResult<{ id: string }> | null,
   formData: FormData
 ): Promise<MutationResult<{ id: string }>> {
-  const slotId = String(formData.get('slotId') ?? '').trim()
-  if (!slotId) return { ok: false, code: 'VALIDATION', message: '…' } // from @/lib/messages in product code
-  // … DAL + policy
-  redirect('/client/bookings/…')
+  // 1. requireActiveUser() — userId only from the session
+  // 2. Zod parse (schema from @sunschool/domain) → fields errors in MutationResult.fields
+  // 3. DAL use-case: domain rules + transaction + audit record
+  // Codes come from @sunschool/domain (CHECK_*, SCHOOL_*, …), text from @/lib/messages
+  const result = await createLessonUseCase(formData)
+  if (result.ok) redirect(`/lessons/${result.data.id}`)
+  return result
 }
 ```
 
@@ -44,24 +47,24 @@ Mutations live in **`apps/web/src/data/**`**; actions stay thin. See [ai_nextjs_
 'use client'
 
 import { useActionState } from 'react'
-import { createBooking } from '@/actions/booking'
+import { createLesson } from '@/actions/lessons'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { MESSAGES } from '@/lib/messages'
 
-export const BookingForm = () => {
-  const [state, formAction, pending] = useActionState(createBooking, null)
+export const LessonForm = () => {
+  const [state, formAction, pending] = useActionState(createLesson, null)
 
   return (
     <form action={formAction} aria-busy={pending}>
       <Field data-invalid={state && !state.ok}>
-        <FieldLabel htmlFor="slotId">{MESSAGES.booking.slotLabel}</FieldLabel>
-        <Input id="slotId" name="slotId" required disabled={pending} />
-        {state && !state.ok ? <FieldError>{state.message}</FieldError> : null}
+        <FieldLabel htmlFor="topic">{MESSAGES.teacher.lesson.topicLabel}</FieldLabel>
+        <Input id="topic" name="topic" required disabled={pending} />
+        {state && !state.ok ? <FieldError>{state.fields?.topic ?? state.message}</FieldError> : null}
       </Field>
       <Button type="submit" disabled={pending} aria-busy={pending}>
-        {pending ? MESSAGES.booking.submitting : MESSAGES.booking.submit}
+        {pending ? MESSAGES.teacher.lesson.saving : MESSAGES.teacher.lesson.save}
       </Button>
     </form>
   )
@@ -99,15 +102,15 @@ Applies to **any server mutation**. Distinct from route **`loading.tsx`** — se
 
 ## 5. Optimistic actions (not forms)
 
-Wishlist toggle, service active — **`useOptimistic`** — see [`ai_optimistic_ui_pattern.md`](./ai_optimistic_ui_pattern.md) and §7 in Pulse reference.
+Toggles without a form (e.g. mark a notification read) — **`useOptimistic`** — see [`ai_optimistic_ui_pattern.md`](./ai_optimistic_ui_pattern.md) and §7 in Pulse reference.
 
 ---
 
 ## 6. Dates and timezone
 
-- Display/booking times use **`TrainerProfile.timezone`** — never server default alone.
-- Store UTC in DB; format with **`date-fns`** + explicit locale.
-- See user flows and [database_schema_v1.md](../../prds/03_data_model/database_schema_v1.md).
+- Lesson dates and deadlines are interpreted in the **school time zone** (`app_setting`, [ADR-004](../../prds/07_governance/adr_004_timezone_scheduling_model.md)) — never the server or browser default alone; `computeLate` takes the zone as input.
+- Store UTC in DB (or a calendar date where the schema says `date`); format with **`date-fns`** + explicit locale from the app language.
+- See [database_schema_v1.md](../../prds/03_data_model/database_schema_v1.md) and [`forms_and_validation_ux.md`](../../design/forms_and_validation_ux.md) (F1–F12, form catalog).
 
 ---
 
@@ -115,25 +118,26 @@ Wishlist toggle, service active — **`useOptimistic`** — see [`ai_optimistic_
 
 Mobile Safari can throw **`TypeError: Load failed`** on Server Action POST without a server error. **Mandatory** for conversion-critical forms on canonical routes.
 
-**Docs:** [`ios-safari-mutation-transport-pattern.md`](../../incidents/ios-safari-mutation-transport-pattern.md) · [`ai_nextjs_db_data_handle.md`](../nextjs/ai_nextjs_db_data_handle.md) §7
+**Docs:** rule **ios-safari-mutation-transport** · [`ai_nextjs_db_data_handle.md`](../nextjs/ai_nextjs_db_data_handle.md) §7 · Pulse incidents in `docs/examples/pulse/`
 
 ### When required
 
 | Flow | Route | Class |
 |------|-------|-------|
-| Booking confirm | `/book/[trainerId]` | B |
-| Trainer onboarding step | `/auth/register/trainer` | B |
-| Admin approve/reject | `/admin/trainers` | B |
-| Profile save (single submit) | `/trainer/profile`, `/client/profile` | B |
+| Registration (consent + name) | `/register` | B |
+| Access request approve / reject | admin access screen | B |
+| Homework check save | lesson check screen | B |
+| Lesson create / edit | `/lessons/new`, `/lessons/[lessonId]/edit` | B |
+| Profile save (single submit) | `/profile` | B |
 
-Toggles / wishlist → **Class A** (Route Handler primary) — [`ai_optimistic_ui_pattern.md`](./ai_optimistic_ui_pattern.md), not this section.
+Routes — [`canonical_routes.md`](../../design/canonical_routes.md). Toggles / debounced saves → **Class A** (Route Handler primary) — [`ai_optimistic_ui_pattern.md`](./ai_optimistic_ui_pattern.md), not this section.
 
 ### Rules
 
 1. **`useActionState`** / `<form action={…}>` stays the default UX on non-iOS browsers.
 2. On **`isIosSafari()`** (or after `Load failed` retry): call **`POST /api/...`** with **`resilientPostFetch`**, same **`MutationResult`** shape.
 3. **Pending UI unchanged** — `disabled`, `aria-busy`, gerund from `@/lib/messages` on both paths.
-4. **Toasts / redirect:** Action path uses `redirect` + query toast (I2); fallback path uses `router.push('/client/bookings/[id]?booked=1')` + client toast component.
+4. **Toasts / redirect:** Action path uses `redirect` + query toast (I2); fallback path uses `router.push('/lessons/[id]')` + client toast component.
 5. **Do not** fork validation — single DAL in `src/data/**`.
 
 ### Hook sketch (transport selection)

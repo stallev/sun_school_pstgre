@@ -3,7 +3,7 @@
 **Статус:** TEMPLATE — после W4 скопировать в `adr_002_nextjs_vercel_runtime_policy.md` и заполнить проект.  
 **До W4:** Rules и Guidelines могут ссылаться на этот файл.
 
-**Проект:** {{PROJECT_NAME}}  
+**Проект:** Sunday School  
 **Owner:** Architecture + Runtime
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)
@@ -14,7 +14,7 @@
 
 ## 1. Context
 
-{{PROJECT_NAME}} hosted on **Vercel**. Next.js 16 renamed request interception **`middleware.ts` → `proxy.ts`**. Next.js **16.3** adds **Instant Navigations** on Cache Components: **Partial Prefetching**, Instant Insights, and stable **`catchError`**.
+Sunday School hosted on **Vercel**. Next.js 16 renamed request interception **`middleware.ts` → `proxy.ts`**. Next.js **16.3** adds **Instant Navigations** on Cache Components: **Partial Prefetching**, Instant Insights, and stable **`catchError`**.
 
 Agents must not treat Next.js 15 `middleware.ts` as the canonical interception file.
 
@@ -46,9 +46,9 @@ Agents must not treat Next.js 15 `middleware.ts` as the canonical interception f
 
 ### Auth / policy
 
-- **`proxy.ts`** imports **`auth.config.ts`** (edge-safe, **no Prisma**) and **`@{{PACKAGE_SCOPE}}/policy-edge`** only.
+- **`proxy.ts`** imports **`auth.config.ts`** (edge-safe, **no Prisma**) and **`@sunschool/policy-edge`** only.
 - **`auth.ts`** — **never** import from `proxy.ts`.
-- **`@{{PACKAGE_SCOPE}}/policy-server`** — **forbidden** in `proxy.ts` / `middleware.ts`.
+- **`@sunschool/policy-server`** — **forbidden** in `proxy.ts` / `middleware.ts`.
 
 ---
 
@@ -133,7 +133,7 @@ Detail: [`docs/guidelines/nextjs/ai_loading_patterns.md`](../../guidelines/nextj
 - [ ] `cacheComponents: true` then `partialPrefetching: true`
 - [ ] New route protection uses **`proxy.ts`**
 - [ ] `auth.config.ts` in proxy; `auth.ts` only in server handlers/actions
-- [ ] No `@{{PACKAGE_SCOPE}}/policy-server` in `proxy.ts` / `middleware.ts`
+- [ ] No `@sunschool/policy-server` in `proxy.ts` / `middleware.ts`
 - [ ] Async `cookies` / `headers` / `params` / `searchParams`
 - [ ] Mutations use `updateTag` / `revalidateTag` / `revalidatePath`
 - [ ] Cross-request reads use **`'use cache'`** + `cacheTag()` — not `unstable_cache`

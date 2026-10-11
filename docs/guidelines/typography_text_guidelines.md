@@ -1,8 +1,8 @@
-﻿# Typography and text content — Pulse
+﻿# Typography and text content — Sunday School
 
-Typography for **`apps/web`** using shared atoms (on scaffold), semantic HTML, {{DESIGN_SYSTEM_NAME}} font tokens, and accessibility.
+Typography for **`apps/web`** using shared atoms (on scaffold), semantic HTML, Slate Cobalt font tokens, and accessibility.
 
-**Design source:** [`visual_identity_contract.md`](../design/visual_identity_contract.md), interim [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](../default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) §typography  
+**Design source:** [`visual_identity_contract.md`](../design/visual_identity_contract.md), interim [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html) §typography  
 **UI rule:** **ui-design-system-shadcn**
 
 ---
@@ -11,9 +11,11 @@ Typography for **`apps/web`** using shared atoms (on scaffold), semantic HTML, {
 
 | Role | Font | CSS token |
 |------|------|-----------|
-| Headings / display | **Source Serif 4** | `font-heading` |
-| UI / body | **Manrope** | `font-sans` |
-| Code / times / IDs | **JetBrains Mono** | `font-mono` |
+| Headings / display | **Alegreya** | `font-display` |
+| UI / body | **Alegreya Sans** | `font-body` |
+| Code / times / IDs | system monospace (`ui-monospace`) — отдельный шрифт не подключается | `font-mono` |
+
+Канон шрифтов и токенов — [`visual_identity_contract.md`](../design/visual_identity_contract.md) (D-2): Alegreya / Alegreya Sans из прототипа заменили Source Serif 4 / Manrope шаблона.
 
 Wire via `next/font/google` in root `layout.tsx`; map in `globals.css` `@theme inline`.
 
@@ -58,7 +60,7 @@ From design system — **mobile-first** (base = mobile, `md:`/`lg:` = desktop):
 | Body | `text-base` | `text-base` |
 | Caption / meta | `text-sm text-muted-foreground` | same |
 
-**Prototype parity:** match font family, weight, and size from [`{{MAIN_PROTOTYPE_HTML}}`](../prototypes/{{MAIN_PROTOTYPE_HTML}}) — Cursor rule **ui-prototype-fidelity**.
+**Prototype parity:** match font family, weight, and size from [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html) — Cursor rule **ui-prototype-fidelity**.
 
 ---
 
@@ -66,7 +68,7 @@ From design system — **mobile-first** (base = mobile, `md:`/`lg:` = desktop):
 
 - Real heading hierarchy — do not skip levels for styling alone (`visualLevel` prop when atoms added)
 - Semantic landmarks in layouts: `main`, `nav`, `header`, `footer` — **ui-semantics-a11y**
-- Sufficient contrast per {{DESIGN_SYSTEM_NAME}} tokens (light + dark) — WCAG 2.1 AA
+- Sufficient contrast per Slate Cobalt tokens (light + dark) — WCAG 2.1 AA
 - `sr-only` for icon-only buttons with lucide icons; decorative icons — `aria-hidden`
 
 ---
@@ -75,4 +77,4 @@ From design system — **mobile-first** (base = mobile, `md:`/`lg:` = desktop):
 
 All strings from **`@/lib/messages`** — not hardcoded in typography components except dev placeholders.
 
-**Reference:** Pulse snapshot [`typography_text_guidelines.md`](../examples/pulse/docs/guidelines/typography_text_guidelines.md) — Calm Editorial → Warm Forest.
+**Reference:** Pulse snapshot [`typography_text_guidelines.md`](../examples/pulse/docs/guidelines/typography_text_guidelines.md) — Calm Editorial → Slate Cobalt.

@@ -1,0 +1,28 @@
+# Profile lean (docs/meta/project_quality_profile.md, D7): one `verify` job.
+# test:coverage and e2e jobs are for standard / strict and are not included.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run rules:check
+      - run: npm run deps:check
+      - run: npm run encoding:check
+      - run: npm run docs:links

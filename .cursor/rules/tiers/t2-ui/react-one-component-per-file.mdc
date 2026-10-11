@@ -19,7 +19,7 @@ alwaysApply: true
 
 ## Типографика
 
-- Пользовательский текст — через typography atoms или design-system scale из [`typography_text_guidelines.md`](docs/guidelines/typography_text_guidelines.md) и [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}).
+- Пользовательский текст — через typography atoms или design-system scale из [`typography_text_guidelines.md`](docs/guidelines/typography_text_guidelines.md) и [`sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html).
 - Не дублировать произвольные heading/body Tailwind strings across routes.
 
 ## Связанные правила

@@ -11,7 +11,7 @@ alwaysApply: false
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)  
 **Guide:** [`ai_semantics_a11y_guidelines.md`](docs/guidelines/react/ai_semantics_a11y_guidelines.md)  
 **Deep dive:** [`docs/general/03-accessibility.md`](docs/general/03-accessibility.md)  
-**Design system:** [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) §15 Checklist
+**Design system:** [`sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html) §15 Checklist
 
 **Target:** **WCAG 2.1 Level AA** — contrast, keyboard, names, structure.
 
@@ -35,7 +35,7 @@ alwaysApply: false
 | **Modals/Sheets** | Focus trap, Escape закрывает — shadcn/Base UI primitives |
 | **Forms** | `aria-invalid`, `aria-describedby` / `FieldError` при ошибках |
 | **Mutations** | `disabled` + `aria-busy` — **ui-mutation-pending** |
-| **Contrast** | AA: текст 4.5:1, UI 3:1 — {{DESIGN_SYSTEM_NAME}} tokens, light + dark |
+| **Contrast** | AA: текст 4.5:1, UI 3:1 — Slate Cobalt tokens, light + dark |
 | **Motion** | `prefers-reduced-motion` — без обязательной анимации для понимания |
 | **Touch** | Targets ≥ 44×44px — **ui-mobile-first** |
 | **Color alone** | Статус/error — не только цвет; текст, icon, или badge |

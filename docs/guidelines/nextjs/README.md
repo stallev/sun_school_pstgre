@@ -1,4 +1,4 @@
-# Next.js Guidelines — {{PROJECT_NAME}}
+# Next.js Guidelines — Sunday School
 
 **Baseline:** Next.js **16.4** (pinned) App Router · **Vercel** · Turbopack · Neon + Prisma v7  
 **Upstream:** [Next.js 16.4](https://nextjs.org/blog/next-16-3) — Instant Navigations **required** ([ADR-002 template §5.1](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md))  

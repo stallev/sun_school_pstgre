@@ -17,7 +17,7 @@
 ```bash
 npm run typecheck          # root — every workspace
 npm run lint               # root — apps/web + all packages/*
-npm run test:domain        # when touching @{{PACKAGE_SCOPE}}/domain
+npm run test:domain        # when touching @sunschool/domain
 ```
 
 Until workspaces exist, manually run `tsc --noEmit` in each touched package.
@@ -33,10 +33,10 @@ Until workspaces exist, manually run `tsc --noEmit` in each touched package.
 
 | Layer | Owns | Must not depend on |
 |-------|------|---------------------|
-| `@{{PACKAGE_SCOPE}}/domain` | Pure domain literals, unions, ports, mutation ADT, shared Zod DTOs | `@{{PACKAGE_SCOPE}}/db`, Next.js, `next-auth`, Prisma |
-| `@{{PACKAGE_SCOPE}}/db` | Prisma client, `$Enums`, repositories | `apps/web` |
-| `@{{PACKAGE_SCOPE}}/policy-server` | Policy inputs as **domain types** (`UserRole`, `PolicySessionContext`) | `next-auth` types, `redirect` / `notFound` |
-| `@{{PACKAGE_SCOPE}}/policy-edge` | Edge-safe path/JWT helpers | `@{{PACKAGE_SCOPE}}/db`, `@{{PACKAGE_SCOPE}}/policy-server` |
+| `@sunschool/domain` | Pure domain literals, unions, ports, mutation ADT, shared Zod DTOs | `@sunschool/db`, Next.js, `next-auth`, Prisma |
+| `@sunschool/db` | Prisma client, `$Enums`, repositories | `apps/web` |
+| `@sunschool/policy-server` | Policy inputs as **domain types** (`UserRole`, `PolicySessionContext`) | `next-auth` types, `redirect` / `notFound` |
+| `@sunschool/policy-edge` | Edge-safe path/JWT helpers | `@sunschool/db`, `@sunschool/policy-server` |
 | `apps/web` | Auth.js module augmentation, UI props, mappers | — |
 
 **Anti-pattern:** `packages/policy/server` importing `Session` from `next-auth`.
@@ -57,7 +57,7 @@ export type PolicySessionContext = {
 ## 3. Domain literals
 
 - Prisma enums in schema are **persistence** source.
-- **`@{{PACKAGE_SCOPE}}/domain`** exports canonical unions (`UserRole`, `BookingStatus`, `TrainerStatus`, …) and **named constant objects** (`USER_ROLE`, `AUTH_MUTATION_ERROR_CODES`, …).
+- **`@sunschool/domain`** exports canonical unions (`UserRole`, `BookingStatus`, `TrainerStatus`, …) and **named constant objects** (`USER_ROLE`, `AUTH_MUTATION_ERROR_CODES`, …).
 - No inline `"pending"` / `"client"` / `"INVALID_CREDENTIALS"` at call sites — import constants or type guards.
 - After whitelist check — **type guard** (`isUserRole`), not `as UserRole`.
 
@@ -65,7 +65,7 @@ export type PolicySessionContext = {
 
 ## 4. Mutation result ADT
 
-Use one discriminated union from `@{{PACKAGE_SCOPE}}/domain`:
+Use one discriminated union from `@sunschool/domain`:
 
 ```ts
 export type MutationOk<T = void> = T extends void ? { ok: true } : { ok: true; data: T };
@@ -73,7 +73,7 @@ export type MutationErr = { ok: false; code: MutationErrorCode; message?: string
 export type MutationResult<T = void> = MutationOk<T> | MutationErr;
 ```
 
-**Error codes:** define in `@{{PACKAGE_SCOPE}}/domain` (`AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES`) — see **domain-literals-and-codes** Cursor Rule. Do not use bare `code: string` or inline SCREAMING_SNAKE literals in actions/DAL/UI.
+**Error codes:** define in `@sunschool/domain` (`AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES`) — see **domain-literals-and-codes** Cursor Rule. Do not use bare `code: string` or inline SCREAMING_SNAKE literals in actions/DAL/UI.
 
 Do not introduce new `{ ok: false; errorMessage: string }` variants.
 
@@ -81,7 +81,7 @@ Do not introduce new `{ ok: false; errorMessage: string }` variants.
 
 ## 5. Prisma Json
 
-- JSON columns: Zod schema + typed override in `@{{PACKAGE_SCOPE}}/db` when added.
+- JSON columns: Zod schema + typed override in `@sunschool/db` when added.
 - Avoid `as unknown as Prisma.InputJsonValue` without documented exception.
 
 ---

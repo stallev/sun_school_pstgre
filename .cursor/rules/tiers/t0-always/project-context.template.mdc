@@ -1,14 +1,14 @@
 ---
-description: "{{PROJECT_NAME}} project context — stack, reference Pulse, document precedence"
+description: "Sunday School project context — stack, reference Pulse, document precedence"
 alwaysApply: true
 ---
 
-# {{PROJECT_NAME}} — project context
+# Sunday School — project context
 
 ## Product
 
-**{{PROJECT_NAME}}** — {{PRODUCT_DESCRIPTION}}  
-Роли: **{{USER_ROLES}}**.  
+**Sunday School** — приложение воскресной школы: учителя и администратор ведут группы, уроки, проверку ДЗ, кирпичики и аналитику (замена действующего приложения)  
+Роли: **admin, teacher**.  
 MVP scope: см. [`docs/prds/01_product_scope/mvp_scope.md`](docs/prds/01_product_scope/mvp_scope.md) (после W1).
 
 ## Quality profile (read with AGENTS.md)
@@ -23,8 +23,8 @@ Architectural and AI-first patterns inherit from **Pulse** (fitness marketplace 
 - Reference summary: [`docs/reference/pulse_project_reference.md`](docs/reference/pulse_project_reference.md)
 - Methodology: [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)
 
-When {{PROJECT_NAME}} docs are silent — follow Pulse reference **architecture, feature patterns, and methodology**, adapting domain and ADR deltas.  
-**{{PROJECT_NAME}} Cursor Rules and Guidelines override Pulse reference code** when they conflict — see [`pulse_project_reference.md`](docs/reference/pulse_project_reference.md) §Priority.
+When Sunday School docs are silent — follow Pulse reference **architecture, feature patterns, and methodology**, adapting domain and ADR deltas.  
+**Sunday School Cursor Rules and Guidelines override Pulse reference code** when they conflict — see [`pulse_project_reference.md`](docs/reference/pulse_project_reference.md) §Priority.
 
 ## Stack (baseline — full Pulse stack; optional modules per quality profile §4)
 
@@ -32,7 +32,7 @@ When {{PROJECT_NAME}} docs are silent — follow Pulse reference **architecture,
 - **Instant Navigations:** `cacheComponents: true` + `partialPrefetching: true`; динамика за `<Suspense>` / `'use cache'`; `export const instant = false` только с задокументированной причиной
 - **Request interception:** **`proxy.ts`** (Next.js 16); `middleware.ts` — только временная миграция
 - **Node.js:** **24.x** — local, CI (`node-version: "24"`), Vercel (`engines.node`: `24.x`)
-- **Hosting:** Vercel · **UI:** shadcn/ui (Base UI) + Tailwind CSS v4 ({{DESIGN_SYSTEM_NAME}} tokens)
+- **Hosting:** Vercel · **UI:** shadcn/ui (Base UI) + Tailwind CSS v4 (Slate Cobalt tokens)
 - **Database:** Neon **PostgreSQL 17** + **Prisma v7** (pooled `DATABASE_URL`, `DIRECT_URL` for migrations)
 - **Auth:** Auth.js v5, **Credentials** (email + password), JWT sessions, role in token
 - **Email:** Resend — **post-MVP** (MVP: schema `job_execution`/`delivery_log` only)
@@ -49,10 +49,10 @@ Runtime policy: [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md) 
 1. **Cursor Rules** (`.cursor/rules/*.mdc`)
 2. **[`AGENTS.md`](AGENTS.md)** — monorepo entry
 3. **Contracts** (`docs/implementation/mvp/contracts/`)
-4. **PRD** (`docs/prds/`) — when created; interim: [`{{INTERIM_DOCS_GLOB}}`]({{INTERIM_DOCS_GLOB}})
+4. **PRD** (`docs/prds/`) — when created; interim: [`docs/my_specs/`](docs/my_specs/)
 5. **[`docs/design/canonical_routes.md`](docs/design/canonical_routes.md)** — single route inventory
 6. **Guidelines** (`docs/guidelines/`) — index in [`docs/guidelines/README.md`](docs/guidelines/README.md)
-7. **HTML prototype** — visual reference only (`docs/prototypes/{{MAIN_PROTOTYPE_HTML}}`), subordinate to canonical docs
+7. **HTML prototype** — visual reference only (`docs/prototypes/sunday_school_prototype.html`), subordinate to canonical docs
 
 **Vs Pulse snapshot:** root Cursor Rules **and** root Guidelines always win over [`docs/examples/pulse/`](docs/examples/pulse/) (even though Guidelines are #6 in this list). **Enforceable paths:** `.cursor/rules/*.mdc` at the repo root and `docs/guidelines/**`. **Not canon:** `docs/examples/pulse/.cursor/rules/**`, `docs/examples/pulse/docs/guidelines/**`, any `docs/examples/lampto/**` (that tree is **not vendored**).
 
@@ -60,11 +60,11 @@ Runtime policy: [ADR-001](docs/prds/07_governance/adr_001_stack_and_runtime.md) 
 
 ## Domain invariants (do not break — fill during W3/W4)
 
-1. **{{DOMAIN_INVARIANT_1}}**
-2. **{{DOMAIN_INVARIANT_2}}**
-3. **{{DOMAIN_INVARIANT_3}}**
-4. **Background jobs (post-MVP email)** — {{DOMAIN_INVARIANT_4}}
-5. **Post-MVP columns** — {{DOMAIN_INVARIANT_5}}
+1. **В школе не более одного активного учебного года; уроки создаются только в активном году; закрытый год — только чтение для teacher, admin правит с записью в журнал (БП-6)**
+2. **Журнал изменений и журнал кирпичиков — только добавление; ошибки исправляются компенсирующими записями; удаление — только по запросу на удаление данных (БП-8, БП-11)**
+3. **Отметки ДЗ привязаны к уроку и группе, где выставлены; история зачислений сохраняется при переводе; кирпичики и достижения считаются по ученику и году, не по группе (БП-7, БП-11)**
+4. **Background jobs (post-MVP email)** — Фоновые задачи и email — post-MVP, в MVP нет `apps/workers`; будущая задача идемпотентна (idempotency key)
+5. **Post-MVP columns** — Схема БД создаётся сразу целиком, включая post-MVP (семьи, достижения, штрафы, голосовая проверка); post-MVP таблицы без интерфейса и не ломают MVP-сценарии
 
 ## Where to find norms
 
@@ -95,4 +95,4 @@ Task classification T0–T3 (orchestrator) is a different axis from this table: 
 
 ## Repository status
 
-**Текущая фаза:** {{CURRENT_PHASE}}. Не расширять реализацию без явной фазы и contract.
+**Текущая фаза:** Bootstrap — P0. Не расширять реализацию без явной фазы и contract.

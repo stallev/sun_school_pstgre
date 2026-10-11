@@ -18,7 +18,7 @@ Package in `apps/web/package.json`; aligns with shadcn/ui and tree-shakable impo
 
 - **Brand assets** (official multi-color logos if required).
 - **Illustrations** or non-icon artwork.
-- **Design-system mandates** from [`{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}) for pixel parity.
+- **Design-system mandates** from [`sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html) for pixel parity.
 
 ## Usage
 
@@ -26,6 +26,6 @@ Package in `apps/web/package.json`; aligns with shadcn/ui and tree-shakable impo
 import { Heart } from "lucide-react";
 ```
 
-Size/stroke via `className` (`size-4`, `text-muted-foreground`) — {{DESIGN_SYSTEM_NAME}} tokens per [ui-design-system-shadcn.mdc](ui-design-system-shadcn.mdc).
+Size/stroke via `className` (`size-4`, `text-muted-foreground`) — Slate Cobalt tokens per [ui-design-system-shadcn.mdc](ui-design-system-shadcn.mdc).
 
 Reference: Pulse (docs/examples/pulse) `ui-icons-lucide.mdc`.

@@ -3,7 +3,7 @@
 **Статус:** TEMPLATE — после волны W1 (`documentation_creation_registry.md` → W1-02) скопировать в `decision_process.md` и заполнить проект.  
 **Зависит от:** `adr_index.md` (W1-01) должен существовать первым.
 
-**Проект:** {{PROJECT_NAME}}  
+**Проект:** Sunday School  
 **Owner:** Architecture
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)
@@ -14,7 +14,7 @@
 
 ## Purpose
 
-Фиксирует **когда** и **как** команда и AI-агенты создают, обновляют и принимают ADR в {{PROJECT_NAME}}. Цель — предотвратить «тихие» архитектурные изменения в коде без записи решения и без учёта ADR-001/002 и реестра документации.
+Фиксирует **когда** и **как** команда и AI-агенты создают, обновляют и принимают ADR в Sunday School. Цель — предотвратить «тихие» архитектурные изменения в коде без записи решения и без учёта ADR-001/002 и реестра документации.
 
 ---
 
@@ -52,7 +52,7 @@
 
 **Дата:** YYYY-MM-DD
 **Статус:** PROPOSED | ACCEPTED | DEPRECATED | SUPERSEDED
-**Проект:** {{PROJECT_NAME}}
+**Проект:** Sunday School
 **Проверено по:** <lib>@<pin> — Context7, YYYY-MM-DD   <!-- runtime/auth/db ADR -->
 
 ## 1. Context
@@ -97,7 +97,7 @@ MVP lock-in (ADR-001, ADR-002) — сразу **ACCEPTED** без ожидани
 ## Workflow (agent + human)
 
 1. **READ** [`adr_index.md`](./adr_index.md) и зависимые ADR.
-2. **CHECK** Pulse reference — [`pulse_project_reference.md`](../../reference/pulse_project_reference.md); адаптировать под домен {{PROJECT_NAME}} и ADR-001, **не** копировать формулировки дословно.
+2. **CHECK** Pulse reference — [`pulse_project_reference.md`](../../reference/pulse_project_reference.md); адаптировать под домен Sunday School и ADR-001, **не** копировать формулировки дословно.
 3. **Context7** (обязательно для runtime/auth/db ADR): Next.js `/vercel/next.js`, Auth.js `/websites/authjs_dev`, Prisma `/websites/prisma_io` — см. registry §2.7.
 4. **DRAFT** `adr_NNN_*.md` в `docs/prds/07_governance/`.
 5. **UPDATE** [`adr_index.md`](./adr_index.md) — строка в registry + Change log.
@@ -159,5 +159,5 @@ MVP lock-in (ADR-001, ADR-002) — сразу **ACCEPTED** без ожидани
 ## Agent notes
 
 - `proxy.ts` в новом коде без migration ticket вместо `middleware.ts` — нарушение ADR-002, не повод для нового ADR, если можно исправить код.
-- Доменные ADR Pulse (auth roles, booking, timezone, i18n) — **иллюстрация процесса**, не источник решений для {{PROJECT_NAME}}; копировать структуру, не содержимое.
+- Доменные ADR Pulse (auth roles, booking, timezone, i18n) — **иллюстрация процесса**, не источник решений для Sunday School; копировать структуру, не содержимое.
 - Post-MVP фичи — не новый ADR на MVP без явного scope change; см. `post_mvp_deferrals.md` (после создания в волне W1).

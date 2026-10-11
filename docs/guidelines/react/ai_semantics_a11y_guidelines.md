@@ -3,7 +3,7 @@
 Norms for **semantic HTML** and **WCAG 2.1 AA** in `apps/web`.  
 **Cursor rule:** **ui-semantics-a11y**  
 **Deep dive:** [`docs/general/03-accessibility.md`](../../general/03-accessibility.md)  
-**Design system checklist:** [`visual_identity_contract.md`](../../design/visual_identity_contract.md), [`accessibility_requirements.md`](../../design/accessibility_requirements.md)
+**Design system checklist:** [`visual_identity_contract.md`](../../design/visual_identity_contract.md), [`ui_states_contract.md`](../../design/ui_states_contract.md)
 
 ---
 
@@ -62,7 +62,7 @@ Pulse serves clients, trainers, and admins on mobile and desktop. Semantic struc
 
 ### Perceivable
 
-- **Contrast:** text ≥ **4.5:1**, large text (≥ 18px regular or ≥ 14px bold) ≥ **3:1**, UI components ≥ **3:1** — {{DESIGN_SYSTEM_NAME}} semantic tokens; verify light **and** dark.
+- **Contrast:** text ≥ **4.5:1**, large text (≥ 18px regular or ≥ 14px bold) ≥ **3:1**, UI components ≥ **3:1** — Slate Cobalt semantic tokens; verify light **and** dark.
 - **Marketing bands:** text on `bg-brand-cta-band` / `bg-brand-band` uses solid `text-on-brand-*` tokens — **not** opacity below **0.88** for body-sized copy or **11px** eyebrow labels (PageSpeed / axe fail below that).
 - **Tertiary copy:** `text-subtle-foreground` (`--color-ink-3`) MUST meet **4.5:1** on `--color-bg` and `--color-surface`; above-the-fold stats use `text-muted-foreground` when subtle tone fails audit.
 - **Images:** informative `alt`; decorative `alt=""`.
@@ -174,7 +174,7 @@ Before finishing a UI task:
 | [`typography_text_guidelines.md`](../typography_text_guidelines.md) | Heading hierarchy, atoms |
 | [`ai_component_guidelines.md`](./ai_component_guidelines.md) | Component structure |
 | [`ai_form_handling_pattern.md`](./ai_form_handling_pattern.md) | Form a11y |
-| [`accessibility_requirements.md`](../../design/accessibility_requirements.md) | Product WCAG canon |
+| [`ui_states_contract.md`](../../design/ui_states_contract.md) | States and focus behavior (product canon; profile D8 → rule `ui-semantics-a11y`) |
 | [`docs/general/03-accessibility.md`](../../general/03-accessibility.md) | Deep dive — focus trap, keyboard patterns |
 | [`ai_browser_rendering_performance.md`](./ai_browser_rendering_performance.md) | Motion / prefers-reduced-motion |
 | [`visual_identity_contract.md`](../../design/visual_identity_contract.md) | Contrast tokens |

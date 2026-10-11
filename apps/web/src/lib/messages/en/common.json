@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "unauthorized": "Sign in to continue",
+    "forbidden": "You do not have permission for this action",
+    "not_found": "Not found",
+    "conflict": "The data has changed. Refresh the page and try again",
+    "internal": "Something went wrong. Please try again"
+  }
+}

@@ -2,9 +2,9 @@
 description: Design system tokens, shadcn primitives and the Design Lab catalog for product UI
 alwaysApply: true
 ---
-# UI: {{DESIGN_SYSTEM_NAME}} + shadcn + Tailwind v4
+# UI: Slate Cobalt + shadcn + Tailwind v4
 
-**Source of truth:** [`docs/design/visual_identity_contract.md`](docs/design/visual_identity_contract.md) (UX-03, W2); до него — interim [`docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}}`](docs/default_docs/{{INTERIM_DESIGN_SYSTEM_DOC}})
+**Source of truth:** [`docs/design/visual_identity_contract.md`](docs/design/visual_identity_contract.md) (UX-03, W2); до него — interim [`docs/prototypes/sunday_school_prototype.html`](docs/prototypes/sunday_school_prototype.html)
 **Typography:** [`docs/guidelines/typography_text_guidelines.md`](docs/guidelines/typography_text_guidelines.md)  
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](docs/meta/ai_first_project_methodology.md)
 

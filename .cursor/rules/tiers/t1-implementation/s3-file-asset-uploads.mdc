@@ -18,18 +18,18 @@ alwaysApply: false
 ## Required alignment
 
 - **Single registry:** Prisma **`FileAsset`** only (`blob_pathname` = S3 object key, `upload_status`, …). No parallel file tables.
-- **Object key prefix:** **`FILE_UPLOAD_OBJECT_KEY_PREFIX`** from `@{{PACKAGE_SCOPE}}/domain` (`{{S3_KEY_PREFIX}}`); build keys with **`buildFileUploadObjectKey()`**; guard with **`isFileUploadObjectKey()`** on confirm/read.
+- **Object key prefix:** **`FILE_UPLOAD_OBJECT_KEY_PREFIX`** from `@sunschool/domain` (`sunschool/`); build keys with **`buildFileUploadObjectKey()`**; guard with **`isFileUploadObjectKey()`** on confirm/read.
 - **Lifecycle:** **`pending`** row with server-chosen key → client PUT to S3 (presigned) → **HeadObject** verify → **`ready`** or **`failed`**. Link FKs only after **`ready`**.
-- **Auth and policy:** `auth()` + `@{{PACKAGE_SCOPE}}/policy-server` on every upload mutation.
+- **Auth and policy:** `auth()` + `@sunschool/policy-server` on every upload mutation.
 - **Reads:** presigned GET only when **`upload_status = ready`**; do not persist expiring URLs as source of truth.
-- **Paths:** code under `apps/web/src/`; Prisma via `@{{PACKAGE_SCOPE}}/db`; domain validation via `@{{PACKAGE_SCOPE}}/domain`.
+- **Paths:** code under `apps/web/src/`; Prisma via `@sunschool/db`; domain validation via `@sunschool/domain`.
 - **Next.js 16:** Server Actions vs Route Handlers per [ai_nextjs_db_data_handle.md](docs/guidelines/nextjs/ai_nextjs_db_data_handle.md); cache: `updateTag` / `revalidateTag` per ADR-002.
 
 ## Storage (ADR-001)
 
 - **AWS S3** — presigned PUT/GET via `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner`.
 - Env (server-only): `AWS_IAM_USER_ACCESS_KEY`, `AWS_IAM_USER_SECRET_ACCESS_KEY`, `S3_BUCKET_REGION`, `S3_BUCKET_NAME`.
-- Object key prefix: **`FILE_UPLOAD_OBJECT_KEY_PREFIX`** = `{{S3_KEY_PREFIX}}` in `@{{PACKAGE_SCOPE}}/domain`.
+- Object key prefix: **`FILE_UPLOAD_OBJECT_KEY_PREFIX`** = `sunschool/` in `@sunschool/domain`.
 - **MUST NOT** use `@vercel/blob` or `BLOB_READ_WRITE_TOKEN` in new code.
 - **Bootstrap AWS:** [`docs/guidelines/nextjs/ai_s3_file_upload_guidelines.md`](docs/guidelines/nextjs/ai_s3_file_upload_guidelines.md) §AWS S3 — bucket setup.
 

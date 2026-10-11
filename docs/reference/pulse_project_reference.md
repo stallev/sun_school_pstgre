@@ -27,7 +27,7 @@
 
 **При разработке:**
 
-Нумерованный SoT — канон: [`.cursor/rules/tiers/t0-always/project-context.template.mdc`](../../.cursor/rules/tiers/t0-always/project-context.template.mdc) § Source-of-truth order (после bootstrap: `project-context.mdc`). **Не дублировать список здесь.**
+Нумерованный SoT — канон: [`.cursor/rules/project-context.mdc`](../../.cursor/rules/project-context.mdc) § Source-of-truth order. **Не дублировать список здесь.**
 
 Над **Pulse snapshot** всегда выигрывают корневые Cursor Rules **и** корневые Guidelines (даже если Guidelines в SoT ниже PRD). Snapshot namesakes в `docs/examples/pulse/.cursor/rules/**` и `docs/examples/pulse/docs/guidelines/**` **не канон**. Дерева `docs/examples/lampto/` в этом репозитории **нет**.
 
@@ -49,20 +49,28 @@
 | Фазовая декомпозиция | `P{N}_phase_description.md` + tasks | Тот же формат |
 | Contracts body | happy/negative/security/race/drift | §2.3.4 registry |
 | AGENTS.md | корень + `apps/web/AGENTS.md` | Из template |
-| Design Lab | `/design-system` + spec | После P6 |
+| Design Lab | `/design-system` + spec | P6 (dev-only, [spec](../implementation/mvp/specs/design_system_lab_spec.md)) |
 | Request path | `proxy.ts` → DAL → Prisma | ADR-002 |
 
 ---
 
 ## Что не копировать слепо
 
-| Аспект | Pulse | Новый проект |
-|--------|-------|--------------|
-| Продукт | Fitness marketplace | Свой домен (PRD) |
-| Роли | client, trainer, admin | Свои роли |
-| Domain invariants | timezone, booking, verification | project-context |
-| Design tokens | Warm Forest (пример) | Свой design system |
-| User flows / schema | Pulse-specific | W1–Wn registry |
+| Аспект | Pulse | Sunday School |
+|--------|-------|---------------|
+| Продукт | Fitness marketplace (запись клиентов к тренерам) | Воскресная школа: группы, уроки, проверка ДЗ, кирпичики, аналитика |
+| Роли | `client`, `trainer`, `admin` | `admin`, `teacher`; `parent` в MVP отклоняется |
+| Вход | Credentials (email + пароль, `passwordHash`), адаптер | **Google + Telegram (OIDC)**, JWT, без адаптера и без пароля ([ADR-003](../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)) |
+| Сущности | booking, slot, trainer profile, wishlist, платежи | учебный год, группа, урок, отметка ДЗ, кирпичики, запрос на удаление; платежей нет |
+| Время | часовой пояс тренера (`TrainerProfile.timezone`) | единый часовой пояс школы ([ADR-004](../prds/07_governance/adr_004_timezone_scheduling_model.md)) |
+| Объектный доступ | владелец ресурса — клиент/тренер | группы по назначению; чужой ресурс → 404, чужая роль → 403 ([матрица](../prds/04_authorization_privacy/authorization_matrix.md)) |
+| Журнал | необязателен | append-only журнал изменений и кирпичиков, запись в той же транзакции |
+| Персональные данные | email, телефон | ФИО учителей и детей, согласия, удаление по запросу (15 дней) |
+| Фоновые задачи / email | Resend, `apps/workers` | post-MVP, модули `email_jobs`, `s3_uploads` выключены |
+| Design tokens | Warm Forest | Slate Cobalt, без тёмной темы ([visual_identity_contract](../design/visual_identity_contract.md)) |
+| Маршруты, flows, schema | Pulse-specific | [`canonical_routes.md`](../design/canonical_routes.md), [`database_schema_v1.md`](../prds/03_data_model/database_schema_v1.md) |
+
+Правило: если нужен Pulse-паттерн — берётся **структура** (слои, формат контракта, фазы), а имена сущностей, роли, маршруты и тексты — из документов проекта.
 
 ---
 

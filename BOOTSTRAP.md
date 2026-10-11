@@ -191,7 +191,7 @@ DATABASE_URL=postgresql://...-pooler...
 DIRECT_URL=postgresql://...
 ```
 
-4. После Prisma schema: `npx prisma migrate dev` из `packages/db`
+4. После Prisma schema: миграции и seed — [`neon_prisma_migrations_guide.md`](docs/implementation/mvp/guides/neon_prisma_migrations_guide.md) и [`migration_runbook.md`](docs/prds/06_operations/migration_runbook.md) (два проекта Neon: dev и prod; `migrate dev` только локально)
 
 ---
 
@@ -223,23 +223,27 @@ DIRECT_URL=postgresql://...
 2. Root directory: monorepo root (или `apps/web` — по структуре после P5)
 3. Env vars: Neon, Auth, AWS, Sentry (см. P5 prompt)
 4. `AUTH_SECRET` — `openssl rand -base64 32`
-5. Preview deployments на каждый PR
+5. Preview deployments на каждый PR (на **dev**-БД). Подробно: [`vercel_deploy_guide.md`](docs/implementation/mvp/guides/vercel_deploy_guide.md)
 
 **Auth.js:** `AUTH_URL` / `NEXTAUTH_URL` per environment.
 
 ---
 
-## Шаг 9 — Auth.js (Credentials) — модуль `auth`
+## Шаг 9 — Auth.js (OIDC Google + Telegram) — модуль `auth`
 
-После P5 scaffold:
+После P5 scaffold. **Проект использует OIDC-вход Google и Telegram, JWT, без Credentials и `@auth/prisma-adapter`** ([ADR-003](docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md), [`auth_runtime_spec.md`](docs/prds/05_runtime/auth_runtime_spec.md) §4):
 
 ```env
-AUTH_SECRET=
-# Optional explicit:
-# AUTH_URL=https://your-domain.com
+AUTH_SECRET=              # openssl rand -base64 32
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
+AUTH_TELEGRAM_ID=         # BotFather Web Login (OIDC), не TELEGRAM_BOT_TOKEN
+AUTH_TELEGRAM_SECRET=
+AUTH_TRUST_HOST=true      # за прокси / туннелем
+FIRST_ADMIN_EMAIL=        # первый admin (только server env / .local)
 ```
 
-Канон: JWT sessions, role in token, **no** `@auth/prisma-adapter` если нет Account/Session tables — см. Pulse P02 pattern в snapshot.
+Полный список переменных и порядок настройки — [`local_dev_setup.md`](docs/implementation/mvp/guides/local_dev_setup.md) §6, [`vercel_deploy_guide.md`](docs/implementation/mvp/guides/vercel_deploy_guide.md) §4.
 
 ---
 

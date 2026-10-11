@@ -1,0 +1,1010 @@
+// Sunday School — database schema v1.
+// Canon: docs/prds/03_data_model/database_schema_v1.md (sections 3-8). Do not diverge silently:
+// change the document and this file in the same commit.
+//
+// Conventions: tables snake_case singular (@@map), columns snake_case (@map), PK uuid,
+// created_at on all tables, updated_at on mutable ones. Enums are mapped to "<name>_enum"
+// so that type names never collide with table names.
+// Constraints Prisma cannot express (partial unique indexes, CHECK) live in the migration SQL.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------- enums (§4)
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  PARENT
+
+  @@map("user_role_enum")
+}
+
+enum AccountStatus {
+  REGISTRATION
+  REQUEST_PENDING
+  REJECTED
+  ACTIVE
+  DISABLED
+  DELETED
+
+  @@map("account_status_enum")
+}
+
+enum LoginProvider {
+  GOOGLE
+  TELEGRAM
+
+  @@map("login_provider_enum")
+}
+
+enum AccessRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@map("access_request_status_enum")
+}
+
+enum AcademicYearStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+
+  @@map("academic_year_status_enum")
+}
+
+enum LessonKind {
+  REGULAR
+  REVIEW
+
+  @@map("lesson_kind_enum")
+}
+
+enum LessonStatus {
+  HELD
+  CHECK_COMPLETED
+
+  @@map("lesson_status_enum")
+}
+
+enum ScoreSource {
+  MANUAL
+  VOICE
+
+  @@map("score_source_enum")
+}
+
+enum GradeEventType {
+  LESSON
+  TRIP
+  CANCELLATION
+
+  @@map("grade_event_type_enum")
+}
+
+enum ConsentChannel {
+  ELECTRONIC
+  PAPER
+
+  @@map("consent_channel_enum")
+}
+
+enum ConsentStatus {
+  ACTIVE
+  REVOKED
+  LEGACY_PENDING
+
+  @@map("consent_status_enum")
+}
+
+enum DeletionRequestType {
+  ACCOUNT
+  CHILD_DATA
+
+  @@map("deletion_request_type_enum")
+}
+
+enum DeletionRequestStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+  REJECTED
+  CANCELLED
+
+  @@map("deletion_request_status_enum")
+}
+
+enum BibleTranslationStatus {
+  NO_DATA
+  LOADING
+  READY
+
+  @@map("bible_translation_status_enum")
+}
+
+enum AppLocale {
+  RU
+  EN
+
+  @@map("app_locale_enum")
+}
+
+enum ConsentType {
+  PD_PROCESSING
+  CHILD_DATA
+  VOICE
+  PHOTO
+
+  @@map("consent_type_enum")
+}
+
+enum AdultRelation {
+  MOTHER
+  FATHER
+  GUARDIAN
+
+  @@map("adult_relation_enum")
+}
+
+enum AchievementKind {
+  REWARD
+  PENALTY
+
+  @@map("achievement_kind_enum")
+}
+
+enum AwardSource {
+  AUTO
+  MANUAL
+
+  @@map("award_source_enum")
+}
+
+enum PenaltyStatus {
+  ACTIVE
+  CANCELLED
+
+  @@map("penalty_status_enum")
+}
+
+enum RecitationStatus {
+  UPLOADED
+  PROCESSING
+  SCORED
+  FAILED
+
+  @@map("recitation_status_enum")
+}
+
+// ---------------------------------------------------------------- 5.1 organization, users, access
+
+model Organization {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  users         AppUser[]
+  academicYears AcademicYear[]
+  grades        Grade[]
+  pupils        Pupil[]
+  goldenVerses  GoldenVerse[]
+  families      Family[]
+
+  @@map("organization")
+}
+
+model AppUser {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String        @map("organization_id") @db.Uuid
+  lastName       String?       @map("last_name")
+  firstName      String?       @map("first_name")
+  middleName     String?       @map("middle_name")
+  email          String?
+  status         AccountStatus
+  firstLoginAt   DateTime?     @map("first_login_at") @db.Timestamptz(6)
+  lastLoginAt    DateTime?     @map("last_login_at") @db.Timestamptz(6)
+  deletedOrdinal Int?          @map("deleted_ordinal")
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  identities         LoginIdentity[]
+  roles              UserRoleAssignment[]
+  consents           PrivacyConsent[]
+  accessRequests     AccessRequest[]        @relation("AccessRequestUser")
+  decidedRequests    AccessRequest[]        @relation("AccessRequestDecidedBy")
+  assignments        TeacherAssignment[]
+  ledMeLessons       Lesson[]               @relation("LessonLeadTeacher")
+  checksMade         HomeworkCheck[]        @relation("HomeworkCheckCheckedBy")
+  scoreEventsSet     HomeworkScoreEvent[]   @relation("ScoreEventSetBy")
+  verseScoresMade    HomeworkVerseScore[]   @relation("VerseScoreScoredBy")
+  bricksIssued       BrickLedger[]          @relation("BrickLedgerIssuedBy")
+  consentsMarked     ChildDataConsent[]     @relation("ChildConsentMarkedBy")
+  auditEntries       AuditLog[]
+  deletionAsSubject  DeletionRequest[]      @relation("DeletionSubjectUser")
+  deletionRequested  DeletionRequest[]      @relation("DeletionRequestedBy")
+  deletionTaken      DeletionRequest[]      @relation("DeletionTakenBy")
+  deletionResolved   DeletionRequest[]      @relation("DeletionResolvedBy")
+  familyAdults       FamilyAdult[]
+  weeklyDigests      WeeklyDigest[]
+  achievementAwards  AchievementAward[]     @relation("AwardAwardedBy")
+  penaltiesIssued    Penalty[]              @relation("PenaltyIssuedBy")
+  recitationsRecorded RecitationAttempt[]
+  voicePhotoGiven    VoicePhotoConsent[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("app_user")
+}
+
+model LoginIdentity {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String        @map("user_id") @db.Uuid
+  provider          LoginProvider
+  providerAccountId String        @map("provider_account_id")
+  email             String?
+  username          String?
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user AppUser @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("login_identity")
+}
+
+// Table name is user_role; the model is named differently to avoid clashing with the UserRole enum.
+model UserRoleAssignment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  role      UserRole
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user AppUser @relation(fields: [userId], references: [id])
+
+  @@unique([userId, role])
+  @@map("user_role")
+}
+
+model PrivacyConsent {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String      @map("user_id") @db.Uuid
+  textVersion String      @map("text_version")
+  acceptedAt  DateTime    @map("accepted_at") @db.Timestamptz(6)
+  type        ConsentType
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user            AppUser         @relation(fields: [userId], references: [id])
+  accessRequests  AccessRequest[]
+
+  @@unique([userId, textVersion])
+  @@map("privacy_consent")
+}
+
+model AccessRequest {
+  id               String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String              @map("user_id") @db.Uuid
+  consentId        String              @map("consent_id") @db.Uuid
+  fullNameSnapshot String              @map("full_name_snapshot")
+  status           AccessRequestStatus
+  decidedById      String?             @map("decided_by") @db.Uuid
+  decidedAt        DateTime?           @map("decided_at") @db.Timestamptz(6)
+  rejectReason     String?             @map("reject_reason")
+  createdAt        DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user      AppUser        @relation("AccessRequestUser", fields: [userId], references: [id])
+  consent   PrivacyConsent @relation(fields: [consentId], references: [id])
+  decidedBy AppUser?       @relation("AccessRequestDecidedBy", fields: [decidedById], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@map("access_request")
+}
+
+// ---------------------------------------------------------------- 5.2 school, groups, years
+
+model AcademicYear {
+  id             String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String             @map("organization_id") @db.Uuid
+  name           String
+  startsOn       DateTime           @map("starts_on") @db.Date
+  endsOn         DateTime           @map("ends_on") @db.Date
+  status         AcademicYearStatus
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  gradeSettings GradeSettings[]
+  assignments   TeacherAssignment[]
+  enrollments   Enrollment[]
+  lessons       Lesson[]
+  bricks        BrickLedger[]
+  awards        AchievementAward[]
+
+  // partial unique "one ACTIVE year per organization" (R-1) — in migration SQL
+  @@index([organizationId, status])
+  @@map("academic_year")
+}
+
+model Grade {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String    @map("organization_id") @db.Uuid
+  name           String
+  description    String?
+  ageMin         Int?      @map("age_min")
+  ageMax         Int?      @map("age_max")
+  isActive       Boolean   @default(true) @map("is_active")
+  language       AppLocale @default(RU)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  settings    GradeSettings[]
+  assignments TeacherAssignment[]
+  enrollments Enrollment[]
+  lessons     Lesson[]
+  events      GradeEvent[]
+
+  @@index([organizationId])
+  @@map("grade")
+}
+
+model GradeSettings {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gradeId             String   @map("grade_id") @db.Uuid
+  academicYearId      String   @map("academic_year_id") @db.Uuid
+  useVerses           Boolean  @default(true) @map("use_verses")
+  useTest             Boolean  @default(true) @map("use_test")
+  useNotebook         Boolean  @default(true) @map("use_notebook")
+  useSinging          Boolean  @default(true) @map("use_singing")
+  maxVersesPerLesson  Int      @default(3) @map("max_verses_per_lesson")
+  labels              Json     @default("{}")
+  weights             Json     @default("{}")
+  recitationDaysN     Int      @default(3) @map("recitation_days_n")
+  achievementsEnabled Boolean  @default(false) @map("achievements_enabled")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  grade        Grade        @relation(fields: [gradeId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  achievementPeriods GradeAchievementPeriod[]
+
+  @@unique([gradeId, academicYearId])
+  @@map("grade_settings")
+}
+
+model TeacherAssignment {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  gradeId        String   @map("grade_id") @db.Uuid
+  academicYearId String   @map("academic_year_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user         AppUser      @relation(fields: [userId], references: [id])
+  grade        Grade        @relation(fields: [gradeId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  @@unique([userId, gradeId, academicYearId])
+  @@index([gradeId, academicYearId])
+  @@map("teacher_assignment")
+}
+
+// ---------------------------------------------------------------- 5.3 pupils
+
+model Pupil {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String    @map("organization_id") @db.Uuid
+  lastName       String    @map("last_name")
+  firstName      String    @map("first_name")
+  middleName     String?   @map("middle_name")
+  birthDate      DateTime? @map("birth_date") @db.Date
+  photoRef       String?   @map("photo_ref")
+  isActive       Boolean   @default(true) @map("is_active")
+  familyId       String?   @map("family_id") @db.Uuid
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  family       Family?      @relation(fields: [familyId], references: [id])
+
+  enrollments    Enrollment[]
+  consents       ChildDataConsent[]
+  checks         HomeworkCheck[]
+  bricks         BrickLedger[]
+  deletions      DeletionRequest[]
+  awards         AchievementAward[]
+  penalties      Penalty[]
+  recitations    RecitationAttempt[]
+  voicePhoto     VoicePhotoConsent[]
+
+  @@index([organizationId])
+  @@map("pupil")
+}
+
+model Enrollment {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId        String    @map("pupil_id") @db.Uuid
+  gradeId        String    @map("grade_id") @db.Uuid
+  academicYearId String    @map("academic_year_id") @db.Uuid
+  startsOn       DateTime  @map("starts_on") @db.Date
+  endsOn         DateTime? @map("ends_on") @db.Date
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  pupil        Pupil        @relation(fields: [pupilId], references: [id])
+  grade        Grade        @relation(fields: [gradeId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  // partial unique (pupil_id) where ends_on is null (R-2) — in migration SQL
+  @@index([gradeId, academicYearId])
+  @@index([pupilId])
+  @@map("enrollment")
+}
+
+model ChildDataConsent {
+  id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId          String         @map("pupil_id") @db.Uuid
+  guardianAdultId  String?        @map("guardian_adult_id") @db.Uuid
+  signerName       String?        @map("signer_name")
+  channel          ConsentChannel
+  textVersion      String         @map("text_version")
+  signedOn         DateTime?      @map("signed_on") @db.Date
+  paperStorageNote String?        @map("paper_storage_note")
+  markedById       String         @map("marked_by") @db.Uuid
+  status           ConsentStatus
+  revokedAt        DateTime?      @map("revoked_at") @db.Timestamptz(6)
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  pupil         Pupil        @relation(fields: [pupilId], references: [id])
+  guardianAdult FamilyAdult? @relation(fields: [guardianAdultId], references: [id])
+  markedBy      AppUser      @relation("ChildConsentMarkedBy", fields: [markedById], references: [id])
+
+  // CHECK: signed_on IS NOT NULL OR status = 'LEGACY_PENDING' — in migration SQL
+  @@index([pupilId])
+  @@map("child_data_consent")
+}
+
+// ---------------------------------------------------------------- 5.4 Bible and golden verses
+
+model BibleTranslation {
+  id        String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code      String                 @unique
+  locale    AppLocale
+  name      String
+  shortName String                 @map("short_name")
+  source    String?
+  license   String?
+  status    BibleTranslationStatus @default(NO_DATA)
+  isDefault Boolean                @default(false) @map("is_default")
+  createdAt DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime               @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  verses       BibleVerse[]
+  verseMap     BibleVerseMap[]
+  recitations  RecitationAttempt[]
+
+  // partial unique (locale) where is_default — in migration SQL
+  @@map("bible_translation")
+}
+
+model BibleBook {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sortOrder     Int      @unique @map("sort_order")
+  testament     String
+  titleRu       String   @map("title_ru")
+  titleEn       String   @map("title_en")
+  shortRu       String   @map("short_ru")
+  shortEn       String   @map("short_en")
+  chaptersCount Int      @map("chapters_count")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  verses       BibleVerse[]
+  verseMap     BibleVerseMap[]
+  goldenVerses GoldenVerse[]
+
+  @@map("bible_book")
+}
+
+model BibleVerse {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  translationId String   @map("translation_id") @db.Uuid
+  bookId        String   @map("book_id") @db.Uuid
+  chapterNumber Int      @map("chapter_number")
+  verseNumber   Int      @map("verse_number")
+  text          String
+  verseOrder    Int      @map("verse_order")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  translation BibleTranslation @relation(fields: [translationId], references: [id])
+  book        BibleBook        @relation(fields: [bookId], references: [id])
+
+  @@unique([translationId, bookId, chapterNumber, verseNumber])
+  @@map("bible_verse")
+}
+
+model GoldenVerse {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  bookId         String   @map("book_id") @db.Uuid
+  startChapter   Int      @map("start_chapter")
+  startVerse     Int      @map("start_verse")
+  endChapter     Int      @map("end_chapter")
+  endVerse       Int      @map("end_verse")
+  label          String?
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  book         BibleBook    @relation(fields: [bookId], references: [id])
+
+  lessonVerses LessonGoldenVerse[]
+
+  @@unique([organizationId, bookId, startChapter, startVerse, endChapter, endVerse])
+  @@map("golden_verse")
+}
+
+model BibleVerseMap {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  translationId String   @map("translation_id") @db.Uuid
+  bookId        String   @map("book_id") @db.Uuid
+  chapterNumber Int      @map("chapter_number")
+  verseNumber   Int      @map("verse_number")
+  commonChapter Int      @map("common_chapter")
+  commonVerse   Int      @map("common_verse")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  translation BibleTranslation @relation(fields: [translationId], references: [id])
+  book        BibleBook        @relation(fields: [bookId], references: [id])
+
+  @@unique([translationId, bookId, chapterNumber, verseNumber])
+  @@map("bible_verse_map")
+}
+
+// ---------------------------------------------------------------- 5.5 lessons and checks
+
+model Lesson {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gradeId        String       @map("grade_id") @db.Uuid
+  academicYearId String       @map("academic_year_id") @db.Uuid
+  title          String
+  lessonDate     DateTime     @map("lesson_date") @db.Date
+  ordinal        Int
+  leadTeacherId  String       @map("lead_teacher_id") @db.Uuid
+  kind           LessonKind
+  body           String?
+  hasTest        Boolean      @default(false) @map("has_test")
+  status         LessonStatus @default(HELD)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  grade        Grade        @relation(fields: [gradeId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+  leadTeacher  AppUser      @relation("LessonLeadTeacher", fields: [leadTeacherId], references: [id])
+
+  verses    LessonGoldenVerse[]
+  checks    HomeworkCheck[]
+  events    GradeEvent[]
+  penalties Penalty[]
+
+  @@index([gradeId, academicYearId, lessonDate])
+  @@map("lesson")
+}
+
+model LessonGoldenVerse {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lessonId      String   @map("lesson_id") @db.Uuid
+  goldenVerseId String   @map("golden_verse_id") @db.Uuid
+  position      Int
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  lesson      Lesson      @relation(fields: [lessonId], references: [id])
+  goldenVerse GoldenVerse @relation(fields: [goldenVerseId], references: [id])
+
+  verseScores  HomeworkVerseScore[]
+  recitations  RecitationAttempt[]
+
+  @@unique([lessonId, position])
+  @@map("lesson_golden_verse")
+}
+
+model HomeworkCheck {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lessonId         String    @map("lesson_id") @db.Uuid
+  pupilId          String    @map("pupil_id") @db.Uuid
+  present          Boolean   @default(false)
+  homeworkChecked  Boolean   @default(false) @map("homework_checked")
+  testScore        Int?      @map("test_score")
+  notebookScore    Int?      @map("notebook_score")
+  singing          Boolean   @default(false)
+  comment          String?
+  late             Boolean   @default(false)
+  pointsTotal      Int?      @map("points_total")
+  scoringSnapshot  Json?     @map("scoring_snapshot")
+  checkedById      String    @map("checked_by") @db.Uuid
+  checkedAt        DateTime  @map("checked_at") @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  lesson    Lesson  @relation(fields: [lessonId], references: [id])
+  pupil     Pupil   @relation(fields: [pupilId], references: [id])
+  checkedBy AppUser @relation("HomeworkCheckCheckedBy", fields: [checkedById], references: [id])
+
+  verseScores HomeworkVerseScore[]
+  scoreEvents HomeworkScoreEvent[]
+  evidence    AchievementEvidence[]
+
+  // CHECK: test_score and notebook_score in 0..10 — in migration SQL
+  @@unique([lessonId, pupilId])
+  @@index([lessonId])
+  @@index([pupilId])
+  @@map("homework_check")
+}
+
+model HomeworkVerseScore {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  checkId        String      @map("check_id") @db.Uuid
+  lessonVerseId  String      @map("lesson_verse_id") @db.Uuid
+  score          Int
+  source         ScoreSource @default(MANUAL)
+  scoredAt       DateTime    @map("scored_at") @db.Timestamptz(6)
+  scoredById     String      @map("scored_by") @db.Uuid
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  check       HomeworkCheck     @relation(fields: [checkId], references: [id])
+  lessonVerse LessonGoldenVerse @relation(fields: [lessonVerseId], references: [id])
+  scoredBy    AppUser           @relation("VerseScoreScoredBy", fields: [scoredById], references: [id])
+
+  // CHECK: score in 0..2 — in migration SQL
+  @@unique([checkId, lessonVerseId])
+  @@map("homework_verse_score")
+}
+
+model HomeworkScoreEvent {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  checkId   String   @map("check_id") @db.Uuid
+  field     String
+  value     Json?
+  setAt     DateTime @map("set_at") @db.Timestamptz(6)
+  setById   String   @map("set_by") @db.Uuid
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  check HomeworkCheck @relation(fields: [checkId], references: [id])
+  setBy AppUser       @relation("ScoreEventSetBy", fields: [setById], references: [id])
+
+  @@index([checkId])
+  @@map("homework_score_event")
+}
+
+model BrickLedger {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId        String   @map("pupil_id") @db.Uuid
+  academicYearId String   @map("academic_year_id") @db.Uuid
+  quantity       Int
+  issuedOn       DateTime @map("issued_on") @db.Date
+  issuedById     String   @map("issued_by") @db.Uuid
+  note           String?
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  pupil        Pupil        @relation(fields: [pupilId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+  issuedBy     AppUser      @relation("BrickLedgerIssuedBy", fields: [issuedById], references: [id])
+
+  // append-only (R-6); CHECK quantity <> 0 — in migration SQL
+  @@index([pupilId, academicYearId])
+  @@map("brick_ledger")
+}
+
+// ---------------------------------------------------------------- 5.6 calendar, audit, deletion, settings
+
+model GradeEvent {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gradeId     String         @map("grade_id") @db.Uuid
+  eventDate   DateTime       @map("event_date") @db.Date
+  type        GradeEventType
+  title       String
+  description String?
+  lessonId    String?        @map("lesson_id") @db.Uuid
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  grade  Grade   @relation(fields: [gradeId], references: [id])
+  lesson Lesson? @relation(fields: [lessonId], references: [id])
+
+  @@index([gradeId, eventDate])
+  @@map("grade_event")
+}
+
+model AuditLog {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  occurredAt  DateTime @default(now()) @map("occurred_at") @db.Timestamptz(6)
+  actorUserId String?  @map("actor_user_id") @db.Uuid
+  source      String
+  entityType  String   @map("entity_type")
+  entityId    String   @map("entity_id")
+  action      String
+  oldValue    Json?    @map("old_value")
+  newValue    Json?    @map("new_value")
+  reason      String?
+  requestId   String?  @map("request_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  actor AppUser? @relation(fields: [actorUserId], references: [id])
+
+  // append-only (R-6): no UPDATE/DELETE from the application
+  @@index([occurredAt])
+  @@index([entityType, entityId])
+  @@index([actorUserId])
+  @@map("audit_log")
+}
+
+model DeletionRequest {
+  id             String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type           DeletionRequestType
+  subjectUserId  String?               @map("subject_user_id") @db.Uuid
+  subjectPupilId String?               @map("subject_pupil_id") @db.Uuid
+  requestedById  String               @map("requested_by") @db.Uuid
+  requestedAt    DateTime              @map("requested_at") @db.Timestamptz(6)
+  reason         String?
+  status         DeletionRequestStatus @default(NEW)
+  dueOn          DateTime              @map("due_on") @db.Date
+  takenById      String?               @map("taken_by") @db.Uuid
+  resolvedById   String?               @map("resolved_by") @db.Uuid
+  resolvedAt     DateTime?             @map("resolved_at") @db.Timestamptz(6)
+  rejectReason   String?               @map("reject_reason")
+  summary        Json?
+  createdAt      DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime              @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subjectUser  AppUser? @relation("DeletionSubjectUser", fields: [subjectUserId], references: [id])
+  subjectPupil Pupil?   @relation(fields: [subjectPupilId], references: [id])
+  requestedBy  AppUser  @relation("DeletionRequestedBy", fields: [requestedById], references: [id])
+  takenBy      AppUser? @relation("DeletionTakenBy", fields: [takenById], references: [id])
+  resolvedBy   AppUser? @relation("DeletionResolvedBy", fields: [resolvedById], references: [id])
+
+  // CHECK: exactly one of subject_user_id / subject_pupil_id; partial unique open request per subject
+  @@index([status, dueOn])
+  @@map("deletion_request")
+}
+
+model AppSetting {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("app_setting")
+}
+
+// ---------------------------------------------------------------- 6 post-MVP (no UI)
+
+model Achievement {
+  id          String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String          @unique
+  nameRu      String          @map("name_ru")
+  nameEn      String          @map("name_en")
+  descriptionRu String?       @map("description_ru")
+  descriptionEn String?       @map("description_en")
+  icon        String?
+  category    String?
+  kind        AchievementKind
+  ruleType    String          @map("rule_type")
+  metric      String?
+  threshold   Int?
+  isActive    Boolean         @default(true) @map("is_active")
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  tiers     AchievementTier[]
+  awards    AchievementAward[]
+  evidence  AchievementEvidence[]
+  penalties Penalty[]
+
+  @@map("achievement")
+}
+
+model AchievementTier {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  achievementId String   @map("achievement_id") @db.Uuid
+  tier          Int
+  length        Int
+  points        Int
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  achievement Achievement @relation(fields: [achievementId], references: [id])
+
+  @@unique([achievementId, tier])
+  @@map("achievement_tier")
+}
+
+model AchievementAward {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId        String      @map("pupil_id") @db.Uuid
+  achievementId  String      @map("achievement_id") @db.Uuid
+  tier           Int
+  academicYearId String      @map("academic_year_id") @db.Uuid
+  points         Int
+  ruleSnapshot   Json        @map("rule_snapshot")
+  source         AwardSource
+  awardedById    String?     @map("awarded_by") @db.Uuid
+  reason         String?
+  awardedAt      DateTime    @map("awarded_at") @db.Timestamptz(6)
+  revokedAt      DateTime?   @map("revoked_at") @db.Timestamptz(6)
+  revokedBy      String?     @map("revoked_by") @db.Uuid
+  revokedReason  String?     @map("revoked_reason")
+  awardKey       String?     @unique @map("award_key")
+  createdAt      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  pupil        Pupil        @relation(fields: [pupilId], references: [id])
+  achievement  Achievement  @relation(fields: [achievementId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+  awardedBy    AppUser?     @relation("AwardAwardedBy", fields: [awardedById], references: [id])
+
+  evidence AchievementEvidence[]
+
+  @@index([pupilId, academicYearId])
+  @@map("achievement_award")
+}
+
+model AchievementEvidence {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  awardId       String   @map("award_id") @db.Uuid
+  achievementId String   @map("achievement_id") @db.Uuid
+  tier          Int
+  checkId       String   @map("check_id") @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  award       AchievementAward @relation(fields: [awardId], references: [id])
+  achievement Achievement      @relation(fields: [achievementId], references: [id])
+  check       HomeworkCheck    @relation(fields: [checkId], references: [id])
+
+  @@unique([achievementId, tier, checkId])
+  @@map("achievement_evidence")
+}
+
+model Penalty {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId       String        @map("pupil_id") @db.Uuid
+  achievementId String        @map("achievement_id") @db.Uuid
+  lessonId      String        @map("lesson_id") @db.Uuid
+  points        Int
+  reason        String
+  issuedById    String        @map("issued_by") @db.Uuid
+  issuedAt      DateTime      @map("issued_at") @db.Timestamptz(6)
+  status        PenaltyStatus @default(ACTIVE)
+  cancelledAt   DateTime?     @map("cancelled_at") @db.Timestamptz(6)
+  cancelledBy   String?       @map("cancelled_by") @db.Uuid
+  cancelledReason String?     @map("cancelled_reason")
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  pupil       Pupil       @relation(fields: [pupilId], references: [id])
+  achievement Achievement @relation(fields: [achievementId], references: [id])
+  lesson      Lesson      @relation(fields: [lessonId], references: [id])
+  issuedBy    AppUser     @relation("PenaltyIssuedBy", fields: [issuedById], references: [id])
+
+  // partial unique (pupil_id, lesson_id) where status = ACTIVE (ШТ-4) — in migration SQL
+  @@index([pupilId])
+  @@map("penalty")
+}
+
+model GradeAchievementPeriod {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gradeSettingsId String    @map("grade_settings_id") @db.Uuid
+  startsAt        DateTime  @map("starts_at") @db.Timestamptz(6)
+  endsAt          DateTime? @map("ends_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  gradeSettings GradeSettings @relation(fields: [gradeSettingsId], references: [id])
+
+  @@map("grade_achievement_period")
+}
+
+model Family {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  name           String
+  address        String?
+  note           String?
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  adults FamilyAdult[]
+  pupils Pupil[]
+
+  @@map("family")
+}
+
+model FamilyAdult {
+  id         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  familyId   String        @map("family_id") @db.Uuid
+  lastName   String        @map("last_name")
+  firstName  String        @map("first_name")
+  middleName String?       @map("middle_name")
+  relation   AdultRelation
+  phones     Json          @default("[]")
+  email      String?
+  userId     String?       @map("user_id") @db.Uuid
+  createdAt  DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  family Family   @relation(fields: [familyId], references: [id])
+  user   AppUser? @relation(fields: [userId], references: [id])
+
+  consents ChildDataConsent[]
+
+  // partial unique: at most one MOTHER and one FATHER per family (СМ-3) — in migration SQL
+  @@map("family_adult")
+}
+
+model WeeklyDigest {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  periodStart DateTime  @map("period_start") @db.Date
+  payload     Json
+  sentAt      DateTime? @map("sent_at") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user AppUser @relation(fields: [userId], references: [id])
+
+  @@map("weekly_digest")
+}
+
+model RecitationAttempt {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId        String           @map("pupil_id") @db.Uuid
+  lessonVerseId  String           @map("lesson_verse_id") @db.Uuid
+  recordedById   String           @map("recorded_by") @db.Uuid
+  audioRef       String?          @map("audio_ref")
+  recordedAt     DateTime         @map("recorded_at") @db.Timestamptz(6)
+  durationS      Int              @map("duration_s")
+  audioDeletedAt DateTime?        @map("audio_deleted_at") @db.Timestamptz(6)
+  status         RecitationStatus @default(UPLOADED)
+  failReason     String?          @map("fail_reason")
+  transcript     String?
+  matchPercent   Int?             @map("match_percent")
+  wordMarkup     Json?            @map("word_markup")
+  modelId        String           @map("model_id")
+  modelVersion   String           @map("model_version")
+  translationId  String           @map("translation_id") @db.Uuid
+  quality        Int?
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  pupil       Pupil             @relation(fields: [pupilId], references: [id])
+  lessonVerse LessonGoldenVerse @relation(fields: [lessonVerseId], references: [id])
+  recordedBy  AppUser           @relation(fields: [recordedById], references: [id])
+  translation BibleTranslation  @relation(fields: [translationId], references: [id])
+
+  @@map("recitation_attempt")
+}
+
+model VoicePhotoConsent {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId     String      @map("pupil_id") @db.Uuid
+  givenById   String      @map("given_by") @db.Uuid
+  type        ConsentType
+  textVersion String      @map("text_version")
+  givenAt     DateTime    @map("given_at") @db.Timestamptz(6)
+  status      ConsentStatus
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  pupil   Pupil   @relation(fields: [pupilId], references: [id])
+  givenBy AppUser @relation(fields: [givenById], references: [id])
+
+  @@map("voice_photo_consent")
+}
