@@ -112,7 +112,7 @@
 
 ## 8. Набор D — dev-фикстуры
 
-**Источник:** файл `packages/db/seed/dev/fixtures.ts` (TS-объекты, типизированы схемой), снятый с прототипа [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html) (`GROUPS`, `USERS`, `PUPILS`, `LESSONS`, `VERSES`, `EVENTS`); случайной генерации нет (ОК-4).
+**Источник:** файл `packages/db/seed/dev/fixtures.ts` (TS-объекты, типизированы схемой), снятый с прототипа [`sunday_school_prototype.html`](../../prototypes/sunday_school_prototype.html) (`GROUPS`, `USERS`, `PUPILS`, `LESSONS`, `VERSES`, `EVENTS`); случайной генерации нет (ОК-4).
 
 | Правило | Значение |
 |---------|----------|
@@ -186,7 +186,7 @@
 | [`database_schema_v1.md`](./database_schema_v1.md) | Таблицы и ограничения |
 | [`adr_001_stack_and_runtime.md`](../07_governance/adr_001_stack_and_runtime.md) | Правила окружений §3.4 |
 | [`adr_009_bible_translations_and_verse_numbering.md`](../07_governance/adr_009_bible_translations_and_verse_numbering.md) | Нумерация, лицензия |
-| *(planned)* `local_dev_setup` (W12-05), `neon_prisma_migrations_guide` (W12) | Запуск команд |
+| [`local_dev_setup.md`](../../implementation/mvp/guides/local_dev_setup.md), [`neon_prisma_migrations_guide.md`](../../implementation/mvp/guides/neon_prisma_migrations_guide.md) | Запуск команд |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W6-03
 

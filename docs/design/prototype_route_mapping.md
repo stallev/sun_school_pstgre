@@ -29,35 +29,35 @@
 
 ## 4. Таблица соответствия (MVP)
 
-| Ключ экрана | Функция прототипа | Маршрут | Роли | Spec / contract (planned) |
+| Ключ экрана | Функция прототипа | Маршрут | Роли | Источник требований (spec / contract / фаза) |
 |-------------|-------------------|---------|------|---------------------------|
-| `login` | `loginHTML` | `/login` | аноним | `access_and_registration_spec` |
-| `register` | `vRegister` | `/register` | статус «Регистрация» | `access_and_registration_spec` |
-| `pending` | `vPending` | `/pending` | «Заявка…», «Отклонена» | `access_and_registration_spec` |
-| `profile` | `vProfile` | `/profile` | все активные | `admin_users_and_deletions_spec` |
-| `today` | `vToday` | `/today` | teacher | `global_shell_spec` |
-| `lessons` | `vLessons` | `/lessons` | teacher | `lesson_form_and_golden_verses_spec` |
-| `lessonForm` | `vLessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | `lesson_form_and_golden_verses_spec` |
-| `lesson` | `vLesson` | `/lessons/[lessonId]` | teacher | `lesson_form_and_golden_verses_spec` |
-| `lessonTable` | `vLessonTable` | `/lessons/[lessonId]/table` | teacher | `homework_check_flow_spec` |
-| `check` | `vCheck` | `/check`, `/lessons/[lessonId]/check` | teacher | `homework_check_flow_spec` |
-| `group` | `vGroup` | `/group` | teacher | `group_and_pupils_spec` |
-| `bricks` | `vBricks` | `/bricks` | teacher, admin | `bricks_and_rating_spec` |
-| `rating` | `vRating` | `/rating` | teacher, admin | `bricks_and_rating_spec` |
-| `calendar` | `vCalendar` | `/calendar` | teacher, admin | `lesson_form_and_golden_verses_spec` |
-| `verses` | `vVerses` | `/verses` | teacher, admin | `lesson_form_and_golden_verses_spec` |
-| `analytics` | `vAnalytics` | `/analytics` | teacher, admin | `analytics_screens_spec` |
-| `pupil` | `vPupil` | `/analytics/pupils/[pupilId]` | teacher, admin | `analytics_screens_spec` |
-| `school` | `vSchool` | `/school` | admin | `analytics_screens_spec` |
-| `approvals` | `vApprovals` | `/approvals` | admin | `admin_users_and_deletions_spec` |
-| `users` | `vUsers` | `/users` | admin | `admin_users_and_deletions_spec` |
-| `userProfile` | `vUserProfile` | `/users/[userId]` | admin | `admin_users_and_deletions_spec` |
-| `people` | `vPeople` | `/people` | admin | `group_and_pupils_spec` |
-| `groups` | `vGroups` | `/groups` | admin | `group_and_pupils_spec` |
-| `groupEdit` | `vGroupEdit` | `/groups/[groupId]` | admin | `group_and_pupils_spec` |
-| `year` | `vYear` | `/year` | admin | `group_and_pupils_spec` |
-| `deletions` | `vDeletions` | `/deletions` | admin | `admin_users_and_deletions_spec` |
-| `audit` | `vAudit` | `/audit` | admin | `admin_users_and_deletions_spec` |
+| `login` | `loginHTML` | `/login` | аноним | [`access_and_registration_spec`](../implementation/mvp/specs/access_and_registration_spec.md) (P01) |
+| `register` | `vRegister` | `/register` | статус «Регистрация» | [`access_and_registration_spec`](../implementation/mvp/specs/access_and_registration_spec.md) (P01) |
+| `pending` | `vPending` | `/pending` | «Заявка…», «Отклонена» | [`access_and_registration_spec`](../implementation/mvp/specs/access_and_registration_spec.md) (P01) |
+| `profile` | `vProfile` | `/profile` | все активные | [`access_and_registration_spec`](../implementation/mvp/specs/access_and_registration_spec.md) §9 (P01); удаление — [`deletion_requests_contract`](../implementation/mvp/contracts/deletion_requests_contract.md) (P06) |
+| `today` | `vToday` | `/today` | teacher | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md); оболочка — [`global_shell_spec`](../implementation/mvp/specs/global_shell_spec.md) |
+| `lessons` | `vLessons` | `/lessons` | teacher | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
+| `lessonForm` | `vLessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
+| `lesson` | `vLesson` | `/lessons/[lessonId]` | teacher | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
+| `lessonTable` | `vLessonTable` | `/lessons/[lessonId]/table` | teacher | [`homework_check_flow_spec`](../implementation/mvp/specs/homework_check_flow_spec.md) (P04) |
+| `check` | `vCheck` | `/check`, `/lessons/[lessonId]/check` | teacher | [`homework_check_flow_spec`](../implementation/mvp/specs/homework_check_flow_spec.md) (P04) |
+| `group` | `vGroup` | `/group` | teacher | [`school_year_and_groups_contract`](../implementation/mvp/contracts/school_year_and_groups_contract.md), [`admin_flow`](../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.4–§4.5 (P02) |
+| `bricks` | `vBricks` | `/bricks` | teacher, admin | [`bricks_ledger_contract`](../implementation/mvp/contracts/bricks_ledger_contract.md), [P05: экранные требования](../implementation/mvp/phases_tasks_descriptions/P05_phase_description.md) |
+| `rating` | `vRating` | `/rating` | teacher, admin | [`bricks_ledger_contract`](../implementation/mvp/contracts/bricks_ledger_contract.md), [P05: экранные требования](../implementation/mvp/phases_tasks_descriptions/P05_phase_description.md) |
+| `calendar` | `vCalendar` | `/calendar` | teacher, admin | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
+| `verses` | `vVerses` | `/verses` | teacher, admin | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
+| `analytics` | `vAnalytics` | `/analytics` | teacher, admin | `analytics_screens_spec` (создаётся в [P05-CU0](../implementation/mvp/tasks/P05_tasks.md)) |
+| `pupil` | `vPupil` | `/analytics/pupils/[pupilId]` | teacher, admin | `analytics_screens_spec` (создаётся в [P05-CU0](../implementation/mvp/tasks/P05_tasks.md)) |
+| `school` | `vSchool` | `/school` | admin | `analytics_screens_spec` (создаётся в [P05-CU0](../implementation/mvp/tasks/P05_tasks.md)) |
+| `approvals` | `vApprovals` | `/approvals` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
+| `users` | `vUsers` | `/users` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
+| `userProfile` | `vUserProfile` | `/users/[userId]` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
+| `people` | `vPeople` | `/people` | admin | [`school_year_and_groups_contract`](../implementation/mvp/contracts/school_year_and_groups_contract.md), [`admin_flow`](../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.4–§4.5 (P02) |
+| `groups` | `vGroups` | `/groups` | admin | [`school_year_and_groups_contract`](../implementation/mvp/contracts/school_year_and_groups_contract.md), [`admin_flow`](../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.4–§4.5 (P02) |
+| `groupEdit` | `vGroupEdit` | `/groups/[groupId]` | admin | [`school_year_and_groups_contract`](../implementation/mvp/contracts/school_year_and_groups_contract.md), [`admin_flow`](../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.4–§4.5 (P02) |
+| `year` | `vYear` | `/year` | admin | [`school_year_and_groups_contract`](../implementation/mvp/contracts/school_year_and_groups_contract.md), [`admin_flow`](../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.4–§4.5 (P02) |
+| `deletions` | `vDeletions` | `/deletions` | admin | [`deletion_requests_contract`](../implementation/mvp/contracts/deletion_requests_contract.md) (P06) |
+| `audit` | `vAudit` | `/audit` | admin | [`change_log_contract`](../implementation/mvp/contracts/change_log_contract.md) (P06) |
 | `settings` | `vSettings` | `/settings` | admin | `global_shell_spec` |
 
 Маршруты без экрана прототипа: `/privacy` (публичный текст согласия, статичная страница; spec — `access_and_registration_spec`).
@@ -97,7 +97,7 @@
 
 | ID | Вопрос | Владелец | Блокирует |
 |----|--------|----------|-----------|
-| Q-01 | Нужны ли отдельные URL для сводной таблицы и проверки конкретного ученика (`/lessons/[lessonId]/check?pupil=`) | владелец | `homework_check_flow_spec` |
+| Q-01 | Нужны ли отдельные URL для сводной таблицы и проверки конкретного ученика (`/lessons/[lessonId]/check?pupil=`) | владелец | [`homework_check_flow_spec`](../implementation/mvp/specs/homework_check_flow_spec.md) (P04) |
 
 ## 10. Related documents
 

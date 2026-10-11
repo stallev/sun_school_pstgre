@@ -6,7 +6,7 @@
 **Runtime:** [ADR-002 template](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.template.md)  
 **Cursor rule:** **app-router-streaming-loading**
 
-> **Scope:** `apps/web/src/app/**` — loading UX, streaming shell, and page-level performance. Cross-request data cache: **`'use cache'`** (Next.js 16) — see §8; tag invalidation — [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md) (после W5).
+> **Scope:** `apps/web/src/app/**` — loading UX, streaming shell, and page-level performance. Cross-request data cache: **`'use cache'`** (Next.js 16) — see §8; tag invalidation — [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`) (после W5).
 
 Verify against Context7 `/vercel/next.js` and [Loading UI and Streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming).
 
@@ -548,7 +548,7 @@ Colocate role- or domain-specific cached loaders in `apps/web/src/lib/**` or `sr
 
 ### `'use cache'` — cross-request cache (Next.js 16)
 
-Colocate cached read functions in `src/data/**` with `import 'server-only'`. Tag names **must** match [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md).
+Colocate cached read functions in `src/data/**` with `import 'server-only'`. Tag names **must** match [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`).
 
 ```tsx
 import 'server-only'
@@ -919,7 +919,7 @@ Run before finishing any `page.tsx`, segment `layout.tsx`, or colocated `loading
 ### C. Cache
 
 - [ ] Repeated reads in one request — React `cache()` or shared cached loader
-- [ ] Cross-request public reads — **`'use cache'`** + `cacheTag()` + `cacheLife()` per [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md) — **not** `unstable_cache`
+- [ ] Cross-request public reads — **`'use cache'`** + `cacheTag()` + `cacheLife()` per [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`) — **not** `unstable_cache`
 - [ ] `cacheComponents: true` **and** `partialPrefetching: true` in `next.config.ts` (Instant Navigations best practice — §8.1)
 - [ ] Dynamic regions use Stream (`Suspense`) or Cache; Block (`instant = false`) only with a documented reason
 - [ ] With Instant Navigations on: Instant Insights overlay reviewed for the route; findings closed via Stream / Cache / Block (§8.1.1)
@@ -988,7 +988,7 @@ State briefly in PR/task which exception applies:
 
 | Document | Topic |
 |----------|-------|
-| [`cache_revalidation_policy.md`](../../prds/05_runtime/cache_revalidation_policy.md) | Tag registry, `updateTag` after mutations |
+| [`adr_002 §5`](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) (реестр тегов — в коде, `src/data/**`) | Tag registry, `updateTag` after mutations |
 | [`ui_states_contract.md`](../../design/ui_states_contract.md) | Empty/loading/error matrix per route |
 | [`ai_auth_implementation_guide.md`](../auth/ai_auth_implementation_guide.md) | JWT, `proxy.ts`, split config |
 | [`ai_nextjs_db_data_handle.md`](./ai_nextjs_db_data_handle.md) | DAL, Server Actions vs Route Handlers |

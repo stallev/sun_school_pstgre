@@ -120,7 +120,7 @@
 |----------|--------------|
 | [`adr_004_timezone_scheduling_model.md`](./adr_004_timezone_scheduling_model.md) | Пояс для форматирования дат |
 | [`adr_009_bible_translations_and_verse_numbering.md`](./adr_009_bible_translations_and_verse_numbering.md) | Язык группы ≠ язык интерфейса |
-| *(planned)* `global_shell_spec.md` | Оболочка и словари |
+| [`global_shell_spec.md`](../../implementation/mvp/specs/global_shell_spec.md) | Оболочка и словари |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W4-06
 

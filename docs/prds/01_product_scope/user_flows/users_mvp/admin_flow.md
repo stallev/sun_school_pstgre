@@ -21,7 +21,7 @@
 
 ## 3. Definitions
 
-Статусы учётной записи, роли, статусы заявки и запроса — enum-ы `@sunschool/domain` (источник — [`database_schema_v1.md`](../../../03_data_model/database_schema_v1.md) *(planned, W1-F6)*). Правила — спец. §2.4, §5.
+Статусы учётной записи, роли, статусы заявки и запроса — enum-ы `@sunschool/domain` (источник — [`database_schema_v1.md`](../../../03_data_model/database_schema_v1.md)). Правила — спец. §2.4, §5.
 
 ## 4. Flows
 
@@ -91,7 +91,7 @@
 
 ## 5. Security paths (ссылки)
 
-Все операции — только для роли `admin`; проверка на сервере (security floor). Детали: `authorization_matrix` *(planned, W5-02)*, `access_requests_and_roles_contract` *(planned, W8-03)*, `deletion_requests_contract` *(planned, W8-08)*. Пользователь без одобренной заявки не видит ничего, кроме регистрации (РГ-1).
+Все операции — только для роли `admin`; проверка на сервере (security floor). Детали: [`authorization_matrix`](../../../04_authorization_privacy/authorization_matrix.md), [`access_requests_and_roles_contract`](../../../../implementation/mvp/contracts/access_requests_and_roles_contract.md), [`deletion_requests_contract`](../../../../implementation/mvp/contracts/deletion_requests_contract.md). Пользователь без одобренной заявки не видит ничего, кроме регистрации (РГ-1).
 
 ## 6. Acceptance criteria
 
@@ -114,7 +114,7 @@
 | [`teacher_flow.md`](./teacher_flow.md) | Поток роли teacher |
 | [`canonical_routes.md`](../../../../design/canonical_routes.md) | Маршруты экранов |
 | [`mvp_scope.md`](../../mvp_scope.md) | Состав MVP |
-| *(planned)* [`database_schema_v1.md`](../../../03_data_model/database_schema_v1.md) | Enum-ы статусов и ролей |
+| [`database_schema_v1.md`](../../../03_data_model/database_schema_v1.md) | Enum-ы статусов и ролей |
 
 **Registry:** [`documentation_creation_registry.md`](../../../../meta/documentation_creation_registry.md) — wave W1-F4
 

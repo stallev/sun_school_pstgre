@@ -206,7 +206,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 | [`adr_003_auth_oidc_jwt_rbac.md`](../07_governance/adr_003_auth_oidc_jwt_rbac.md) | Решения |
 | [`authorization_matrix.md`](../04_authorization_privacy/authorization_matrix.md) | Права и перенаправления |
 | [`telegram_authjs_oidc_portable_guide.md`](../../my_specs/telegram_authjs_oidc_portable_guide.md) | Обходы Telegram |
-| *(planned)* `access_and_registration_spec` (W9-02) | Экраны входа и регистрации |
+| [`access_and_registration_spec.md`](../../implementation/mvp/specs/access_and_registration_spec.md) (W9-02) | Экраны входа и регистрации |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W5-08
 

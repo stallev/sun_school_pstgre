@@ -97,7 +97,7 @@
 |----------|--------------|
 | [`domain_invariants.md`](../02_domain_model/domain_invariants.md) | INV-03, INV-13, INV-14 |
 | [`adr_001_stack_and_runtime.md`](./adr_001_stack_and_runtime.md) | Хранение времени |
-| *(planned)* `homework_check_contract.md` | `computeLate` |
+| [`homework_check_contract.md`](../../implementation/mvp/contracts/homework_check_contract.md) | `computeLate` |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W4-02
 

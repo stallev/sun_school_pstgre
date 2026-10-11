@@ -21,7 +21,7 @@
 
 ## 3. Definitions
 
-Статусы записи проверки, тип урока (обычный / обзорный), оценки 0–2 — enum-ы `@sunschool/domain` (источник — [`database_schema_v1.md`](../../../03_data_model/database_schema_v1.md) *(planned, W1-F6)*). Правила — спец. §3.10–3.12, БП-1…БП-4, БП-10…БП-12.
+Статусы записи проверки, тип урока (обычный / обзорный), оценки 0–2 — enum-ы `@sunschool/domain` (источник — [`database_schema_v1.md`](../../../03_data_model/database_schema_v1.md) ). Правила — спец. §3.10–3.12, БП-1…БП-4, БП-10…БП-12.
 
 ## 4. Flows
 
@@ -85,7 +85,7 @@
 
 ## 5. Security paths (ссылки)
 
-Teacher видит и правит только **свои** группы; чужая группа или чужой ученик → 404 / 403. Закрытый год — только чтение. Детали: `authorization_matrix` *(planned, W5-02)*, `homework_check_contract` *(planned, W8-05)*, `bricks_ledger_contract` *(planned, W8-06)*.
+Teacher видит и правит только **свои** группы; чужая группа или чужой ученик → 404 / 403. Закрытый год — только чтение. Детали: [`authorization_matrix`](../../../04_authorization_privacy/authorization_matrix.md), [`homework_check_contract`](../../../../implementation/mvp/contracts/homework_check_contract.md), [`bricks_ledger_contract`](../../../../implementation/mvp/contracts/bricks_ledger_contract.md).
 
 ## 6. Acceptance criteria
 

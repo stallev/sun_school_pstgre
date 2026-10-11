@@ -4,7 +4,7 @@ All user-visible product copy for **`apps/web`** lives in **`apps/web/src/lib/me
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
 **Cursor rules:** **ui-messages-and-copy** (`.cursor/rules/ui-messages-and-copy.mdc`) · **ui-messages-bundle-splitting** (`.cursor/rules/ui-messages-bundle-splitting.mdc`)  
-**Locale strategy:** [`adr_009_ui_locale_strategy.md`](../../prds/07_governance/adr_009_ui_locale_strategy.md) · **Runtime:** [`i18n_runtime_spec.md`](../../implementation/mvp/contracts/i18n_runtime_spec.md)
+**Locale strategy:** [`adr_008_i18n_ru_en_dictionary_slices.md`](../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md) · **Runtime:** ADR-008 §4 (отдельного runtime-spec нет)
 
 ---
 

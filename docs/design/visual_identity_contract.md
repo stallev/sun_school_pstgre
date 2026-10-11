@@ -202,7 +202,7 @@
 | [`responsive_navigation_contract.md`](./responsive_navigation_contract.md) | Оболочка и навигация |
 | [`prototype_route_mapping.md`](./prototype_route_mapping.md) | Экран прототипа → маршрут |
 | [`typography_text_guidelines.md`](../guidelines/typography_text_guidelines.md) | Enforcement слой для текста |
-| *(planned)* `design_system_lab_spec.md` | Витрина компонентов (W15) |
+| [`design_system_lab_spec.md`](../implementation/mvp/specs/design_system_lab_spec.md) | Витрина компонентов (W15) |
 
 **Registry:** [`documentation_creation_registry.md`](../meta/documentation_creation_registry.md) — wave W2-03
 

@@ -135,7 +135,7 @@
 | [`canonical_routes.md`](./canonical_routes.md) | Список маршрутов |
 | [`prototype_route_mapping.md`](./prototype_route_mapping.md) | Экран прототипа → маршрут |
 | [`visual_identity_contract.md`](./visual_identity_contract.md) | Токены и рецепты |
-| *(planned)* `global_shell_spec.md` | Реализация оболочки (W9-01) |
+| [`global_shell_spec.md`](../implementation/mvp/specs/global_shell_spec.md) | Реализация оболочки (W9-01) |
 
 **Registry:** [`documentation_creation_registry.md`](../meta/documentation_creation_registry.md) — wave W2-02
 
