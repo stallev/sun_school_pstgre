@@ -1,10 +1,24 @@
 {
-  "name": "ai-first-monorepo-boilerplate",
+  "name": "sunschool",
   "private": true,
   "engines": {
     "node": "24.x"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/policy/*"
+  ],
   "scripts": {
+    "dev": "npm run dev -w @sunschool/web",
+    "build": "npm run build -w @sunschool/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "db:generate": "npm run db:generate -w @sunschool/db",
+    "db:migrate:dev": "npm run db:migrate:dev -w @sunschool/db",
+    "db:migrate:deploy": "npm run db:migrate:deploy -w @sunschool/db",
+    "db:migrate:status": "npm run db:migrate:status -w @sunschool/db",
     "rules:sync": "node scripts/sync-claude-rules.mjs",
     "rules:check": "node scripts/sync-claude-rules.mjs --check",
     "deps:check": "node scripts/check-exact-deps.mjs",
