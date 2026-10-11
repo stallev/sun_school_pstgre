@@ -24,7 +24,8 @@
     "deps:check": "node scripts/check-exact-deps.mjs",
     "encoding:check": "node scripts/check-text-encoding.mjs",
     "docs:links": "node scripts/check-doc-links.mjs",
-    "psi:lab": "node scripts/psi-lab/run-pagespeed.mjs"
+    "psi:lab": "node scripts/psi-lab/run-pagespeed.mjs",
+    "prepare": "node -e \"try{require('fs').accessSync('.git');require('child_process').execSync('husky',{stdio:'inherit'})}catch(e){}\""
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",
@@ -37,5 +38,8 @@
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.1",
     "vitest": "5.0.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --max-warnings=0"
   }
 }
