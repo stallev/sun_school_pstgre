@@ -79,7 +79,7 @@ Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
 
 ## Cursor vs Claude Code rules
 
-**SoT MUST:** `.cursor/rules/*.mdc` only (not `tiers/` until copied to the rules root). After any `.mdc` edit in this task: `npm run rules:sync`. Before commit: `npm run rules:check`. Mirror: `.claude/rules/*.md` — generated, in git, never hand-edit. Playbook: [`docs/claude-code-cursor-rules-sync.md`](docs/claude-code-cursor-rules-sync.md).
+**SoT MUST:** `.cursor/rules/*.mdc` only (not `tiers/` until copied to the rules root). **Активны T0 + T1** (манифест — [`.cursor/rules/README.md`](.cursor/rules/README.md)); T2 (UI) — с P6; `s3-file-asset-uploads` не активируется (модуль выключен). Правку правила вносить в tier-копию и в корень одинаково (`rules:check` сверяет). After any `.mdc` edit in this task: `npm run rules:sync`. Before commit: `npm run rules:check`. Mirror: `.claude/rules/*.md` — generated, in git, never hand-edit. Playbook: [`docs/claude-code-cursor-rules-sync.md`](docs/claude-code-cursor-rules-sync.md).
 
 Cursor `alwaysApply: false` without `globs` (e.g. `agent-code-review-subagent.mdc`) is requestable in Cursor; Claude Code treats a missing `paths` as always-on — do not “fix” the Claude file by hand.
 
@@ -112,4 +112,4 @@ Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Google + Telegr
 
 ## Repository status
 
-**Текущая фаза:** Bootstrap — P3 завершена; следующая — P4. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) и [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).
+**Текущая фаза:** Bootstrap — P4 завершена (T1-правила активны, auth-слой под ADR-003); следующая — P5 (scaffold), затем P6 (Design Lab; T2-правила). См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) и [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).

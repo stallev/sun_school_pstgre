@@ -22,8 +22,8 @@
 | P0 Bootstrap, P1 Прототип | ✔ | HTML-прототип приведён к UX-03 (D-6…D-8) |
 | P2 Реестр документов | ✔ (gate G2) | реестр адаптирован; формальное утверждение владельцем — в шапке реестра |
 | **P3 Волны W1–W9, W11, W12, W14, W15** | ✔ | см. индекс; W10, W13, часть W5/W6/W7/W9/W12 — «не требуется» на lean |
-| P4 Rules + guidelines | ⏳ следующий | список работ — §5 |
-| P5 Scaffold, P6 Design Lab | ⏳ | после P4; gates G3–G5 |
+| P4 Rules + guidelines | ✔ | T0 + T1 активны (без `s3-file-asset-uploads`); auth-правило и гайд — OIDC; guidelines очищены |
+| P5 Scaffold, P6 Design Lab | ⏳ следующий: P5 | gates G3–G5 |
 | P7+ Фазы P01…P07 | ⏳ | [`implementation/mvp/README.md`](../implementation/mvp/README.md) |
 
 Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и specs lean созданы — **выполнено**. Условие для P5: активные T1-правила (P4).
@@ -81,9 +81,9 @@ Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и spe
 
 | # | Работа | Фаза |
 |---|--------|------|
-| 1 | Активировать T1-правила; адаптировать `auth-security.mdc` и `docs/guidelines/auth/ai_auth_implementation_guide.md` (Credentials → OIDC, без адаптера) | P4 |
-| 2 | `docs/guidelines/README.md` и `react/README.md`: убрать ссылки на не созданные `styleguide`, `accessibility_requirements`, `interaction_design_contract`, `content_and_microcopy_contract`, `client_flow`, `trainer_flow`; `next-themes` и `base-vega` в `react/ai_component_guidelines.md` — по решению P6 | P4 |
-| 3 | `ai_loading_patterns.md`: реестр тегов кэша — в коде; `ai_form_handling_pattern.md`: адаптация под пояс школы и `MutationResult` | P4 |
+| 1 | ✔ Активировать T1-правила; адаптировать `auth-security.mdc` и `docs/guidelines/auth/ai_auth_implementation_guide.md` (Credentials → OIDC, без адаптера) | P4 |
+| 2 | ✔ `docs/guidelines/README.md` и `react/README.md`: убрать ссылки на не созданные `styleguide`, `accessibility_requirements`, `interaction_design_contract`, `content_and_microcopy_contract`, `client_flow`, `trainer_flow`; `next-themes` и `base-vega` в `react/ai_component_guidelines.md` — по решению P6 | P4 |
+| 3 | ✔ `ai_loading_patterns.md`: реестр тегов кэша — в коде; `ai_form_handling_pattern.md`: адаптация под пояс школы и `MutationResult` | P4 |
 | 4 | Проверить `shadcn init` Base UI и стиль; обновить правило `ui-design-system-shadcn` (без `.dark`) и ADR-001 при расхождении | P6 |
 | 5 | Сверить Prisma `migrate dev/status`, shadow DB; Vercel Root Directory для монорепо | P5 |
 | 6 | Написать `analytics_screens_spec` (P05-CU0) до реализации аналитики | P05 |
@@ -109,3 +109,4 @@ W1-01/02 шаблоны ADR-индекса; W5-01/03…07/09; W6-01/02; W7-01/04
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — создан по итогам W14 |
+| 2026-10-11 | P4 завершена: статус этапа и работы §6 п. 1–3 отмечены выполненными |
