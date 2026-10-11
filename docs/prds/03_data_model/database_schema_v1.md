@@ -237,3 +237,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W1-F6), схема целиком |
+| 2026-10-11 | Реализовано в `packages/db/prisma/schema.prisma` (P5): 39 таблиц, миграция `init`. Соглашения реализации: модели PascalCase с `@@map`, enum-типы БД с суффиксом `_enum`, модель таблицы `user_role` называется `UserRoleAssignment`; ограничения вне Prisma (partial unique R-1, R-2, один PENDING-запрос, один default на язык, открытый запрос на удаление, один активный штраф, МАТЬ/ОТЕЦ; CHECK: subject удаления, `signed_on` при `LEGACY_PENDING`, диапазоны оценок, `quantity <> 0`) — в SQL миграции; запрет UPDATE/DELETE (R-6) — репозиторием, роль БД — P07 |

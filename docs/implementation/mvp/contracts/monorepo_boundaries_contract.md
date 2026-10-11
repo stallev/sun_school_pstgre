@@ -7,7 +7,7 @@
 **Волна:** W8-01  
 **Зависит от:** [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md) §3.2, [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §3–§5, [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) PKG-01…PKG-03, [`lifecycle_models.md`](../../../prds/02_domain_model/lifecycle_models.md) §4, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) §4, [`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §3, §10  
 **Связанные документы:** [`AGENTS.md`](../../../../AGENTS.md), [`ai_typescript_monorepo_guidelines.md`](../../../guidelines/typescript/ai_typescript_monorepo_guidelines.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
-**Проверено по:** ADR-001 / ADR-002 (пины и политика `proxy.ts`); границы пакетов — решение проекта, не API библиотек. ESLint boundaries — как класс проверок: конкретный плагин и конфигурация выбираются на P5 и сверяются по его документации. Context7 недоступен.
+**Проверено по:** ADR-001 / ADR-002 (пины и политика `proxy.ts`); границы пакетов — решение проекта, не API библиотек. Проверка границ реализована на P5 (2026-10-11) встроенным правилом ESLint `no-restricted-imports` по группам файлов в `eslint.config.mjs` — без дополнительного плагина (решение: меньше зависимостей, правила читаются как таблица §4); негативный тест — импорт `next` и `@sunschool/db` из `packages/domain` даёт ошибку. Context7 недоступен.
 
 ---
 

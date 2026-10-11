@@ -29,7 +29,7 @@
 | Framework | **Next.js 16.4.x**, App Router, TypeScript | exact pin, без caret; детали — ADR-002 |
 | Hosting | **Vercel** | preview на PR; один production-проект |
 | ORM | **Prisma v7** | `datasource.url` — в `prisma.config.ts`; `PrismaClient` создаётся только с driver adapter |
-| База данных | **Neon PostgreSQL 17** | pooled `DATABASE_URL` (приложение), direct `DIRECT_URL` (миграции) |
+| База данных | **Neon PostgreSQL 17** (dev-проект фактически на 18.6 — Q-05) | pooled `DATABASE_URL` (приложение), direct `DIRECT_URL` (миграции) |
 | UI | shadcn/ui + Tailwind CSS v4, токены Slate Cobalt | токены — UX-03 (W2) |
 | Toasts | Sonner | |
 | Auth | **Auth.js v5** (`next-auth@beta`), JWT-сессии | провайдеры: Google, Telegram (custom OIDC); пароля нет |
@@ -120,8 +120,9 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 
 | ID | Вопрос | Владелец | Блокирует |
 |----|--------|----------|-----------|
-| Q-01 | Какой driver adapter для Neon в Prisma 7 (`@prisma/adapter-neon` или `@prisma/adapter-pg` с pooled URL): страница документации Neon найдена только для v6 | architect | P01 (scaffold БД), `neon_prisma_migrations_guide` |
-| Q-02 | Точный patch-пин Next.js 16.4.x на дату scaffold | исполнитель P5 | P01-T1 |
+| Q-01 | ~~Какой driver adapter для Neon в Prisma 7~~ — **решено 2026-10-11 (P5):** `@prisma/adapter-pg` с pooled `DATABASE_URL`; по документации Prisma (PostgreSQL, Neon: CLI — `DIRECT_URL`, runtime — pooled URL); `migrate dev`, shadow database и приложение проверены на dev-ветке Neon | architect | — |
+| Q-02 | ~~Точный patch-пин Next.js 16.4.x~~ — **решено 2026-10-11 (P5): `next@16.4.0`** (`npm view next version` = 16.4.0) | исполнитель P5 | — |
+| Q-05 | Версия PostgreSQL: документ фиксирует PG 17, а dev-проект Neon создан на **PG 18.6** (`show server_version`, 2026-10-11). Схема и миграции совместимы; оставить PG 18 для dev и prod (одна версия на оба проекта) или создать проекты на 17 | владелец | P07 (prod-проект) |
 | Q-03 | ~~Один или два Neon-проекта~~ — **решено 2026-10-10: два** (отдельные проекты dev и prod; спец. 12.2 п. 34) | владелец | — |
 | Q-04 | ~~Первый admin по email из env~~ — **решено 2026-10-10**: email в переменной `FIRST_ADMIN_EMAIL` (значение — только в локальном, не коммитимом конфиге и в env Vercel); первый вход с этим email создаёт активного admin один раз (спец. 12.2 п. 32, ОК-3) | владелец | — |
 

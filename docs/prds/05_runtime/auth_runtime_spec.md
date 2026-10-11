@@ -24,8 +24,8 @@
 
 | Файл (`apps/web/src`) | Runtime | Содержит | Импортирует |
 |-----------------------|---------|----------|-------------|
-| `auth.config.ts` | edge-safe | провайдеры (Google, Telegram), `pages`, `authorized` | только `next-auth`, `lib/auth/telegram-oidc-discovery-fetch` |
-| `auth.ts` | Node | `NextAuth(...)`: `session`, `callbacks`, экспорт `handlers`, `auth`, `signIn`, `signOut` | `auth.config.ts`, `packages/db`, `policy-server` |
+| `auth.config.ts` | edge-safe | провайдеры (Google, Telegram), `pages`, `session`, **чистые** callbacks `jwt` / `session` (без БД: переносят `uid`, `status`, `roles`, чтобы `proxy.ts` читал claims) | только `next-auth`, `@sunschool/domain` (типы), `lib/auth/telegram-oidc-discovery-fetch` |
+| `auth.ts` | Node | `NextAuth(...)`: `...authConfig` + callbacks с БД (`signIn`, `redirect`; запись claims в токен при первом входе), экспорт `handlers`, `auth`, `signIn`, `signOut` | `auth.config.ts`, `packages/db`, `policy-server` |
 | `app/api/auth/[...nextauth]/route.ts` | Node | `GET` / `POST` с обёрткой укорочения `state` | `handlers`, `lib/auth/telegram-oauth-state-rewrite` |
 | `proxy.ts` | edge | `auth`-обёртка, перенаправление по статусу и префиксу | `auth.config.ts`, `policy-edge` |
 | `lib/auth/telegram-oidc-discovery-fetch.ts` | edge-safe | синтетический `userinfo_endpoint` | — |

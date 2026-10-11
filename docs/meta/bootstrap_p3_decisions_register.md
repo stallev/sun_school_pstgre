@@ -23,7 +23,8 @@
 | P2 Реестр документов | ✔ (gate G2) | реестр адаптирован; формальное утверждение владельцем — в шапке реестра |
 | **P3 Волны W1–W9, W11, W12, W14, W15** | ✔ | см. индекс; W10, W13, часть W5/W6/W7/W9/W12 — «не требуется» на lean |
 | P4 Rules + guidelines | ✔ | T0 + T1 активны (без `s3-file-asset-uploads`); auth-правило и гайд — OIDC; guidelines очищены |
-| P5 Scaffold, P6 Design Lab | ⏳ следующий: P5 | gates G3–G5 |
+| P5 Scaffold | ✔ | workspaces, пакеты, схема и миграция на dev-Neon, Next 16.4.0, каркас Auth.js, Sentry, Vitest, ESLint-границы, commitlint/husky, CI; бизнес-логики нет |
+| P6 Design Lab | ⏳ следующий | gates G4–G5 |
 | P7+ Фазы P01…P07 | ⏳ | [`implementation/mvp/README.md`](../implementation/mvp/README.md) |
 
 Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и specs lean созданы — **выполнено**. Условие для P5: активные T1-правила (P4).
@@ -65,6 +66,7 @@ Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и spe
 | 10 | Оболочка: бейдж «99+», динамика за Suspense; dev-вход фикстур; admin+teacher → NAV admin | [`global_shell_spec.md`](../implementation/mvp/specs/global_shell_spec.md) Q-01…Q-05 |
 | 11 | Lab: lucide, токены `penalty`/`tier` объявлены, но не используются | [`design_system_lab_spec.md`](../implementation/mvp/specs/design_system_lab_spec.md) Q-02, Q-03 |
 | 12 | Окно восстановления Neon prod — не менее 1 суток; релиз prod — GitHub Actions с protected environment | [`migration_runbook.md`](../prds/06_operations/migration_runbook.md) Q-02, Q-03 |
+| 13 | Версия PostgreSQL: dev-проект Neon на 18.6 вместо 17 из ADR-001; предложение — PG 18 на dev и prod | ADR-001 Q-05 |
 
 ## 5. Блокеры prod (ждут владельца или юриста)
 
@@ -85,9 +87,9 @@ Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и spe
 | 2 | ✔ `docs/guidelines/README.md` и `react/README.md`: убрать ссылки на не созданные `styleguide`, `accessibility_requirements`, `interaction_design_contract`, `content_and_microcopy_contract`, `client_flow`, `trainer_flow`; `next-themes` и `base-vega` в `react/ai_component_guidelines.md` — по решению P6 | P4 |
 | 3 | ✔ `ai_loading_patterns.md`: реестр тегов кэша — в коде; `ai_form_handling_pattern.md`: адаптация под пояс школы и `MutationResult` | P4 |
 | 4 | Проверить `shadcn init` Base UI и стиль; обновить правило `ui-design-system-shadcn` (без `.dark`) и ADR-001 при расхождении | P6 |
-| 5 | Сверить Prisma `migrate dev/status`, shadow DB; Vercel Root Directory для монорепо | P5 |
+| 5 | ✔ Сверить Prisma `migrate dev/status`, shadow DB (проверено на Neon dev); Vercel Root Directory для монорепо — остаётся для P07 | P5 |
 | 6 | Написать `analytics_screens_spec` (P05-CU0) до реализации аналитики | P05 |
-| 7 | Выбрать инструмент проверки границ пакетов (ESLint boundaries / dependency-cruiser) | P5 |
+| 7 | ✔ Инструмент проверки границ: встроенный `no-restricted-imports` | P5 |
 
 ## 7. Что сознательно не создавалось (lean)
 
@@ -109,4 +111,5 @@ W1-01/02 шаблоны ADR-индекса; W5-01/03…07/09; W6-01/02; W7-01/04
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — создан по итогам W14 |
+| 2026-10-11 | P5 завершена: статус этапа, работы §6 п. 5, 7; §4 п. 13 (версия PG) |
 | 2026-10-11 | P4 завершена: статус этапа и работы §6 п. 1–3 отмечены выполненными |

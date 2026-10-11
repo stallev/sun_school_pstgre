@@ -7,7 +7,7 @@
 **Волна:** W12-07  
 **Зависит от:** [`migration_runbook.md`](../../../prds/06_operations/migration_runbook.md), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md) §3.4, [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §4–§5, [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md)  
 **Связанные документы:** [`local_dev_setup.md`](./local_dev_setup.md), [`vercel_deploy_guide.md`](./vercel_deploy_guide.md), [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
-**Проверено по:** Neon — neon.com через WebFetch, 2026-10-11: проект и ветка — copy-on-write, каждая ветка имеет свои вычислительные ресурсы; pooled-подключение (`-pooler`, PgBouncer transaction mode) — для serverless/веб-приложений, direct — для миграций и `pg_dump`; при pooled не поддерживаются `SET`, `LISTEN/NOTIFY`, SQL-level `PREPARE`, session-level advisory locks; окно восстановления настраивается (по умолчанию 6 часов Free / 1 сутки платные). Prisma ORM — prisma.io через WebFetch, 2026-10-11: `prisma.config.ts` (`datasource.url` обязателен, `directUrl` в v7 удалён, `migrations.seed`), `migrate deploy` — для CI/CD. **Команды `migrate dev` / `migrate status`, shadow database — по референсу Pulse (страница не сверена)**; команды и скрипты — **целевые**, проверяются на P5/P01. Context7 недоступен.
+**Проверено по:** Neon — neon.com через WebFetch, 2026-10-11: проект и ветка — copy-on-write, каждая ветка имеет свои вычислительные ресурсы; pooled-подключение (`-pooler`, PgBouncer transaction mode) — для serverless/веб-приложений, direct — для миграций и `pg_dump`; при pooled не поддерживаются `SET`, `LISTEN/NOTIFY`, SQL-level `PREPARE`, session-level advisory locks; окно восстановления настраивается (по умолчанию 6 часов Free / 1 сутки платные). Prisma ORM — prisma.io через WebFetch, 2026-10-11: `prisma.config.ts` (`datasource.url` обязателен, `directUrl` в v7 удалён, `migrations.seed`), `migrate deploy` — для CI/CD. **Команды `migrate dev` / `migrate status` и shadow database проверены на dev-ветке Neon (P5, 2026-10-11):** `migrate dev --create-only`, применение, `migrate status` — «Database schema is up to date»; shadow DB создаётся на Neon без отдельной настройки. Driver adapter — `@prisma/adapter-pg` (клиент `prisma-client`, вывод в `packages/db/src/generated/prisma`, вне git; `db:generate` обязателен после установки и в CI). Context7 недоступен.
 
 ---
 
@@ -132,7 +132,7 @@ packages/db/
 
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
-| Q-01 | Сверить `migrate dev`, `migrate status`, shadow DB по документации | Сделать на P5 preflight | P5 |
+| Q-01 | ~~Сверить `migrate dev`, `migrate status`, shadow DB~~ — **решено 2026-10-11** (см. «Проверено по») | — | — |
 | Q-02 | Тестовая БД для DAL: ветка Neon или контейнер Postgres | Контейнер Postgres в CI (быстрее, без секретов), ветка Neon — для репетиций | P5 |
 | Q-03 | Автоприостановка compute prod | По решению владельца (стоимость vs cold start) | P07 |
 

@@ -7,7 +7,7 @@
 **Волна:** W12-05  
 **Зависит от:** [`neon_prisma_migrations_guide.md`](./neon_prisma_migrations_guide.md), [`migration_runbook.md`](../../../prds/06_operations/migration_runbook.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md), [`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §4, [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md) §3.4  
 **Связанные документы:** [`global_shell_spec.md`](../specs/global_shell_spec.md) §8, [`telegram_authjs_oidc_portable_guide.md`](../../../my_specs/telegram_authjs_oidc_portable_guide.md), [`vercel_deploy_guide.md`](./vercel_deploy_guide.md), [`P01_tasks.md`](../tasks/P01_tasks.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
-**Проверено по:** `package.json` репозитория (scripts: `rules:sync`, `rules:check`, `deps:check`, `encoding:check`, `docs:links`, `psi:lab`; `engines.node: 24.x`) — на дату документа. Остальные скрипты (`dev`, `build`, `typecheck`, `lint`, `test`, `db:*`) — **целевые**, появляются на P5/P01; их имена фиксирует этот документ как канон. Telegram OIDC: HTTPS-origin обязателен, `http://localhost` Telegram часто отклоняет — по гайду владельца (§2). Neon/Prisma — [`neon_prisma_migrations_guide.md`](./neon_prisma_migrations_guide.md). Context7 недоступен.
+**Проверено по:** `package.json` репозитория (scripts: `rules:sync`, `rules:check`, `deps:check`, `encoding:check`, `docs:links`, `psi:lab`; `engines.node: 24.x`) — на дату документа. Скрипты `dev`, `build`, `typecheck`, `lint`, `test`, `db:generate`, `db:migrate:*` созданы на P5 (2026-10-11) и проверены; `db:seed:*` — целевые (P01/P03). Единый `.env` в корне читают Prisma CLI (`prisma.config.ts`) и `apps/web` (`next.config.ts`, `@next/env`). Telegram OIDC: HTTPS-origin обязателен, `http://localhost` Telegram часто отклоняет — по гайду владельца (§2). Neon/Prisma — [`neon_prisma_migrations_guide.md`](./neon_prisma_migrations_guide.md). Context7 недоступен.
 
 ---
 
@@ -26,7 +26,7 @@
 |-----|------------|
 | Node.js | **24.x** (`engines` в корневом `package.json`) |
 | npm | версия из Node 24; установка — `npm ci` (lockfile) |
-| Git | ветка `bootstrap`/рабочая; hooks (husky) после P5 |
+| Git | ветка `bootstrap`/рабочая; hooks (husky: commitlint, `rules:check`, lint-staged) ставятся при `npm install` |
 | Neon | доступ к проекту **dev**; своя ветка разработчика (по желанию) |
 | Google OAuth | приложение dev: redirect `http://localhost:3000/api/auth/callback/google` (порт — по `dev`-скрипту) |
 | Telegram | бот dev (BotFather → Web Login → OIDC), **HTTPS**-origin (туннель или стабильный preview), redirect `{origin}/api/auth/callback/telegram` |
@@ -56,13 +56,13 @@
 | `deps:check` | корень | точные версии зависимостей | есть |
 | `encoding:check`, `docs:links` | корень | проверки документации | есть |
 | `psi:lab` | корень | PageSpeed lab (только по запросу, на деплое) | есть |
-| `dev` | корень → `apps/web` | dev-сервер | P5 |
-| `build` | корень → `apps/web` | сборка | P5 |
-| `typecheck`, `lint`, `test` | корень | проверки (все workspaces) | P5 |
-| `db:generate` | `@sunschool/db` | `prisma generate` | P5 |
-| `db:migrate:dev` | `@sunschool/db` | `prisma migrate dev` (только local) | P5 |
-| `db:migrate:deploy` | `@sunschool/db` | `prisma migrate deploy` | P5 |
-| `db:migrate:status` | `@sunschool/db` | `prisma migrate status` | P5 |
+| `dev` | корень → `apps/web` | dev-сервер | есть |
+| `build` | корень → `apps/web` | сборка | есть |
+| `typecheck`, `lint`, `test` | корень | проверки (все workspaces) | есть |
+| `db:generate` | `@sunschool/db` | `prisma generate` (клиент в `src/generated`, вне git) | есть |
+| `db:migrate:dev` | `@sunschool/db` | `prisma migrate dev` (только local) | есть |
+| `db:migrate:deploy` | `@sunschool/db` | `prisma migrate deploy` | есть |
+| `db:migrate:status` | `@sunschool/db` | `prisma migrate status` | есть |
 | `db:seed:reference` | `@sunschool/db` | справочники (dev, prod) | P01 |
 | `db:seed:bible`, `db:seed:bible:niv` | `@sunschool/db` | Библия (NIV — по лицензии) | P03 |
 | `db:seed:dev` | `@sunschool/db` | фикстуры (**только dev**) | P01–P05 |
@@ -149,7 +149,7 @@
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
 | Q-01 | Порт и способ HTTPS-туннеля для Telegram (инструмент) | Выбрать на P01; зафиксировать в этом документе | P01 |
-| Q-02 | Единый `.env.example` в корне или в `apps/web` | `apps/web/.env.example` + `packages/db/.env.example` | P5 |
+| Q-02 | ~~Единый `.env.example` в корне или в `apps/web`~~ — **решено 2026-10-11:** один `.env` и один `.env.example` в корне (читают CLI и приложение) | — | — |
 | Q-03 | Контейнер Postgres для тестов DAL (локально) | Да, `docker compose` (опционально) | P5 |
 
 ## 14. Related documents

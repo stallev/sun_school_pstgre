@@ -112,4 +112,4 @@ Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Google + Telegr
 
 ## Repository status
 
-**Текущая фаза:** Bootstrap — P4 завершена (T1-правила активны, auth-слой под ADR-003); следующая — P5 (scaffold), затем P6 (Design Lab; T2-правила). См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) и [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).
+**Текущая фаза:** Bootstrap — P5 завершена (каркас монорепо, схема БД, Auth.js-скелет, CI); следующая — P6 (Design Lab; T2-правила), затем фазы реализации P01…P07. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) и [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).

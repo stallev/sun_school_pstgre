@@ -36,10 +36,10 @@ apps/web/src/
 │   ├── atoms/        — typography (Design Lab catalog)
 │   ├── ui/           — shadcn primitives
 │   └── {domain}/     — feature UI (*.server.tsx, *.client.tsx, *-skeleton.tsx)
-└── lib/              — messages, validation helpers, UI utils
+└── lib/              — auth/, messages/ (ru|en × namespaces), cache-tags.ts, env.server.ts, UI utils
 ```
 
-**Monorepo:** business rules → `packages/domain`; authz → `packages/policy-server`; never import policy-server from `proxy.ts`.
+**Monorepo:** business rules → `packages/domain`; authz → `packages/policy/server` (`@sunschool/policy-server`), JWT-only checks → `packages/policy/edge`; never import policy-server or `@sunschool/db` from `proxy.ts` (lint enforces: `eslint.config.mjs`).
 
 **NOT `features/` folders** — horizontal layers above, not vertical feature slices.
 
@@ -67,8 +67,13 @@ apps/web/src/
 | Logic vs UI | `react-logic-presentation.mdc` | No fetch + hooks in one file |
 | One component/file | `react-one-component-per-file.mdc` | Named export; skeleton = sibling file |
 | Domain codes | `domain-literals-and-codes.mdc` | `@sunschool/domain` |
+| Auth / session | `auth-security.mdc` | `requireActiveUser()` by DB; JWT = uid/status/roles |
+| Policy packages | `policy-packages.mdc` | edge = JWT only; server = DB |
+| XSS / CSRF / CSP | `security-xss-csrf.mdc` | DOMPurify, Origin checks |
+| Tests | `testing.mdc` | lean: domain + S-path policy |
+| Dependencies | `dependency-pinning.mdc` | exact versions, `deps:check` |
 | Mutations UX | `ui-mutation-pending`, `ui-toast-mutations`, `ui-optimistic-mutations` | Sonner, aria-busy |
-| Design system | `ui-design-system-shadcn.mdc` | Design Lab catalog only |
+| Design system | `ui-design-system-shadcn.mdc` | Design Lab catalog only (T2 — active from P6) |
 
 Full index: [`docs/guidelines/README.md`](../../../docs/guidelines/README.md).
 
