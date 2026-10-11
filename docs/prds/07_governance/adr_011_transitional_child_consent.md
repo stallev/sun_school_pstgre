@@ -23,7 +23,7 @@
 ## 3. Context
 
 - Старое приложение не хранило согласий опекунов (§13, СО-5); школа продолжает работать с детьми, которых переносят.
-- В схеме `child_data_consent` есть только `ACTIVE` и `REVOKED`; `signed_on` обязателен; миграция не может создать честное «подписанное» согласие.
+- В схеме `child_data_consent` есть только `ACTIVE` и `REVOKED`; `signed_on` обязателен; импорт (выполняет владелец вне проекта) не может создать честное «подписанное» согласие.
 - Нужно сохранить работу школы **и** не нарушить смысл СО-4 для **новых** детей.
 
 ## 4. Decision
@@ -31,7 +31,7 @@
 | # | Решение |
 |---|---------|
 | 1 | В `CONSENT_STATUS` добавляется значение **`LEGACY_PENDING`** — «согласие не получено, ребёнок перенесён; действует переходный период» |
-| 2 | Миграция создаёт для каждого перенесённого ребёнка запись `child_data_consent`: `status = LEGACY_PENDING`, `channel = PAPER`, `signed_on = NULL`, `signer_name = NULL`, `text_version = 'legacy'`, `marked_by` = системный пользователь миграции |
+| 2 | Импорт владельца (вне проекта; требования — этот ADR и [`P07_phase_description.md`](../../implementation/mvp/phases_tasks_descriptions/P07_phase_description.md) §Совместимость) создаёт для каждого перенесённого ребёнка запись `child_data_consent`: `status = LEGACY_PENDING`, `channel = PAPER`, `signed_on = NULL`, `signer_name = NULL`, `text_version = 'legacy'`, `marked_by` = системный пользователь миграции |
 | 3 | Единый срок хранится в `app_setting.legacy_consent_deadline_on` (`date`): дата импорта + **60 дней** (СО-5); ключа до миграции нет |
 | 4 | `enrollPupil` допускает согласие `LEGACY_PENDING` **только** пока `today ≤ deadline` и только для детей с признаком перенесённого (запись `LEGACY_PENDING`); для остальных по-прежнему нужен `ACTIVE` (INV-08, R-5 сохраняются) |
 | 5 | Существующие зачисления перенесённых детей **сохраняются**; работа (проверки, кирпичики) не блокируется в переходный период |
@@ -55,7 +55,7 @@
 
 - Схема: `CONSENT_STATUS` + `LEGACY_PENDING`; `child_data_consent.signed_on` nullable (только при `LEGACY_PENDING`; CHECK).
 - `canEnroll` (domain) различает `ACTIVE` и `LEGACY_PENDING` с датой.
-- Новые операции: `extendLegacyDeadline` (admin); `importLegacyPupil` — внутренний этап миграции.
+- Новая операция приложения: `extendLegacyDeadline` (admin). `importLegacyPupil` — **контракт данных** для импорта владельца (вне проекта), не use-case приложения.
 - Аналитика и отчёты не меняются; дети учитываются как обычно.
 - Экран `/people` получает фильтр и баннер срока; оболочка — баннер у admin.
 - Юридическая сторона: перенос без согласия опирается на правовое основание школы — проверяет владелец до prod (Q-01).

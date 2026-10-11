@@ -75,9 +75,9 @@
 | `settings.language_changed` / `settings.timezone_changed` | настройки приложения | `app_setting` | seed_data_spec, ADR-004, ADR-008 |
 | `bible.load_started` / `bible.load_finished` / `bible.load_failed` | загрузка перевода | `bible_translation` | W8-09 |
 | `seed.run` | запуск `seed:reference` / `seed:bible` / `seed:dev` | `seed` | seed_data_spec |
-| `migration.run` | запуск импорта из действующего приложения (`migrate:legacy`), счётчики в `new_value` | `seed` | P07 |
+| `migration.run` | запуск импорта владельца (необязательно: пишет скрипт владельца, если подключён к `writeAudit`); счётчики в `new_value` | `seed` | P07, ADR-011 |
 | `school.legacy_deadline_extended` | продлён общий срок переходного периода согласий | `app_setting` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
-| `school.legacy_pupil_imported` | ребёнок перенесён с `LEGACY_PENDING` (`SYSTEM`) | `child_data_consent` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
+| `school.legacy_pupil_imported` | ребёнок перенесён с `LEGACY_PENDING` (необязательно: запись импорта владельца, `SYSTEM`) | `child_data_consent` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
 
 ## 5. Правила записи
 
