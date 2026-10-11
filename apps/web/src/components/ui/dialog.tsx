@@ -42,10 +42,11 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
-  showCloseButton = true,
+  closeLabel,
   ...props
 }: DialogPrimitive.Popup.Props & {
-  showCloseButton?: boolean
+  /** Accessible name of the corner close button; the button is omitted when not given. */
+  closeLabel?: string
 }) {
   return (
     <DialogPortal>
@@ -59,7 +60,7 @@ function DialogContent({
         {...props}
       >
         {children}
-        {showCloseButton && (
+        {closeLabel && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
             render={
@@ -72,7 +73,7 @@ function DialogContent({
           >
             <XIcon
             />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{closeLabel}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -92,11 +93,12 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 
 function DialogFooter({
   className,
-  showCloseButton = false,
+  closeLabel,
   children,
   ...props
 }: React.ComponentProps<"div"> & {
-  showCloseButton?: boolean
+  /** Text of the footer close button; omitted when not given. */
+  closeLabel?: string
 }) {
   return (
     <div
@@ -108,9 +110,9 @@ function DialogFooter({
       {...props}
     >
       {children}
-      {showCloseButton && (
+      {closeLabel && (
         <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Close
+          {closeLabel}
         </DialogPrimitive.Close>
       )}
     </div>
