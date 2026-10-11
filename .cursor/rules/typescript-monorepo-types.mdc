@@ -19,7 +19,7 @@ Web-only `tsc` **does not** replace package checks.
 
 | Layer | Types |
 |-------|--------|
-| `@sunschool/domain` | `UserRole`, entity statuses (Pulse: `BookingStatus`), ports, `MutationResult`, shared Zod DTOs |
+| `@sunschool/domain` | `UserRole`, entity statuses (`AccountStatus`, `LessonStatus`, …), ports, `MutationResult`, shared Zod DTOs |
 | `@sunschool/policy-server` | **`PolicySessionContext` / `UserRole`**, not `next-auth` `Session` |
 | `apps/web` | Auth.js augmentation, UI props, session → domain mappers |
 
@@ -27,8 +27,8 @@ Web-only `tsc` **does not** replace package checks.
 
 ## Domain literals
 
-- Roles/statuses from `@sunschool/domain` or typed constants — no inline role / status strings (Pulse: `"trainer"` / `"pending"`).
-- **Mutation error codes** — import from `@sunschool/domain` (`AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES`); no inline `"INVALID_CREDENTIALS"` / `"DUPLICATE_EMAIL"`. Full contract: **domain-literals-and-codes**.
+- Roles/statuses from `@sunschool/domain` or typed constants — no inline role / status strings (e.g. no `"teacher"` / `"ACTIVE"` literals).
+- **Mutation error codes** — import from `@sunschool/domain` (`MUTATION_ERROR_CODES`, prefixed values such as `AUTH_LINK_CONFLICT`); no inline code strings. Full contract: **domain-literals-and-codes**.
 - Use type guards after string validation, not unsafe `as`.
 
 ## Related rules

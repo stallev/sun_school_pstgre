@@ -21,31 +21,31 @@ description: Domain literals, mutation error codes, and API string values — no
 
 | Значение | Источник | Примеры |
 |----------|----------|---------|
-| Коды ошибок мутаций | `@sunschool/domain` | `AUTH_MUTATION_ERROR_CODES`, `MUTATION_ERROR_CODES` |
+| Коды ошибок мутаций | `@sunschool/domain` | `MUTATION_ERROR_CODES` (общие + префиксы `ACCESS_`/`SCHOOL_`/`CHECK_`/`BRICKS_`/`DELETION_`/`BIBLE_`/`AUTH_`) |
 | Роли | `@sunschool/domain` | `USER_ROLE`, `USER_ROLES` |
-| Статусы сущностей домена | `@sunschool/domain` | `<ENTITY>_STATUSES` (Pulse: `BOOKING_STATUSES`, `TRAINER_STATUSES`) |
-| UI-копирайт | `@/lib/messages` | `MESSAGES.auth.login.invalidCredentials` |
+| Статусы сущностей домена | `@sunschool/domain` | `<ENTITY>_STATUSES` (e.g. `ACCOUNT_STATUS`) |
+| UI-копирайт | `@/lib/messages` | `MESSAGES.auth.login.denied` (результат мутации несёт ключ, не текст) |
 
 Новый код ошибки → **сначала** добавить в `@sunschool/domain` (`packages/domain/src/constants/mutation-error-codes.ts` или доменный namespace), затем использовать в DAL/actions/UI.
 
 ## Паттерн
 
 ```ts
-import { AUTH_MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
+import { MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
 
 return {
   ok: false,
-  code: AUTH_MUTATION_ERROR_CODES.INVALID_CREDENTIALS,
-  message: MESSAGES.auth.login.invalidCredentials,
+  code: MUTATION_ERROR_CODES.AUTH_LINK_CONFLICT,
+  message: "auth.profile.link_conflict", // dictionary key, resolved in UI via @/lib/messages
 };
 
-if (state.code === AUTH_MUTATION_ERROR_CODES.DUPLICATE_EMAIL) { … }
+if (state.code === MUTATION_ERROR_CODES.AUTH_LAST_IDENTITY) { … }
 ```
 
 ## Исключения
 
 - **Prisma / vendor codes** (`P2002`, HTTP status) — сравнивать с documented vendor literal; не смешивать с `MutationErrorCode`.
-- **Auth.js provider id** (`"credentials"`) — framework contract; не выносить в domain без ADR.
+- **Auth.js provider id** (`"google"`, `"telegram"`) — framework contract; сопоставление с `LOGIN_PROVIDER` — одной функцией в `lib/auth`.
 - **Test fixtures** — допустимо inline только в `*.test.*` / seed при явной изоляции.
 
 ## Agent checklist
