@@ -78,6 +78,7 @@
 | Phases + tasks | [P01](../implementation/mvp/phases_tasks_descriptions/P01_phase_description.md) · [P02](../implementation/mvp/phases_tasks_descriptions/P02_phase_description.md) · [P03](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md) · [P04](../implementation/mvp/phases_tasks_descriptions/P04_phase_description.md) · [P05](../implementation/mvp/phases_tasks_descriptions/P05_phase_description.md) · [P06](../implementation/mvp/phases_tasks_descriptions/P06_phase_description.md) · [P07](../implementation/mvp/phases_tasks_descriptions/P07_phase_description.md) (description + tasks в `implementation/mvp/tasks/`) | W11 | Canonical |
 | Operations | [`migration_runbook`](./06_operations/migration_runbook.md), [`local_dev_setup`](../implementation/mvp/guides/local_dev_setup.md), [`vercel_deploy_guide`](../implementation/mvp/guides/vercel_deploy_guide.md), [`neon_prisma_migrations_guide`](../implementation/mvp/guides/neon_prisma_migrations_guide.md) | W12 | Canonical |
 | Навигаторы | [implementation/mvp/README](../implementation/mvp/README.md), [prds/README](./README.md), [design/README](../design/README.md) | W14 | Canonical |
+| Реестр решений и открытых вопросов bootstrap P3 | [`../meta/bootstrap_p3_decisions_register.md`](../meta/bootstrap_p3_decisions_register.md) | W14 | Canonical |
 
 ## 8. Визуальный эталон
 
@@ -140,3 +141,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.28 — W12: migration_runbook, local_dev_setup, vercel_deploy_guide, neon_prisma_migrations_guide → Canonical; перенос данных из старого приложения вне проекта (реализует владелец) |
 | 2026-10-11 | v1.29 — P07 переименована (переходный период согласий и prod-готовность): перенос данных вне проекта по решению владельца |
 | 2026-10-11 | v1.30 — W14: навигаторы (README), финальная сверка индекса; статус проекта обновлён |
+| 2026-10-11 | v1.31 — W14: реестр решений и открытых вопросов bootstrap P3 |
