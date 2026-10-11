@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@next/env": "16.4.0",
     "@sentry/nextjs": "11.6.0",
     "@sunschool/db": "*",
     "@sunschool/domain": "*",

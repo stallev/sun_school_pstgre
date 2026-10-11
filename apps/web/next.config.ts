@@ -1,4 +1,10 @@
+import path from "node:path";
+import { loadEnvConfig } from "@next/env";
 import type { NextConfig } from "next";
+
+// One git-ignored .env at the repo root serves the app, the Prisma CLI and the seed scripts
+// (local_dev_setup.md §6). Next.js itself only reads apps/web/.env*, so the root file is loaded here.
+loadEnvConfig(path.resolve(process.cwd(), "../.."));
 
 /**
  * Next.js 16.4 — ADR-002 §5.1: Instant Navigations need cacheComponents first, then partialPrefetching.
