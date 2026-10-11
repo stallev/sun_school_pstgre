@@ -16,7 +16,7 @@
 
 ## Phase DoR audit (lean: оркестратор inline)
 
-- [ ] Bootstrap P5 и P6 завершены (gates G4, G5); `npm run typecheck`, `lint`, `test` зелёные на чистом дереве
+- [x] Bootstrap P5 и P6 завершены (gates G4, G5); `npm run typecheck`, `lint`, `test` зелёные на чистом дереве — проверено 2026-10-11, ветка P0006
 - [ ] Все задачи ниже проходят DoR (ссылки `§` открываются; пути H/N/S указаны; версии библиотек сверены с `Проверено по` документов; пометить дату и исполнителя)
 - [ ] Open questions фазы: Q-01 решён (2026-10-11: одобрение `TEACHER` без групп — с предупреждением `NO_GROUPS`); Q-03 `global_shell_spec` (dev-вход) решён или отложен
 - [ ] Внешняя настройка: приложения Google и Telegram для dev, `AUTH_*` в `.local`, `FIRST_ADMIN_EMAIL` в `.local/dev-secrets.json`
@@ -31,10 +31,12 @@
       Files: `packages/domain/src/constants/{user-role,account-status,login-provider,access-request-status}.ts`
       Acceptance: значения совпадают с enum схемы §4 (тест сверки списков) → тест зелёный
       Paths: n/a — константы без поведения
+      Статус: частично (2026-10-11) — `packages/domain/src/constants/enums.ts` (каркас P5) есть; нет отдельных файлов по Files и теста сверки со схемой
 - [ ] P01-T2 · T1 · Contract: [monorepo_boundaries §7–§8](../contracts/monorepo_boundaries_contract.md), [access_requests §6](../contracts/access_requests_and_roles_contract.md)
       Files: `packages/domain/src/constants/mutation-error-codes.ts`, `types/mutation-result.ts`
       Acceptance: общие коды + `ACCESS_*`, `AUTH_*`; `MutationResult` с `fields?` → typecheck, тест типов
       Paths: n/a — реестр кодов
+      Статус: частично (2026-10-11) — `mutation-error-codes.ts`, `mutation-result.ts` (каркас P5) есть, общие коды и `AUTH_*` заданы; нет `ACCESS_*` и теста типов
 - [ ] P01-T3 · T1 · Contract: [change_log §3–§4](../contracts/change_log_contract.md)
       Files: `packages/domain/src/constants/audit-action.ts`, `audit/serialize-audit-values.ts`
       Acceptance: реестр содержит `access.*`, `auth.*`, `seed.run`, `settings.*`; сериализация отбрасывает ФИО/email/`providerAccountId` → unit-тест (INV-23)
@@ -52,6 +54,7 @@
       Files: `packages/db/src/client.ts`, `env-guard.ts`
       Acceptance: клиент с driver adapter; при расхождении `APP_ENV` и `app_setting.db_environment` — отказ до записи → тест (мок маркера)
       Paths: H [seed_data_spec §5] · N [неизвестный `APP_ENV`, нет маркера в prod] · S [INV-24: prod-URL + dev]
+      Статус: частично (2026-10-11) — `packages/db/src/client.ts` — каркас P5; `env-guard.ts` и тест отсутствуют
 - [ ] P01-T6 · T3 · Contract: [change_log §5, §11](../contracts/change_log_contract.md)
       Files: `packages/db/src/audit/write-audit.ts`
       Acceptance: единственная точка записи `audit_log`; требует транзакцию; нет `update`/`delete` → тест, grep-проверка в тесте
@@ -69,10 +72,12 @@
       Files: `apps/web/src/auth.config.ts`, `src/lib/auth/telegram-oidc-discovery-fetch.ts`
       Acceptance: провайдеры `google`, `telegram` (`idToken`, `checks: pkce,state`); синтетический `userinfo_endpoint` только при его отсутствии; `customFetch` импортирован из `next-auth` → unit-тест fetch-обёртки
       Paths: H [§6.2] · N [discovery недоступен → исходный ответ] · S [`TELEGRAM_BOT_TOKEN` не используется как secret]
+      Статус: частично (2026-10-11) — `auth.config.ts` и `telegram-oidc-discovery-fetch.ts` (каркас P5) есть; unit-теста fetch-обёртки нет
 - [ ] P01-T9 · T3 · Spec: [auth_runtime_spec §6 (TG-1…TG-5)](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `src/lib/auth/telegram-oauth-state-rewrite.ts`, `src/app/api/auth/[...nextauth]/route.ts`
       Acceptance: после обёртки `state.length ≤ 256` для Telegram; cookie `authjs.state` совпадает; нет cookie → ошибка → unit-тест (TG-5)
       Paths: H [§6.1] · N [нет `AUTH_SECRET` → 500 без деталей] · S [CSRF-проверка `state` сохранена]
+      Статус: частично (2026-10-11) — `telegram-oauth-state-rewrite.ts` и route handler (каркас P5) есть; unit-теста TG-5 нет
 
 **CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Google (localhost) и Telegram (HTTPS-туннель/preview)
 
@@ -86,6 +91,7 @@
       Files: `src/auth.ts` (jwt/session/redirect), `src/types/next-auth.d.ts`
       Acceptance: JWT = `uid`, `status`, `roles`; `session.user` без email/имени; `redirect` пускает только маршруты из `canonical_routes` → тест callbacks
       Paths: H [§5.2–5.3] · N [внешний `callbackUrl`] · S [ПД не в токене]
+      Статус: частично (2026-10-11) — `auth.ts` — каркас без callbacks `signIn`/`jwt`/`session`/`redirect`; `next-auth.d.ts` есть; тестов нет
 
 **CU DoD:** `typecheck` · `lint` · `test` (включая гонку двойного первого входа) · smoke: вход нового пользователя → `REGISTRATION`
 
@@ -99,6 +105,7 @@
       Files: `apps/web/src/proxy.ts`, `src/lib/auth/require-user.ts`
       Acceptance: `proxy.ts` использует только `policy-edge` и `auth.config`; `requireActiveUser()` читает статус/роли по БД, кэш на запрос; перенаправления по §6 → тесты + lint boundaries
       Paths: H [§10] · N [нет сессии → `/login`] · S [AZ-D1…D5: устаревший JWT, снятая роль]
+      Статус: частично (2026-10-11) — `proxy.ts` подключён к `policy-edge`; `canVisitRoutePrefix` — заглушка «allow all», `requireActiveUser()` бросает ошибку (реализация в CU5)
 
 **CU DoD:** `typecheck` · `lint` (boundaries) · `test` · smoke: teacher → `/users` даёт 403, аноним → `/login`
 
@@ -115,6 +122,7 @@
 - [ ] P01-T16 · T0 · Files: `apps/web/src/lib/messages/{ru,en}/{common,auth}.json`, `get-dictionary.ts`
       Acceptance: ключи оболочки и `auth` в ru и en; тип `en` ≡ `typeof ru` → сборка падает при пропуске
       Paths: n/a — copy
+      Статус: частично (2026-10-11) — словари `ru`/`en` (`common`, `auth`, `teacher`, `admin`, `analytics`) и `get-dictionary.ts` (каркас P5) есть; ключи оболочки и проверка `en ≡ ru` — нет
 
 **CU DoD:** `typecheck` · `lint` · `test` · smoke 390 px и `lg` · проверка Lab-секций новых компонентов
 
