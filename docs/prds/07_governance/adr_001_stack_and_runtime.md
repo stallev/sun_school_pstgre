@@ -30,7 +30,7 @@
 | Hosting | **Vercel** | preview на PR; один production-проект |
 | ORM | **Prisma v7** | `datasource.url` — в `prisma.config.ts`; `PrismaClient` создаётся только с driver adapter |
 | База данных | **Neon PostgreSQL 17** (dev-проект фактически на 18.6 — Q-05) | pooled `DATABASE_URL` (приложение), direct `DIRECT_URL` (миграции) |
-| UI | shadcn/ui + Tailwind CSS v4, токены Slate Cobalt | токены — UX-03 (W2) |
+| UI | shadcn/ui на **Base UI** (`@base-ui/react`, `components.json` style `base-vega`) + Tailwind CSS v4, токены Slate Cobalt | токены — UX-03 (W2); Radix как слой примитивов не используется; проверено в P6 |
 | Toasts | Sonner | |
 | Auth | **Auth.js v5** (`next-auth@beta`), JWT-сессии | провайдеры: Google, Telegram (custom OIDC); пароля нет |
 | i18n | ru / en, срезы словарей | ADR-008 (W4-06) |

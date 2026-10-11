@@ -43,7 +43,7 @@ Design explicitly: **empty**, **loading**, **error**, **forbidden**.
 
 shadcn on **Base UI**: Card, Button, Tabs, Dialog, Sheet, Table, Form/Field/Label, Alert, Skeleton — install via shadcn MCP, then tokenize.
 
-- Init: `shadcn init -b base`. In `components.json`, `"style": "base-vega"`.
+- Init: `shadcn init -b base -p vega` (shadcn CLI 4.21.4; verified P6). Result in `components.json`: `"style": "base-vega"`. After init, `src/lib/utils.ts` MUST be `clsx` + `tailwind-merge` (the CLI may emit a bogus `cn` package — remove it); revert the CLI's generated `globals.css`/`layout.tsx` tokens/font to Slate Cobalt.
 - Primitive package: `@base-ui/react`.
 - Compose with the Base UI `render` prop.
 - **MUST NOT:** `shadcn init -b radix`, a `radix-*` style, or `@radix-ui/*` as the shadcn primitive layer.
