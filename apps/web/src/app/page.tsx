@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { homeRouteFor } from "@sunschool/policy-edge";
 import { auth } from "@/auth";
@@ -6,6 +7,8 @@ import { auth } from "@/auth";
 export const instant = false;
 
 const HomePage = async () => {
+  // Same prerender guard as /login: auth() uses crypto.getRandomValues().
+  await connection();
   const session = await auth();
   if (!session?.user?.id) {
     redirect("/login");

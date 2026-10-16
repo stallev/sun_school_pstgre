@@ -1,19 +1,19 @@
 import * as Sentry from "@sentry/nextjs";
 
 /**
- * Sentry stub (module `sentry`). Initialization is conditional on SENTRY_DSN, so dev and CI run
- * without it. Source-map upload (SENTRY_AUTH_TOKEN, withSentryConfig) is added in P07 with the
- * prod configuration. Personal data is never attached (do not enable PII options; INV-23).
+ * Sentry loads from runtime-specific configs when a DSN is set (`NEXT_PUBLIC_SENTRY_DSN` or
+ * `SENTRY_DSN`). Without DSN, dev and CI skip initialization. PII is scrubbed in `beforeSend`
+ * (see `lib/observability/scrub.ts`). Source maps upload uses `withSentryConfig` when
+ * `SENTRY_AUTH_TOKEN` is present at build time.
  */
 export async function register(): Promise<void> {
-  const dsn = process.env.SENTRY_DSN;
-  if (!dsn) return;
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    await import("./sentry.server.config");
+  }
 
-  Sentry.init({
-    dsn,
-    environment: process.env.APP_ENV,
-    tracesSampleRate: 0,
-  });
+  if (process.env.NEXT_RUNTIME === "edge") {
+    await import("./sentry.edge.config");
+  }
 }
 
 export const onRequestError = Sentry.captureRequestError;
