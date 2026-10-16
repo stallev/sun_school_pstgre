@@ -19,7 +19,7 @@
 - [x] Bootstrap P5 и P6 завершены (gates G4, G5); `npm run typecheck`, `lint`, `test` зелёные на чистом дереве — проверено 2026-10-11, ветка P0006
 - [x] Все задачи ниже проходят DoR (ссылки `§` открываются; пути H/N/S указаны; версии библиотек сверены с `Проверено по` документов; пометить дату и исполнителя) — проверено inline 2026-10-11, оркестратор (Claude)
 - [x] Open questions фазы: Q-01 решён (2026-10-11: одобрение `TEACHER` без групп — с предупреждением `NO_GROUPS`); Q-03 `global_shell_spec` (dev-вход) решён или отложен — Q-03 отложен на CU6 (дефолт: dev-вход фикстур по `APP_ENV=dev`)
-- [ ] Внешняя настройка: Telegram-бот dev (`AUTH_TELEGRAM_*` — есть), `FIRST_ADMIN_EMAIL` и `ADMIN_PASSWORD` в `.local/dev-secrets.json` (есть; Google не используется — решение 2026-10-16)
+- [x] Внешняя настройка: Telegram-бот dev (`AUTH_TELEGRAM_*` — есть), `FIRST_ADMIN_EMAIL` и `ADMIN_PASSWORD` в `.local/dev-secrets.json` (есть; Google не используется — решение 2026-10-16)
 
 ## Commit plan
 
@@ -114,7 +114,7 @@
 
 **CU DoD:** `typecheck` · `lint` (boundaries) · `test` · smoke: аноним → `/login` (проверено на собранном приложении: `/today`, `/users`, `/register`, неизвестный путь → 307 `/login`; `/login`, `/design-system` открыты) — ✔ 2026-10-16; teacher → `/users` даёт 403 — подтверждено тестами `requireRole`/`checkRole`, сквозной браузерный smoke — после `(app)`-оболочки и страниц (CU6/CU10); `forbidden()` включён флагом `experimental.authInterrupts` (экспериментальный API Next 16.4). **Переданные дальше пункты из review CU5:** (1) экран `/login` (CU8) завершает устаревшую сессию при `?error=AccessDenied` — страница `/login?error=…` открыта для любого статуса, поэтому петли редиректов нет; (2) обновление claims в JWT для только что одобренного пользователя (JWT `REQUEST_PENDING`, БД `ACTIVE` застревает на `/pending` до повторного входа) — решить в CU8/CU9 (`update()` сессии с клиента `/pending` либо обновление при `updateAge`, `auth_runtime_spec` §5.2); (3) `forbidden.tsx` берёт русский словарь по умолчанию — локаль из `app_setting.ui_locale` в CU6
 
-### P01-CU6 — feat(web): add app shell, navigation and shell-level states · Review: diff-only · Commit: auto
+### P01-CU6 — feat(web): add app shell, navigation and shell-level states · Review: diff-only · Commit: auto · ✔ выполнен 2026-10-16
 
 - [x] P01-T14 · T1 · Spec: [global_shell_spec §4–§6](../specs/global_shell_spec.md)
       Files: `apps/web/src/app/layout.tsx`, `app/(app)/layout.tsx`, `app/(auth)/layout.tsx`, `components/shell/*`, `lib/shell/nav-resolver.ts`
@@ -131,7 +131,7 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · smoke 390 px и `lg` · проверка Lab-секций новых компонентов
 
-### P01-CU7 — feat(auth): add registration, resubmission and own-name use-cases · Review: reviewer · Commit: auto
+### P01-CU7 — feat(auth): add registration, resubmission and own-name use-cases · Review: reviewer · Commit: auto · ✔ выполнен 2026-10-16
 
 - [x] P01-T17 · T3 · Contract: [access_requests §5.2–§5.3, §5.8, §6](../contracts/access_requests_and_roles_contract.md)
       Files: `apps/web/src/data/access/{submit-registration,resubmit-registration,update-own-name}.ts`, `actions/access.ts`
@@ -140,7 +140,7 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` (отказы, идемпотентность) · smoke: `REGISTRATION → REQUEST_PENDING`
 
-### P01-CU8 — feat(web): add login, privacy, register and pending screens · Review: diff-only · Commit: auto
+### P01-CU8 — feat(web): add login, privacy, register and pending screens · Review: diff-only · Commit: auto · ✔ выполнен 2026-10-16
 
 - [x] P01-T18 · T1 · Spec: [access_and_registration §6–§10](../specs/access_and_registration_spec.md)
       Files: `app/(auth)/{login,privacy,register,pending}/page.tsx`, `components/auth/{ProviderButton,ConsentBlock,RegisterForm}.tsx`
@@ -165,7 +165,7 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` (S-пути тестом) · smoke: approve ADMIN, reject с причиной, disable/enable
 
-### P01-CU10 — feat(web): add approvals and users screens · Review: diff-only · Commit: auto
+### P01-CU10 — feat(web): add approvals and users screens · Review: diff-only · Commit: auto · ✔ выполнен 2026-10-16
 
 - [x] P01-T22 · T1 · Spec: [admin_flow §4.1–§4.2](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Matrix: AZ-01…AZ-04 · UX: [forms §6](../../../design/forms_and_validation_ux.md)
       Files: `app/(app)/approvals/page.tsx`, `users/page.tsx`, `users/[userId]/page.tsx`, `components/admin/{ApprovalRow,UserRow,RoleSelector}.tsx`
@@ -199,9 +199,9 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · `build:check` — ✔ 2026-10-16; smoke 390 px — вручную
 
-### P01-CU13 — docs(docs): sync P01 docs with implementation · Review: diff-only · Commit: auto
+### P01-CU13 — docs(docs): sync P01 docs with implementation · Review: diff-only · Commit: auto · ✔ выполнен 2026-10-16
 
-- [ ] P01-T26 · T0 · Files: `docs/**` (контракты, specs, ADR-003, auth guideline `ai_auth_implementation_guide.md`, индекс)
+- [x] P01-T26 · T0 · Files: `docs/**` (контракты, specs, ADR-003, auth guideline `ai_auth_implementation_guide.md`, индекс)
       Acceptance: grep изменённых терминов; нет расхождений между кодом и документами; расхождения исправлены в документах (product-docs-alignment)
       Paths: n/a — docs-only
 

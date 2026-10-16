@@ -46,7 +46,7 @@ Browser
 
 - **Адаптера нет** (`@auth/prisma-adapter` не используется): в схеме нет таблиц `Account` / `Session`. Идентичности — `login_identity`, пользователи — `app_user`.
 - Provider id → enum `LOGIN_PROVIDER` одной функцией в `lib/auth` (без inline-строк на call site).
-- **Пароль, Credentials-провайдер и сброс пароля не используются**; добавление — только через amend ADR-001 и ADR-003.
+- **Credentials** — только администратор (email + пароль, ADR-003 v1.1); самостоятельная регистрация и сброс пароля для пользователей не используются. Расширение пароля на роли кроме admin — только через amend ADR-001 и ADR-003. `@auth/prisma-adapter` не добавлять (в схеме нет `Account` / `Session`).
 
 ---
 
@@ -65,7 +65,7 @@ Browser
 
 | Callback | Что делает | Чего не делает |
 |----------|-----------|----------------|
-| `signIn` | Находит/создаёт `login_identity` и `app_user` (`REGISTRATION`), создаёт первого admin, выполняет привязку по cookie намерения; отказ — `false` | не раскрывает причину отказа; не сливает пользователей |
+| `signIn` | Находит/создаёт `login_identity` и `app_user` (`REGISTRATION`), проверяет Credentials администратора, выполняет привязку по cookie намерения; первый admin — команда `db:seed:admin`, не этот callback | не раскрывает причину отказа; не сливает пользователей |
 | `jwt` | На первом входе кладёт `uid`, `status`, `roles` | не ходит в БД на каждый запрос; не кладёт ФИО, email, телефон |
 | `session` | Отдаёт `id`, `status`, `roles` | не отдаёт поля провайдера |
 | `redirect` | Пускает относительные пути из `canonical_routes.md` | не пускает внешний `callbackUrl` |

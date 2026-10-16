@@ -106,7 +106,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 ## 6. Consequences
 
 - Документы W2–W9 и scaffold P5 используют версии и границы отсюда; отклонения — через ADR amend.
-- Guidelines, написанные под Credentials (`ai_auth_implementation_guide.md`), требуют адаптации в P4 / W4-01.
+- `ai_auth_implementation_guide.md` приведён к ADR-003 v1.1 (Telegram + Credentials администратора) в P01.
 - `packages/db` владеет миграциями и seed-скриптами, включая загрузку Библии (см. [`Bible/README.md`](../../my_specs/Bible/README.md)).
 
 ## 7. Acceptance criteria
@@ -140,7 +140,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 
 ## 10. Agent notes
 
-- Не добавлять Credentials-провайдер, `@auth/prisma-adapter`, Resend, S3, `apps/workers` без amend ADR.
+- Не расширять пароль/Credentials за пределы администратора; не добавлять `@auth/prisma-adapter`, Resend, S3, `apps/workers` без amend ADR.
 - Не импортировать `@sunschool/policy-server` в `proxy.ts`.
 - Не создавать третье окружение; не использовать дамп prod как dev-данные.
 - Версии не «обновлять по привычке»: пины меняются только через этот ADR.

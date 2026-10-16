@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** В работе — 5 из 13 CU (CU1 domain и CU2 db — 2026-10-11; CU3 Telegram-провайдер и схема входа, CU4 callbacks/Credentials/`db:seed:admin`, CU5 policy/`requireActiveUser`/`proxy.ts` — 2026-10-16; обновлено 2026-10-16). Дальше CU6 (оболочка и навигация), затем CU7–CU13; для ручного smoke Telegram нужен HTTPS-туннель (бот dev настроен); подробности — [`P01_tasks.md`](../tasks/P01_tasks.md). Решение владельца 2026-10-16: Google исключён, администратор входит по email + паролю, из Telegram сохраняются `username` и `phone` — см. ADR-003 v1.1, новые задачи P01-T8a и P01-T10a.  
+**Прогресс фазы:** Реализация CU1–CU12 завершена (2026-10-11…2026-10-16); остаётся CU13 (docs sync) и закрытие Verification/DoD. Ручной smoke Telegram OAuth (HTTPS-туннель) — вне обязательного DoD: вход покрыт unit/integration-тестами (решение владельца 2026-10-16). Google исключён; администратор — email + пароль (`db:seed:admin`); Telegram — `username` и `phone` (ADR-003 v1.1). Детали — [`P01_tasks.md`](../tasks/P01_tasks.md).  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-01  
@@ -170,7 +170,7 @@ flowchart TD
 
 | Риск | Guard |
 |------|-------|
-| Промпт P5 описывает «Credentials scaffold» — противоречит ADR-003 | Auth в P01 по `auth_runtime_spec`; Credentials и `@auth/prisma-adapter` не добавлять |
+| Промпт P5 описывает «Credentials scaffold» — устарел после ADR-003 v1.1 | Auth в P01 по `auth_runtime_spec`: Telegram + Credentials **только admin**; `@auth/prisma-adapter` не добавлять |
 | Роли и статусы inline-строками | `domain-literals-and-codes`; lint |
 | `status`/`roles` из JWT для доступа к данным | `requireActiveUser()` по БД; review S |
 | Журнал не пишется в транзакции | тест use-case; `writeAudit` — единственная точка |
@@ -196,7 +196,7 @@ flowchart TD
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
 | Q-01 | ✔ **Решено 2026-10-11.** Одобрение `TEACHER` без групп (расхождение контракта W8-03 и `admin_flow` §4.2) | Принят вариант `admin_flow`: одобрение без групп **разрешено с предупреждением** `NO_GROUPS`; группа назначается позже в `/groups/[groupId]`; контракт W8-03 §5.4/§6 и lifecycle §5.1 исправлены | — |
-| Q-02 | Dev-вход «смотреть как» | Решить в CU6 по Q-03 `global_shell_spec`; до решения — только просмотр NAV | CU6 |
+| Q-02 | Dev-вход «смотреть как» | Q-03 `global_shell_spec` отложен (дефолт: dev-фикстуры при `APP_ENV=dev`); до решения — только просмотр NAV | — |
 
 ---
 
@@ -213,7 +213,7 @@ flowchart TD
 ## Agent notes
 
 - Одна сессия = P01 only; не начинать P02 до DoD.
-- Не добавлять Credentials, `@auth/prisma-adapter`, `middleware.ts`.
+- Не расширять пароль/Credentials за пределы администратора; не добавлять `@auth/prisma-adapter`; канон перехвата запросов — `proxy.ts`, не `middleware.ts`.
 - Не принимать `userId`/роль/статус с клиента.
 - Все мутации — через use-case с записью журнала в той же транзакции.
 - Не создавать страниц вне `canonical_routes`.
