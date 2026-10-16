@@ -1,5 +1,6 @@
 import { decode, encode } from "@auth/core/jwt";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { AUTHJS_PROVIDER_ID } from "./provider-map";
 import { rewriteTelegramOAuthAuthorizeState } from "./telegram-oauth-state-rewrite";
 
 const SECRET = "unit-test-secret-unit-test-secret";
@@ -40,6 +41,7 @@ describe("rewriteTelegramOAuthAuthorizeState (TG-2, TG-5)", () => {
     const sealed = cookie.slice(STATE_COOKIE.length + 1).split(";")[0] ?? "";
     const decoded = await decode({ secret: SECRET, salt: STATE_COOKIE, token: sealed });
     expect(decoded?.value).toBe(state); // CSRF check keeps working: cookie and query state match
+    expect(decoded?.provider).toBe(AUTHJS_PROVIDER_ID.TELEGRAM);
     expect(cookie).toContain("HttpOnly");
   });
 

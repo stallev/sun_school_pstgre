@@ -1,13 +1,15 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
 import { encode } from "@auth/core/jwt";
+import { AUTHJS_PROVIDER_ID } from "@/lib/auth/provider-map";
 
 /**
  * Telegram OIDC workaround §6.1 (telegram_authjs_oidc_portable_guide.md, auth_runtime_spec TG-2):
  * oauth.telegram.org answers `state too long` for state > 256 characters, while @auth/core emits
  * ~430-450. After the Auth.js handler, an authorize redirect to Telegram gets a short opaque state
  * and the `authjs.state` cookie is re-sealed with the same `encode` (CSRF protection is preserved:
- * cookie and query `state` still match).
+ * cookie and query `state` still match). @auth/core 0.41.3 also stores `provider` in the
+ * sealed check and rejects the callback when it is not the callback provider id.
  */
 const TELEGRAM_OAUTH_STATE_MAX_LENGTH = 256;
 const TELEGRAM_AUTHORIZE_URL_PREFIX = "https://oauth.telegram.org/";
@@ -61,7 +63,7 @@ async function sealShortStateCookieValue(params: {
     secret: params.secret,
     salt: params.cookieName,
     maxAge: STATE_COOKIE_MAX_AGE_SEC,
-    token: { value: params.shortState },
+    token: { value: params.shortState, provider: AUTHJS_PROVIDER_ID.TELEGRAM },
   });
 }
 

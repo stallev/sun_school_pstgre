@@ -223,7 +223,7 @@ Auth.js `@auth/core` кодирует OAuth `state` дефолтным JWE `enco
 
 1. Сгенерировать короткий opaque token (32 байта `base64url`, около 43 символов).
 2. Подменить `state` в URL.
-3. Перепечатать cookie `authjs.state` / `__Secure-authjs.state` тем же `encode` из `@auth/core/jwt` (`salt` = имя cookie, `token: { value: shortState }`, TTL 15 минут, как у Auth.js). CSRF остаётся: cookie совпадает с query `state`.
+3. Перепечатать cookie `authjs.state` / `__Secure-authjs.state` тем же `encode` из `@auth/core/jwt` (`salt` = имя cookie, `token: { value: shortState, provider: "telegram" }`, TTL 15 минут, как у Auth.js). `@auth/core` 0.41.3 сверяет `provider` с id провайдера callback и отклоняет cookie без этого поля (`InvalidCheck`). CSRF остаётся: `value` совпадает с query `state`.
 4. Обновить и заголовок `Location`, и JSON `{ url }`. Body у `200` JSON не удалять.
 5. Остальные `Set-Cookie` сохранить. Если cookie `state` нет — падать, а не отдавать длинный `state`.
 
@@ -288,7 +288,7 @@ async function sealShortStateCookieValue(params: {
     secret: params.secret,
     salt: params.cookieName,
     maxAge: STATE_COOKIE_MAX_AGE_SEC,
-    token: { value: params.shortState },
+    token: { value: params.shortState, provider: "telegram" },
   });
 }
 
@@ -585,7 +585,7 @@ sequenceDiagram
 ## 10. Безопасность
 
 - `checks: ["pkce", "state"]` не отключать.
-- После rewrite cookie `authjs.state` содержит тот же opaque value, что query `state`.
+- После rewrite cookie `authjs.state` содержит тот же opaque `value`, что query `state`, и `provider: "telegram"`.
 - В BotFather только HTTPS origins.
 - `clientSecret` и `AUTH_SECRET` только на сервере, не в `NEXT_PUBLIC_*`.
 - Не доверять профилю или hash, которые клиент постит мимо callback Auth.js.
