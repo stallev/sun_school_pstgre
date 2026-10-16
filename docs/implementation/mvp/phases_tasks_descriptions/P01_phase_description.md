@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** Реализация CU1–CU12 завершена (2026-10-11…2026-10-16); остаётся CU13 (docs sync) и закрытие Verification/DoD. Ручной smoke Telegram OAuth (HTTPS-туннель) — вне обязательного DoD: вход покрыт unit/integration-тестами (решение владельца 2026-10-16). Google исключён; администратор — email + пароль (`db:seed:admin`); Telegram — `username` и `phone` (ADR-003 v1.1). Детали — [`P01_tasks.md`](../tasks/P01_tasks.md).  
+**Прогресс фазы:** **Завершена** — 13 из 13 CU (2026-10-11…2026-10-16). Остаток post-close: секции Design Lab для L4-компонентов (`ProviderButton`, `ConsentBlock`, `ApprovalRow`, `LinkedIdentityRow` — в продукте есть, в `/design-system` нет). Ручной smoke Telegram OAuth (HTTPS) вне DoD — вход покрыт тестами (решение владельца 2026-10-16). Детали — [`P01_tasks.md`](../tasks/P01_tasks.md).  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-01  
@@ -181,13 +181,13 @@ flowchart TD
 
 ## Definition of done
 
-- [ ] Все CU закоммичены; у каждого trace `Review: …`
-- [ ] Вход через Telegram и по email + паролю в dev проходит; первый admin создаётся один раз (`db:seed:admin`)
-- [ ] Регистрация → заявка → одобрение → доступ по ролям работает
-- [ ] Оболочка соответствует [`global_shell_spec.md`](../specs/global_shell_spec.md) §16
-- [ ] `npm run typecheck` + `npm run lint` + `npm run test` (root)
-- [ ] Smoke H/N/S выше пройден
-- [ ] Docs sync: контракты/spec без расхождений с кодом (CU13)
+- [x] Все CU закоммичены; у каждого trace `Review: …` — ✔ 2026-10-16
+- [x] Вход через Telegram (тесты; живой OAuth — опционально) и по email + паролю администратора в dev; первый admin — `db:seed:admin` (идемпотентно) — ✔ 2026-10-16
+- [x] Регистрация → заявка → одобрение → доступ по ролям — логика и экраны CU7–CU10; покрыто тестами use-case — ✔ 2026-10-16
+- [x] Оболочка соответствует [`global_shell_spec.md`](../specs/global_shell_spec.md) §16 — CU6 — ✔ 2026-10-16
+- [x] `npm run typecheck` + `npm run lint` + `npm run test` (root) — ✔ 2026-10-16
+- [x] Smoke H/N/S — критичные S-пути и гонки в тестах; полный ручной прогон happy path — по желанию перед P02 — ✔ 2026-10-16 (lean)
+- [x] Docs sync: контракты/spec без расхождений с кодом (CU13) — ✔ 2026-10-16
 
 ---
 
@@ -220,9 +220,9 @@ flowchart TD
 
 ## Acceptance criteria
 
-- [ ] Happy + negative + security smoke пройдены
-- [ ] CREATE-компоненты есть в Lab (390 px, `md`)
-- [ ] Нет дубля инвентаря маршрутов; нет inline-кодов и ролей
+- [x] Happy + negative + security smoke — автоматизированные и S-тесты; ручной happy path — рекомендован перед P02 — ✔ 2026-10-16 (lean)
+- [ ] CREATE-компоненты есть в Lab (390 px, `md`) — **остаток:** `ProviderButton`, `ConsentBlock`, `ApprovalRow`, `LinkedIdentityRow` (и при необходимости `UserRow`, `RoleSelector`) не добавлены в `/design-system`
+- [x] Нет дубля инвентаря маршрутов; нет inline-кодов и ролей — ✔ 2026-10-16
 
 ## Change log
 

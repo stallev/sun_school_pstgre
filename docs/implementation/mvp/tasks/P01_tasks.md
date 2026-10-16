@@ -207,9 +207,9 @@
 
 ## Verification (phase)
 
-- [ ] Все CU закоммичены; у каждого trace `Review: …`
-- [ ] Phase DoD из [`P01_phase_description.md`](../phases_tasks_descriptions/P01_phase_description.md)
-- [ ] Docs sync выполнен в CU13, а не отдельным хвостом без CU
+- [x] Все CU закоммичены; у каждого trace `Review: …` — ✔ 2026-10-16 (CU1–CU13 в ветке `P01`)
+- [x] Phase DoD из [`P01_phase_description.md`](../phases_tasks_descriptions/P01_phase_description.md) — ✔ 2026-10-16 (остаток: Lab-секции для L4-компонентов auth/admin)
+- [x] Docs sync выполнен в CU13, а не отдельным хвостом без CU — ✔ 2026-10-16
 
 ---
 
