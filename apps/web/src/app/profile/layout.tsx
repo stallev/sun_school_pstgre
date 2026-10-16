@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { ACCOUNT_STATUS } from "@sunschool/domain";
 import { ACCESS_DENIED_ROUTE, homeRouteFor } from "@sunschool/policy-edge";
+import { AuthScreen } from "@/components/auth/AuthScreen";
 import { AuthMessagesProvider } from "@/components/auth/auth-messages-provider.client";
 import { AppShell } from "@/components/shell/app-shell";
 import { buildShellNav } from "@/data/shell/build-shell-nav.server";
@@ -67,7 +68,7 @@ const ProfileLayout = async ({ children }: ProfileLayoutProps) => {
 
   return (
     <AuthMessagesProvider messages={authMessages}>
-      <div className="mx-auto max-w-xl p-4">{children}</div>
+      <AuthScreen variant="reading">{children}</AuthScreen>
     </AuthMessagesProvider>
   );
 };

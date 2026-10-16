@@ -9,6 +9,8 @@ import { loadSessionPolicyContext } from "@/lib/auth/load-session-policy.server"
 import { loginErrorMessageKey } from "@/lib/auth/login-error-message-key";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { pickShellMessages } from "@/lib/messages/shell-messages";
+import { AuthScreen } from "@/components/auth/AuthScreen";
 
 export const instant = false;
 
@@ -33,21 +35,29 @@ const LoginPage = async ({ searchParams }: LoginPageProps) => {
   }
 
   const locale = await getUiLocale();
-  const auth = await getDictionary(locale, "auth");
+  const [auth, common] = await Promise.all([getDictionary(locale, "auth"), getDictionary(locale, "common")]);
+  const brandLabel = pickShellMessages(common).brand;
   const errorKey = loginErrorMessageKey(errorParam);
-  const errorMessage = errorKey ? getMessage(auth, errorKey) : null;
+  const isCredentialsError = errorKey === "login.bad_credentials" || errorKey === "login.locked";
+  const initialCredentialsError =
+    isCredentialsError && errorKey ? getMessage(auth, errorKey) : null;
+  const telegramErrorMessage =
+    errorKey && !isCredentialsError ? getMessage(auth, errorKey) : null;
 
   const { APP_ENV } = getServerEnv();
 
   return (
-    <main>
+    <AuthScreen variant="narrow">
       {isAccessDenied ? <LoginAccessDeniedCleanup /> : null}
       <LoginForm
+        brandLabel={brandLabel}
         callbackUrl={callbackUrl}
-        errorMessage={errorMessage}
+        telegramErrorMessage={telegramErrorMessage}
+        defaultAdminLoginOpen={isCredentialsError}
+        initialCredentialsError={initialCredentialsError}
         showDevBanner={APP_ENV === "dev"}
       />
-    </main>
+    </AuthScreen>
   );
 };
 

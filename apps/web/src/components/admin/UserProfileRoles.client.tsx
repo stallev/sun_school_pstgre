@@ -9,6 +9,7 @@ import { RoleSelector } from "@/components/admin/RoleSelector";
 import { Button } from "@/components/ui/button";
 import type { ActiveGradeOption } from "@/data/access/load-active-grades.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
+import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
 type UserProfileRolesProps = {
@@ -50,7 +51,7 @@ export const UserProfileRoles = ({
         initialGradeIds={initialGradeIds}
         disabled={pending}
       />
-      <Button type="submit" disabled={pending} aria-busy={pending}>
+      <Button type="submit" disabled={pending} aria-busy={pending} className={FORM_SUBMIT_BUTTON_CLASS}>
         {pending ? (
           <>
             <Loader2Icon className="size-4 animate-spin" aria-hidden />

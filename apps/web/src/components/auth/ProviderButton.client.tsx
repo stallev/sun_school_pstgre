@@ -5,6 +5,7 @@ import { SendIcon } from "lucide-react";
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuthMessages } from "@/components/auth/auth-messages-provider.client";
+import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 
 type ProviderButtonProps = {
   callbackUrl: string;
@@ -23,7 +24,7 @@ export const ProviderButton = ({ callbackUrl }: ProviderButtonProps) => {
   return (
     <Button
       type="button"
-      className="min-h-12 w-full"
+      className={FORM_SUBMIT_BUTTON_CLASS}
       disabled={pending}
       aria-busy={pending}
       onClick={handleTelegramSignIn}

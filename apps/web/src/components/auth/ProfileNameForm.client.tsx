@@ -12,6 +12,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
+import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
 
 type ProfileNameFormProps = {
@@ -79,7 +80,7 @@ export const ProfileNameForm = ({ initialNames, dictionaries }: ProfileNameFormP
           />
         </Field>
       </FieldGroup>
-      <Button type="submit" disabled={pending} aria-busy={pending} className="min-h-11">
+      <Button type="submit" disabled={pending} aria-busy={pending} className={FORM_SUBMIT_BUTTON_CLASS}>
         {pending ? <Loader2Icon className="size-4 animate-spin" aria-hidden /> : null}
         {pending ? messages.profile.savePending : messages.profile.save}
       </Button>

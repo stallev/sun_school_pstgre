@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandMark } from "@/components/patterns/BrandMark";
 import { CustomLink } from "@/components/ui/custom-link";
 import { ShellNavigation } from "@/components/shell/shell-navigation.client";
 import { UserMenu } from "@/components/shell/user-menu";
@@ -19,9 +20,9 @@ export const ShellHeader = ({ homeHref, displayName, nav, badgeCounts }: ShellHe
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-sm reduce-transparency:bg-surface">
-      <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-4 sm:px-6 lg:px-8">
-        <CustomLink href={homeHref} className="shrink-0 font-display text-lg font-medium text-ink no-underline">
-          {messages.brand}
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-2 sm:px-4 lg:px-8">
+        <CustomLink href={homeHref} className="shrink-0 no-underline">
+          <BrandMark brandName={messages.brand} />
         </CustomLink>
         <ShellNavigation
           shellRole={nav.shellRole}

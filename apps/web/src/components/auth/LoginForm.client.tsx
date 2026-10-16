@@ -1,109 +1,63 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { signIn } from "next-auth/react";
-import { Loader2Icon } from "lucide-react";
-import { AlertText, ContentText, Heading, SectionTitle } from "@/components/atoms";
+import { AlertText, ContentText } from "@/components/atoms";
+import { AdminLoginDisclosure } from "@/components/auth/AdminLoginDisclosure.client";
 import { ProviderButton } from "@/components/auth/ProviderButton.client";
 import { useAuthMessages } from "@/components/auth/auth-messages-provider.client";
-import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/patterns/BrandMark";
 import { CustomLink } from "@/components/ui/custom-link";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
-import { toast } from "sonner";
 
 type LoginFormProps = {
+  brandLabel: string;
   callbackUrl: string;
-  errorMessage: string | null;
+  telegramErrorMessage: string | null;
+  defaultAdminLoginOpen: boolean;
+  initialCredentialsError: string | null;
   showDevBanner: boolean;
 };
 
-export const LoginForm = ({ callbackUrl, errorMessage, showDevBanner }: LoginFormProps) => {
+export const LoginForm = ({
+  brandLabel,
+  callbackUrl,
+  telegramErrorMessage,
+  defaultAdminLoginOpen,
+  initialCredentialsError,
+  showDevBanner,
+}: LoginFormProps) => {
   const messages = useAuthMessages();
-  const [credentialsError, setCredentialsError] = useState<string | null>(null);
-  const [pending, startTransition] = useTransition();
-
-  const handleCredentialsSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-    const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-    setCredentialsError(null);
-    startTransition(async () => {
-      const result = await signIn("credentials", { email, password, redirect: false, callbackUrl });
-      if (result?.error) {
-        const isLocked = result.error === "locked" || result.code === "locked";
-        const key = isLocked ? messages.login.locked : messages.login.bad_credentials;
-        setCredentialsError(key);
-        toast.error(key, { duration: PRODUCT_TOAST_DURATION_MS });
-        return;
-      }
-      if (result?.url) {
-        window.location.assign(result.url);
-      }
-    });
-  };
-
-  const alertMessage = credentialsError ?? errorMessage;
 
   return (
-    <div className="space-y-6">
-      <header className="space-y-2 text-center">
-        <Heading>{messages.login.title}</Heading>
-        <ContentText className="text-muted-foreground">{messages.login.intro}</ContentText>
-        {showDevBanner ? (
-          <ContentText className="text-warn">{messages.login.devBanner}</ContentText>
-        ) : null}
-      </header>
+    <div>
+      <div className="flex items-center gap-3">
+        <BrandMark />
+        <p className="font-display text-2xl font-medium text-ink">{brandLabel}</p>
+      </div>
 
-      {alertMessage ? (
-        <div role="alert" className="rounded-xl border border-danger/40 bg-danger-soft p-3 text-ink">
-          <AlertText>{alertMessage}</AlertText>
+      <h1 className="mt-10 font-display text-[2.25rem] font-medium leading-[1.05] tracking-[-0.015em] text-ink">
+        {messages.login.title}
+      </h1>
+      <ContentText className="mt-3 text-ink-2">{messages.login.intro}</ContentText>
+      {showDevBanner ? <ContentText className="mt-3 text-warn">{messages.login.devBanner}</ContentText> : null}
+
+      {telegramErrorMessage ? (
+        <div role="alert" className="mt-6 rounded-xl border border-danger/40 bg-danger-soft p-3 text-ink">
+          <AlertText>{telegramErrorMessage}</AlertText>
         </div>
       ) : null}
 
-      <ProviderButton callbackUrl={callbackUrl} />
-
-      <div className="flex items-center gap-3">
-        <div className="h-px flex-1 bg-line" />
-        <ContentText tone="muted" className="text-muted-foreground">{messages.login.divider}</ContentText>
-        <div className="h-px flex-1 bg-line" />
+      <div className="mt-8">
+        <ProviderButton callbackUrl={callbackUrl} />
       </div>
 
-      <form onSubmit={handleCredentialsSubmit} className="space-y-4" aria-busy={pending}>
-        <SectionTitle>{messages.login.adminTitle}</SectionTitle>
-        <FieldGroup>
-          <Field>
-            <FieldLabel htmlFor="email">{messages.login.email}</FieldLabel>
-            <Input id="email" name="email" type="email" autoComplete="email" required disabled={pending} />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="password">{messages.login.password}</FieldLabel>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              disabled={pending}
-            />
-          </Field>
-        </FieldGroup>
-        <Button type="submit" variant="outline" className="min-h-12 w-full" disabled={pending} aria-busy={pending}>
-          {pending ? (
-            <>
-              <Loader2Icon className="size-4 animate-spin" aria-hidden />
-              {messages.login.submitPending}
-            </>
-          ) : (
-            messages.login.submit
-          )}
-        </Button>
-        <ContentText tone="muted" className="text-muted-foreground">{messages.login.adminNote}</ContentText>
-      </form>
+      <ContentText className="mt-6 text-sm text-ink-2">{messages.login.adminNote}</ContentText>
 
-      <ContentText tone="muted" className="text-center">
+      <AdminLoginDisclosure
+        callbackUrl={callbackUrl}
+        defaultOpen={defaultAdminLoginOpen}
+        initialCredentialsError={initialCredentialsError}
+      />
+
+      <ContentText tone="muted" className="mt-10 text-xs">
         <CustomLink href="/privacy">{messages.login.privacyLink}</CustomLink>
       </ContentText>
     </div>

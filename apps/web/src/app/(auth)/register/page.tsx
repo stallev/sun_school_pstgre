@@ -6,8 +6,8 @@ import {
   resubmitRegistrationAction,
   submitRegistrationAction,
 } from "@/actions/access";
-import { AuthSignOutLink } from "@/components/auth/AuthSignOutLink.client";
 import { RegisterForm } from "@/components/auth/RegisterForm.client";
+import { AuthScreen } from "@/components/auth/AuthScreen";
 import { Heading } from "@/components/atoms";
 import { loadRegisterPageContext } from "@/data/access/load-register-context.server";
 import { requireSession } from "@/lib/auth/require-user";
@@ -57,25 +57,25 @@ const RegisterPage = async () => {
         : authMessages.register.titleNew;
 
   return (
-    <main className="space-y-6">
-      <header className="flex items-start justify-between gap-3">
-        <Heading>{title}</Heading>
-        <AuthSignOutLink
+    <AuthScreen variant="reading">
+      <div className="space-y-6">
+        <header>
+          <Heading>{title}</Heading>
+        </header>
+        <RegisterForm
+          mode={registerContext.mode}
+          consentVersion={registerContext.consentVersion}
+          summaryBullets={privacy.summaryBullets}
+          fullTextParagraphs={fullTextParagraphs}
+          rejectReason={registerContext.rejectReason}
+          initialNames={registerContext.initialNames}
+          dictionaries={{ auth, common }}
           signOutLabel={shellMessages.signOut}
           signOutPendingLabel={shellMessages.signOutPending}
+          action={action}
         />
-      </header>
-      <RegisterForm
-        mode={registerContext.mode}
-        consentVersion={registerContext.consentVersion}
-        summaryBullets={privacy.summaryBullets}
-        fullTextParagraphs={fullTextParagraphs}
-        rejectReason={registerContext.rejectReason}
-        initialNames={registerContext.initialNames}
-        dictionaries={{ auth, common }}
-        action={action}
-      />
-    </main>
+      </div>
+    </AuthScreen>
   );
 };
 

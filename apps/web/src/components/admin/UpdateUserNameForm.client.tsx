@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
+import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
 type UpdateUserNameFormProps = {
@@ -58,7 +59,7 @@ export const UpdateUserNameForm = ({
           <Input id="nameReason" name="reason" disabled={pending} />
         </Field>
       </FieldGroup>
-      <Button type="submit" disabled={pending} aria-busy={pending}>
+      <Button type="submit" disabled={pending} aria-busy={pending} className={FORM_SUBMIT_BUTTON_CLASS}>
         {pending ? (
           <>
             <Loader2Icon className="size-4 animate-spin" aria-hidden />

@@ -8,6 +8,7 @@ import { hasServerEnv } from "@/lib/env.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { getDictionary } from "@/lib/messages/get-dictionary";
+import { AuthScreen } from "@/components/auth/AuthScreen";
 import { getPrivacyContent } from "@/app/(auth)/privacy/content";
 
 export const instant = false;
@@ -30,7 +31,8 @@ const PrivacyPage = async () => {
   const consentVersion = await readConsentTextVersionFromDb(await getPrisma());
 
   return (
-    <main className="space-y-6">
+    <AuthScreen variant="reading">
+      <div className="space-y-6">
       <header className="space-y-2">
         <Heading>{authMessages.privacy.title}</Heading>
         <ContentText tone="muted" className="text-muted-foreground">
@@ -48,7 +50,8 @@ const PrivacyPage = async () => {
       ))}
 
       <CustomLink href="/login">{authMessages.privacy.backToLogin}</CustomLink>
-    </main>
+      </div>
+    </AuthScreen>
   );
 };
 

@@ -7,7 +7,9 @@ import { AlertText, ContentText, SectionTitle } from "@/components/atoms";
 import { Banner } from "@/components/patterns/Banner";
 import { ConsentBlock } from "@/components/auth/ConsentBlock.client";
 import { useAuthMessages } from "@/components/auth/auth-messages-provider.client";
+import { AuthSignOutLink } from "@/components/auth/AuthSignOutLink.client";
 import { Button } from "@/components/ui/button";
+import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
@@ -23,6 +25,8 @@ type RegisterFormProps = {
   rejectReason: string | null;
   initialNames: { lastName: string; firstName: string; middleName: string };
   dictionaries: { auth: Dictionary; common: Dictionary };
+  signOutLabel: string;
+  signOutPendingLabel: string;
   action: (prev: MutationResult | null, formData: FormData) => Promise<MutationResult>;
 };
 
@@ -34,6 +38,8 @@ export const RegisterForm = ({
   rejectReason,
   initialNames,
   dictionaries,
+  signOutLabel,
+  signOutPendingLabel,
   action,
 }: RegisterFormProps) => {
   const messages = useAuthMessages();
@@ -69,7 +75,7 @@ export const RegisterForm = ({
       ) : null}
 
       {mode !== "consentOnly" ? (
-        <section className="space-y-3">
+        <section className="space-y-3 rounded-xl border border-line bg-surface p-4 sm:p-5">
           <SectionTitle>{messages.register.stepData}</SectionTitle>
           <FieldGroup>
             <Field>
@@ -116,26 +122,36 @@ export const RegisterForm = ({
         </section>
       ) : null}
 
-      <ConsentBlock
-        consentVersion={consentVersion}
-        summaryBullets={summaryBullets}
-        fullTextParagraphs={fullTextParagraphs}
-        checked={consentChecked}
-        onCheckedChange={setConsentChecked}
-        disabled={pending}
-      />
-      {consentChecked ? <input type="hidden" name="consentAccepted" value="true" /> : null}
+      <section className="rounded-xl border border-line bg-surface p-4 sm:p-5">
+        <ConsentBlock
+          consentVersion={consentVersion}
+          summaryBullets={summaryBullets}
+          fullTextParagraphs={fullTextParagraphs}
+          checked={consentChecked}
+          onCheckedChange={setConsentChecked}
+          disabled={pending}
+        />
+        {consentChecked ? <input type="hidden" name="consentAccepted" value="true" /> : null}
+      </section>
 
-      <Button type="submit" className="min-h-12 w-full" disabled={pending || !consentChecked} aria-busy={pending}>
-        {pending ? (
-          <>
-            <Loader2Icon className="size-4 animate-spin" aria-hidden />
-            {messages.register.submitPending}
-          </>
-        ) : (
-          submitLabel
-        )}
-      </Button>
+      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <AuthSignOutLink signOutLabel={signOutLabel} signOutPendingLabel={signOutPendingLabel} />
+        <Button
+          type="submit"
+          className={FORM_SUBMIT_BUTTON_CLASS}
+          disabled={pending || !consentChecked}
+          aria-busy={pending}
+        >
+          {pending ? (
+            <>
+              <Loader2Icon className="size-4 animate-spin" aria-hidden />
+              {messages.register.submitPending}
+            </>
+          ) : (
+            submitLabel
+          )}
+        </Button>
+      </div>
 
     </form>
   );

@@ -30,7 +30,7 @@ export const AppShell = ({
     <main
       id="main"
       tabIndex={-1}
-      className="mx-auto w-full max-w-[1400px] px-4 pb-28 pt-6 sm:px-6 lg:px-8 lg:pb-8"
+      className="mx-auto w-full max-w-[1400px] px-4 pb-28 pt-4 sm:px-6 lg:px-8 lg:pb-16 lg:pt-7"
     >
       {children}
     </main>
