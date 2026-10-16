@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { ContentText, Heading, SectionTitle } from "@/components/atoms";
 import { CustomLink } from "@/components/ui/custom-link";
 import { readConsentTextVersionFromDb } from "@/data/access/consent-text-version.server";
 import { getPrisma } from "@/lib/db.server";
+import { hasServerEnv } from "@/lib/env.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { getDictionary } from "@/lib/messages/get-dictionary";
@@ -16,6 +18,11 @@ export const metadata: Metadata = {
 };
 
 const PrivacyPage = async () => {
+  // A preview build has no database. Postpone so prerender does not throw; the request reads the version.
+  if (!hasServerEnv()) {
+    await connection();
+  }
+
   const locale = await getUiLocale();
   const auth = await getDictionary(locale, "auth");
   const authMessages = pickAuthMessages(auth);

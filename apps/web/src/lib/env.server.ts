@@ -20,6 +20,11 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 let cached: ServerEnv | undefined;
 
+/** True when the process can open the database. Preview builds often have no secrets. */
+export function hasServerEnv(): boolean {
+  return serverEnvSchema.safeParse(process.env).success;
+}
+
 export function getServerEnv(): ServerEnv {
   if (!cached) {
     const parsed = serverEnvSchema.safeParse(process.env);
