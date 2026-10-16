@@ -62,8 +62,8 @@
 
 ### P07-CU6 — feat(web): add Sentry observability with PII filtering · Review: reviewer · Commit: auto
 
-- [ ] P07-T8 · T3 · Spec: [auth_runtime_spec §8](../../../prds/05_runtime/auth_runtime_spec.md) · Profile: D9
-      Files: `apps/web/sentry.{client,server,edge}.config.ts`, `instrumentation.ts`, `lib/observability/scrub.ts`
+- [x] P07-T8 · T3 · Spec: [auth_runtime_spec §8](../../../prds/05_runtime/auth_runtime_spec.md) · Profile: D9 — **закрыт досрочно** (до старта фазы P07)
+      Files: `apps/web/src/sentry.{server,edge}.config.ts`, `instrumentation-client.ts`, `instrumentation.ts`, `lib/observability/scrub.ts`, `lib/sentry/config.ts`, `next.config.ts`
       Acceptance: события серверных ошибок и `logger.error` Auth.js; `beforeSend` удаляет значения форм, email, ФИО, токены; `release`/`environment` по `APP_ENV`; `digest` попадает в событие → тест фильтра
       Paths: H · N [Sentry недоступен — приложение работает] · S [нет ПД; DSN в env]
 

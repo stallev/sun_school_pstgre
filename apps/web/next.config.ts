@@ -1,5 +1,6 @@
 import path from "node:path";
 import { loadEnvConfig } from "@next/env";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
 // One git-ignored .env at the repo root serves the app, the Prisma CLI and the seed scripts
@@ -30,4 +31,14 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["pg"],
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+  silent: !process.env.CI,
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+});

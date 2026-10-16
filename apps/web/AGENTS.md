@@ -126,15 +126,16 @@ Full index: [`docs/guidelines/README.md`](../../docs/guidelines/README.md).
 
 ## Observability (Sentry)
 
-Error tracking via `@sentry/nextjs` — `src/instrumentation.ts` (initialized only when `SENTRY_DSN` is set; no personal data) and `src/app/global-error.tsx`. Source-map upload is configured in P07.
+Error tracking via `@sentry/nextjs` — client `src/instrumentation-client.ts`; server/edge `src/sentry.*.config.ts` loaded from `src/instrumentation.ts` when `NEXT_PUBLIC_SENTRY_DSN` (or legacy `SENTRY_DSN`) is set. `beforeSend` in `src/lib/observability/scrub.ts` strips form values, email, names, tokens (`sendDefaultPii: false`; no `setUser`). Segment and root boundaries call `Sentry.captureException` in `global-error.tsx` and `(app)/error.tsx`. Build: `withSentryConfig` in `next.config.ts` (tunnel `/monitoring`, source maps when `SENTRY_AUTH_TOKEN` is set).
 
 | Variable | Purpose |
 |----------|---------|
-| `NEXT_PUBLIC_SENTRY_DSN` | Client + server DSN |
+| `NEXT_PUBLIC_SENTRY_DSN` / `SENTRY_DSN` | Client + server DSN |
+| `NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE` | Trace sample rate 0…1 (default 0 without env) |
 | `SENTRY_AUTH_TOKEN` | Source map upload (build only, secret) |
 | `SENTRY_ORG` / `SENTRY_PROJECT` | Release + source map target |
 
-Mutation flows tag `submit_transport` via `@/lib/sentry/pulse-tags` (see ios-safari incident docs). Session Replay deferred.
+`environment` = `APP_ENV`. Session Replay and `enableLogs` are off. Mutation flows will tag `submit_transport` when the first Class B transport ships (ios-safari rule).
 
 ## Dev & verification
 

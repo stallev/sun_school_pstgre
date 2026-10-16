@@ -1,5 +1,7 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
 import { ErrorState } from "@/components/patterns/ErrorState";
 import { pickGlobalErrorCopy } from "@/lib/messages/global-error-copy";
 
@@ -8,8 +10,12 @@ type AppSegmentErrorProps = {
   reset: () => void;
 };
 
-const AppSegmentError = ({ reset }: AppSegmentErrorProps) => {
+const AppSegmentError = ({ error, reset }: AppSegmentErrorProps) => {
   const copy = pickGlobalErrorCopy();
+
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
 
   return (
     <ErrorState

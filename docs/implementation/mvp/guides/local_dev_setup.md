@@ -83,7 +83,8 @@
 | `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | Telegram OIDC (scope `openid profile phone`) | BotFather Web Login | ✔ | auth |
 | `AUTH_TRUST_HOST` / `AUTH_URL` | origin за прокси/туннелем | значение туннеля | при туннеле | auth |
 | `FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` | первый admin — **только для `db:seed:admin`**, приложение не читает | `.local/dev-secrets.json` (git-ignored) | ✔ | auth |
-| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN` | Sentry | проект Sentry (dev) | нет | sentry |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN` | Sentry (клиент предпочитает `NEXT_PUBLIC_*`) | проект Sentry (dev) | нет | sentry |
+| `NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE` | доля performance-трейсов (0…1); локально `1`, на prod Vercel разумно `0.1` | `1` в `.env.example` | нет | sentry |
 | `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` | upload source maps (сборка) | Sentry | нет в dev | sentry |
 
 `TELEGRAM_BOT_TOKEN` как `clientSecret` **не используется** ([`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §4.2). Выключены модули `s3_uploads`, `email_jobs` — переменных нет. `NEXT_PUBLIC_*` — только публичные значения.
