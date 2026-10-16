@@ -10,6 +10,7 @@ import { auth } from "@/auth";
 import { getPrisma } from "@/lib/db.server";
 import { homeRouteFor } from "@sunschool/policy-edge";
 import { nameFieldsFromForm } from "@/lib/auth/name-fields-from-form";
+import { refreshOwnSessionFromDb } from "@/lib/auth/refresh-own-session-from-db.server";
 
 const unauthorized = (): MutationResult => ({
   ok: false,
@@ -34,6 +35,7 @@ export async function submitRegistrationAction(_prev: MutationResult | null, for
 
   const result = await submitRegistration(await getPrisma(), userId, raw, new Date());
   if (result.ok) {
+    await refreshOwnSessionFromDb();
     redirect("/pending?submitted=1");
   }
   return result;
@@ -53,6 +55,7 @@ export async function resubmitRegistrationAction(
 
   const result = await resubmitRegistration(await getPrisma(), userId, raw, new Date());
   if (result.ok) {
+    await refreshOwnSessionFromDb();
     redirect("/pending?submitted=1");
   }
   return result;
@@ -83,6 +86,22 @@ export async function recordPrivacyConsentAction(
     select: { status: true, roles: { select: { role: true } } },
   });
   if (!user) return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+
+  redirect(homeRouteFor(user.status, user.roles.map((entry) => entry.role)));
+}
+
+/** «Проверить статус» on `/pending`: refresh JWT from DB, then route by current status. */
+export async function refreshAccessStatusAction(): Promise<void> {
+  const userId = await requireSessionUserId();
+  if (!userId) redirect("/login");
+
+  await refreshOwnSessionFromDb();
+
+  const user = await (await getPrisma()).appUser.findUnique({
+    where: { id: userId },
+    select: { status: true, roles: { select: { role: true } } },
+  });
+  if (!user) redirect("/login");
 
   redirect(homeRouteFor(user.status, user.roles.map((entry) => entry.role)));
 }

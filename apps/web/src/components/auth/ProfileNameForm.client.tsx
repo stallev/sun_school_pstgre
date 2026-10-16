@@ -45,7 +45,7 @@ export const ProfileNameForm = ({ initialNames, dictionaries }: ProfileNameFormP
   return (
     <form action={formAction} className="space-y-4" aria-busy={pending}>
       {formError ? <AlertText role="alert">{formError}</AlertText> : null}
-      <FieldGroup>
+      <FieldGroup className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Field>
           <FieldLabel htmlFor="profile-lastName">{messages.register.lastName}</FieldLabel>
           <Input
