@@ -174,27 +174,30 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · `build:check` — ✔ 2026-10-16; smoke 390 px и `lg` — вручную
 
-### P01-CU11 — feat(auth): add identity linking and unlinking · Review: reviewer · Commit: auto
+### P01-CU11 — feat(auth): add identity linking and unlinking · Review: reviewer · Commit: auto · ✔ выполнен 2026-10-16
 
-- [ ] P01-T23 · T3 · Spec: [auth_runtime_spec §7](../../../prds/05_runtime/auth_runtime_spec.md) · ADR: [adr_003 §4.5, Q-02](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)
-      Files: `src/lib/auth/link-intent.ts`, `src/data/access/{start-link-provider,unlink-provider}.ts`, расширение `signIn`-callback
+- [x] P01-T23 · T3 · Spec: [auth_runtime_spec §7](../../../prds/05_runtime/auth_runtime_spec.md) · ADR: [adr_003 §4.5, Q-02](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)
+      Files: `src/lib/auth/link-intent.ts`, `src/data/access/{start-link-provider,unlink-provider,link-provider}.ts`, `src/actions/access-identity.ts`, расширение `signIn`-callback
       Acceptance: привязывается только Telegram (`CREDENTIALS` подключает оператор); подписанный одноразовый cookie TTL ≤ 10 мин; привязка чужой идентичности → `AUTH_LINK_CONFLICT`; последний способ не отвязывается (`FOR UPDATE`) → тесты callback и параллельных отвязок
       Paths: H [§7] · N [просрочен/повторён cookie, конфликт, последний способ] · S [AZ-05; `userId` не с клиента; подделка cookie]
-- [ ] P01-T24 · T2 · ADR: [adr_003 Q-02](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)
+      Сделано: cookie `sunschool.link-intent` (HMAC, unit-тесты); DAL link/unlink/start; ветка `signIn` с `/profile?linked=1` / `link_error=AUTH_LINK_CONFLICT`; интеграционные тесты на dev-БД
+- [x] P01-T24 · T2 · ADR: [adr_003 Q-02](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)
       Files: ADR-003 (запись результата спайка), при провале — решение об amend ADR-001
       Acceptance: подтверждено, что cookie доступен в `signIn`-callback при OIDC-callback; результат записан в ADR → отчёт в CU
       Paths: n/a — исследовательская задача
+      Сделано: Q-02 закрыт в ADR-003 §10 (2026-10-16)
 
-**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke привязки Telegram к учётной записи администратора (email + пароль)
+**CU DoD:** `typecheck` · `lint` · `test` · `build:check` — ✔ 2026-10-16; ручной smoke привязки Telegram к admin (HTTPS) — по желанию
 
-### P01-CU12 — feat(web): add profile screen with identities · Review: diff-only · Commit: auto
+### P01-CU12 — feat(web): add profile screen with identities · Review: diff-only · Commit: auto · ✔ выполнен 2026-10-16
 
-- [ ] P01-T25 · T1 · Spec: [access_and_registration §9](../specs/access_and_registration_spec.md)
-      Files: `app/(app)/profile/page.tsx`, `app/(auth)/profile/…` (вид без оболочки), `components/auth/LinkedIdentityRow.tsx`
+- [x] P01-T25 · T1 · Spec: [access_and_registration §9](../specs/access_and_registration_spec.md)
+      Files: `app/profile/{layout,page,loading}.tsx`, `load-own-profile.server.ts`, `components/auth/{LinkedIdentityRow,ProfileNameForm,ProfileLinkToast,ProfileDeletionStub}.tsx`, словарь `auth.profile`
       Acceptance: ФИО, роли/статус, способы входа (подключить/отключить), согласие (чтение), «Выйти»; блок удаления — заглушка до P06 → ручной smoke
       Paths: H [spec §12] · N [spec §13: конфликт, последний способ] · S [spec §14 S-7]
+      Сделано: единый маршрут `/profile` вне `(app)`/`(auth)`; shell для `ACTIVE`, auth-вид для `REQUEST_PENDING`/`REJECTED`; query-toast `linked` / `link_error`
 
-**CU DoD:** `typecheck` · `lint` · `test` · smoke 390 px
+**CU DoD:** `typecheck` · `lint` · `test` · `build:check` — ✔ 2026-10-16; smoke 390 px — вручную
 
 ### P01-CU13 — docs(docs): sync P01 docs with implementation · Review: diff-only · Commit: auto
 

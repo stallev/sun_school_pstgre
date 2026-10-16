@@ -66,6 +66,50 @@ export type AuthMessages = {
     status_invalid: string;
     form: string;
   };
+  profile: {
+    title: string;
+    backToPending: string;
+    rolesLabel: string;
+    statusLabel: string;
+    roleAdmin: string;
+    roleTeacher: string;
+    statusActive: string;
+    statusRequestPending: string;
+    statusRejected: string;
+    nameSection: string;
+    save: string;
+    savePending: string;
+    savedToast: string;
+    identitiesSection: string;
+    telegramTitle: string;
+    credentialsTitle: string;
+    connected: string;
+    notConnected: string;
+    connect: string;
+    connectPending: string;
+    disconnect: string;
+    disconnectPending: string;
+    lastIdentityHint: string;
+    unlinkConfirmTitle: string;
+    unlinkConfirmBody: string;
+    unlinkConfirm: string;
+    unlinkCancel: string;
+    unlinkedToast: string;
+    linkedToast: string;
+    linkConflict: string;
+    linkForbidden: string;
+    unlinkForbidden: string;
+    lastIdentity: string;
+    consentSection: string;
+    consentLine: string;
+    uiLocaleSection: string;
+    uiLocaleValue: string;
+    localeRu: string;
+    localeEn: string;
+    deletionSection: string;
+    deletionStub: string;
+    signOut: string;
+  };
 };
 
 export const pickAuthMessages = (auth: Dictionary): AuthMessages => ({
@@ -131,5 +175,49 @@ export const pickAuthMessages = (auth: Dictionary): AuthMessages => ({
   errors: {
     status_invalid: getMessage(auth, "errors.status_invalid"),
     form: getMessage(auth, "errors.form"),
+  },
+  profile: {
+    title: getMessage(auth, "profile.title"),
+    backToPending: getMessage(auth, "profile.back_to_pending"),
+    rolesLabel: getMessage(auth, "profile.roles_label"),
+    statusLabel: getMessage(auth, "profile.status_label"),
+    roleAdmin: getMessage(auth, "profile.role_admin"),
+    roleTeacher: getMessage(auth, "profile.role_teacher"),
+    statusActive: getMessage(auth, "profile.status_active"),
+    statusRequestPending: getMessage(auth, "profile.status_request_pending"),
+    statusRejected: getMessage(auth, "profile.status_rejected"),
+    nameSection: getMessage(auth, "profile.name_section"),
+    save: getMessage(auth, "profile.save"),
+    savePending: getMessage(auth, "profile.save_pending"),
+    savedToast: getMessage(auth, "profile.saved_toast"),
+    identitiesSection: getMessage(auth, "profile.identities_section"),
+    telegramTitle: getMessage(auth, "profile.telegram_title"),
+    credentialsTitle: getMessage(auth, "profile.credentials_title"),
+    connected: getMessage(auth, "profile.connected"),
+    notConnected: getMessage(auth, "profile.not_connected"),
+    connect: getMessage(auth, "profile.connect"),
+    connectPending: getMessage(auth, "profile.connect_pending"),
+    disconnect: getMessage(auth, "profile.disconnect"),
+    disconnectPending: getMessage(auth, "profile.disconnect_pending"),
+    lastIdentityHint: getMessage(auth, "profile.last_identity_hint"),
+    unlinkConfirmTitle: getMessage(auth, "profile.unlink_confirm_title"),
+    unlinkConfirmBody: getMessage(auth, "profile.unlink_confirm_body"),
+    unlinkConfirm: getMessage(auth, "profile.unlink_confirm"),
+    unlinkCancel: getMessage(auth, "profile.unlink_cancel"),
+    unlinkedToast: getMessage(auth, "profile.unlinked_toast"),
+    linkedToast: getMessage(auth, "profile.linked_toast"),
+    linkConflict: getMessage(auth, "profile.link_conflict"),
+    linkForbidden: getMessage(auth, "profile.link_forbidden"),
+    unlinkForbidden: getMessage(auth, "profile.unlink_forbidden"),
+    lastIdentity: getMessage(auth, "profile.last_identity"),
+    consentSection: getMessage(auth, "profile.consent_section"),
+    consentLine: getMessage(auth, "profile.consent_line"),
+    uiLocaleSection: getMessage(auth, "profile.ui_locale_section"),
+    uiLocaleValue: getMessage(auth, "profile.ui_locale_value"),
+    localeRu: getMessage(auth, "profile.locale_ru"),
+    localeEn: getMessage(auth, "profile.locale_en"),
+    deletionSection: getMessage(auth, "profile.deletion_section"),
+    deletionStub: getMessage(auth, "profile.deletion_stub"),
+    signOut: getMessage(auth, "profile.sign_out"),
   },
 });
