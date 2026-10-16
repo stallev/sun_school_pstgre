@@ -133,7 +133,7 @@
 
 ### P01-CU7 — feat(auth): add registration, resubmission and own-name use-cases · Review: reviewer · Commit: auto
 
-- [ ] P01-T17 · T3 · Contract: [access_requests §5.2–§5.3, §5.8, §6](../contracts/access_requests_and_roles_contract.md)
+- [x] P01-T17 · T3 · Contract: [access_requests §5.2–§5.3, §5.8, §6](../contracts/access_requests_and_roles_contract.md)
       Files: `apps/web/src/data/access/{submit-registration,resubmit-registration,update-own-name}.ts`, `actions/access.ts`
       Acceptance: атомарно `privacy_consent` + `access_request` + статус; повтор идемпотентен; `consentVersion` — серверная; журнал `access.registration_submitted/_resubmitted/name_changed` → тесты по таблице отказов §6
       Paths: H [§5.2–5.3] · N [§6: нет согласия, ФИО, статус, уже `PENDING`] · S [AZ-05, AZ-D5; `userId` из сессии; нет ПД в журнале]

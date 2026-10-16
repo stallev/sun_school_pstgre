@@ -11,6 +11,7 @@ import { createPrismaClient, type Prisma, type PrismaClient } from "@sunschool/d
 import { signInTelegram, signInTelegramInTransaction } from "./first-login";
 import { purgeExpiredRegistrations } from "./purge-expired-registration";
 import { resolveSessionClaims } from "./session-claims";
+import { submitRegistrationInTransaction } from "./submit-registration";
 
 loadEnv({ path: path.resolve(import.meta.dirname, "../../../../../.env"), quiet: true });
 
@@ -154,6 +155,38 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
     expect(claims.viaTelegram).toEqual({ uid: claims.user.id, status: "ACTIVE", roles: ["TEACHER"] });
     expect(claims.viaTelegram?.uid).not.toBe(id);
     expect(claims.viaCredentials).toEqual(claims.viaTelegram);
+  }, 60_000);
+
+  it("REGISTRATION submit moves user to REQUEST_PENDING with consent, request and audit", async () => {
+    const id = unique();
+    const out = await rolledBack(async (tx) => {
+      const login = await signInTelegram(tx, { providerAccountId: id, username: "reg", phone: null, now: NOW });
+      if (login.kind !== "ok") throw new Error("expected login");
+      const result = await submitRegistrationInTransaction(
+        tx,
+        login.userId,
+        { lastName: "Иванов", firstName: "Пётр", middleName: "Сергеевич", consentAccepted: true },
+        NOW,
+      );
+      const user = await tx.appUser.findUnique({ where: { id: login.userId } });
+      const consent = await tx.privacyConsent.findFirst({ where: { userId: login.userId } });
+      const request = await tx.accessRequest.findFirst({ where: { userId: login.userId } });
+      const audit = await tx.auditLog.findFirst({
+        where: { entityId: request?.id, action: "access.registration_submitted" },
+      });
+      return { result, user, consent, request, audit };
+    });
+    expect(out.result).toEqual({ ok: true });
+    expect(out.user).toMatchObject({
+      status: "REQUEST_PENDING",
+      lastName: "Иванов",
+      firstName: "Пётр",
+      middleName: "Сергеевич",
+    });
+    expect(out.consent).toMatchObject({ type: "PD_PROCESSING" });
+    expect(out.request).toMatchObject({ status: "PENDING", fullNameSnapshot: "Иванов Пётр Сергеевич" });
+    expect(out.audit).toMatchObject({ source: "USER", entityType: "access_request" });
+    expect(JSON.stringify(out.audit)).not.toContain("Иванов");
   }, 60_000);
 
   it("double first login: two competing transactions end with ONE user and identity", async () => {
