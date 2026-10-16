@@ -168,3 +168,9 @@ Telegram требует заранее зарегистрированный HTTP
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W12-06) |
+
+## Сборка и тесты (инцидент 2026-10-16)
+
+- `next build` проверяет типы всех файлов из `apps/web/tsconfig.json`. Тесты (`*.test.ts(x)`, `src/test/**`) из него **исключены**: `vitest` — devDependency корня и в сборке Vercel недоступна (preview упал с `TS2307: Cannot find module 'vitest'`). Типы тестов проверяет `npm run typecheck` (`apps/web/tsconfig.test.json`).
+- `npm run build:check` = `scripts/check-build-isolation.mjs` + `next build`; запускается в pre-commit (`scripts/precommit-build-check.mjs`, только если в commit есть код или конфигурация сборки) и в CI (`ci.yml`).
+- Сборка не должна требовать секретов: без `DATABASE_URL`, `AUTH_*` она проходит (проверено 2026-10-16); `/design-system` пререндерится с `APP_ENV` на момент сборки (на preview — `dev`, в prod — 404).

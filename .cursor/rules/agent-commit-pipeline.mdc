@@ -35,7 +35,8 @@ alwaysApply: true
 
 Перед коммитом, если затронут код:
 
-- `npm run typecheck` (root monorepo) — когда workspaces уже есть (после P5)
+- `npm run typecheck` (root monorepo) — когда workspaces уже есть (после P5); включает тесты (`apps/web/tsconfig.test.json`)
+- `npm run build:check` — **продакшн-сборка как на Vercel**: `scripts/check-build-isolation.mjs` (тесты и test-only импорты не попадают в сборку) + `next build`. Обязательна, если в diff есть код или конфигурация сборки (`apps|packages/**`, `package*.json`, `tsconfig*`, `eslint`/`vitest` config). Hook `.husky/pre-commit` → `scripts/precommit-build-check.mjs` запускает её сам; обход (`--no-verify`) запрещён. Причина: `next build` проверяет типы файлов из `tsconfig.json`, а `vitest` — root devDependency, которой на Vercel нет (падение preview 2026-10-16)
 - `npm run lint` — когда скрипт есть
 - `npm run rules:check` — если есть `.claude/rules/` (после `rules:sync`)
 - `npm run deps:check` — если в diff есть `package.json` / `package-lock.json` / `.npmrc` (`dependency-pinning.mdc`)

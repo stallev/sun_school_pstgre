@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "npm run dev -w @sunschool/web",
     "build": "npm run build -w @sunschool/web",
+    "build:check": "node scripts/check-build-isolation.mjs && npm run build",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "test": "vitest run --passWithNoTests",
