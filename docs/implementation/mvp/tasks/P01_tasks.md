@@ -96,24 +96,23 @@
 - [x] P01-T11 · T3 · Spec: [auth_runtime_spec §5.2–§5.4, §9](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `src/auth.ts` (jwt/session/redirect), `src/types/next-auth.d.ts`
       Acceptance: JWT = `uid`, `status`, `roles`; `session.user` без email/имени; `redirect` пускает только маршруты из `canonical_routes` → тест callbacks
-      Сделано в CU4: jwt/session/redirect (только относительные пути и тот же origin). **Проверка по каноническим маршрутам и домашний маршрут статуса — в CU5** (`isCanonicalRoute`, `homeRouteFor`).
+      Сделано: jwt/session в CU4; `redirect` — в CU5 по каноническим маршрутам (`isCanonicalRoute` из policy-edge), вне списка → `baseUrl`, где proxy ведёт на домашний маршрут статуса (`homeRouteFor`).
       Paths: H [§5.2–5.3] · N [внешний `callbackUrl`] · S [ПД не в токене]
 
 **CU DoD:** `typecheck` · `lint` · `test` (включая гонку двух запусков `db:seed:admin`) · smoke: `db:seed:admin` выполнен на dev (создан, повтор — no-op) — ✔ 2026-10-16; вход нового пользователя через Telegram → `REGISTRATION` и вход администратора по паролю в браузере — после экранов CU8 (логика покрыта интеграционными тестами на dev-БД)
 
-### P01-CU5 — feat(policy): add edge and server policy, requireActiveUser and proxy · Review: reviewer · Commit: auto
+### P01-CU5 — feat(policy): add edge and server policy, requireActiveUser and proxy · Review: reviewer · Commit: auto · ✔ выполнен 2026-10-16
 
-- [ ] P01-T12 · T3 · Matrix: [authorization_matrix §4, §6](../../../prds/04_authorization_privacy/authorization_matrix.md) · Contract: [monorepo_boundaries §3–§4](../contracts/monorepo_boundaries_contract.md)
-      Files: `packages/policy/edge/src/{route-access,home-route}.ts`, `packages/policy/server/src/{context,require-role}.ts`
+- [x] P01-T12 · T3 · Matrix: [authorization_matrix §4, §6](../../../prds/04_authorization_privacy/authorization_matrix.md) · Contract: [monorepo_boundaries §3–§4](../contracts/monorepo_boundaries_contract.md)
+      Files: `packages/policy/edge/src/{route-access,route-table,home-route}.ts`, `packages/policy/server/src/{context,require-role}.ts`
       Acceptance: таблица «статус × префикс» из §6 матрицы реализована функцией; `PolicySessionContext` без типов `next-auth` → unit-тест по всей таблице
       Paths: H [§6] · N [неизвестный статус → deny] · S [INV-04…INV-06; AZ-P4]
-- [ ] P01-T13 · T3 · Spec: [auth_runtime_spec §10](../../../prds/05_runtime/auth_runtime_spec.md) · ADR: [adr_002 §3](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
+- [x] P01-T13 · T3 · Spec: [auth_runtime_spec §10](../../../prds/05_runtime/auth_runtime_spec.md) · ADR: [adr_002 §3](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
       Files: `apps/web/src/proxy.ts`, `src/lib/auth/require-user.ts`
       Acceptance: `proxy.ts` использует только `policy-edge` и `auth.config`; `requireActiveUser()` читает статус/роли по БД, кэш на запрос; перенаправления по §6 → тесты + lint boundaries
       Paths: H [§10] · N [нет сессии → `/login`] · S [AZ-D1…D5: устаревший JWT, снятая роль]
-      Статус: частично (2026-10-11) — `proxy.ts` подключён к `policy-edge`; `canVisitRoutePrefix` — заглушка «allow all», `requireActiveUser()` бросает ошибку (реализация в CU5)
 
-**CU DoD:** `typecheck` · `lint` (boundaries) · `test` · smoke: teacher → `/users` даёт 403, аноним → `/login`
+**CU DoD:** `typecheck` · `lint` (boundaries) · `test` · smoke: аноним → `/login` (проверено на собранном приложении: `/today`, `/users`, `/register`, неизвестный путь → 307 `/login`; `/login`, `/design-system` открыты) — ✔ 2026-10-16; teacher → `/users` даёт 403 — подтверждено тестами `requireRole`/`checkRole`, сквозной браузерный smoke — после `(app)`-оболочки и страниц (CU6/CU10); `forbidden()` включён флагом `experimental.authInterrupts` (экспериментальный API Next 16.4). **Переданные дальше пункты из review CU5:** (1) экран `/login` (CU8) завершает устаревшую сессию при `?error=AccessDenied` — страница `/login?error=…` открыта для любого статуса, поэтому петли редиректов нет; (2) обновление claims в JWT для только что одобренного пользователя (JWT `REQUEST_PENDING`, БД `ACTIVE` застревает на `/pending` до повторного входа) — решить в CU8/CU9 (`update()` сессии с клиента `/pending` либо обновление при `updateAge`, `auth_runtime_spec` §5.2); (3) `forbidden.tsx` берёт русский словарь по умолчанию — локаль из `app_setting.ui_locale` в CU6
 
 ### P01-CU6 — feat(web): add app shell, navigation and shell-level states · Review: diff-only · Commit: auto
 

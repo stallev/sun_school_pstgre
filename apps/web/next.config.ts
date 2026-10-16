@@ -19,6 +19,8 @@ loadEnvConfig(
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
+  // `forbidden()` (AZ-D3: a 403 page for a wrong role) is experimental in Next.js 16.4.
+  experimental: { authInterrupts: true },
   transpilePackages: [
     "@sunschool/domain",
     "@sunschool/db",

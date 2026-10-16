@@ -8,6 +8,7 @@ import { signInTelegramInTransaction } from "@/data/access/first-login";
 import { verifyCredentials } from "@/data/access/verify-credentials";
 import { getPrisma } from "@/lib/db.server";
 import { AUTHJS_PROVIDER_ID, toLoginProvider } from "@/lib/auth/provider-map";
+import { isCanonicalRoute } from "@sunschool/policy-edge";
 import { safeRedirect } from "@/lib/auth/safe-redirect";
 import { mapTelegramProfile } from "@/lib/auth/telegram-profile";
 
@@ -70,7 +71,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return claims ? { ...carried, ...claims } : carried;
     },
     redirect({ url, baseUrl }) {
-      return safeRedirect(url, baseUrl);
+      return safeRedirect(url, baseUrl, isCanonicalRoute);
     },
   },
   logger: {
