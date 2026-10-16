@@ -18,10 +18,10 @@ describe("serializeAuditValues (INV-23, L-3, L-7)", () => {
 
   it("cleans nested objects and arrays", () => {
     const result = serializeAuditValues({
-      identity: { provider: "GOOGLE", providerAccountId: "1", email: "x@y.z" },
+      identity: { provider: "TELEGRAM", providerAccountId: "1", email: "x@y.z", phone: "+70000000000" },
       users: [{ id: "u1", fullName: "A B" }],
     });
-    expect(result).toEqual({ identity: { provider: "GOOGLE" }, users: [{ id: "u1" }] });
+    expect(result).toEqual({ identity: { provider: "TELEGRAM" }, users: [{ id: "u1" }] });
   });
 
   it("returns null when nothing is left", () => {

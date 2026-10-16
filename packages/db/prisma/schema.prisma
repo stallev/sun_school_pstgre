@@ -38,7 +38,7 @@ enum AccountStatus {
 }
 
 enum LoginProvider {
-  GOOGLE
+  CREDENTIALS
   TELEGRAM
 
   @@map("login_provider_enum")
@@ -253,10 +253,15 @@ model LoginIdentity {
   providerAccountId String        @map("provider_account_id")
   email             String?
   username          String?
+  phone             String?
+  passwordHash      String?       @map("password_hash")
+  failedAttempts    Int           @default(0) @map("failed_attempts")
+  lockedUntil       DateTime?     @map("locked_until") @db.Timestamptz(6)
   createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
 
   user AppUser @relation(fields: [userId], references: [id])
 
+  // CHECK (provider = CREDENTIALS) = (password_hash IS NOT NULL) — in migration SQL
   @@unique([provider, providerAccountId])
   @@index([userId])
   @@map("login_identity")

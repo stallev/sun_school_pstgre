@@ -13,6 +13,8 @@ const FORBIDDEN_KEYS: ReadonlySet<string> = new Set([
   "email",
   "username",
   "phone",
+  "phonenumber",
+  "passwordhash",
   "providerid",
   "provideraccountid",
   "accountid",

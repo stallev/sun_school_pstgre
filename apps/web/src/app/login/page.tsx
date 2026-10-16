@@ -1,6 +1,6 @@
 /**
- * Scaffold placeholder for /login (canonical_routes.md). Sign-in buttons (client signIn for Google
- * and Telegram, TG-1) are implemented in P01-CU8.
+ * Scaffold placeholder for /login (canonical_routes.md). Sign-in UI (client signIn for Telegram
+ * and the administrator email + password form, TG-1) is implemented in P01-CU8.
  */
 const LoginPage = () => (
   <main className="mx-auto max-w-xl p-4">

@@ -1,23 +1,22 @@
 import { customFetch, type NextAuthConfig } from "next-auth";
-import Google from "next-auth/providers/google";
 import { ACCOUNT_STATUS, type AccountStatus, type UserRole } from "@sunschool/domain";
 import { fetchTelegramOidcWithSyntheticUserinfo } from "@/lib/auth/telegram-oidc-discovery-fetch";
+import { mapTelegramProfile } from "@/lib/auth/telegram-profile";
 
 /**
  * Edge-safe Auth.js config (auth_runtime_spec §3): providers, pages and the PURE jwt/session
  * callbacks, so that proxy.ts can read claims without importing the DB layer.
- * DB-touching callbacks (signIn, redirect) live in `auth.ts`.
- * Credentials and database adapters are not used (ADR-003).
+ * DB-touching pieces live in `auth.ts`: the Credentials provider (administrator email + password,
+ * ADR-003 v1.1) and the signIn / redirect callbacks. Google and database adapters are not used.
  */
-const TELEGRAM_OIDC_ISSUER = "https://oauth.telegram.org";
+export const TELEGRAM_OIDC_ISSUER = "https://oauth.telegram.org";
+/** `phone` is requested but optional: a missing `phone_number` never blocks sign-in (Q-05). */
+export const TELEGRAM_OIDC_SCOPE = "openid profile phone";
 
 export default {
   trustHost: true,
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 14, updateAge: 60 * 60 * 24 },
   providers: [
-    Google({
-      authorization: { params: { scope: "openid email profile" } },
-    }),
     {
       id: "telegram",
       name: "Telegram",
@@ -25,20 +24,13 @@ export default {
       issuer: TELEGRAM_OIDC_ISSUER,
       clientId: process.env.AUTH_TELEGRAM_ID,
       clientSecret: process.env.AUTH_TELEGRAM_SECRET,
-      authorization: { params: { scope: "openid profile" } },
+      authorization: { params: { scope: TELEGRAM_OIDC_SCOPE } },
       // Profile comes from the ID token only; UserInfo is never called (TG workaround §6.2).
       idToken: true,
       [customFetch]: fetchTelegramOidcWithSyntheticUserinfo,
       checks: ["pkce", "state"],
       allowDangerousEmailAccountLinking: false,
-      profile(profile) {
-        return {
-          id: String(profile.sub ?? profile.id),
-          name: profile.name ?? undefined,
-          image: profile.picture ?? undefined,
-          email: null,
-        };
-      },
+      profile: (claims) => mapTelegramProfile(claims),
     },
   ],
   pages: {
@@ -46,18 +38,20 @@ export default {
     error: "/login",
   },
   callbacks: {
-    // Claims are written by auth.ts#signIn on the first login (P01-CU4); here they are only carried.
+    // Only uid / status / roles are kept in the token (ADR-003 §4.3): Auth.js seeds a new token with
+    // the provider's name, email, picture and sub — they are dropped here. The claims themselves are
+    // written by auth.ts#signIn / jwt on the first login (P01-CU4); here they are only carried.
     jwt({ token }) {
-      return token;
+      return { uid: token.uid, status: token.status, roles: token.roles };
     },
-    // Only uid / status / roles reach the client (ADR-003 §4.3) — no name, email or provider fields.
+    // Built from scratch (no spread of session.user): no name, email, image or phone reaches the client.
     session({ session, token }) {
       session.user = {
-        ...session.user,
         id: typeof token.uid === "string" ? token.uid : "",
         status: (token.status as AccountStatus | undefined) ?? ACCOUNT_STATUS.REGISTRATION,
         roles: (token.roles as UserRole[] | undefined) ?? [],
-      };
+        // Auth.js types `user` as AdapterUser too (email, emailVerified); we deliberately send none.
+      } as typeof session.user;
       return session;
     },
   },

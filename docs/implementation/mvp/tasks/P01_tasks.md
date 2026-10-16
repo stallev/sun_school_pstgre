@@ -65,24 +65,23 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · `prisma migrate` не требуется (схема из P5) · smoke: `db:migrate` + `seed:reference` на dev-ветке — ✔ 2026-10-11 (105 строк создано; повтор — 0; интеграционный тест на dev Neon зелёный)
 
-### P01-CU3 — feat(auth): configure Telegram OIDC provider and credentials with Telegram workarounds · Review: reviewer · Commit: auto
+### P01-CU3 — feat(auth): configure Telegram OIDC provider with phone scope and login identity fields · Review: reviewer · Commit: auto · ✔ выполнен 2026-10-16, кроме ручного smoke Telegram (Credentials `authorize` — CU4/T10a)
 
-- [ ] P01-T8 · T3 · Spec: [auth_runtime_spec §4, §6](../../../prds/05_runtime/auth_runtime_spec.md) · Guide: [telegram guide §4, §6](../../../my_specs/telegram_authjs_oidc_portable_guide.md)
+- [x] P01-T8 · T3 · Spec: [auth_runtime_spec §4, §6](../../../prds/05_runtime/auth_runtime_spec.md) · Guide: [telegram guide §4, §6](../../../my_specs/telegram_authjs_oidc_portable_guide.md)
       Files: `apps/web/src/auth.config.ts`, `src/lib/auth/telegram-oidc-discovery-fetch.ts`
+      Сделано: `telegram-profile.ts` (маппинг claims → `username`/`phone`, необязательные), тесты `auth.config`, fetch-обёртки и перепечатки `state` (vitest-алиасы `@`, `server-only`).
       Acceptance: провайдер `telegram` (`idToken`, scope `openid profile phone`, `checks: pkce,state`; `profile()` отдаёт `username`, `phone`); Google удалён из кода, `.env.example`, `login/page.tsx`; синтетический `userinfo_endpoint` только при его отсутствии; `customFetch` импортирован из `next-auth` → unit-тест fetch-обёртки
       Paths: H [§6.2] · N [discovery недоступен → исходный ответ] · S [`TELEGRAM_BOT_TOKEN` не используется как secret]
-      Статус: частично (2026-10-11) — `auth.config.ts` и `telegram-oidc-discovery-fetch.ts` (каркас P5) есть; unit-теста fetch-обёртки нет
-- [ ] P01-T8a · T3 · ADR: [adr_003 v1.1 §4.1](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · Schema: [database_schema_v1 §4, §5.1](../../../prds/03_data_model/database_schema_v1.md) (добавлено 2026-10-16: Google исключён, Credentials администратора)
+- [x] P01-T8a · T3 · ADR: [adr_003 v1.1 §4.1](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · Schema: [database_schema_v1 §4, §5.1](../../../prds/03_data_model/database_schema_v1.md) (добавлено 2026-10-16: Google исключён, Credentials администратора)
       Files: `packages/db/prisma/schema.prisma` + новая миграция, `packages/domain/src/constants/login-provider.ts`, `apps/web/src/lib/env.server.ts`, `apps/web/src/app/login/page.tsx`, тест сверки enum
       Acceptance: `LOGIN_PROVIDER` = `CREDENTIALS`, `TELEGRAM` (миграция `RENAME VALUE 'GOOGLE' TO 'CREDENTIALS'`, на dev-БД строк с `GOOGLE` нет); `login_identity` + `phone`, `password_hash`, `failed_attempts`, `locked_until` и CHECK (`password_hash` ⇔ `CREDENTIALS`); `AUTH_GOOGLE_*` убраны из `env.server.ts`; страница `/login` без Google → `typecheck`, тест сверки enum со схемой, `db:migrate:deploy` на dev
       Paths: H [схема §5.1] · N [CHECK отклоняет пароль у Telegram-идентичности] · S [хэш и телефон — ПД: удаляются процедурой УД-7]
-- [ ] P01-T9 · T3 · Spec: [auth_runtime_spec §6 (TG-1…TG-5)](../../../prds/05_runtime/auth_runtime_spec.md)
+- [x] P01-T9 · T3 · Spec: [auth_runtime_spec §6 (TG-1…TG-5)](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `src/lib/auth/telegram-oauth-state-rewrite.ts`, `src/app/api/auth/[...nextauth]/route.ts`
       Acceptance: после обёртки `state.length ≤ 256` для Telegram; cookie `authjs.state` совпадает; нет cookie → ошибка → unit-тест (TG-5)
       Paths: H [§6.1] · N [нет `AUTH_SECRET` → 500 без деталей] · S [CSRF-проверка `state` сохранена]
-      Статус: частично (2026-10-11) — `telegram-oauth-state-rewrite.ts` и route handler (каркас P5) есть; unit-теста TG-5 нет
 
-**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Telegram (HTTPS-туннель/preview): проверить, приходят ли `username` и `phone` и что при отказе от `phone` вход проходит (Q-05 runtime-спеки)
+**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Telegram (HTTPS-туннель/preview): проверить, приходят ли `username` и `phone` и что при отказе от `phone` вход проходит (Q-05 runtime-спеки: телефон необязателен — решено). **Ручной smoke Telegram ещё не выполнен** (нужен HTTPS-туннель) — выполнить до закрытия фазы; unit-тесты и миграция — ✔ 2026-10-16
 
 ### P01-CU4 — feat(auth): add sign-in callbacks, credentials login, first admin seed and lazy registration purge · Review: reviewer · Commit: auto
 
