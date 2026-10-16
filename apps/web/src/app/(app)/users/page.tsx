@@ -33,13 +33,11 @@ const UsersPage = async ({ searchParams }: UsersPageProps) => {
       <div className="space-y-6">
         <PageHeader title={adminMessages.page.usersTitle} />
         <UsersStatusFilter activeStatus={statusFilter} messages={adminMessages} />
-        <ul className="space-y-3">
+        <div className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
           {users.map((row) => (
-            <li key={row.userId}>
-              <UserRow row={row} messages={adminMessages} />
-            </li>
+            <UserRow key={row.userId} row={row} messages={adminMessages} />
           ))}
-        </ul>
+        </div>
       </div>
     </AdminMessagesProvider>
   );

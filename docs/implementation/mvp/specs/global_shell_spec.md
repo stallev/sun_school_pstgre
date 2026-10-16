@@ -36,7 +36,7 @@
 | `app/layout.tsx` | Server | `<html lang>` (из `ui_locale`), шрифты, провайдеры: словарь `common`, `Toaster` (Sonner), Sentry-инициализация; нет оболочки |
 | `app/global-error.tsx` | Client | свой `<html>`/`<body>`, минимальный стиль, «Повторить» (UX-05 S3.6) |
 | `app/not-found.tsx` | Server | 404 без раскрытия причин (AZ-D4) |
-| `app/(auth)/layout.tsx` | Server | центрированный контейнер, без шапки; словарь `auth` |
+| `app/(auth)/layout.tsx` | Server | словарь `auth`, без шапки; рамка экрана — `AuthScreen` на каждой странице (`narrow` для `/login`, `reading` для `/register`, `/pending`, `/privacy`) |
 | `app/(app)/layout.tsx` | Server | `requireActiveUser()`, выбор NAV, бейджи (Suspense), оболочка |
 | `app/(app)/loading.tsx` | Server | skeleton области контента (не навигации) |
 | `app/(app)/error.tsx` | Client | ошибка внутри оболочки, `retry()` |

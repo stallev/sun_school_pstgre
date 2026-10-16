@@ -20,6 +20,7 @@ import {
 import type { ActiveGradeOption } from "@/data/access/load-active-grades.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 
 type ApproveRequestDialogProps = {
   requestId: string;
@@ -72,7 +73,7 @@ export const ApproveRequestDialog = ({
             <DialogClose render={<Button type="button" variant="outline" disabled={pending} />}>
               {closeLabel}
             </DialogClose>
-            <Button type="submit" disabled={pending} aria-busy={pending}>
+            <Button type="submit" disabled={pending} aria-busy={pending} className={FORM_SUBMIT_BUTTON_CLASS}>
               {pending ? (
                 <>
                   <Loader2Icon className="size-4 animate-spin" aria-hidden />

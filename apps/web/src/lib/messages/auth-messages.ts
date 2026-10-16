@@ -15,6 +15,7 @@ export type AuthMessages = {
     submit: string;
     submitPending: string;
     adminNote: string;
+    adminHide: string;
     privacyLink: string;
     devBanner: string;
     cancelled: string;
@@ -125,6 +126,7 @@ export const pickAuthMessages = (auth: Dictionary): AuthMessages => ({
     submit: getMessage(auth, "login.submit"),
     submitPending: getMessage(auth, "login.submit_pending"),
     adminNote: getMessage(auth, "login.admin_note"),
+    adminHide: getMessage(auth, "login.admin_hide"),
     privacyLink: getMessage(auth, "login.privacy_link"),
     devBanner: getMessage(auth, "login.dev_banner"),
     cancelled: getMessage(auth, "login.cancelled"),

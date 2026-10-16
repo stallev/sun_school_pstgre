@@ -6,6 +6,8 @@ import { homeRouteFor } from "@sunschool/policy-edge";
 import { AuthSignOutLink } from "@/components/auth/AuthSignOutLink.client";
 import { PendingRefreshButton } from "@/components/auth/PendingRefreshButton.client";
 import { PendingSubmittedToast } from "@/components/auth/PendingSubmittedToast.client";
+import { AuthScreen } from "@/components/auth/AuthScreen";
+import { PendingStatusSteps } from "@/components/auth/PendingStatusSteps";
 import { ContentText, Heading } from "@/components/atoms";
 import { CustomLink } from "@/components/ui/custom-link";
 import { Banner } from "@/components/patterns/Banner";
@@ -52,49 +54,51 @@ const PendingPage = async () => {
     : null;
 
   return (
-    <main className="space-y-6">
-      <Suspense fallback={null}>
-        <PendingSubmittedToast message={authMessages.register.toastSubmitted} />
-      </Suspense>
-      <header className="flex items-start justify-between gap-3">
-        <Heading>{title}</Heading>
-        <AuthSignOutLink
-          signOutLabel={shellMessages.signOut}
-          signOutPendingLabel={shellMessages.signOutPending}
-        />
-      </header>
+    <AuthScreen variant="reading">
+      <div className="space-y-6">
+        <Suspense fallback={null}>
+          <PendingSubmittedToast message={authMessages.register.toastSubmitted} />
+        </Suspense>
+        <header className="flex items-start justify-between gap-3">
+          <Heading>{title}</Heading>
+          <AuthSignOutLink
+            signOutLabel={shellMessages.signOut}
+            signOutPendingLabel={shellMessages.signOutPending}
+          />
+        </header>
 
-      <ContentText>{pending.displayName}</ContentText>
-      {submittedLabel ? <ContentText tone="muted" className="text-muted-foreground">{submittedLabel}</ContentText> : null}
-
-      {pending.rejectReason ? (
-        <Banner tone="error" title={authMessages.pending.titleRejected}>
-          <ContentText>{pending.rejectReason}</ContentText>
-        </Banner>
-      ) : null}
-
-      <ol className="list-decimal space-y-2 pl-5 text-ink-2">
-        <li>{authMessages.pending.stepSignIn}</li>
-        <li>
-          {authMessages.pending.stepConsent}
-          {pending.consentVersion ? ` (${pending.consentVersion})` : ""}
-        </li>
-        <li>{authMessages.pending.stepReview}</li>
-        <li>{authMessages.pending.stepAfterApprove}</li>
-      </ol>
-
-      <div className="flex flex-col gap-3">
-        <PendingRefreshButton />
-        {pending.status === ACCOUNT_STATUS.REJECTED ? (
-          <CustomLink href="/register" className="text-center">
-            {authMessages.pending.fixAndResubmit}
-          </CustomLink>
+        <ContentText>{pending.displayName}</ContentText>
+        {submittedLabel ? (
+          <ContentText tone="muted" className="text-muted-foreground">{submittedLabel}</ContentText>
         ) : null}
-        <CustomLink href="/profile" className="text-center">
-          {authMessages.pending.profile}
-        </CustomLink>
+
+        {pending.rejectReason ? (
+          <Banner tone="error" title={authMessages.pending.titleRejected}>
+            <ContentText>{pending.rejectReason}</ContentText>
+          </Banner>
+        ) : null}
+
+        <PendingStatusSteps
+          stepSignIn={authMessages.pending.stepSignIn}
+          stepConsent={authMessages.pending.stepConsent}
+          stepConsentVersion={pending.consentVersion}
+          stepReview={authMessages.pending.stepReview}
+          stepAfterApprove={authMessages.pending.stepAfterApprove}
+        />
+
+        <div className="flex flex-col gap-3">
+          <PendingRefreshButton />
+          {pending.status === ACCOUNT_STATUS.REJECTED ? (
+            <CustomLink href="/register" className="text-center">
+              {authMessages.pending.fixAndResubmit}
+            </CustomLink>
+          ) : null}
+          <CustomLink href="/profile" className="text-center">
+            {authMessages.pending.profile}
+          </CustomLink>
+        </div>
       </div>
-    </main>
+    </AuthScreen>
   );
 };
 

@@ -13,7 +13,7 @@ type UserRowProps = {
 export const UserRow = ({ row, messages }: UserRowProps) => (
   <CustomLink
     href={`/users/${row.userId}`}
-    className="flex min-h-11 flex-col gap-1 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-paper md:flex-row md:items-center md:justify-between"
+    className="flex min-h-11 flex-col gap-1 px-4 py-3 transition-colors hover:bg-paper md:flex-row md:items-center md:justify-between"
   >
     <ContentText className="font-medium text-ink">{row.displayName}</ContentText>
     <ContentText tone="secondary" className="text-sm">

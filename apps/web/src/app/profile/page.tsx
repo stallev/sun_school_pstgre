@@ -76,8 +76,10 @@ const ProfilePage = async () => {
   const isAuthChrome =
     policy?.status === ACCOUNT_STATUS.REQUEST_PENDING || policy?.status === ACCOUNT_STATUS.REJECTED;
 
+  const shellProfile = !isAuthChrome;
+
   return (
-    <main className="space-y-8">
+    <main className={shellProfile ? "mx-auto max-w-5xl space-y-8" : "space-y-8"}>
       <Suspense fallback={null}>
         <ProfileLinkToast />
       </Suspense>
@@ -96,7 +98,7 @@ const ProfilePage = async () => {
         title={authMessages.profile.title}
         description={formatProfileSubtitle(profile, authMessages)}
         actions={
-          !isAuthChrome ? (
+          shellProfile ? (
             <AuthSignOutLink
               signOutLabel={shellMessages.signOut}
               signOutPendingLabel={shellMessages.signOutPending}
@@ -105,36 +107,40 @@ const ProfilePage = async () => {
         }
       />
 
-      <FormSection title={authMessages.profile.nameSection}>
-        <ProfileNameForm
-          initialNames={{
-            lastName: profile.lastName,
-            firstName: profile.firstName,
-            middleName: profile.middleName,
-          }}
-          dictionaries={dictionaries}
-        />
-      </FormSection>
+      <div className={shellProfile ? "grid gap-6 lg:grid-cols-2" : "space-y-8"}>
+        <FormSection title={authMessages.profile.nameSection}>
+          <ProfileNameForm
+            initialNames={{
+              lastName: profile.lastName,
+              firstName: profile.firstName,
+              middleName: profile.middleName,
+            }}
+            dictionaries={dictionaries}
+          />
+        </FormSection>
 
-      <FormSection title={authMessages.profile.identitiesSection}>
-        <ul className="space-y-3">
-          {profile.identities.map((identity) => (
-            <LinkedIdentityRow key={identity.provider} identity={identity} dictionaries={dictionaries} />
-          ))}
-        </ul>
-      </FormSection>
+        <FormSection title={authMessages.profile.identitiesSection}>
+          <ul className="space-y-3">
+            {profile.identities.map((identity) => (
+              <LinkedIdentityRow key={identity.provider} identity={identity} dictionaries={dictionaries} />
+            ))}
+          </ul>
+        </FormSection>
 
-      <FormSection title={authMessages.profile.consentSection}>
-        {consentLine ? <ContentText>{consentLine}</ContentText> : <ContentText tone="muted">—</ContentText>}
-      </FormSection>
+        <div className={shellProfile ? "space-y-8 lg:col-span-2" : "space-y-8"}>
+          <FormSection title={authMessages.profile.consentSection}>
+            {consentLine ? <ContentText>{consentLine}</ContentText> : <ContentText tone="muted">—</ContentText>}
+          </FormSection>
 
-      <FormSection title={authMessages.profile.uiLocaleSection}>
-        <ContentText>{uiLocaleLine}</ContentText>
-      </FormSection>
+          <FormSection title={authMessages.profile.uiLocaleSection}>
+            <ContentText>{uiLocaleLine}</ContentText>
+          </FormSection>
 
-      <FormSection title={authMessages.profile.deletionSection}>
-        <ProfileDeletionStub messages={authMessages.profile} />
-      </FormSection>
+          <FormSection title={authMessages.profile.deletionSection}>
+            <ProfileDeletionStub messages={authMessages.profile} />
+          </FormSection>
+        </div>
+      </div>
     </main>
   );
 };

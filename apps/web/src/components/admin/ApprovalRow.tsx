@@ -37,33 +37,36 @@ export const ApprovalRow = ({
 }: ApprovalRowProps) => {
   const messages = useAdminMessages();
 
+  const loginMethods = row.loginProviders.map((provider) => loginLabel(provider, messages)).join(" · ");
+  const metaLine = `${submittedLabel}: ${new Date(row.submittedAtIso).toLocaleDateString()} · ${messages.approvals.consentVersion}: ${row.consentVersion} · ${formatWaitingDays(messages.approvals.waitingDays, row.waitingDays)}`;
+
   return (
-    <article className="rounded-xl border border-border bg-card p-4 space-y-3">
-      <SectionTitle>{row.displayName}</SectionTitle>
-      <ContentText tone="secondary">
-        {row.loginProviders.map((provider) => loginLabel(provider, messages)).join(" · ")}
-      </ContentText>
-      <ContentText tone="secondary">
-        {submittedLabel}: {new Date(row.submittedAtIso).toLocaleDateString()} ·{" "}
-        {messages.approvals.consentVersion}: {row.consentVersion} ·{" "}
-        {formatWaitingDays(messages.approvals.waitingDays, row.waitingDays)}
-      </ContentText>
-      <div className="flex flex-wrap gap-2">
-        <ApproveRequestDialog
-          requestId={row.requestId}
-          displayName={row.displayName}
-          grades={grades}
-          dictionaries={dictionaries}
-          formError={formError}
-          closeLabel={closeLabel}
-        />
-        <RejectRequestDialog
-          requestId={row.requestId}
-          displayName={row.displayName}
-          dictionaries={dictionaries}
-          formError={formError}
-          closeLabel={closeLabel}
-        />
+    <article className="rounded-xl border border-line bg-surface p-4">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto] md:items-center">
+        <div className="min-w-0 space-y-1">
+          <SectionTitle>{row.displayName}</SectionTitle>
+          <ContentText tone="secondary" className="text-sm">{loginMethods}</ContentText>
+        </div>
+        <ContentText tone="secondary" className="text-sm md:text-end">
+          {metaLine}
+        </ContentText>
+        <div className="flex flex-wrap gap-2 md:justify-end">
+          <ApproveRequestDialog
+            requestId={row.requestId}
+            displayName={row.displayName}
+            grades={grades}
+            dictionaries={dictionaries}
+            formError={formError}
+            closeLabel={closeLabel}
+          />
+          <RejectRequestDialog
+            requestId={row.requestId}
+            displayName={row.displayName}
+            dictionaries={dictionaries}
+            formError={formError}
+            closeLabel={closeLabel}
+          />
+        </div>
       </div>
     </article>
   );

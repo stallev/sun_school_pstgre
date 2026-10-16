@@ -21,6 +21,7 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 
 type RejectRequestDialogProps = {
   requestId: string;
@@ -91,7 +92,12 @@ export const RejectRequestDialog = ({
             <DialogClose render={<Button type="button" variant="outline" disabled={pending} />}>
               {closeLabel}
             </DialogClose>
-            <Button type="submit" disabled={pending || !canSubmit} aria-busy={pending}>
+            <Button
+              type="submit"
+              disabled={pending || !canSubmit}
+              aria-busy={pending}
+              className={FORM_SUBMIT_BUTTON_CLASS}
+            >
               {pending ? (
                 <>
                   <Loader2Icon className="size-4 animate-spin" aria-hidden />
