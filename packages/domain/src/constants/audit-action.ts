@@ -17,6 +17,7 @@ export const AUDIT_ACTION = {
   ACCESS_REGISTRATION_PURGED: "access.registration_purged",
   AUTH_IDENTITY_LINKED: "auth.identity_linked",
   AUTH_IDENTITY_UNLINKED: "auth.identity_unlinked",
+  AUTH_PASSWORD_SET: "auth.password_set",
   SETTINGS_LANGUAGE_CHANGED: "settings.language_changed",
   SETTINGS_TIMEZONE_CHANGED: "settings.timezone_changed",
   SEED_RUN: "seed.run",

@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** В работе — 3 из 13 CU (CU1 domain и CU2 db — 2026-10-11, CU3 Telegram-провайдер и схема входа — 2026-10-16; обновлено 2026-10-16). Дальше CU4–CU5 (callbacks, Credentials, `db:seed:admin`, policy/proxy); для ручного smoke Telegram нужен HTTPS-туннель (бот dev настроен); подробности — [`P01_tasks.md`](../tasks/P01_tasks.md). Решение владельца 2026-10-16: Google исключён, администратор входит по email + паролю, из Telegram сохраняются `username` и `phone` — см. ADR-003 v1.1, новые задачи P01-T8a и P01-T10a.  
+**Прогресс фазы:** В работе — 4 из 13 CU (CU1 domain и CU2 db — 2026-10-11; CU3 Telegram-провайдер и схема входа, CU4 callbacks/Credentials/`db:seed:admin` — 2026-10-16; обновлено 2026-10-16). Дальше CU5 (policy/proxy); для ручного smoke Telegram нужен HTTPS-туннель (бот dev настроен); подробности — [`P01_tasks.md`](../tasks/P01_tasks.md). Решение владельца 2026-10-16: Google исключён, администратор входит по email + паролю, из Telegram сохраняются `username` и `phone` — см. ADR-003 v1.1, новые задачи P01-T8a и P01-T10a.  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-01  

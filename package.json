@@ -20,6 +20,7 @@
     "db:migrate:deploy": "npm run db:migrate:deploy -w @sunschool/db",
     "db:migrate:status": "npm run db:migrate:status -w @sunschool/db",
     "db:seed:reference": "npm run seed:reference -w @sunschool/db",
+    "db:seed:admin": "npm run seed:admin -w @sunschool/db",
     "rules:sync": "node scripts/sync-claude-rules.mjs",
     "rules:check": "node scripts/sync-claude-rules.mjs --check",
     "deps:check": "node scripts/check-exact-deps.mjs",

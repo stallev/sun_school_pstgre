@@ -83,23 +83,23 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Telegram (HTTPS-туннель/preview): проверить, приходят ли `username` и `phone` и что при отказе от `phone` вход проходит (Q-05 runtime-спеки: телефон необязателен — решено). **Ручной smoke Telegram ещё не выполнен** (нужен HTTPS-туннель) — выполнить до закрытия фазы; unit-тесты и миграция — ✔ 2026-10-16
 
-### P01-CU4 — feat(auth): add sign-in callbacks, credentials login, first admin seed and lazy registration purge · Review: reviewer · Commit: auto
+### P01-CU4 — feat(auth): add sign-in callbacks, credentials login, first admin seed and lazy registration purge · Review: reviewer · Commit: auto · ✔ выполнен 2026-10-16
 
-- [ ] P01-T10 · T3 · Contract: [access_requests §5.1, §5.10](../contracts/access_requests_and_roles_contract.md) · Spec: [auth_runtime_spec §5](../../../prds/05_runtime/auth_runtime_spec.md)
+- [x] P01-T10 · T3 · Contract: [access_requests §5.1, §5.10](../contracts/access_requests_and_roles_contract.md) · Spec: [auth_runtime_spec §5](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `apps/web/src/auth.ts`, `src/data/access/first-login.ts`, `purge-expired-registration.ts`
       Acceptance: `signIn` создаёт `REGISTRATION` + `login_identity` (Telegram: `username`, `phone`, если переданы; пустое значение не затирает сохранённое) в одной транзакции; `DISABLED`/`DELETED` → `false`; просроченная `REGISTRATION` удаляется и создаётся заново → тесты use-case и гонки двойного входа
       Paths: H [§5.1, §5.10] · N [`DISABLED`, нет провайдера, Telegram без `phone`/`username`] · S [AZ-D5; ПД не в JWT и не в журнале]
-- [ ] P01-T10a · T3 · ADR: [adr_003 v1.1 §4.1, §4.4](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · Spec: [auth_runtime_spec §4.4, §5.1 п. 5](../../../prds/05_runtime/auth_runtime_spec.md) · [seed_data_spec §4](../../../prds/03_data_model/seed_data_spec.md) (добавлено 2026-10-16)
-      Files: `apps/web/src/lib/auth/password.ts`, `apps/web/src/auth.ts` (Credentials `authorize`), `packages/db/src/seed/admin/{index,run}.ts`, скрипты `seed:admin` / корневой `db:seed:admin`, `packages/domain` (`AUDIT_ACTION.AUTH_PASSWORD_SET`, коды отказа входа)
-      Acceptance: scrypt-хэш и `timingSafeEqual`; 5 неудач → блокировка 15 мин (`RATE_LIMITED`); неверный email и пароль дают одинаковый ответ; `db:seed:admin` под advisory-lock создаёт `ACTIVE` + `ADMIN` + `CREDENTIALS`-идентичность из `FIRST_ADMIN_EMAIL` / `ADMIN_PASSWORD` один раз, повтор идемпотентен, пароль меняется только с `--reset-password`; журнал `access.first_admin_created`, `auth.password_set` без пароля и хэша; приложение не читает `ADMIN_PASSWORD` → unit-тесты `authorize` и пароля, интеграционный тест seed на dev-БД, гонка двух запусков
+- [x] P01-T10a · T3 · ADR: [adr_003 v1.1 §4.1, §4.4](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · Spec: [auth_runtime_spec §4.4, §5.1 п. 5](../../../prds/05_runtime/auth_runtime_spec.md) · [seed_data_spec §4](../../../prds/03_data_model/seed_data_spec.md) (добавлено 2026-10-16)
+      Files: `packages/db/src/auth/password.ts` (общий код: seed и приложение; путь изменён 2026-10-16), `apps/web/src/data/access/verify-credentials.ts`, `apps/web/src/auth.ts` (Credentials `authorize`), `packages/db/src/seed/admin/{index,run}.ts`, скрипты `seed:admin` / корневой `db:seed:admin`, `packages/domain` (`AUDIT_ACTION.AUTH_PASSWORD_SET`, коды отказа входа)
+      Acceptance: scrypt-хэш и `timingSafeEqual`; 5 неудач → блокировка 15 мин (`RATE_LIMITED`); неверный email и пароль дают одинаковый ответ; `db:seed:admin` под advisory-lock создаёт `ACTIVE` + `ADMIN` + `CREDENTIALS`-идентичность из `FIRST_ADMIN_EMAIL` / `ADMIN_PASSWORD` один раз, повтор идемпотентен, пароль меняется только с `--reset-password`; гонка двух запусков проверена на dev-БД с существующим админом (оба — no-op под lock, дублей нет), создающая гонка — только на пустой БД (тест умеет и её, с очисткой); журнал `access.first_admin_created`, `auth.password_set` без пароля и хэша; приложение не читает `ADMIN_PASSWORD` → unit-тесты `authorize` и пароля, интеграционный тест seed на dev-БД, гонка двух запусков
       Paths: H [ADR-003 §4.4] · N [неверный пароль, блокировка, `DISABLED`, нет идентичности у teacher] · S [пароль/хэш не в логах, журнале, Sentry, ответах; `ADMIN_PASSWORD` только в seed]
-- [ ] P01-T11 · T3 · Spec: [auth_runtime_spec §5.2–§5.4, §9](../../../prds/05_runtime/auth_runtime_spec.md)
+- [x] P01-T11 · T3 · Spec: [auth_runtime_spec §5.2–§5.4, §9](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `src/auth.ts` (jwt/session/redirect), `src/types/next-auth.d.ts`
       Acceptance: JWT = `uid`, `status`, `roles`; `session.user` без email/имени; `redirect` пускает только маршруты из `canonical_routes` → тест callbacks
+      Сделано в CU4: jwt/session/redirect (только относительные пути и тот же origin). **Проверка по каноническим маршрутам и домашний маршрут статуса — в CU5** (`isCanonicalRoute`, `homeRouteFor`).
       Paths: H [§5.2–5.3] · N [внешний `callbackUrl`] · S [ПД не в токене]
-      Статус: частично (2026-10-11) — `auth.ts` — каркас без callbacks `signIn`/`jwt`/`session`/`redirect`; `next-auth.d.ts` есть; тестов нет
 
-**CU DoD:** `typecheck` · `lint` · `test` (включая гонку двух запусков `db:seed:admin`) · smoke: вход нового пользователя через Telegram → `REGISTRATION`; `db:seed:admin` → вход администратора по паролю
+**CU DoD:** `typecheck` · `lint` · `test` (включая гонку двух запусков `db:seed:admin`) · smoke: `db:seed:admin` выполнен на dev (создан, повтор — no-op) — ✔ 2026-10-16; вход нового пользователя через Telegram → `REGISTRATION` и вход администратора по паролю в браузере — после экранов CU8 (логика покрыта интеграционными тестами на dev-БД)
 
 ### P01-CU5 — feat(policy): add edge and server policy, requireActiveUser and proxy · Review: reviewer · Commit: auto
 

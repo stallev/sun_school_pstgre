@@ -25,13 +25,14 @@
 | Файл (`apps/web/src`) | Runtime | Содержит | Импортирует |
 |-----------------------|---------|----------|-------------|
 | `auth.config.ts` | edge-safe | провайдер Telegram, `pages`, `session`, **чистые** callbacks `jwt` / `session` (без БД: переносят `uid`, `status`, `roles`, чтобы `proxy.ts` читал claims) | только `next-auth`, `@sunschool/domain` (типы), `lib/auth/telegram-oidc-discovery-fetch` |
-| `auth.ts` | Node | `NextAuth(...)`: `...authConfig` + провайдер **Credentials** с `authorize()` (БД, scrypt) + callbacks с БД (`signIn`, `redirect`; запись claims в токен при первом входе), экспорт `handlers`, `auth`, `signIn`, `signOut` | `auth.config.ts`, `packages/db`, `policy-server`, `lib/auth/password` |
+| `auth.ts` | Node | `NextAuth(...)`: `...authConfig` + провайдер **Credentials** с `authorize()` (БД, scrypt) + callbacks с БД (`signIn`, `redirect`; запись claims в токен при первом входе), экспорт `handlers`, `auth`, `signIn`, `signOut` | `auth.config.ts`, `packages/db`, `policy-server`, `packages/db/src/auth/password.ts` |
 | `app/api/auth/[...nextauth]/route.ts` | Node | `GET` / `POST` с обёрткой укорочения `state` | `handlers`, `lib/auth/telegram-oauth-state-rewrite` |
 | `proxy.ts` | edge | `auth`-обёртка, перенаправление по статусу и префиксу | `auth.config.ts`, `policy-edge` |
 | `lib/auth/telegram-oidc-discovery-fetch.ts` | edge-safe | синтетический `userinfo_endpoint` | — |
 | `lib/auth/telegram-oauth-state-rewrite.ts` | Node | укорочение `state` | `@auth/core/jwt` |
 | `lib/auth/link-intent.ts` | Node | cookie «намерение привязки» (§7) | — |
-| `lib/auth/password.ts` | Node | хэш и проверка пароля (scrypt, `timingSafeEqual`), блокировка по `failed_attempts` (§4.4) | `node:crypto` |
+| `packages/db/src/auth/password.ts` (экспорт `@sunschool/db`) | Node | хэш и проверка пароля (scrypt, `timingSafeEqual`); тот же код использует `db:seed:admin` | `node:crypto` |
+| `data/access/verify-credentials.ts` | Node | логика `authorize()`: блокировка по `failed_attempts` (§4.4) | `@sunschool/db`, `@sunschool/domain` |
 | `lib/auth/require-user.ts` | Node | `requireActiveUser`, `requireRole` (§10) | `auth.ts`, `policy-server` |
 
 Правила: `proxy.ts` **не** импортирует `auth.ts`, `packages/db`, `policy-server` (PKG-02, ADR-002 §3). Пакеты `packages/**` не импортируют `next-auth`; в `policy-*` передаётся `PolicySessionContext` (`typescript-monorepo-types`).
@@ -220,7 +221,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 | Q-03 | Нужна ли политика «один активный сеанс» или принудительный выход при отключении — по умолчанию нет, достаточно серверной проверки | владелец | — |
 | Q-04 | ~~Верифицированность email из Google~~ — снят 2026-10-16 (Google не используется; email админа задаёт оператор) | — | — |
 | Q-05 | ✔ **Решено 2026-10-16 (владелец).** `phone` необязателен: нет `phone_number` в ID token — вход продолжается, поле пустое. Поведение Telegram при отказе от `phone` (документация молчит) подтверждается ручным smoke CU3; если Telegram прервёт вход — убрать scope `phone` из запроса (одна константа) | — | — |
-| Q-06 | ✔ **Решено 2026-10-16 (владелец).** scrypt N=2^15, r=8, p=1, соль 16 байт, ключ 64 байта; формат строки хэша — в P01-CU4 (`lib/auth/password.ts`) | — | — |
+| Q-06 | ✔ **Решено 2026-10-16 (владелец).** scrypt N=2^15, r=8, p=1, соль 16 байт, ключ 64 байта; формат строки хэша — в P01-CU4 (`packages/db/src/auth/password.ts`) | — | — |
 
 ## 14. Related documents
 
