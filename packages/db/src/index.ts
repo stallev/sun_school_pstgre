@@ -11,4 +11,5 @@ export {
 export type { DbEnvironment, EnvGuardDecision } from "./env-guard";
 export { writeAudit } from "./audit/write-audit";
 export type { AuditEntry } from "./audit/write-audit";
+export { reassignAuditActorsForUserMerge } from "./audit/reassign-audit-actors-for-merge";
 export { getDummyPasswordHash, hashPassword, verifyPassword } from "./auth/password";

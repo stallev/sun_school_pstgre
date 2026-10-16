@@ -11,7 +11,9 @@ import { createPrismaClient, type Prisma, type PrismaClient } from "@sunschool/d
 import { signInTelegram, signInTelegramInTransaction } from "./first-login";
 import { purgeExpiredRegistrations } from "./purge-expired-registration";
 import { resolveSessionClaims } from "./session-claims";
+import { approveRequestInTransaction } from "./approve-request";
 import { submitRegistrationInTransaction } from "./submit-registration";
+import { MUTATION_ERROR_CODES } from "@sunschool/domain";
 
 loadEnv({ path: path.resolve(import.meta.dirname, "../../../../../.env"), quiet: true });
 
@@ -187,6 +189,86 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
     expect(out.request).toMatchObject({ status: "PENDING", fullNameSnapshot: "Иванов Пётр Сергеевич" });
     expect(out.audit).toMatchObject({ source: "USER", entityType: "access_request" });
     expect(JSON.stringify(out.audit)).not.toContain("Иванов");
+  }, 60_000);
+
+  it("approveRequest moves REQUEST_PENDING to ACTIVE with roles and audit", async () => {
+    const id = unique();
+    const out = await rolledBack(async (tx) => {
+      const login = await signInTelegram(tx, { providerAccountId: id, username: "appr", phone: null, now: NOW });
+      if (login.kind !== "ok") throw new Error("expected login");
+      await submitRegistrationInTransaction(
+        tx,
+        login.userId,
+        { lastName: "Сидоров", firstName: "Иван", consentAccepted: true },
+        NOW,
+      );
+      const request = await tx.accessRequest.findFirst({ where: { userId: login.userId, status: "PENDING" } });
+      if (!request) throw new Error("expected pending request");
+      const admin = await tx.appUser.create({
+        data: {
+          organizationId,
+          status: "ACTIVE",
+          roles: { create: [{ role: "ADMIN" }] },
+          identities: { create: { provider: "CREDENTIALS", providerAccountId: unique(), passwordHash: "hash" } },
+        },
+      });
+      const result = await approveRequestInTransaction(tx, admin.id, {
+        requestId: request.id,
+        roles: ["TEACHER"],
+        gradeIds: [],
+      }, NOW);
+      const user = await tx.appUser.findUnique({ where: { id: login.userId } });
+      const roles = await tx.userRoleAssignment.findMany({ where: { userId: login.userId } });
+      const audit = await tx.auditLog.findFirst({
+        where: { entityId: request.id, action: "access.request_approved" },
+      });
+      return { result, user, roles, audit };
+    });
+    expect(out.result).toMatchObject({ ok: true, warnings: ["NO_GROUPS"] });
+    expect(out.user?.status).toBe("ACTIVE");
+    expect(out.roles.map((r) => r.role)).toEqual(["TEACHER"]);
+    expect(out.audit).toMatchObject({ source: "USER", entityType: "access_request" });
+  }, 60_000);
+
+  it("second approve on the same request returns ACCESS_REQUEST_DECIDED", async () => {
+    const id = unique();
+    const out = await rolledBack(async (tx) => {
+      const login = await signInTelegram(tx, { providerAccountId: id, username: "race", phone: null, now: NOW });
+      if (login.kind !== "ok") throw new Error("expected login");
+      await submitRegistrationInTransaction(
+        tx,
+        login.userId,
+        { lastName: "Громов", firstName: "Алексей", consentAccepted: true },
+        NOW,
+      );
+      const request = await tx.accessRequest.findFirst({ where: { userId: login.userId, status: "PENDING" } });
+      if (!request) throw new Error("expected pending request");
+      const admin = await tx.appUser.create({
+        data: {
+          organizationId,
+          status: "ACTIVE",
+          roles: { create: [{ role: "ADMIN" }] },
+          identities: { create: { provider: "CREDENTIALS", providerAccountId: unique(), passwordHash: "hash" } },
+        },
+      });
+      const first = await approveRequestInTransaction(tx, admin.id, {
+        requestId: request.id,
+        roles: ["ADMIN"],
+        gradeIds: [],
+      }, NOW);
+      const second = await approveRequestInTransaction(tx, admin.id, {
+        requestId: request.id,
+        roles: ["ADMIN"],
+        gradeIds: [],
+      }, NOW);
+      return { first, second };
+    });
+    expect(out.first).toEqual({ ok: true });
+    expect(out.second).toEqual({
+      ok: false,
+      code: MUTATION_ERROR_CODES.ACCESS_REQUEST_DECIDED,
+      message: "admin.approvals.already_decided",
+    });
   }, 60_000);
 
   it("double first login: two competing transactions end with ONE user and identity", async () => {

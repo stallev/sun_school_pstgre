@@ -1,1 +1,15 @@
-{}
+{
+  "approvals": {
+    "already_decided": "This request has already been decided. Refresh the list.",
+    "parent_unavailable": "Parent access is not available yet.",
+    "no_groups_warning": "Teacher approved without groups. Assign a group later.",
+    "groups_invalid": "One or more groups are not part of the active school year.",
+    "roles_required": "Select at least one role."
+  },
+  "users": {
+    "last_admin": "Cannot remove or disable the last administrator.",
+    "self_forbidden": "You cannot perform this action on your own account.",
+    "merge_same": "Choose two different users to merge.",
+    "merge_admin_forbidden": "Elevate the kept user to administrator before merging an admin account."
+  }
+}

@@ -9,5 +9,6 @@ export * from "./audit/serialize-audit-values";
 export * from "./schemas/person-name";
 export * from "./schemas/registration";
 export * from "./schemas/update-own-name";
+export * from "./schemas/access-admin";
 export type { MutationOk, MutationErr, MutationResult } from "./types/mutation-result";
 export type { Clock, IdGenerator } from "./types/ports";

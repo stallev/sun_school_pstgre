@@ -15,7 +15,7 @@ describe("getMessage", () => {
   });
 
   it("keeps the ru and en keys of the common and auth slices in step", async () => {
-    for (const namespace of ["common", "auth"] as const) {
+    for (const namespace of ["common", "auth", "admin"] as const) {
       expect(keys(await getDictionary("ru", namespace)).sort()).toEqual(keys(await getDictionary("en", namespace)).sort());
     }
   });

@@ -152,13 +152,13 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Telegram → `/register` → `/pending`; администратор по паролю → экран согласия
 
-### P01-CU9 — feat(auth): add approval, roles, disable and merge use-cases · Review: reviewer · Commit: auto
+### P01-CU9 — feat(auth): add approval, roles, disable and merge use-cases · Review: reviewer · Commit: auto · ✔ выполнен 2026-10-16
 
-- [ ] P01-T20 · T3 · Contract: [access_requests §5.4–§5.7, §5.9, §6–§8](../contracts/access_requests_and_roles_contract.md)
+- [x] P01-T20 · T3 · Contract: [access_requests §5.4–§5.7, §5.9, §6–§8](../contracts/access_requests_and_roles_contract.md)
       Files: `apps/web/src/data/access/{approve-request,reject-request,change-roles,disable-access,enable-access,update-user-name,merge-users}.ts`, `actions/access-admin.ts`
       Acceptance: блокировки и порядок по §8; `ACCESS_LAST_ADMIN`, `ACCESS_SELF_FORBIDDEN`, `ACCESS_ROLE_UNAVAILABLE`; `TEACHER` без групп одобряется с предупреждением `NO_GROUPS`, группа не активного года — `VALIDATION`; журнал на каждую операцию → тесты отказов и гонок (два admin, последний admin)
       Paths: H [§5.4–5.9] · N [§6 все строки] · S [AZ-01…AZ-04, AZ-P1…AZ-P3: teacher → `FORBIDDEN`, чужой → `NOT_FOUND`]
-- [ ] P01-T21 · T3 · Contract: [access_requests §5.10](../contracts/access_requests_and_roles_contract.md) · Lifecycle: [§5.1 ленивая очистка](../../../prds/02_domain_model/lifecycle_models.md)
+- [x] P01-T21 · T3 · Contract: [access_requests §5.10](../contracts/access_requests_and_roles_contract.md) · Lifecycle: [§5.1 ленивая очистка](../../../prds/02_domain_model/lifecycle_models.md)
       Files: вызов `purgeExpiredRegistration` из загрузчиков `/approvals`, `/users`
       Acceptance: просроченные `REGISTRATION` (> 30 дней) удаляются при открытии admin-экранов; журнал `SYSTEM` → тест
       Paths: H [§5.10] · N [свежие не затрагиваются] · S [INV-25: нет cron]
