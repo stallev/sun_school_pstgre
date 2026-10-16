@@ -23,7 +23,8 @@ const redirect = (to: string): EdgeDecision => ({ kind: "redirect", to });
  * - no session → `/login`, except `/login` and `/privacy`;
  * - `REGISTRATION` → only `/register` and `/privacy`; everything else → `/register`;
  * - `REQUEST_PENDING` / `REJECTED` → `/pending`, `/profile`, `/privacy`; everything else → `/pending`;
- * - `ACTIVE` → application routes and `/profile`, `/privacy`; `/login`, `/register`, `/pending` and `/` → home;
+ * - `ACTIVE` → application routes, `/profile`, `/privacy`, `/register` (consent refresh, РГ-5; page redirects when not needed);
+ *   `/login`, `/pending` and `/` → home;
  * - `DISABLED` / `DELETED` / an unknown status → `/login` and `/privacy` only;
  * - `/login?error=…` is always open (terminal error page, no redirect loops);
  * - a wrong ROLE on an application route is NOT redirected here (AZ-D3: the server answers 403);
@@ -53,9 +54,9 @@ export function canVisitRoutePrefix(session: EdgeSession | null, pathname: strin
     case ACCOUNT_STATUS.REJECTED:
       return audience === "pending" || audience === "profile" || isPrivacy ? ALLOW : redirect(home);
     case ACCOUNT_STATUS.ACTIVE:
-      if (audience === "app" || audience === "profile" || isPrivacy) return ALLOW;
+      if (audience === "app" || audience === "profile" || isPrivacy || audience === "register") return ALLOW;
       if (audience === null && path !== "/") return ALLOW; // unknown path → the 404 page
-      return redirect(home); // /login, /register, /pending, /
+      return redirect(home); // /login, /pending, /
     case ACCOUNT_STATUS.DISABLED:
     case ACCOUNT_STATUS.DELETED:
       return audience === "public" ? ALLOW : redirect(LOGIN_ROUTE);

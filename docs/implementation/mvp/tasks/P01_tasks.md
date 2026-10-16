@@ -142,11 +142,11 @@
 
 ### P01-CU8 — feat(web): add login, privacy, register and pending screens · Review: diff-only · Commit: auto
 
-- [ ] P01-T18 · T1 · Spec: [access_and_registration §6–§10](../specs/access_and_registration_spec.md)
+- [x] P01-T18 · T1 · Spec: [access_and_registration §6–§10](../specs/access_and_registration_spec.md)
       Files: `app/(auth)/{login,privacy,register,pending}/page.tsx`, `components/auth/{ProviderButton,ConsentBlock,RegisterForm}.tsx`
       Acceptance: клиентский `signIn`; чекбокс не отмечен, кнопка неактивна без него; режимы «исправить» и «подтвердить согласие»; «Выйти» на `/register` и `/pending`; `/privacy` публичный → ручной smoke H/N + проверка DOM
       Paths: H [spec §12] · N [spec §13] · S [spec §14: `callbackUrl`, нет ПД в URL]
-- [ ] P01-T19 · T0 · Files: `apps/web/src/lib/messages/{ru,en}/auth.json`, `app/(auth)/privacy/content.ts`
+- [x] P01-T19 · T0 · Files: `apps/web/src/lib/messages/{ru,en}/auth.json`, `app/(auth)/privacy/content.ts`
       Acceptance: текст согласия v1 (черновик) на ru и en — среди собираемых данных названы имя пользователя и телефон из Telegram (если разрешены) и email администратора; версия = `consent_text_version`
       Paths: n/a — copy
 

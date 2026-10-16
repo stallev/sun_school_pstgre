@@ -25,9 +25,9 @@ describe("canVisitRoutePrefix — status × route table (authorization_matrix §
     ["REGISTRATION", session(S.REGISTRATION), { login: to("/register"), privacy: ALLOW, register: ALLOW, pending: to("/register"), profile: to("/register"), otherApp: to("/register") }],
     ["REQUEST_PENDING", session(S.REQUEST_PENDING), { login: to("/pending"), privacy: ALLOW, register: to("/pending"), pending: ALLOW, profile: ALLOW, otherApp: to("/pending") }],
     ["REJECTED", session(S.REJECTED), { login: to("/pending"), privacy: ALLOW, register: to("/pending"), pending: ALLOW, profile: ALLOW, otherApp: to("/pending") }],
-    ["ACTIVE teacher", session(S.ACTIVE, [USER_ROLE.TEACHER]), { login: to("/today"), privacy: ALLOW, register: to("/today"), pending: to("/today"), profile: ALLOW, otherApp: ALLOW }],
-    ["ACTIVE admin", session(S.ACTIVE, [USER_ROLE.ADMIN]), { login: to("/school"), privacy: ALLOW, register: to("/school"), pending: to("/school"), profile: ALLOW, otherApp: ALLOW }],
-    ["ACTIVE admin+teacher", session(S.ACTIVE, [USER_ROLE.TEACHER, USER_ROLE.ADMIN]), { login: to("/school"), privacy: ALLOW, register: to("/school"), pending: to("/school"), profile: ALLOW, otherApp: ALLOW }],
+    ["ACTIVE teacher", session(S.ACTIVE, [USER_ROLE.TEACHER]), { login: to("/today"), privacy: ALLOW, register: ALLOW, pending: to("/today"), profile: ALLOW, otherApp: ALLOW }],
+    ["ACTIVE admin", session(S.ACTIVE, [USER_ROLE.ADMIN]), { login: to("/school"), privacy: ALLOW, register: ALLOW, pending: to("/school"), profile: ALLOW, otherApp: ALLOW }],
+    ["ACTIVE admin+teacher", session(S.ACTIVE, [USER_ROLE.TEACHER, USER_ROLE.ADMIN]), { login: to("/school"), privacy: ALLOW, register: ALLOW, pending: to("/school"), profile: ALLOW, otherApp: ALLOW }],
     ["DISABLED", session(S.DISABLED), { login: ALLOW, privacy: ALLOW, register: to("/login"), pending: to("/login"), profile: to("/login"), otherApp: to("/login") }],
     ["DELETED", session(S.DELETED), { login: ALLOW, privacy: ALLOW, register: to("/login"), pending: to("/login"), profile: to("/login"), otherApp: to("/login") }],
   ];
