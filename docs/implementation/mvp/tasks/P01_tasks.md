@@ -116,18 +116,18 @@
 
 ### P01-CU6 — feat(web): add app shell, navigation and shell-level states · Review: diff-only · Commit: auto
 
-- [ ] P01-T14 · T1 · Spec: [global_shell_spec §4–§6](../specs/global_shell_spec.md)
+- [x] P01-T14 · T1 · Spec: [global_shell_spec §4–§6](../specs/global_shell_spec.md)
       Files: `apps/web/src/app/layout.tsx`, `app/(app)/layout.tsx`, `app/(auth)/layout.tsx`, `components/shell/*`, `lib/shell/nav-resolver.ts`
       Acceptance: NAV по роли совпадает с [UX-02 §5](../../../design/responsive_navigation_contract.md); disclosure + `aria-expanded`; drawer по APG; skip-link → проверка DOM и 390 px / `lg`
       Paths: H [§10] · N [§11: бейдж не ломает оболочку] · S [§12 S-1, S-4: пункт не в DOM; dev-переключатель не в prod]
-- [ ] P01-T15 · T1 · Spec: [global_shell_spec §5, §7](../specs/global_shell_spec.md) · UX: [ui_states S1, S3, S4](../../../design/ui_states_contract.md)
+- [x] P01-T15 · T1 · Spec: [global_shell_spec §5, §7](../specs/global_shell_spec.md) · UX: [ui_states S1, S3, S4](../../../design/ui_states_contract.md)
       Files: `app/global-error.tsx`, `app/not-found.tsx`, `app/(app)/{loading,error}.tsx`, `components/shell/nav-badge.tsx`
       Acceptance: 403/404/ошибка внутри оболочки; бейдж «Люди» = заявки (+ удаления после P06) → ручной шаг
       Paths: H · N [§7 таблица состояний] · S [бейджи только admin]
-- [ ] P01-T16 · T0 · Files: `apps/web/src/lib/messages/{ru,en}/{common,auth}.json`, `get-dictionary.ts`
+- [x] P01-T16 · T0 · Files: `apps/web/src/lib/messages/{ru,en}/{common,auth}.json`, `get-dictionary.ts`
       Acceptance: ключи оболочки и `auth` в ru и en; тип `en` ≡ `typeof ru` → сборка падает при пропуске
       Paths: n/a — copy
-      Статус: частично (2026-10-11) — словари `ru`/`en` (`common`, `auth`, `teacher`, `admin`, `analytics`) и `get-dictionary.ts` (каркас P5) есть; ключи оболочки и проверка `en ≡ ru` — нет
+      Статус: ✔ 2026-10-16 — `shell`/`states` в `common`, `pickShellMessages`, тест ключей ru≡en
 
 **CU DoD:** `typecheck` · `lint` · `test` · smoke 390 px и `lg` · проверка Lab-секций новых компонентов
 

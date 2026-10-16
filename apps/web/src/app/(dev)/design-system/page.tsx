@@ -8,6 +8,7 @@ import { LabAnchorBar } from "@/components/design-lab/LabAnchorBar";
 import { LabSection } from "@/components/design-lab/LabSection";
 import { OverlayMatrix } from "@/components/design-lab/OverlayMatrix";
 import { PatternsGallery } from "@/components/design-lab/PatternsGallery";
+import { ShellMatrix } from "@/components/design-lab/ShellMatrix";
 import { ShapeMotion } from "@/components/design-lab/ShapeMotion";
 import { TableMatrix } from "@/components/design-lab/TableMatrix";
 import { TypeScale } from "@/components/design-lab/TypeScale";
@@ -27,6 +28,7 @@ const ANCHORS = [
   { id: "overlays", label: "Overlays" },
   { id: "tables", label: "Tables" },
   { id: "patterns", label: "Patterns" },
+  { id: "shell", label: "Shell" },
 ] as const;
 
 const DesignSystemPage = () => (
@@ -76,6 +78,10 @@ const DesignSystemPage = () => (
         <WidthFrame>
           <PatternsGallery />
         </WidthFrame>
+      </LabSection>
+
+      <LabSection id="shell" title="L3 · Shell" hint="global_shell_spec §4 — navigation chrome">
+        <ShellMatrix />
       </LabSection>
     </main>
   </>

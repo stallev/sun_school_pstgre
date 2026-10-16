@@ -19,4 +19,10 @@ describe("getMessage", () => {
       expect(keys(await getDictionary("ru", namespace)).sort()).toEqual(keys(await getDictionary("en", namespace)).sort());
     }
   });
+
+  it("includes shell navigation keys in common", async () => {
+    const ru = await getDictionary("ru", "common");
+    expect(getMessage(ru, "shell.nav.today")).toBeTruthy();
+    expect(getMessage(ru, "shell.nav.groups.people")).toBeTruthy();
+  });
 });

@@ -3,7 +3,7 @@
  * and the administrator email + password form, TG-1) is implemented in P01-CU8.
  */
 const LoginPage = () => (
-  <main className="mx-auto max-w-xl p-4">
+  <main>
     <h1 className="text-xl font-semibold">Login</h1>
   </main>
 );

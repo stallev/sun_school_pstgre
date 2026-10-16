@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Alegreya, Alegreya_Sans } from "next/font/google";
 import type { ReactNode } from "react";
-import { Toaster } from "sonner";
+import { ProductToaster } from "@/components/shell/product-toaster.client";
+import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import "./globals.css";
 
 const alegreya = Alegreya({
@@ -26,13 +27,17 @@ type RootLayoutProps = {
   children: ReactNode;
 };
 
-const RootLayout = ({ children }: RootLayoutProps) => (
-  <html lang="ru" className={`${alegreya.variable} ${alegreyaSans.variable}`}>
-    <body>
-      {children}
-      <Toaster position="bottom-center" />
-    </body>
-  </html>
-);
+const RootLayout = async ({ children }: RootLayoutProps) => {
+  const locale = await getUiLocale();
+
+  return (
+    <html lang={locale} className={`${alegreya.variable} ${alegreyaSans.variable}`}>
+      <body>
+        {children}
+        <ProductToaster />
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;

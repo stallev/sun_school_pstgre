@@ -65,7 +65,12 @@ describe("auth.config (edge-safe, ADR-003 v1.1)", () => {
 
   it("keeps the Google provider and its env vars out of the source tree", () => {
     const root = resolve(import.meta.dirname, "..");
-    for (const file of ["src/auth.config.ts", "src/lib/env.server.ts", "src/app/login/page.tsx", "src/auth.ts"]) {
+    for (const file of [
+      "src/auth.config.ts",
+      "src/lib/env.server.ts",
+      "src/app/(auth)/login/page.tsx",
+      "src/auth.ts",
+    ]) {
       expect(readFileSync(resolve(root, file), "utf8"), file).not.toMatch(/providers\/google|AUTH_GOOGLE|id:\s*"google"/i);
     }
   });
