@@ -6,7 +6,7 @@
 quality_profile: lean        # prototype | lean | standard | strict
 overrides: {}
 modules:
-  auth: true                 # Google + Telegram (OIDC), роли admin / teacher
+  auth: true                 # Telegram (OIDC) + email/пароль администратора, роли admin / teacher
   design_lab: true           # обязателен на lean / standard / strict
   sentry: true
   s3_uploads: false
@@ -37,7 +37,7 @@ Overrides не заданы — значения D1–D10 соответству
 - Пользователи и нагрузка: учителя и администратор школы, малая нагрузка; MVP заменяет действующее приложение (`docs/my_specs/mvp_scope.md`). Родители и голосовая проверка — post-MVP.
 - Персональные данные / платежи: платежей нет; есть ПД учителей и детей (ФИО, согласие на обработку, запросы на удаление). Правило P00 (§2 шаблона) рекомендует для чувствительных PII не ниже `standard`; **владелец осознанно выбрал `lean`** (бумажное согласие, малая аудитория, скорость выхода). Security floor (§5 шаблона) действует полностью; каждый CU с `Paths: S` или в sensitive zone проходит `reviewer`.
 - Сроки и команда: скорость выхода в приоритете.
-- Модули: `auth` — вход через Google и Telegram, роли admin / teacher; `i18n` — словари ru / en; `sentry` — выбор владельца; `ios_safari_transport` — включён владельцем (мобильный клиент учителей); `s3_uploads`, `email_jobs` — вне MVP.
+- Модули: `auth` — вход через Telegram и по email + паролю (администратор), роли admin / teacher; `i18n` — словари ru / en; `sentry` — выбор владельца; `ios_safari_transport` — включён владельцем (мобильный клиент учителей); `s3_uploads`, `email_jobs` — вне MVP.
 - Входные материалы: `docs/my_specs/*`, `docs/prototypes/sunday_school_prototype.html`.
 
 ## Журнал

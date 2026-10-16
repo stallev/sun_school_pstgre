@@ -47,7 +47,7 @@ if (state.code === MUTATION_ERROR_CODES.AUTH_LAST_IDENTITY) { … }
 ## Исключения
 
 - **Prisma / vendor codes** (`P2002`, HTTP status) — сравнивать с documented vendor literal; не смешивать с `MutationErrorCode`.
-- **Auth.js provider id** (`"google"`, `"telegram"`) — framework contract; сопоставление с `LOGIN_PROVIDER` — одной функцией в `lib/auth`.
+- **Auth.js provider id** (`"credentials"`, `"telegram"`) — framework contract; сопоставление с `LOGIN_PROVIDER` — одной функцией в `lib/auth`.
 - **Test fixtures** — допустимо inline только в `*.test.*` / seed при явной изоляции.
 
 ## Agent checklist

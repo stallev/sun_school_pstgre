@@ -36,7 +36,7 @@
 |--------------|----------|-----|
 | `USER_ROLE` | `ADMIN`, `TEACHER`, `PARENT` | `user_role.role` (в MVP выдаются `ADMIN`, `TEACHER`) |
 | `ACCOUNT_STATUS` | `REGISTRATION`, `REQUEST_PENDING`, `REJECTED`, `ACTIVE`, `DISABLED`, `DELETED` | `app_user.status` |
-| `LOGIN_PROVIDER` | `GOOGLE`, `TELEGRAM` | `login_identity.provider` |
+| `LOGIN_PROVIDER` | `CREDENTIALS`, `TELEGRAM` | `login_identity.provider` (ADR-003 v1.1: Google не используется; `CREDENTIALS` — email + пароль администратора) |
 | `ACCESS_REQUEST_STATUS` | `PENDING`, `APPROVED`, `REJECTED` | `access_request.status` |
 | `ACADEMIC_YEAR_STATUS` | `DRAFT`, `ACTIVE`, `CLOSED` | `academic_year.status` |
 | `LESSON_KIND` | `REGULAR`, `REVIEW` | `lesson.kind` |
@@ -64,7 +64,7 @@
 |---------|----------------------|-------------|
 | `organization` | `name text` | ровно одна запись |
 | `app_user` | `organization_id`, `last_name text · null`, `first_name text · null`, `middle_name text · null`, `email text · null`, `status ACCOUNT_STATUS`, `first_login_at`, `last_login_at`, `deleted_ordinal int · null` (для «Удалённый пользователь №N») | `status` не `NULL`; ФИО обязательно при `ACTIVE` |
-| `login_identity` | `user_id`, `provider LOGIN_PROVIDER`, `provider_account_id text`, `email · null`, `username · null` | `UNIQUE (provider, provider_account_id)`; у пользователя ≥ 1 |
+| `login_identity` | `user_id`, `provider LOGIN_PROVIDER`, `provider_account_id text` (Telegram id; для `CREDENTIALS` — email в нижнем регистре), `email · null` (только `CREDENTIALS`), `username · null` (Telegram `preferred_username`, без `@`), `phone · null` (Telegram `phone_number`, только при согласии пользователя), `password_hash · null` (scrypt; только `CREDENTIALS`), `failed_attempts int default 0`, `locked_until timestamptz · null` | `UNIQUE (provider, provider_account_id)`; у пользователя ≥ 1; `password_hash` непусто ⇔ `provider = CREDENTIALS` (CHECK); `phone`, `username` видят только admin и владелец; не в журнале (INV-23) |
 | `user_role` | `user_id`, `role USER_ROLE` | `UNIQUE (user_id, role)`; роли только у `ACTIVE`; не снять последнего `ADMIN` |
 | `privacy_consent` | `user_id`, `text_version text`, `accepted_at timestamptz`, `type CONSENT_TYPE` (`PD_PROCESSING`) | `UNIQUE (user_id, text_version)` |
 | `access_request` | `user_id`, `consent_id`, `full_name_snapshot text`, `status`, `decided_by · null`, `decided_at · null`, `reject_reason · null`, `assigned_roles` (через `user_role`) | не более одной `PENDING` на пользователя |
@@ -169,7 +169,7 @@
 
 | Данные | Таблица · поля | Класс | При запросе на удаление (УД-7) |
 |--------|----------------|-------|--------------------------------|
-| Идентификаторы входа, email | `login_identity`, `app_user.email` | ПД взрослого | удалить |
+| Идентификаторы входа, email, телефон и username Telegram, хэш пароля | `login_identity`, `app_user.email` | ПД взрослого | удалить |
 | ФИО взрослого | `app_user.*_name` | ПД взрослого | удалить; «Удалённый пользователь №N» |
 | Согласие на обработку ПД | `privacy_consent` | подтверждение | оставить обезличенным |
 | Карточка ребёнка | `pupil.*` | ПД ребёнка | удалить полностью |

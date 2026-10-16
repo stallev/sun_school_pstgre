@@ -1,2 +1,3 @@
 npm run rules:check
 npx --no -- lint-staged
+node scripts/precommit-build-check.mjs

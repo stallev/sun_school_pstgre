@@ -19,7 +19,7 @@
 - [ ] P06 DoD выполнен
 - [ ] ADR-011 принят; юридическая проверка переходного периода (ADR-011 Q-01) — до prod
 - [x] Документы W12 (`migration_runbook`, `vercel_deploy_guide`, `neon_prisma_migrations_guide`) существуют
-- [ ] Приложения Google/Telegram prod и домен настроены (ручной шаг владельца)
+- [ ] Telegram-бот prod и домен настроены; пароль первого admin prod задан оператором для `db:seed:admin` (ручной шаг владельца)
 
 ## Commit plan
 

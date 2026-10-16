@@ -4,6 +4,61 @@
     "forbidden": "You do not have permission for this action",
     "not_found": "Not found",
     "conflict": "The data has changed. Refresh the page and try again",
-    "internal": "Something went wrong. Please try again"
+    "reason_required": "Enter a reason",
+    "internal": "Something went wrong. Please try again",
+    "forbidden_title": "Access denied",
+    "form": "Could not complete the action. Check the form and try again."
+  },
+  "states": {
+    "not_found_title": "Page not found",
+    "not_found_description": "Check the address or go back to the home screen.",
+    "error_title": "Could not load this page",
+    "error_retry": "Try again"
+  },
+  "shell": {
+    "skip_to_content": "Skip to content",
+    "brand": "Sunday School",
+    "menu": "Menu",
+    "open_menu": "Open menu",
+    "close": "Close",
+    "main_nav": "Main navigation",
+    "profile": "Profile",
+    "sign_out": "Sign out",
+    "sign_out_pending": "Signing out…",
+    "user_menu": "Account menu",
+    "display_name_fallback": "User",
+    "forbidden_home": "Go to home",
+    "badge_in_queue": "{count} in queue",
+    "document_suffix": "Sunday School",
+    "dev_view_as": "View as",
+    "dev_role_admin": "Administrator",
+    "dev_role_teacher": "Teacher",
+    "nav": {
+      "today": "Today",
+      "school": "School",
+      "analytics": "Analytics",
+      "rating": "Rating",
+      "verses": "Golden verses",
+      "calendar": "Calendar",
+      "bricks": "Bricks",
+      "audit": "Change log",
+      "approvals": "Requests",
+      "users": "Users",
+      "people": "Students",
+      "deletions": "Deletion requests",
+      "lessons_all": "All lessons",
+      "check": "Homework check",
+      "group_roster": "Group roster",
+      "groups_admin": "Groups",
+      "year": "School year",
+      "settings": "Settings",
+      "groups": {
+        "lessons": "Lessons",
+        "group": "Group",
+        "analytics": "Analytics",
+        "people": "People",
+        "study": "Curriculum"
+      }
+    }
   }
 }

@@ -39,7 +39,7 @@
   - Ориентир ≤ ~400 hand-written строк на CU; больше — делить при планировании.
   - Заголовок CU = commit subject: `type(scope): subject` (agent-commit-pipeline).
   - Review: по профилю D6 (agent-code-review-subagent § Depth): `standard` / `strict` — `reviewer` при runtime-коде; `diff-only` — только docs / .mdc / tests / tooling.
-  - Commit: auto — агент коммитит на границе CU после зелёной ВЕРИФИКАЦИИ и review без blockers.
+  - Commit: auto — в том же ходе, где отмечена последняя задача CU, агент проходит pipeline (ВЕРИФИКАЦИЯ → review → commit) и коммитит без отдельного вопроса после зелёной ВЕРИФИКАЦИИ и review без blockers.
 Формат задачи:
   - [ ] P{N}-T{k} · T0|T1|T2|T3 · Spec: [file §N.M](…) · Contract: [file §N.M](…) · ADR/PRD: [ID](…)
         Files: <пути / globs> · Acceptance: <проверка → ожидаемый исход>

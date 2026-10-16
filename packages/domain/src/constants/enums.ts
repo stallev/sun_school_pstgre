@@ -4,28 +4,12 @@
  * Each enum is a const object plus a union type.
  */
 
-export const USER_ROLE = { ADMIN: "ADMIN", TEACHER: "TEACHER", PARENT: "PARENT" } as const;
-export type UserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
+export * from "./user-role";
+export * from "./account-status";
+export * from "./login-provider";
+export * from "./access-request-status";
 
-export const ACCOUNT_STATUS = {
-  REGISTRATION: "REGISTRATION",
-  REQUEST_PENDING: "REQUEST_PENDING",
-  REJECTED: "REJECTED",
-  ACTIVE: "ACTIVE",
-  DISABLED: "DISABLED",
-  DELETED: "DELETED",
-} as const;
-export type AccountStatus = (typeof ACCOUNT_STATUS)[keyof typeof ACCOUNT_STATUS];
 
-export const LOGIN_PROVIDER = { GOOGLE: "GOOGLE", TELEGRAM: "TELEGRAM" } as const;
-export type LoginProvider = (typeof LOGIN_PROVIDER)[keyof typeof LOGIN_PROVIDER];
-
-export const ACCESS_REQUEST_STATUS = {
-  PENDING: "PENDING",
-  APPROVED: "APPROVED",
-  REJECTED: "REJECTED",
-} as const;
-export type AccessRequestStatus = (typeof ACCESS_REQUEST_STATUS)[keyof typeof ACCESS_REQUEST_STATUS];
 
 export const ACADEMIC_YEAR_STATUS = { DRAFT: "DRAFT", ACTIVE: "ACTIVE", CLOSED: "CLOSED" } as const;
 export type AcademicYearStatus = (typeof ACADEMIC_YEAR_STATUS)[keyof typeof ACADEMIC_YEAR_STATUS];

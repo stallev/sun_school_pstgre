@@ -29,7 +29,7 @@
 | Root Directory | `apps/web` **или** корень монорепо — решается на P5 (Q-01) | нужны файлы `packages/*` вне `apps/web`; проверить настройку включения файлов вне Root Directory |
 | Node.js | **24.x** | `engines.node` (ADR-001 §3.1) |
 | Install | `npm ci` | lockfile обязателен; Vercel определяет менеджер по lockfile |
-| Build | `next build` через workspace; перед ним `prisma generate` (если не в `postinstall`) | |
+| Build | скрипт `build` пакета `@sunschool/web`: `prisma generate` (`db:generate` в `@sunschool/db`), затем `next build` | клиент в `packages/db/src/generated/` вне git; `prisma` остаётся devDependency — Vercel ставит devDependencies на время сборки |
 | Framework | Next.js 16.4.x (точная версия) | ADR-002 |
 | `vercel.json` | без `crons`; заголовки/CSP — по P07-CU7 | |
 | Skip unaffected builds | по умолчанию включено для GitHub | не отключать без причины |
@@ -45,7 +45,6 @@
 | `DATABASE_URL` | Neon **prod** pooled | Neon **dev** pooled | Neon dev | Secret |
 | `DIRECT_URL` | Neon prod direct — **только релизный шаг CI** | Neon dev direct (CI) | Neon dev | Secret |
 | `AUTH_SECRET` | уникальный prod | уникальный preview | dev | Secret |
-| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | приложение prod | приложение dev/preview | dev | Secret |
 | `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | бот prod | **не задаётся** (Telegram на эфемерных preview не включается) | бот dev | Secret |
 | `AUTH_TRUST_HOST` / `AUTH_URL` | `true` / `https://<prod-домен>` | `true` | по туннелю | Config |
 | `FIRST_ADMIN_EMAIL` | email владельца | тестовый | `.local` | Secret |
@@ -65,10 +64,9 @@
 
 | Провайдер | Что зарегистрировать | Prod | Preview |
 |-----------|----------------------|------|---------|
-| Google | Authorized redirect URI `https://<домен>/api/auth/callback/google` | prod-домен | стабильный preview-хост (если нужен) либо вход Google на preview не используется |
 | Telegram (BotFather Web Login) | Trusted Origin (HTTPS) и Redirect URI `https://<домен>/api/auth/callback/telegram` | prod-домен | **не включать**: эфемерные URL нестабильны |
 
-Telegram требует заранее зарегистрированный HTTPS-origin ([`telegram guide`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2). `callback` совпадает с `id` провайдера (`telegram`, `google`).
+Telegram требует заранее зарегистрированный HTTPS-origin ([`telegram guide`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2). `callback` совпадает с `id` провайдера (`telegram`). Вход администратора по email и паролю внешней регистрации не требует; `FIRST_ADMIN_EMAIL` и `ADMIN_PASSWORD` в Vercel **не задаются** — их передаёт оператор команде `db:seed:admin` на время запуска.
 
 ## 6. Порядок релиза
 
@@ -96,7 +94,7 @@ Telegram требует заранее зарегистрированный HTTP
 | Проверка | Ожидаемо |
 |----------|----------|
 | `/login` открывается по HTTPS | форма входа, без ошибок |
-| Вход Google первым admin (`FIRST_ADMIN_EMAIL`) | `ACTIVE`, экран согласия, `/school` |
+| Вход первого admin по email и паролю (после `db:seed:admin`) | `ACTIVE`, экран согласия, `/school` |
 | Регистрация нового пользователя | `/pending`, заявка у admin |
 | `/design-system` | 404 |
 | Dev-переключатель роли | отсутствует |
@@ -109,7 +107,7 @@ Telegram требует заранее зарегистрированный HTTP
 |--------|-------|
 | `APP_ENV` ≠ маркер БД | деплой стартует с ошибкой; приложение не обслуживает запросы |
 | Не задан `AUTH_SECRET` | ошибка конфигурации Auth.js, вход недоступен |
-| Redirect URI не совпал | `redirect_uri_mismatch` (Google) / отказ Telegram |
+| Redirect URI не совпал | отказ Telegram (redirect URI не совпал) |
 | Preview без Telegram-секретов | кнопка Telegram скрыта/недоступна (по конфигурации) |
 | Миграция упала в CI | деплой не выполняется (шаг 3 после шага 2) |
 
@@ -135,7 +133,7 @@ Telegram требует заранее зарегистрированный HTTP
 
 - [ ] Preview-деплой работает на dev-БД, prod-секреты недоступны — исход: проверка env.
 - [ ] Prod-деплой проходит smoke §8 — исход: ручной шаг.
-- [ ] Redirect URI Google и Telegram совпадают с доменом — исход: вход проходит.
+- [ ] Redirect URI Telegram совпадает с доменом; первый admin создан `db:seed:admin` и входит по паролю — исход: вход проходит.
 - [ ] `DIRECT_URL` prod отсутствует в runtime-окружении Vercel — исход: проверка настроек.
 - [ ] `vercel.json` не содержит `crons` — исход: grep.
 
@@ -144,7 +142,7 @@ Telegram требует заранее зарегистрированный HTTP
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
 | Q-01 | Root Directory: `apps/web` или корень монорепо; включение файлов вне Root Directory | Проверить на P5 по документации и фактической сборке; зафиксировать здесь | P5 |
-| Q-02 | Где выполняется `prisma generate` (build vs `postinstall`) и нужен ли `prisma` как prod-зависимость | Проверить на P5 | P5 |
+| Q-02 | Где выполняется `prisma generate` | **Закрыт (2026-10-16):** в скрипте `build` `@sunschool/web`, до `next build`. `prisma` — devDependency `@sunschool/db`, не prod-зависимость | — |
 | Q-03 | Поля `vercel.json` для заголовков/CSP | Определить в P07-CU7 по документации | P07 |
 | Q-04 | Домен prod и preview-хост | Выбор владельца | P07 |
 
@@ -170,3 +168,12 @@ Telegram требует заранее зарегистрированный HTTP
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W12-06) |
+| 2026-10-16 | Q-02 закрыт: `prisma generate` в скрипте `build` `@sunschool/web` |
+
+## Сборка и тесты (инцидент 2026-10-16)
+
+- `next build` проверяет типы всех файлов из `apps/web/tsconfig.json`. Тесты (`*.test.ts(x)`, `src/test/**`) из него **исключены**: `vitest` — devDependency корня и в сборке Vercel недоступна (preview упал с `TS2307: Cannot find module 'vitest'`). Типы тестов проверяет `npm run typecheck` (`apps/web/tsconfig.test.json`).
+- `npm run build:check` = `scripts/check-build-isolation.mjs` + `next build`; запускается в pre-commit (`scripts/precommit-build-check.mjs`, только если в commit есть код или конфигурация сборки) и в CI (`ci.yml`).
+- Сборка не должна требовать секретов: без `DATABASE_URL`, `AUTH_*` она проходит (проверено 2026-10-16). `/design-system` смотрит на `APP_ENV` в момент сборки: `dev` — страница есть, иначе 404. Пока preview не получает `APP_ENV`, лаборатория там отвечает 404.
+- `prisma generate` обязателен в том же скрипте, который запускает Vercel (`@sunschool/web` `build`). Клиент в `src/generated` не в git; без generate Turbopack падает с `Can't resolve './generated/prisma/client'` (preview `dpl_G4HHP2n4p4PdrswwovzbKGMBV18P`, 2026-10-16). Корневой `npm run build` только делегирует в этот скрипт. CI по-прежнему вызывает `db:generate` отдельно до `build:check` — повторный generate идемпотентен.
+- Переменные проекта сейчас с target **production**. Preview их не получает. Пререндер тогда падал: `/_not-found` через `getUiLocale` → `getServerEnv`, затем `/privacy` через `getPrisma` (`Invalid server environment: APP_ENV, DATABASE_URL, AUTH_SECRET`, `dpl_29YN7krTGZXmGiaBYF24NUXdAhS9`). Без валидного server env `getUiLocale` возвращает `ru` и не открывает БД, а `/privacy` откладывает рендер (`connection()`). Чтобы preview **работал** (вход, данные), на target Preview нужны свои `APP_ENV=dev`, `DATABASE_URL` (Neon dev) и `AUTH_SECRET` — не копия prod.

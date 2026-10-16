@@ -32,7 +32,7 @@ When Sunday School docs are silent — follow Pulse reference **architecture, fe
 - **Node.js:** **24.x** — local, CI (`node-version: "24"`), Vercel (`engines.node`: `24.x`)
 - **Hosting:** Vercel · **UI:** shadcn/ui (Base UI) + Tailwind CSS v4 (Slate Cobalt tokens)
 - **Database:** Neon **PostgreSQL 17** + **Prisma v7** (pooled `DATABASE_URL`, `DIRECT_URL` for migrations)
-- **Auth:** Auth.js v5, вход через **Google и Telegram (OIDC)** — [`telegram_authjs_oidc_portable_guide.md`](docs/my_specs/telegram_authjs_oidc_portable_guide.md); JWT sessions, role in token (`admin`, `teacher`); пароль в MVP не используется
+- **Auth:** Auth.js v5, вход через **Telegram (OIDC)** и **email + пароль для администратора** (Credentials) — [`telegram_authjs_oidc_portable_guide.md`](docs/my_specs/telegram_authjs_oidc_portable_guide.md); JWT sessions, role in token (`admin`, `teacher`); пароль только у администратора (создаёт команда `db:seed:admin`); Google не используется
 - **Email:** Resend — **post-MVP**, модуль `email_jobs` выключен по профилю
 - **Storage:** AWS S3 — модуль `s3_uploads` **выключен** по профилю (включается ADR-007 при необходимости)
 - **Observability:** Sentry (`@sentry/nextjs`) — модуль `sentry` включён

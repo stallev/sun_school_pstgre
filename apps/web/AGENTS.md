@@ -22,7 +22,7 @@ This is **not** the Next.js from training data. APIs, conventions, and file stru
 | `next` | **16.4** (pinned) | No Next 15 patterns; no floating `^16` without ADR |
 | `react` / `react-dom` | 19.x | Server Components by default |
 | `tailwindcss` | v4 | Semantic tokens in `src/app/globals.css` (Slate Cobalt, no dark theme) |
-| `next-auth` | 5.0.0-beta (pinned) | Google + Telegram OIDC, JWT, no adapter |
+| `next-auth` | 5.0.0-beta (pinned) | Telegram OIDC + Credentials (admin only), JWT, no adapter |
 | `@sunschool/*` | workspace | `domain`, `db`, `policy-edge`, `policy-server` |
 
 ## Directory conventions

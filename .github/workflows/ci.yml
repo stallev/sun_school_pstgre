@@ -20,6 +20,8 @@ jobs:
       - run: npm ci
       - run: npm run db:generate
       - run: npm run typecheck
+      # Same command as Vercel, without root devDependencies leaking into app code (build-isolation guard).
+      - run: npm run build:check
       - run: npm run lint
       - run: npm run test
       - run: npm run rules:check

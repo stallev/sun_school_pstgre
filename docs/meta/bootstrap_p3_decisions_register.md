@@ -76,7 +76,7 @@ Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и spe
 | 2 | Юридическая проверка срока удаления 15 дней | prod | deletion contract Q-01 |
 | 3 | Юридическая проверка основания обработки данных перенесённых детей в переходный период; подтверждение срока 60 дней | prod | ADR-011 Q-01, Q-02 |
 | 4 | Окно восстановления Neon и его текст в согласии | prod, `/privacy` | runbook §9 |
-| 5 | Prod-домен; приложения Google и Telegram prod | P07 | vercel_deploy_guide Q-04 |
+| 5 | Prod-домен; Telegram-бот prod (Google не используется — решение 2026-10-16) | P07 | vercel_deploy_guide Q-04 |
 | 6 | Финальный текст согласия `/privacy` v1 | P07 | access_and_registration_spec |
 
 ## 6. Работы bootstrap P4–P6 (вытекают из аудита W14)

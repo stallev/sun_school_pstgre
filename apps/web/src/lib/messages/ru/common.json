@@ -4,6 +4,61 @@
     "forbidden": "Недостаточно прав для этого действия",
     "not_found": "Не найдено",
     "conflict": "Данные изменились. Обновите страницу и повторите",
-    "internal": "Что-то пошло не так. Попробуйте ещё раз"
+    "reason_required": "Укажите причину",
+    "internal": "Что-то пошло не так. Попробуйте ещё раз",
+    "forbidden_title": "Нет доступа",
+    "form": "Не удалось выполнить действие. Проверьте данные и попробуйте снова."
+  },
+  "states": {
+    "not_found_title": "Страница не найдена",
+    "not_found_description": "Проверьте адрес или вернитесь на главную.",
+    "error_title": "Не удалось загрузить страницу",
+    "error_retry": "Повторить"
+  },
+  "shell": {
+    "skip_to_content": "К содержимому",
+    "brand": "Sunday School",
+    "menu": "Меню",
+    "open_menu": "Открыть меню",
+    "close": "Закрыть",
+    "main_nav": "Основная навигация",
+    "profile": "Профиль",
+    "sign_out": "Выйти",
+    "sign_out_pending": "Выход…",
+    "user_menu": "Меню пользователя",
+    "display_name_fallback": "Пользователь",
+    "forbidden_home": "На главную",
+    "badge_in_queue": "В очереди: {count}",
+    "document_suffix": "Sunday School",
+    "dev_view_as": "Смотреть как",
+    "dev_role_admin": "Администратор",
+    "dev_role_teacher": "Учитель",
+    "nav": {
+      "today": "Сегодня",
+      "school": "Школа",
+      "analytics": "Аналитика",
+      "rating": "Рейтинг",
+      "verses": "Золотые стихи",
+      "calendar": "Календарь",
+      "bricks": "Кирпичики",
+      "audit": "Журнал изменений",
+      "approvals": "Заявки",
+      "users": "Пользователи",
+      "people": "Ученики",
+      "deletions": "Запросы на удаление",
+      "lessons_all": "Все уроки",
+      "check": "Проверка ДЗ",
+      "group_roster": "Состав группы",
+      "groups_admin": "Группы",
+      "year": "Учебный год",
+      "settings": "Настройки",
+      "groups": {
+        "lessons": "Уроки",
+        "group": "Группа",
+        "analytics": "Аналитика",
+        "people": "Люди",
+        "study": "Учёба"
+      }
+    }
   }
 }

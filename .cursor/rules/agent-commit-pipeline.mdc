@@ -12,7 +12,7 @@ alwaysApply: true
 
 Коммит выполняется в двух случаях:
 
-1. **Граница commit unit (auto):** завершена последняя задача CU, объявленного в `P{N}_tasks.md` § Commit plan ([`model-routing.mdc`](model-routing.mdc) §3a). Пользователь заранее разрешил такие коммиты, когда утвердил Commit plan; отдельный вопрос не нужен.
+1. **Граница commit unit (auto):** завершена последняя задача CU, объявленного в `P{N}_tasks.md` § Commit plan ([`model-routing.mdc`](model-routing.mdc) §3a). Пользователь заранее разрешил такие коммиты, когда утвердил Commit plan (`Commit: auto` в заголовке CU); отдельный вопрос не нужен. **В том же ходе**, где отмечена последняя задача объявленного CU, агент **обязан** пройти pipeline целиком (ВЕРИФИКАЦИЯ → stage → review → commit) и **не** останавливаться на галочках с запросом разрешения на коммит.
 2. **Явный запрос пользователя.**
 
 Во всех остальных случаях не коммитить. Задача вне CU (мелкая ad-hoc правка) отдельно **не** коммитится: она ждёт границы CU или явного запроса.
@@ -35,7 +35,8 @@ alwaysApply: true
 
 Перед коммитом, если затронут код:
 
-- `npm run typecheck` (root monorepo) — когда workspaces уже есть (после P5)
+- `npm run typecheck` (root monorepo) — когда workspaces уже есть (после P5); включает тесты (`apps/web/tsconfig.test.json`)
+- `npm run build:check` — **продакшн-сборка как на Vercel**: `scripts/check-build-isolation.mjs` (тесты и test-only импорты не попадают в сборку) + `next build`. Обязательна, если в diff есть код или конфигурация сборки (`apps|packages/**`, `package*.json`, `tsconfig*`, `eslint`/`vitest` config). Hook `.husky/pre-commit` → `scripts/precommit-build-check.mjs` запускает её сам; обход (`--no-verify`) запрещён. Причина: `next build` проверяет типы файлов из `tsconfig.json`, а `vitest` — root devDependency, которой на Vercel нет (падение preview 2026-10-16)
 - `npm run lint` — когда скрипт есть
 - `npm run rules:check` — если есть `.claude/rules/` (после `rules:sync`)
 - `npm run deps:check` — если в diff есть `package.json` / `package-lock.json` / `.npmrc` (`dependency-pinning.mdc`)
@@ -112,8 +113,8 @@ Stage только релевантные файлы (`git add`). Не комм�
 #### Examples
 
 ```
-feature/P6-auth: feat(auth): add google oauth provider
-P6-add-google-auth: fix(web): resolve filter re-render
+feature/P6-auth: feat(auth): add telegram oidc provider
+P6-add-telegram-auth: fix(web): resolve filter re-render
 main: chore(docs): sync canonical routes
 ```
 
@@ -174,7 +175,7 @@ npx husky init
 ### Verify commitlint
 
 ```bash
-echo "feature/P6-auth: add google oauth" | npx commitlint   # fail
+echo "feature/P6-auth: add telegram oidc" | npx commitlint   # fail
 echo "feature/P6-auth: chore: test setup" | npx commitlint  # pass
 ```
 

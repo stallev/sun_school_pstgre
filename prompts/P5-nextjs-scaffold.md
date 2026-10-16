@@ -26,7 +26,7 @@ Senior Fullstack Developer (Next.js 16 + PostgreSQL + monorepo).
    - Next.js **current 16.4.x patch** — baseline **16.4**. Confirm with `npm view next version` + Context7 `/vercel/next.js`; if latest is still 16.4.x, pin **that** exact version. Align `@next/third-parties` and `eslint-config-next`. No `^16`.
    - `src/proxy.ts` (NOT middleware.ts for new code)
    - `src/data/`, `src/lib/`, `src/components/{atoms,ui,design-lab}/`
-   - Auth.js v5 — модуль `auth`: **OIDC-провайдеры Google и Telegram, JWT без `@auth/prisma-adapter`**, каркас по [`auth_runtime_spec.md`](../docs/prds/05_runtime/auth_runtime_spec.md) §3–§5 и [ADR-003](../docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md); **Credentials не добавлять** (в P5 — только конфигурация и заглушки, логика входа — фаза P01)
+   - Auth.js v5 — модуль `auth`: **Telegram OIDC и Credentials администратора (с 2026-10-16; Google не используется), JWT без `@auth/prisma-adapter`**, каркас по [`auth_runtime_spec.md`](../docs/prds/05_runtime/auth_runtime_spec.md) §3–§5 и [ADR-003](../docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md); **Credentials не добавлять** (в P5 — только конфигурация и заглушки, логика входа — фаза P01)
    - Sentry stub (`@sentry/nextjs`) — модуль `sentry`
    - `globals.css` with token placeholders
 7. Root `AGENTS.md` уже создан в P0. Скопировать `scaffold/apps/web/AGENTS.template.md` → `apps/web/AGENTS.md` (заменить placeholders); скопировать `scaffold/apps/web/CLAUDE.md` → `apps/web/CLAUDE.md` (статичный `@AGENTS.md`-импорт, без изменений). Корневой `CLAUDE.md` не дублировать MUST — зеркало `.claude/rules/`.

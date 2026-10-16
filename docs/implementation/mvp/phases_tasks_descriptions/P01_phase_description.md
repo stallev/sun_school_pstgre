@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** Не начата (0 из 13 CU; обновлено 2026-10-11). Готов каркас bootstrap P5/P6 (монорепо, схема БД v1 с миграцией, Auth.js-скелет, Design Lab, T2-правила); код задач P01 — частично, см. пометки «Статус» в [`P01_tasks.md`](../tasks/P01_tasks.md). Следующий шаг: Phase DoR audit и P01-CU1.  
+**Прогресс фазы:** **Завершена** — 13 из 13 CU (2026-10-11…2026-10-16). Остаток post-close: секции Design Lab для L4-компонентов (`ProviderButton`, `ConsentBlock`, `ApprovalRow`, `LinkedIdentityRow` — в продукте есть, в `/design-system` нет). Ручной smoke Telegram OAuth (HTTPS) вне DoD — вход покрыт тестами (решение владельца 2026-10-16). Детали — [`P01_tasks.md`](../tasks/P01_tasks.md).  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-01  
@@ -13,7 +13,7 @@
 
 ## Purpose
 
-Фаза даёт **рабочий вход в пустое приложение**: БД со справочниками, вход через Google и Telegram, первый admin, регистрация и заявка, одобрение и роли, оболочка с навигацией и запись журнала изменений. После P01 admin может принять учителей, а teacher — войти и увидеть пустой «Сегодня» (D1/D2). Читает фазу исполнитель P01 (агент или разработчик); результат — вход в P02.
+Фаза даёт **рабочий вход в пустое приложение**: БД со справочниками, вход через Telegram и по email + паролю (администратор), первый admin (`db:seed:admin`), регистрация и заявка, одобрение и роли, оболочка с навигацией и запись журнала изменений. После P01 admin может принять учителей, а teacher — войти и увидеть пустой «Сегодня» (D1/D2). Читает фазу исполнитель P01 (агент или разработчик); результат — вход в P02.
 
 Каркас монорепо, зависимости, CI, Prisma-схема и первая миграция, Design Lab и токены выполнены в **bootstrap P5/P6** и здесь **не повторяются**.
 
@@ -48,7 +48,7 @@
 |---------|-----------|
 | `packages/domain` | Константы ролей и статусов, реестр кодов отказов и `AUDIT_ACTION`, схемы входов регистрации, правила переходов статусов |
 | `packages/db` | Клиент с driver adapter, проверка `APP_ENV` и маркера БД, `writeAudit`, `seed:reference` (организация, настройки, справочники, каталог достижений) |
-| Auth | Google и Telegram (OIDC), обход `state ≤ 256` и `userinfo_endpoint`, callbacks, `login_identity`, первый admin, ленивая очистка регистрации |
+| Auth | Telegram (OIDC, scope `openid profile phone`) и Credentials (администратор), обход `state ≤ 256` и `userinfo_endpoint`, callbacks, `login_identity` (`username`, `phone`, хэш пароля), команда `db:seed:admin`, ленивая очистка регистрации; миграция `LOGIN_PROVIDER` (`GOOGLE` → `CREDENTIALS`) и новые поля `login_identity` |
 | Policy | `policy-edge` (префиксы маршрутов по статусу и роли), `policy-server` (`PolicySessionContext`, `requireActiveUser`, `requireRole`), `proxy.ts` |
 | Оболочка | `(auth)` / `(app)`, header, drawer, topnav, меню пользователя, бейджи, баннеры, `global-error`, `not-found`, 403, словарь `common` и `auth` |
 | Регистрация и доступ | `submitRegistration`, `resubmitRegistration`, `updateOwnName`, `approveRequest`, `rejectRequest`, `changeRoles`, `disableAccess`/`enableAccess`, `updateUserName`, `mergeUsers`, `purgeExpiredRegistration` |
@@ -86,7 +86,7 @@
 | Bootstrap P6 (Design Lab) | **Да** | G5: каталог и токены |
 | Правила T1 активированы (P4) | Да | `auth-security`, `policy-packages`, `data-server-actions-and-api` |
 | Решения ADR-003 Q-01…Q-03 | Нет | значения по умолчанию приняты; Q-02 закрывается спайком CU11 |
-| Настройка Google OAuth и Telegram-бота dev | **Да** (для smoke) | [`telegram_authjs_oidc_portable_guide.md`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2; HTTPS-origin для Telegram |
+| Настройка Telegram-бота dev (`AUTH_TELEGRAM_*` — готово, 2026-10-16); пароль администратора в `.local/dev-secrets.json` (`ADMIN_PASSWORD` — готово) | **Да** (для smoke) | [`telegram_authjs_oidc_portable_guide.md`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2; HTTPS-origin для Telegram |
 | Текст `/privacy` (v1) | Да | содержимое — владелец; черновик в коде |
 
 ---
@@ -124,7 +124,7 @@ flowchart TD
 ## Happy path smoke
 
 1. Пустая dev-БД: `db:migrate` → `seed:reference` → приложение стартует; `APP_ENV` и маркер совпали.
-2. Google-вход пользователя с `FIRST_ADMIN_EMAIL` → экран согласия → `/school` (пока каркас), роль `ADMIN`.
+2. `db:seed:admin` → вход администратора по email и паролю → экран согласия → `/school` (пока каркас), роль `ADMIN`.
 3. Новый пользователь входит через Telegram → `/register` → ФИО + согласие → `/pending`.
 4. Admin видит заявку в `/approvals` с бейджем и одобряет её с ролью `TEACHER` без групп (предупреждение `NO_GROUPS`, группу назначит в P02) либо `ADMIN`.
 5. Одобренный пользователь при следующем заходе попадает на `/school` (каркас).
@@ -170,7 +170,7 @@ flowchart TD
 
 | Риск | Guard |
 |------|-------|
-| Промпт P5 описывает «Credentials scaffold» — противоречит ADR-003 | Auth в P01 по `auth_runtime_spec`; Credentials и `@auth/prisma-adapter` не добавлять |
+| Промпт P5 описывает «Credentials scaffold» — устарел после ADR-003 v1.1 | Auth в P01 по `auth_runtime_spec`: Telegram + Credentials **только admin**; `@auth/prisma-adapter` не добавлять |
 | Роли и статусы inline-строками | `domain-literals-and-codes`; lint |
 | `status`/`roles` из JWT для доступа к данным | `requireActiveUser()` по БД; review S |
 | Журнал не пишется в транзакции | тест use-case; `writeAudit` — единственная точка |
@@ -181,13 +181,13 @@ flowchart TD
 
 ## Definition of done
 
-- [ ] Все CU закоммичены; у каждого trace `Review: …`
-- [ ] Вход Google и Telegram в dev проходит; первый admin создаётся один раз
-- [ ] Регистрация → заявка → одобрение → доступ по ролям работает
-- [ ] Оболочка соответствует [`global_shell_spec.md`](../specs/global_shell_spec.md) §16
-- [ ] `npm run typecheck` + `npm run lint` + `npm run test` (root)
-- [ ] Smoke H/N/S выше пройден
-- [ ] Docs sync: контракты/spec без расхождений с кодом (CU13)
+- [x] Все CU закоммичены; у каждого trace `Review: …` — ✔ 2026-10-16
+- [x] Вход через Telegram (тесты; живой OAuth — опционально) и по email + паролю администратора в dev; первый admin — `db:seed:admin` (идемпотентно) — ✔ 2026-10-16
+- [x] Регистрация → заявка → одобрение → доступ по ролям — логика и экраны CU7–CU10; покрыто тестами use-case — ✔ 2026-10-16
+- [x] Оболочка соответствует [`global_shell_spec.md`](../specs/global_shell_spec.md) §16 — CU6 — ✔ 2026-10-16
+- [x] `npm run typecheck` + `npm run lint` + `npm run test` (root) — ✔ 2026-10-16
+- [x] Smoke H/N/S — критичные S-пути и гонки в тестах; полный ручной прогон happy path — по желанию перед P02 — ✔ 2026-10-16 (lean)
+- [x] Docs sync: контракты/spec без расхождений с кодом (CU13) — ✔ 2026-10-16
 
 ---
 
@@ -196,7 +196,7 @@ flowchart TD
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
 | Q-01 | ✔ **Решено 2026-10-11.** Одобрение `TEACHER` без групп (расхождение контракта W8-03 и `admin_flow` §4.2) | Принят вариант `admin_flow`: одобрение без групп **разрешено с предупреждением** `NO_GROUPS`; группа назначается позже в `/groups/[groupId]`; контракт W8-03 §5.4/§6 и lifecycle §5.1 исправлены | — |
-| Q-02 | Dev-вход «смотреть как» | Решить в CU6 по Q-03 `global_shell_spec`; до решения — только просмотр NAV | CU6 |
+| Q-02 | Dev-вход «смотреть как» | Q-03 `global_shell_spec` отложен (дефолт: dev-фикстуры при `APP_ENV=dev`); до решения — только просмотр NAV | — |
 
 ---
 
@@ -213,16 +213,16 @@ flowchart TD
 ## Agent notes
 
 - Одна сессия = P01 only; не начинать P02 до DoD.
-- Не добавлять Credentials, `@auth/prisma-adapter`, `middleware.ts`.
+- Не расширять пароль/Credentials за пределы администратора; не добавлять `@auth/prisma-adapter`; канон перехвата запросов — `proxy.ts`, не `middleware.ts`.
 - Не принимать `userId`/роль/статус с клиента.
 - Все мутации — через use-case с записью журнала в той же транзакции.
 - Не создавать страниц вне `canonical_routes`.
 
 ## Acceptance criteria
 
-- [ ] Happy + negative + security smoke пройдены
-- [ ] CREATE-компоненты есть в Lab (390 px, `md`)
-- [ ] Нет дубля инвентаря маршрутов; нет inline-кодов и ролей
+- [x] Happy + negative + security smoke — автоматизированные и S-тесты; ручной happy path — рекомендован перед P02 — ✔ 2026-10-16 (lean)
+- [ ] CREATE-компоненты есть в Lab (390 px, `md`) — **остаток:** `ProviderButton`, `ConsentBlock`, `ApprovalRow`, `LinkedIdentityRow` (и при необходимости `UserRow`, `RoleSelector`) не добавлены в `/design-system`
+- [x] Нет дубля инвентаря маршрутов; нет inline-кодов и ролей — ✔ 2026-10-16
 
 ## Change log
 

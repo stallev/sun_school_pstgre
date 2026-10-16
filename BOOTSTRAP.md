@@ -229,18 +229,17 @@ DIRECT_URL=postgresql://...
 
 ---
 
-## Шаг 9 — Auth.js (OIDC Google + Telegram) — модуль `auth`
+## Шаг 9 — Auth.js (Telegram OIDC + Credentials администратора) — модуль `auth`
 
-После P5 scaffold. **Проект использует OIDC-вход Google и Telegram, JWT, без Credentials и `@auth/prisma-adapter`** ([ADR-003](docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md), [`auth_runtime_spec.md`](docs/prds/05_runtime/auth_runtime_spec.md) §4):
+После P5 scaffold. **Проект использует OIDC-вход Telegram и Credentials (email + пароль) только для администратора, JWT, без `@auth/prisma-adapter`; Google не используется** ([ADR-003](docs/prds/07_governance/adr_003_auth_oidc_jwt_rbac.md), [`auth_runtime_spec.md`](docs/prds/05_runtime/auth_runtime_spec.md) §4):
 
 ```env
 AUTH_SECRET=              # openssl rand -base64 32
-AUTH_GOOGLE_ID=
-AUTH_GOOGLE_SECRET=
 AUTH_TELEGRAM_ID=         # BotFather Web Login (OIDC), не TELEGRAM_BOT_TOKEN
 AUTH_TELEGRAM_SECRET=
 AUTH_TRUST_HOST=true      # за прокси / туннелем
-FIRST_ADMIN_EMAIL=        # первый admin (только server env / .local)
+FIRST_ADMIN_EMAIL=        # только для `db:seed:admin` (dev: .local/dev-secrets.json)
+ADMIN_PASSWORD=           # только для `db:seed:admin`; приложение не читает
 ```
 
 Полный список переменных и порядок настройки — [`local_dev_setup.md`](docs/implementation/mvp/guides/local_dev_setup.md) §6, [`vercel_deploy_guide.md`](docs/implementation/mvp/guides/vercel_deploy_guide.md) §4.

@@ -17,7 +17,7 @@ export default auth((request) => {
     ? { userId: user.id, status: user.status, roles: user.roles }
     : null;
 
-  const decision = canVisitRoutePrefix(session, request.nextUrl.pathname);
+  const decision = canVisitRoutePrefix(session, `${request.nextUrl.pathname}${request.nextUrl.search}`);
   if (decision.kind === "redirect") {
     return NextResponse.redirect(new URL(decision.to, request.nextUrl));
   }

@@ -278,7 +278,7 @@
 | Тема | Library | Что проверить |
 |------|---------|---------------|
 | Next.js 16 | `/vercel/next.js` | `proxy.ts`, async `cookies`/`headers`/`params` |
-| Auth.js v5 | `/websites/authjs_dev` | OIDC-провайдеры (Google; Telegram — custom OIDC), JWT, role in token |
+| Auth.js v5 | `/websites/authjs_dev` | провайдеры (Telegram — custom OIDC; Credentials — администратор), JWT, role in token |
 | Prisma + Neon | `/websites/prisma_io` | `DATABASE_URL`, `DIRECT_URL`, migrate deploy |
 
 Версии, закреплённые при bootstrap (P2, 2026-10-10): Next.js 16.4.x, Auth.js v5, Prisma v7 — источник `project-context.mdc`; **сверка с Context7 при P2 не выполнялась** (инструмент недоступен в сессии) и обязательна при написании ADR-001 / ADR-002 / ADR-003 (W1-F1, W1-F2, W4-01).
@@ -519,7 +519,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | ID | Файл | Зависит от | Обновить backlinks |
 |----|------|------------|-------------------|
 | W9-01 | `docs/implementation/mvp/specs/global_shell_spec.md` — оболочка из прототипа (`#shell`, header, drawer, role switcher только в dev) | responsive_navigation_contract, visual_identity | ux_ui_principles |
-| W9-02 | `docs/implementation/mvp/specs/access_and_registration_spec.md` — вход Google / Telegram, регистрация с согласием, ожидание заявки | auth_runtime_spec, access_requests_and_roles_contract, forms_and_validation_ux | auth_runtime_spec, admin_flow |
+| W9-02 | `docs/implementation/mvp/specs/access_and_registration_spec.md` — вход Telegram / email + пароль администратора, регистрация с согласием, ожидание заявки | auth_runtime_spec, access_requests_and_roles_contract, forms_and_validation_ux | auth_runtime_spec, admin_flow |
 | W9-03 | `docs/implementation/mvp/specs/lesson_form_and_golden_verses_spec.md` | school_year_and_groups_contract, bible_seed_contract, forms_and_validation_ux | pages_functional_spec, teacher_flow |
 | W9-04 | `docs/implementation/mvp/specs/homework_check_flow_spec.md` — последовательная проверка + сводная таблица | homework_check_contract, ui_states | teacher_flow, pages_functional_spec |
 | W9-05 | `docs/implementation/mvp/specs/group_and_pupils_spec.md` | school_year_and_groups_contract, ui_states | admin_flow, teacher_flow |
@@ -563,7 +563,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 | ID | Файл | Зависит от | Обновить backlinks |
 |----|------|------------|-------------------|
-| W11-01 | `docs/implementation/mvp/phases_tasks_descriptions/P01_phase_description.md` — scaffold, БД, auth (Google / Telegram), оболочка | W8-01…03, monorepo_packages, global_shell_spec | methodology §2.5 |
+| W11-01 | `docs/implementation/mvp/phases_tasks_descriptions/P01_phase_description.md` — scaffold, БД, auth (Telegram / Credentials администратора), оболочка | W8-01…03, monorepo_packages, global_shell_spec | methodology §2.5 |
 | W11-02 | `docs/implementation/mvp/tasks/P01_tasks.md` | P01_phase_description | — |
 | W11-03 | `P02_phase_description.md` — учебный год, группы, ученики | P01, school_year_and_groups_contract, group_and_pupils_spec | methodology |
 | W11-04 | `P02_tasks.md` | P02_phase | — |

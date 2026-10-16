@@ -75,7 +75,7 @@ Monorepo: **Next.js 16.4** App Router + Vercel + Neon PostgreSQL.
    Индекс в `.cursor/skills/app-conventions` может быть не виден Claude Code — при сомнении читать `.cursor/rules/` (или `.claude/rules/`) напрямую, не полагаясь только на skill.
 5. Выполнить задачи `docs/implementation/mvp/tasks/P{N}_tasks.md` по commit units (§ Commit plan), включая пути H / N / S из `Paths` задачи.
 6. `npm run typecheck` + `npm run lint` + CU DoD (обязательная ВЕРИФИКАЦИЯ). Runtime dual-view (`next-dev-loop`) и lab PSI (`npm run psi:lab`) — **только если пользователь явно попросил**; не auto.
-7. На границе CU — review и auto-commit (§ Commit & review).
+7. На границе CU — в **том же ходе**, где закрыта последняя задача CU: review и auto-commit без запроса разрешения (`Commit: auto` в Commit plan); pipeline целиком (§ Commit & review).
 
 ## Cursor vs Claude Code rules
 
@@ -108,7 +108,7 @@ Web detail: [`apps/web/AGENTS.md`](apps/web/AGENTS.md) § Skills.
 
 ## Stack (full Pulse)
 
-Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Google + Telegram) · Sentry · shadcn/ui · Tailwind v4 · Sonner · i18n ru/en (Resend и AWS S3 — post-MVP / выключены профилем)
+Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Telegram + email/пароль администратора) · Sentry · shadcn/ui · Tailwind v4 · Sonner · i18n ru/en (Resend и AWS S3 — post-MVP / выключены профилем)
 
 ## Repository status
 

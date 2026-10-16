@@ -26,7 +26,7 @@
 |-------|------------|:---:|:----:|-----------------|
 | **A. Справочники** | `organization`, `app_setting` по умолчанию, `bible_translation`, `bible_book`, каталог `achievement` / `achievement_tier` и штрафы | ✔ | ✔ | upsert по естественному ключу, без `TRUNCATE` |
 | **B. Библия** | `bible_verse` (RST, NIV), `bible_verse_map` | ✔ | ✔ (NIV — после лицензии) | upsert, одна транзакция на перевод |
-| **C. Первый admin** | не seed: создаётся при первом входе по `FIRST_ADMIN_EMAIL` | ✔ | ✔ | один раз под блокировкой |
+| **C. Первый admin** | отдельная команда `db:seed:admin` (не справочник): email и пароль из `FIRST_ADMIN_EMAIL` / `ADMIN_PASSWORD` | ✔ | ✔ | один раз под блокировкой |
 | **D. Dev-фикстуры** | вымышленные группы, люди, уроки, проверки, кирпичики, календарь, заявки, журнал | ✔ | **никогда** | пересоздаёт данные dev с нуля |
 
 После развёртывания **prod содержит только A + B + C** (ОК-2): ни одной группы, ученика, учебного года, урока, проверки.
@@ -38,13 +38,14 @@
 | 1 | `db:migrate` | применяет миграции (схема целиком, ADR-005) | dev, prod |
 | 2 | `db:seed:reference` | набор A; записывает маркер окружения (§5) | dev, prod |
 | 3 | `db:seed:bible` | набор B: RST; затем `db:seed:bible:niv` — NIV; строит `bible_verse_map`, проверяет счётчики | dev, prod |
+| 3a | `db:seed:admin` | набор C: первый admin (`ACTIVE`, роль `ADMIN`, `login_identity` `CREDENTIALS` с хэшем scrypt); пароль и email — dev: `.local/dev-secrets.json` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD`), prod: переменные окружения оператора на время запуска; идемпотентна, пароль меняет только `--reset-password`; журнал `access.first_admin_created`, `auth.password_set` (`SYSTEM`) | dev, prod |
 | 4 | `db:seed:dev` | набор D | **только dev** |
 
 Правила:
 
 1. Команды **явные**: ни `migrate`, ни старт приложения seed не запускают (Prisma v7).
 2. Каждая команда идемпотентна: повторный запуск не меняет число строк и не дублирует журнал сверх одной записи «запущено».
-3. Каждый запуск пишет запись в `audit_log` (`source = SYSTEM`, `entity_type = 'seed'`, `action`, результат и счётчики в `new_value`; ПД нет — INV-23, ПБ-2).
+3. Запуск, изменивший данные (или записавший маркер), пишет одну запись в `audit_log`; повтор, ничего не изменивший, записи не создаёт ([change_log_contract L-6](../../implementation/mvp/contracts/change_log_contract.md)) (`source = SYSTEM`, `entity_type = 'seed'`, `action`, результат и счётчики в `new_value`; ПД нет — INV-23, ПБ-2).
 4. Seed-код живёт в `packages/db`; `apps/web` seed не импортирует (PKG).
 5. Prisma-клиент seed создаётся через driver adapter с `DIRECT_URL` (не pooled).
 
@@ -141,7 +142,7 @@
 
 ### 8.2 Вход в dev
 
-Вымышленные пользователи не имеют `login_identity`, которое проходит реальный OAuth. Для работы в dev используется переключатель роли «смотреть как» ([ОК-5](../../my_specs/sunday_school_data_analytics_spec.md), `responsive_navigation_contract` §8): он включён только при `APP_ENV=dev` и отсутствует в сборке prod. Реальный вход Google / Telegram в dev создаёт обычного `REGISTRATION` пользователя либо первого admin (`FIRST_ADMIN_EMAIL` dev).
+Вымышленные пользователи не имеют `login_identity`, которое проходит реальный OAuth. Для работы в dev используется переключатель роли «смотреть как» ([ОК-5](../../my_specs/sunday_school_data_analytics_spec.md), `responsive_navigation_contract` §8): он включён только при `APP_ENV=dev` и отсутствует в сборке prod. Реальный вход в dev: Telegram создаёт обычного `REGISTRATION` пользователя (с `username` и `phone`, если переданы); администратор из `db:seed:admin` входит по email и паролю.
 
 ## 9. Paths (H / N / S)
 
@@ -149,7 +150,7 @@
 |------|----------|-------|
 | **H** | Пустая dev-БД: `db:migrate` → `seed:reference` → `seed:bible` → `seed:dev` | Приложение стартует, под ролью «смотреть как» доступны данные прототипа |
 | **H** | Пустая prod-БД: `db:migrate` → `seed:reference` → `seed:bible` | Справочники и Библия; первый admin входит по `FIRST_ADMIN_EMAIL`; больше ничего |
-| **H** | Повторный `seed:reference` | Нет дублей, журнал +1 запись |
+| **H** | Повторный `seed:reference` | Нет дублей; журнал без новых записей (L-6) |
 | **N** | `APP_ENV=dev`, маркер БД `prod` | Все команды и приложение завершаются, запись не выполнена |
 | **N** | `seed:dev` без маркера | Отказ |
 | **N** | Сверка счётчиков Библии не сошлась | `status` перевода не `READY`; перевод недоступен как язык группы |

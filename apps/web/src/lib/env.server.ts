@@ -10,8 +10,6 @@ const serverEnvSchema = z.object({
   APP_ENV: z.enum(["dev", "prod"]),
   DATABASE_URL: z.string().min(1),
   AUTH_SECRET: z.string().min(16),
-  AUTH_GOOGLE_ID: z.string().optional(),
-  AUTH_GOOGLE_SECRET: z.string().optional(),
   AUTH_TELEGRAM_ID: z.string().optional(),
   AUTH_TELEGRAM_SECRET: z.string().optional(),
   FIRST_ADMIN_EMAIL: z.string().email().optional(),
@@ -21,6 +19,11 @@ const serverEnvSchema = z.object({
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 let cached: ServerEnv | undefined;
+
+/** True when the process can open the database. Preview builds often have no secrets. */
+export function hasServerEnv(): boolean {
+  return serverEnvSchema.safeParse(process.env).success;
+}
 
 export function getServerEnv(): ServerEnv {
   if (!cached) {

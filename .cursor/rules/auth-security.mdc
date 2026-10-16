@@ -1,5 +1,5 @@
 ---
-description: Auth — OIDC (Google + Telegram), JWT, defense in depth; align with ADR-003 and auth_runtime_spec
+description: Auth — Telegram (OIDC) + admin email/password, JWT, defense in depth; align with ADR-003 and auth_runtime_spec
 globs:
   - apps/web/**/auth/**
   - apps/web/src/app/api/auth/**
@@ -21,7 +21,7 @@ alwaysApply: false
 
 ## Auth model (MVP)
 
-- Sign-in: **Google** and **Telegram (OIDC)** only. No password, no Credentials provider, no email-link.
+- Sign-in: **Telegram (OIDC)** for everyone; **email + password (Credentials) for administrators only** (ADR-003 v1.1). No Google, no self-registration by password, no password reset in the app, no email-link.
 - Sessions: Auth.js v5 `strategy: "jwt"`, **no database adapter**. Identities live in `login_identity`, users in `app_user`.
 - Roles: `admin`, `teacher` (from `@sunschool/domain`). Status: `REGISTRATION` → `REQUEST_PENDING` → `ACTIVE` | `REJECTED` | `DISABLED` | `DELETED`.
 - Linking a second provider: **signed link-intent cookie** + client `signIn()` — not an adapter (`auth_runtime_spec` §7).
@@ -60,6 +60,12 @@ alwaysApply: false
 - No `AUTH_REDIRECT_PROXY_URL` / `redirectProxyUrl`. Pin `next-auth` and `@auth/core` to exact versions; upgrade as a separate task with the TG-5 acceptance test.
 - `TELEGRAM_BOT_TOKEN` is not used as `clientSecret`; use `AUTH_TELEGRAM_ID` / `AUTH_TELEGRAM_SECRET`.
 
+## Credentials (administrator) and Telegram profile data
+
+- `authorize()` lives in `auth.ts` (Node, DB); `auth.config.ts` stays edge-safe. Hash = **scrypt** (`node:crypto`), compare with `timingSafeEqual`; 5 failures → 15-minute lock (`failed_attempts`, `locked_until`); same answer for a wrong email and a wrong password.
+- The first admin is created by `db:seed:admin` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` — dev: `.local/dev-secrets.json`, prod: operator env, never Vercel runtime). The app never reads these variables.
+- Never log, audit, return or send to Sentry a password, a hash, a phone or a Telegram username (INV-23). `login_identity.phone` / `username` come from Telegram (`phone`, `preferred_username`; both optional, an empty value does not erase a stored one) and are visible only to admin and the owner.
+
 ## Errors
 
 - Login failures go to `/login?error=<code>`; messages come from the `auth` dictionary slice (`@/lib/messages`), without tokens or other users' data.
@@ -68,7 +74,7 @@ alwaysApply: false
 
 ## Do not
 
-- Add `Credentials`, `passwordHash`, bcrypt, password reset, or `@auth/prisma-adapter` without amending ADR-001 and ADR-003.
+- Extend Credentials beyond administrators, add self-registration by password, password reset in the app, Google, or `@auth/prisma-adapter` without amending ADR-001 and ADR-003.
 - Put personal data or extra roles into the JWT "for convenience".
 - Cache authorization results across requests.
 - Log `providerAccountId`, tokens, `AUTH_SECRET` or the link-intent cookie value (INV-23).
@@ -78,7 +84,8 @@ alwaysApply: false
 
 - [ ] Route protection by prefix in **`proxy.ts`**; **no** `policy-server` / `@sunschool/db` import there
 - [ ] Every mutation and protected read calls `requireActiveUser()` before touching data; `userId` only from the session
-- [ ] First `ADMIN` created once (`FIRST_ADMIN_EMAIL`, `email_verified`, race-safe in one transaction)
+- [ ] First `ADMIN` created once by `db:seed:admin` (advisory lock, idempotent); password stored as scrypt hash only
+- [ ] No password / hash / phone / username in JWT, audit values, logs or Sentry events
 - [ ] Link / unlink: idempotent success, conflict code, last identity cannot be removed, `SELECT … FOR UPDATE`
 - [ ] Telegram: `state.length ≤ 256`, client `signIn`, both handler methods wrapped
 - [ ] Audit record written in the same transaction as the mutation

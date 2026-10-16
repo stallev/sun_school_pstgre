@@ -32,7 +32,7 @@
 | База данных | **Neon PostgreSQL 17** (dev-проект фактически на 18.6 — Q-05) | pooled `DATABASE_URL` (приложение), direct `DIRECT_URL` (миграции) |
 | UI | shadcn/ui на **Base UI** (`@base-ui/react`, `components.json` style `base-vega`) + Tailwind CSS v4, токены Slate Cobalt | токены — UX-03 (W2); Radix как слой примитивов не используется; проверено в P6 |
 | Toasts | Sonner | |
-| Auth | **Auth.js v5** (`next-auth@beta`), JWT-сессии | провайдеры: Google, Telegram (custom OIDC); пароля нет |
+| Auth | **Auth.js v5** (`next-auth@beta`), JWT-сессии | провайдеры: Telegram (custom OIDC) и Credentials (email + пароль — только администратор, ADR-003 v1.1); Google не используется |
 | i18n | ru / en, срезы словарей | ADR-008 (W4-06) |
 | Observability | **Sentry** (`@sentry/nextjs`) | модуль `sentry` включён профилем |
 
@@ -52,7 +52,7 @@ Scope пакетов — `@sunschool/*`. `apps/workers` не создаётся 
 
 | Модуль | Состояние | Следствие |
 |--------|-----------|-----------|
-| `auth` | включён | Google + Telegram, роли `admin`, `teacher` в JWT |
+| `auth` | включён | Telegram + Credentials администратора, роли `admin`, `teacher` в JWT |
 | `design_lab` | включён | `/design-system`, W15 |
 | `sentry` | включён | `@sentry/nextjs` на P5 |
 | `i18n` | включён | словари `common`, `auth`, `teacher`, `admin`, `analytics` |
@@ -69,7 +69,7 @@ Scope пакетов — `@sunschool/*`. `apps/workers` не создаётся 
 | Переменная | `APP_ENV=dev` | `APP_ENV=prod` |
 | База | отдельный Neon-проект (решено: два проекта) | отдельный Neon-проект |
 | Первый admin | `FIRST_ADMIN_EMAIL` (свой) | `FIRST_ADMIN_EMAIL` (свой) |
-| Секреты, `AUTH_SECRET`, приложения Google / Telegram | свои | свои |
+| Секреты, `AUTH_SECRET`, Telegram-бот, пароль администратора | свои | свои |
 | Содержимое | схема + справочники + фейковые данные (`seed:dev`) | схема + справочники + первый admin |
 | Переключатель роли «смотреть как» | есть | **нет в сборке** |
 
@@ -96,7 +96,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 
 | Альтернатива | Почему отклонена |
 |--------------|------------------|
-| Credentials (email + пароль) | Вход — через Google и Telegram (решение владельца, спец. §2.1); паролей в системе нет |
+| Credentials для всех пользователей | Решение владельца 2026-10-16: пароль только у администратора (ADR-003 v1.1), у остальных — Telegram; Google отклонён |
 | `@auth/prisma-adapter` | В схеме нет Account/Session-таблиц Auth.js; JWT-сессии; привязка провайдеров — собственная таблица способов входа (ADR-003) |
 | Одна БД на dev и prod | Нарушает ОК-1 (разные базы, секреты, провайдеры) |
 | Staging-окружение | ОК-8: нет пользователей и команды, не нужно |
@@ -106,7 +106,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 ## 6. Consequences
 
 - Документы W2–W9 и scaffold P5 используют версии и границы отсюда; отклонения — через ADR amend.
-- Guidelines, написанные под Credentials (`ai_auth_implementation_guide.md`), требуют адаптации в P4 / W4-01.
+- `ai_auth_implementation_guide.md` приведён к ADR-003 v1.1 (Telegram + Credentials администратора) в P01.
 - `packages/db` владеет миграциями и seed-скриптами, включая загрузку Библии (см. [`Bible/README.md`](../../my_specs/Bible/README.md)).
 
 ## 7. Acceptance criteria
@@ -140,7 +140,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 
 ## 10. Agent notes
 
-- Не добавлять Credentials-провайдер, `@auth/prisma-adapter`, Resend, S3, `apps/workers` без amend ADR.
+- Не расширять пароль/Credentials за пределы администратора; не добавлять `@auth/prisma-adapter`, Resend, S3, `apps/workers` без amend ADR.
 - Не импортировать `@sunschool/policy-server` в `proxy.ts`.
 - Не создавать третье окружение; не использовать дамп prod как dev-данные.
 - Версии не «обновлять по привычке»: пины меняются только через этот ADR.
