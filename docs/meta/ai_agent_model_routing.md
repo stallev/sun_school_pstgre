@@ -70,7 +70,7 @@ Cursor **Agent Review** (панель IDE, `/agent-review`, Quick/Deep) — от
 10. **MUST** — шаг плана T2 содержит `Goal`, `Files`, `Acceptance`, `Tier` (по умолчанию T1). Делегату передавать путь плана и номера шагов. Ответ субагента ≤ 15 строк.
 11. **MUST** — эскалация: один повтор с точной ошибкой → `architect` правит spec / план и не пишет код → повторное применение → стоп и вопрос пользователю. Цикл повторов запрещён.
 12. **MUST** — задачи фазы сгруппированы в CU заранее (§ Commit units). Задача вне CU не коммитится отдельно.
-13. **MUST** — на границе CU: ВЕРИФИКАЦИЯ → review (`reviewer` или `diff-only`) → auto-commit по [`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc).
+13. **MUST** — на границе CU в **том же ходе**, где закрыта последняя задача CU: ВЕРИФИКАЦИЯ → review (`reviewer` или `diff-only`) → auto-commit по [`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc); не останавливаться на галочках и не спрашивать разрешение (`Commit: auto` в Commit plan уже дано).
 14. **MUST NOT** — варианты `-fast`, effort `xhigh` и контекст 500k, пока пользователь явно не попросил.
 15. **MUST** — один контекст держать ниже ~200k токенов (выше этого Grok 4.7 тарифицируется с множителем 2). Дальше — новый чат или делегирование. Читать файлы по пути, не перечитывать уже известное, править точечно. Когда задача закрыта или контекст устарел — предложить новый чат.
 
@@ -161,7 +161,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 
 Вход `reviewer`: задачи CU из `P{N}_tasks.md` (2a) + `git diff --staged`; Paths H / N / S — ожидаемая форма (2b). Не передаётся summary автора и черновик commit message. Bugbot не вызывать; `reviewer` не правит код; re-review — только delta, не более одного раза.
 
-**Auto-commit** ([`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc)): CU объявлен в tasks, ВЕРИФИКАЦИЯ зелёная, review без blockers → коммит без вопроса пользователю. Запрещено: push, `--amend`, `--no-verify`, stage `.env*` / секретов. Blocker остался после re-review → не коммитить, доложить.
+**Auto-commit** ([`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc)): в том же ходе, где отмечена последняя задача объявленного CU, агент проходит pipeline целиком; CU объявлен в tasks, ВЕРИФИКАЦИЯ зелёная, review без blockers → коммит без вопроса пользователю. Запрещено: push, `--amend`, `--no-verify`, stage `.env*` / секретов. Blocker остался после re-review → не коммитить, доложить.
 
 ## Acceptance criteria
 

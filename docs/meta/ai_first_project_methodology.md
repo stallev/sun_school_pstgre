@@ -88,7 +88,7 @@ monorepo/
 | РЕАЛИЗАЦИЯ | Оркестратор; `implementer` — только для изоляции контекста / параллельных шагов |
 | ВЕРИФИКАЦИЯ | **Always:** typecheck, lint, CU DoD / phase DoD; тесты — по профилю (D4 / D5 / D7). **On user request only:** (1) runtime dual-view via skill `next-dev-loop` (`/_next/mcp` + `agent-browser`) — live `next dev`, 4 layers; (2) lab PSI on a **deployed** origin via `npm run psi:lab` (`psi-lab-testing.mdc`) — not localhost, not MCP as primary. Do **not** auto-start either after UI edits or in commit pipeline. |
 | REVIEW (CU) | Runtime-код в CU → субагент `reviewer` (не Bugbot, не замена lint); docs-only CU → `diff-only` ([`agent-code-review-subagent.mdc`](../../.cursor/rules/agent-code-review-subagent.mdc)) |
-| COMMIT | На границе CU — автоматически после зелёной ВЕРИФИКАЦИИ и review без blockers ([`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc)) |
+| COMMIT | В том же ходе, где закрыта последняя задача CU: pipeline целиком; коммит автоматически после зелёной ВЕРИФИКАЦИИ и review без blockers ([`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc)); не спрашивать разрешение при `Commit: auto` |
 
 ### 2.3 AGENTS.md
 
