@@ -1,19 +1,18 @@
 "use client";
 
 import { useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2Icon } from "lucide-react";
+import { refreshAccessStatusAction } from "@/actions/access";
 import { Button } from "@/components/ui/button";
 import { useAuthMessages } from "@/components/auth/auth-messages-provider.client";
 
 export const PendingRefreshButton = () => {
   const messages = useAuthMessages();
-  const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   const handleRefresh = () => {
-    startTransition(() => {
-      router.refresh();
+    startTransition(async () => {
+      await refreshAccessStatusAction();
     });
   };
 

@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import authConfig from "@/auth.config";
-import { resolveSessionClaims } from "@/data/access/session-claims";
+import { resolveSessionClaims, resolveSessionClaimsByUserId } from "@/data/access/session-claims";
 import { signInTelegramInTransaction } from "@/data/access/first-login";
 import { linkTelegramInTransaction } from "@/data/access/link-provider";
 import { verifyCredentials } from "@/data/access/verify-credentials";
@@ -32,7 +32,7 @@ class LockedError extends CredentialsSignin {
   override code = "locked";
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     ...authConfig.providers,
@@ -98,7 +98,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // On the first call after a sign-in Auth.js passes `account`: read uid / status / roles once.
     async jwt(params) {
       const carried = await authConfig.callbacks.jwt(params);
-      const { account } = params;
+      const { account, trigger, token } = params;
+
+      if (trigger === "update") {
+        const uid = typeof token.uid === "string" ? token.uid : "";
+        if (!uid) return carried;
+        const claims = await resolveSessionClaimsByUserId(await getPrisma(), uid);
+        return claims ? { ...carried, ...claims } : carried;
+      }
+
       const provider = toLoginProvider(account?.provider);
       if (!account || provider === null) return carried;
       const claims = await resolveSessionClaims(await getPrisma(), {

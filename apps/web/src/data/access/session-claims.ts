@@ -32,3 +32,10 @@ export async function resolveSessionClaims(
   if (!user) return null;
   return { uid: user.id, status: user.status, roles: user.roles.map((entry) => entry.role) };
 }
+
+/** Re-read JWT claims after the user's own status change (`jwt` trigger `update`). */
+export async function resolveSessionClaimsByUserId(db: Pick<PrismaClient, "appUser">, userId: string): Promise<SessionClaims | null> {
+  const user = await db.appUser.findUnique({ where: { id: userId }, select });
+  if (!user) return null;
+  return { uid: user.id, status: user.status, roles: user.roles.map((entry) => entry.role) };
+}

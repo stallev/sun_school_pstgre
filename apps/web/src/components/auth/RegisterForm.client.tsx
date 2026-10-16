@@ -63,7 +63,7 @@ export const RegisterForm = ({
   const fieldErrors = state && !state.ok ? state.fields : undefined;
 
   return (
-    <form action={formAction} className="space-y-6" aria-busy={pending}>
+    <form action={formAction} className="space-y-4" aria-busy={pending}>
       {rejectReason ? (
         <Banner tone="error" title={messages.register.titleResubmit}>
           <ContentText>{rejectReason}</ContentText>
@@ -77,7 +77,7 @@ export const RegisterForm = ({
       {mode !== "consentOnly" ? (
         <section className="space-y-3 rounded-xl border border-line bg-surface p-4 sm:p-5">
           <SectionTitle>{messages.register.stepData}</SectionTitle>
-          <FieldGroup>
+          <FieldGroup className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <Field>
               <FieldLabel htmlFor="lastName">{messages.register.lastName}</FieldLabel>
               <Input

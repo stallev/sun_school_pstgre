@@ -58,7 +58,7 @@ const RegisterPage = async () => {
 
   return (
     <AuthScreen variant="reading">
-      <div className="space-y-6">
+      <div className="space-y-4">
         <header>
           <Heading>{title}</Heading>
         </header>
