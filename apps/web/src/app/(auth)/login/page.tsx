@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { homeRouteFor } from "@sunschool/policy-edge";
 import { LoginAccessDeniedCleanup } from "@/components/auth/LoginAccessDeniedCleanup.client";
@@ -24,6 +25,8 @@ type LoginPageProps = {
 };
 
 const LoginPage = async ({ searchParams }: LoginPageProps) => {
+  // Auth.js calls crypto.getRandomValues() inside auth(). Postpone first so prerender does not throw.
+  await connection();
   const params = await searchParams;
   const callbackUrl = sanitizeCallbackUrl(params.callbackUrl);
   const errorParam = params.error;
