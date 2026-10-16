@@ -167,12 +167,12 @@
 
 ### P01-CU10 — feat(web): add approvals and users screens · Review: diff-only · Commit: auto
 
-- [ ] P01-T22 · T1 · Spec: [admin_flow §4.1–§4.2](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Matrix: AZ-01…AZ-04 · UX: [forms §6](../../../design/forms_and_validation_ux.md)
+- [x] P01-T22 · T1 · Spec: [admin_flow §4.1–§4.2](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Matrix: AZ-01…AZ-04 · UX: [forms §6](../../../design/forms_and_validation_ux.md)
       Files: `app/(app)/approvals/page.tsx`, `users/page.tsx`, `users/[userId]/page.tsx`, `components/admin/{ApprovalRow,UserRow,RoleSelector}.tsx`
       Acceptance: список заявок «старые сверху» с датой и версией согласия; диалоги одобрения (роли, группы) и отклонения (причина); профиль пользователя (роли, статус, способы входа, журнал по пользователю — после P06 ссылка) → ручной smoke H/N, проверка DOM
       Paths: H [admin_flow §4.1] · N [UX-05 D15: пусто «Новых заявок нет»; конфликт — список обновляется] · S [AZ-01…AZ-04: teacher → 403]
 
-**CU DoD:** `typecheck` · `lint` · `test` · smoke 390 px и `lg`
+**CU DoD:** `typecheck` · `lint` · `test` · `build:check` — ✔ 2026-10-16; smoke 390 px и `lg` — вручную
 
 ### P01-CU11 — feat(auth): add identity linking and unlinking · Review: reviewer · Commit: auto
 

@@ -1,0 +1,72 @@
+/** Serializable admin-route copy for client components (ui-messages-bundle-splitting). */
+export type AdminMessages = {
+  page: { approvalsTitle: string; usersTitle: string; profileTitle: string };
+  approvals: {
+    emptyTitle: string;
+    emptyDescription: string;
+    submitted: string;
+    consentVersion: string;
+    waitingDays: string;
+    loginTelegram: string;
+    loginCredentials: string;
+    approve: string;
+    reject: string;
+    approveTitle: string;
+    approveDescription: string;
+    rejectTitle: string;
+    rejectDescription: string;
+    rejectReason: string;
+    rolesLabel: string;
+    groupsLabel: string;
+    roleAdmin: string;
+    roleTeacher: string;
+    submitApprove: string;
+    submitReject: string;
+    submitPending: string;
+    toastApproved: string;
+    toastRejected: string;
+  };
+  users: {
+    filterAll: string;
+    filterActive: string;
+    filterPending: string;
+    filterDisabled: string;
+    statusActive: string;
+    statusRequestPending: string;
+    statusDisabled: string;
+    statusRejected: string;
+    statusRegistration: string;
+    rolesAdmin: string;
+    rolesTeacher: string;
+    rolesAdminTeacher: string;
+    rolesNone: string;
+    profileRoles: string;
+    profileStatus: string;
+    profileLoginMethods: string;
+    profileAuditLink: string;
+    profileAuditSoon: string;
+    saveRoles: string;
+    disableAccess: string;
+    enableAccess: string;
+    updateName: string;
+    mergeUsers: string;
+    disableConfirmTitle: string;
+    disableConfirmDescription: string;
+    enableConfirmTitle: string;
+    enableConfirmDescription: string;
+    mergeTitle: string;
+    mergeDescription: string;
+    mergeKeep: string;
+    mergeRemove: string;
+    nameReason: string;
+    toastRolesSaved: string;
+    toastDisabled: string;
+    toastEnabled: string;
+    toastNameSaved: string;
+    toastMerged: string;
+  };
+  form: { lastName: string; firstName: string; middleName: string; cancel: string };
+};
+
+export const formatWaitingDays = (template: string, count: number): string =>
+  template.replace("{count}", String(count));

@@ -1,23 +1,47 @@
 import { USER_ROLE } from "@sunschool/domain";
+import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
+import { UserRow } from "@/components/admin/UserRow";
+import { UsersStatusFilter } from "@/components/admin/UsersStatusFilter";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { ContentText } from "@/components/atoms/ContentText";
 import { runAdminLazyPurge } from "@/data/access/admin-lazy-purge.server";
+import { loadUsersList, parseUsersStatusFilter } from "@/data/access/load-users-list.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
-import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
+import { getDictionary } from "@/lib/messages/get-dictionary";
 
-const UsersPage = async () => {
+type UsersPageProps = {
+  searchParams: Promise<{ status?: string }>;
+};
+
+const UsersPage = async ({ searchParams }: UsersPageProps) => {
   await requireRole(USER_ROLE.ADMIN);
-  await runAdminLazyPurge(await getPrisma(), new Date());
+  const prisma = await getPrisma();
+  await runAdminLazyPurge(prisma, new Date());
+
+  const { status: statusRaw } = await searchParams;
+  const statusFilter = parseUsersStatusFilter(statusRaw);
+
   const locale = await getUiLocale();
-  const common = await getDictionary(locale, "common");
+  const adminDict = await getDictionary(locale, "admin");
+  const adminMessages = pickAdminMessages(adminDict);
+  const users = await loadUsersList(prisma, statusFilter);
 
   return (
-    <div className="space-y-6">
-      <PageHeader title={getMessage(common, "shell.nav.users")} />
-      <ContentText tone="secondary">Scaffold — user list lands in P01-CU10.</ContentText>
-    </div>
+    <AdminMessagesProvider messages={adminMessages}>
+      <div className="space-y-6">
+        <PageHeader title={adminMessages.page.usersTitle} />
+        <UsersStatusFilter activeStatus={statusFilter} messages={adminMessages} />
+        <ul className="space-y-3">
+          {users.map((row) => (
+            <li key={row.userId}>
+              <UserRow row={row} messages={adminMessages} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </AdminMessagesProvider>
   );
 };
 

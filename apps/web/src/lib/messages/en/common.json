@@ -6,7 +6,8 @@
     "conflict": "The data has changed. Refresh the page and try again",
     "reason_required": "Enter a reason",
     "internal": "Something went wrong. Please try again",
-    "forbidden_title": "Access denied"
+    "forbidden_title": "Access denied",
+    "form": "Could not complete the action. Check the form and try again."
   },
   "states": {
     "not_found_title": "Page not found",
