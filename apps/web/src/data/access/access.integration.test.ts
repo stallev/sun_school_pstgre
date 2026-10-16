@@ -9,6 +9,8 @@ import { config as loadEnv } from "dotenv";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createPrismaClient, type Prisma, type PrismaClient } from "@sunschool/db";
 import { signInTelegram, signInTelegramInTransaction } from "./first-login";
+import { linkTelegram } from "./link-provider";
+import { unlinkProvider } from "./unlink-provider";
 import { purgeExpiredRegistrations } from "./purge-expired-registration";
 import { resolveSessionClaims } from "./session-claims";
 import { approveRequestInTransaction } from "./approve-request";
@@ -269,6 +271,120 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
       code: MUTATION_ERROR_CODES.ACCESS_REQUEST_DECIDED,
       message: "admin.approvals.already_decided",
     });
+  }, 60_000);
+
+  it("links a free Telegram identity to an admin with credentials", async () => {
+    const tgId = unique();
+    const out = await rolledBack(async (tx) => {
+      const admin = await tx.appUser.create({
+        data: {
+          organizationId,
+          status: "ACTIVE",
+          roles: { create: [{ role: "ADMIN" }] },
+          identities: {
+            create: {
+              provider: "CREDENTIALS",
+              providerAccountId: unique(),
+              passwordHash: "hash",
+              email: "admin-link@test.local",
+            },
+          },
+        },
+      });
+      const first = await linkTelegram(tx, {
+        userId: admin.id,
+        providerAccountId: tgId,
+        username: "linked",
+        phone: null,
+        now: NOW,
+      });
+      const second = await linkTelegram(tx, {
+        userId: admin.id,
+        providerAccountId: tgId,
+        username: "linked",
+        phone: null,
+        now: NOW,
+      });
+      const count = await tx.loginIdentity.count({ where: { userId: admin.id } });
+      const audit = await tx.auditLog.findFirst({
+        where: { entityId: admin.id, action: "auth.identity_linked" },
+      });
+      return { first, second, count, audit };
+    });
+    expect(out.first).toEqual({ ok: true });
+    expect(out.second).toEqual({ ok: true });
+    expect(out.count).toBe(2);
+    expect(out.audit).toMatchObject({ source: "USER", entityType: "login_identity" });
+    expect(JSON.stringify(out.audit)).not.toContain(tgId);
+  }, 60_000);
+
+  it("refuses linking a Telegram id that belongs to another user", async () => {
+    const tgId = unique();
+    const result = await rolledBack(async (tx) => {
+      await tx.appUser.create({
+        data: {
+          organizationId,
+          status: "ACTIVE",
+          identities: { create: { provider: "TELEGRAM", providerAccountId: tgId } },
+        },
+      });
+      const admin = await tx.appUser.create({
+        data: {
+          organizationId,
+          status: "ACTIVE",
+          identities: {
+            create: { provider: "CREDENTIALS", providerAccountId: unique(), passwordHash: "hash" },
+          },
+        },
+      });
+      return linkTelegram(tx, {
+        userId: admin.id,
+        providerAccountId: tgId,
+        username: null,
+        phone: null,
+        now: NOW,
+      });
+    });
+    expect(result).toMatchObject({ ok: false, code: MUTATION_ERROR_CODES.AUTH_LINK_CONFLICT });
+  }, 60_000);
+
+  it("unlinkProvider refuses the last identity and allows removing Telegram when credentials remain", async () => {
+    const out = await rolledBack(async (tx) => {
+      const user = await tx.appUser.create({
+        data: {
+          organizationId,
+          status: "ACTIVE",
+          identities: {
+            create: [
+              { provider: "TELEGRAM", providerAccountId: unique() },
+              { provider: "CREDENTIALS", providerAccountId: unique(), passwordHash: "hash" },
+            ],
+          },
+        },
+      });
+      const last = await unlinkProvider(
+        { $transaction: (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx) } as never,
+        user.id,
+        "TELEGRAM",
+      );
+      const onlyTelegram = await tx.appUser.create({
+        data: {
+          organizationId,
+          status: "ACTIVE",
+          identities: { create: { provider: "TELEGRAM", providerAccountId: unique() } },
+        },
+      });
+      const blocked = await unlinkProvider(
+        { $transaction: (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx) } as never,
+        onlyTelegram.id,
+        "TELEGRAM",
+      );
+      const remaining = await tx.loginIdentity.count({ where: { userId: user.id } });
+      return { last, blocked, remaining };
+    });
+    expect(out.last).toEqual({ ok: true });
+    expect(out.blocked).toMatchObject({ ok: false, code: MUTATION_ERROR_CODES.AUTH_LAST_IDENTITY });
+    expect(out.remaining).toBe(1);
   }, 60_000);
 
   it("double first login: two competing transactions end with ONE user and identity", async () => {

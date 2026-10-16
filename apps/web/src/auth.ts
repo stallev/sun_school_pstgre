@@ -5,9 +5,15 @@ import Credentials from "next-auth/providers/credentials";
 import authConfig from "@/auth.config";
 import { resolveSessionClaims } from "@/data/access/session-claims";
 import { signInTelegramInTransaction } from "@/data/access/first-login";
+import { linkTelegramInTransaction } from "@/data/access/link-provider";
 import { verifyCredentials } from "@/data/access/verify-credentials";
 import { getPrisma } from "@/lib/db.server";
+import {
+  clearLinkIntentCookie,
+  parseLinkIntentCookie,
+} from "@/lib/auth/link-intent";
 import { AUTHJS_PROVIDER_ID, toLoginProvider } from "@/lib/auth/provider-map";
+import { LOGIN_PROVIDER, MUTATION_ERROR_CODES } from "@sunschool/domain";
 import { isCanonicalRoute } from "@sunschool/policy-edge";
 import { safeRedirect } from "@/lib/auth/safe-redirect";
 import { mapTelegramProfile } from "@/lib/auth/telegram-profile";
@@ -15,7 +21,7 @@ import { mapTelegramProfile } from "@/lib/auth/telegram-profile";
 /**
  * Node-runtime Auth.js entry (auth_runtime_spec §3): `auth.config` (Telegram, pure jwt/session) +
  * the Credentials provider (administrator email + password, ADR-003 v1.1) + the DB callbacks.
- * No adapter, no Google. Linking a second method (`link-intent`) arrives in P01-CU11.
+ * No adapter, no Google. Second-method linking uses the signed `link-intent` cookie (§7).
  */
 
 /** Error `code`s are mapped to dictionary keys on /login (`auth.login.bad_credentials` / `locked`). */
@@ -47,6 +53,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ account, profile }) {
       const provider = toLoginProvider(account?.provider);
       if (provider === null || !account?.providerAccountId) return false;
+
+      const now = new Date();
+      const linkIntent = await parseLinkIntentCookie(now);
+      const linkBranch =
+        linkIntent !== null &&
+        provider === LOGIN_PROVIDER.TELEGRAM &&
+        linkIntent.provider === LOGIN_PROVIDER.TELEGRAM;
+
+      if (linkBranch) {
+        try {
+          if (account.provider === AUTHJS_PROVIDER_ID.CREDENTIALS) return false;
+          const claims = mapTelegramProfile({ ...(profile ?? {}), sub: account.providerAccountId });
+          const linkResult = await linkTelegramInTransaction(await getPrisma(), {
+            userId: linkIntent.uid,
+            providerAccountId: claims.id,
+            username: claims.username,
+            phone: claims.phone,
+            now,
+          });
+          if (!linkResult.ok) {
+            if (linkResult.code === MUTATION_ERROR_CODES.AUTH_LINK_CONFLICT) {
+              return `/profile?link_error=${MUTATION_ERROR_CODES.AUTH_LINK_CONFLICT}`;
+            }
+            return false;
+          }
+          return "/profile?linked=1";
+        } finally {
+          await clearLinkIntentCookie();
+        }
+      }
+
       if (account.provider === AUTHJS_PROVIDER_ID.CREDENTIALS) return true; // checked in authorize()
 
       const claims = mapTelegramProfile({ ...(profile ?? {}), sub: account.providerAccountId });
@@ -54,7 +91,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         providerAccountId: claims.id,
         username: claims.username,
         phone: claims.phone,
-        now: new Date(),
+        now,
       });
       return result.kind === "ok";
     },
