@@ -32,7 +32,7 @@
 | Framework | Next.js **16.4** (exact patch pin, no caret), App Router, `proxy.ts` |
 | Hosting | Vercel |
 | DB | Neon PostgreSQL 17 + Prisma v7 |
-| Auth | Auth.js v5, Google + Telegram (OIDC), JWT, роли `admin` / `teacher` |
+| Auth | Auth.js v5, Telegram (OIDC) + email/пароль администратора, JWT, роли `admin` / `teacher` |
 | UI | shadcn/ui (Base UI) + Tailwind CSS v4 |
 | Email | Resend (post-MVP; модуль `email_jobs` выключен) |
 | Storage | AWS S3 (presigned) — модуль `s3_uploads` выключен профилем |

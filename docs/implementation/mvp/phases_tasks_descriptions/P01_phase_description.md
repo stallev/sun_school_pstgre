@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** В работе — 2 из 13 CU (CU1 domain и CU2 db выполнены 2026-10-11; обновлено 2026-10-11). Дальше CU3–CU5 (OIDC, callbacks, policy/proxy) — нужны приложения Google/Telegram для smoke; подробности — [`P01_tasks.md`](../tasks/P01_tasks.md).  
+**Прогресс фазы:** В работе — 2 из 13 CU (CU1 domain и CU2 db выполнены 2026-10-11; обновлено 2026-10-11). Дальше CU3–CU5 (OIDC, callbacks, policy/proxy) — нужны приложения Google/Telegram для smoke; подробности — [`P01_tasks.md`](../tasks/P01_tasks.md). Решение владельца 2026-10-16: Google исключён, администратор входит по email + паролю, из Telegram сохраняются `username` и `phone` — см. ADR-003 v1.1, новые задачи P01-T8a и P01-T10a.  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-01  
@@ -13,7 +13,7 @@
 
 ## Purpose
 
-Фаза даёт **рабочий вход в пустое приложение**: БД со справочниками, вход через Google и Telegram, первый admin, регистрация и заявка, одобрение и роли, оболочка с навигацией и запись журнала изменений. После P01 admin может принять учителей, а teacher — войти и увидеть пустой «Сегодня» (D1/D2). Читает фазу исполнитель P01 (агент или разработчик); результат — вход в P02.
+Фаза даёт **рабочий вход в пустое приложение**: БД со справочниками, вход через Telegram и по email + паролю (администратор), первый admin (`db:seed:admin`), регистрация и заявка, одобрение и роли, оболочка с навигацией и запись журнала изменений. После P01 admin может принять учителей, а teacher — войти и увидеть пустой «Сегодня» (D1/D2). Читает фазу исполнитель P01 (агент или разработчик); результат — вход в P02.
 
 Каркас монорепо, зависимости, CI, Prisma-схема и первая миграция, Design Lab и токены выполнены в **bootstrap P5/P6** и здесь **не повторяются**.
 
@@ -48,7 +48,7 @@
 |---------|-----------|
 | `packages/domain` | Константы ролей и статусов, реестр кодов отказов и `AUDIT_ACTION`, схемы входов регистрации, правила переходов статусов |
 | `packages/db` | Клиент с driver adapter, проверка `APP_ENV` и маркера БД, `writeAudit`, `seed:reference` (организация, настройки, справочники, каталог достижений) |
-| Auth | Google и Telegram (OIDC), обход `state ≤ 256` и `userinfo_endpoint`, callbacks, `login_identity`, первый admin, ленивая очистка регистрации |
+| Auth | Telegram (OIDC, scope `openid profile phone`) и Credentials (администратор), обход `state ≤ 256` и `userinfo_endpoint`, callbacks, `login_identity` (`username`, `phone`, хэш пароля), команда `db:seed:admin`, ленивая очистка регистрации; миграция `LOGIN_PROVIDER` (`GOOGLE` → `CREDENTIALS`) и новые поля `login_identity` |
 | Policy | `policy-edge` (префиксы маршрутов по статусу и роли), `policy-server` (`PolicySessionContext`, `requireActiveUser`, `requireRole`), `proxy.ts` |
 | Оболочка | `(auth)` / `(app)`, header, drawer, topnav, меню пользователя, бейджи, баннеры, `global-error`, `not-found`, 403, словарь `common` и `auth` |
 | Регистрация и доступ | `submitRegistration`, `resubmitRegistration`, `updateOwnName`, `approveRequest`, `rejectRequest`, `changeRoles`, `disableAccess`/`enableAccess`, `updateUserName`, `mergeUsers`, `purgeExpiredRegistration` |
@@ -86,7 +86,7 @@
 | Bootstrap P6 (Design Lab) | **Да** | G5: каталог и токены |
 | Правила T1 активированы (P4) | Да | `auth-security`, `policy-packages`, `data-server-actions-and-api` |
 | Решения ADR-003 Q-01…Q-03 | Нет | значения по умолчанию приняты; Q-02 закрывается спайком CU11 |
-| Настройка Google OAuth и Telegram-бота dev | **Да** (для smoke) | [`telegram_authjs_oidc_portable_guide.md`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2; HTTPS-origin для Telegram |
+| Настройка Telegram-бота dev (`AUTH_TELEGRAM_*` — готово, 2026-10-16); пароль администратора в `.local/dev-secrets.json` (`ADMIN_PASSWORD` — готово) | **Да** (для smoke) | [`telegram_authjs_oidc_portable_guide.md`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2; HTTPS-origin для Telegram |
 | Текст `/privacy` (v1) | Да | содержимое — владелец; черновик в коде |
 
 ---
@@ -124,7 +124,7 @@ flowchart TD
 ## Happy path smoke
 
 1. Пустая dev-БД: `db:migrate` → `seed:reference` → приложение стартует; `APP_ENV` и маркер совпали.
-2. Google-вход пользователя с `FIRST_ADMIN_EMAIL` → экран согласия → `/school` (пока каркас), роль `ADMIN`.
+2. `db:seed:admin` → вход администратора по email и паролю → экран согласия → `/school` (пока каркас), роль `ADMIN`.
 3. Новый пользователь входит через Telegram → `/register` → ФИО + согласие → `/pending`.
 4. Admin видит заявку в `/approvals` с бейджем и одобряет её с ролью `TEACHER` без групп (предупреждение `NO_GROUPS`, группу назначит в P02) либо `ADMIN`.
 5. Одобренный пользователь при следующем заходе попадает на `/school` (каркас).
@@ -182,7 +182,7 @@ flowchart TD
 ## Definition of done
 
 - [ ] Все CU закоммичены; у каждого trace `Review: …`
-- [ ] Вход Google и Telegram в dev проходит; первый admin создаётся один раз
+- [ ] Вход через Telegram и по email + паролю в dev проходит; первый admin создаётся один раз (`db:seed:admin`)
 - [ ] Регистрация → заявка → одобрение → доступ по ролям работает
 - [ ] Оболочка соответствует [`global_shell_spec.md`](../specs/global_shell_spec.md) §16
 - [ ] `npm run typecheck` + `npm run lint` + `npm run test` (root)

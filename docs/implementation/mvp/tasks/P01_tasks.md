@@ -19,7 +19,7 @@
 - [x] Bootstrap P5 и P6 завершены (gates G4, G5); `npm run typecheck`, `lint`, `test` зелёные на чистом дереве — проверено 2026-10-11, ветка P0006
 - [x] Все задачи ниже проходят DoR (ссылки `§` открываются; пути H/N/S указаны; версии библиотек сверены с `Проверено по` документов; пометить дату и исполнителя) — проверено inline 2026-10-11, оркестратор (Claude)
 - [x] Open questions фазы: Q-01 решён (2026-10-11: одобрение `TEACHER` без групп — с предупреждением `NO_GROUPS`); Q-03 `global_shell_spec` (dev-вход) решён или отложен — Q-03 отложен на CU6 (дефолт: dev-вход фикстур по `APP_ENV=dev`)
-- [ ] Внешняя настройка: приложения Google и Telegram для dev, `AUTH_*` в `.local`, `FIRST_ADMIN_EMAIL` в `.local/dev-secrets.json`
+- [ ] Внешняя настройка: Telegram-бот dev (`AUTH_TELEGRAM_*` — есть), `FIRST_ADMIN_EMAIL` и `ADMIN_PASSWORD` в `.local/dev-secrets.json` (есть; Google не используется — решение 2026-10-16)
 
 ## Commit plan
 
@@ -65,34 +65,42 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · `prisma migrate` не требуется (схема из P5) · smoke: `db:migrate` + `seed:reference` на dev-ветке — ✔ 2026-10-11 (105 строк создано; повтор — 0; интеграционный тест на dev Neon зелёный)
 
-### P01-CU3 — feat(auth): configure Google and Telegram OIDC providers with Telegram workarounds · Review: reviewer · Commit: auto
+### P01-CU3 — feat(auth): configure Telegram OIDC provider and credentials with Telegram workarounds · Review: reviewer · Commit: auto
 
 - [ ] P01-T8 · T3 · Spec: [auth_runtime_spec §4, §6](../../../prds/05_runtime/auth_runtime_spec.md) · Guide: [telegram guide §4, §6](../../../my_specs/telegram_authjs_oidc_portable_guide.md)
       Files: `apps/web/src/auth.config.ts`, `src/lib/auth/telegram-oidc-discovery-fetch.ts`
-      Acceptance: провайдеры `google`, `telegram` (`idToken`, `checks: pkce,state`); синтетический `userinfo_endpoint` только при его отсутствии; `customFetch` импортирован из `next-auth` → unit-тест fetch-обёртки
+      Acceptance: провайдер `telegram` (`idToken`, scope `openid profile phone`, `checks: pkce,state`; `profile()` отдаёт `username`, `phone`); Google удалён из кода, `.env.example`, `login/page.tsx`; синтетический `userinfo_endpoint` только при его отсутствии; `customFetch` импортирован из `next-auth` → unit-тест fetch-обёртки
       Paths: H [§6.2] · N [discovery недоступен → исходный ответ] · S [`TELEGRAM_BOT_TOKEN` не используется как secret]
       Статус: частично (2026-10-11) — `auth.config.ts` и `telegram-oidc-discovery-fetch.ts` (каркас P5) есть; unit-теста fetch-обёртки нет
+- [ ] P01-T8a · T3 · ADR: [adr_003 v1.1 §4.1](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · Schema: [database_schema_v1 §4, §5.1](../../../prds/03_data_model/database_schema_v1.md) (добавлено 2026-10-16: Google исключён, Credentials администратора)
+      Files: `packages/db/prisma/schema.prisma` + новая миграция, `packages/domain/src/constants/login-provider.ts`, `apps/web/src/lib/env.server.ts`, `apps/web/src/app/login/page.tsx`, тест сверки enum
+      Acceptance: `LOGIN_PROVIDER` = `CREDENTIALS`, `TELEGRAM` (миграция `RENAME VALUE 'GOOGLE' TO 'CREDENTIALS'`, на dev-БД строк с `GOOGLE` нет); `login_identity` + `phone`, `password_hash`, `failed_attempts`, `locked_until` и CHECK (`password_hash` ⇔ `CREDENTIALS`); `AUTH_GOOGLE_*` убраны из `env.server.ts`; страница `/login` без Google → `typecheck`, тест сверки enum со схемой, `db:migrate:deploy` на dev
+      Paths: H [схема §5.1] · N [CHECK отклоняет пароль у Telegram-идентичности] · S [хэш и телефон — ПД: удаляются процедурой УД-7]
 - [ ] P01-T9 · T3 · Spec: [auth_runtime_spec §6 (TG-1…TG-5)](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `src/lib/auth/telegram-oauth-state-rewrite.ts`, `src/app/api/auth/[...nextauth]/route.ts`
       Acceptance: после обёртки `state.length ≤ 256` для Telegram; cookie `authjs.state` совпадает; нет cookie → ошибка → unit-тест (TG-5)
       Paths: H [§6.1] · N [нет `AUTH_SECRET` → 500 без деталей] · S [CSRF-проверка `state` сохранена]
       Статус: частично (2026-10-11) — `telegram-oauth-state-rewrite.ts` и route handler (каркас P5) есть; unit-теста TG-5 нет
 
-**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Google (localhost) и Telegram (HTTPS-туннель/preview)
+**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Telegram (HTTPS-туннель/preview): проверить, приходят ли `username` и `phone` и что при отказе от `phone` вход проходит (Q-05 runtime-спеки)
 
-### P01-CU4 — feat(auth): add sign-in callbacks, first login and lazy registration purge · Review: reviewer · Commit: auto
+### P01-CU4 — feat(auth): add sign-in callbacks, credentials login, first admin seed and lazy registration purge · Review: reviewer · Commit: auto
 
 - [ ] P01-T10 · T3 · Contract: [access_requests §5.1, §5.10](../contracts/access_requests_and_roles_contract.md) · Spec: [auth_runtime_spec §5](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `apps/web/src/auth.ts`, `src/data/access/first-login.ts`, `purge-expired-registration.ts`
-      Acceptance: `signIn` создаёт `REGISTRATION` + `login_identity` в одной транзакции; `DISABLED`/`DELETED` → `false`; первый admin по `FIRST_ADMIN_EMAIL` один раз под блокировкой; просроченная `REGISTRATION` удаляется и создаётся заново → тесты use-case и гонки двойного входа
-      Paths: H [§5.1, §5.10] · N [`DISABLED`, нет провайдера, email не верифицирован] · S [AZ-D5; `FIRST_ADMIN_EMAIL` не раскрывается; ПД не в JWT]
+      Acceptance: `signIn` создаёт `REGISTRATION` + `login_identity` (Telegram: `username`, `phone`, если переданы; пустое значение не затирает сохранённое) в одной транзакции; `DISABLED`/`DELETED` → `false`; просроченная `REGISTRATION` удаляется и создаётся заново → тесты use-case и гонки двойного входа
+      Paths: H [§5.1, §5.10] · N [`DISABLED`, нет провайдера, Telegram без `phone`/`username`] · S [AZ-D5; ПД не в JWT и не в журнале]
+- [ ] P01-T10a · T3 · ADR: [adr_003 v1.1 §4.1, §4.4](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · Spec: [auth_runtime_spec §4.4, §5.1 п. 5](../../../prds/05_runtime/auth_runtime_spec.md) · [seed_data_spec §4](../../../prds/03_data_model/seed_data_spec.md) (добавлено 2026-10-16)
+      Files: `apps/web/src/lib/auth/password.ts`, `apps/web/src/auth.ts` (Credentials `authorize`), `packages/db/src/seed/admin/{index,run}.ts`, скрипты `seed:admin` / корневой `db:seed:admin`, `packages/domain` (`AUDIT_ACTION.AUTH_PASSWORD_SET`, коды отказа входа)
+      Acceptance: scrypt-хэш и `timingSafeEqual`; 5 неудач → блокировка 15 мин (`RATE_LIMITED`); неверный email и пароль дают одинаковый ответ; `db:seed:admin` под advisory-lock создаёт `ACTIVE` + `ADMIN` + `CREDENTIALS`-идентичность из `FIRST_ADMIN_EMAIL` / `ADMIN_PASSWORD` один раз, повтор идемпотентен, пароль меняется только с `--reset-password`; журнал `access.first_admin_created`, `auth.password_set` без пароля и хэша; приложение не читает `ADMIN_PASSWORD` → unit-тесты `authorize` и пароля, интеграционный тест seed на dev-БД, гонка двух запусков
+      Paths: H [ADR-003 §4.4] · N [неверный пароль, блокировка, `DISABLED`, нет идентичности у teacher] · S [пароль/хэш не в логах, журнале, Sentry, ответах; `ADMIN_PASSWORD` только в seed]
 - [ ] P01-T11 · T3 · Spec: [auth_runtime_spec §5.2–§5.4, §9](../../../prds/05_runtime/auth_runtime_spec.md)
       Files: `src/auth.ts` (jwt/session/redirect), `src/types/next-auth.d.ts`
       Acceptance: JWT = `uid`, `status`, `roles`; `session.user` без email/имени; `redirect` пускает только маршруты из `canonical_routes` → тест callbacks
       Paths: H [§5.2–5.3] · N [внешний `callbackUrl`] · S [ПД не в токене]
       Статус: частично (2026-10-11) — `auth.ts` — каркас без callbacks `signIn`/`jwt`/`session`/`redirect`; `next-auth.d.ts` есть; тестов нет
 
-**CU DoD:** `typecheck` · `lint` · `test` (включая гонку двойного первого входа) · smoke: вход нового пользователя → `REGISTRATION`
+**CU DoD:** `typecheck` · `lint` · `test` (включая гонку двух запусков `db:seed:admin`) · smoke: вход нового пользователя через Telegram → `REGISTRATION`; `db:seed:admin` → вход администратора по паролю
 
 ### P01-CU5 — feat(policy): add edge and server policy, requireActiveUser and proxy · Review: reviewer · Commit: auto
 
@@ -141,10 +149,10 @@
       Acceptance: клиентский `signIn`; чекбокс не отмечен, кнопка неактивна без него; режимы «исправить» и «подтвердить согласие»; «Выйти» на `/register` и `/pending`; `/privacy` публичный → ручной smoke H/N + проверка DOM
       Paths: H [spec §12] · N [spec §13] · S [spec §14: `callbackUrl`, нет ПД в URL]
 - [ ] P01-T19 · T0 · Files: `apps/web/src/lib/messages/{ru,en}/auth.json`, `app/(auth)/privacy/content.ts`
-      Acceptance: текст согласия v1 (черновик) на ru и en; версия = `consent_text_version`
+      Acceptance: текст согласия v1 (черновик) на ru и en — среди собираемых данных названы имя пользователя и телефон из Telegram (если разрешены) и email администратора; версия = `consent_text_version`
       Paths: n/a — copy
 
-**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Google/Telegram → `/register` → `/pending`
+**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke Telegram → `/register` → `/pending`; администратор по паролю → экран согласия
 
 ### P01-CU9 — feat(auth): add approval, roles, disable and merge use-cases · Review: reviewer · Commit: auto
 
@@ -172,14 +180,14 @@
 
 - [ ] P01-T23 · T3 · Spec: [auth_runtime_spec §7](../../../prds/05_runtime/auth_runtime_spec.md) · ADR: [adr_003 §4.5, Q-02](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)
       Files: `src/lib/auth/link-intent.ts`, `src/data/access/{start-link-provider,unlink-provider}.ts`, расширение `signIn`-callback
-      Acceptance: подписанный одноразовый cookie TTL ≤ 10 мин; привязка чужой идентичности → `AUTH_LINK_CONFLICT`; последний способ не отвязывается (`FOR UPDATE`) → тесты callback и параллельных отвязок
+      Acceptance: привязывается только Telegram (`CREDENTIALS` подключает оператор); подписанный одноразовый cookie TTL ≤ 10 мин; привязка чужой идентичности → `AUTH_LINK_CONFLICT`; последний способ не отвязывается (`FOR UPDATE`) → тесты callback и параллельных отвязок
       Paths: H [§7] · N [просрочен/повторён cookie, конфликт, последний способ] · S [AZ-05; `userId` не с клиента; подделка cookie]
 - [ ] P01-T24 · T2 · ADR: [adr_003 Q-02](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)
       Files: ADR-003 (запись результата спайка), при провале — решение об amend ADR-001
       Acceptance: подтверждено, что cookie доступен в `signIn`-callback при OIDC-callback; результат записан в ADR → отчёт в CU
       Paths: n/a — исследовательская задача
 
-**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke привязки Telegram↔Google
+**CU DoD:** `typecheck` · `lint` · `test` · ручной smoke привязки Telegram к учётной записи администратора (email + пароль)
 
 ### P01-CU12 — feat(web): add profile screen with identities · Review: diff-only · Commit: auto
 

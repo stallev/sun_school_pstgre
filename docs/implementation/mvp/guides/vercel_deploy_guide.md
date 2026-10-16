@@ -45,7 +45,6 @@
 | `DATABASE_URL` | Neon **prod** pooled | Neon **dev** pooled | Neon dev | Secret |
 | `DIRECT_URL` | Neon prod direct — **только релизный шаг CI** | Neon dev direct (CI) | Neon dev | Secret |
 | `AUTH_SECRET` | уникальный prod | уникальный preview | dev | Secret |
-| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | приложение prod | приложение dev/preview | dev | Secret |
 | `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | бот prod | **не задаётся** (Telegram на эфемерных preview не включается) | бот dev | Secret |
 | `AUTH_TRUST_HOST` / `AUTH_URL` | `true` / `https://<prod-домен>` | `true` | по туннелю | Config |
 | `FIRST_ADMIN_EMAIL` | email владельца | тестовый | `.local` | Secret |
@@ -65,10 +64,9 @@
 
 | Провайдер | Что зарегистрировать | Prod | Preview |
 |-----------|----------------------|------|---------|
-| Google | Authorized redirect URI `https://<домен>/api/auth/callback/google` | prod-домен | стабильный preview-хост (если нужен) либо вход Google на preview не используется |
 | Telegram (BotFather Web Login) | Trusted Origin (HTTPS) и Redirect URI `https://<домен>/api/auth/callback/telegram` | prod-домен | **не включать**: эфемерные URL нестабильны |
 
-Telegram требует заранее зарегистрированный HTTPS-origin ([`telegram guide`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2). `callback` совпадает с `id` провайдера (`telegram`, `google`).
+Telegram требует заранее зарегистрированный HTTPS-origin ([`telegram guide`](../../../my_specs/telegram_authjs_oidc_portable_guide.md) §2). `callback` совпадает с `id` провайдера (`telegram`). Вход администратора по email и паролю внешней регистрации не требует; `FIRST_ADMIN_EMAIL` и `ADMIN_PASSWORD` в Vercel **не задаются** — их передаёт оператор команде `db:seed:admin` на время запуска.
 
 ## 6. Порядок релиза
 
@@ -96,7 +94,7 @@ Telegram требует заранее зарегистрированный HTTP
 | Проверка | Ожидаемо |
 |----------|----------|
 | `/login` открывается по HTTPS | форма входа, без ошибок |
-| Вход Google первым admin (`FIRST_ADMIN_EMAIL`) | `ACTIVE`, экран согласия, `/school` |
+| Вход первого admin по email и паролю (после `db:seed:admin`) | `ACTIVE`, экран согласия, `/school` |
 | Регистрация нового пользователя | `/pending`, заявка у admin |
 | `/design-system` | 404 |
 | Dev-переключатель роли | отсутствует |
@@ -109,7 +107,7 @@ Telegram требует заранее зарегистрированный HTTP
 |--------|-------|
 | `APP_ENV` ≠ маркер БД | деплой стартует с ошибкой; приложение не обслуживает запросы |
 | Не задан `AUTH_SECRET` | ошибка конфигурации Auth.js, вход недоступен |
-| Redirect URI не совпал | `redirect_uri_mismatch` (Google) / отказ Telegram |
+| Redirect URI не совпал | отказ Telegram (redirect URI не совпал) |
 | Preview без Telegram-секретов | кнопка Telegram скрыта/недоступна (по конфигурации) |
 | Миграция упала в CI | деплой не выполняется (шаг 3 после шага 2) |
 
@@ -135,7 +133,7 @@ Telegram требует заранее зарегистрированный HTTP
 
 - [ ] Preview-деплой работает на dev-БД, prod-секреты недоступны — исход: проверка env.
 - [ ] Prod-деплой проходит smoke §8 — исход: ручной шаг.
-- [ ] Redirect URI Google и Telegram совпадают с доменом — исход: вход проходит.
+- [ ] Redirect URI Telegram совпадает с доменом; первый admin создан `db:seed:admin` и входит по паролю — исход: вход проходит.
 - [ ] `DIRECT_URL` prod отсутствует в runtime-окружении Vercel — исход: проверка настроек.
 - [ ] `vercel.json` не содержит `crons` — исход: grep.
 

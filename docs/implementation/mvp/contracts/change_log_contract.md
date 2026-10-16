@@ -75,6 +75,7 @@
 | `settings.language_changed` / `settings.timezone_changed` | настройки приложения | `app_setting` | seed_data_spec, ADR-004, ADR-008 |
 | `bible.load_started` / `bible.load_finished` / `bible.load_failed` | загрузка перевода | `bible_translation` | W8-09 |
 | `seed.run` | запуск `seed:reference` / `seed:bible` / `seed:dev` | `seed` | seed_data_spec |
+| `auth.password_set` | пароль администратора создан или сброшен командой `db:seed:admin` (`SYSTEM`; без пароля и хэша — INV-23) | `login_identity` | ADR-003 v1.1 |
 | `migration.run` | запуск импорта владельца (необязательно: пишет скрипт владельца, если подключён к `writeAudit`); счётчики в `new_value` | `seed` | P07, ADR-011 |
 | `school.legacy_deadline_extended` | продлён общий срок переходного периода согласий | `app_setting` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
 | `school.legacy_pupil_imported` | ребёнок перенесён с `LEGACY_PENDING` (необязательно: запись импорта владельца, `SYSTEM`) | `child_data_consent` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
@@ -149,7 +150,7 @@
 - [ ] Откат транзакции не оставляет записи — исход: тест.
 - [ ] Teacher не читает журнал — исход: тест policy.
 - [ ] `UPDATE`/`DELETE` над `audit_log` невозможны для роли приложения — исход: тест БД.
-- [ ] Сериализация не включает ФИО, email, `providerAccountId` — исход: тест.
+- [ ] Сериализация не включает ФИО, email, телефон, username, `providerAccountId`, пароль и хэш — исход: тест.
 - [ ] Реестр §4 совпадает с `AUDIT_ACTION` в `domain` — исход: тест сверки.
 
 ## 13. Open questions

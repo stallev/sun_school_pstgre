@@ -110,8 +110,8 @@ Stage только релевантные файлы (`git add`). Не комм�
 #### Examples
 
 ```
-feature/P6-auth: feat(auth): add google oauth provider
-P6-add-google-auth: fix(web): resolve filter re-render
+feature/P6-auth: feat(auth): add telegram oidc provider
+P6-add-telegram-auth: fix(web): resolve filter re-render
 main: chore(docs): sync canonical routes
 ```
 
@@ -172,7 +172,7 @@ npx husky init
 ### Verify commitlint
 
 ```bash
-echo "feature/P6-auth: add google oauth" | npx commitlint   # fail
+echo "feature/P6-auth: add telegram oidc" | npx commitlint   # fail
 echo "feature/P6-auth: chore: test setup" | npx commitlint  # pass
 ```
 

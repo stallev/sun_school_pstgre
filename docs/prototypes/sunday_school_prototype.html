@@ -46,7 +46,7 @@
   GAP-СПИСОК P1 (сверка с docs/my_specs/mvp_scope.md §2; дорисовывались только токены и оболочка)
   Обозначения: [+] экран есть · [~] есть частично / проверить в W10 · [-] нет · [post] post-MVP, оставлено как референс волны 2
 
-  Вход и доступ        [+] login (Google / Telegram), register, pending, approvals, users, userProfile (отключение доступа, объединение дубликатов)
+  Вход и доступ        [+] login (Telegram; email и пароль — для администратора), register, pending, approvals, users, userProfile (отключение доступа, объединение дубликатов)
   Персональные данные  [+] profile, deletions, childConsent (согласие отмечает admin)
   Школа и группы       [+] school, year, groups, groupEdit (язык группы и перевод Библии — ЯГ-1)
   Ученики              [+] people, pupil (зачисление, перевод между группами, «без группы»)
@@ -236,13 +236,13 @@ const I18N = {
       en_notice:'Prototype: shell, navigation, sign-in, registration, profile and settings are translated. Other screens are translated in the Next.js code from the same dictionaries.'
     },
     auth: {
-      login_title:'Вход для учителей и родителей', login_sub:'Без пароля: подтвердите вход в Google или Telegram.', login_google:'Войти через Google', login_tg:'Войти через Telegram',
+      login_title:'Вход для учителей и родителей', login_sub:'Подтвердите вход в Telegram — пароль не нужен.', login_tg:'Войти через Telegram', login_or:'или', login_admin:'Вход для администратора', login_email:'Email', login_password:'Пароль', login_submit:'Войти', login_err:'Введите email и пароль',
       login_note:'После первого входа вы заполните короткую регистрацию. Доступ к группе или к данным ребёнка откроет администратор школы.', login_proto:'Прототип: кнопки не связаны с настоящими сервисами.',
       reg_title:'Регистрация', reg_fix_title:'Исправьте заявку', reg_sub:'Вы вошли через {prov}. Осталось два шага — и заявка уйдёт администратору.', reg_fix_sub:'Поправьте данные и отправьте заявку снова.',
-      reg_reject:'Причина отказа:', reg_step1:'1. Как вас зовут', reg_step1_sub:'Так вас увидят администратор и учителя.', reg_pref_google:'Подставили из Google — проверьте.', reg_pref_tg:'Telegram передаёт только имя — допишите фамилию.',
+      reg_reject:'Причина отказа:', reg_step1:'1. Как вас зовут', reg_step1_sub:'Так вас увидят администратор и учителя.', reg_pref_pw:'Укажите ФИО, как оно записано в документах школы.', reg_pref_tg:'Telegram передаёт только имя — допишите фамилию.',
       last:'Фамилия', first:'Имя', middle:'Отчество', optional:'— необязательно',
       reg_step2:'2. Согласие на обработку персональных данных',
-      c_what:'Что храним:', c_what_t:'ФИО, email или имя в Telegram, ваши роли, связь с детьми, действия в системе.',
+      c_what:'Что храним:', c_what_t:'ФИО, имя пользователя и номер телефона из Telegram (если вы разрешили их передать) или email администратора, ваши роли, связь с детьми, действия в системе.',
       c_why:'Зачем:', c_why_t:'чтобы вести воскресную школу: уроки, оценки, связь учителей с родителями.',
       c_who:'Кто отвечает:', c_who_t:'церковь — администратор школы. Данные хранятся в облачной базе данных.',
       c_del:'Как удалить:', c_del_t:'в профиле — «Запросить удаление». Выполняем до 15 дней; резервные копии очищаются в течение срока их хранения.',
@@ -296,13 +296,13 @@ const I18N = {
       en_notice:'Prototype: shell, navigation, sign-in, registration, profile and settings are translated. Other screens are translated in the Next.js code from the same dictionaries.'
     },
     auth: {
-      login_title:'Sign in for teachers and parents', login_sub:'No password: confirm sign-in with Google or Telegram.', login_google:'Sign in with Google', login_tg:'Sign in with Telegram',
-      login_note:'After your first sign-in you will fill in a short registration. The school administrator then opens access to your group or your child’s data.', login_proto:'Prototype: buttons are not connected to real services.',
+      login_title:'Sign in for teachers and parents', login_sub:'Confirm sign-in in Telegram — no password needed.', login_tg:'Sign in with Telegram', login_or:'or', login_admin:'Administrator sign-in', login_email:'Email', login_password:'Password', login_submit:'Sign in', login_err:'Enter your email and password',
+      login_note:'After your first sign-in you will fill in a short registration. The school administrator then opens access to your group or your child’s data.', login_proto:'Prototype: buttons are not connected to real services; any email and password signs in as the administrator.',
       reg_title:'Registration', reg_fix_title:'Fix your request', reg_sub:'You signed in with {prov}. Two steps left before your request goes to the administrator.', reg_fix_sub:'Correct your details and send the request again.',
-      reg_reject:'Reason for rejection:', reg_step1:'1. Your name', reg_step1_sub:'This is how the administrator and teachers will see you.', reg_pref_google:'Filled in from Google — please check.', reg_pref_tg:'Telegram only shares your first name — please add your last name.',
+      reg_reject:'Reason for rejection:', reg_step1:'1. Your name', reg_step1_sub:'This is how the administrator and teachers will see you.', reg_pref_pw:'Enter your name as it appears in school records.', reg_pref_tg:'Telegram only shares your first name — please add your last name.',
       last:'Last name', first:'First name', middle:'Patronymic', optional:'— optional',
       reg_step2:'2. Consent to personal data processing',
-      c_what:'What we store:', c_what_t:'your name, email or Telegram name, your roles, links to children, actions in the app.',
+      c_what:'What we store:', c_what_t:'your name, Telegram username and phone number (if you allowed sharing them) or the administrator’s email, your roles, links to children, actions in the app.',
       c_why:'Why:', c_why_t:'to run the Sunday school: lessons, grades, contact between teachers and parents.',
       c_who:'Who is responsible:', c_who_t:'the church — the school administrator. Data is stored in a cloud database.',
       c_del:'How to delete:', c_del_t:'in your profile — “Request deletion”. Done within 15 days; backups are purged within their retention period.',
@@ -362,10 +362,10 @@ const YEAR = '2026–2027';
 const ROLES = [['teacher','Учитель'],['parent','Родитель · post-MVP'],['admin','Админ'],['subscriber','Новый']];
 const ROLE_NAME = { admin:'администратор', teacher:'учитель', parent:'родитель', subscriber:'новый пользователь' };
 const ME = {
-  teacher:    { name:'Павел Ким',      sub:'Учитель · Средняя группа', prov:['google','telegram'], email:'p.kim@gmail.com', tg:'@pkim' },
-  parent:     { name:'Ольга Смирнова', sub:'Родитель · двое детей',    prov:['google'], email:'olga.smirnova@gmail.com' },
-  admin:      { name:'Александр Л.',   sub:'Директор школы',           prov:['google'], email:'alex.l@gmail.com' },
-  subscriber: { name:'Игорь Смирнов',  sub:'Ждёт назначения роли',     prov:['google'], email:'igor.smirnov@gmail.com' }
+  teacher:    { name:'Павел Ким',      sub:'Учитель · Средняя группа', prov:['telegram'], tg:'@pkim', phone:'+7 900 111-22-33' },
+  parent:     { name:'Ольга Смирнова', sub:'Родитель · двое детей',    prov:['telegram'], tg:'@olga_smirnova', phone:'+7 900 222-33-44' },
+  admin:      { name:'Александр Л.',   sub:'Директор школы',           prov:['password'], email:'alex.l@example.org' },
+  subscriber: { name:'Игорь Смирнов',  sub:'Ждёт назначения роли',     prov:['telegram'], tg:'@igor_smirnov', phone:'+7 900 333-44-55' }
 };
 /* Меню: пункт [view, label, icon] или группа { id, label, icon, items:[[view,label,icon,описание]] } */
 /* Меню хранит ключи словаря (Раздел 14): подпись = t(ключ) */
@@ -612,19 +612,19 @@ const groupTeachers = name => (GROUPS.find(g=>g.name===name)||{teachers:[]}).tea
 const SETTINGS = { verses:{on:true,label:'Золотые стихи',max:3,days:3}, test:{on:true,label:'Тест',pts:10}, nb:{on:true,label:'Тетрадь',pts:10}, sing:{on:true,label:'Спевка',pts:1} };
 
 const USERS = [
-  { id:'u1', name:'Александр Л.',     email:'alex.l@gmail.com', prov:['google'], roles:['admin','teacher'], groups:['Старшая'], first:'01.09', last:'сегодня', me:true },
-  { id:'u2', name:'Павел Ким',        email:'p.kim@gmail.com', tg:'@pkim', prov:['google','telegram'], roles:['teacher'], groups:['Средняя'], first:'01.09', last:'сегодня' },
-  { id:'u3', name:'Елена Гусева',     tg:'@elena_gus', prov:['telegram'], roles:['teacher'], groups:['Средняя'], first:'02.09', last:'вчера' },
-  { id:'u4', name:'Анна Миронова',    email:'anna.mironova@gmail.com', prov:['google'], roles:['teacher'], groups:['Младшая'], first:'02.09', last:'3 дня назад' },
-  { id:'u5', name:'Сергей Тарасов',   email:'s.tarasov@gmail.com', prov:['google'], roles:['teacher'], groups:['Старшая'], first:'05.09', last:'неделю назад' },
-  { id:'u6', name:'Ольга Смирнова',   email:'olga.smirnova@gmail.com', prov:['google'], roles:['parent'], guardian:'g1', first:'08.09', last:'сегодня' },
-  { id:'u7', name:'Наталья Ковалёва', tg:'@nata_kov', prov:['telegram'], roles:['parent'], guardian:'g3', first:'10.09', last:'2 дня назад' },
-  { id:'u12',name:'Марина Белова',    email:'marina.belova@gmail.com', prov:['google'], roles:['parent','teacher'], guardian:'g6', groups:['Младшая'], first:'03.09', last:'вчера' },
-  { id:'u8', name:'Игорь Смирнов',    email:'igor.smirnov@gmail.com', prov:['google'], roles:[], first:'30.10', last:'30.10', hint:'g2' },
+  { id:'u1', name:'Александр Л.',     email:'alex.l@example.org', prov:['password'], roles:['admin','teacher'], groups:['Старшая'], first:'01.09', last:'сегодня', me:true },
+  { id:'u2', name:'Павел Ким',        tg:'@pkim', phone:'+7 900 111-22-33', prov:['telegram'], roles:['teacher'], groups:['Средняя'], first:'01.09', last:'сегодня' },
+  { id:'u3', name:'Елена Гусева',     tg:'@elena_gus', phone:'+7 900 444-55-66', prov:['telegram'], roles:['teacher'], groups:['Средняя'], first:'02.09', last:'вчера' },
+  { id:'u4', name:'Анна Миронова',    tg:'@anna_mironova', phone:'+7 900 555-66-77', prov:['telegram'], roles:['teacher'], groups:['Младшая'], first:'02.09', last:'3 дня назад' },
+  { id:'u5', name:'Сергей Тарасов',   tg:'@s_tarasov', prov:['telegram'], roles:['teacher'], groups:['Старшая'], first:'05.09', last:'неделю назад' },
+  { id:'u6', name:'Ольга Смирнова',   tg:'@olga_smirnova', phone:'+7 900 222-33-44', prov:['telegram'], roles:['parent'], guardian:'g1', first:'08.09', last:'сегодня' },
+  { id:'u7', name:'Наталья Ковалёва', tg:'@nata_kov', phone:'+7 900 666-77-88', prov:['telegram'], roles:['parent'], guardian:'g3', first:'10.09', last:'2 дня назад' },
+  { id:'u12',name:'Марина Белова',    tg:'@marina_belova', phone:'+7 900 777-88-99', prov:['telegram'], roles:['parent','teacher'], guardian:'g6', groups:['Младшая'], first:'03.09', last:'вчера' },
+  { id:'u8', name:'Игорь Смирнов',    tg:'@igor_smirnov', phone:'+7 900 333-44-55', prov:['telegram'], roles:[], first:'30.10', last:'30.10', hint:'g2' },
   { id:'u9', name:'Дима',             tg:'@dima_orlov', prov:['telegram'], roles:[], first:'29.10', last:'29.10' },
-  { id:'u10',name:'Светлана Н.',      email:'svetlana.n@gmail.com', prov:['google'], roles:[], first:'12.10', last:'12.10' },
-  { id:'u11',name:'Павел К.',         tg:'@pkim_2', prov:['telegram'], roles:[], first:'31.10', last:'сегодня', dup:'u2' },
-  { id:'u13',name:'Роман Ш.',         email:'roman.sh@gmail.com', prov:['google'], roles:[], disabled:true, first:'15.09', last:'15.09' }
+  { id:'u10',name:'Светлана Н.',      tg:'@svetlana_n', prov:['telegram'], roles:[], first:'12.10', last:'12.10' },
+  { id:'u11',name:'Павел К.',         tg:'@pkim_2', phone:'+7 900 111-22-33', prov:['telegram'], roles:[], first:'31.10', last:'сегодня', dup:'u2' },
+  { id:'u13',name:'Роман Ш.',         tg:'@roman_sh', prov:['telegram'], roles:[], disabled:true, first:'15.09', last:'15.09' }
 ];
 
 S.audit = [
@@ -726,8 +726,8 @@ function toggle(on, act, label, extra=''){
     class="relative h-8 w-14 shrink-0 rounded-full transition-[background-color] duration-150 ${on ? 'bg-ink' : 'bg-line-strong'}">
     <span class="absolute top-1 left-1 size-6 rounded-full bg-surface transition-transform duration-200 ease-out-soft motion-reduce:transition-none ${on ? 'translate-x-6' : ''}"></span></button>`;
 }
-const provLabel = u => u.prov.map(p=> p==='google'
-  ? `<span class="inline-flex items-center gap-1 text-sm text-ink-2">${ic('i-globe','size-4')}Google</span>`
+const provLabel = u => u.prov.map(p=> p==='password'
+  ? `<span class="inline-flex items-center gap-1 text-sm text-ink-2">${ic('i-key','size-4')}Email и пароль</span>`
   : `<span class="inline-flex items-center gap-1 text-sm text-ink-2">${ic('i-send','size-4')}Telegram</span>`).join('<span class="text-line-strong"> · </span>');
 
 /* Логотип: синий квадрат с инициалами, как в действующем приложении */
@@ -1019,9 +1019,16 @@ function loginHTML(){
       <h1 class="mt-10 font-display text-[2.25rem] font-medium leading-[1.05] tracking-[-0.015em]">${t('auth.login_title')}</h1>
       <p class="mt-3 text-ink-2">${t('auth.login_sub')}</p>
       <div class="mt-8 grid gap-2">
-        <button type="button" data-act="login" data-prov="google" class="${B_OUTLINE} h-12 justify-start px-5">${ic('i-globe')} ${t('auth.login_google')}</button>
-        <button type="button" data-act="login" data-prov="telegram" class="${B_OUTLINE} h-12 justify-start px-5">${ic('i-send')} ${t('auth.login_tg')}</button>
+        <button type="button" data-act="login" data-prov="telegram" class="${B_PRIMARY} h-12 justify-start px-5">${ic('i-send')} ${t('auth.login_tg')}</button>
       </div>
+      <p class="mt-6 flex items-center gap-3 text-sm text-muted"><span class="h-px flex-1 bg-line"></span>${t('auth.login_or')}<span class="h-px flex-1 bg-line"></span></p>
+      <form data-form="loginpw" class="mt-4 space-y-3" novalidate>
+        <h2 class="text-sm font-medium text-ink-2">${t('auth.login_admin')}</h2>
+        <div><label for="lp-e" class="${LABEL}">${t('auth.login_email')}</label><input id="lp-e" name="email" type="email" autocomplete="username" class="${FIELD}"></div>
+        <div><label for="lp-p" class="${LABEL}">${t('auth.login_password')}</label><input id="lp-p" name="password" type="password" autocomplete="current-password" class="${FIELD}"></div>
+        <p data-err class="hidden text-sm text-danger" role="alert"></p>
+        <button class="${B_OUTLINE} h-12 w-full justify-start px-5">${ic('i-key')} ${t('auth.login_submit')}</button>
+      </form>
       <p class="mt-6 text-sm text-ink-2">${t('auth.login_note')}</p>
       <p class="mt-10 text-xs text-muted">${t('auth.login_proto')}</p>
     </div></div>`;
@@ -2158,7 +2165,7 @@ const ST_META = {
     u.consent = { v:CONSENT_V, at:u.first }; u.sent = u.first; });
   USERS.push(
     { id:'u14', name:'Андрей', fio:{ l:'', f:'Андрей', m:'' }, tg:'@andrey_k', prov:['telegram'], roles:[], status:'registration', consent:null, first:'31.10', last:'сегодня' },
-    { id:'u15', name:'Олег Петров', fio:{ l:'Петров', f:'Олег', m:'' }, email:'oleg.p@gmail.com', prov:['google'], roles:[], status:'rejected', consent:{ v:CONSENT_V, at:'20.10' }, sent:'20.10', first:'20.10', last:'22.10',
+    { id:'u15', name:'Олег Петров', fio:{ l:'Петров', f:'Олег', m:'' }, tg:'@oleg_p', prov:['telegram'], roles:[], status:'rejected', consent:{ v:CONSENT_V, at:'20.10' }, sent:'20.10', first:'20.10', last:'22.10',
       reject:{ by:'Александр Л.', date:'22.10', reason:'Не нашли вас среди родителей и учителей. Укажите полное ФИО или подойдите к директору школы после служения.' } },
     { id:'u16', name:'Удалённый пользователь №1', fio:null, prov:[], roles:[], status:'deleted', consent:{ v:CONSENT_V, at:'05.09', anon:true }, first:'05.09', last:'—' }
   );
@@ -2212,7 +2219,7 @@ function delPlan(r){
     mine.forEach(f=>{ if (!f.adults.some(a=>a.user!==u.id && (a.phone || a.email))) warn.push(`Семья ${f.name}: не останется взрослого с контактами (СМ-9)`); });
     if ((u.groups||[]).length && u.roles.includes('teacher')) warn.push(`Ведёт группы в ${YEAR}: ${u.groups.join(', ')} — назначьте замену до выполнения`);
     if (u.roles.includes('admin') && USERS.filter(x=>x.roles.includes('admin') && x.status==='active').length<=1) warn.push('Это последний администратор — выполнить нельзя (УД-9)');
-    return { del:[['Способы входа', u.prov.length], ['Email и Telegram', (u.email?1:0)+(u.tg?1:0)], ['ФИО', 1], ['Роли и назначения', u.roles.length + (u.groups||[]).length]],
+    return { del:[['Способы входа', u.prov.length], ['Email, Telegram и телефон', (u.email?1:0)+(u.tg?1:0)+(u.phone?1:0)], ['ФИО', 1], ['Роли и назначения', u.roles.length + (u.groups||[]).length]],
       anon:[['Записи, где он автор (уроки, проверки, выдачи, журнал)', auth], ...mine.map(f=>['Запись в семье '+f.name+' → «взрослый (данные удалены)»', 1]), ['Согласие на обработку ПД и заявка', 2]], warn, block: warn.some(w=>w.includes('последний')) };
   }
   /* Данные ребёнка — полное удаление (УД-7, решение 31): обезличиваем только ссылки в журнале */
@@ -2263,15 +2270,15 @@ function executeDel(r){
 
 /* ---------- Регистрация (РГ-1…РГ-4) — тексты из словаря auth ---------- */
 function vRegister(){
-  const u = meU(), f = u.fio || { l:'', f:'', m:'' }, re = u.status==='rejected', g = u.prov[0]==='google';
+  const u = meU(), f = u.fio || { l:'', f:'', m:'' }, re = u.status==='rejected', g = u.prov[0]==='password';
   const li = (k) => `<li>— <b class="font-medium text-ink">${t('auth.c_'+k)}</b> ${t('auth.c_'+k+'_t')}</li>`;
   return `<div class="mx-auto max-w-2xl">
-    ${pageHead(t(re ? 'auth.reg_fix_title' : 'auth.reg_title'), re ? t('auth.reg_fix_sub') : t('auth.reg_sub', { prov: g ? 'Google' : 'Telegram' }))}
+    ${pageHead(t(re ? 'auth.reg_fix_title' : 'auth.reg_title'), re ? t('auth.reg_fix_sub') : t('auth.reg_sub', { prov: g ? 'email и пароль' : 'Telegram' }))}
     ${re ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-danger-soft px-3 py-2.5 text-sm">${ic('i-alert','size-4 mt-0.5 text-danger')}<span><b class="font-bold">${t('auth.reg_reject')}</b> ${u.reject.reason}</span></p>` : ''}
     <form data-form="register" class="space-y-4" novalidate>
       <section class="${CARD} p-4 sm:p-5">
         <h2 class="${H2}">${t('auth.reg_step1')}</h2>
-        <p class="mt-1 text-sm text-ink-2">${t('auth.reg_step1_sub')} ${t(g ? 'auth.reg_pref_google' : 'auth.reg_pref_tg')}</p>
+        <p class="mt-1 text-sm text-ink-2">${t('auth.reg_step1_sub')} ${t(g ? 'auth.reg_pref_pw' : 'auth.reg_pref_tg')}</p>
         <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div><label for="rg-l" class="${LABEL}">${t('auth.last')}</label><input id="rg-l" name="l" value="${f.l}" autocomplete="family-name" class="${FIELD}"></div>
           <div><label for="rg-f" class="${LABEL}">${t('auth.first')}</label><input id="rg-f" name="f" value="${f.f}" autocomplete="given-name" class="${FIELD}"></div>
@@ -2355,7 +2362,7 @@ function vProfile(){
     <section class="${CARD} p-4 sm:p-5">
       <h2 class="${H2}">${t('auth.pr_logins')}</h2>
       <p class="mt-1 text-sm text-ink-2">${t('auth.pr_logins_t')}</p>
-      <ul class="mt-4 divide-y divide-line">${prov('google','i-globe','Google',u.email)}${prov('telegram','i-send','Telegram',u.tg)}</ul>
+      <ul class="mt-4 divide-y divide-line">${prov('telegram','i-send','Telegram',[u.tg, u.phone].filter(Boolean).join(' · '))}${prov('password','i-key','Email и пароль',u.email)}</ul>
       <p class="mt-3 text-sm text-ink-2">${u.consent ? t('auth.pr_consent', { v:u.consent.v, date:u.consent.at }) : ''}</p>
       <button type="button" data-act="logout" class="${B_GHOST} mt-3">${ic('i-logout','size-4')} ${t('common.logout')}</button>
     </section>
@@ -2525,7 +2532,7 @@ function vUserProfile(){
       </form>`}
       <section class="${CARD} px-4 py-2 sm:px-5"><dl class="divide-y divide-line">
         ${dl('Способы входа', u.prov.length ? `<span class="flex flex-wrap gap-x-1">${provLabel(u)}</span>` : '—')}
-        ${dl('Email / Telegram', [u.email, u.tg].filter(Boolean).join(' · ') || '—')}
+        ${dl('Email / Telegram / телефон', [u.email, u.tg, u.phone].filter(Boolean).join(' · ') || '—')}
         ${dl('Согласие на обработку ПД', u.consent ? `версия ${u.consent.v} · ${u.consent.at}${u.consent.anon ? ' · обезличено' : ''}` : '<span class="text-warn">не дано</span>')}
         ${dl('Заявка', u.sent ? `отправлена ${u.sent}${u.reject ? ` · отклонена ${u.reject.date}: ${u.reject.reason}` : u.status==='active' ? ' · одобрена' : ''}` : '—')}
         ${dl('Семьи', famsOfUser(u.id).map(f=>`${famLink(f)} <span class="text-sm text-ink-2">(${adultOf(f,u.id).type}; ${kidsTxt(f)})</span>`).join('<br>') || '—')}
@@ -2638,6 +2645,11 @@ document.addEventListener('submit', e=>{
   const f = e.target, kind = f.dataset.form, err = f.querySelector('[data-err]');
   const fail = msg => { if (err){ err.textContent = msg; err.classList.remove('hidden'); } else toast(msg); };
   const nameOk = v => /^[A-Za-zА-Яа-яЁёІіЎў' -]{1,50}$/.test(v);
+  if (kind==='loginpw'){
+    e.preventDefault();
+    if (!f.email.value.trim() || !f.password.value) return fail(t('auth.login_err'));
+    S.authed = true; S.role = 'admin'; S.view = FIRST_VIEW.admin; render(); toast('Вы вошли по email и паролю'); return;
+  }
   if (kind==='register' || kind==='fio'){
     const l = f.l.value.trim(), fn = f.f.value.trim(), m = f.m.value.trim();
     if (!l || !fn) return fail(t('auth.err_name'));
@@ -2729,7 +2741,7 @@ function parentLinkBlock(u){
   return `<div data-parent-block class="rounded-lg border border-line bg-paper/50 p-3">
     <p class="font-medium">Семья и дети <span class="font-normal text-muted">— для роли «родитель»</span></p>
     ${mine.length ? `<p class="mt-1 text-sm text-ink-2">Сейчас: ${mine.map(f=>`${famLink(f)} (${adultOf(f,u.id).type}; ${kidsTxt(f)})`).join(', ')}</p>` : ''}
-    ${m ? `<p class="mt-1 text-sm text-cobalt">Совпало ${m.by}: похоже, это ${m.a.fio} — ${m.a.type} в семье ${m.f.name} (${kidsTxt(m.f)}).</p>` : !u.email ? '<p class="mt-1 text-sm text-muted">Telegram не передаёт email — сопоставили только по ФИО.</p>' : ''}
+    ${m ? `<p class="mt-1 text-sm text-cobalt">Совпало ${m.by}: похоже, это ${m.a.fio} — ${m.a.type} в семье ${m.f.name} (${kidsTxt(m.f)}).</p>` : !u.phone ? '<p class="mt-1 text-sm text-muted">Telegram не передал телефон — сопоставили только по ФИО.</p>' : ''}
     <div class="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-${modes.length}" role="radiogroup" aria-label="Как связать с детьми">${modes.map(([v,l])=>`<label class="flex min-h-10 cursor-pointer items-center justify-center rounded-lg border border-muted bg-surface px-2 py-1.5 text-center text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="fmode" value="${v}" ${v===def?'checked':''} data-input="fmode" class="sr-only">${l}</label>`).join('')}</div>
     <div data-mode="link" class="${def==='link'?'':'hidden'} mt-3">
       <label class="${LABEL}" for="fl-${u.id}">Взрослый без учётной записи</label>
@@ -3268,9 +3280,9 @@ document.addEventListener('click', e=>{
     case 'go': closeDialog(); if (el.dataset.tab) S.peopleTab = el.dataset.tab; if (el.dataset.view==='analytics' && S.role==='teacher') S.anaGroup='Средняя'; if (el.dataset.view==='check' && S.view!=='check') { openCheck(CUR); break; } go(el.dataset.view); break;
     case 'toast': toast(el.dataset.msg); break;
     case 'noop': el.parentElement.querySelectorAll('[role=radio]').forEach(b=>{ const on=b===el; b.setAttribute('aria-checked',on); b.className = b.className.replace(on?SEG_OFF:SEG_ON, on?SEG_ON:SEG_OFF); }); break;
-    case 'login': { const g = el.dataset.prov==='google', id = 'u'+Date.now();
-      USERS.push({ id, name:g ? 'Андрей Кузнецов' : 'Андрей', fio:{ l:g ? 'Кузнецов' : '', f:'Андрей', m:'' }, email:g ? 'a.kuznetsov@gmail.com' : '', tg:g ? '' : '@andrey_k', prov:[el.dataset.prov], roles:[], status:'registration', consent:null, first:TODAY, last:'сегодня' });
-      S.authed = true; S.role='subscriber'; S.guestId = id; S.view='register'; render(); toast(`Вы вошли через ${g?'Google':'Telegram'}. Заполните регистрацию`); break; }
+    case 'login': { const id = 'u'+Date.now();
+      USERS.push({ id, name:'Андрей', fio:{ l:'', f:'Андрей', m:'' }, email:'', tg:'@andrey_k', phone:'+7 900 000-00-00', prov:['telegram'], roles:[], status:'registration', consent:null, first:TODAY, last:'сегодня' });
+      S.authed = true; S.role='subscriber'; S.guestId = id; S.view='register'; render(); toast('Вы вошли через Telegram. Заполните регистрацию'); break; }
     case 'logout': S.authed = false; render(); break;
     case 'lang': S.lang = el.dataset.val; render(); if (S.lang==='en') toast('Английский интерфейс появится после перевода словаря'); break;
 

@@ -44,12 +44,23 @@
 
 ## 2. BotFather
 
-1. Создайте или выберите бота. Имя и аватар видны на экране согласия.
-2. BotFather → бот → **Login Widget** → **Switch to OpenID Connect Login**.
-3. Зарегистрируйте:
-   - **Trusted Origins** — HTTPS origin (`https://app.example.com`). `http://localhost` Telegram часто отклоняет. Для локальной проверки нужен HTTPS-туннель или стабильный preview.
+`AUTH_TELEGRAM_ID` и `AUTH_TELEGRAM_SECRET` — Client ID и Client Secret из BotFather для OpenID Connect. Это не токен бота.
+
+1. Откройте в Telegram [@BotFather](https://t.me/BotFather). Создайте бота командой `/newbot` или выберите существующего через `/mybots`. Для локальной разработки — отдельный бот, не тот, что будет в проде. Имя и аватар видны на экране согласия.
+2. В карточке бота откройте **Login Widget** (в текущем BotFather это также **Web Login**) и выберите **Switch to OpenID Connect Login**.
+3. Зарегистрируйте два адреса. `http://localhost` Telegram часто отклоняет, поэтому локально нужен HTTPS-туннель (Cloudflare Tunnel, ngrok) или стабильный preview.
+   - **Trusted Origin** — корень приложения, например `https://your-tunnel.example.com`.
    - **Redirect URI** — ровно `{origin}/api/auth/callback/telegram`. Сегмент `telegram` равен `id` провайдера в Auth.js.
-4. Скопируйте **Client ID** и **Client Secret**.
+4. Скопируйте **Client ID** и **Client Secret** в `.env` (не в репозиторий):
+
+```env
+AUTH_TELEGRAM_ID=     # Client ID
+AUTH_TELEGRAM_SECRET= # Client Secret
+AUTH_URL=https://your-tunnel.example.com
+```
+
+`AUTH_URL` должен совпадать с origin, указанным в BotFather. После смены origin, redirect или `.env` перезапустите приложение.
+
 5. Эфемерные preview-URL: либо стабильный preview-хост в allowlist, либо Telegram на них не включать.
 
 Auth.js v5 собирает callback как `/api/auth/callback/{providerId}`. Если сменить `id`, меняется и URI в BotFather.
@@ -125,7 +136,7 @@ export default {
 |------|----------|--------|
 | `type` | `"oidc"` | Discovery, ID token, JWKS |
 | `issuer` | `https://oauth.telegram.org` | Auth.js сам читает `/.well-known/openid-configuration` |
-| `authorization.params.scope` | `openid profile` | Без `phone` и без bot-scope, пока продукт их не требует |
+| `authorization.params.scope` | `openid profile` | Без `phone` и без bot-scope, пока продукт их не требует. **Sunday School:** `openid profile phone` (телефон и `preferred_username` сохраняются в `login_identity`; без bot-scope) — [`auth_runtime_spec.md`](../prds/05_runtime/auth_runtime_spec.md) §4.1 |
 | `idToken` | `true` | Claims из ID token |
 | `checks` | `["pkce", "state"]` | CSRF и PKCE |
 | `allowDangerousEmailAccountLinking` | `false` | У Telegram обычно нет email; автослияние по email опасно |

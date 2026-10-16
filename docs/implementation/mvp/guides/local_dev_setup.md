@@ -28,7 +28,6 @@
 | npm | версия из Node 24; установка — `npm ci` (lockfile) |
 | Git | ветка `bootstrap`/рабочая; hooks (husky: commitlint, `rules:check`, lint-staged) ставятся при `npm install` |
 | Neon | доступ к проекту **dev**; своя ветка разработчика (по желанию) |
-| Google OAuth | приложение dev: redirect `http://localhost:3000/api/auth/callback/google` (порт — по `dev`-скрипту) |
 | Telegram | бот dev (BotFather → Web Login → OIDC), **HTTPS**-origin (туннель или стабильный preview), redirect `{origin}/api/auth/callback/telegram` |
 | Файлы данных Библии | RST в репозитории; NIV — локально, не в git (`Bible/data/.../niv`) |
 
@@ -44,6 +43,7 @@
 | 4 | Neon dev | взять `DATABASE_URL` (pooled) и `DIRECT_URL` (direct) ветки | строки в `.env.local` |
 | 5 | Миграции | `npm run db:migrate:deploy` | таблицы созданы, `migrate status` чист |
 | 6 | Справочники | `npm run db:seed:reference` | организация, настройки, 66 книг, каталог; маркер `dev` |
+| 6a | Первый admin | `npm run db:seed:admin` (email и пароль — из `.local/dev-secrets.json`: `FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD`) | admin `ACTIVE`; вход по email и паролю |
 | 7 | Библия | `npm run db:seed:bible` (RST); `npm run db:seed:bible:niv` — при наличии локальных данных | перевод `READY` после сверки |
 | 8 | Фикстуры | `npm run db:seed:dev` | данные прототипа (вымышленные) |
 | 9 | Запуск | `npm run dev` | приложение на `http://localhost:3000` |
@@ -63,7 +63,8 @@
 | `db:migrate:dev` | `@sunschool/db` | `prisma migrate dev` (только local) | есть |
 | `db:migrate:deploy` | `@sunschool/db` | `prisma migrate deploy` | есть |
 | `db:migrate:status` | `@sunschool/db` | `prisma migrate status` | есть |
-| `db:seed:reference` | `@sunschool/db` | справочники (dev, prod) | P01 |
+| `db:seed:reference` | `@sunschool/db` | справочники (dev, prod) | P01 ✔ |
+| `db:seed:admin` | `@sunschool/db` | первый admin: email + пароль (dev, prod; `--reset-password`) | P01 |
 | `db:seed:bible`, `db:seed:bible:niv` | `@sunschool/db` | Библия (NIV — по лицензии) | P03 |
 | `db:seed:dev` | `@sunschool/db` | фикстуры (**только dev**) | P01–P05 |
 
@@ -79,10 +80,9 @@
 | `DATABASE_URL` | pooled, приложение | Neon dev | ✔ | core |
 | `DIRECT_URL` | direct, CLI и seed | Neon dev | ✔ | core |
 | `AUTH_SECRET` | подпись JWT/cookie | `openssl rand -base64 32` | ✔ | auth |
-| `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` | Google OAuth | консоль Google | ✔ | auth |
-| `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | Telegram OIDC | BotFather Web Login | для входа Telegram | auth |
+| `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | Telegram OIDC (scope `openid profile phone`) | BotFather Web Login | ✔ | auth |
 | `AUTH_TRUST_HOST` / `AUTH_URL` | origin за прокси/туннелем | значение туннеля | при туннеле | auth |
-| `FIRST_ADMIN_EMAIL` | первый admin | `.local/dev-secrets.json` | ✔ | auth |
+| `FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` | первый admin — **только для `db:seed:admin`**, приложение не читает | `.local/dev-secrets.json` (git-ignored) | ✔ | auth |
 | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN` | Sentry | проект Sentry (dev) | нет | sentry |
 | `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` | upload source maps (сборка) | Sentry | нет в dev | sentry |
 
@@ -92,7 +92,7 @@
 
 | Способ | Как |
 |--------|-----|
-| Google | кнопка «Войти через Google» на `localhost`; первый вход с `FIRST_ADMIN_EMAIL` → admin |
+| Email + пароль (admin) | форма «Вход для администратора» на `localhost` после `db:seed:admin` |
 | Telegram | запуск через HTTPS-туннель; в BotFather зарегистрировать origin и redirect; `AUTH_URL` = origin туннеля |
 | «Смотреть как» | dev-переключатель роли ([`global_shell_spec.md`](../specs/global_shell_spec.md) §8): показывает NAV роли; **не повышает** серверные права; нет в prod |
 | Фикстуры | вымышленные пользователи `@example.test` из `seed:dev` |
@@ -110,7 +110,7 @@
 
 ## 9. Happy path smoke
 
-1. После шага 9: `/login` открывается; вход через Google ведёт на `/register` (новый пользователь) или `/school` (первый admin).
+1. После шага 9: `/login` открывается; вход через Telegram ведёт на `/register` (новый пользователь); администратор входит по email и паролю → экран согласия → `/school`.
 2. Admin открывает `/year`, `/groups` (после P02) с данными фикстур.
 3. «Смотреть как teacher» показывает NAV teacher.
 4. `/design-system` открывается в dev (после P6) и даёт 404 при `APP_ENV=prod`.
@@ -134,14 +134,14 @@
 |------|------------|
 | S-1 | `.env*`, `.local/` вне git; в документах — имена, не значения |
 | S-2 | Реальные данные детей в dev не загружаются; дамп prod в dev — никогда (ОК-4) |
-| S-3 | Секреты dev и prod различны (`AUTH_SECRET`, приложения Google/Telegram) (ОК-1) |
+| S-3 | Секреты dev и prod различны (`AUTH_SECRET`, Telegram-бот, пароль администратора) (ОК-1) |
 | S-4 | Dev-переключатель не используется как доказательство прав |
 
 ## 12. Acceptance criteria
 
 - [ ] По §4 разработчик получает работающее приложение с фикстурами — исход: ручной прогон.
 - [ ] Все скрипты §5 существуют после P5/P01 с указанными именами — исход: сверка `package.json`.
-- [ ] Вход Google и Telegram проходит в dev — исход: smoke P01.
+- [ ] Вход через Telegram и по email + паролю проходит в dev — исход: smoke P01.
 - [ ] В репозитории нет значений секретов — исход: поиск по `AUTH_`/`postgresql://`.
 
 ## 13. Open questions

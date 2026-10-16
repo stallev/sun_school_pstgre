@@ -3,7 +3,7 @@
 **Stack:** Next.js **16.4** (App Router) | Auth.js v5 (JWT, без адаптера) | Prisma v7 | Neon | Vercel  
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
 **Runtime:** [ADR-002](../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) — **`proxy.ts`**, not `middleware.ts`  
-**Auth canon:** [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) — **OIDC (Google + Telegram), JWT, RBAC**; [`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md) — файлы, callbacks, ошибки  
+**Auth canon:** [ADR-003](../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) — **Telegram (OIDC) + email/пароль администратора, JWT, RBAC**; [`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md) — файлы, callbacks, ошибки  
 **Telegram:** [`telegram_authjs_oidc_portable_guide.md`](../../my_specs/telegram_authjs_oidc_portable_guide.md) — код обходов (не копировать вслепую, см. TG-1…TG-5)  
 **Schema:** [`database_schema_v1.md`](../../prds/03_data_model/database_schema_v1.md) §5.1 (`app_user`, `login_identity`)  
 **Rule:** [`auth-security.mdc`](../../../.cursor/rules/auth-security.mdc)
@@ -37,7 +37,7 @@ Browser
 
 ```typescript
 // auth.config.ts — импортируется proxy.ts И auth.ts
-// БЕЗ Prisma. Провайдеры (Google, Telegram), pages, authorized.
+// БЕЗ Prisma. Провайдер Telegram, pages, authorized. Credentials (authorize с БД) — в auth.ts.
 
 // auth.ts — только сервер
 // NextAuth({ ...authConfig, session: { strategy: "jwt" }, callbacks: { signIn, jwt, session, redirect } })
@@ -54,8 +54,8 @@ Browser
 
 | Провайдер | Заметки |
 |-----------|---------|
-| Google | Встроенный, scope `openid email profile`; email нужен для `FIRST_ADMIN_EMAIL` (`email_verified` обязателен) |
-| Telegram | Custom `oidc`: `issuer: https://oauth.telegram.org`, `idToken: true`, `checks: ["pkce","state"]`, `profile().email = null`, `allowDangerousEmailAccountLinking: false` |
+| Credentials | Только администратор: `authorize()` в `auth.ts` (БД, scrypt + `timingSafeEqual`, блокировка 5 неудач / 15 минут); пользователя создаёт команда `db:seed:admin`; пароль не логировать ([`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md) §4.4) |
+| Telegram | Custom `oidc`: `issuer: https://oauth.telegram.org`, `idToken: true`, `checks: ["pkce","state"]`, `profile().email = null`, `username` ← `preferred_username`, `phone` ← `phone_number` (необязательны), `allowDangerousEmailAccountLinking: false` |
 
 Обходы Telegram (укорочение `state`, синтетический `userinfo_endpoint`, `customFetch` из `next-auth`) — TG-1…TG-5 в `auth_runtime_spec` §6. Вход и привязка Telegram — **только клиентский** `signIn("telegram")`.
 
@@ -135,7 +135,7 @@ export async function proxy(request: NextRequest) {
 ## 9. MVP flows
 
 - Первый вход → `REGISTRATION` → `/register` (согласие, ФИО, роль `TEACHER`; `parent` в MVP отклоняется) → `REQUEST_PENDING` → решение admin → `ACTIVE`.
-- Первый admin — по `FIRST_ADMIN_EMAIL` (Google, `email_verified`), один раз, в одной транзакции.
+- Первый admin — командой `db:seed:admin` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD`), один раз, в одной транзакции под advisory-lock; приложение эти переменные не читает.
 - Email и пароль не запрашиваются; формы ввода учётных данных на сайте нет.
 
 Детали — [`access_and_registration_spec.md`](../../implementation/mvp/specs/access_and_registration_spec.md) и [`access_requests_and_roles_contract.md`](../../implementation/mvp/contracts/access_requests_and_roles_contract.md).

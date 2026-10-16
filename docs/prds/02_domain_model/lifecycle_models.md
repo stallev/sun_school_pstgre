@@ -75,7 +75,7 @@ stateDiagram-v2
 
 | Из → в | Use-case | Актор | Предусловия | Последствия |
 |--------|----------|-------|-------------|-------------|
-| `∅ → REGISTRATION` | `firstLogin` | `USER` | вход через Google или Telegram; провайдер подтвердил личность | создан `app_user`, `login_identity` |
+| `∅ → REGISTRATION` | `firstLogin` | `USER` | вход через Telegram; провайдер подтвердил личность (первый admin создаётся командой `db:seed:admin`, не входом) | создан `app_user`, `login_identity` |
 | `REGISTRATION → REQUEST_PENDING` | `submitRegistration` | `USER` | ФИО валидно (РГ-3), отмечено согласие на ПД (РГ-2) | созданы `privacy_consent`, `access_request` (`PENDING`) |
 | `REQUEST_PENDING → ACTIVE` | `approveRequest` | `ADMIN` | выбрана ≥ 1 роль из `ADMIN`, `TEACHER`; для `TEACHER` группы года желательны (без них — предупреждение `NO_GROUPS`, решено 2026-10-11) | записаны `user_role`, `teacher_assignment` (если выбраны); заявка `APPROVED` |
 | `REQUEST_PENDING → REJECTED` | `rejectRequest` | `ADMIN` | причина обязательна | заявка `REJECTED` |
