@@ -57,7 +57,7 @@
 | `encoding:check`, `docs:links` | корень | проверки документации | есть |
 | `psi:lab` | корень | PageSpeed lab (только по запросу, на деплое) | есть |
 | `dev` | корень → `apps/web` | dev-сервер | есть |
-| `build` | корень → `apps/web` | сборка | есть |
+| `build` | корень → `apps/web` | `prisma generate`, затем `next build` | есть |
 | `typecheck`, `lint`, `test` | корень | проверки (все workspaces) | есть |
 | `db:generate` | `@sunschool/db` | `prisma generate` (клиент в `src/generated`, вне git) | есть |
 | `db:migrate:dev` | `@sunschool/db` | `prisma migrate dev` (только local) | есть |

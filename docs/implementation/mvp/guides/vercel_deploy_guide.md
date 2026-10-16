@@ -29,7 +29,7 @@
 | Root Directory | `apps/web` **или** корень монорепо — решается на P5 (Q-01) | нужны файлы `packages/*` вне `apps/web`; проверить настройку включения файлов вне Root Directory |
 | Node.js | **24.x** | `engines.node` (ADR-001 §3.1) |
 | Install | `npm ci` | lockfile обязателен; Vercel определяет менеджер по lockfile |
-| Build | `next build` через workspace; перед ним `prisma generate` (если не в `postinstall`) | |
+| Build | скрипт `build` пакета `@sunschool/web`: `prisma generate` (`db:generate` в `@sunschool/db`), затем `next build` | клиент в `packages/db/src/generated/` вне git; `prisma` остаётся devDependency — Vercel ставит devDependencies на время сборки |
 | Framework | Next.js 16.4.x (точная версия) | ADR-002 |
 | `vercel.json` | без `crons`; заголовки/CSP — по P07-CU7 | |
 | Skip unaffected builds | по умолчанию включено для GitHub | не отключать без причины |
@@ -142,7 +142,7 @@ Telegram требует заранее зарегистрированный HTTP
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
 | Q-01 | Root Directory: `apps/web` или корень монорепо; включение файлов вне Root Directory | Проверить на P5 по документации и фактической сборке; зафиксировать здесь | P5 |
-| Q-02 | Где выполняется `prisma generate` (build vs `postinstall`) и нужен ли `prisma` как prod-зависимость | Проверить на P5 | P5 |
+| Q-02 | Где выполняется `prisma generate` | **Закрыт (2026-10-16):** в скрипте `build` `@sunschool/web`, до `next build`. `prisma` — devDependency `@sunschool/db`, не prod-зависимость | — |
 | Q-03 | Поля `vercel.json` для заголовков/CSP | Определить в P07-CU7 по документации | P07 |
 | Q-04 | Домен prod и preview-хост | Выбор владельца | P07 |
 
@@ -168,9 +168,11 @@ Telegram требует заранее зарегистрированный HTTP
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W12-06) |
+| 2026-10-16 | Q-02 закрыт: `prisma generate` в скрипте `build` `@sunschool/web` |
 
 ## Сборка и тесты (инцидент 2026-10-16)
 
 - `next build` проверяет типы всех файлов из `apps/web/tsconfig.json`. Тесты (`*.test.ts(x)`, `src/test/**`) из него **исключены**: `vitest` — devDependency корня и в сборке Vercel недоступна (preview упал с `TS2307: Cannot find module 'vitest'`). Типы тестов проверяет `npm run typecheck` (`apps/web/tsconfig.test.json`).
 - `npm run build:check` = `scripts/check-build-isolation.mjs` + `next build`; запускается в pre-commit (`scripts/precommit-build-check.mjs`, только если в commit есть код или конфигурация сборки) и в CI (`ci.yml`).
 - Сборка не должна требовать секретов: без `DATABASE_URL`, `AUTH_*` она проходит (проверено 2026-10-16); `/design-system` пререндерится с `APP_ENV` на момент сборки (на preview — `dev`, в prod — 404).
+- `prisma generate` обязателен в том же скрипте, который запускает Vercel (`@sunschool/web` `build`). Клиент в `src/generated` не в git; без generate Turbopack падает с `Can't resolve './generated/prisma/client'` (preview `dpl_G4HHP2n4p4PdrswwovzbKGMBV18P`, 2026-10-16). Корневой `npm run build` только делегирует в этот скрипт. CI по-прежнему вызывает `db:generate` отдельно до `build:check` — повторный generate идемпотентен.
