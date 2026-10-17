@@ -77,4 +77,20 @@ export const pickTeacherCheckMessages = (
   yearClosedDescription: getMessage(teacher, "group.year_closed_description"),
   pendingSave: getMessage(teacher, "lesson.form.saving"),
   formError: getMessage(common, "errors.form"),
+  tablePageTitle: getMessage(teacher, "check.table.page_title"),
+  tableLinkSequential: getMessage(teacher, "check.table.link_sequential"),
+  tableFilterPresent: getMessage(teacher, "check.table.filter_present"),
+  tableFilterUnchecked: getMessage(teacher, "check.table.filter_unchecked"),
+  tableLegendUnchecked: getMessage(teacher, "check.table.legend_unchecked"),
+  tableLegendAbsent: getMessage(teacher, "check.table.legend_absent"),
+  tableColumnNumber: getMessage(teacher, "check.table.column_number"),
+  tableColumnPupil: getMessage(teacher, "check.table.column_pupil"),
+  tableColumnOpen: getMessage(teacher, "check.table.column_open"),
+  tableFootnote: getMessage(teacher, "check.table.footnote"),
+  tableNoTest: getMessage(teacher, "check.table.no_test"),
+  tableVersesMobile: getMessage(teacher, "check.table.verses_mobile"),
+  tableOpenPupilAria: (name) =>
+    fill(getMessage(teacher, "check.table.open_pupil_aria"), { name }),
+  tableProgressHeader: (checked, total) =>
+    fill(getMessage(teacher, "check.table.progress_header"), { checked, total }),
 });

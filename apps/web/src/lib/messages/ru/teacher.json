@@ -189,7 +189,23 @@
     "empty_roster_title": "В группе пока нет учеников",
     "empty_roster_description": "Добавьте учеников, прежде чем проверять ДЗ.",
     "empty_roster_action": "Состав группы",
-    "present_required": "Отметьте присутствие перед сохранением"
+    "present_required": "Отметьте присутствие перед сохранением",
+    "table": {
+      "page_title": "Сводная таблица",
+      "link_sequential": "Последовательная проверка",
+      "filter_present": "Только присутствовавшие",
+      "filter_unchecked": "Только непроверенные",
+      "legend_unchecked": "не проверен",
+      "legend_absent": "не был",
+      "column_number": "№",
+      "column_pupil": "Ученик",
+      "column_open": "Открыть",
+      "footnote": "Стихи — заданные на прошлом уроке. Итого = стихи + тест + тетрадь + спевка. Зелёным — от 8, красным — до 4 баллов.",
+      "no_test": "нет",
+      "verses_mobile": "Стихи",
+      "open_pupil_aria": "Открыть {name} в последовательной проверке",
+      "progress_header": "Проверено {checked} из {total}"
+    }
   },
   "calendar": {
     "page_title": "Календарь",

@@ -85,7 +85,7 @@
 
 ### P04-CU6 — feat(web): add lesson summary table · Review: diff-only · Commit: auto
 
-- [ ] P04-T10 · T1 · Spec: [flow §7](../specs/homework_check_flow_spec.md) · Prototype: `lessonTable`
+- [x] P04-T10 · T1 · Spec: [flow §7](../specs/homework_check_flow_spec.md) · Prototype: `lessonTable`
       Files: `app/(app)/lessons/[lessonId]/table/page.tsx`, `components/teacher/{LessonCheckTable,LessonCheckTableRow}.tsx`
       Acceptance: фильтры, раскраска + значение, метка «позже» текстом, правка ячейки сразу (partial/correct) с откатом при отказе, карточки на < `md` → ручной smoke
       Paths: H · N [`CONFLICT` откат ячейки] · S [AZ-33, AZ-34]

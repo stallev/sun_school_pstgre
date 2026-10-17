@@ -189,7 +189,23 @@
     "empty_roster_title": "No pupils in this group yet",
     "empty_roster_description": "Add pupils before checking homework.",
     "empty_roster_action": "Group members",
-    "present_required": "Mark attendance before saving"
+    "present_required": "Mark attendance before saving",
+    "table": {
+      "page_title": "Summary table",
+      "link_sequential": "Sequential check",
+      "filter_present": "Present only",
+      "filter_unchecked": "Unchecked only",
+      "legend_unchecked": "not checked",
+      "legend_absent": "absent",
+      "column_number": "#",
+      "column_pupil": "Pupil",
+      "column_open": "Open",
+      "footnote": "Verses are from the previous lesson. Total = verses + test + notebook + singing. Green from 8, red up to 4 points.",
+      "no_test": "n/a",
+      "verses_mobile": "Verses",
+      "open_pupil_aria": "Open {name} in sequential check",
+      "progress_header": "Checked {checked} of {total}"
+    }
   },
   "calendar": {
     "page_title": "Calendar",

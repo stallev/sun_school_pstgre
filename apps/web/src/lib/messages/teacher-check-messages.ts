@@ -56,4 +56,18 @@ export type TeacherCheckMessages = {
   yearClosedDescription: string;
   pendingSave: string;
   formError: string;
+  tablePageTitle: string;
+  tableLinkSequential: string;
+  tableFilterPresent: string;
+  tableFilterUnchecked: string;
+  tableLegendUnchecked: string;
+  tableLegendAbsent: string;
+  tableColumnNumber: string;
+  tableColumnPupil: string;
+  tableColumnOpen: string;
+  tableFootnote: string;
+  tableNoTest: string;
+  tableVersesMobile: string;
+  tableOpenPupilAria: (name: string) => string;
+  tableProgressHeader: (checked: number, total: number) => string;
 };
