@@ -5,7 +5,36 @@
     "profile_title": "Профиль пользователя",
     "year_title": "Учебный год",
     "groups_title": "Группы",
-    "people_title": "Ученики и семьи"
+    "people_title": "Ученики и семьи",
+    "settings_title": "Настройки приложения",
+    "school_title": "Школа"
+  },
+  "settings": {
+    "page_subtitle": "Общие для всей школы: язык интерфейса и часовой пояс.",
+    "language_title": "Язык интерфейса",
+    "language_hint": "Меняется для всех пользователей при следующей загрузке страницы.",
+    "language_ru": "Русский",
+    "language_en": "English",
+    "language_save": "Сохранить язык",
+    "timezone_title": "Часовой пояс школы",
+    "timezone_hint": "IANA-имя пояса для расписания и дат (ADR-004).",
+    "timezone_search_label": "Поиск по IANA",
+    "timezone_search_placeholder": "Europe/Moscow",
+    "timezone_save": "Сохранить пояс",
+    "submit_pending": "Сохраняем…",
+    "toast_language_saved": "Язык интерфейса сохранён",
+    "toast_timezone_saved": "Часовой пояс сохранён",
+    "footer_note": "Смена пояса не пересчитывает прошлые записи — действует на новые операции.",
+    "timezone_invalid": "Укажите корректный IANA-пояс",
+    "timezone_required": "Выберите часовой пояс"
+  },
+  "school": {
+    "page_subtitle": "Сводка по активному учебному году (каркас; средние — в P05).",
+    "stats_title": "Счётчики",
+    "groups_label": "Группы",
+    "pupils_label": "Зачисленные ученики",
+    "requests_label": "Заявки на доступ",
+    "scaffold_note": "Таблицы групп и «Требует внимания» появятся в следующих фазах."
   },
   "approvals": {
     "empty_title": "Новых заявок нет",

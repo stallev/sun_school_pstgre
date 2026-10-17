@@ -14,7 +14,14 @@
     "not_found_title": "Page not found",
     "not_found_description": "Check the address or go back to the home screen.",
     "error_title": "Could not load this page",
-    "error_retry": "Try again"
+    "error_retry": "Try again",
+    "no_active_year_title": "The school year has not started yet",
+    "no_active_year_admin": "Create and activate a school year to manage groups and lessons.",
+    "no_active_year_teacher": "Wait until an administrator activates the school year.",
+    "create_year_action": "Create school year",
+    "timezone_unset_title": "School time zone is not set",
+    "timezone_unset_description": "UTC is used for now. Pick an IANA time zone in settings for accurate schedules and dates.",
+    "choose_timezone_action": "Choose time zone"
   },
   "shell": {
     "skip_to_content": "Skip to content",

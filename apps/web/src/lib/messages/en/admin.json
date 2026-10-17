@@ -5,7 +5,36 @@
     "profile_title": "User profile",
     "year_title": "School year",
     "groups_title": "Groups",
-    "people_title": "Students and families"
+    "people_title": "Students and families",
+    "settings_title": "App settings",
+    "school_title": "School"
+  },
+  "settings": {
+    "page_subtitle": "Shared for the whole school: interface language and time zone.",
+    "language_title": "Interface language",
+    "language_hint": "Applies to every user on the next page load.",
+    "language_ru": "Russian",
+    "language_en": "English",
+    "language_save": "Save language",
+    "timezone_title": "School time zone",
+    "timezone_hint": "IANA time zone for schedules and dates (ADR-004).",
+    "timezone_search_label": "Search IANA zones",
+    "timezone_search_placeholder": "Europe/London",
+    "timezone_save": "Save time zone",
+    "submit_pending": "Saving…",
+    "toast_language_saved": "Interface language saved",
+    "toast_timezone_saved": "Time zone saved",
+    "footer_note": "Changing the time zone does not recalculate past records — it applies to new operations.",
+    "timezone_invalid": "Enter a valid IANA time zone",
+    "timezone_required": "Choose a time zone"
+  },
+  "school": {
+    "page_subtitle": "Active school year snapshot (scaffold; averages land in P05).",
+    "stats_title": "Counts",
+    "groups_label": "Groups",
+    "pupils_label": "Enrolled pupils",
+    "requests_label": "Access requests",
+    "scaffold_note": "Group tables and “Needs attention” lists arrive in later phases."
   },
   "approvals": {
     "empty_title": "No new requests",

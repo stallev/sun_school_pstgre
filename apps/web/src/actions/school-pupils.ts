@@ -10,7 +10,7 @@ import { transferPupil } from "@/data/school/transfer-pupil";
 import { unenrollPupil } from "@/data/school/unenroll-pupil";
 import { updatePupil } from "@/data/school/update-pupil";
 import { uuidFromForm } from "@/lib/auth/admin-access-form";
-import { requireRole } from "@/lib/auth/require-user";
+import { requireActiveUser, requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 
 const revalidatePeople = () => {
@@ -85,7 +85,7 @@ export async function enrollPupilAction(
   _prev: MutationResult | null,
   formData: FormData,
 ): Promise<MutationResult> {
-  const actor = await requireRole(USER_ROLE.ADMIN);
+  const actor = await requireActiveUser();
   const result = await enrollPupil(await getPrisma(), actor.userId, {
     pupilId: uuidFromForm(formData, "pupilId"),
     gradeId: uuidFromForm(formData, "gradeId"),
@@ -99,7 +99,7 @@ export async function unenrollPupilAction(
   _prev: MutationResult | null,
   formData: FormData,
 ): Promise<MutationResult> {
-  const actor = await requireRole(USER_ROLE.ADMIN);
+  const actor = await requireActiveUser();
   const result = await unenrollPupil(await getPrisma(), actor.userId, {
     pupilId: uuidFromForm(formData, "pupilId"),
     endsOn: String(formData.get("endsOn") ?? "").trim(),

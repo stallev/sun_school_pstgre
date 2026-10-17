@@ -7,6 +7,33 @@ export type AdminMessages = {
     yearTitle: string;
     groupsTitle: string;
     peopleTitle: string;
+    settingsTitle: string;
+    schoolTitle: string;
+  };
+  settings: {
+    pageSubtitle: string;
+    languageTitle: string;
+    languageHint: string;
+    languageRu: string;
+    languageEn: string;
+    languageSave: string;
+    timezoneTitle: string;
+    timezoneHint: string;
+    timezoneSearchLabel: string;
+    timezoneSearchPlaceholder: string;
+    timezoneSave: string;
+    submitPending: string;
+    toastLanguageSaved: string;
+    toastTimezoneSaved: string;
+    footerNote: string;
+  };
+  school: {
+    pageSubtitle: string;
+    statsTitle: string;
+    groupsLabel: string;
+    pupilsLabel: string;
+    requestsLabel: string;
+    scaffoldNote: string;
   };
   approvals: {
     emptyTitle: string;

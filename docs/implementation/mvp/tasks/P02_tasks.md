@@ -106,15 +106,15 @@
 
 ### P02-CU9 — feat(web): add teacher group, settings and school skeleton screens · Review: diff-only · Commit: auto
 
-- [ ] P02-T11 · T1 · Flow: [teacher_flow §4.6](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `group`
+- [x] P02-T11 · T1 · Flow: [teacher_flow §4.6](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `group`
       Files: `app/(app)/group/page.tsx`, `components/teacher/RosterTable.tsx`
       Acceptance: состав своей группы; зачисление/исключение в своей группе; «согласие есть/нет»; D2 для teacher без назначения; D3 в закрытом году → ручной smoke
       Paths: H · N [D2, D3] · S [AZ-21, AZ-23, AZ-P6]
-- [ ] P02-T12 · T1 · ADR: adr_004, adr_008 · Prototype: `settings`
+- [x] P02-T12 · T1 · ADR: adr_004, adr_008 · Prototype: `settings`
       Files: `app/(app)/settings/page.tsx`, `components/admin/{SettingsLanguageForm,TimezonePicker}.tsx`
       Acceptance: язык и часовой пояс (поиск по IANA), предупреждение D13 до выбора → ручной smoke
       Paths: H · N [неизвестный пояс] · S [AZ-15]
-- [ ] P02-T13 · T1 · Prototype: `school`
+- [x] P02-T13 · T1 · Prototype: `school`
       Files: `app/(app)/school/page.tsx`, `components/shell/ShellBanners.tsx`
       Acceptance: каркас — счётчики (группы, ученики, заявки), баннеры D1/D13; без средних (P05) → ручной smoke
       Paths: H · N [D1] · S [AZ-16]
