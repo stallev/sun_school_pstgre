@@ -17,7 +17,7 @@
 ## Phase DoR audit (lean: оркестратор inline + spec-gap)
 
 - [ ] P04 DoD; в БД есть проверенные записи
-- [ ] **Spec-gap:** `analytics_screens_spec.md` отсутствует — CU0 создаёт его (docs-only) до CU6–CU8
+- [x] **Spec-gap:** `analytics_screens_spec.md` отсутствует — CU0 создаёт его (docs-only) до CU6–CU8
 - [ ] Решения: Q-01 метрика рейтинга, Q-02 библиотека графиков (в CU6)
 - [ ] Остальные задачи проходят DoR; формулы — только по спец. §5, §9 и контрактам
 
@@ -25,7 +25,7 @@
 
 ### P05-CU0 — docs(implementation): add analytics screens spec · Review: diff-only · Commit: auto
 
-- [ ] P05-T0 · T2 · Spec: [спец. §9.1–§9.6](../../../my_specs/sunday_school_data_analytics_spec.md), [§5](../../../my_specs/sunday_school_data_analytics_spec.md) · UX: [ui_states D12](../../../design/ui_states_contract.md)
+- [x] P05-T0 · T2 · Spec: [спец. §9.1–§9.6](../../../my_specs/sunday_school_data_analytics_spec.md), [§5](../../../my_specs/sunday_school_data_analytics_spec.md) · UX: [ui_states D12](../../../design/ui_states_contract.md)
       Files: `docs/implementation/mvp/specs/analytics_screens_spec.md`, индекс
       Acceptance: spec с экранами группы/ученика/школы, фильтрами, графиками (одна ось), таблицами, пустыми состояниями, «как считали», Paths H/N/S, Acceptance → проходит DoR §2.3.6
       Paths: n/a — docs-only
