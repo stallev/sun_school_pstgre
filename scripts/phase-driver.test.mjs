@@ -11,6 +11,7 @@ import {
   logTail,
   parseCommitUnits,
   parseCuCommitArgs,
+  isHarnessTestFailure,
   parsePorcelain,
   parseRunPhaseArgs,
   partitionChangedPaths,
@@ -231,6 +232,22 @@ describe("session result", () => {
   });
 });
 
+describe("harness test failure", () => {
+  it("detects a vitest worker crash that executed no tests", () => {
+    const sample = [
+      "TypeError: Cannot read properties of undefined (reading 'config')",
+      "Test Files  63 failed (63)",
+      "     Tests  no tests",
+    ].join("\n");
+    expect(isHarnessTestFailure(sample)).toBe(true);
+  });
+
+  it("leaves an assertion failure as a real test failure", () => {
+    expect(isHarnessTestFailure("FAIL expected 1 to be 2\n Tests  1 failed | 10 passed (11)")).toBe(false);
+    expect(isHarnessTestFailure("")).toBe(false);
+  });
+});
+
 describe("session prompt", () => {
   it("asks for a full verify only when the CU review is reviewer", () => {
     const [diffOnly] = parseCommitUnits(`
@@ -270,6 +287,11 @@ describe("session prompt", () => {
     expect(implementer).not.toContain("cu-commit.mjs commit");
     expect(orchestrator).toContain('node scripts/cu-commit.mjs commit --paths-file paths.txt --subject "feat(auth): add proxy"');
     expect(orchestrator).toContain("reviewer");
+    expect(implementer).toContain("RESULT: verify-flake");
+    expect(implementer).toContain("Не запускай npm run test");
+    expect(orchestrator).toContain("Снова harness-failed");
+    expect(orchestrator).toContain("тест, который фиксирует этот blocker");
+    expect(orchestrator).toContain("Третьего круга нет");
   });
 
   it("keeps the claude prompt as one session without markers", () => {

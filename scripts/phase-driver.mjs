@@ -244,7 +244,21 @@ export const STATUS_PREFIX = "STATUS:";
 export const IMPLEMENTER_MARKER = "=== IMPLEMENTER ===";
 export const ORCHESTRATOR_MARKER = "=== ORCHESTRATOR ===";
 /** First line of the implementer's answer; the orchestrator branches on it. */
-export const IMPLEMENTER_RESULTS = { staged: "staged", dorFail: "dor-fail", verifyFail: "verify-fail" };
+export const IMPLEMENTER_RESULTS = {
+  staged: "staged",
+  dorFail: "dor-fail",
+  verifyFail: "verify-fail",
+  verifyFlake: "verify-flake",
+};
+
+/**
+ * Vitest started and then ran no tests (worker crash on `describe` / `config`).
+ * An assertion failure still prints a test count, so it does not match.
+ */
+export function isHarnessTestFailure(output) {
+  const text = String(output ?? "");
+  return /Tests\s+no tests/.test(text) && /reading ['"]config['"]/.test(text);
+}
 
 export function renderStatusLine(state, id) {
   return `${STATUS_PREFIX} ${state} ${id}`;
@@ -257,12 +271,24 @@ function verifyCommandFor(unit) {
 const REVIEWER_CALL =
   "Вызови субагента reviewer. В промпте только идентификатор CU и путь к задачам, и просьба прочитать git diff --staged. Ответ не длиннее 15 строк.";
 
+const TEST_OWNER_LINE =
+  "Тесты запускает только команда cu-verify ниже. Не запускай npm run test, vitest и второй прогон тестов сам.";
+
+function blockerFixLines(unit, pathsFile) {
+  const verify = verifyCommandFor(unit);
+  return [
+    `Blocker — исправить только перечисленные blockers ${unit.id}. В ту же правку входит тест, который фиксирует этот blocker. Прочие suggestions не реализовывать. Затем ${verify} и stage с ${pathsFile}. Затем один review только дельты.`,
+    "Если blocker тот же: один вызов architect (spec-gap, только docs) — одна фраза инварианта в спеке, без кода. Затем ещё один проход правки с этой фразой, verify и stage, и один review только дельты. Blocker снова жив — остановись. Третьего круга нет.",
+  ];
+}
+
 function codeAndStageLines({ unit, tasksPath, pathsFile }) {
   return [
     `Отметь чекбоксы этого CU в ${tasksPath} до коммита. Хеш после коммита не дописывай.`,
     `Запиши в ${pathsFile} ровно те конкретные пути, которые войдут в индекс, включая файл задач. Без glob и без секретов.`,
     `Драйвер заранее вписал в ${pathsFile} все существующие пути из Files. Удали те, что ты не менял. cu-commit пропускает неизменённые пути и печатает их как unchanged.`,
     "Если менялись .cursor/rules/*.mdc, до stage выполни npm run rules:sync и добавь .claude/rules/ в список путей.",
+    TEST_OWNER_LINE,
     verifyCommandFor(unit),
     `node scripts/cu-commit.mjs stage --paths-file ${pathsFile}`,
   ];
@@ -283,8 +309,10 @@ function renderSingleSessionPrompt({ unit, tasksPath, pathsFile }) {
     "Прочитай только строки этого CU и указанные §. DoR проверь сам. Провал DoR — один вызов architect, затем код.",
     "Команды запускай через Bash tool Claude Code; allowlist в .claude/settings.json.",
     ...codeAndStageLines({ unit, tasksPath, pathsFile }),
+    "Если хвост содержит `cu-verify: test harness-failed`, код не меняй: запусти ту же команду cu-verify ещё один раз, затем stage. Снова harness-failed — остановись.",
+    "Иначе проверка упала: один повтор с текстом ошибки. Упала снова — остановись.",
     reviewStep,
-    "Если reviewer вернул blocker: поправь код, снова выполни stage с тем же файлом путей, затем один review только дельты.",
+    ...blockerFixLines(unit, pathsFile),
     commitLine({ unit, pathsFile }),
     GIT_GUARD_LINE,
   ].join("\n");
@@ -296,7 +324,7 @@ function renderSingleSessionPrompt({ unit, tasksPath, pathsFile }) {
  * Nested subagents are not assumed: architect and reviewer are called by the orchestrator.
  */
 function renderCursorPrompt({ unit, tasksPath, pathsFile }) {
-  const { staged, dorFail, verifyFail } = IMPLEMENTER_RESULTS;
+  const { staged, dorFail, verifyFail, verifyFlake } = IMPLEMENTER_RESULTS;
   const selfReview =
     unit.review === "reviewer"
       ? []
@@ -307,22 +335,26 @@ function renderCursorPrompt({ unit, tasksPath, pathsFile }) {
     `Провал DoR: кода не пиши, architect не вызывай, верни первой строкой RESULT: ${dorFail} и пункты DoR.`,
     "Команды запускай через Shell. Сырой git add / git commit / push не вызывай, коммит не делай, reviewer не вызывай.",
     ...codeAndStageLines({ unit, tasksPath, pathsFile }),
-    `Проверка упала: один повтор с текстом ошибки. Упала снова — верни RESULT: ${verifyFail} и хвост ошибки.`,
+    `Если хвост содержит \`cu-verify: test harness-failed\`, код не меняй и верни RESULT: ${verifyFlake} и этот хвост.`,
+    `Иначе проверка упала: один повтор с текстом ошибки. Упала снова — верни RESULT: ${verifyFail} и хвост ошибки.`,
     ...selfReview,
-    `Ответ не длиннее 15 строк. Первая строка: RESULT: ${staged} | ${dorFail} | ${verifyFail}. Дальше: изменённые файлы, итог проверки, открытые вопросы.`,
+    `Ответ не длиннее 15 строк. Первая строка: RESULT: ${staged} | ${dorFail} | ${verifyFail} | ${verifyFlake}. Дальше: изменённые файлы, итог проверки, открытые вопросы.`,
   ];
   const reviewStep =
     unit.review === "reviewer"
       ? `При RESULT: ${staged} — ${REVIEWER_CALL}`
       : `При RESULT: ${staged} — review уже сделан implementer: перенеси его строку Review: в ответ.`;
+  const [blockerFix, blockerAgain] = blockerFixLines(unit, pathsFile);
   const orchestrator = [
     `Ты оркестратор ${unit.id}. Код не пиши, исходники и diff не читай, итоги прошлых CU не пересказывай.`,
     "Commit: auto уже разрешён. Между шагами не спрашивай подтверждения.",
     "Вызови субагента implementer. Промпт — блок IMPLEMENTER выше дословно, без добавлений.",
     `RESULT: ${dorFail} — один вызов architect (spec-gap) с этими пунктами, затем один повторный вызов implementer с тем же блоком.`,
+    `RESULT: ${verifyFlake} — сам один раз запусти ${verifyCommandFor(unit)}. Зелёная — новый вызов implementer: код не менять, только stage с ${pathsFile}. Снова harness-failed — остановись и доложи.`,
     `RESULT: ${verifyFail} или повторный ${dorFail} — остановись и доложи пользователю.`,
     reviewStep,
-    `Blocker — новый вызов implementer: исправить только перечисленные blockers ${unit.id}, затем ${verifyCommandFor(unit)} и stage с ${pathsFile}. Затем один review только дельты. Blocker остался — остановись и доложи.`,
+    `Blocker — новый вызов implementer: ${blockerFix.slice("Blocker — ".length)}`,
+    blockerAgain,
     commitLine({ unit, pathsFile }),
     "Хук упал — новый вызов implementer с хвостом хука, затем commit ещё раз. Упал повторно — остановись и доложи.",
     GIT_GUARD_LINE,

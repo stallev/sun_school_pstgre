@@ -163,7 +163,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 
 Вход `reviewer`: задачи CU из `P{N}_tasks.md` (2a) + `git diff --staged`; Paths H / N / S — ожидаемая форма (2b). Не передаётся summary автора и черновик commit message. Bugbot не вызывать; `reviewer` не правит код; re-review — только delta, не более одного раза.
 
-**Auto-commit** ([`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc)): в том же ходе, где отмечена последняя задача объявленного CU, агент проходит pipeline целиком; CU объявлен в tasks, ВЕРИФИКАЦИЯ зелёная, review без blockers → коммит без вопроса пользователю. Запрещено: push, `--amend`, `--no-verify`, stage `.env*` / секретов. Blocker остался после re-review → не коммитить, доложить.
+**Auto-commit** ([`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc)): в том же ходе, где отмечена последняя задача объявленного CU, агент проходит pipeline целиком; CU объявлен в tasks, ВЕРИФИКАЦИЯ зелёная, review без blockers → коммит без вопроса пользователю. Запрещено: push, `--amend`, `--no-verify`, stage `.env*` / секретов. Blocker остался → не коммитить. В драйвере фазы перед стопом ещё одна фраза `architect` и одна дельта (§ Phase driver).
 
 ## Phase driver
 
@@ -177,7 +177,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 2. `node scripts/cu-verify.mjs` запускает `lint` и `test`. Перед `reviewer` сеанс добавляет `--full`: тогда же выполняется `typecheck`. `build:check` сеанс не запускает.
 3. `node scripts/cu-commit.mjs stage --paths-file <файл>` кладёт в индекс только перечисленные пути. Скрипт отклоняет `.env`, `.env.*`, `.local/dev-secrets.json` и `..`.
 4. Review по D6. Заголовок CU уже содержит `Review: reviewer|diff-only`. Для `reviewer` субагент сам читает `git diff --staged` и отвечает не больше чем 15 строками. Для `diff-only` сеанс пишет одну строку `Review:`.
-5. Blocker — правка кода, снова `stage` с тем же списком, один review только дельты.
+5. Blocker — правка кода и тест на этот blocker, снова `stage`, один review только дельты. Тот же blocker — одна фраза инварианта через `architect`, ещё один проход и одна дельта.
 6. `node scripts/cu-commit.mjs commit --paths-file <файл> --subject "<type(scope): subject>"`. Имя ветки подставляет скрипт. Индекс должен совпасть со списком. `--amend`, `--no-verify` и `push` скрипт не принимает. `next build` выполняет pre-commit hook.
 7. Отметка CU входит в тот же индекс. Хеш после коммита в файл задач не дописывается.
 
@@ -200,7 +200,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 
 **Claude Code.** `node scripts/run-phase.mjs P{N} --environment claude-code` из терминала или фоновой задачи с логом; allowlist [`.claude/settings.json`](../../.claude/settings.json).
 
-**Остановки.** Blocking Open question. Проверка упала дважды: один повтор с текстом ошибки, затем одна правка спеки через `architect`. Reviewer-blocker остался после review дельты. Хук коммита упал повторно. `Smoke: blocking`. Сеанс не уложился в `--max-turns`.
+**Остановки.** Blocking Open question. Красная проверка (assertion / lint / typecheck) после одного повтора с текстом ошибки. Сбой запуска Vitest (`cu-verify: test harness-failed`) после повтора скрипта и одного повтора оркестратора — без правки кода и без `architect`. Тот же reviewer-blocker после дельты, одной фразы инварианта от `architect` и ещё одной дельты. Хук коммита упал повторно. `Smoke: blocking`. Сеанс не уложился в `--max-turns`.
 
 ## Acceptance criteria
 
