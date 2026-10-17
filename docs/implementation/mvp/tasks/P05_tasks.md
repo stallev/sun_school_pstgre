@@ -17,7 +17,7 @@
 ## Phase DoR audit (lean: оркестратор inline + spec-gap)
 
 - [ ] P04 DoD; в БД есть проверенные записи
-- [ ] **Spec-gap:** `analytics_screens_spec.md` отсутствует — CU0 создаёт его (docs-only) до CU6–CU8
+- [x] **Spec-gap:** `analytics_screens_spec.md` отсутствует — CU0 создаёт его (docs-only) до CU6–CU8
 - [ ] Решения: Q-01 метрика рейтинга, Q-02 библиотека графиков (в CU6)
 - [ ] Остальные задачи проходят DoR; формулы — только по спец. §5, §9 и контрактам
 
@@ -25,7 +25,7 @@
 
 ### P05-CU0 — docs(implementation): add analytics screens spec · Review: diff-only · Commit: auto
 
-- [ ] P05-T0 · T2 · Spec: [спец. §9.1–§9.6](../../../my_specs/sunday_school_data_analytics_spec.md), [§5](../../../my_specs/sunday_school_data_analytics_spec.md) · UX: [ui_states D12](../../../design/ui_states_contract.md)
+- [x] P05-T0 · T2 · Spec: [спец. §9.1–§9.6](../../../my_specs/sunday_school_data_analytics_spec.md), [§5](../../../my_specs/sunday_school_data_analytics_spec.md) · UX: [ui_states D12](../../../design/ui_states_contract.md)
       Files: `docs/implementation/mvp/specs/analytics_screens_spec.md`, индекс
       Acceptance: spec с экранами группы/ученика/школы, фильтрами, графиками (одна ось), таблицами, пустыми состояниями, «как считали», Paths H/N/S, Acceptance → проходит DoR §2.3.6
       Paths: n/a — docs-only
@@ -34,7 +34,7 @@
 
 ### P05-CU1 — feat(domain): add bricks balance rules, schemas and codes · Review: diff-only · Commit: auto
 
-- [ ] P05-T1 · T1 · Contract: [bricks_ledger §3, §5, §8](../contracts/bricks_ledger_contract.md)
+- [x] P05-T1 · T1 · Contract: [bricks_ledger §3, §5, §8](../contracts/bricks_ledger_contract.md)
       Files: `packages/domain/src/bricks/{compute-balance,can-issue,schemas}.ts`, коды `BRICKS_*`, `AUDIT_ACTION` (`bricks.*`)
       Acceptance: остаток = набрано − выдано; `canIssue` не позволяет сверх остатка; компенсация не больше выданного → unit-тесты
       Paths: H [§3] · N [0, дробное, минус без примечания]
@@ -43,7 +43,7 @@
 
 ### P05-CU2 — feat(bricks): add balance, issue and compensate use-cases · Review: reviewer · Commit: auto
 
-- [ ] P05-T2 · T3 · Contract: [bricks_ledger §6, §8–§10](../contracts/bricks_ledger_contract.md) · Invariants: INV-10, INV-17, INV-18
+- [x] P05-T2 · T3 · Contract: [bricks_ledger §6, §8–§10](../contracts/bricks_ledger_contract.md) · Invariants: INV-10, INV-17, INV-18
       Files: `apps/web/src/data/bricks/{get-balance,list-ledger,issue-bricks,compensate-bricks}.ts`, `actions/bricks.ts`
       Acceptance: блокировка пары ученик+год; остаток внутри транзакции; журнал только добавление (нет update/delete); `requestId` идемпотентен; журнал изменений → тесты гонок и отказов
       Paths: H [§6] · N [§8: сверх остатка, нулевое, нет примечания, дата будущая] · S [AZ-40, AZ-41, AZ-D4: чужой → `NOT_FOUND`; роль БД без `UPDATE`/`DELETE`]
@@ -52,11 +52,11 @@
 
 ### P05-CU3 — feat(web): add bricks screen · Review: diff-only · Commit: auto
 
-- [ ] P05-T3 · T1 · Phase: [экранные требования `/bricks`](../phases_tasks_descriptions/P05_phase_description.md) · Flow: [teacher_flow §4.5](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `bricks`
+- [x] P05-T3 · T1 · Phase: [экранные требования `/bricks`](../phases_tasks_descriptions/P05_phase_description.md) · Flow: [teacher_flow §4.5](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `bricks`
       Files: `app/(app)/bricks/page.tsx`, `components/teacher/{BalanceTable,IssueBricksDialog,CompensateBricksDialog,LedgerList}.tsx`
       Acceptance: таблица с остатком и «требует внимания», диалоги выдачи/исправления, журнал ученика, пустые состояния, закрытый год допустим для выдачи → ручной smoke H/N
       Paths: H · N [сверх остатка, D8] · S [AZ-40, AZ-41]
-- [ ] P05-T4 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
+- [x] P05-T4 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
       Acceptance: ключи кирпичиков на двух языках
       Paths: n/a — copy
 
@@ -64,11 +64,11 @@
 
 ### P05-CU4 — feat(domain): add analytics sample, averages, dynamics and rating rules · Review: diff-only · Commit: auto
 
-- [ ] P05-T5 · T2 · Spec: [спец. БП-1…БП-4](../../../my_specs/sunday_school_data_analytics_spec.md) · Invariants: INV-11, INV-12, INV-15
+- [x] P05-T5 · T2 · Spec: [спец. БП-1…БП-4](../../../my_specs/sunday_school_data_analytics_spec.md) · Invariants: INV-11, INV-12, INV-15
       Files: `packages/domain/src/analytics/{sample-layers,attendance,averages}.ts`
       Acceptance: слои A/B/C/D, порог явки 50% от даты зачисления; среднее по тесту/тетради (присутствие либо «сдано позже»; `NULL` не входит, 0 входит); стихи по БП-2 → unit-тесты таблицами, включая обзорный и первый урок
       Paths: H · N [нет проверенных, нет зачисления, малая выборка]
-- [ ] P05-T6 · T2 · Spec: [спец. §9.1.3, РТ-3](../../../my_specs/sunday_school_data_analytics_spec.md)
+- [x] P05-T6 · T2 · Spec: [спец. §9.1.3, РТ-3](../../../my_specs/sunday_school_data_analytics_spec.md)
       Files: `packages/domain/src/analytics/{normalized-score,smoothing,trend,rating}.ts`
       Acceptance: нормированный балл по максимуму урока; скользящее среднее по 3; разность; тренд МНК по 6 урокам, < 4 точек → «мало данных»; метрика рейтинга по Q-01 → unit-тесты
       Paths: H · N [пропуск точки ≠ 0, < 4 точек]
@@ -77,7 +77,7 @@
 
 ### P05-CU5 — feat(analytics): add analytics read models and caching · Review: diff-only · Commit: auto
 
-- [ ] P05-T7 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · ADR: [adr_002 §5](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
+- [x] P05-T7 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · ADR: [adr_002 §5](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
       Files: `apps/web/src/data/analytics/{get-group-analytics,get-pupil-analytics,get-school-overview,get-conducted-lessons,get-data-quality}.ts`
       Acceptance: фильтр периода (год/месяц/диапазон), фильтр по группе; доступ по `teacher_assignment`; `'use cache'` с тегами и сбросом из `saveChecked`/`correctCheck`/выдачи → тесты выборок, проверка отсутствия чужих данных
       Paths: H · N [пустой период] · S [AZ-44…AZ-46: чужой → `NOT_FOUND`]

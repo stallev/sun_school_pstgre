@@ -52,8 +52,27 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
     await prisma.$disconnect();
   });
 
+  const closeAllActiveYears = async (
+    tx: Prisma.TransactionClient,
+  ): Promise<void> => {
+    const activeYears = await tx.academicYear.findMany({
+      where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+      select: { id: true },
+    });
+    for (const year of activeYears) {
+      const closed = await closeYearInTransaction(tx, adminUserId, organizationId, {
+        yearId: year.id,
+      });
+      if (!closed.ok) {
+        throw new Error(`closeAllActiveYears failed: ${JSON.stringify(closed)}`);
+      }
+    }
+  };
+
   it("create → activate → close leaves no ACTIVE year and closes enrollments", async () => {
     const out = await rolledBack(async (tx) => {
+      await closeAllActiveYears(tx);
+
       const created = await createYearInTransaction(tx, adminUserId, organizationId, {
         name: `IT-${Date.now()}`,
         startsOn: "2030-09-01",
@@ -83,6 +102,8 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
 
   it("second activateYear returns SCHOOL_YEAR_ACTIVE_EXISTS", async () => {
     const out = await rolledBack(async (tx) => {
+      await closeAllActiveYears(tx);
+
       const first = await createYearInTransaction(tx, adminUserId, organizationId, {
         name: `IT-A-${Date.now()}`,
         startsOn: "2032-09-01",
@@ -110,6 +131,17 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
   }, 60_000);
 
   it("parallel activations yield one success and one SCHOOL_YEAR_ACTIVE_EXISTS", async () => {
+    const priorActive = await prisma.academicYear.findFirst({
+      where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+      select: { id: true },
+    });
+    const priorActiveYearId = priorActive?.id ?? null;
+    if (priorActiveYearId) {
+      await prisma.$transaction((tx) =>
+        closeYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
+      );
+    }
+
     const suffix = Date.now();
     const yearA = await prisma.academicYear.create({
       data: {
@@ -152,6 +184,21 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
     expect(successes).toHaveLength(1);
     expect(blocked).toHaveLength(1);
 
+    const raceWinner = await prisma.academicYear.findFirst({
+      where: { id: { in: [yearA.id, yearB.id] }, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+      select: { id: true },
+    });
+    if (raceWinner) {
+      await prisma.$transaction((tx) =>
+        closeYearInTransaction(tx, adminUserId, organizationId, { yearId: raceWinner.id }),
+      );
+    }
     await prisma.academicYear.deleteMany({ where: { id: { in: [yearA.id, yearB.id] } } });
+
+    if (priorActiveYearId) {
+      await prisma.$transaction((tx) =>
+        activateYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
+      );
+    }
   }, 60_000);
 });

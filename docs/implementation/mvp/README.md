@@ -52,9 +52,10 @@
 | [`global_shell_spec.md`](./specs/global_shell_spec.md) | Оболочка и навигация |
 | [`access_and_registration_spec.md`](./specs/access_and_registration_spec.md) | Вход, регистрация, профиль |
 | [`homework_check_flow_spec.md`](./specs/homework_check_flow_spec.md) | Экраны проверки и сводной таблицы |
+| [`analytics_screens_spec.md`](./specs/analytics_screens_spec.md) | Аналитика группы, ученика, школа (W9-07) |
 | [`design_system_lab_spec.md`](./specs/design_system_lab_spec.md) | Каталог компонентов `/design-system` |
 
-Остальные specs W9 на lean **не создаются**: требования — в контрактах, UX-контрактах и разделе «Экранные требования» описаний фаз P03/P05.
+Остальные specs W9 на lean **не создаются**, кроме [`analytics_screens_spec.md`](./specs/analytics_screens_spec.md): требования — в контрактах, UX-контрактах и разделе «Экранные требования» описаний фаз P03/P05.
 
 ## Guides
 
