@@ -34,7 +34,7 @@
 
 ### P05-CU1 — feat(domain): add bricks balance rules, schemas and codes · Review: diff-only · Commit: auto
 
-- [ ] P05-T1 · T1 · Contract: [bricks_ledger §3, §5, §8](../contracts/bricks_ledger_contract.md)
+- [x] P05-T1 · T1 · Contract: [bricks_ledger §3, §5, §8](../contracts/bricks_ledger_contract.md)
       Files: `packages/domain/src/bricks/{compute-balance,can-issue,schemas}.ts`, коды `BRICKS_*`, `AUDIT_ACTION` (`bricks.*`)
       Acceptance: остаток = набрано − выдано; `canIssue` не позволяет сверх остатка; компенсация не больше выданного → unit-тесты
       Paths: H [§3] · N [0, дробное, минус без примечания]

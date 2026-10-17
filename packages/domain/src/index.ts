@@ -37,5 +37,8 @@ export * from "./check/next-lesson-date";
 export * from "./check/resolve-verses-to-recite";
 export * from "./check/schemas";
 export * from "./calendar/schemas";
+export * from "./bricks/compute-balance";
+export * from "./bricks/can-issue";
+export * from "./bricks/schemas";
 export type { MutationOk, MutationErr, MutationResult } from "./types/mutation-result";
 export type { Clock, IdGenerator } from "./types/ports";
