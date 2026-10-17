@@ -36,7 +36,7 @@ UI-экраны входят в **commit units** фазы (`docs/implementation/
 
 | Правило | Cursor AI | Claude Code |
 |--------|-----------|---------------|
-| Драйвер | `run-phase.mjs P{NN} --environment cursor` на **каждый** CU в этом чате | `run-phase.mjs P{NN} --environment claude-code` — цикл в терминале / фоне |
+| Драйвер | `run-phase.mjs P{NN} --environment cursor` на **каждый** CU в этом чате; чат — оркестратор, экраны пишет субагент `implementer` | `run-phase.mjs P{NN} --environment claude-code` — цикл в терминале / фоне |
 | Этот UI-guideline | Основная среда для экранов | Те же правила Design Lab / toast / pending в сеансе `claude -p` |
 | Коммит | `cu-verify` → `cu-commit` → review → commit; `Commit: auto` | То же в сеансе `claude -p` |
 | Каталог | Design Lab, atoms / `ui` / `patterns`; без `design-lab/**` в продукте | То же |

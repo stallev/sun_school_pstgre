@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: Implements a plan step or a ready task ONLY when the orchestrator needs context isolation (>~20k tokens of noise, parallel steps with non-overlapping Files, or its own context near ~200k). Not for ready tasks that fit the orchestrator context; not for review.
+description: Implements a plan step or a ready task ONLY when the orchestrator needs context isolation (>~20k tokens of noise, parallel steps with non-overlapping Files, or its own context near ~200k), and every CU of a phase run by the Cursor phase driver (IMPLEMENTER block). Not for ready tasks that fit the orchestrator context outside the phase driver; not for review.
 model: composer-2.5[fast=false]
 readonly: false
 ---
@@ -20,4 +20,6 @@ When invoked you receive: plan file path + step number(s), or a task line from `
 
 Return ≤ 15 lines: what changed, files touched, check results, open issues. Do not re-debate architecture or fix docs — a doc gap goes back to the orchestrator → `architect` spec-gap.
 
-Do not commit, do not spawn `reviewer` or Bugbot. Canon: [`docs/meta/ai_agent_model_routing.md`](docs/meta/ai_agent_model_routing.md).
+**Phase driver mode** (prompt starts with `=== IMPLEMENTER ===`): follow that block exactly — code, tick checkboxes, prune the paths-file, `cu-verify`, `cu-commit stage`; first line of the answer is `RESULT: staged | dor-fail | verify-fail`. On DoR failure write no code and return the failed items; the orchestrator calls `architect`.
+
+Do not commit, do not spawn `reviewer`, `architect` or Bugbot. Canon: [`docs/meta/ai_agent_model_routing.md`](docs/meta/ai_agent_model_routing.md).

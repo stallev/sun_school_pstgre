@@ -13,7 +13,7 @@ Self-contained canon for running an implementation phase with AI agents, with no
 | Goal | How it is reached |
 |------|-------------------|
 | The human approves a phase once, not every step | Pre-approved `Commit: auto` in the task file; in Cursor — user rules + `agent-commit-pipeline` (§8) |
-| No context build-up across a phase | One **fresh agent session per commit unit (CU)**. State lives in the task file and in git, not in a transcript |
+| No context build-up across a phase | One **fresh context per commit unit (CU)**: a headless session (Claude Code) or an `implementer` subagent under a thin chat orchestrator (Cursor). State lives in the task file and in git, not in a transcript |
 | Low token cost | Deterministic work (verify, stage, commit) runs in **scripts**, not in LLM sessions. Logs go to files, and only a tail of about 40 lines reaches the agent |
 | Quality gate kept | One independent `reviewer` per risky CU. Git hooks run the full build |
 | Safe failure | Every abnormal state ends the driver with a non-zero exit code. Nothing loops, and nothing is pushed |
@@ -41,7 +41,7 @@ The orchestration is model-agnostic. Pin models in agent definition files, never
 | **CU session** (main agent) | Workhorse coding model (Sonnet-class, Composer-class) | Fresh per CU | Yes | Every CU |
 | `architect` | Frontier reasoning model, high effort (Opus-class, Grok-4.x high) | Fresh subagent | No, edits `docs/**` and the task line only | DoR fails, or the escalation ladder (§7.3) |
 | `reviewer` | Frontier reasoning model, read-only tools. A different family from the writer is preferable | Fresh subagent | No | CUs that the profile marks `Review: reviewer` |
-| `implementer` | Same as the CU session | Fresh subagent | Yes | Only when reading for this CU would add > ~20k tokens of noise |
+| `implementer` | Same as the CU session | Fresh subagent | Yes | **Cursor:** every CU (the chat is a thin orchestrator). **Claude Code:** only when reading for this CU would add > ~20k tokens of noise |
 | Search / explore | Fast, cheap model (Haiku-class) | Fresh subagent | No | Broad codebase search |
 | Driver | **Not an LLM**: a Node script | n/a | No | Gates each CU; **Cursor Agent** loops in chat |
 | Verify / commit | **Not an LLM**: Node scripts | n/a | No | Every CU boundary |
@@ -49,7 +49,7 @@ The orchestration is model-agnostic. Pin models in agent definition files, never
 Rules:
 - Never spawn a separate "router" or "CU orchestrator" agent. The CU session is the orchestrator.
 - Subagents return at most 15 lines. The parent never receives a raw diff, a log or a review transcript.
-- **Environment fork (human chooses at phase start):** **`Cursor AI`** — chat loops `run-phase.mjs` with `--environment cursor` (default). **`Claude Code`** — terminal runs `run-phase.mjs` with `--environment claude-code` (headless `claude -p` loop). See [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md).
+- **Environment fork (human chooses at phase start):** **`Cursor AI`** — chat loops `run-phase.mjs` with `--environment cursor` (default) as a thin orchestrator and hands each CU to `implementer`. **`Claude Code`** — terminal runs `run-phase.mjs` with `--environment claude-code` (headless `claude -p` loop). See [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md).
 - Many headless harnesses do not let a subagent spawn subagents. Every delegation goes from the CU session, one level deep.
 
 ## 4. The flow
@@ -59,25 +59,30 @@ human: launch phrase with **Среда: Cursor AI | Claude Code** (prompts/phase
   │
   ├─ Cursor AI ─────────────────────────────────────────────
   ▼
-loop until driver reports phase complete or exit ≠ 0:
+loop until the first stdout line is not `STATUS: cu …`:
   run-phase.mjs P{NN} --environment cursor   ← one invocation per CU
     │  picks the first CU whose task checkboxes are not all [x]
-    │  refuses a dirty tree outside that CU's Files
-    │  writes .local/phase-runs/<CU>.paths, prints session prompt (stdout)
+    │  refuses a dirty tree outside that CU's Files (STATUS: dirty, exit 1)
+    │  writes .local/phase-runs/<CU>.paths
+    │  stdout: STATUS: cu <CU> · === IMPLEMENTER === block · === ORCHESTRATOR === block
     ▼
-  same Cursor Agent chat (orchestrator = CU session)
-    ├─ read only this CU's lines and the linked § sections
-    ├─ DoR inline; on failure one `architect` call (≤15 lines back)
-    ├─ write code (or one `implementer` if the noise budget is exceeded)
-    ├─ tick this CU's checkboxes in the task file
-    ├─ write exact paths into the paths-file
-    ├─ cu-verify.mjs [--full]        → log file; agent sees exit code + tail
-    ├─ cu-commit.mjs stage           → index = paths-file, nothing else
-    ├─ review: `reviewer` subagent reads `git diff --staged` (≤15 lines)
-    │          or diff-only by the session itself (one `Review:` line)
-    │    blocker → fix → stage again → one delta re-review → still blocked: stop phase
+  same Cursor Agent chat = thin orchestrator (no code, no source / diff reads)
+    ├─ `implementer` subagent, fresh per CU, gets the IMPLEMENTER block verbatim:
+    │    ├─ read only this CU's lines and the linked § sections; DoR inline
+    │    ├─ write code, tick this CU's checkboxes, prune the paths-file
+    │    ├─ cu-verify.mjs [--full]   → log file; sees exit code + tail; one retry
+    │    ├─ cu-commit.mjs stage      → index = paths-file, nothing else
+    │    ├─ diff-only CU: self-review, one `Review:` line
+    │    └─ returns ≤15 lines, first line RESULT: staged | dor-fail | verify-fail
+    ├─ dor-fail → one `architect` spec-gap → one more `implementer`
+    ├─ verify-fail → stop phase
+    ├─ `reviewer` CU: `reviewer` subagent reads `git diff --staged` (≤15 lines)
+    │    blocker → new `implementer` fixes only the blockers, stages → one delta re-review → still blocked: stop
     ├─ cu-commit.mjs commit --subject → hook: commitlint + typecheck + build
-    └─ run run-phase.mjs again for the next CU
+    │    hook fails → new `implementer` with the hook tail → commit again → fails again: stop
+    └─ one line "<CU> — <hash>", run run-phase.mjs again (nothing else carries over)
+
+Subagents are called only from the orchestrator (one level deep): nested subagents are not assumed.
   │
   ├─ Claude Code ───────────────────────────────────────────
   ▼
@@ -132,7 +137,8 @@ All scripts are Node ESM with no dependencies, cross-platform (`shell: true` on 
 | `assertStagePaths(list)` | Non-empty, no refused paths, deduplicated |
 | `assertCommitIndex(staged, allowed)` | The index must **equal** the list: no extra, no missing |
 | `buildCommitMessage(branch, subject)` | `<branch>: <subject>`. Validates type, scope, lowercase, no period, ≤ 120 characters |
-| `renderSessionPrompt({unit, tasksPath, pathsFile})` | The only prompt the CU session gets (§7.1) |
+| `renderSessionPrompt({unit, tasksPath, pathsFile, harness})` | The only prompt per CU (§7.1). `claude`: one session prompt. `cursor`: `=== IMPLEMENTER ===` block (code → verify → stage) + `=== ORCHESTRATOR ===` block (architect / reviewer / commit) |
+| `renderStatusLine(state, id)` | `STATUS: cu\|complete\|smoke-blocking\|dirty <id>` — the first stdout line of the driver |
 | `parseCuCommitArgs` / `parseRunPhaseArgs` | Strict argument parsing. `--amend`, `--no-verify`, `--force`, `push` are rejected outright |
 | `logTail(text, 40)` | The last N lines, which are all an agent ever sees of a log |
 
@@ -152,7 +158,7 @@ All scripts are Node ESM with no dependencies, cross-platform (`shell: true` on 
 
 ### 6.4 `run-phase.mjs P{NN} [--environment cursor|claude-code] [--harness cursor|print|claude] [--model <workhorse>] [--max-turns N]`
 
-- **`--environment cursor` (default)** — **Cursor AI**: one CU per invocation (`harness cursor`). Decide → dirty-tree gate → paths-file → prompt on **stdout** → exit `0`. The chat runs the CU and calls the driver again. Do **not** run a multi-hour foreground command in the agent shell (~10 min cap).
+- **`--environment cursor` (default)** — **Cursor AI**: one CU per invocation (`harness cursor`). Decide → dirty-tree gate → paths-file → `STATUS: cu <CU>` and the two-block prompt on **stdout** → exit `0`. The chat orchestrates the CU through `implementer` and calls the driver again. Every outcome prints its `STATUS:` line first, so exit `0` for "phase complete" and for "next CU" is never ambiguous. Do **not** run a multi-hour foreground command in the agent shell (~10 min cap).
 - **`--environment claude-code`** — **Claude Code**: sets `harness claude`; driver **loops** `claude -p` per CU until the phase ends or fails. Run from a real terminal or a **background** task with log redirect (see launch prompt). On Windows resolves `claude` via `where.exe`.
 - **`--harness print`** — dry-run label; same as `cursor` for prompt output.
 - Conflicting `--environment` and `--harness` (e.g. `cursor` + `claude`) → exit `1`, reason `environment-harness`.
@@ -177,6 +183,8 @@ Pass `--model` explicitly. `--output-format json` returns usage and cost; the dr
 ## 7. The CU session
 
 ### 7.1 Prompt (rendered by the driver; do not add more)
+
+Below is the single-session form (`claude`). The `cursor` form splits the same steps: 1–4 and verify / stage go to the `IMPLEMENTER` block, review / commit / escalation to the `ORCHESTRATOR` block (§4).
 
 1. `Execute <CU> per <tasks file>.` `Commit: auto` is pre-approved. Do not ask between steps.
 2. Read only this CU's lines and the linked `§`. Check DoR yourself. If DoR fails, call `architect` once, then write the code.
@@ -290,7 +298,7 @@ Profile → `Review:` mapping:
 | CU session runs on an expensive frontier model | No `--model` in the headless command | Pass the workhorse model explicitly |
 | `cu-commit commit` fails with `missing=` | The paths-file lists a file that was not changed | `cu-commit` drops listed paths that `git status --porcelain` does not report (prints `unchanged: …`), and the session prompt asks to prune them. The driver pre-fill is a starting point, not the answer |
 | Phase started as one long `run-phase --harness claude` in Cursor shell | Foreground cap ~10 min; wrong harness for Cursor | Use default `cursor` harness: **one** `run-phase.mjs P{NN}` per CU inside the chat, not a background Claude CLI loop |
-| Context of the phase chat grows | Whole-phase work in one Cursor chat accumulates transcripts | Prefer focused reads per CU; `implementer` when noise > ~20k tokens; start a new chat only if context is exhausted mid-phase (driver resumes from checkboxes) |
+| Context of the phase chat overflows after a few CUs (P02: 3 of 10) | The chat wrote code, read logs and review answers for every CU itself | Thin orchestrator (§4): each CU goes to a fresh `implementer`; the chat keeps only `RESULT` / `Review` / hash lines. A new chat with the same launch phrase resumes from the checkboxes if a limit is still hit |
 | `claude.cmd` not found on Windows (`--harness claude`) | WinGet installs `claude.exe` without `.cmd` shim | Use Cursor harness (default), or let the driver resolve `claude` via `where.exe` |
 | Commit has the build log in context | Raw `git commit` | Only `cu-commit.mjs` |
 | Driver loops on the same CU | The session did not tick checkboxes | The driver already stops with exit 1. Fix the prompt or the task grammar |

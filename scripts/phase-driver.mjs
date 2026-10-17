@@ -238,32 +238,102 @@ export function renderSmokeList(phaseId, deferredUnits) {
   return `${lines.join("\n")}\n`;
 }
 
-export function renderSessionPrompt({ unit, tasksPath, pathsFile, harness = "cursor" }) {
-  const verifyCommand = unit.review === "reviewer" ? "node scripts/cu-verify.mjs --full" : "node scripts/cu-verify.mjs";
-  const reviewStep =
-    unit.review === "reviewer"
-      ? "Вызови субагента reviewer. В промпте только идентификатор CU и путь к задачам, и просьба прочитать git diff --staged. Ответ не длиннее 15 строк."
-      : "Сделай diff-only сам и оставь одну строку Review:.";
-  const shellLine =
-    harness === "claude"
-      ? "Команды запускай через Bash tool Claude Code; allowlist в .claude/settings.json."
-      : "Команды запускай через Shell в Cursor Agent. Сырой git add / git commit / push не вызывай — только cu-commit.mjs и правила agent-commit-pipeline.";
+/** Stdout markers of the cursor harness: the first stdout line is always `STATUS: …`. */
+export const STATUS_PREFIX = "STATUS:";
+export const IMPLEMENTER_MARKER = "=== IMPLEMENTER ===";
+export const ORCHESTRATOR_MARKER = "=== ORCHESTRATOR ===";
+/** First line of the implementer's answer; the orchestrator branches on it. */
+export const IMPLEMENTER_RESULTS = { staged: "staged", dorFail: "dor-fail", verifyFail: "verify-fail" };
+
+export function renderStatusLine(state, id) {
+  return `${STATUS_PREFIX} ${state} ${id}`;
+}
+
+function verifyCommandFor(unit) {
+  return unit.review === "reviewer" ? "node scripts/cu-verify.mjs --full" : "node scripts/cu-verify.mjs";
+}
+
+const REVIEWER_CALL =
+  "Вызови субагента reviewer. В промпте только идентификатор CU и путь к задачам, и просьба прочитать git diff --staged. Ответ не длиннее 15 строк.";
+
+function codeAndStageLines({ unit, tasksPath, pathsFile }) {
+  return [
+    `Отметь чекбоксы этого CU в ${tasksPath} до коммита. Хеш после коммита не дописывай.`,
+    `Запиши в ${pathsFile} ровно те конкретные пути, которые войдут в индекс, включая файл задач. Без glob и без секретов.`,
+    `Драйвер заранее вписал в ${pathsFile} все существующие пути из Files. Удали те, что ты не менял. cu-commit пропускает неизменённые пути и печатает их как unchanged.`,
+    "Если менялись .cursor/rules/*.mdc, до stage выполни npm run rules:sync и добавь .claude/rules/ в список путей.",
+    verifyCommandFor(unit),
+    `node scripts/cu-commit.mjs stage --paths-file ${pathsFile}`,
+  ];
+}
+
+function commitLine({ unit, pathsFile }) {
+  return `node scripts/cu-commit.mjs commit --paths-file ${pathsFile} --subject "${unit.subject}"`;
+}
+
+const GIT_GUARD_LINE = "Сырой git add и git commit не вызывай. build:check не запускай: его выполняет pre-commit hook.";
+
+/** Claude Code headless: one fresh `claude -p` session runs the whole CU. */
+function renderSingleSessionPrompt({ unit, tasksPath, pathsFile }) {
+  const reviewStep = unit.review === "reviewer" ? REVIEWER_CALL : "Сделай diff-only сам и оставь одну строку Review:.";
   return [
     `Выполни ${unit.id} по ${tasksPath}.`,
     "Commit: auto уже разрешён. Между шагами не спрашивай подтверждения.",
     "Прочитай только строки этого CU и указанные §. DoR проверь сам. Провал DoR — один вызов architect, затем код.",
-    `Отметь чекбоксы этого CU в ${tasksPath} до коммита. Хеш после коммита не дописывай.`,
-    shellLine,
-    `Запиши в ${pathsFile} ровно те конкретные пути, которые войдут в индекс, включая файл задач. Без glob и без секретов.`,
-    `Драйвер заранее вписал в ${pathsFile} все существующие пути из Files. Удали те, что ты не менял. cu-commit пропускает неизменённые пути и печатает их как unchanged.`,
-    verifyCommand,
-    `node scripts/cu-commit.mjs stage --paths-file ${pathsFile}`,
+    "Команды запускай через Bash tool Claude Code; allowlist в .claude/settings.json.",
+    ...codeAndStageLines({ unit, tasksPath, pathsFile }),
     reviewStep,
     "Если reviewer вернул blocker: поправь код, снова выполни stage с тем же файлом путей, затем один review только дельты.",
-    `node scripts/cu-commit.mjs commit --paths-file ${pathsFile} --subject "${unit.subject}"`,
-    "Сырой git add и git commit не вызывай. build:check не запускай: его выполняет pre-commit hook.",
-    "Если менялись .cursor/rules/*.mdc, до stage выполни npm run rules:sync и добавь .claude/rules/ в список путей.",
+    commitLine({ unit, pathsFile }),
+    GIT_GUARD_LINE,
   ].join("\n");
+}
+
+/**
+ * Cursor AI: the long-lived chat is a thin orchestrator; a fresh `implementer` subagent does the CU
+ * (code → verify → stage), so the chat grows by a few lines per CU, not by the CU's code.
+ * Nested subagents are not assumed: architect and reviewer are called by the orchestrator.
+ */
+function renderCursorPrompt({ unit, tasksPath, pathsFile }) {
+  const { staged, dorFail, verifyFail } = IMPLEMENTER_RESULTS;
+  const selfReview =
+    unit.review === "reviewer"
+      ? []
+      : ["После stage сделай diff-only review сам (git diff --staged) и включи в ответ одну строку Review: diff-only — …."];
+  const implementer = [
+    `Выполни задачи ${unit.id} по ${tasksPath}. Ты субагент implementer в режиме драйвера фазы.`,
+    "Прочитай только строки этого CU и указанные §. DoR проверь сам.",
+    `Провал DoR: кода не пиши, architect не вызывай, верни первой строкой RESULT: ${dorFail} и пункты DoR.`,
+    "Команды запускай через Shell. Сырой git add / git commit / push не вызывай, коммит не делай, reviewer не вызывай.",
+    ...codeAndStageLines({ unit, tasksPath, pathsFile }),
+    `Проверка упала: один повтор с текстом ошибки. Упала снова — верни RESULT: ${verifyFail} и хвост ошибки.`,
+    ...selfReview,
+    `Ответ не длиннее 15 строк. Первая строка: RESULT: ${staged} | ${dorFail} | ${verifyFail}. Дальше: изменённые файлы, итог проверки, открытые вопросы.`,
+  ];
+  const reviewStep =
+    unit.review === "reviewer"
+      ? `При RESULT: ${staged} — ${REVIEWER_CALL}`
+      : `При RESULT: ${staged} — review уже сделан implementer: перенеси его строку Review: в ответ.`;
+  const orchestrator = [
+    `Ты оркестратор ${unit.id}. Код не пиши, исходники и diff не читай, итоги прошлых CU не пересказывай.`,
+    "Commit: auto уже разрешён. Между шагами не спрашивай подтверждения.",
+    "Вызови субагента implementer. Промпт — блок IMPLEMENTER выше дословно, без добавлений.",
+    `RESULT: ${dorFail} — один вызов architect (spec-gap) с этими пунктами, затем один повторный вызов implementer с тем же блоком.`,
+    `RESULT: ${verifyFail} или повторный ${dorFail} — остановись и доложи пользователю.`,
+    reviewStep,
+    `Blocker — новый вызов implementer: исправить только перечисленные blockers ${unit.id}, затем ${verifyCommandFor(unit)} и stage с ${pathsFile}. Затем один review только дельты. Blocker остался — остановись и доложи.`,
+    commitLine({ unit, pathsFile }),
+    "Хук упал — новый вызов implementer с хвостом хука, затем commit ещё раз. Упал повторно — остановись и доложи.",
+    GIT_GUARD_LINE,
+    `После коммита одна строка «${unit.id} — <hash>» и сразу снова run-phase.`,
+  ];
+  return [IMPLEMENTER_MARKER, ...implementer, ORCHESTRATOR_MARKER, ...orchestrator].join("\n");
+}
+
+export function renderSessionPrompt({ unit, tasksPath, pathsFile, harness = "cursor" }) {
+  return harness === "claude"
+    ? renderSingleSessionPrompt({ unit, tasksPath, pathsFile })
+    : renderCursorPrompt({ unit, tasksPath, pathsFile });
 }
 
 const FORBIDDEN_COMMIT_ARGS = new Set(["--amend", "--no-verify", "--force", "--push", "push"]);

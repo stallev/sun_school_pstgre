@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Phase driver: picks the next open CU, gates dirty tree, writes paths-file and session prompt.
- * --environment cursor (default) / print — one CU per invocation; Cursor Agent loops in chat.
+ * --environment cursor (default) / print — one CU per invocation; Cursor Agent loops in chat as a thin
+ *   orchestrator, an implementer subagent does each CU. First stdout line: `STATUS: cu|complete|smoke-blocking|dirty <id>`.
  * --environment claude-code — headless loop via `claude -p` (Claude Code CLI).
  */
 import { spawnSync } from "node:child_process";
@@ -19,6 +20,7 @@ import {
   parseRunPhaseArgs,
   renderSessionPrompt,
   renderSmokeList,
+  renderStatusLine,
   summarizeSessionResult,
 } from "./phase-driver.mjs";
 
@@ -62,12 +64,14 @@ function prepare(units) {
   const step = decidePhaseStep(units);
   if (step.action === "complete") {
     const smoke = writeSmoke(step.deferred);
+    console.log(renderStatusLine("complete", parsed.phase));
     console.error(`run-phase: ${parsed.phase} завершена`);
     console.error(`smoke: ${smoke}`);
     process.exit(0);
   }
   if (step.action === "smoke-blocking") {
     const smoke = writeSmoke(step.deferred);
+    console.log(renderStatusLine("smoke-blocking", step.blocking.id));
     console.error(`run-phase: стоп перед ${step.next.id}: у ${step.blocking.id} Smoke: blocking`);
     console.error(`smoke: ${smoke}`);
     process.exit(2);
@@ -75,6 +79,7 @@ function prepare(units) {
 
   const dirty = classifyDirtyPaths(dirtyPaths(), step.unit.files, tasksPath);
   if (dirty.blocked.length > 0) {
+    console.log(renderStatusLine("dirty", step.unit.id));
     console.error("run-phase: грязное дерево вне Files этого CU:");
     for (const filePath of dirty.blocked) console.error(`  ${filePath}`);
     process.exit(1);
@@ -145,10 +150,9 @@ function emitCursorStep(prepared) {
   }
   console.error(`run-phase: ${prepared.unit.id} · environment ${parsed.environment} · harness ${parsed.harness}`);
   console.error(`paths: .local/phase-runs/${prepared.unit.id}.paths`);
-  console.error("prompt: ---");
+  console.log(renderStatusLine("cu", prepared.unit.id));
   console.log(prepared.prompt);
-  console.error("prompt: ---");
-  console.error(`run-phase: после коммита снова: node scripts/run-phase.mjs ${parsed.phase}`);
+  console.error(`run-phase: после коммита снова: node scripts/run-phase.mjs ${parsed.phase} --environment ${parsed.environment}`);
 }
 
 if (parsed.harness === "cursor" || parsed.harness === "print") {

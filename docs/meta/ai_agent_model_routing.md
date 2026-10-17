@@ -173,7 +173,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 
 **Порядок сеанса.**
 
-1. Читает строки CU и указанные `§` и пишет код. `implementer` — только если чтение этого CU даёт больше ~20k токенов шума.
+1. Читает строки CU и указанные `§` и пишет код. **Cursor AI:** шаги 1–3 делает свежий `implementer` по блоку `IMPLEMENTER` промпта драйвера, а чат-оркестратор — шаги 4–6 (исключение из `model-routing.mdc` §2). **Claude Code:** `implementer` — только если чтение этого CU даёт больше ~20k токенов шума.
 2. `node scripts/cu-verify.mjs` запускает `lint` и `test`. Перед `reviewer` сеанс добавляет `--full`: тогда же выполняется `typecheck`. `build:check` сеанс не запускает.
 3. `node scripts/cu-commit.mjs stage --paths-file <файл>` кладёт в индекс только перечисленные пути. Скрипт отклоняет `.env`, `.env.*`, `.local/dev-secrets.json` и `..`.
 4. Review по D6. Заголовок CU уже содержит `Review: reviewer|diff-only`. Для `reviewer` субагент сам читает `git diff --staged` и отвечает не больше чем 15 строками. Для `diff-only` сеанс пишет одну строку `Review:`.
@@ -187,7 +187,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 
 | Среда | Флаг | Поведение |
 |-------|------|-----------|
-| **Cursor AI** (default) | `--environment cursor` | Один CU за вызов; промпт на stdout; цикл в чате Cursor |
+| **Cursor AI** (default) | `--environment cursor` | Один CU за вызов; stdout: `STATUS: …`, блоки `IMPLEMENTER` / `ORCHESTRATOR`; цикл в чате Cursor, CU — в субагенте `implementer` |
 | **Claude Code** | `--environment claude-code` | Драйвер крутит `claude -p` до конца фазы; JSON сеансов в `.local/phase-runs/<CU>-session-*.json` |
 
 Не смешивать: в Cursor Agent не запускать `claude-code` harness «вместо» работы в чате; в Claude Code не дублировать CU вручную, пока крутится драйвер.
@@ -196,7 +196,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 
 **Запуск.** Фраза из [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md) с явной строкой **Среда: Cursor AI** или **Среда: Claude Code**.
 
-**Cursor AI.** Новый чат Agent; на каждый CU — `node scripts/run-phase.mjs P{N} --environment cursor`. Shell для `cu-*`; без сырого `git add` / `commit` / `push`.
+**Cursor AI.** Новый чат Agent — тонкий оркестратор на всю фазу; на каждый CU — `node scripts/run-phase.mjs P{N} --environment cursor`, ветвление по первой строке stdout (`STATUS: cu|complete|smoke-blocking|dirty`). Код, логи проверок и diff остаются в контекстах `implementer` / `reviewer`. Shell для `cu-*`; без сырого `git add` / `commit` / `push`.
 
 **Claude Code.** `node scripts/run-phase.mjs P{N} --environment claude-code` из терминала или фоновой задачи с логом; allowlist [`.claude/settings.json`](../../.claude/settings.json).
 
@@ -238,7 +238,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 | [`ai_first_project_methodology.md`](./ai_first_project_methodology.md) | Цикл КОНТЕКСТ → TIER/DoR → … → COMMIT |
 | [`agent-code-review-subagent.mdc`](../../.cursor/rules/agent-code-review-subagent.mdc) | Review-гейт CU, sensitive zones |
 | [`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc) | Auto-commit на границе CU |
-| [`scripts/run-phase.mjs`](../../scripts/run-phase.mjs) | Драйвер фазы: один свежий сеанс на CU |
+| [`scripts/run-phase.mjs`](../../scripts/run-phase.mjs) | Драйвер фазы: один свежий контекст на CU (`claude -p` или `implementer`) |
 | [`ai_code_review_protocol.md`](../guidelines/ai_code_review_protocol.md) | HOW трёх проходов и prompt `reviewer` |
 | [Subagents](https://cursor.com/docs/agent/subagents) | Формат `.cursor/agents/*.md` |
 

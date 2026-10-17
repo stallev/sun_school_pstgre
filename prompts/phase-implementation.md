@@ -11,7 +11,7 @@
 | | **Cursor AI** | **Claude Code** |
 |---|----------------|-----------------|
 | Где | Новый чат **Cursor Agent** | Терминал + CLI `claude`, или чат Cursor только для **запуска** драйвера в фоне |
-| Драйвер | `node scripts/run-phase.mjs PNN` (default: `--environment cursor`) — **на каждый CU** | `node scripts/run-phase.mjs PNN --environment claude-code` — **цикл** до конца фазы или ошибки |
+| Драйвер | `node scripts/run-phase.mjs PNN` (default: `--environment cursor`) — **на каждый CU**; чат — оркестратор, CU делает субагент `implementer` | `node scripts/run-phase.mjs PNN --environment claude-code` — **цикл** до конца фазы или ошибки |
 | Harness | `cursor` (промпт на stdout, агент в чате выполняет CU) | `claude` (`claude -p` headless, JSON в `.local/phase-runs/*-session-*.json`) |
 | Разрешения | User rules + `agent-commit-pipeline`; Shell для `cu-*` | [`.claude/settings.json`](../.claude/settings.json) allowlist |
 | Не смешивать | Не запускать `--environment claude-code` внутри Cursor Agent как способ «сделать фазу в чате» | Не ждать, что Cursor сам крутит CU без драйвера |
@@ -23,25 +23,27 @@
 ## Фраза: Cursor AI
 
 ```text
-Среда: Cursor AI. Запусти имплементацию фазы PNN целиком в этом чате.
+Среда: Cursor AI. Запусти имплементацию фазы PNN целиком в этом чате. Ты тонкий оркестратор: код пишет субагент implementer, по одному свежему вызову на CU.
 
-На каждый CU:
+Цикл:
 1) node scripts/run-phase.mjs PNN --environment cursor
-2) выполни промпт из stdout (verify → stage → review → commit через scripts/cu-commit.mjs)
-3) снова шаг 1, пока драйвер не сообщит о завершении фазы или не вернёт код 2
+2) по первой строке stdout:
+   - STATUS: cu <CU> — выполни блок ORCHESTRATOR; блок IMPLEMENTER передай субагенту implementer дословно
+   - STATUS: complete PNN — пройди smoke из .local/phase-runs/PNN-smoke.md и доложи
+   - STATUS: smoke-blocking <CU> — остановись и доложи
+   - STATUS: dirty <CU> или любой другой ненулевой код — остановись и доложи
+3) после коммита — одна строка «<CU> — <hash>» и снова шаг 1
 
+Сам код не пиши, исходники и git diff не читай, итоги прошлых CU не пересказывай.
 Задачи фазы: docs/implementation/mvp/tasks/PNN_tasks.md.
 Протокол: docs/meta/ai_agent_model_routing.md § Phase driver.
 
 Коммиты по Commit: auto для всех CU этой фазы разрешены заранее. Между CU не спрашивай подтверждения. Push не делай. Сырой git add и git commit не вызывай.
 
-Коды выхода драйвера:
-- 0 и «фаза завершена» — пройти smoke из .local/phase-runs/PNN-smoke.md
-- 2 — Smoke: blocking у закрытого CU; остановись и доложи
-- 1 — грязное дерево вне Files CU, CU не отмечен, проверка/хук/reviewer после повтора
-
 Не используй --environment claude-code в этом чате.
 ```
+
+Чат растёт на несколько строк за CU: код, вывод проверок и diff остаются в контексте `implementer` и `reviewer`. Если чат всё же исчерпан, откройте новый с той же фразой: драйвер продолжит с первого неотмеченного CU.
 
 ---
 
@@ -85,6 +87,6 @@ node scripts/run-phase.mjs PNN --environment claude-code
 
 ## Коды выхода
 
-- `0` — фаза завершена **или** (режим `cursor`) выдан промпт следующего CU.
+- `0` — фаза завершена (`STATUS: complete`) **или** (режим `cursor`) выдан промпт следующего CU (`STATUS: cu <CU>`). Различать по первой строке stdout, не по тексту stderr.
 - `2` — `Smoke: blocking` у закрытого CU.
 - `1` — грязное дерево вне Files CU; CU не отмечен; `claude` не найден (`claude-code`); ошибка сеанса; проверка/хук/reviewer после повтора; конфликт `--environment` и `--harness`.
