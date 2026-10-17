@@ -60,11 +60,11 @@
 
 ### P04-CU4 — feat(check): add lesson completion and check read models · Review: reviewer · Commit: auto
 
-- [ ] P04-T6 · T3 · Contract: [homework_check §5.8](../contracts/homework_check_contract.md)
+- [x] P04-T6 · T3 · Contract: [homework_check §5.8](../contracts/homework_check_contract.md)
       Files: `data/checks/complete-lesson-check.ts`
       Acceptance: `HELD → CHECK_COMPLETED` при ≥ 1 проверенной записи; идемпотентно; журнал `lesson.check_completed` → тесты
       Paths: H · N [`CHECK_NOTHING_CHECKED`] · S [AZ-33]
-- [ ] P04-T7 · T1 · Spec: [flow §3, §5, §7](../specs/homework_check_flow_spec.md)
+- [x] P04-T7 · T1 · Spec: [flow §3, §5, §7](../specs/homework_check_flow_spec.md)
       Files: `data/checks/{get-check-roster,get-check-record,get-lesson-table,get-lesson-progress,get-current-lesson}.ts`
       Acceptance: roster на дату урока (+ добавленные позже), стихи предыдущего обычного урока, прогресс N из M, «текущий урок» по поясу школы → тесты выборок
       Paths: H · N [нет учеников, нет текущего урока] · S [фильтр по группе и году; чужой → `NOT_FOUND`]

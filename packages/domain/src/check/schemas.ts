@@ -124,3 +124,12 @@ export const overrideVerseScoreInputSchema = z
   .strict();
 
 export type OverrideVerseScoreInput = z.infer<typeof overrideVerseScoreInputSchema>;
+
+/** homework_check_contract §5.8 — complete lesson check session. */
+export const completeLessonCheckInputSchema = z
+  .object({
+    lessonId: z.uuid(),
+  })
+  .strict();
+
+export type CompleteLessonCheckInput = z.infer<typeof completeLessonCheckInputSchema>;
