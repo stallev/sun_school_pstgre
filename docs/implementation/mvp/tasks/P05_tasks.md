@@ -43,7 +43,7 @@
 
 ### P05-CU2 — feat(bricks): add balance, issue and compensate use-cases · Review: reviewer · Commit: auto
 
-- [ ] P05-T2 · T3 · Contract: [bricks_ledger §6, §8–§10](../contracts/bricks_ledger_contract.md) · Invariants: INV-10, INV-17, INV-18
+- [x] P05-T2 · T3 · Contract: [bricks_ledger §6, §8–§10](../contracts/bricks_ledger_contract.md) · Invariants: INV-10, INV-17, INV-18
       Files: `apps/web/src/data/bricks/{get-balance,list-ledger,issue-bricks,compensate-bricks}.ts`, `actions/bricks.ts`
       Acceptance: блокировка пары ученик+год; остаток внутри транзакции; журнал только добавление (нет update/delete); `requestId` идемпотентен; журнал изменений → тесты гонок и отказов
       Paths: H [§6] · N [§8: сверх остатка, нулевое, нет примечания, дата будущая] · S [AZ-40, AZ-41, AZ-D4: чужой → `NOT_FOUND`; роль БД без `UPDATE`/`DELETE`]

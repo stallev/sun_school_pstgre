@@ -8,4 +8,6 @@ export const CACHE_TAGS = {
   SCHOOL_TIMEZONE: "school-timezone",
   BIBLE_BOOKS: "bible:books",
   bibleTranslation: (code: string) => `bible:translation:${code}`,
+  bricksBalance: (pupilId: string, yearId: string) => `bricks:balance:${pupilId}:${yearId}`,
+  bricksLedger: (pupilId: string, yearId: string) => `bricks:ledger:${pupilId}:${yearId}`,
 } as const;
