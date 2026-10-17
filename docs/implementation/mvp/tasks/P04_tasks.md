@@ -42,7 +42,7 @@
 
 ### P04-CU2 — feat(check): add partial and final check save use-cases · Review: reviewer · Commit: auto
 
-- [ ] P04-T4 · T3 · Contract: [homework_check §5.4–§5.5, §8, §10](../contracts/homework_check_contract.md)
+- [x] P04-T4 · T3 · Contract: [homework_check §5.4–§5.5, §8, §10](../contracts/homework_check_contract.md)
       Files: `apps/web/src/data/checks/{save-partial-check,save-checked}.ts`, `actions/checks.ts`
       Acceptance: upsert записи; событие оценки на изменённое поле; `saveChecked` — присутствие обязательно, `points_total` и `scoring_snapshot` заморожены, `late` вычислен, `expectedUpdatedAt` проверен; год `ACTIVE`; повтор идемпотентен; журнал `check.saved` → тесты по таблице §8
       Paths: H [§5.4–5.5] · N [§8: присутствие, диапазон, `CONFLICT`, закрытый год] · S [AZ-33, AZ-P5, AZ-P6: чужой урок → `NOT_FOUND`; `late`/баллы не с клиента]

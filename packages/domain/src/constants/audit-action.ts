@@ -78,5 +78,6 @@ export const AUDIT_ENTITY_TYPE = {
   BIBLE_TRANSLATION: "bible_translation",
   LESSON: "lesson",
   GRADE_EVENT: "grade_event",
+  HOMEWORK_CHECK: "homework_check",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];
