@@ -93,7 +93,7 @@
 
 ### P03-CU7 — feat(web): add lessons list, lesson card and verses screens · Review: diff-only · Commit: auto
 
-- [ ] P03-T11 · T1 · Flow: [teacher_flow §4.2](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `lessons`, `lesson`, `verses`
+- [x] P03-T11 · T1 · Flow: [teacher_flow §4.2](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `lessons`, `lesson`, `verses`
       Files: `app/(app)/lessons/page.tsx`, `lessons/[lessonId]/page.tsx`, `verses/page.tsx`, `components/teacher/{LessonCard,LessonListRow}.tsx`
       Acceptance: список, карточка со стихами и текстом, справочник; D1/D2/D3/D4 состояния; удаление только без проверок; «Проверить» → заглушка P04 → ручной smoke
       Paths: H · N [UX-05 D1–D4] · S [AZ-32, AZ-36: чужой урок → 404]

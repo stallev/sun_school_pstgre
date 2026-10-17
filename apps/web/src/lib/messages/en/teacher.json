@@ -28,6 +28,7 @@
     "translation_niv": "NIV",
     "toast_created": "Lesson created",
     "toast_updated": "Lesson saved",
+    "toast_deleted": "Lesson deleted",
     "no_year_title": "No active school year",
     "no_year_description": "Lesson creation is available after the year is activated.",
     "form": {
@@ -87,6 +88,47 @@
     "verses_limit": "Too many verses for one lesson",
     "review_no_verses": "Review lessons cannot have verses or a test",
     "verse_range_invalid": "Check the verse range",
-    "verse_locked": "Verses and lesson type cannot change after checks exist"
+    "verse_locked": "Verses and lesson type cannot change after checks exist",
+    "list": {
+      "title": "Lessons",
+      "subtitle": "{group} · {year}",
+      "new_lesson": "New lesson",
+      "grade_filter": "Group",
+      "grade_apply": "Show",
+      "empty_title": "No lessons yet",
+      "empty_description": "Create the first lesson for this group in the active year.",
+      "empty_action": "New lesson"
+    },
+    "detail": {
+      "card_title": "Lesson {n} · {title}",
+      "date": "Date",
+      "lead": "Led by",
+      "has_test_yes": "In-class test",
+      "has_test_no": "No test",
+      "body": "Lesson plan",
+      "verse_missing": "Text unavailable in the group translation",
+      "check_progress": "Homework check",
+      "check_not_started": "Not checked yet",
+      "check_partial": "Checked {checked} of {total}",
+      "check_completed": "Check completed",
+      "action_check": "Check homework",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "delete_confirm_title": "Delete this lesson?",
+      "delete_confirm_description": "The lesson and its golden verses will be removed. This cannot be undone.",
+      "delete_confirm_action": "Delete lesson"
+    },
+    "verses_page": {
+      "title": "Golden verses",
+      "subtitle": "{group} · {year}",
+      "empty_title": "No golden verses yet",
+      "empty_description": "Verses appear here after you add them to lessons.",
+      "used_in": "Used in lessons",
+      "usage_link": "Lesson {n} · {title}"
+    },
+    "check_stub": {
+      "title": "Homework check",
+      "description": "Sequential homework check arrives in the next release. Use the lesson card to review the plan and verses."
+    }
   }
 }

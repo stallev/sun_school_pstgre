@@ -194,6 +194,7 @@ export async function loadLessonInOrganization(
       body: string | null;
       hasTest: boolean;
       leadTeacherId: string;
+      status: string;
       createdAt: Date;
     }
   | MutationErr
@@ -210,6 +211,7 @@ export async function loadLessonInOrganization(
       body: true,
       hasTest: true,
       leadTeacherId: true,
+      status: true,
       createdAt: true,
     },
   });

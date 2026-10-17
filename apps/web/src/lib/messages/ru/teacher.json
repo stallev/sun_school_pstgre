@@ -28,6 +28,7 @@
     "translation_niv": "NIV",
     "toast_created": "Урок создан",
     "toast_updated": "Урок сохранён",
+    "toast_deleted": "Урок удалён",
     "no_year_title": "Нет активного учебного года",
     "no_year_description": "Создание урока станет доступно после активации года.",
     "form": {
@@ -87,6 +88,47 @@
     "verses_limit": "Слишком много стихов для одного урока",
     "review_no_verses": "У обзорного урока не бывает стихов и теста",
     "verse_range_invalid": "Проверьте диапазон стихов",
-    "verse_locked": "Стихи и тип урока нельзя менять после проверок"
+    "verse_locked": "Стихи и тип урока нельзя менять после проверок",
+    "list": {
+      "title": "Уроки",
+      "subtitle": "{group} · {year}",
+      "new_lesson": "Новый урок",
+      "grade_filter": "Группа",
+      "grade_apply": "Показать",
+      "empty_title": "Уроков пока нет",
+      "empty_description": "Создайте первый урок для группы в активном году.",
+      "empty_action": "Новый урок"
+    },
+    "detail": {
+      "card_title": "Урок {n} · {title}",
+      "date": "Дата",
+      "lead": "Ведёт",
+      "has_test_yes": "Тест на уроке",
+      "has_test_no": "Без теста",
+      "body": "План урока",
+      "verse_missing": "Текст недоступен в переводе группы",
+      "check_progress": "Проверка ДЗ",
+      "check_not_started": "Проверка не начата",
+      "check_partial": "Проверено {checked} из {total}",
+      "check_completed": "Проверка завершена",
+      "action_check": "Проверить",
+      "action_edit": "Правка",
+      "action_delete": "Удалить",
+      "delete_confirm_title": "Удалить урок?",
+      "delete_confirm_description": "Урок и его золотые стихи будут удалены без возможности восстановления.",
+      "delete_confirm_action": "Удалить урок"
+    },
+    "verses_page": {
+      "title": "Золотые стихи",
+      "subtitle": "{group} · {year}",
+      "empty_title": "Золотых стихов пока нет",
+      "empty_description": "Стихи появятся здесь после добавления в уроки.",
+      "used_in": "Использован в уроках",
+      "usage_link": "Урок {n} · {title}"
+    },
+    "check_stub": {
+      "title": "Проверка ДЗ",
+      "description": "Последовательная проверка появится в следующем релизе. Пока откройте карточку урока, чтобы посмотреть план и стихи."
+    }
   }
 }
