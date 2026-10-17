@@ -40,7 +40,7 @@
 
 ### P02-CU2 — feat(school): add academic year use-cases · Review: reviewer · Commit: auto
 
-- [ ] P02-T3 · T3 · Contract: [school_year §5.1, §8](../contracts/school_year_and_groups_contract.md) · Invariants: INV-01
+- [x] P02-T3 · T3 · Contract: [school_year §5.1, §8](../contracts/school_year_and_groups_contract.md) · Invariants: INV-01
       Files: `apps/web/src/data/school/{create-year,activate-year,close-year}.ts`, `actions/school-year.ts`
       Acceptance: `activateYear` под блокировкой + partial unique; `closeYear` закрывает зачисления и назначения, год read-only для teacher; `createYear` копирует настройки и назначения; журнал `school.year_*` → тесты (второй активный, пересечение, гонка)
       Paths: H [§5.1] · N [§6: активный есть, пересечение, статус] · S [AZ-12, AZ-P5: teacher → `FORBIDDEN`]
