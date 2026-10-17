@@ -28,22 +28,20 @@ alwaysApply: true
 ## Pipeline (порядок обязателен)
 
 ```
-граница CU | запрос → ВЕРИФИКАЦИЯ → stage → review (уровень по diff) → compose message → git commit → commitlint (hook)
+граница CU | запрос → cu-verify → cu-commit stage → review (уровень по diff) → cu-commit commit → hook (commitlint, typecheck, next build)
 ```
 
 ### 1. Deterministic verification
 
-Перед коммитом, если затронут код:
+Перед коммитом, если затронут код, агент запускает `node scripts/cu-verify.mjs`. Скрипт пишет полный лог в `.local/phase-runs/` и печатает хвост около 40 строк.
 
-- `npm run typecheck` (root monorepo) — когда workspaces уже есть (после P5); включает тесты (`apps/web/tsconfig.test.json`)
-- `npm run build:check` — **продакшн-сборка как на Vercel**: `scripts/check-build-isolation.mjs` (тесты и test-only импорты не попадают в сборку) + `next build`. Обязательна, если в diff есть код или конфигурация сборки (`apps|packages/**`, `package*.json`, `tsconfig*`, `eslint`/`vitest` config). Hook `.husky/pre-commit` → `scripts/precommit-build-check.mjs` запускает её сам; обход (`--no-verify`) запрещён. Причина: `next build` проверяет типы файлов из `tsconfig.json`, а `vitest` — root devDependency, которой на Vercel нет (падение preview 2026-10-16)
-- `npm run lint` — когда скрипт есть
-- `npm run rules:check` — если есть `.claude/rules/` (после `rules:sync`)
-- `npm run deps:check` — если в diff есть `package.json` / `package-lock.json` / `.npmrc` (`dependency-pinning.mdc`)
-- Тесты — по профилю качества ([`project_quality_profile.md`](docs/meta/project_quality_profile.md) D4 / D5 / D7; нет профиля → `standard`): `lean`+ — `npm run test`, если CU затрагивает код с тестами. `test:coverage` (пороги D4) и `test:e2e` — в CI с `standard`; e2e локально — когда CU меняет критичный flow
+- Всегда `npm run lint` и `npm run test`.
+- `node scripts/cu-verify.mjs --full` добавляет `npm run typecheck` и нужен только перед `reviewer` (D6: T3 / `Paths: S` / sensitive zone). Для diff-only `typecheck` выполняет хук.
+- `npm run build:check` агент **не** запускает. Hook `.husky/pre-commit` → `scripts/precommit-build-check.mjs` сам выполняет изоляцию сборки, `typecheck` и `next build`, когда в индексе есть код или конфигурация сборки (`apps|packages/**`, `package*.json`, `tsconfig*`, `eslint`/`vitest` config). Обход (`--no-verify`) запрещён. Причина: `next build` проверяет типы файлов из `tsconfig.json`, а `vitest` — root devDependency, которой на Vercel нет (падение preview 2026-10-16).
+- `npm run deps:check` — если в diff есть `package.json` / `package-lock.json` / `.npmrc` (`dependency-pinning.mdc`). В `cu-verify` этот шаг не входит.
 - CU DoD из `P{N}_tasks.md` (и Phase DoD — на последнем CU фазы)
 
-Если в задаче правили `.cursor/rules/*.mdc` — в **той же задаче** `npm run rules:sync` и закоммитить `.claude/rules/`. Не править зеркало руками.
+Если в задаче правили `.cursor/rules/*.mdc` — в **той же задаче** `npm run rules:sync` и включить `.claude/rules/` в paths-file до `stage`. Не править зеркало руками. `npm run rules:check` выполняет хук.
 
 При fail — исправить, не коммитить.
 
@@ -56,10 +54,10 @@ alwaysApply: true
 Параллельно:
 
 - `git status`
-- `git diff` (staged + unstaged)
+- `git diff --stat` (полный `git diff --staged` читает `reviewer`, в промпт сеанса его не вставлять)
 - `git log --oneline -10`
 
-Stage только релевантные файлы (`git add`). Не коммитить `.env`, credentials.
+Индекс собирает `node scripts/cu-commit.mjs stage --paths-file <файл>` до review. В списке только файлы задач CU, включая правку `P{N}_tasks.md`. Нет `.env`, credentials.
 
 ### 3. Pre-commit review
 
@@ -69,10 +67,12 @@ Stage только релевантные файлы (`git add`). Не комм�
 2. **Три прохода** (`reviewer`): проблема → ожидаемая форма → diff. Проблема — из задач CU в `P{N}_tasks.md` и просьбы пользователя, не из diff и не из собственного message; неясна → спросить до review
 3. **`reviewer`** — pinned субагент ([`.cursor/agents/reviewer.md`](../agents/reviewer.md), readonly), получает только проблему и scope, не summary автора. **Не** `bugbot` (платный), **не** `generalPurpose`. Один на CU.
 4. **Trace-блок** (`Review: …`) в ответе — всегда, включая `skip`
-5. **Blocker** → исправить → re-review **только delta**, не более одного раза (§ Budget); blocker остался → не коммитить, доложить пользователю
+5. **Blocker** → исправить → снова `stage` с тем же списком → re-review **только delta**, не более одного раза (§ Budget); blocker остался → не коммитить, доложить пользователю
 6. **Suggestions only / no findings** → продолжить §4
 
 ### 4. Compose commit message
+
+Заголовок собирает `node scripts/cu-commit.mjs commit`. Агент передаёт только subject (`type(scope): subject`). Префикс ветки скрипт читает сам через `git branch --show-current`.
 
 **Branch prefix = имя текущей ветки** (`git branch --show-current`), без изменений:
 
@@ -127,9 +127,11 @@ main: chore(docs): sync canonical routes
 
 ### 5. Execute commit
 
-- HEREDOC для message (Windows/PowerShell: эквивалент без интерактива)
-- После commit — `git status` для verify
-- Hook fail → исправить message → **новый commit**, не `--amend` (кроме случаев из user rule)
+- До review: `node scripts/cu-commit.mjs stage --paths-file <файл>`.
+- После review без blockers: `node scripts/cu-commit.mjs commit --paths-file <файл> --subject "<type(scope): subject>"`.
+- Сырой `git add` и `git commit` не вызывать. Скрипт не принимает `--amend`, `--no-verify` и `push`.
+- После blocker: правка, снова `stage` с тем же списком, один review дельты, затем `commit`.
+- Hook fail → исправить и новый `commit` через скрипт, не `--amend` (кроме случаев из user rule).
 
 ---
 
