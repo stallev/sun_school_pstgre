@@ -49,7 +49,7 @@
 
 ### P02-CU3 — feat(school): add groups, assignments and grade settings use-cases · Review: reviewer · Commit: auto
 
-- [ ] P02-T4 · T3 · Contract: [school_year §5.2–§5.5](../contracts/school_year_and_groups_contract.md)
+- [x] P02-T4 · T3 · Contract: [school_year §5.2–§5.5](../contracts/school_year_and_groups_contract.md)
       Files: `data/school/{create-group,update-group,set-group-language,assign-teacher,unassign-teacher,update-grade-settings}.ts`
       Acceptance: `grade_settings` по умолчанию; язык `EN` только при `READY`; назначение — пользователь `ACTIVE` с ролью `TEACHER`; снятие не удаляет уроки; веса действуют на новые проверки → тесты по таблице отказов
       Paths: H [§5.2–5.5] · N [§6: язык недоступен, не teacher, имя занято, группа неактивна] · S [AZ-10, AZ-11, AZ-13; teacher → `FORBIDDEN`]
