@@ -50,11 +50,11 @@
 
 ### P03-CU3 — feat(domain): add verse text builder, range rules and lesson schemas · Review: diff-only · Commit: auto
 
-- [ ] P03-T5 · T1 · Contract: [bible_seed §5.2](../contracts/bible_seed_contract.md)
+- [x] P03-T5 · T1 · Contract: [bible_seed §5.2](../contracts/bible_seed_contract.md)
       Files: `packages/domain/src/bible/{build-verse-text,normalize-range}.ts`
       Acceptance: сборка по диапазону в переводе группы, `missing[]`; обратное отображение через карту; границы диапазона → unit-тесты
       Paths: H [§5.2] · N [пропуск стиха, `end < start`]
-- [ ] P03-T6 · T1 · Contract: [homework_check §4.1, §5.1](../contracts/homework_check_contract.md)
+- [x] P03-T6 · T1 · Contract: [homework_check §4.1, §5.1](../contracts/homework_check_contract.md)
       Files: `packages/domain/src/lesson/{schemas,ordinal,previous-regular}.ts`, коды `CHECK_*` (урок), `AUDIT_ACTION` (`lesson.*`, `calendar.*`)
       Acceptance: схемы входов, `previousRegularLesson` пропускает обзорный (БП-2), `ordinal` по `(date, created_at)` → unit-тесты
       Paths: H · N [обзорный со стихами, лимит]

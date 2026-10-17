@@ -44,6 +44,14 @@ export const AUDIT_ACTION = {
   BIBLE_LOAD_STARTED: "bible.load_started",
   BIBLE_LOAD_FINISHED: "bible.load_finished",
   BIBLE_LOAD_FAILED: "bible.load_failed",
+  LESSON_CREATED: "lesson.created",
+  LESSON_UPDATED: "lesson.updated",
+  LESSON_DELETED: "lesson.deleted",
+  LESSON_LEAD_CHANGED: "lesson.lead_changed",
+  LESSON_CHECK_COMPLETED: "lesson.check_completed",
+  CALENDAR_EVENT_CREATED: "calendar.event_created",
+  CALENDAR_EVENT_UPDATED: "calendar.event_updated",
+  CALENDAR_EVENT_DELETED: "calendar.event_deleted",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 
@@ -65,5 +73,7 @@ export const AUDIT_ENTITY_TYPE = {
   ENROLLMENT: "enrollment",
   SEED: "seed",
   BIBLE_TRANSLATION: "bible_translation",
+  LESSON: "lesson",
+  GRADE_EVENT: "grade_event",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];
