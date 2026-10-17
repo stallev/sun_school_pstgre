@@ -68,8 +68,6 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           const linkResult = await linkTelegramInTransaction(await getPrisma(), {
             userId: linkIntent.uid,
             providerAccountId: claims.id,
-            username: claims.username,
-            phone: claims.phone,
             now,
           });
           if (!linkResult.ok) {
@@ -89,8 +87,6 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       const claims = mapTelegramProfile({ ...(profile ?? {}), sub: account.providerAccountId });
       const result = await signInTelegramInTransaction(await getPrisma(), {
         providerAccountId: claims.id,
-        username: claims.username,
-        phone: claims.phone,
         now,
       });
       return result.kind === "ok";

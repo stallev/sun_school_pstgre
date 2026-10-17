@@ -53,32 +53,30 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
     await prisma.$disconnect();
   });
 
-  it("a new Telegram login creates REGISTRATION with username and phone", async () => {
+  it("a new Telegram login creates REGISTRATION with provider id only", async () => {
     const id = unique();
     const out = await rolledBack(async (tx) => {
-      const result = await signInTelegram(tx, { providerAccountId: id, username: "pkim", phone: "+79001112233", now: NOW });
+      const result = await signInTelegram(tx, { providerAccountId: id, now: NOW });
       const identity = await tx.loginIdentity.findFirst({ where: { providerAccountId: id } });
       return { result, identity };
     });
     expect(out.result).toMatchObject({ kind: "ok", status: "REGISTRATION", created: true });
-    expect(out.identity).toMatchObject({ provider: "TELEGRAM", username: "pkim", phone: "+79001112233", email: null });
+    expect(out.identity).toMatchObject({ provider: "TELEGRAM", providerAccountId: id, email: null });
   }, 60_000);
 
-  it("a repeat login is idempotent and an empty phone does not erase the stored one", async () => {
+  it("a repeat login is idempotent and updates last_login_at", async () => {
     const id = unique();
     const out = await rolledBack(async (tx) => {
-      const first = await signInTelegram(tx, { providerAccountId: id, username: "pkim", phone: "+79001112233", now: NOW });
+      const first = await signInTelegram(tx, { providerAccountId: id, now: NOW });
       const later = new Date(NOW.getTime() + 3600_000);
-      const second = await signInTelegram(tx, { providerAccountId: id, username: null, phone: null, now: later });
+      const second = await signInTelegram(tx, { providerAccountId: id, now: later });
       const identities = await tx.loginIdentity.count({ where: { providerAccountId: id } });
-      const identity = await tx.loginIdentity.findFirst({ where: { providerAccountId: id } });
       const user = await tx.appUser.findFirst({ where: { identities: { some: { providerAccountId: id } } } });
-      return { first, second, identities, identity, user };
+      return { first, second, identities, user };
     });
     expect(out.second).toMatchObject({ kind: "ok", created: false });
     expect(out.second.kind === "ok" && out.first.kind === "ok" && out.second.userId === out.first.userId).toBe(true);
     expect(out.identities).toBe(1);
-    expect(out.identity).toMatchObject({ username: "pkim", phone: "+79001112233" });
     expect(out.user?.lastLoginAt?.getTime()).toBe(NOW.getTime() + 3600_000);
   }, 60_000);
 
@@ -89,7 +87,7 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
         await tx.appUser.create({
           data: { organizationId, status, firstLoginAt: NOW, identities: { create: { provider: "TELEGRAM", providerAccountId: id } } },
         });
-        return signInTelegram(tx, { providerAccountId: id, username: null, phone: null, now: NOW });
+        return signInTelegram(tx, { providerAccountId: id, now: NOW });
       });
       expect(result, status).toEqual({ kind: "denied" });
     }
@@ -103,10 +101,10 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
           organizationId,
           status: "REGISTRATION",
           firstLoginAt: daysAgo(40),
-          identities: { create: { provider: "TELEGRAM", providerAccountId: id, phone: "+70000000001" } },
+          identities: { create: { provider: "TELEGRAM", providerAccountId: id } },
         },
       });
-      const result = await signInTelegram(tx, { providerAccountId: id, username: null, phone: null, now: NOW });
+      const result = await signInTelegram(tx, { providerAccountId: id, now: NOW });
       const oldStill = await tx.appUser.findUnique({ where: { id: old.id } });
       const audit = await tx.auditLog.findFirst({ where: { entityId: old.id, action: "access.registration_purged" } });
       return { old, result, oldStill, audit };
@@ -115,7 +113,6 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
     expect(out.result).toMatchObject({ kind: "ok", created: true, status: "REGISTRATION" });
     expect(out.result.kind === "ok" && out.result.userId !== out.old.id).toBe(true);
     expect(out.audit).toMatchObject({ source: "SYSTEM", actorUserId: null, entityType: "app_user" });
-    expect(JSON.stringify(out.audit)).not.toContain("+7000");
   }, 60_000);
 
   it("purgeExpiredRegistrations removes only expired REGISTRATION users", async () => {
@@ -164,7 +161,7 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
   it("REGISTRATION submit moves user to REQUEST_PENDING with consent, request and audit", async () => {
     const id = unique();
     const out = await rolledBack(async (tx) => {
-      const login = await signInTelegram(tx, { providerAccountId: id, username: "reg", phone: null, now: NOW });
+      const login = await signInTelegram(tx, { providerAccountId: id, now: NOW });
       if (login.kind !== "ok") throw new Error("expected login");
       const result = await submitRegistrationInTransaction(
         tx,
@@ -196,7 +193,7 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
   it("approveRequest moves REQUEST_PENDING to ACTIVE with roles and audit", async () => {
     const id = unique();
     const out = await rolledBack(async (tx) => {
-      const login = await signInTelegram(tx, { providerAccountId: id, username: "appr", phone: null, now: NOW });
+      const login = await signInTelegram(tx, { providerAccountId: id, now: NOW });
       if (login.kind !== "ok") throw new Error("expected login");
       await submitRegistrationInTransaction(
         tx,
@@ -235,7 +232,7 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
   it("second approve on the same request returns ACCESS_REQUEST_DECIDED", async () => {
     const id = unique();
     const out = await rolledBack(async (tx) => {
-      const login = await signInTelegram(tx, { providerAccountId: id, username: "race", phone: null, now: NOW });
+      const login = await signInTelegram(tx, { providerAccountId: id, now: NOW });
       if (login.kind !== "ok") throw new Error("expected login");
       await submitRegistrationInTransaction(
         tx,
@@ -294,15 +291,11 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
       const first = await linkTelegram(tx, {
         userId: admin.id,
         providerAccountId: tgId,
-        username: "linked",
-        phone: null,
         now: NOW,
       });
       const second = await linkTelegram(tx, {
         userId: admin.id,
         providerAccountId: tgId,
-        username: "linked",
-        phone: null,
         now: NOW,
       });
       const count = await tx.loginIdentity.count({ where: { userId: admin.id } });
@@ -340,8 +333,6 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
       return linkTelegram(tx, {
         userId: admin.id,
         providerAccountId: tgId,
-        username: null,
-        phone: null,
         now: NOW,
       });
     });
@@ -391,8 +382,8 @@ describe.skipIf(!enabled)("access use-cases on the dev database", () => {
     const id = unique();
     try {
       const results = await Promise.all([
-        signInTelegramInTransaction(prisma, { providerAccountId: id, username: "a", phone: null, now: NOW }),
-        signInTelegramInTransaction(prisma, { providerAccountId: id, username: "a", phone: null, now: NOW }),
+        signInTelegramInTransaction(prisma, { providerAccountId: id, now: NOW }),
+        signInTelegramInTransaction(prisma, { providerAccountId: id, now: NOW }),
       ]);
       expect(results.every((r) => r.kind === "ok")).toBe(true);
       expect(await prisma.loginIdentity.count({ where: { providerAccountId: id } })).toBe(1);

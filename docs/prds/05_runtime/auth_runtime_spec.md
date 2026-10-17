@@ -43,7 +43,7 @@
 
 | Провайдер | `id` | Тип | Особенности |
 |-----------|------|-----|-------------|
-| Telegram | `telegram` | custom `oidc` | `issuer: https://oauth.telegram.org`, `idToken: true`, scope `openid profile phone`, `checks: ["pkce","state"]`, `allowDangerousEmailAccountLinking: false`, `profile()` отдаёт `id` = `sub`, `name`, `picture`, `email: null`, а также `username` ← `preferred_username` и `phone` ← `phone_number` (оба необязательны); `customFetch` из `next-auth`; конфигурация — гайд §4 |
+| Telegram | `telegram` | custom `oidc` | `issuer: https://oauth.telegram.org`, `idToken: true`, scope `openid`, `checks: ["pkce","state"]`, `allowDangerousEmailAccountLinking: false`, `profile()` отдаёт `id` = `sub`, `email: null` (имя, аватар, username и телефон не сохраняются); `customFetch` из `next-auth`; конфигурация — гайд §4 |
 | Credentials | `credentials` | встроенный | поля `email`, `password`; **только** для учётных записей администратора; `authorize()` — §4.4; вход из UI — клиентский `signIn("credentials", { redirect: false })` |
 
 Сопоставление `LOGIN_PROVIDER`: `credentials` → `CREDENTIALS`, `telegram` → `TELEGRAM` (одна функция в `lib/auth`, без inline-строк на call site — `domain-literals-and-codes`).
@@ -62,7 +62,7 @@
 
 ### 4.3 Telegram: внешняя настройка
 
-В BotFather: OIDC включён; Trusted Origin — HTTPS; Redirect URI — `{origin}/api/auth/callback/telegram`. Локальная проверка Telegram — HTTPS-туннель или стабильный preview; вход администратора по email и паролю проверяется на `localhost` без внешней настройки. Эфемерные preview Vercel для Telegram не включаются. Scope `phone` запрашивается всегда; телефон необязателен (Q-05, решено).
+В BotFather: OIDC включён; Trusted Origin — HTTPS; Redirect URI — `{origin}/api/auth/callback/telegram`. Локальная проверка Telegram — HTTPS-туннель или стабильный preview; вход администратора по email и паролю проверяется на `localhost` без внешней настройки. Эфемерные preview Vercel для Telegram не включаются. Scope — только `openid` (ADR-003 v1.2); телефон и профиль не запрашиваются (Q-05 закрыт).
 
 ### 4.4 Credentials (администратор)
 
@@ -90,12 +90,11 @@
    - найдена и пользователь `ACTIVE` / `REQUEST_PENDING` / `REJECTED` / `REGISTRATION` — продолжить;
    - найдена и пользователь `DISABLED` / `DELETED` — отказ;
    - не найдена — шаг 4.
-4. **Регистрация (только Telegram):** создать `app_user` (`REGISTRATION`) и `login_identity` (`username` ← `preferred_username`, `phone` ← `phone_number`, оба необязательны; email нет) в одной транзакции; для `credentials` ветки регистрации нет — идентичность создаёт только `db:seed:admin`; гонка — `UNIQUE (provider, provider_account_id)`: проигравший перечитывает найденную запись.
+4. **Регистрация (только Telegram):** создать `app_user` (`REGISTRATION`) и `login_identity` (`provider_account_id` = `sub`; email нет) в одной транзакции; для `credentials` ветки регистрации нет — идентичность создаёт только `db:seed:admin`; гонка — `UNIQUE (provider, provider_account_id)`: проигравший перечитывает найденную запись.
 5. **Первый admin** создаёт не `signIn`, а команда `db:seed:admin` (seed_data_spec §4): в одной транзакции под advisory-lock — `app_user` `ACTIVE`, роль `ADMIN`, `login_identity` `CREDENTIALS` (email, хэш), записи журнала `access.first_admin_created` и `auth.password_set` (`SYSTEM`); повтор — идемпотентно (пароль меняется только с `--reset-password`, тогда пишется `auth.password_set`).
 6. **Привязка:** `login_identity` свободна → создать для `userId` из намерения; уже у этого пользователя → успех (идемпотентно); у другого → отказ с кодом конфликта, пользователи **не сливаются**; намерение погашается в любом исходе.
 7. Лениво очистить просроченную `REGISTRATION` (> 30 дней, INV-25): удалить и создать заново (шаг 4).
-8. Для Telegram: если `username` или `phone` из профиля изменились (или были пусты) — обновить `login_identity`; пустое значение из профиля **не затирает** сохранённое. В журнал эти поля не пишутся (INV-23).
-9. Обновить `last_login_at` (и `first_login_at`, если пусто).
+8. Обновить `last_login_at` (и `first_login_at`, если пусто).
 
 Возврат: `true` — Auth.js продолжает; строка допускается только как относительный путь из `canonical_routes.md` (иначе `false`).
 
@@ -104,7 +103,7 @@
 - При первом входе (`user` задан): записать `uid` = `app_user.id` (по `login_identity`, **не** `user.id` провайдера), `status`, `roles`.
 - При чтении сессии: **не** ходить в БД на каждый запрос; `status`/`roles` в токене — оптимистичный срез до явного `trigger: "update"` (см. ниже) или перелогина. Окончательная проверка — §10.
 - После **собственной** смены статуса (отправка/повтор заявки) и по кнопке «Проверить статус» на `/pending`: сервер вызывает `unstable_update({})` (`trigger: "update"`), колбэк `jwt` перечитывает `status`/`roles` по `token.uid` из БД; тело запроса от клиента **не** доверяется.
-- В токен **не** кладутся ФИО, email, телефон, имя пользователя Telegram (ADR-003 §4.3) — `username` и `phone` читаются из БД в `/profile` и карточке пользователя.
+- В токен **не** кладутся ФИО, email, телефон и имя пользователя Telegram (ADR-003 §4.3); Telegram profile data не сохраняется в БД (v1.2).
 
 ### 5.3 `session({ session, token })`
 
@@ -187,14 +186,12 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 
 | Путь | Описание | Исход |
 |------|----------|-------|
-| **H** | Новый пользователь входит через Telegram | `REGISTRATION`, `username` и `phone` сохранены (если переданы), перенаправление `/register` |
+| **H** | Новый пользователь входит через Telegram | `REGISTRATION`, `login_identity.provider_account_id`, перенаправление `/register` |
 | **H** | Администратор из `db:seed:admin` входит по email и паролю | сессия; нет согласия → `/register` (режим «подтвердить согласие»), иначе `/school` |
-| **H** | Повторный вход в Telegram со сменой username | `login_identity.username` обновлён |
 | **H** | Teacher привязывает Telegram в `/profile` | `login_identity` создана; повтор — идемпотентный успех |
 | **N** | `DISABLED` пользователь входит | `/login?error=AccessDenied`, сообщение `auth.login.denied` |
 | **N** | Telegram `state` > 256 | Обёртка укорачивает; при сбое — 500 без деталей |
 | **N** | Истёк / повторён cookie намерения | Обычный вход, привязка не выполняется |
-| **N** | Telegram не передал `phone` / `username` | Вход проходит; поля пустые, сохранённые не затираются |
 | **N** | Неверный пароль; 5 неудач подряд | `CredentialsSignin`, затем блокировка 15 мин; одинаковый ответ для неверного email |
 | **N** | Telegram id принадлежит другому | `OAuthAccountNotLinked`-сценарий: отказ, без слияния |
 | **S** | Клиент передаёт `userId` при привязке | Игнорируется; `uid` из сессии / подписанного cookie |
@@ -206,7 +203,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 
 ## 12. Acceptance criteria
 
-- [ ] Вход через Telegram создаёт `REGISTRATION`, сохраняет `username` и `phone` (если переданы) и ведёт на `/register` — исход: ручной smoke dev.
+- [ ] Вход через Telegram создаёт `REGISTRATION` (только `provider_account_id`) и ведёт на `/register` — исход: ручной smoke dev.
 - [ ] `db:seed:admin` создаёт первого admin один раз; вход по email и паролю работает; хэш — scrypt — исход: тест двойного запуска и smoke.
 - [ ] 5 неверных паролей блокируют вход на 15 минут; ответ на неверный email и пароль одинаков — исход: тест `authorize`.
 - [ ] JWT не содержит ФИО, email, телефон и username — исход: декодирование cookie.
@@ -223,7 +220,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 | Q-02 | Спайк привязки без адаптера (ADR-003 Q-02) | architect | P01 auth-задачи |
 | Q-03 | Нужна ли политика «один активный сеанс» или принудительный выход при отключении — по умолчанию нет, достаточно серверной проверки | владелец | — |
 | Q-04 | ~~Верифицированность email из Google~~ — снят 2026-10-16 (Google не используется; email админа задаёт оператор) | — | — |
-| Q-05 | ✔ **Решено 2026-10-16 (владелец).** `phone` необязателен: нет `phone_number` в ID token — вход продолжается, поле пустое. Поведение Telegram при отказе от `phone` (документация молчит) подтверждается ручным smoke CU3; если Telegram прервёт вход — убрать scope `phone` из запроса (одна константа) | — | — |
+| Q-05 | ✔ **Решено 2026-10-17 (v1.2).** Scope `phone` не запрашивается; телефон Telegram не собирается | — | — |
 | Q-06 | ✔ **Решено 2026-10-16 (владелец).** scrypt N=2^15, r=8, p=1, соль 16 байт, ключ 64 байта; формат строки хэша — в P01-CU4 (`packages/db/src/auth/password.ts`) | — | — |
 
 ## 14. Related documents
@@ -251,3 +248,4 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W5-08) |
 | 2026-10-16 | v1.1 — Google исключён; Credentials для администратора (§4.4), первый admin — `db:seed:admin`; Telegram: scope `phone`, сохранение `username` и `phone`; ошибки `CredentialsSignin`, `RateLimited`; Q-04 снят, Q-05, Q-06 |
+| 2026-10-17 | v1.2 — Telegram scope `openid` only; `login_identity.username` / `phone` удалены; Q-05 закрыт |

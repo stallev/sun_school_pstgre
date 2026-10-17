@@ -21,25 +21,7 @@ const LINKABLE_STATUSES: ReadonlySet<string> = new Set([
 export type LinkTelegramInput = {
   userId: string;
   providerAccountId: string;
-  username: string | null;
-  phone: string | null;
   now: Date;
-};
-
-const refreshTelegramFields = async (
-  tx: Tx,
-  identityId: string,
-  current: { username: string | null; phone: string | null },
-  input: LinkTelegramInput,
-) => {
-  const nextUsername = input.username ?? current.username;
-  const nextPhone = input.phone ?? current.phone;
-  if (nextUsername !== current.username || nextPhone !== current.phone) {
-    await tx.loginIdentity.update({
-      where: { id: identityId },
-      data: { username: nextUsername, phone: nextPhone },
-    });
-  }
 };
 
 /** Attach a free Telegram identity to `userId` (auth_runtime_spec §5.1 step 6, §7). */
@@ -59,12 +41,11 @@ export async function linkTelegram(tx: Tx, input: LinkTelegramInput): Promise<Mu
         providerAccountId: input.providerAccountId,
       },
     },
-    select: { id: true, userId: true, username: true, phone: true },
+    select: { id: true, userId: true },
   });
 
   if (existing) {
     if (existing.userId === input.userId) {
-      await refreshTelegramFields(tx, existing.id, existing, input);
       return { ok: true };
     }
     return {
@@ -79,8 +60,6 @@ export async function linkTelegram(tx: Tx, input: LinkTelegramInput): Promise<Mu
       userId: input.userId,
       provider: LOGIN_PROVIDER.TELEGRAM,
       providerAccountId: input.providerAccountId,
-      username: input.username,
-      phone: input.phone,
     },
   });
 

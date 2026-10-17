@@ -2,8 +2,8 @@
 
 **Тип:** ADR  
 **Статус:** ACCEPTED  
-**Версия:** 1.1  
-**Дата:** 2026-10-16 (v1.0 — 2026-10-11)  
+**Версия:** 1.2  
+**Дата:** 2026-10-17 (v1.1 — 2026-10-16; v1.0 — 2026-10-11)  
 **Волна:** W4-01  
 **Зависит от:** [`adr_001_stack_and_runtime.md`](./adr_001_stack_and_runtime.md), [`adr_002_nextjs_vercel_runtime_policy.md`](./adr_002_nextjs_vercel_runtime_policy.md), [`domain_invariants.md`](../02_domain_model/domain_invariants.md), [`lifecycle_models.md`](../02_domain_model/lifecycle_models.md), [`telegram_authjs_oidc_portable_guide.md`](../../my_specs/telegram_authjs_oidc_portable_guide.md), [`sunday_school_data_analytics_spec.md`](../../my_specs/sunday_school_data_analytics_spec.md) §2.1, §2.4  
 **Связанные документы:** [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) §5.1, [`responsive_navigation_contract.md`](../../design/responsive_navigation_contract.md) §7, [`architecture_master_index.md`](../architecture_master_index.md)  
@@ -24,7 +24,7 @@
 
 - **Решение владельца 2026-10-16:** вход через Google **не используется**. Основной способ — Telegram; **администратор** входит по email и паролю (Credentials). У учителей и остальных пользователей паролей нет — подлинность подтверждает Telegram (спец. §2.1).
 - Первый вход — регистрация и заявка на доступ; роли получает только `ACTIVE` пользователь (`lifecycle_models` §5.1).
-- Telegram не передаёт email. При scope `phone` и согласии пользователя передаёт `phone_number`; `preferred_username` может отсутствовать (у пользователя нет username).
+- Telegram не передаёт email. Scope OIDC — только `openid`: в БД сохраняется `sub` → `provider_account_id`; имя, аватар, username и телефон не запрашиваются и не хранятся (v1.2).
 - Шаблон проекта и `ai_auth_implementation_guide.md` ориентированы на Credentials; в проекте Credentials — **только для администратора** (§4.4), не для самостоятельной регистрации.
 
 ## 4. Decision
@@ -34,13 +34,13 @@
 | Элемент | Решение |
 |---------|---------|
 | Библиотека | Auth.js v5 (`next-auth`), `auth.ts` экспортирует `handlers`, `auth`, `signIn`, `signOut`; Route Handler `app/api/auth/[...nextauth]/route.ts` |
-| Провайдеры | **Telegram как custom OIDC** (`id: "telegram"`, `type: "oidc"`, `issuer: https://oauth.telegram.org`, `scope: "openid profile phone"`) и **Credentials** (`id: "credentials"`, email + пароль; только для учётных записей администратора) |
+| Провайдеры | **Telegram как custom OIDC** (`id: "telegram"`, `type: "oidc"`, `issuer: https://oauth.telegram.org`, `scope: "openid"`) и **Credentials** (`id: "credentials"`, email + пароль; только для учётных записей администратора) |
 | Поток | Authorization Code + **PKCE + `state`** (`checks: ["pkce", "state"]` не отключать), full-page redirect |
 | Вход из UI | Только клиентский `signIn()` из `next-auth/react`; серверный `signIn()` из Server Action для Telegram не используется (обход `state` не срабатывает). Форма email + пароль — `signIn("credentials", { email, password, redirect: false })` на клиенте |
 | Пароль | Хэш **scrypt** (`node:crypto`, соль на запись, параметры в строке хэша) в `login_identity.password_hash`; сравнение — `timingSafeEqual`; открытый пароль нигде не хранится и не логируется |
 | Перебор пароля | `login_identity.failed_attempts` и `locked_until`: 5 неудач подряд → блокировка на 15 минут; ответ на неверный email и неверный пароль одинаков; код `RATE_LIMITED` |
 | Обходы Telegram | (а) укорочение `state` до ≤ 256 символов; (б) синтетический `userinfo_endpoint` в discovery через `customFetch` — реализация по гайду владельца, §6 |
-| Данные Telegram | `sub` → `provider_account_id`; `preferred_username` → `login_identity.username` (без `@`, может быть пусто); `phone_number` → `login_identity.phone` (как пришло, может быть пусто). Обновляются при каждом входе, если изменились; в журнал не попадают (INV-23) |
+| Данные Telegram | Только `sub` → `login_identity.provider_account_id`. Поля `login_identity.username` и `login_identity.phone` удалены (v1.2); профиль Telegram и телефон не сохраняются и не показываются в UI |
 | Сессия | **JWT** (`session.strategy: "jwt"`), HttpOnly cookie; БД-сессий и таблиц Session нет |
 | Адаптер | **Нет** `@auth/prisma-adapter` (ADR-001); идентичности — таблица `login_identity` |
 
@@ -97,7 +97,7 @@
 | Захват привязки | одноразовое подписанное намерение (§4.5 п. 2), отказ при чужой идентичности |
 | Секреты | `AUTH_SECRET`, `AUTH_TELEGRAM_*` — только server env; `ADMIN_PASSWORD` — только при запуске `db:seed:admin`, приложением не читается; `TELEGRAM_BOT_TOKEN` не используется как `clientSecret` |
 | Подбор пароля | блокировка по `failed_attempts` / `locked_until`, одинаковый ответ на неверный email и пароль, scrypt; пароль не логируется и не попадает в Sentry |
-| ПД из Telegram | `phone` и `username` видят только admin и сам пользователь (`/profile`, карточка пользователя); не в JWT, не в журнале; перечислены в тексте согласия и в процедуре удаления |
+| ПД из Telegram | Только технический id (`provider_account_id`); не в JWT, не в журнале; username/телефон Telegram не собираются (v1.2) |
 | Open redirect | `callbackUrl` допускается только относительным путём из `canonical_routes.md` |
 | Утечка в ошибках | пользователю — сообщение по коду без токенов и JWKS |
 | ПД в токене | запрещены (§4.3) |
@@ -119,11 +119,11 @@
 
 | Путь | Описание | Исход |
 |------|----------|-------|
-| **H** | Новый пользователь входит через Telegram | `REGISTRATION`, `login_identity` с `username` и `phone` (если переданы), перенаправление на `/register` |
+| **H** | Новый пользователь входит через Telegram | `REGISTRATION`, `login_identity` с `provider_account_id`, перенаправление на `/register` |
 | **H** | Администратор входит по email и паролю | Сессия, при отсутствии согласия — `/register`, иначе `/school` |
 | **H** | Активный teacher входит через Telegram | Сессия, перенаправление на `/today` |
 | **N** | Пользователь отменил согласие у провайдера | Восстановимое сообщение на `/login`, без stack trace |
-| **N** | Telegram не передал `phone` или `username` | Вход проходит, поля пустые |
+| **N** | — | Scope `openid` only; отдельного сценария «не передал phone/username» нет (поля не запрашиваются) |
 | **N** | Неверный пароль / 5 неудач подряд | Одинаковая ошибка; затем блокировка 15 минут, `RATE_LIMITED` |
 | **N** | `DISABLED` пользователь | Вход отклонён, сообщение по ключу |
 | **N** | Telegram id уже у другого пользователя при привязке | Привязка отклонена, пользователи не сливаются |
@@ -141,11 +141,11 @@
 | `access_requests_and_roles_contract.md` (W8-03) | Регистрация, одобрение, объединение |
 | `ai_auth_implementation_guide.md` | Адаптация под OIDC и без адаптера — в P4 |
 | `auth-security.mdc` | Актуализация правил — в P4 |
-| [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) | `LOGIN_PROVIDER` = `CREDENTIALS`, `TELEGRAM`; `login_identity` + `phone`, `password_hash`, `failed_attempts`, `locked_until`; таблицы Session нет |
+| [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) | `LOGIN_PROVIDER` = `CREDENTIALS`, `TELEGRAM`; `login_identity` (без Telegram `username`/`phone` с v1.2), `password_hash`, `failed_attempts`, `locked_until`; таблицы Session нет |
 
 ## 9. Acceptance criteria
 
-- [ ] Вход через Telegram создаёт `REGISTRATION` пользователя (с `username` и `phone`, если переданы) и перенаправляет на `/register` — исход: ручной smoke в dev.
+- [ ] Вход через Telegram создаёт `REGISTRATION` пользователя (только `provider_account_id`) и перенаправляет на `/register` — исход: ручной smoke в dev.
 - [ ] Администратор из `db:seed:admin` входит по email и паролю; хэш в БД — scrypt, пароль нигде не виден — исход: smoke и тест.
 - [ ] 5 неверных паролей блокируют вход на 15 минут — исход: тест.
 - [ ] JWT не содержит ФИО, email, телефон и username — исход: декодирование cookie.
@@ -160,8 +160,8 @@
 |----|--------|----------|-----------|
 | Q-01 | Срок JWT (14 суток, обновление раз в сутки — по умолчанию) | владелец | `auth_runtime_spec` |
 | Q-02 | ✔ **Решено 2026-10-16 (P01-CU11):** cookie `sunschool.link-intent` с `Path=/api/auth` доступен в Node `signIn` при OIDC callback; клиентский `signIn("telegram")` сохраняет cookie на редиректах (`SameSite=Lax`, same-site). Запасной `@auth/prisma-adapter` не требуется. | — | — |
-| Q-03 | ~~Поведение при смене username Telegram~~ — **решено 2026-10-16:** ключ — id; `username` и `phone` обновляются при каждом входе | — | — |
-| Q-04 | ✔ **Решено 2026-10-16 (владелец):** телефон необязателен; поведение Telegram при отказе проверяется smoke CU3 | — | — |
+| Q-03 | ✔ **Закрыто v1.2:** username Telegram не сохраняется; ключ — `provider_account_id` | — | — |
+| Q-04 | ✔ **Закрыто v1.2:** scope `phone` не запрашивается; телефон Telegram не собирается | — | — |
 | Q-05 | ✔ **Решено 2026-10-16 (владелец):** сброс пароля — только оператором (`db:seed:admin --reset-password`); пароль только у администратора (admin-only подтверждено) | — | — |
 
 ## 11. Related documents
@@ -188,3 +188,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — ACCEPTED (W4-01) |
 | 2026-10-16 | v1.1 — Google исключён; добавлен Credentials (email + пароль) только для администратора, первый admin — командой `db:seed:admin`; Telegram передаёт `username` и `phone` (scope `phone`); поля `login_identity`; Q-03 решён, Q-04/Q-05 |
+| 2026-10-17 | v1.2 — scope Telegram `openid` only; в БД только `provider_account_id`; колонки `login_identity.username` и `login_identity.phone` удалены; Q-05 (телефон) закрыт отказом от scope `phone` |

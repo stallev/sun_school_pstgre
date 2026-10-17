@@ -78,7 +78,7 @@
 
 | Данные | Действие |
 |--------|----------|
-| `login_identity` (идентификаторы Telegram, `username`, `phone`, email и хэш пароля администратора) | удалить |
+| `login_identity` (идентификаторы Telegram, email и хэш пароля администратора) | удалить |
 | `app_user.*_name`, `email` | стереть; `status = DELETED`; `deleted_ordinal = N` («Удалённый пользователь №N») |
 | `user_role`, `teacher_assignment` | удалить (предупреждение §7, если назначен на группу активного года) |
 | Авторство: уроки (`lead_teacher_id`), проверки (`checked_by`), выдачи (`issued_by`), `audit_log.actor_user_id` | **оставить**, ссылка ведёт на обезличенную запись |

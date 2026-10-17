@@ -61,7 +61,7 @@
 ### 5.1 `firstLogin`
 
 - **Предусловия:** вход провайдером подтверждён, `login_identity` не найдена ([`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §5.1 п. 4).
-- **Транзакция:** создать `app_user` (`REGISTRATION`, `first_login_at`) и `login_identity` (Telegram: `username`, `phone` — если переданы). `firstLogin` выполняется только для Telegram.
+- **Транзакция:** создать `app_user` (`REGISTRATION`, `first_login_at`) и `login_identity` (Telegram: `provider_account_id`). `firstLogin` выполняется только для Telegram.
 - **Исключение — первый admin:** создаётся не входом, а командой `db:seed:admin` (seed_data_spec §4): `ACTIVE`, роль `ADMIN`, `login_identity` `CREDENTIALS` (email из `FIRST_ADMIN_EMAIL`, хэш пароля); **до начала работы он проходит экран согласия** (как РГ-5), после чего создаётся `privacy_consent` (решено 2026-10-11, Q-01); записи журнала `access.first_admin_created`, `auth.password_set` (решено 2026-10-16: Google не используется, ADR-003 v1.1).
 - **Постусловия:** пользователь перенаправляется на `/register` (первый admin после входа по паролю — на экран согласия, затем `/school`).
 

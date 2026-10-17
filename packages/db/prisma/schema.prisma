@@ -252,8 +252,6 @@ model LoginIdentity {
   provider          LoginProvider
   providerAccountId String        @map("provider_account_id")
   email             String?
-  username          String?
-  phone             String?
   passwordHash      String?       @map("password_hash")
   failedAttempts    Int           @default(0) @map("failed_attempts")
   lockedUntil       DateTime?     @map("locked_until") @db.Timestamptz(6)

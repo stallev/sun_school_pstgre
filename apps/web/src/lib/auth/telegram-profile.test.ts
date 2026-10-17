@@ -1,12 +1,8 @@
 import { describe, expect, it } from "vitest";
-import {
-  mapTelegramProfile,
-  normalizeTelegramPhone,
-  normalizeTelegramUsername,
-} from "./telegram-profile";
+import { mapTelegramProfile } from "./telegram-profile";
 
-describe("mapTelegramProfile (scopes openid profile phone)", () => {
-  it("maps id, name, picture, username and phone", () => {
+describe("mapTelegramProfile (scope openid)", () => {
+  it("maps only the Telegram subject id", () => {
     expect(
       mapTelegramProfile({
         sub: "123456789",
@@ -17,19 +13,8 @@ describe("mapTelegramProfile (scopes openid profile phone)", () => {
       }),
     ).toEqual({
       id: "123456789",
-      name: "Pavel Kim",
-      image: "https://t.me/i/userpic/320/x.jpg",
       email: null,
-      username: "pkim",
-      phone: "+79001112233",
     });
-  });
-
-  it("treats a missing phone and a missing username as null (Q-05: phone is optional)", () => {
-    const user = mapTelegramProfile({ sub: "1", name: "Elena" });
-    expect(user.phone).toBeNull();
-    expect(user.username).toBeNull();
-    expect(user.id).toBe("1");
   });
 
   it("never exposes an email (Telegram does not send one)", () => {
@@ -43,22 +28,5 @@ describe("mapTelegramProfile (scopes openid profile phone)", () => {
   it("rejects a profile without any subject instead of creating an empty identity", () => {
     expect(() => mapTelegramProfile({ name: "X" })).toThrow(/no subject/);
     expect(() => mapTelegramProfile({ sub: "  " })).toThrow(/no subject/);
-  });
-});
-
-describe("normalizers", () => {
-  it("strips a leading @ and blanks from the username", () => {
-    expect(normalizeTelegramUsername("@pkim")).toBe("pkim");
-    expect(normalizeTelegramUsername("  pkim ")).toBe("pkim");
-    expect(normalizeTelegramUsername("@")).toBeNull();
-    expect(normalizeTelegramUsername("")).toBeNull();
-    expect(normalizeTelegramUsername(undefined)).toBeNull();
-    expect(normalizeTelegramUsername(42)).toBeNull();
-  });
-
-  it("removes spaces, dashes and brackets from the phone but keeps the plus", () => {
-    expect(normalizeTelegramPhone("+7 (900) 111-22-33")).toBe("+79001112233");
-    expect(normalizeTelegramPhone("   ")).toBeNull();
-    expect(normalizeTelegramPhone(null)).toBeNull();
   });
 });

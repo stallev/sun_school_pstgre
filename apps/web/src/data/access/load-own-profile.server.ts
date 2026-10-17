@@ -16,8 +16,6 @@ import { readConsentTextVersionFromDb } from "./consent-text-version.server";
 export type OwnProfileIdentity = {
   provider: LoginProvider;
   connected: boolean;
-  username: string | null;
-  phone: string | null;
   email: string | null;
   canUnlink: boolean;
 };
@@ -52,7 +50,7 @@ export async function loadOwnProfile(db: PrismaClient, userId: string): Promise<
       middleName: true,
       roles: { select: { role: true } },
       identities: {
-        select: { id: true, provider: true, email: true, username: true, phone: true },
+        select: { id: true, provider: true, email: true },
       },
       consents: {
         where: { type: CONSENT_TYPE.PD_PROCESSING },
@@ -80,12 +78,10 @@ export async function loadOwnProfile(db: PrismaClient, userId: string): Promise<
 
   const buildIdentity = (
     provider: LoginProvider,
-    row: { username: string | null; phone: string | null; email: string | null } | undefined,
+    row: { email: string | null } | undefined,
   ): OwnProfileIdentity => ({
     provider,
     connected: Boolean(row),
-    username: row?.username ?? null,
-    phone: row?.phone ?? null,
     email: row?.email ?? null,
     canUnlink: Boolean(row) && identityCount > 1 && provider === LOGIN_PROVIDER.TELEGRAM,
   });

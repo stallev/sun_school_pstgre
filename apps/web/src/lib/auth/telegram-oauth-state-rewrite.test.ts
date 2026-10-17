@@ -6,7 +6,7 @@ import { rewriteTelegramOAuthAuthorizeState } from "./telegram-oauth-state-rewri
 const SECRET = "unit-test-secret-unit-test-secret";
 const STATE_COOKIE = "authjs.state";
 const LONG_STATE = "s".repeat(440);
-const AUTHORIZE = `https://oauth.telegram.org/auth?client_id=1&scope=openid+profile+phone&state=${LONG_STATE}`;
+const AUTHORIZE = `https://oauth.telegram.org/auth?client_id=1&scope=openid&state=${LONG_STATE}`;
 
 const sealedLongStateCookie = async () => {
   const value = await encode({ secret: SECRET, salt: STATE_COOKIE, token: { value: LONG_STATE }, maxAge: 900 });
@@ -52,7 +52,7 @@ describe("rewriteTelegramOAuthAuthorizeState (TG-2, TG-5)", () => {
     expect(rewritten.headers.getSetCookie().some((c) => c.startsWith("authjs.pkce.code_verifier=abc"))).toBe(true);
     const location = new URL(rewritten.headers.get("location") ?? "");
     expect(location.searchParams.get("client_id")).toBe("1");
-    expect(location.searchParams.get("scope")).toBe("openid profile phone");
+    expect(location.searchParams.get("scope")).toBe("openid");
   });
 
   it("leaves a short state and non-Telegram redirects alone", async () => {

@@ -8,7 +8,6 @@ export type PrivacyContent = {
 const CONTENT: Record<MessageLocale, Omit<PrivacyContent, never>> = {
   ru: {
     summaryBullets: [
-      "Имя пользователя Telegram и телефон (если вы разрешили доступ)",
       "Фамилия, имя и отчество для учёта в воскресной школе",
       "Email администратора для входа по паролю",
       "Удаление — по запросу в приложении (раздел профиля)",
@@ -17,7 +16,6 @@ const CONTENT: Record<MessageLocale, Omit<PrivacyContent, never>> = {
       {
         title: "Что собираем",
         body: [
-          "Имя пользователя и телефон из Telegram, если вы разрешили их передать при входе.",
           "Фамилия, имя и отчество, которые вы указываете при регистрации.",
           "Email администратора, используемый только для входа по паролю.",
         ],
@@ -47,7 +45,6 @@ const CONTENT: Record<MessageLocale, Omit<PrivacyContent, never>> = {
   },
   en: {
     summaryBullets: [
-      "Telegram username and phone (if you allowed access)",
       "Last, first and middle name for Sunday school records",
       "Administrator email for password sign-in",
       "Deletion — request it in the app (profile section)",
@@ -56,7 +53,6 @@ const CONTENT: Record<MessageLocale, Omit<PrivacyContent, never>> = {
       {
         title: "What we collect",
         body: [
-          "Telegram username and phone when you allow them during sign-in.",
           "Last, first and middle name you provide at registration.",
           "Administrator email used only for password sign-in.",
         ],

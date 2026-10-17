@@ -48,7 +48,7 @@
 |---------|-----------|
 | `packages/domain` | Константы ролей и статусов, реестр кодов отказов и `AUDIT_ACTION`, схемы входов регистрации, правила переходов статусов |
 | `packages/db` | Клиент с driver adapter, проверка `APP_ENV` и маркера БД, `writeAudit`, `seed:reference` (организация, настройки, справочники, каталог достижений) |
-| Auth | Telegram (OIDC, scope `openid profile phone`) и Credentials (администратор), обход `state ≤ 256` и `userinfo_endpoint`, callbacks, `login_identity` (`username`, `phone`, хэш пароля), команда `db:seed:admin`, ленивая очистка регистрации; миграция `LOGIN_PROVIDER` (`GOOGLE` → `CREDENTIALS`) и новые поля `login_identity` |
+| Auth | Telegram (OIDC, scope `openid`) и Credentials (администратор), обход `state ≤ 256` и `userinfo_endpoint`, callbacks, `login_identity` (только `provider_account_id` для Telegram, хэш пароля для Credentials), команда `db:seed:admin`, ленивая очистка регистрации; миграция `LOGIN_PROVIDER` (`GOOGLE` → `CREDENTIALS`) |
 | Policy | `policy-edge` (префиксы маршрутов по статусу и роли), `policy-server` (`PolicySessionContext`, `requireActiveUser`, `requireRole`), `proxy.ts` |
 | Оболочка | `(auth)` / `(app)`, header, drawer, topnav, меню пользователя, бейджи, баннеры, `global-error`, `not-found`, 403, словарь `common` и `auth` |
 | Регистрация и доступ | `submitRegistration`, `resubmitRegistration`, `updateOwnName`, `approveRequest`, `rejectRequest`, `changeRoles`, `disableAccess`/`enableAccess`, `updateUserName`, `mergeUsers`, `purgeExpiredRegistration` |

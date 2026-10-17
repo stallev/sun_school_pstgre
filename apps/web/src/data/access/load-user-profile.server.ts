@@ -43,7 +43,7 @@ export async function loadUserProfile(db: PrismaClient, userId: string): Promise
       organizationId: true,
       roles: { select: { role: true } },
       identities: {
-        select: { provider: true, email: true, username: true },
+        select: { provider: true, email: true },
       },
     },
   });
@@ -88,7 +88,6 @@ export async function loadUserProfile(db: PrismaClient, userId: string): Promise
 type IdentityRow = {
   provider: string;
   email: string | null;
-  username: string | null;
 };
 
 const identityLabel = (identity: IdentityRow): string => {
@@ -96,7 +95,7 @@ const identityLabel = (identity: IdentityRow): string => {
     return identity.email ?? LOGIN_PROVIDER.CREDENTIALS;
   }
   if (identity.provider === LOGIN_PROVIDER.TELEGRAM) {
-    return identity.username ? `@${identity.username}` : LOGIN_PROVIDER.TELEGRAM;
+    return LOGIN_PROVIDER.TELEGRAM;
   }
   return identity.provider;
 };

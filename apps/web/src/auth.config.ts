@@ -10,8 +10,8 @@ import { mapTelegramProfile } from "@/lib/auth/telegram-profile";
  * ADR-003 v1.1) and the signIn / redirect callbacks. Google and database adapters are not used.
  */
 export const TELEGRAM_OIDC_ISSUER = "https://oauth.telegram.org";
-/** `phone` is requested but optional: a missing `phone_number` never blocks sign-in (Q-05). */
-export const TELEGRAM_OIDC_SCOPE = "openid profile phone";
+/** Telegram id only (`sub` → `provider_account_id`); profile and phone scopes are not requested (ADR-003 v1.2). */
+export const TELEGRAM_OIDC_SCOPE = "openid";
 
 export default {
   trustHost: true,

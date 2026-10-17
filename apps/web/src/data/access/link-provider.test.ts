@@ -29,8 +29,6 @@ describe("linkTelegram", () => {
     const result = await linkTelegram(tx as never, {
       userId: USER_ID,
       providerAccountId: "tg-1",
-      username: "teacher",
-      phone: "+79001112233",
       now: NOW,
     });
     expect(result).toEqual({ ok: true });
@@ -46,8 +44,6 @@ describe("linkTelegram", () => {
         findUnique: async () => ({
           id: "id-1",
           userId: USER_ID,
-          username: "old",
-          phone: "+79001112233",
         }),
         update: vi.fn(),
       },
@@ -55,8 +51,6 @@ describe("linkTelegram", () => {
     const result = await linkTelegram(tx as never, {
       userId: USER_ID,
       providerAccountId: "tg-1",
-      username: null,
-      phone: null,
       now: NOW,
     });
     expect(result).toEqual({ ok: true });
@@ -72,16 +66,12 @@ describe("linkTelegram", () => {
         findUnique: async () => ({
           id: "id-1",
           userId: OTHER_ID,
-          username: null,
-          phone: null,
         }),
       },
     };
     const result = await linkTelegram(tx as never, {
       userId: USER_ID,
       providerAccountId: "tg-1",
-      username: null,
-      phone: null,
       now: NOW,
     });
     expect(result).toMatchObject({

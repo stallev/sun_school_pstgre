@@ -7,12 +7,6 @@ import "next-auth/jwt";
  * The session carries uid / status / roles and nothing personal (ADR-003 §4.3).
  */
 declare module "next-auth" {
-  /** Extra Telegram claims carried from `profile()` to the `signIn` callback only (never to the token). */
-  interface User {
-    username?: string | null;
-    phone?: string | null;
-  }
-
   interface Session {
     user: {
       id: string;
