@@ -72,7 +72,7 @@
 
 ### P03-CU5 — feat(lessons): add verse text reads and group translation resolver · Review: diff-only · Commit: auto
 
-- [ ] P03-T8 · T1 · Contract: [bible_seed §5.2, §12](../contracts/bible_seed_contract.md) · ADR: [adr_002 §5](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
+- [x] P03-T8 · T1 · Contract: [bible_seed §5.2, §12](../contracts/bible_seed_contract.md) · ADR: [adr_002 §5](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
       Files: `apps/web/src/data/bible/{get-group-translation,get-verse-text,list-books}.ts` (`'use cache'` с тегом перевода)
       Acceptance: текст по индексу `(translation, book, chapter, verse)`; `missing[]` для формы; кэш с тегом, сброс при перезагрузке перевода → тест
       Paths: H · N [нет перевода у группы → `SCHOOL_LANGUAGE_UNAVAILABLE`] · S [только чтение, нет мутаций]
