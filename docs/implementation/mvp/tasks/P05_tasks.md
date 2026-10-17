@@ -52,11 +52,11 @@
 
 ### P05-CU3 — feat(web): add bricks screen · Review: diff-only · Commit: auto
 
-- [ ] P05-T3 · T1 · Phase: [экранные требования `/bricks`](../phases_tasks_descriptions/P05_phase_description.md) · Flow: [teacher_flow §4.5](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `bricks`
+- [x] P05-T3 · T1 · Phase: [экранные требования `/bricks`](../phases_tasks_descriptions/P05_phase_description.md) · Flow: [teacher_flow §4.5](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `bricks`
       Files: `app/(app)/bricks/page.tsx`, `components/teacher/{BalanceTable,IssueBricksDialog,CompensateBricksDialog,LedgerList}.tsx`
       Acceptance: таблица с остатком и «требует внимания», диалоги выдачи/исправления, журнал ученика, пустые состояния, закрытый год допустим для выдачи → ручной smoke H/N
       Paths: H · N [сверх остатка, D8] · S [AZ-40, AZ-41]
-- [ ] P05-T4 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
+- [x] P05-T4 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
       Acceptance: ключи кирпичиков на двух языках
       Paths: n/a — copy
 

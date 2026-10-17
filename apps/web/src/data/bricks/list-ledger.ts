@@ -30,6 +30,9 @@ async function loadCachedBrickLedger(
       issuedOn: true,
       note: true,
       createdAt: true,
+      issuedBy: {
+        select: { lastName: true, firstName: true, middleName: true },
+      },
     },
   });
   return rows.map(mapBrickLedgerRow);

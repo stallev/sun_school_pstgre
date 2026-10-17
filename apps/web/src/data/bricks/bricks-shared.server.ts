@@ -16,6 +16,7 @@ import {
   lockPupilRow,
 } from "../school/school-pupil-shared.server";
 import { loadAcademicYearForOrganization } from "../school/school-year-guards.server";
+import { formatDisplayName } from "@/lib/person/format-display-name";
 
 type Tx = Prisma.TransactionClient;
 
@@ -24,6 +25,7 @@ export type BrickLedgerEntryDto = {
   quantity: number;
   issuedOn: string;
   note: string | null;
+  issuedByName: string;
   createdAt: string;
 };
 
@@ -153,11 +155,17 @@ export const mapBrickLedgerRow = (row: {
   issuedOn: Date;
   note: string | null;
   createdAt: Date;
+  issuedBy: {
+    lastName: string | null;
+    firstName: string | null;
+    middleName: string | null;
+  };
 }): BrickLedgerEntryDto => ({
   id: row.id,
   quantity: row.quantity,
   issuedOn: isoFromCalendarDate(row.issuedOn),
   note: row.note,
+  issuedByName: formatDisplayName(row.issuedBy),
   createdAt: row.createdAt.toISOString(),
 });
 
