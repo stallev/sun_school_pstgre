@@ -229,6 +229,65 @@ describe("saveCheckInTransaction", () => {
     expect(tx.homeworkScoreEvent.create).toHaveBeenCalled();
   });
 
+  it("keeps frozen points when grade weights change later (INV-13)", async () => {
+    let weights: Record<string, number> = { notebook: 2 };
+    const gradeSettingsFindUnique = vi.fn().mockImplementation(() =>
+      Promise.resolve({
+        useVerses: false,
+        useTest: false,
+        useNotebook: true,
+        useSinging: false,
+        maxVersesPerLesson: 3,
+        weights,
+      }),
+    );
+    const tx = mockTx({
+      gradeSettings: { findUnique: gradeSettingsFindUnique },
+    });
+    const first = await saveCheckInTransaction(tx as never, actorUserId, orgId, baseInput, "checked");
+    expect(first.ok).toBe(true);
+    expect(tx.homeworkCheck.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          pointsTotal: 16,
+          scoringSnapshot: expect.objectContaining({
+            weights: expect.objectContaining({ notebook: 2 }),
+          }),
+        }),
+      }),
+    );
+
+    weights = { notebook: 99 };
+    const updatedAt = new Date("2026-10-16T10:00:00.000Z");
+    vi.mocked(tx.$queryRaw)
+      .mockReset()
+      .mockResolvedValueOnce([{ id: yearId }])
+      .mockResolvedValueOnce([
+        {
+          id: checkId,
+          lessonId,
+          pupilId,
+          present: true,
+          homeworkChecked: true,
+          testScore: null,
+          notebookScore: 8,
+          singing: false,
+          comment: null,
+          updatedAt,
+        },
+      ]);
+    const second = await saveCheckInTransaction(
+      tx as never,
+      actorUserId,
+      orgId,
+      { ...baseInput, expectedUpdatedAt: updatedAt.toISOString() },
+      "checked",
+    );
+    expect(second.ok).toBe(true);
+    expect(tx.homeworkCheck.update).toHaveBeenCalledTimes(1);
+    expect(gradeSettingsFindUnique).toHaveBeenCalledTimes(1);
+  });
+
   it("is idempotent when saveChecked repeats unchanged checked record", async () => {
     const updatedAt = new Date("2026-10-16T10:00:00.000Z");
     const tx = mockTx({

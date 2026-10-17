@@ -51,7 +51,7 @@
 
 ### P04-CU3 — feat(check): add correction and manual verse score use-cases · Review: reviewer · Commit: auto
 
-- [ ] P04-T5 · T3 · Contract: [homework_check §5.6–§5.7, §8–§9](../contracts/homework_check_contract.md) · Invariants: INV-13, INV-14
+- [x] P04-T5 · T3 · Contract: [homework_check §5.6–§5.7, §8–§9](../contracts/homework_check_contract.md) · Invariants: INV-13, INV-14
       Files: `data/checks/{correct-check,override-verse-score}.ts`
       Acceptance: teacher — год `ACTIVE`; admin — любой, в `CLOSED` с причиной; пересчёт по текущим весам, новый снимок, `late` по событиям; присутствие не меняется автоматически; `CHECK_NO_CHANGES`; журнал `check.corrected` со старым/новым значением → тесты
       Paths: H [§5.6] · N [закрытый год, нет причины, нет изменений, `CONFLICT`] · S [AZ-34, AZ-35, AZ-P5: teacher в закрытом → `FORBIDDEN`]
