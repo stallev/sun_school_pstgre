@@ -183,8 +183,8 @@
 ## 11. Acceptance criteria
 
 - [ ] `submitRegistration` создаёт согласие, заявку и статус `REQUEST_PENDING` атомарно — исход: тест use-case.
-- [ ] `approveRequest` для `TEACHER` без групп успешен и возвращает `warnings: ["NO_GROUPS"]`; группа не активного года отклоняется (`VALIDATION`) — исход: тест.
-- [ ] Заявка с `PARENT` отклоняется — исход: тест.
+- [x] `approveRequest` для `TEACHER` без групп успешен и возвращает `warnings: ["NO_GROUPS"]`; группа не активного года отклоняется (`VALIDATION`) — исход: тест (`approve-request.test.ts`, `access.integration.test.ts`).
+- [x] Заявка с `PARENT` отклоняется — исход: тест (`approve-request.test.ts`).
 - [ ] Параллельные решения по заявке дают один успех — исход: тест гонки.
 - [ ] Нельзя снять `ADMIN` у последнего и у себя — исход: тест (AZ-P1, AZ-P2).
 - [ ] Teacher не может вызвать операции admin — исход: тест policy.

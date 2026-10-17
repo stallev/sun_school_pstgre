@@ -121,9 +121,9 @@
 
 **CU DoD:** `typecheck` · `lint` · `test` · smoke
 
-### P02-CU10 — docs(docs): sync P02 docs and P01 follow-up · Review: diff-only · Commit: auto
+### P02-CU10 — docs(docs): sync p02 docs and p01 follow-up · Review: diff-only · Commit: auto
 
-- [ ] P02-T14 · T0 · Files: `docs/**`, регрессионные тесты одобрения `TEACHER`
+- [x] P02-T14 · T0 · Files: `docs/**`, регрессионные тесты одобрения `TEACHER`
       Acceptance: сквозной smoke «заявка teacher → одобрение без групп (предупреждение `NO_GROUPS`) → назначение группы → вход → `/today`»; контракт W8-03 и admin_flow согласованы; ссылки открываются
       Paths: n/a — docs/tests
 
@@ -131,7 +131,7 @@
 
 - [ ] Все CU закоммичены; trace `Review: …`
 - [ ] Phase DoD из [`P02_phase_description.md`](../phases_tasks_descriptions/P02_phase_description.md)
-- [ ] Docs sync — в CU10
+- [x] Docs sync — в CU10
 
 ---
 

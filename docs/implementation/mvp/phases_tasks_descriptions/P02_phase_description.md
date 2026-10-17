@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** Не начата (обновлено 2026-10-11). Ждёт DoD P01; заранее выполнены проверки: R-1/R-2 в миграции P5, решение `NO_GROUPS`.  
+**Прогресс фазы:** Реализация завершена (CU1–CU10, обновлено 2026-10-17). DoD P01 выполнен; R-1/R-2 в миграции P5; Q-01 `NO_GROUPS` закрыт в CU10.  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-03  
@@ -128,6 +128,17 @@ flowchart TD
 | Язык `EN` без `READY` перевода | `SCHOOL_LANGUAGE_UNAVAILABLE` |
 | Teacher в закрытом году | `FORBIDDEN`, форма скрыта (D3) |
 | Неизвестное IANA-имя пояса | `VALIDATION`, значение не меняется |
+
+## P01 follow-up smoke (teacher без групп → назначение → `/today`)
+
+| Шаг | Действие | Ожидаемо |
+|-----|----------|----------|
+| 1 | Регистрация нового пользователя → `/pending` | Заявка `PENDING`, пользователь `REQUEST_PENDING` |
+| 2 | Admin `/approvals` → одобрить роль `TEACHER` **без** групп | Успех + предупреждение `NO_GROUPS`; статус `ACTIVE` |
+| 3 | Admin: активный год и группа → `/groups/[groupId]` → назначить teacher (§4.4 admin_flow) | `teacher_assignment` на активный год |
+| 4 | Teacher повторный вход | Редирект на `/today` (home teacher, [`canonical_routes.md`](../../../design/canonical_routes.md)) |
+
+**Регрессия (авто):** `apps/web/src/data/access/approve-request.test.ts` (`NO_GROUPS`, одобрение с `gradeIds`); `access.integration.test.ts` (dev DB, одобрение teacher); `teacher-approval-p02-regression.test.ts` (home `/today`).
 
 ## Security smoke
 
