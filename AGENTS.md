@@ -108,7 +108,7 @@ Web detail: [`apps/web/AGENTS.md`](apps/web/AGENTS.md) § Skills.
 
 ## Stack (full Pulse)
 
-Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Telegram + email/пароль администратора) · Sentry · shadcn/ui · Tailwind v4 · Sonner · i18n ru/en (Resend и AWS S3 — post-MVP / выключены профилем)
+Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Telegram + email/пароль администратора; в dev — `db:seed:teacher`) · Sentry · shadcn/ui · Tailwind v4 · Sonner · i18n ru/en (Resend и AWS S3 — post-MVP / выключены профилем)
 
 ## Repository status
 

@@ -1,1 +1,26 @@
-{}
+{
+  "group": {
+    "page_title": "Моя группа",
+    "page_subtitle": "{group} · {count} в составе",
+    "select_all": "Выбрать всех",
+    "select_pupil": "Выбрать {name}",
+    "remove_selected": "Исключить выбранных ({count})",
+    "enrolled_since": "В группе с {date}",
+    "consent_yes": "Согласие есть",
+    "consent_no": "Согласия нет",
+    "add_pupil_label": "Добавить ученика",
+    "add_pupil_placeholder": "Выберите ученика",
+    "add_pupil_submit": "Зачислить",
+    "unenroll_hint": "Исключение не удаляет историю: оценки остаются в уроках, ученик попадает в список «Без группы».",
+    "toast_enrolled": "Ученик зачислен",
+    "toast_unenrolled": "Ученик исключён",
+    "empty_title": "В группе пока никого нет",
+    "empty_description": "Зачислите учеников из списка без группы, когда появится согласие.",
+    "unassigned_title": "Группа не назначена",
+    "unassigned_description": "Обратитесь к администратору — вас пока не назначили на группу в активном году.",
+    "no_year_title": "Учебный год ещё не начат",
+    "no_year_description": "Состав группы появится после активации учебного года.",
+    "year_closed_title": "Год закрыт — только чтение",
+    "year_closed_description": "Изменять состав группы нельзя."
+  }
+}

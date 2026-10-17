@@ -19,6 +19,7 @@
 | **Lab PSI (portable)** | [`psi-lab-testing.md`](psi-lab-testing.md) — deployed origin via REST `runPagespeed`; not `next-dev-loop` |
 | **Code review protocol** | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) — problem → expected shape → diff; subagent prompt. WHEN/levels/budget: rule `agent-code-review-subagent.mdc`. Не Bugbot. Не заменяет T3-субагента `reviewer`. |
 | **Phase orchestration (portable)** | [`agent-phase-orchestration.md`](agent-phase-orchestration.md) — phase driver, CU session, `cu-verify` / `cu-commit` / `run-phase` contracts, permissions; deep dive: [`../general/06-agent-orchestration.md`](../general/06-agent-orchestration.md) |
+| Session-per-CU (informational) | [`agent-phase-orchestration-session-per-cu.md`](agent-phase-orchestration-session-per-cu.md) — alternative: fresh top-level session per CU, fewer tokens, more human starts; **not normative** |
 | **Маршрутизация моделей** | [`../meta/ai_agent_model_routing.md`](../meta/ai_agent_model_routing.md) — task tier T0–T3, субагенты, гигиена токенов; runtime: `model-routing.mdc` |
 | React | [`react/README.md`](react/README.md) |
 | Auth | [`auth/ai_auth_implementation_guide.md`](auth/ai_auth_implementation_guide.md) |

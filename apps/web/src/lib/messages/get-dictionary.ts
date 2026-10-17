@@ -1,17 +1,15 @@
 import "server-only";
 
+import type { Dictionary, MessageLocale, MessageNamespace } from "@/lib/messages/dictionary-types";
+
+export type { Dictionary, MessageLocale, MessageNamespace } from "@/lib/messages/dictionary-types";
+export { MESSAGE_LOCALES, MESSAGE_NAMESPACES } from "@/lib/messages/dictionary-types";
+
 /**
  * Dictionary loader — canon: ADR-008 §4.3. One language per application (no locale in the URL),
  * dictionaries are split into namespaces by route group: the client gets only the subset of keys
  * it needs (rule ui-messages-bundle-splitting). Teacher never receives the admin namespace.
  */
-export const MESSAGE_LOCALES = ["ru", "en"] as const;
-export type MessageLocale = (typeof MESSAGE_LOCALES)[number];
-
-export const MESSAGE_NAMESPACES = ["common", "auth", "teacher", "admin", "analytics"] as const;
-export type MessageNamespace = (typeof MESSAGE_NAMESPACES)[number];
-
-export type Dictionary = { [key: string]: string | Dictionary };
 
 const loaders: Record<MessageLocale, Record<MessageNamespace, () => Promise<{ default: Dictionary }>>> = {
   ru: {

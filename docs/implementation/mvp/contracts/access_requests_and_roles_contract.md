@@ -63,6 +63,7 @@
 - **Предусловия:** вход провайдером подтверждён, `login_identity` не найдена ([`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §5.1 п. 4).
 - **Транзакция:** создать `app_user` (`REGISTRATION`, `first_login_at`) и `login_identity` (Telegram: `provider_account_id`). `firstLogin` выполняется только для Telegram.
 - **Исключение — первый admin:** создаётся не входом, а командой `db:seed:admin` (seed_data_spec §4): `ACTIVE`, роль `ADMIN`, `login_identity` `CREDENTIALS` (email из `FIRST_ADMIN_EMAIL`, хэш пароля); **до начала работы он проходит экран согласия** (как РГ-5), после чего создаётся `privacy_consent` (решено 2026-10-11, Q-01); записи журнала `access.first_admin_created`, `auth.password_set` (решено 2026-10-16: Google не используется, ADR-003 v1.1).
+- **Исключение — dev-учитель:** только при `APP_ENV=dev`, команда `db:seed:teacher` (ADR-003 v1.3): `ACTIVE`, роль `TEACHER`, `CREDENTIALS` (`TEACHER_EMAIL`), `privacy_consent` сразу (текущая версия текста), журнал `access.dev_teacher_created`. В prod учитель по-прежнему приходит через Telegram и заявку. Самостоятельной регистрации по паролю нет.
 - **Постусловия:** пользователь перенаправляется на `/register` (первый admin после входа по паролю — на экран согласия, затем `/school`).
 
 ### 5.2 `submitRegistration`
@@ -183,8 +184,8 @@
 ## 11. Acceptance criteria
 
 - [ ] `submitRegistration` создаёт согласие, заявку и статус `REQUEST_PENDING` атомарно — исход: тест use-case.
-- [ ] `approveRequest` для `TEACHER` без групп успешен и возвращает `warnings: ["NO_GROUPS"]`; группа не активного года отклоняется (`VALIDATION`) — исход: тест.
-- [ ] Заявка с `PARENT` отклоняется — исход: тест.
+- [x] `approveRequest` для `TEACHER` без групп успешен и возвращает `warnings: ["NO_GROUPS"]`; группа не активного года отклоняется (`VALIDATION`) — исход: тест (`approve-request.test.ts`, `access.integration.test.ts`).
+- [x] Заявка с `PARENT` отклоняется — исход: тест (`approve-request.test.ts`).
 - [ ] Параллельные решения по заявке дают один успех — исход: тест гонки.
 - [ ] Нельзя снять `ADMIN` у последнего и у себя — исход: тест (AZ-P1, AZ-P2).
 - [ ] Teacher не может вызвать операции admin — исход: тест policy.

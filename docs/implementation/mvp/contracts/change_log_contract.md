@@ -45,6 +45,7 @@
 | Action | Событие | `entity_type` | Контракт |
 |--------|---------|---------------|----------|
 | `access.first_admin_created` | создан первый admin | `app_user` | W8-03 |
+| `access.dev_teacher_created` | создан dev-учитель (`db:seed:teacher`, `SYSTEM`) | `app_user` | ADR-003 v1.3 |
 | `access.registration_submitted` | регистрация отправлена | `access_request` | W8-03 |
 | `access.registration_resubmitted` | повторная отправка | `access_request` | W8-03 |
 | `access.request_approved` | заявка одобрена | `access_request` | W8-03 |

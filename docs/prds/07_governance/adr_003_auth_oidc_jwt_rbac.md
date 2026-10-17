@@ -22,10 +22,10 @@
 
 ## 3. Context
 
-- **Решение владельца 2026-10-16:** вход через Google **не используется**. Основной способ — Telegram; **администратор** входит по email и паролю (Credentials). У учителей и остальных пользователей паролей нет — подлинность подтверждает Telegram (спец. §2.1).
+- **Решение владельца 2026-10-16:** вход через Google **не используется**. Основной способ — Telegram; **администратор** входит по email и паролю (Credentials). В prod у учителей пароля нет — подлинность подтверждает Telegram (спец. §2.1). **Уточнение 2026-10-17:** в dev оператор может завести одну учётку учителя командой `db:seed:teacher`.
 - Первый вход — регистрация и заявка на доступ; роли получает только `ACTIVE` пользователь (`lifecycle_models` §5.1).
 - Telegram не передаёт email. Scope OIDC — только `openid`: в БД сохраняется `sub` → `provider_account_id`; имя, аватар, username и телефон не запрашиваются и не хранятся (v1.2).
-- Шаблон проекта и `ai_auth_implementation_guide.md` ориентированы на Credentials; в проекте Credentials — **только для администратора** (§4.4), не для самостоятельной регистрации.
+- Шаблон проекта и `ai_auth_implementation_guide.md` ориентированы на Credentials; в проекте Credentials — администратор и dev-учитель (§4.4), не для самостоятельной регистрации.
 
 ## 4. Decision
 
@@ -34,7 +34,7 @@
 | Элемент | Решение |
 |---------|---------|
 | Библиотека | Auth.js v5 (`next-auth`), `auth.ts` экспортирует `handlers`, `auth`, `signIn`, `signOut`; Route Handler `app/api/auth/[...nextauth]/route.ts` |
-| Провайдеры | **Telegram как custom OIDC** (`id: "telegram"`, `type: "oidc"`, `issuer: https://oauth.telegram.org`, `scope: "openid"`) и **Credentials** (`id: "credentials"`, email + пароль; только для учётных записей администратора) |
+| Провайдеры | **Telegram как custom OIDC** (`id: "telegram"`, `type: "oidc"`, `issuer: https://oauth.telegram.org`, `scope: "openid"`) и **Credentials** (`id: "credentials"`, email + пароль; администратор в любом окружении, учитель — только dev-сидом `db:seed:teacher`) |
 | Поток | Authorization Code + **PKCE + `state`** (`checks: ["pkce", "state"]` не отключать), full-page redirect |
 | Вход из UI | Только клиентский `signIn()` из `next-auth/react`; серверный `signIn()` из Server Action для Telegram не используется (обход `state` не срабатывает). Форма email + пароль — `signIn("credentials", { email, password, redirect: false })` на клиенте |
 | Пароль | Хэш **scrypt** (`node:crypto`, соль на запись, параметры в строке хэша) в `login_identity.password_hash`; сравнение — `timingSafeEqual`; открытый пароль нигде не хранится и не логируется |
@@ -51,7 +51,7 @@
 3. Не найдена и нет намерения привязки — создаётся `app_user` (`REGISTRATION`) и `login_identity`; пользователь направляется на `/register`.
 4. Слияние по совпавшему email **запрещено** (`allowDangerousEmailAccountLinking: false`); дубликаты объединяет только admin (§4.5).
 5. Ключ идентичности — `providerAccountId` (Telegram id; для Credentials — нормализованный email), не username и не телефон.
-6. Credentials: `authorize()` ищет `login_identity` с `provider = CREDENTIALS` по email (нижний регистр), проверяет блокировку и хэш; статус `DISABLED` / `DELETED` — отказ; успех сбрасывает `failed_attempts`. Регистрации по паролю нет.
+6. Credentials: `authorize()` ищет `login_identity` с `provider = CREDENTIALS` по email (нижний регистр), проверяет блокировку и хэш; отдельной проверки роли нет. Статус `DISABLED` / `DELETED` — отказ; успех сбрасывает `failed_attempts`. Регистрации по паролю нет. В prod такую идентичность имеет администратор из `db:seed:admin`; в dev команда `db:seed:teacher` может добавить одну учётную запись учителя (§4.4).
 
 ### 4.3 Токен и сессия
 
@@ -70,6 +70,7 @@
 - Форма регистрации и согласие (РГ-2…РГ-4) — `lifecycle_models` §5.1; `submitRegistration` создаёт заявку.
 - **Первый admin:** создаётся не входом, а явной командой оператора `db:seed:admin` (seed_data_spec §4): `FIRST_ADMIN_EMAIL` и `ADMIN_PASSWORD` (dev — из `.local/dev-secrets.json`, prod — переменные окружения на время запуска, не в репозитории и не в Vercel runtime). Команда создаёт `ACTIVE` пользователя с ролью `ADMIN` и `login_identity` (`CREDENTIALS`, хэш пароля) один раз; повторный запуск идемпотентен и меняет пароль только при `--reset-password`. Записи журнала: `access.first_admin_created`, `auth.password_set` (`SYSTEM`).
 - Администратор после первого входа подтверждает согласие на `/register` (режим «подтвердить согласие»); позже может подключить Telegram вторым способом (§4.5). Другие администраторы назначаются обычным путём (заявка через Telegram → роль `ADMIN`) и пароля не получают, пока оператор не создаст его командой.
+- **Dev-учитель (решение владельца 2026-10-17):** команда `db:seed:teacher` работает только при `APP_ENV=dev` и маркере БД `dev`. Секреты `TEACHER_EMAIL` / `TEACHER_PASSWORD` читает только скрипт (dev — `.local/dev-secrets.json`, не Vercel runtime, приложение не читает). Создаёт одного `ACTIVE` пользователя с ролью `TEACHER`, `login_identity` `CREDENTIALS` (scrypt) и `privacy_consent` (`PD_PROCESSING`, текущая `consent_text_version`), чтобы сессия сразу открывала `/today`. Группу и учебный год не создаёт. Повтор идемпотентен; `--reset-password` меняет только хэш и пишет `auth.password_set`. Если email уже занят другой `CREDENTIALS`-идентичностью (в том числе admin) — отказ, без слияния. Журнал при создании: `access.dev_teacher_created`, `auth.password_set` (`SYSTEM`); в `new_value` только статус и роль. В prod учителя по-прежнему приходят через Telegram и заявку.
 - Роль `PARENT` в MVP недоступна: заявка с ней отклоняется (`mvp_scope.md` §4).
 
 ### 4.5 Привязка второго способа и объединение
@@ -95,7 +96,7 @@
 | IDOR / повышение роли | `userId` только из `auth()`; роль и статус — по БД на каждой мутации |
 | Подмена `state` / CSRF | `checks: ["pkce", "state"]`; cookie `authjs.state` совпадает с `state` в URL после укорочения |
 | Захват привязки | одноразовое подписанное намерение (§4.5 п. 2), отказ при чужой идентичности |
-| Секреты | `AUTH_SECRET`, `AUTH_TELEGRAM_*` — только server env; `ADMIN_PASSWORD` — только при запуске `db:seed:admin`, приложением не читается; `TELEGRAM_BOT_TOKEN` не используется как `clientSecret` |
+| Секреты | `AUTH_SECRET`, `AUTH_TELEGRAM_*` — только server env; `ADMIN_PASSWORD` — только при запуске `db:seed:admin`; `TEACHER_PASSWORD` — только при запуске `db:seed:teacher` в dev; приложение их не читает; `TELEGRAM_BOT_TOKEN` не используется как `clientSecret` |
 | Подбор пароля | блокировка по `failed_attempts` / `locked_until`, одинаковый ответ на неверный email и пароль, scrypt; пароль не логируется и не попадает в Sentry |
 | ПД из Telegram | Только технический id (`provider_account_id`); не в JWT, не в журнале; username/телефон Telegram не собираются (v1.2) |
 | Open redirect | `callbackUrl` допускается только относительным путём из `canonical_routes.md` |
@@ -107,7 +108,7 @@
 
 | Альтернатива | Почему отклонена |
 |--------------|------------------|
-| Credentials для всех пользователей / самостоятельная регистрация по паролю | Лишняя поверхность атаки и поддержка сброса паролей; Credentials — только для администратора (решение владельца 2026-10-16) |
+| Credentials для всех пользователей / самостоятельная регистрация по паролю | Лишняя поверхность атаки и поддержка сброса паролей. Пароль в prod — только у администратора (решение владельца 2026-10-16). Исключение с 2026-10-17: одна dev-учётка учителя командой `db:seed:teacher`, без регистрации и без сброса в приложении |
 | Google (OIDC) | Решение владельца 2026-10-16: не используется |
 | Первый admin по email из Google | Заменён командой `db:seed:admin` — не зависит от внешнего провайдера |
 | `@auth/prisma-adapter` и БД-сессии | Нет таблиц Account/Session (ADR-001); JWT достаточно |
@@ -122,6 +123,7 @@
 | **H** | Новый пользователь входит через Telegram | `REGISTRATION`, `login_identity` с `provider_account_id`, перенаправление на `/register` |
 | **H** | Администратор входит по email и паролю | Сессия, при отсутствии согласия — `/register`, иначе `/school` |
 | **H** | Активный teacher входит через Telegram | Сессия, перенаправление на `/today` |
+| **H** | Dev-учитель из `db:seed:teacher` входит по email | Сессия с ролью `TEACHER`, согласие уже есть → `/today` |
 | **N** | Пользователь отменил согласие у провайдера | Восстановимое сообщение на `/login`, без stack trace |
 | **N** | — | Scope `openid` only; отдельного сценария «не передал phone/username» нет (поля не запрашиваются) |
 | **N** | Неверный пароль / 5 неудач подряд | Одинаковая ошибка; затем блокировка 15 минут, `RATE_LIMITED` |
@@ -162,7 +164,7 @@
 | Q-02 | ✔ **Решено 2026-10-16 (P01-CU11):** cookie `sunschool.link-intent` с `Path=/api/auth` доступен в Node `signIn` при OIDC callback; клиентский `signIn("telegram")` сохраняет cookie на редиректах (`SameSite=Lax`, same-site). Запасной `@auth/prisma-adapter` не требуется. | — | — |
 | Q-03 | ✔ **Закрыто v1.2:** username Telegram не сохраняется; ключ — `provider_account_id` | — | — |
 | Q-04 | ✔ **Закрыто v1.2:** scope `phone` не запрашивается; телефон Telegram не собирается | — | — |
-| Q-05 | ✔ **Решено 2026-10-16 (владелец):** сброс пароля — только оператором (`db:seed:admin --reset-password`); пароль только у администратора (admin-only подтверждено) | — | — |
+| Q-05 | ✔ **Решено 2026-10-16 (владелец):** сброс пароля — только оператором (`db:seed:admin --reset-password` и, в dev, `db:seed:teacher --reset-password`). ✔ **Уточнено 2026-10-17:** в prod пароль только у администратора; в dev оператор может завести одну учётку учителя командой `db:seed:teacher` | — | — |
 
 ## 11. Related documents
 
@@ -176,7 +178,7 @@
 
 ## 12. Agent notes
 
-- Credentials — только для администратора (v1.1); не расширять на регистрацию и сброс пароля без amend ADR-001 и ADR-003. `@auth/prisma-adapter` не добавлять.
+- Credentials в prod — администратор из `db:seed:admin`. В dev дополнительно одна учётка учителя из `db:seed:teacher` (v1.3). Самостоятельную регистрацию и сброс пароля в приложении не добавлять. `@auth/prisma-adapter` не добавлять.
 - Google не подключать. Пароль, хэш, телефон, username — не в JWT и не в журнал.
 - Не класть ФИО, email, роли «для удобства» в JWT сверх §4.3.
 - Не использовать серверный `signIn()` для Telegram.
@@ -189,3 +191,4 @@
 | 2026-10-11 | v1.0 — ACCEPTED (W4-01) |
 | 2026-10-16 | v1.1 — Google исключён; добавлен Credentials (email + пароль) только для администратора, первый admin — командой `db:seed:admin`; Telegram передаёт `username` и `phone` (scope `phone`); поля `login_identity`; Q-03 решён, Q-04/Q-05 |
 | 2026-10-17 | v1.2 — scope Telegram `openid` only; в БД только `provider_account_id`; колонки `login_identity.username` и `login_identity.phone` удалены; Q-05 (телефон) закрыт отказом от scope `phone` |
+| 2026-10-17 | v1.3 — dev-учитель: `db:seed:teacher` (email + пароль, согласие, `/today`); prod без изменений; Q-05 уточнён |

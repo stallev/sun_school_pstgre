@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { MUTATION_ERROR_CODES, type MutationResult } from "@sunschool/domain";
-import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { Dictionary } from "@/lib/messages/dictionary-types";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
 

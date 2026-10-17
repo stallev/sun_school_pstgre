@@ -126,8 +126,8 @@ flowchart TD
 1. Пустая dev-БД: `db:migrate` → `seed:reference` → приложение стартует; `APP_ENV` и маркер совпали.
 2. `db:seed:admin` → вход администратора по email и паролю → экран согласия → `/school` (пока каркас), роль `ADMIN`.
 3. Новый пользователь входит через Telegram → `/register` → ФИО + согласие → `/pending`.
-4. Admin видит заявку в `/approvals` с бейджем и одобряет её с ролью `TEACHER` без групп (предупреждение `NO_GROUPS`, группу назначит в P02) либо `ADMIN`.
-5. Одобренный пользователь при следующем заходе попадает на `/school` (каркас).
+4. Admin видит заявку в `/approvals` с бейджем и одобряет её с ролью `TEACHER` без групп (предупреждение `NO_GROUPS`) либо `ADMIN`.
+5. Одобренный `ADMIN` при следующем заходе попадает на `/school`; одобренный `TEACHER` — на `/today` (назначение группы — P02, [`P02_phase_description.md`](./P02_phase_description.md) §P01 follow-up smoke).
 6. Пользователь привязывает второй способ входа в `/profile`.
 
 ## Negative path smoke

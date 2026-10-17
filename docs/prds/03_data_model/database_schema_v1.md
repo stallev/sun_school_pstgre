@@ -36,7 +36,7 @@
 |--------------|----------|-----|
 | `USER_ROLE` | `ADMIN`, `TEACHER`, `PARENT` | `user_role.role` (в MVP выдаются `ADMIN`, `TEACHER`) |
 | `ACCOUNT_STATUS` | `REGISTRATION`, `REQUEST_PENDING`, `REJECTED`, `ACTIVE`, `DISABLED`, `DELETED` | `app_user.status` |
-| `LOGIN_PROVIDER` | `CREDENTIALS`, `TELEGRAM` | `login_identity.provider` (ADR-003 v1.1: Google не используется; `CREDENTIALS` — email + пароль администратора) |
+| `LOGIN_PROVIDER` | `CREDENTIALS`, `TELEGRAM` | `login_identity.provider` (ADR-003: Google не используется; `CREDENTIALS` — email + пароль администратора в любом окружении и, только в dev, учителя из `db:seed:teacher`) |
 | `ACCESS_REQUEST_STATUS` | `PENDING`, `APPROVED`, `REJECTED` | `access_request.status` |
 | `ACADEMIC_YEAR_STATUS` | `DRAFT`, `ACTIVE`, `CLOSED` | `academic_year.status` |
 | `LESSON_KIND` | `REGULAR`, `REVIEW` | `lesson.kind` |

@@ -1,1 +1,26 @@
-{}
+{
+  "group": {
+    "page_title": "My group",
+    "page_subtitle": "{group} · {count} enrolled",
+    "select_all": "Select all",
+    "select_pupil": "Select {name}",
+    "remove_selected": "Remove selected ({count})",
+    "enrolled_since": "In group since {date}",
+    "consent_yes": "Consent on file",
+    "consent_no": "No consent",
+    "add_pupil_label": "Add pupil",
+    "add_pupil_placeholder": "Choose a pupil",
+    "add_pupil_submit": "Enroll",
+    "unenroll_hint": "Removing a pupil does not erase history: lesson marks stay; the pupil moves to “Unassigned”.",
+    "toast_enrolled": "Pupil enrolled",
+    "toast_unenrolled": "Pupil removed from group",
+    "empty_title": "No pupils in the group yet",
+    "empty_description": "Enroll pupils from the unassigned list once consent is recorded.",
+    "unassigned_title": "No group assigned",
+    "unassigned_description": "Contact an administrator — you are not assigned to a group in the active year yet.",
+    "no_year_title": "The school year has not started",
+    "no_year_description": "The roster will appear after the school year is activated.",
+    "year_closed_title": "Year closed — read only",
+    "year_closed_description": "You cannot change the group roster."
+  }
+}

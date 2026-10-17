@@ -27,9 +27,10 @@
 | **A. Справочники** | `organization`, `app_setting` по умолчанию, `bible_translation`, `bible_book`, каталог `achievement` / `achievement_tier` и штрафы | ✔ | ✔ | upsert по естественному ключу, без `TRUNCATE` |
 | **B. Библия** | `bible_verse` (RST, NIV), `bible_verse_map` | ✔ | ✔ (NIV — после лицензии) | upsert, одна транзакция на перевод |
 | **C. Первый admin** | отдельная команда `db:seed:admin` (не справочник): email и пароль из `FIRST_ADMIN_EMAIL` / `ADMIN_PASSWORD` | ✔ | ✔ | один раз под блокировкой |
+| **C2. Dev-учитель** | отдельная команда `db:seed:teacher`: email и пароль из `TEACHER_EMAIL` / `TEACHER_PASSWORD`; не входит в набор prod | ✔ | **никогда** | один раз под блокировкой; только `APP_ENV=dev` |
 | **D. Dev-фикстуры** | вымышленные группы, люди, уроки, проверки, кирпичики, календарь, заявки, журнал | ✔ | **никогда** | пересоздаёт данные dev с нуля |
 
-После развёртывания **prod содержит только A + B + C** (ОК-2): ни одной группы, ученика, учебного года, урока, проверки.
+После развёртывания **prod содержит только A + B + C** (ОК-2): ни одной группы, ученика, учебного года, урока, проверки. Набор C2 (`db:seed:teacher`) в prod не входит.
 
 ## 4. Команды и порядок
 
@@ -39,6 +40,7 @@
 | 2 | `db:seed:reference` | набор A; записывает маркер окружения (§5) | dev, prod |
 | 3 | `db:seed:bible` | набор B: RST; затем `db:seed:bible:niv` — NIV; строит `bible_verse_map`, проверяет счётчики | dev, prod |
 | 3a | `db:seed:admin` | набор C: первый admin (`ACTIVE`, роль `ADMIN`, `login_identity` `CREDENTIALS` с хэшем scrypt); пароль и email — dev: `.local/dev-secrets.json` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD`), prod: переменные окружения оператора на время запуска; идемпотентна, пароль меняет только `--reset-password`; журнал `access.first_admin_created`, `auth.password_set` (`SYSTEM`) | dev, prod |
+| 3b | `db:seed:teacher` | набор C2, после 3a: один учитель (`ACTIVE`, роль `TEACHER`, `CREDENTIALS`, `privacy_consent` текущей `consent_text_version`); секреты `TEACHER_EMAIL` / `TEACHER_PASSWORD` — только dev (`.local/dev-secrets.json` или env на время запуска); при `APP_ENV` или маркере ≠ `dev` — отказ до записи; идемпотентна; `--reset-password` меняет только хэш; занятый email — отказ; журнал `access.dev_teacher_created`, `auth.password_set`; группу не создаёт | **только dev** |
 | 4 | `db:seed:dev` | набор D | **только dev** |
 
 Правила:
@@ -57,6 +59,7 @@
 | Маркер БД | `app_setting.db_environment` ∈ {`dev`, `prod`}; записывается шагом 2 по `APP_ENV` при пустом значении и **не перезаписывается** |
 | Сверка | Любая команда seed и старт приложения сравнивают `APP_ENV` с маркером; расхождение → завершение с понятной ошибкой, **ничего не записано** (ОК-1, INV-24) |
 | `db:seed:dev` | Дополнительно: отказывается, если маркер ≠ `dev` или маркера нет; в сборке и в скриптах деплоя prod команды нет |
+| `db:seed:teacher` | То же ограничение, что у `db:seed:dev`: `APP_ENV` и маркер должны быть `dev`, иначе отказ до записи |
 | Хост строки подключения | Логируется (без пароля) для оператора; решение принимается по маркеру, не по хосту |
 
 Маркер в БД выбран потому, что защищает от неверно скопированной строки подключения: переменные окружения можно перепутать, база — нет. **Статус: Proposed** (Q-01); ADR-001 §3.4 п. 2 («строка подключения не отмечена как dev») получает эту реализацию после подтверждения.
@@ -142,7 +145,7 @@
 
 ### 8.2 Вход в dev
 
-Вымышленные пользователи не имеют `login_identity`, которое проходит реальный OAuth. Для работы в dev используется переключатель роли «смотреть как» ([ОК-5](../../my_specs/sunday_school_data_analytics_spec.md), `responsive_navigation_contract` §8): он включён только при `APP_ENV=dev` и отсутствует в сборке prod. Реальный вход в dev: Telegram создаёт обычного `REGISTRATION` пользователя (только `provider_account_id`); администратор из `db:seed:admin` входит по email и паролю.
+Вымышленные пользователи не имеют `login_identity`, которое проходит реальный OAuth. Для работы в dev используется переключатель роли «смотреть как» ([ОК-5](../../my_specs/sunday_school_data_analytics_spec.md), `responsive_navigation_contract` §8): он включён только при `APP_ENV=dev` и отсутствует в сборке prod. Реальный вход в dev: Telegram создаёт обычного `REGISTRATION` пользователя (только `provider_account_id`); администратор из `db:seed:admin` и учитель из `db:seed:teacher` входят по email и паролю. Учитель без назначения видит пустое состояние на `/today`.
 
 ## 9. Paths (H / N / S)
 

@@ -4,13 +4,15 @@ import { homeRouteFor } from "@sunschool/policy-edge";
 /** Product shell reads the session on every request — Block per ADR-002 (auth + nav). */
 export const instant = false;
 import { AppShell } from "@/components/shell/app-shell";
+import { ShellBanners } from "@/components/shell/ShellBanners";
 import { buildShellNav } from "@/data/shell/build-shell-nav.server";
 import { loadShellBadgeCounts } from "@/data/shell/load-shell-badge-counts.server";
+import { loadShellBanners, type ShellBannerCopy } from "@/data/shell/load-shell-banners.server";
 import { getShellUser } from "@/data/shell/get-shell-user.server";
 import { requireActiveUser } from "@/lib/auth/require-user";
 import { getServerEnv } from "@/lib/env.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
-import { getDictionary } from "@/lib/messages/get-dictionary";
+import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
 
 type AppGroupLayoutProps = {
@@ -31,6 +33,16 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
 
   const shellMessages = pickShellMessages(common);
   const homeHref = homeRouteFor(context.status, context.roles);
+  const bannerCopy: ShellBannerCopy = {
+    noActiveYearTitle: getMessage(common, "states.no_active_year_title"),
+    noActiveYearDescriptionAdmin: getMessage(common, "states.no_active_year_admin"),
+    noActiveYearDescriptionTeacher: getMessage(common, "states.no_active_year_teacher"),
+    createYearAction: getMessage(common, "states.create_year_action"),
+    timezoneUnsetTitle: getMessage(common, "states.timezone_unset_title"),
+    timezoneUnsetDescription: getMessage(common, "states.timezone_unset_description"),
+    chooseTimezoneAction: getMessage(common, "states.choose_timezone_action"),
+  };
+  const shellBanners = await loadShellBanners(context, bannerCopy);
 
   return (
     <AppShell
@@ -40,6 +52,7 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
       nav={nav}
       badgeCounts={badgeCounts}
     >
+      <ShellBanners banners={shellBanners} />
       {children}
     </AppShell>
   );

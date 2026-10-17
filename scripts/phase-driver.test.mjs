@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  IMPLEMENTER_MARKER,
   LOG_TAIL_LINES,
+  ORCHESTRATOR_MARKER,
   assertCommitIndex,
   assertStagePaths,
   buildCommitMessage,
@@ -13,6 +15,7 @@ import {
   parseRunPhaseArgs,
   partitionChangedPaths,
   renderSessionPrompt,
+  renderStatusLine,
   summarizeSessionResult,
 } from "./phase-driver.mjs";
 
@@ -82,6 +85,7 @@ describe("paths", () => {
       expect(assertStagePaths([filePath]).ok).toBe(false);
     }
     expect(assertStagePaths(["apps/web/src/app/page.tsx"]).paths).toEqual(["apps/web/src/app/page.tsx"]);
+    expect(assertStagePaths([".env.example"]).paths).toEqual([".env.example"]);
   });
 
   it("requires the staged index to equal the allow-list", () => {
@@ -162,14 +166,31 @@ describe("log tail", () => {
 });
 
 describe("run-phase args", () => {
-  it("defaults to print, 40 turns and the sonnet model", () => {
+  it("defaults to cursor environment, 40 turns and the sonnet model", () => {
     expect(parseRunPhaseArgs(["P01"])).toEqual({
       ok: true,
       phase: "P01",
-      harness: "print",
+      harness: "cursor",
+      environment: "cursor",
       maxTurns: 40,
       model: "sonnet",
     });
+  });
+
+  it("accepts print as an alias of cursor", () => {
+    expect(parseRunPhaseArgs(["P01", "--harness", "print"]).harness).toBe("print");
+  });
+
+  it("maps --environment to harness", () => {
+    expect(parseRunPhaseArgs(["P02", "--environment", "claude-code"]).harness).toBe("claude");
+    expect(parseRunPhaseArgs(["P02", "--environment", "claude-code"]).environment).toBe("claude-code");
+    expect(parseRunPhaseArgs(["P02", "--environment", "cursor"]).harness).toBe("cursor");
+  });
+
+  it("rejects conflicting --environment and --harness", () => {
+    expect(parseRunPhaseArgs(["P01", "--environment", "cursor", "--harness", "claude"]).reason).toBe(
+      "environment-harness",
+    );
   });
 
   it("takes an explicit model and rejects a missing one", () => {
@@ -220,14 +241,48 @@ describe("session prompt", () => {
 ### P03-CU2 — feat(auth): add proxy · Review: reviewer · Commit: auto
 - [ ] P03-T2 · T3 · Files: \`apps/web/src/proxy.ts\`
 `);
-    expect(renderSessionPrompt({ unit: diffOnly, tasksPath: "tasks.md", pathsFile: "paths.txt" })).toContain(
-      "node scripts/cu-verify.mjs\n",
-    );
-    expect(renderSessionPrompt({ unit: diffOnly, tasksPath: "tasks.md", pathsFile: "paths.txt" })).not.toContain(
-      "--full",
-    );
-    expect(renderSessionPrompt({ unit: reviewed, tasksPath: "tasks.md", pathsFile: "paths.txt" })).toContain(
-      "node scripts/cu-verify.mjs --full",
-    );
+    for (const harness of ["cursor", "claude"]) {
+      expect(renderSessionPrompt({ unit: diffOnly, tasksPath: "tasks.md", pathsFile: "paths.txt", harness })).toContain(
+        "node scripts/cu-verify.mjs\n",
+      );
+      expect(
+        renderSessionPrompt({ unit: diffOnly, tasksPath: "tasks.md", pathsFile: "paths.txt", harness }),
+      ).not.toContain("--full");
+      expect(renderSessionPrompt({ unit: reviewed, tasksPath: "tasks.md", pathsFile: "paths.txt", harness })).toContain(
+        "node scripts/cu-verify.mjs --full",
+      );
+    }
+  });
+
+  it("splits the cursor prompt into an implementer brief and orchestrator steps", () => {
+    const [reviewed] = parseCommitUnits(`
+### P03-CU2 — feat(auth): add proxy · Review: reviewer · Commit: auto
+- [ ] P03-T2 · T3 · Files: \`apps/web/src/proxy.ts\`
+`);
+    const prompt = renderSessionPrompt({ unit: reviewed, tasksPath: "tasks.md", pathsFile: "paths.txt" });
+    const implementerAt = prompt.indexOf(IMPLEMENTER_MARKER);
+    const orchestratorAt = prompt.indexOf(ORCHESTRATOR_MARKER);
+    expect(implementerAt).toBe(0);
+    expect(orchestratorAt).toBeGreaterThan(implementerAt);
+    const implementer = prompt.slice(implementerAt, orchestratorAt);
+    const orchestrator = prompt.slice(orchestratorAt);
+    expect(implementer).toContain("node scripts/cu-commit.mjs stage --paths-file paths.txt");
+    expect(implementer).not.toContain("cu-commit.mjs commit");
+    expect(orchestrator).toContain('node scripts/cu-commit.mjs commit --paths-file paths.txt --subject "feat(auth): add proxy"');
+    expect(orchestrator).toContain("reviewer");
+  });
+
+  it("keeps the claude prompt as one session without markers", () => {
+    const [reviewed] = parseCommitUnits(`
+### P03-CU2 — feat(auth): add proxy · Review: reviewer · Commit: auto
+- [ ] P03-T2 · T3 · Files: \`apps/web/src/proxy.ts\`
+`);
+    const prompt = renderSessionPrompt({ unit: reviewed, tasksPath: "tasks.md", pathsFile: "paths.txt", harness: "claude" });
+    expect(prompt).not.toContain(IMPLEMENTER_MARKER);
+    expect(prompt).toContain("cu-commit.mjs commit");
+  });
+
+  it("renders a STATUS line", () => {
+    expect(renderStatusLine("complete", "P02")).toBe("STATUS: complete P02");
   });
 });

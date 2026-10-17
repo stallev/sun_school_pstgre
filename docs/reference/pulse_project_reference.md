@@ -60,7 +60,7 @@
 |--------|-------|---------------|
 | Продукт | Fitness marketplace (запись клиентов к тренерам) | Воскресная школа: группы, уроки, проверка ДЗ, кирпичики, аналитика |
 | Роли | `client`, `trainer`, `admin` | `admin`, `teacher`; `parent` в MVP отклоняется |
-| Вход | Credentials (email + пароль, `passwordHash`), адаптер | **Telegram (OIDC)** + email/пароль только администратора (scrypt), JWT, без адаптера, Google нет ([ADR-003](../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)) |
+| Вход | Credentials (email + пароль, `passwordHash`), адаптер | **Telegram (OIDC)** + email/пароль администратора и, в dev, одной учётки учителя (`db:seed:teacher`, scrypt), JWT, без адаптера, Google нет ([ADR-003](../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md)) |
 | Сущности | booking, slot, trainer profile, wishlist, платежи | учебный год, группа, урок, отметка ДЗ, кирпичики, запрос на удаление; платежей нет |
 | Время | часовой пояс тренера (`TrainerProfile.timezone`) | единый часовой пояс школы ([ADR-004](../prds/07_governance/adr_004_timezone_scheduling_model.md)) |
 | Объектный доступ | владелец ресурса — клиент/тренер | группы по назначению; чужой ресурс → 404, чужая роль → 403 ([матрица](../prds/04_authorization_privacy/authorization_matrix.md)) |

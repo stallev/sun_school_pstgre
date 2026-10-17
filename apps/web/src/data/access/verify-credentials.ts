@@ -9,8 +9,10 @@ import {
 import { getDummyPasswordHash, verifyPassword, type PrismaClient } from "@sunschool/db";
 
 /**
- * Logic of the Credentials `authorize()` (auth_runtime_spec §4.4, ADR-003 v1.1 §4.1). Only an
- * administrator has a CREDENTIALS identity, so a teacher cannot sign in by password.
+ * Logic of the Credentials `authorize()` (auth_runtime_spec §4.4, ADR-003 v1.3). Any
+ * `login_identity` with `CREDENTIALS` and a hash can sign in — there is no role check here.
+ * In production that identity is the administrator from `db:seed:admin`. In dev, `db:seed:teacher`
+ * may add one teacher. There is still no self-registration and no in-app password reset.
  * - a wrong email and a wrong password look identical (`bad_credentials`) and cost the same time
  *   (a dummy hash is verified for an unknown email);
  * - 5 failures in a row lock the identity for 15 minutes (`locked`);

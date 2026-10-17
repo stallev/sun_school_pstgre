@@ -1,4 +1,4 @@
-import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { Dictionary } from "@/lib/messages/dictionary-types";
 
 /** Resolves `auth.login.denied` or `common.errors.not_found` without importing server-only loaders. */
 export const resolveMessageKey = (dictionaries: Record<string, Dictionary>, messageKey: string): string => {
