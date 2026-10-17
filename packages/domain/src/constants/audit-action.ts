@@ -4,6 +4,7 @@
  */
 export const AUDIT_ACTION = {
   ACCESS_FIRST_ADMIN_CREATED: "access.first_admin_created",
+  ACCESS_DEV_TEACHER_CREATED: "access.dev_teacher_created",
   ACCESS_REGISTRATION_SUBMITTED: "access.registration_submitted",
   ACCESS_REGISTRATION_RESUBMITTED: "access.registration_resubmitted",
   ACCESS_REQUEST_APPROVED: "access.request_approved",

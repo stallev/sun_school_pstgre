@@ -32,7 +32,7 @@
 | База данных | **Neon PostgreSQL 17** (dev-проект фактически на 18.6 — Q-05) | pooled `DATABASE_URL` (приложение), direct `DIRECT_URL` (миграции) |
 | UI | shadcn/ui на **Base UI** (`@base-ui/react`, `components.json` style `base-vega`) + Tailwind CSS v4, токены Slate Cobalt | токены — UX-03 (W2); Radix как слой примитивов не используется; проверено в P6 |
 | Toasts | Sonner | |
-| Auth | **Auth.js v5** (`next-auth@beta`), JWT-сессии | провайдеры: Telegram (custom OIDC) и Credentials (email + пароль — только администратор, ADR-003 v1.1); Google не используется |
+| Auth | **Auth.js v5** (`next-auth@beta`), JWT-сессии | провайдеры: Telegram (custom OIDC) и Credentials (email + пароль администратора; в dev ещё одна учётка учителя командой `db:seed:teacher`, ADR-003 v1.3); Google не используется |
 | i18n | ru / en, срезы словарей | ADR-008 (W4-06) |
 | Observability | **Sentry** (`@sentry/nextjs`) | модуль `sentry` включён профилем |
 
@@ -96,7 +96,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 
 | Альтернатива | Почему отклонена |
 |--------------|------------------|
-| Credentials для всех пользователей | Решение владельца 2026-10-16: пароль только у администратора (ADR-003 v1.1), у остальных — Telegram; Google отклонён |
+| Credentials для всех пользователей | Решение владельца 2026-10-16: в prod пароль только у администратора (ADR-003), у остальных — Telegram. С 2026-10-17 в dev одна учётка учителя — `db:seed:teacher`. Google отклонён |
 | `@auth/prisma-adapter` | В схеме нет Account/Session-таблиц Auth.js; JWT-сессии; привязка провайдеров — собственная таблица способов входа (ADR-003) |
 | Одна БД на dev и prod | Нарушает ОК-1 (разные базы, секреты, провайдеры) |
 | Staging-окружение | ОК-8: нет пользователей и команды, не нужно |
@@ -140,7 +140,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 
 ## 10. Agent notes
 
-- Не расширять пароль/Credentials за пределы администратора; не добавлять `@auth/prisma-adapter`, Resend, S3, `apps/workers` без amend ADR.
+- Не расширять пароль/Credentials дальше администратора и dev-команды `db:seed:teacher` (ADR-003 v1.3); не добавлять самостоятельную регистрацию, `@auth/prisma-adapter`, Resend, S3, `apps/workers` без amend ADR.
 - Не импортировать `@sunschool/policy-server` в `proxy.ts`.
 - Не создавать третье окружение; не использовать дамп prod как dev-данные.
 - Версии не «обновлять по привычке»: пины меняются только через этот ADR.

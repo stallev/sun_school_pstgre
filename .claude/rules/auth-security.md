@@ -19,7 +19,7 @@ paths:
 
 ## Auth model (MVP)
 
-- Sign-in: **Telegram (OIDC)** for everyone; **email + password (Credentials) for administrators only** (ADR-003 v1.1). No Google, no self-registration by password, no password reset in the app, no email-link.
+- Sign-in: **Telegram (OIDC)** for everyone; **email + password (Credentials)** for the administrator (`db:seed:admin`) and, in dev only, one teacher (`db:seed:teacher`, ADR-003 v1.3). No Google, no self-registration by password, no password reset in the app, no email-link.
 - Sessions: Auth.js v5 `strategy: "jwt"`, **no database adapter**. Identities live in `login_identity`, users in `app_user`.
 - Roles: `admin`, `teacher` (from `@sunschool/domain`). Status: `REGISTRATION` → `REQUEST_PENDING` → `ACTIVE` | `REJECTED` | `DISABLED` | `DELETED`.
 - Linking a second provider: **signed link-intent cookie** + client `signIn()` — not an adapter (`auth_runtime_spec` §7).
@@ -61,7 +61,7 @@ paths:
 ## Credentials (administrator) and Telegram profile data
 
 - `authorize()` lives in `auth.ts` (Node, DB); `auth.config.ts` stays edge-safe. Hash = **scrypt** (`node:crypto`), compare with `timingSafeEqual`; 5 failures → 15-minute lock (`failed_attempts`, `locked_until`); same answer for a wrong email and a wrong password.
-- The first admin is created by `db:seed:admin` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` — dev: `.local/dev-secrets.json`, prod: operator env, never Vercel runtime). The app never reads these variables.
+- The first admin is created by `db:seed:admin` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` — dev: `.local/dev-secrets.json`, prod: operator env, never Vercel runtime). A dev teacher is created by `db:seed:teacher` (`TEACHER_EMAIL`, `TEACHER_PASSWORD` — dev secrets only; the command refuses unless `APP_ENV` and the DB marker are `dev`). The app never reads these variables.
 - Never log, audit, return or send to Sentry a password, a hash, a phone or a Telegram username (INV-23). Telegram OIDC scope is `openid` only — the app stores `provider_account_id` (`sub`), not Telegram profile or phone fields (ADR-003 v1.2).
 
 ## Errors
@@ -72,7 +72,7 @@ paths:
 
 ## Do not
 
-- Extend Credentials beyond administrators, add self-registration by password, password reset in the app, Google, or `@auth/prisma-adapter` without amending ADR-001 and ADR-003.
+- Extend Credentials beyond the administrator and the dev-only `db:seed:teacher` command, add self-registration by password, password reset in the app, Google, or `@auth/prisma-adapter` without amending ADR-001 and ADR-003.
 - Put personal data or extra roles into the JWT "for convenience".
 - Cache authorization results across requests.
 - Log `providerAccountId`, tokens, `AUTH_SECRET` or the link-intent cookie value (INV-23).

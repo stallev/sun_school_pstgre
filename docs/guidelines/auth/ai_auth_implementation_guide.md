@@ -46,7 +46,7 @@ Browser
 
 - **Адаптера нет** (`@auth/prisma-adapter` не используется): в схеме нет таблиц `Account` / `Session`. Идентичности — `login_identity`, пользователи — `app_user`.
 - Provider id → enum `LOGIN_PROVIDER` одной функцией в `lib/auth` (без inline-строк на call site).
-- **Credentials** — только администратор (email + пароль, ADR-003 v1.1); самостоятельная регистрация и сброс пароля для пользователей не используются. Расширение пароля на роли кроме admin — только через amend ADR-001 и ADR-003. `@auth/prisma-adapter` не добавлять (в схеме нет `Account` / `Session`).
+- **Credentials** — email + пароль (ADR-003 v1.3): в prod только администратор из `db:seed:admin`; в dev ещё одна учётка учителя из `db:seed:teacher`. Самостоятельная регистрация и сброс пароля в приложении не используются. Дальше пароль не расширять без нового amend ADR-001 и ADR-003. `@auth/prisma-adapter` не добавлять (в схеме нет `Account` / `Session`).
 
 ---
 
@@ -54,7 +54,7 @@ Browser
 
 | Провайдер | Заметки |
 |-----------|---------|
-| Credentials | Только администратор: `authorize()` в `auth.ts` (БД, scrypt + `timingSafeEqual`, блокировка 5 неудач / 15 минут); пользователя создаёт команда `db:seed:admin`; пароль не логировать ([`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md) §4.4) |
+| Credentials | `authorize()` в `auth.ts` без проверки роли (БД, scrypt + `timingSafeEqual`, блокировка 5 неудач / 15 минут); идентичность создаёт `db:seed:admin` и, в dev, `db:seed:teacher`; пароль не логировать ([`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md) §4.4) |
 | Telegram | Custom `oidc`: `issuer: https://oauth.telegram.org`, `idToken: true`, scope `openid`, `checks: ["pkce","state"]`, `profile()` → `id` = `sub`, `email: null`, `allowDangerousEmailAccountLinking: false` |
 
 Обходы Telegram (укорочение `state`, синтетический `userinfo_endpoint`, `customFetch` из `next-auth`) — TG-1…TG-5 в `auth_runtime_spec` §6. Вход и привязка Telegram — **только клиентский** `signIn("telegram")`.
@@ -65,7 +65,7 @@ Browser
 
 | Callback | Что делает | Чего не делает |
 |----------|-----------|----------------|
-| `signIn` | Находит/создаёт `login_identity` и `app_user` (`REGISTRATION`), проверяет Credentials администратора, выполняет привязку по cookie намерения; первый admin — команда `db:seed:admin`, не этот callback | не раскрывает причину отказа; не сливает пользователей |
+| `signIn` | Находит/создаёт `login_identity` и `app_user` (`REGISTRATION`), проверяет Credentials, выполняет привязку по cookie намерения; первый admin — `db:seed:admin`, dev-учитель — `db:seed:teacher`, не этот callback | не раскрывает причину отказа; не сливает пользователей |
 | `jwt` | На первом входе кладёт `uid`, `status`, `roles` | не ходит в БД на каждый запрос; не кладёт ФИО, email, телефон |
 | `session` | Отдаёт `id`, `status`, `roles` | не отдаёт поля провайдера |
 | `redirect` | Пускает относительные пути из `canonical_routes.md` | не пускает внешний `callbackUrl` |
@@ -136,6 +136,7 @@ export async function proxy(request: NextRequest) {
 
 - Первый вход → `REGISTRATION` → `/register` (согласие, ФИО, роль `TEACHER`; `parent` в MVP отклоняется) → `REQUEST_PENDING` → решение admin → `ACTIVE`.
 - Первый admin — командой `db:seed:admin` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD`), один раз, в одной транзакции под advisory-lock; приложение эти переменные не читает.
+- Dev-учитель — командой `db:seed:teacher` (`TEACHER_EMAIL`, `TEACHER_PASSWORD`), только при `APP_ENV=dev`; приложение эти переменные не читает.
 - Email и пароль не запрашиваются; формы ввода учётных данных на сайте нет.
 
 Детали — [`access_and_registration_spec.md`](../../implementation/mvp/specs/access_and_registration_spec.md) и [`access_requests_and_roles_contract.md`](../../implementation/mvp/contracts/access_requests_and_roles_contract.md).

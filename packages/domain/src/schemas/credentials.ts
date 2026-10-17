@@ -15,7 +15,10 @@ export const credentialsLoginSchema = z.object({
 });
 export type CredentialsLogin = z.infer<typeof credentialsLoginSchema>;
 
-/** Input of `db:seed:admin`: the password policy applies when it is set. */
+/**
+ * Input of `db:seed:admin` and of the dev-only `db:seed:teacher` (ADR-003 v1.3).
+ * The password policy applies when the password is set. Teacher seed does not add a second schema.
+ */
 export const adminSeedInputSchema = z.object({
   email,
   password: z.string().min(ADMIN_PASSWORD_MIN_LENGTH),

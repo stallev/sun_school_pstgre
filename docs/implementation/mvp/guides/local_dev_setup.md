@@ -44,6 +44,7 @@
 | 5 | Миграции | `npm run db:migrate:deploy` | таблицы созданы, `migrate status` чист |
 | 6 | Справочники | `npm run db:seed:reference` | организация, настройки, 66 книг, каталог; маркер `dev` |
 | 6a | Первый admin | `npm run db:seed:admin` (email и пароль — из `.local/dev-secrets.json`: `FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD`) | admin `ACTIVE`; вход по email и паролю |
+| 6b | Dev-учитель | `npm run db:seed:teacher` (только `APP_ENV=dev`; `TEACHER_EMAIL`, `TEACHER_PASSWORD` в `.local/dev-secrets.json`) | teacher `ACTIVE` с согласием; вход по email открывает `/today`; группу не создаёт |
 | 7 | Библия | `npm run db:seed:bible` (RST); `npm run db:seed:bible:niv` — при наличии локальных данных | перевод `READY` после сверки |
 | 8 | Фикстуры | `npm run db:seed:dev` | данные прототипа (вымышленные) |
 | 9 | Запуск | `npm run dev` | приложение на `http://localhost:3000` |
@@ -65,6 +66,7 @@
 | `db:migrate:status` | `@sunschool/db` | `prisma migrate status` | есть |
 | `db:seed:reference` | `@sunschool/db` | справочники (dev, prod) | P01 ✔ |
 | `db:seed:admin` | `@sunschool/db` | первый admin: email + пароль (dev, prod; `--reset-password`) | P01 |
+| `db:seed:teacher` | `@sunschool/db` | один учитель: email + пароль (**только dev**; `--reset-password`) | P02 |
 | `db:seed:bible`, `db:seed:bible:niv` | `@sunschool/db` | Библия (NIV — по лицензии) | P03 |
 | `db:seed:dev` | `@sunschool/db` | фикстуры (**только dev**) | P01–P05 |
 
@@ -83,6 +85,7 @@
 | `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | Telegram OIDC (scope `openid`) | BotFather Web Login | ✔ | auth |
 | `AUTH_TRUST_HOST` / `AUTH_URL` | origin за прокси/туннелем | значение туннеля | при туннеле | auth |
 | `FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` | первый admin — **только для `db:seed:admin`**, приложение не читает | `.local/dev-secrets.json` (git-ignored) | ✔ | auth |
+| `TEACHER_EMAIL`, `TEACHER_PASSWORD` | dev-учитель — **только для `db:seed:teacher`**, приложение не читает; в prod не задаются | `.local/dev-secrets.json` (git-ignored) | для входа учителя в dev | auth |
 | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN` | Sentry (клиент предпочитает `NEXT_PUBLIC_*`) | проект Sentry (dev) | нет | sentry |
 | `NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE` | доля performance-трейсов (0…1); локально `1`, на prod Vercel разумно `0.1` | `1` в `.env.example` | нет | sentry |
 | `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` | upload source maps (сборка) | Sentry | нет в dev | sentry |
@@ -93,7 +96,8 @@
 
 | Способ | Как |
 |--------|-----|
-| Email + пароль (admin) | форма «Вход для администратора» на `localhost` после `db:seed:admin` |
+| Email + пароль (admin) | форма «Вход по email» на `localhost` после `db:seed:admin` |
+| Email + пароль (учитель, dev) | та же форма после `db:seed:teacher`; сессия с ролью teacher открывает `/today` |
 | Telegram | запуск через HTTPS-туннель; в BotFather зарегистрировать origin и redirect; `AUTH_URL` = origin туннеля |
 | «Смотреть как» | dev-переключатель роли ([`global_shell_spec.md`](../specs/global_shell_spec.md) §8): показывает NAV роли; **не повышает** серверные права; нет в prod |
 | Фикстуры | вымышленные пользователи `@example.test` из `seed:dev` |

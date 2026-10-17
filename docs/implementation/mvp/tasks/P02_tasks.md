@@ -127,6 +127,17 @@
       Acceptance: сквозной smoke «заявка teacher → одобрение без групп (предупреждение `NO_GROUPS`) → назначение группы → вход → `/today`»; контракт W8-03 и admin_flow согласованы; ссылки открываются
       Paths: n/a — docs/tests
 
+**CU DoD:** `typecheck` · `lint` · `test`
+
+### P02-CU11 — feat(auth): seed a dev teacher for email sign-in · Review: reviewer · Commit: auto
+
+- [x] P02-T15 · T3 · ADR: [adr_003 §4.1, §4.4, Q-05](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md) · Spec: [auth_runtime §4.2, §4.4, §5.1](../../../prds/05_runtime/auth_runtime_spec.md) · Seed: [seed_data §4](../../../prds/03_data_model/seed_data_spec.md)
+      Files: `packages/db/src/seed/teacher/{index,run,seed-teacher.integration.test}.ts`, `packages/domain/src/constants/audit-action.ts`, `packages/db/package.json`, `package.json`, `.env.example`, `apps/web/src/data/access/verify-credentials.ts`, `apps/web/src/lib/messages/{ru,en}/auth.json`, документы ADR-003 / ADR-001 / auth runtime / seed / schema / access spec и contract / teacher flow / local dev / auth guide, `.cursor/rules` (`project-context`, `auth-security`)
+      Acceptance: `npm run db:seed:teacher` на dev создаёт `ACTIVE` + `TEACHER` + `CREDENTIALS` + `privacy_consent`; повтор не пишет журнал; `--reset-password` меняет только хэш; занятый email (в том числе admin) — отказ; нет `consent_text_version` — отказ; пароль короче 12 символов не проходит `adminSeedInputSchema`; при `APP_ENV=prod` команда отказывается до записи; вход этим email открывает `/today` с ролью teacher; admin-сид не меняется; пароль, хэш и email не попадают в журнал и лог
+      Paths: H [форма «Вход по email», редирект на `/today`] · N [нет организации, email занят, нет `consent_text_version`, пароль короче 12] · S [хэш scrypt, секреты не в приложении и не в журнале, prod-отказ]
+
+**CU DoD:** `typecheck` · `lint` · `test` · smoke: `db:seed:teacher` на локальной dev-БД
+
 ## Verification (phase)
 
 - [ ] Все CU закоммичены; trace `Review: …`
@@ -147,3 +158,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W11-04) |
+| 2026-10-17 | v1.1 — P02-CU11: dev-учитель `db:seed:teacher` |

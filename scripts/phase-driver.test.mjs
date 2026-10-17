@@ -85,6 +85,7 @@ describe("paths", () => {
       expect(assertStagePaths([filePath]).ok).toBe(false);
     }
     expect(assertStagePaths(["apps/web/src/app/page.tsx"]).paths).toEqual(["apps/web/src/app/page.tsx"]);
+    expect(assertStagePaths([".env.example"]).paths).toEqual([".env.example"]);
   });
 
   it("requires the staged index to equal the allow-list", () => {

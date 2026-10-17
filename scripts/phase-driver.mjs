@@ -173,6 +173,7 @@ export function pathRefusalReason(relativePath) {
   if (!normalized || normalized.startsWith("/") || /^[A-Za-z]:/.test(normalized)) return "absolute";
   if (normalized.split("/").includes("..")) return "parent";
   const base = normalized.slice(normalized.lastIndexOf("/") + 1);
+  if (base === ".env.example") return null;
   if (base === ".env" || base.startsWith(".env.")) return "secret";
   if (normalized === ".local/dev-secrets.json") return "secret";
   return null;

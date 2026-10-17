@@ -44,7 +44,7 @@
 | Провайдер | `id` | Тип | Особенности |
 |-----------|------|-----|-------------|
 | Telegram | `telegram` | custom `oidc` | `issuer: https://oauth.telegram.org`, `idToken: true`, scope `openid`, `checks: ["pkce","state"]`, `allowDangerousEmailAccountLinking: false`, `profile()` отдаёт `id` = `sub`, `email: null` (имя, аватар, username и телефон не сохраняются); `customFetch` из `next-auth`; конфигурация — гайд §4 |
-| Credentials | `credentials` | встроенный | поля `email`, `password`; **только** для учётных записей администратора; `authorize()` — §4.4; вход из UI — клиентский `signIn("credentials", { redirect: false })` |
+| Credentials | `credentials` | встроенный | поля `email`, `password`; `authorize()` ищет любую `CREDENTIALS`-идентичность (§4.4); в prod её создаёт только `db:seed:admin`, в dev ещё `db:seed:teacher`; вход из UI — клиентский `signIn("credentials", { redirect: false })` |
 
 Сопоставление `LOGIN_PROVIDER`: `credentials` → `CREDENTIALS`, `telegram` → `TELEGRAM` (одна функция в `lib/auth`, без inline-строк на call site — `domain-literals-and-codes`).
 
@@ -56,6 +56,7 @@
 | `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | Telegram OIDC (BotFather Web Login) | `TELEGRAM_BOT_TOKEN` не использовать как `clientSecret` |
 | `AUTH_TRUST_HOST` / `AUTH_URL` | за прокси Vercel | по гайду §3 |
 | `FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` | email и пароль первого admin (ОК-3) — **только для команды `db:seed:admin`**, приложение их не читает | dev — `.local/dev-secrets.json` (git-ignored); prod — переменные окружения оператора на время запуска, не в Vercel runtime; в документах и логах не хранятся |
+| `TEACHER_EMAIL`, `TEACHER_PASSWORD` | email и пароль одной dev-учётки учителя — **только для команды `db:seed:teacher`**, приложение их не читает | только dev: `.local/dev-secrets.json` или env на время запуска; в prod и в Vercel runtime не задаются; в документах и логах не хранятся |
 | `APP_ENV` | `dev` / `prod` | сверка со строкой подключения (INV-24) |
 
 Все значения — только серверные; `NEXT_PUBLIC_*` для auth нет. Валидация env при старте — `lib/env.server.ts` (P5).
@@ -64,7 +65,7 @@
 
 В BotFather: OIDC включён; Trusted Origin — HTTPS; Redirect URI — `{origin}/api/auth/callback/telegram`. Локальная проверка Telegram — HTTPS-туннель или стабильный preview; вход администратора по email и паролю проверяется на `localhost` без внешней настройки. Эфемерные preview Vercel для Telegram не включаются. Scope — только `openid` (ADR-003 v1.2); телефон и профиль не запрашиваются (Q-05 закрыт).
 
-### 4.4 Credentials (администратор)
+### 4.4 Credentials (администратор и dev-учитель)
 
 `authorize({ email, password })` в `auth.ts`:
 
@@ -74,7 +75,7 @@
 4. Сравнить `scrypt(password, salt)` с `password_hash` через `timingSafeEqual`. Неудача: `failed_attempts += 1`, при 5 — `locked_until = now() + 15 минут`, счётчик обнуляется после блокировки. Успех: `failed_attempts = 0`.
 5. Вернуть `{ id: uid }`; дальнейшая логика (`signIn`, `jwt`, `session`) общая с Telegram.
 
-Пароль и хэш не логируются, не попадают в Sentry, журнал и ответы. Пользователи без `CREDENTIALS`-идентичности войти по паролю не могут; регистрации и сброса пароля в приложении нет — только команда `db:seed:admin` (§5.1 п. 5).
+Пароль и хэш не логируются, не попадают в Sentry, журнал и ответы. Пользователи без `CREDENTIALS`-идентичности войти по паролю не могут; регистрации и сброса пароля в приложении нет. Идентичность создаёт `db:seed:admin` (§5.1 п. 5) и, только в dev, `db:seed:teacher` (§5.1 п. 5a).
 
 ## 5. Callbacks
 
@@ -90,8 +91,9 @@
    - найдена и пользователь `ACTIVE` / `REQUEST_PENDING` / `REJECTED` / `REGISTRATION` — продолжить;
    - найдена и пользователь `DISABLED` / `DELETED` — отказ;
    - не найдена — шаг 4.
-4. **Регистрация (только Telegram):** создать `app_user` (`REGISTRATION`) и `login_identity` (`provider_account_id` = `sub`; email нет) в одной транзакции; для `credentials` ветки регистрации нет — идентичность создаёт только `db:seed:admin`; гонка — `UNIQUE (provider, provider_account_id)`: проигравший перечитывает найденную запись.
+4. **Регистрация (только Telegram):** создать `app_user` (`REGISTRATION`) и `login_identity` (`provider_account_id` = `sub`; email нет) в одной транзакции; для `credentials` ветки регистрации нет — идентичность создаёт `db:seed:admin` или (dev) `db:seed:teacher`; гонка — `UNIQUE (provider, provider_account_id)`: проигравший перечитывает найденную запись.
 5. **Первый admin** создаёт не `signIn`, а команда `db:seed:admin` (seed_data_spec §4): в одной транзакции под advisory-lock — `app_user` `ACTIVE`, роль `ADMIN`, `login_identity` `CREDENTIALS` (email, хэш), записи журнала `access.first_admin_created` и `auth.password_set` (`SYSTEM`); повтор — идемпотентно (пароль меняется только с `--reset-password`, тогда пишется `auth.password_set`).
+5a. **Dev-учитель** создаёт команда `db:seed:teacher`, и только если `APP_ENV` и маркер БД равны `dev` (иначе отказ до записи): `ACTIVE`, роль `TEACHER`, `CREDENTIALS` (email, scrypt), `privacy_consent` (`PD_PROCESSING`, текущая `consent_text_version`). Журнал: `access.dev_teacher_created`, `auth.password_set`. Повтор ничего не пишет; `--reset-password` меняет только хэш. Занятый email (в том числе admin) — отказ без слияния. Группу команда не создаёт.
 6. **Привязка:** `login_identity` свободна → создать для `userId` из намерения; уже у этого пользователя → успех (идемпотентно); у другого → отказ с кодом конфликта, пользователи **не сливаются**; намерение погашается в любом исходе.
 7. Лениво очистить просроченную `REGISTRATION` (> 30 дней, INV-25): удалить и создать заново (шаг 4).
 8. Обновить `last_login_at` (и `first_login_at`, если пусто).
@@ -189,6 +191,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 | **H** | Новый пользователь входит через Telegram | `REGISTRATION`, `login_identity.provider_account_id`, перенаправление `/register` |
 | **H** | Администратор из `db:seed:admin` входит по email и паролю | сессия; нет согласия → `/register` (режим «подтвердить согласие»), иначе `/school` |
 | **H** | Teacher привязывает Telegram в `/profile` | `login_identity` создана; повтор — идемпотентный успех |
+| **H** | Dev-учитель из `db:seed:teacher` входит по email | роль `TEACHER`, согласие уже записано → `/today` |
 | **N** | `DISABLED` пользователь входит | `/login?error=AccessDenied`, сообщение `auth.login.denied` |
 | **N** | Telegram `state` > 256 | Обёртка укорачивает; при сбое — 500 без деталей |
 | **N** | Истёк / повторён cookie намерения | Обычный вход, привязка не выполняется |
@@ -197,7 +200,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 | **S** | Клиент передаёт `userId` при привязке | Игнорируется; `uid` из сессии / подписанного cookie |
 | **S** | Подделка cookie намерения | Подпись не проходит → обычный вход |
 | **S** | Пароль или хэш в логе / Sentry / журнале | Не допускается; тест сериализации + grep |
-| **S** | Teacher пытается войти по паролю | Нет `CREDENTIALS`-идентичности → `CredentialsSignin` |
+| **S** | Учитель без `CREDENTIALS`-идентичности входит по паролю | `CredentialsSignin` (в prod так у всех учителей; в dev — у тех, кого не создала `db:seed:teacher`) |
 | **S** | `callbackUrl` на внешний хост | Игнорируется, домашний маршрут |
 | **Race** | Два первых входа одного человека; две привязки; две отвязки; два запуска `db:seed:admin` | `UNIQUE (provider, provider_account_id)`; `FOR UPDATE`; один успех |
 
@@ -205,6 +208,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 
 - [ ] Вход через Telegram создаёт `REGISTRATION` (только `provider_account_id`) и ведёт на `/register` — исход: ручной smoke dev.
 - [ ] `db:seed:admin` создаёт первого admin один раз; вход по email и паролю работает; хэш — scrypt — исход: тест двойного запуска и smoke.
+- [ ] `db:seed:teacher` на dev создаёт учителя с согласием; повтор молчит; `--reset-password` меняет хэш; при `APP_ENV=prod` отказ; вход открывает `/today` — исход: интеграционный тест и smoke.
 - [ ] 5 неверных паролей блокируют вход на 15 минут; ответ на неверный email и пароль одинаков — исход: тест `authorize`.
 - [ ] JWT не содержит ФИО, email, телефон и username — исход: декодирование cookie.
 - [ ] `state.length ≤ 256` для Telegram — исход: тест перехвата redirect (TG-5).
@@ -236,7 +240,7 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 
 ## 15. Agent notes
 
-- Credentials — только администратор (ADR-003 v1.1); без самостоятельной регистрации и сброса пароля. `@auth/prisma-adapter` не добавлять. Google не подключать.
+- Credentials: администратор (`db:seed:admin`) и, только в dev, учитель (`db:seed:teacher`, ADR-003 v1.3). Без самостоятельной регистрации и сброса пароля в приложении. `@auth/prisma-adapter` не добавлять. Google не подключать.
 - Не вызывать серверный `signIn("telegram")`.
 - Не класть ПД и роли «для удобства» в JWT сверх `uid`, `status`, `roles`.
 - Не использовать `status`/`roles` из JWT для решения о доступе к данным.
@@ -249,3 +253,4 @@ Auth.js глотает OIDC-исключения: в Sentry они попада�
 | 2026-10-11 | v1.0 — Canonical (W5-08) |
 | 2026-10-16 | v1.1 — Google исключён; Credentials для администратора (§4.4), первый admin — `db:seed:admin`; Telegram: scope `phone`, сохранение `username` и `phone`; ошибки `CredentialsSignin`, `RateLimited`; Q-04 снят, Q-05, Q-06 |
 | 2026-10-17 | v1.2 — Telegram scope `openid` only; `login_identity.username` / `phone` удалены; Q-05 закрыт |
+| 2026-10-17 | v1.3 — `TEACHER_EMAIL` / `TEACHER_PASSWORD`, `db:seed:teacher`, вход dev-учителя на `/today` |
