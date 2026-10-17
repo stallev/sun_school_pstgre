@@ -58,7 +58,7 @@
 
 ### P02-CU4 — feat(school): add pupil and paper consent use-cases · Review: reviewer · Commit: auto
 
-- [ ] P02-T5 · T3 · Contract: [school_year §5.6–§5.8](../contracts/school_year_and_groups_contract.md) · Matrix: AZ-20…AZ-22
+- [x] P02-T5 · T3 · Contract: [school_year §5.6–§5.8](../contracts/school_year_and_groups_contract.md) · Matrix: AZ-20…AZ-22
       Files: `data/school/{create-pupil,update-pupil,deactivate-pupil,record-paper-consent,revoke-consent}.ts`
       Acceptance: карточка без согласия допустима; `recordPaperConsent` создаёт `ACTIVE` (подписант, дата, версия, место); отзыв блокирует зачисление; в DTO teacher — только «есть/нет» → тесты, проверка отсутствия ФИО в журнале
       Paths: H [§5.6–5.8] · N [нет подписанта/даты, дата в будущем] · S [AZ-20, AZ-22, СО-7: teacher не видит детали; INV-23]
