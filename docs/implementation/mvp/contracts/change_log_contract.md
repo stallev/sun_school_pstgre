@@ -67,6 +67,7 @@
 | `lesson.created` / `lesson.updated` / `lesson.deleted` | урок | `lesson` | W8-05 |
 | `lesson.lead_changed` | ведущий учитель | `lesson` | W8-05 |
 | `lesson.check_completed` | проверка урока завершена | `lesson` | W8-05 |
+| `calendar.event_created` / `calendar.event_updated` / `calendar.event_deleted` | событие календаря группы | `grade_event` | P03 §3.18 |
 | `check.saved` | проверка сохранена итогово | `homework_check` | W8-05 |
 | `check.corrected` | корректировка (БП-12) | `homework_check` | W8-05 |
 | `check.verse_overridden` | ручная оценка стиха | `homework_check` | W8-05 |

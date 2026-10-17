@@ -1,0 +1,34 @@
+import type { AppLocale } from "@sunschool/domain";
+
+export type TeacherCalendarMessages = {
+  pageTitle: string;
+  pageSubtitle: (group: string, year: string) => string;
+  newEvent: string;
+  monthEventsTitle: string;
+  emptyMonth: string;
+  emptyMonthCta: string;
+  typeLesson: string;
+  typeTrip: string;
+  typeCancellation: string;
+  weekdays: string[];
+  prevMonth: string;
+  nextMonth: string;
+  openLesson: string;
+  formCreateTitle: string;
+  formEditTitle: string;
+  dateLabel: string;
+  typeLabel: string;
+  titleLabel: string;
+  descriptionLabel: string;
+  lessonLinkLabel: string;
+  lessonLinkNone: string;
+  save: string;
+  delete: string;
+  cancel: string;
+  deleteConfirmTitle: string;
+  deleteConfirmDescription: string;
+  toastCreated: string;
+  toastUpdated: string;
+  toastDeleted: string;
+  locale: AppLocale;
+};

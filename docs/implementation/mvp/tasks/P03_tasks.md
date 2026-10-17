@@ -102,11 +102,11 @@
 
 ### P03-CU8 — feat(calendar): add event use-cases and calendar screen · Review: reviewer · Commit: auto
 
-- [ ] P03-T12 · T3 · Spec: [спец. §3.18](../../../my_specs/sunday_school_data_analytics_spec.md) · Matrix: AZ-42, AZ-43
+- [x] P03-T12 · T3 · Spec: [спец. §3.18](../../../my_specs/sunday_school_data_analytics_spec.md) · Matrix: AZ-42, AZ-43
       Files: `data/calendar/{create-event,update-event,delete-event}.ts`, `actions/calendar.ts`; обновление [`change_log_contract.md`](../contracts/change_log_contract.md) §4 (`calendar.event_*`)
       Acceptance: тип `LESSON` связан с уроком; teacher — своя группа и активный год; admin любая; журнал → тесты отказов
       Paths: H · N [тип/урок, чужая группа, закрытый год] · S [AZ-42, AZ-P5, AZ-P6]
-- [ ] P03-T13 · T1 · Prototype: `calendar`
+- [x] P03-T13 · T1 · Prototype: `calendar`
       Files: `app/(app)/calendar/page.tsx`, `components/teacher/{CalendarMonth,CalendarEventForm}.tsx`
       Acceptance: месяц/список, создание/правка/удаление, открытие урока из события → ручной smoke
       Paths: H · N [пустой месяц — призыв] · S [AZ-43]

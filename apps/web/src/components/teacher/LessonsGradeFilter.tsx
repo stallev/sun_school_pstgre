@@ -8,6 +8,7 @@ type LessonsGradeFilterProps = {
   gradeId: string;
   messages: TeacherLessonScreensMessages;
   actionPath?: string;
+  hiddenFields?: Record<string, string>;
 };
 
 export const LessonsGradeFilter = ({
@@ -15,8 +16,14 @@ export const LessonsGradeFilter = ({
   gradeId,
   messages,
   actionPath = "/lessons",
+  hiddenFields,
 }: LessonsGradeFilterProps) => (
   <form method="get" action={actionPath} className="flex flex-wrap items-end gap-2">
+    {hiddenFields
+      ? Object.entries(hiddenFields).map(([name, value]) => (
+          <input key={name} type="hidden" name={name} value={value} />
+        ))
+      : null}
     <label className="grid gap-1">
       <ContentText className="text-sm font-medium text-ink">{messages.gradeFilterLabel}</ContentText>
       <select

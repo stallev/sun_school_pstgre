@@ -29,5 +29,6 @@ export * from "./bible/build-verse-text";
 export * from "./lesson/schemas";
 export * from "./lesson/ordinal";
 export * from "./lesson/previous-regular";
+export * from "./calendar/schemas";
 export type { MutationOk, MutationErr, MutationResult } from "./types/mutation-result";
 export type { Clock, IdGenerator } from "./types/ports";
