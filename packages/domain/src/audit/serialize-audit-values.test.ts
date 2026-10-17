@@ -40,7 +40,9 @@ describe("serializeAuditValues (INV-23, L-3, L-7)", () => {
 describe("AUDIT_ACTION registry", () => {
   it("uses dotted lower-case audit families", () => {
     for (const code of Object.values(AUDIT_ACTION)) {
-      expect(code).toMatch(/^(access|auth|settings|school|seed|bible|lesson|calendar)\.[a-z_]+$/);
+      expect(code).toMatch(
+        /^(access|auth|settings|school|seed|bible|lesson|check|calendar)\.[a-z_]+$/,
+      );
     }
   });
 });

@@ -205,9 +205,12 @@ points_total = Σ(verseScore_i) × w_verses
 
 | Слой | Роль |
 |------|------|
-| `domain` | `computePoints`, `computeLate`, `buildVerseText`, `nextLessonDate`, схемы входов |
+| `domain` (`packages/domain/src/check/**`) | `computePoints`, `computeLate`, `nextLessonDate`, `resolveVersesToRecite`, Zod-схемы входов, `CHECK_*` коды |
 | `policy-server` | `requireAssignedTeacher`, статус года |
-| DAL (`src/data/lessons/**`, `src/data/checks/**`) | транзакции §5, журнал, `ordinal` |
+| DAL (`apps/web/src/data/checks/**`) | мутации §5.4–§5.8; чтение: `get-check-roster`, `get-check-record`, `get-lesson-table`, `get-lesson-progress`, `get-current-lesson`; общее: `check-read-shared.server.ts`, `check-shared.server.ts` |
+| RSC loaders (`apps/web/src/data/checks/load-*-page.server.ts`) | сборка DTO для `/check`, `/lessons/[lessonId]/check`, `/lessons/[lessonId]/table` |
+| Actions (`apps/web/src/actions/checks.ts`) | тонкие Server Actions → DAL |
+| DAL уроков (`apps/web/src/data/lessons/**`) | `createLesson` и др. §5.1–§5.3, `ordinal` |
 | Кэш | `updateTag` по уроку, группе, балансу ученика |
 | Запрещено | вычисление баллов и `late` в компоненте или action |
 
@@ -231,7 +234,7 @@ points_total = Σ(verseScore_i) × w_verses
 | Q-02 | ✔ **Решено 2026-10-11.** Может ли быть два урока группы в один день | Да (выезд, дополнительный); `ordinal` по `(date, created_at)` | владелец | W9-03 |
 | Q-03 | ✔ **Решено 2026-10-11.** Удаление урока teacher без проверок (lifecycle §5.6) | Разрешено; журнал | владелец | — |
 | Q-04 | Как учитывать `late` для оценки на обзорном уроке (спевка, тетрадь) | Так же: относительно следующего урока группы | architect | — |
-| Q-05 | Поле `updated_at` у `lesson` и `homework_check` для TX-3 | Есть по правилу схемы §2 п. 2 (изменяемые таблицы); колонки в таблицах §5.5 не перечислены | architect | P01 |
+| Q-05 | ✔ **Решено 2026-10-17 (P03).** Поле `updated_at` у `lesson` и `homework_check` для TX-3 | Колонки в Prisma и [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.4–§5.5; `expectedUpdatedAt` в мутациях проверки | architect | — |
 
 ## 15. Related documents
 
@@ -257,3 +260,4 @@ points_total = Σ(verseScore_i) × w_verses
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-05) |
+| 2026-10-17 | v1.1 — Docs sync P04: §12 пути реализации, Q-05 закрыт |

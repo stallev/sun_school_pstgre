@@ -166,13 +166,13 @@ stateDiagram-v2
 ```mermaid
 stateDiagram-v2
   [*] --> HELD: createLesson
-  HELD --> CHECK_COMPLETED: completeCheck
+  HELD --> CHECK_COMPLETED: completeLessonCheck
 ```
 
 | Из → в | Use-case | Актор | Предусловия | Последствия |
 |--------|----------|-------|-------------|-------------|
 | `∅ → HELD` | `createLesson` | `TEACHER` (своя группа), `ADMIN` | год `ACTIVE`, дата в границах; ведущий назначен на группу (УЧ-1); обзорный — без стихов и теста; стихов ≤ лимита группы | создан урок, порядковый номер в году |
-| `HELD → CHECK_COMPLETED` | `completeCheck` | `TEACHER` (своя группа), `ADMIN` | отметка учителя: посещаемость и ДЗ внесены | урок считается проверенным (БП-1); запускает пересчёты в post-MVP |
+| `HELD → CHECK_COMPLETED` | `completeLessonCheck` | `TEACHER` (своя группа), `ADMIN` | отметка учителя: посещаемость и ДЗ внесены | урок считается проверенным (БП-1); запускает пересчёты в post-MVP |
 | — | `changeLeadTeacher` | `TEACHER`, `ADMIN` | новый ведущий назначен на группу | запись в журнале (УЧ-4) |
 | — | `deleteLesson` | `TEACHER` (без проверок), `ADMIN` (с записью в журнале) | у урока нет проверок — иначе только `ADMIN` | урок удалён |
 
@@ -316,3 +316,4 @@ stateDiagram-v2
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W3-02) |
+| 2026-10-17 | v1.1 — §5.6: use-case `completeLessonCheck` (синхрон с контрактом P04) |

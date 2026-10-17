@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
 import { StatusText } from "@/components/ui/status-text";
 import type { LessonsListRow } from "@/data/lessons/load-lessons-list-page.server";
+import { formatLessonCheckProgressLabel } from "@/lib/lesson/format-lesson-check-label";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
 type TodayLessonCardProps = {
@@ -24,6 +25,14 @@ export const TodayLessonCard = ({
 }: TodayLessonCardProps) => {
   const kindLabel =
     lesson.kind === LESSON_KIND.REVIEW ? messages.kindReview : messages.kindRegular;
+  const checkLabel = formatLessonCheckProgressLabel(
+    {
+      checkedCount: lesson.checkedCount,
+      totalPupils: lesson.totalPupils,
+      status: lesson.status,
+    },
+    messages,
+  );
 
   return (
     <article className="space-y-5 rounded-xl border border-line bg-surface p-4 md:p-6">
@@ -43,7 +52,7 @@ export const TodayLessonCard = ({
       </div>
       <div className="space-y-1">
         <ContentText className="text-sm font-medium text-ink">{messages.checkProgressLabel}</ContentText>
-        <StatusText tone="info">{messages.todayProgressStub}</StatusText>
+        <StatusText tone="info">{checkLabel}</StatusText>
       </div>
       <div className="flex flex-wrap gap-2">
         <Button render={<CustomLink href={`/lessons/${lesson.lessonId}/check`} />}>
