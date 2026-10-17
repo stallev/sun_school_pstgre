@@ -52,6 +52,10 @@ export type TeacherCheckMessages = {
   emptyRosterTitle: string;
   emptyRosterDescription: string;
   emptyRosterAction: string;
+  entryEmptyTitle: string;
+  entryEmptyDescription: string;
+  entryActionNewLesson: string;
+  entryActionAllLessons: string;
   yearClosedTitle: string;
   yearClosedDescription: string;
   pendingSave: string;

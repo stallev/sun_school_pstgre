@@ -189,6 +189,12 @@
     "empty_roster_title": "No pupils in this group yet",
     "empty_roster_description": "Add pupils before checking homework.",
     "empty_roster_action": "Group members",
+    "entry": {
+      "empty_title": "No lessons to check",
+      "empty_description": "Create a lesson or open the list to pick one for homework check.",
+      "action_new_lesson": "New lesson",
+      "action_all_lessons": "All lessons"
+    },
     "present_required": "Mark attendance before saving",
     "table": {
       "page_title": "Summary table",

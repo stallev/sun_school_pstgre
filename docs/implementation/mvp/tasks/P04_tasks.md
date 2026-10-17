@@ -94,7 +94,7 @@
 
 ### P04-CU7 — feat(web): wire check entry points, today progress and lesson status · Review: diff-only · Commit: auto
 
-- [ ] P04-T11 · T1 · Flow: [teacher_flow §4.2–§4.3](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md)
+- [x] P04-T11 · T1 · Flow: [teacher_flow §4.2–§4.3](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md)
       Files: `app/(app)/check/page.tsx` (редирект), `today/page.tsx`, `lessons/page.tsx`, `lessons/[lessonId]/page.tsx`
       Acceptance: `/check` → текущий урок либо пустое состояние; прогресс «N из M» на «Сегодня»; статус проверки в списке; кнопка «Проверить» ведёт на экран → ручной smoke
       Paths: H · N [нет текущего урока] · S [только свои]
