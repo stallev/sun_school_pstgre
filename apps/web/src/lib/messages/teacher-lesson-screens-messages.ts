@@ -45,5 +45,9 @@ export type TeacherLessonScreensMessages = {
   unassignedDescription: string;
   yearClosedTitle: string;
   yearClosedDescription: string;
+  todayPageSubtitle: (group: string, year: string) => string;
+  todayIncompleteLabel: string;
+  todayContinueCheck: string;
+  todayProgressStub: string;
   locale: AppLocale;
 };

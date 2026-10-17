@@ -115,7 +115,7 @@
 
 ### P03-CU9 — feat(web): add today screen · Review: diff-only · Commit: auto
 
-- [ ] P03-T14 · T1 · Flow: [teacher_flow §4.2](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `today`
+- [x] P03-T14 · T1 · Flow: [teacher_flow §4.2](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · Prototype: `today`
       Files: `app/(app)/today/page.tsx`, `components/teacher/TodayLessonCard.tsx`
       Acceptance: ближайший/текущий урок, «Новый урок», блок прогресса — заглушка до P04; D1/D2 → ручной smoke
       Paths: H · N [D1, D2] · S [только свои группы]

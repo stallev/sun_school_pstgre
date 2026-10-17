@@ -64,5 +64,10 @@ export const pickTeacherLessonScreensMessages = (
   unassignedDescription: getMessage(teacher, "group.unassigned_description"),
   yearClosedTitle: getMessage(teacher, "group.year_closed_title"),
   yearClosedDescription: getMessage(teacher, "group.year_closed_description"),
+  todayPageSubtitle: (group, year) =>
+    fill(getMessage(teacher, "lesson.today.page_subtitle"), { group, year }),
+  todayIncompleteLabel: getMessage(teacher, "lesson.today.incomplete_label"),
+  todayContinueCheck: getMessage(teacher, "lesson.today.continue_check"),
+  todayProgressStub: getMessage(teacher, "lesson.today.progress_stub"),
   locale,
 });

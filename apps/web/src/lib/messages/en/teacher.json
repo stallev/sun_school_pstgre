@@ -129,6 +129,13 @@
     "check_stub": {
       "title": "Homework check",
       "description": "Sequential homework check arrives in the next release. Use the lesson card to review the plan and verses."
+    },
+    "today": {
+      "page_title": "Today",
+      "page_subtitle": "{group} · {year}",
+      "incomplete_label": "Incomplete homework check",
+      "continue_check": "Continue check",
+      "progress_stub": "Homework check progress will appear here in the next release."
     }
   },
   "calendar": {
