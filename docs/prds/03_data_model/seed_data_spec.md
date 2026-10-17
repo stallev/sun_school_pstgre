@@ -99,7 +99,7 @@
 
 1. **Модель:** тексты приводятся к схеме §5.4 (`bible_translation`, общий `bible_book`, `bible_verse`); таблицы `bible_edition` / `bible_chapter` из скриптов владельца не создаются; `verse_order` сохраняется.
 2. **Источники:** RST — `Bible/data/RelSQLData/bible_*_seed.json` (в git); NIV — `.../niv/*.json`, собирается из `niv_src` (локально, **не в git**, ADR-009 §3.2).
-3. **Скрипты** владельца переносятся в `packages/db/seed/bible/` и поправляются под схему: пути, импорт env, имена таблиц, зависимости (Bible/README §4 п. 6). Они остаются источником алгоритма; расхождение с этим документом разрешается правкой скрипта.
+3. **Скрипты** владельца переносятся в `packages/db/src/seed/bible/` и поправляются под схему: пути, импорт env, имена таблиц, зависимости (Bible/README §4 п. 6). Они остаются источником алгоритма; расхождение с этим документом разрешается правкой скрипта.
 4. **Проверки после загрузки** (падение = `status` перевода не `READY`):
 
 | Проверка | Ожидание |
@@ -111,12 +111,12 @@
 | `verse_order` уникален в переводе | 0 дубликатов |
 | `bible_verse_map`: сумма стихов по затронутой главе | совпадает с `verses_count` перевода |
 
-5. **`bible_verse_map`** (ADR-009 §3.3): хранит только исключения; Псалмы — по правилу из разности `verses_count` (сдвиг главы, надписания как `verse_number = 0`), исключения и 27 остальных глав — по таблице версификации в `packages/db/seed/bible/versification.json`. Файл готовит architect на P02 и выборочно сверяет владелец до prod (ADR-009 Q-02). Пока файл не готов — `bible_verse_map` пуста, а перевод `en-niv` получает `status = LOADING` и **не** выбирается как язык группы (ЯГ-3, R-9).
+5. **`bible_verse_map`** (ADR-009 §3.3): хранит только исключения; Псалмы — по правилу из разности `verses_count` (сдвиг главы, надписания как `verse_number = 0`), исключения и 27 остальных глав — по `packages/db/src/seed/bible/versification.json` (`{ version, exceptions[] }`, P03). Выборочную сверку карты до prod выполняет владелец (ADR-009 Q-02). Перевод `en-niv` остаётся не `READY`, пока загрузка и сверка §7 не прошли (ЯГ-3, R-9).
 6. **Лицензия:** NIV загружается в dev по решению владельца; в prod — после подтверждения лицензии Biblica ([ADR-009](../07_governance/adr_009_bible_translations_and_verse_numbering.md) §3.2). Команда `db:seed:bible:niv` в prod требует явного флага `--confirm-license`.
 
 ## 8. Набор D — dev-фикстуры
 
-**Источник:** файл `packages/db/seed/dev/fixtures.ts` (TS-объекты, типизированы схемой), снятый с прототипа [`sunday_school_prototype.html`](../../prototypes/sunday_school_prototype.html) (`GROUPS`, `USERS`, `PUPILS`, `LESSONS`, `VERSES`, `EVENTS`); случайной генерации нет (ОК-4).
+**Источник:** файл `packages/db/src/seed/dev/fixtures.ts` (TS-объекты, типизированы схемой; post-MVP, пока не в репо), снятый с прототипа [`sunday_school_prototype.html`](../../prototypes/sunday_school_prototype.html) (`GROUPS`, `USERS`, `PUPILS`, `LESSONS`, `VERSES`, `EVENTS`); случайной генерации нет (ОК-4).
 
 | Правило | Значение |
 |---------|----------|
@@ -159,7 +159,7 @@
 | **N** | Сверка счётчиков Библии не сошлась | `status` перевода не `READY`; перевод недоступен как язык группы |
 | **N** | NIV в prod без `--confirm-license` | Отказ |
 | **S** | Реальные ПД в фикстурах | Блокер review; тест: в фикстурах только `@example.test` |
-| **S** | Seed вызывается из приложения / Route Handler | Запрещено; нет импорта `packages/db/seed` из `apps/web` |
+| **S** | Seed вызывается из приложения / Route Handler | Запрещено; нет импорта `packages/db/src/seed` из `apps/web` |
 | **Race** | Два `seed:reference` одновременно | Блокировка (`pg_advisory_lock`) или upsert по ключу; дублей нет |
 | **Drift** | Каталог в БД ≠ §6.1 | Тест seed падает |
 
@@ -207,3 +207,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W6-03) |
+| 2026-10-17 | v1.1 — Пути `packages/db/src/seed/bible`; versification.json (P03) |

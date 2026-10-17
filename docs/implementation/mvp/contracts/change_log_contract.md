@@ -186,3 +186,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-07) |
+| 2026-10-17 | v1.1 — P03: реестр §4 сверен с `AUDIT_ACTION` (`lesson.*`, `calendar.*`, `bible.*`) |

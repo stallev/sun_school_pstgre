@@ -26,11 +26,11 @@
 ### P03-CU1 — feat(db): add Bible loader for Synodal translation with count verification · Review: reviewer · Commit: auto
 
 - [x] P03-T1 · T3 · Contract: [bible_seed §3–§5, §7](../contracts/bible_seed_contract.md) · Spec: [seed_data_spec §7](../../../prds/03_data_model/seed_data_spec.md)
-      Files: `packages/db/seed/bible/{load-books,load-verses,verify,run}.ts`, скрипт `seed:bible`
+      Files: `packages/db/src/seed/bible/{load-books,load-verses,verify,run}.ts`, скрипт `seed:bible`
       Acceptance: upsert без `TRUNCATE`; проверки 66/1189/31 166, `SUM(verses_count)`, уникальность `verse_order`; переходы `startLoad` → `finishLoad` / `failLoad` (статус `READY` только после сверки); журнал `bible.*` + `seed.run` → интеграционный тест на копии БД
       Paths: H [§5.1] · N [§8: счётчики, окружение] · S [маркер БД, `DIRECT_URL`; нет вызова из приложения]
 - [x] P03-T2 · T3 · Spec: [Bible/README §4 п. 1, 3, 6](../../../my_specs/Bible/README.md)
-      Files: перенос скриптов в `packages/db/seed/bible/`, правка имён таблиц под схему §5.4
+      Files: перенос скриптов в `packages/db/src/seed/bible/`, правка имён таблиц под схему §5.4
       Acceptance: `bible_chapter` не создаётся; `verse_order` сохраняется; повторный запуск идемпотентен → тест
       Paths: H · N [повторный запуск] · S [нет секретов в логах]
 
@@ -39,7 +39,7 @@
 ### P03-CU2 — feat(db): add verse map builder and NIV loader with license guard · Review: reviewer · Commit: auto
 
 - [x] P03-T3 · T3 · Contract: [bible_seed §6](../contracts/bible_seed_contract.md) · ADR: [adr_009 §3.3](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md)
-      Files: `packages/db/seed/bible/{build-verse-map,versification.json}`, `load-niv.ts`
+      Files: `packages/db/src/seed/bible/{build-verse-map,versification.json}`, `load-niv.ts`
       Acceptance: Псалмы — по правилу из разности `verses_count`, 27 глав и слияния — по таблице; сумма стихов по главе совпадает с `verses_count`; `Пс. 22:1–3` ↔ `Ps. 23:1–3` → unit-тест
       Paths: H [§5.2] · N [карта неполна → NIV не `READY`] · S [NIV не в git; `--confirm-license` в prod]
 - [x] P03-T4 · T2 · Files: `.gitignore` проверка, CI-скрипт `check:no-niv-in-git`
@@ -124,7 +124,7 @@
 
 ### P03-CU10 — docs(docs): sync P03 docs · Review: diff-only · Commit: auto
 
-- [ ] P03-T15 · T0 · Files: `docs/**` (change_log registry, bible_seed_contract Q, schema при расхождениях)
+- [x] P03-T15 · T0 · Files: `docs/**` (change_log registry, bible_seed_contract Q, schema при расхождениях)
       Acceptance: grep терминов; нет drift с кодом
       Paths: n/a — docs-only
 
@@ -132,7 +132,7 @@
 
 - [ ] Все CU закоммичены; trace `Review: …`
 - [ ] Phase DoD из [`P03_phase_description.md`](../phases_tasks_descriptions/P03_phase_description.md)
-- [ ] Docs sync — в CU10
+- [x] Docs sync — в CU10
 
 ---
 
