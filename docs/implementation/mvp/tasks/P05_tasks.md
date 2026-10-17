@@ -77,7 +77,7 @@
 
 ### P05-CU5 — feat(analytics): add analytics read models and caching · Review: diff-only · Commit: auto
 
-- [ ] P05-T7 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · ADR: [adr_002 §5](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
+- [x] P05-T7 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · ADR: [adr_002 §5](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md)
       Files: `apps/web/src/data/analytics/{get-group-analytics,get-pupil-analytics,get-school-overview,get-conducted-lessons,get-data-quality}.ts`
       Acceptance: фильтр периода (год/месяц/диапазон), фильтр по группе; доступ по `teacher_assignment`; `'use cache'` с тегами и сбросом из `saveChecked`/`correctCheck`/выдачи → тесты выборок, проверка отсутствия чужих данных
       Paths: H · N [пустой период] · S [AZ-44…AZ-46: чужой → `NOT_FOUND`]

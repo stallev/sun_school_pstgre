@@ -8,6 +8,7 @@ import type { PrismaClient } from "@sunschool/db";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActorOrganizationId } from "../lessons/lesson-shared.server";
 import { revalidateBricksCachesForLessonCheck } from "../bricks/revalidate-bricks-cache";
+import { revalidateAnalyticsCachesForLessonCheck } from "../analytics/revalidate-analytics-cache";
 import { saveCheckInTransaction } from "./check-shared.server";
 
 export async function saveChecked(
@@ -31,6 +32,7 @@ export async function saveChecked(
   });
   if (result.ok) {
     await revalidateBricksCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
+    await revalidateAnalyticsCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
   }
   return result;
 }
