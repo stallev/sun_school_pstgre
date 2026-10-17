@@ -22,6 +22,7 @@ export async function verifyTranslation(
   tx: SeedTx,
   translationId: string,
   chapterRows: readonly RstChapterRow[],
+  expectedVerses: number,
 ): Promise<VerifyReport> {
   const books = await tx.bibleBook.count();
   if (books !== BIBLE_EXPECTED.books) {
@@ -39,8 +40,8 @@ export async function verifyTranslation(
   }
 
   const verses = await tx.bibleVerse.count({ where: { translationId } });
-  if (verses !== BIBLE_EXPECTED.versesRst) {
-    throw new BibleVerifyError(`Verse count ${verses} !== ${BIBLE_EXPECTED.versesRst}`);
+  if (verses !== expectedVerses) {
+    throw new BibleVerifyError(`Verse count ${verses} !== ${expectedVerses}`);
   }
 
   const booksBySort = await tx.bibleBook.findMany({ select: { id: true, sortOrder: true } });

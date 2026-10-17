@@ -38,11 +38,11 @@
 
 ### P03-CU2 — feat(db): add verse map builder and NIV loader with license guard · Review: reviewer · Commit: auto
 
-- [ ] P03-T3 · T3 · Contract: [bible_seed §6](../contracts/bible_seed_contract.md) · ADR: [adr_009 §3.3](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md)
+- [x] P03-T3 · T3 · Contract: [bible_seed §6](../contracts/bible_seed_contract.md) · ADR: [adr_009 §3.3](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md)
       Files: `packages/db/seed/bible/{build-verse-map,versification.json}`, `load-niv.ts`
       Acceptance: Псалмы — по правилу из разности `verses_count`, 27 глав и слияния — по таблице; сумма стихов по главе совпадает с `verses_count`; `Пс. 22:1–3` ↔ `Ps. 23:1–3` → unit-тест
       Paths: H [§5.2] · N [карта неполна → NIV не `READY`] · S [NIV не в git; `--confirm-license` в prod]
-- [ ] P03-T4 · T2 · Files: `.gitignore` проверка, CI-скрипт `check:no-niv-in-git`
+- [x] P03-T4 · T2 · Files: `.gitignore` проверка, CI-скрипт `check:no-niv-in-git`
       Acceptance: `git ls-files` не содержит путей NIV → скрипт зелёный
       Paths: n/a — tooling
 

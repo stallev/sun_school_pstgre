@@ -1,0 +1,4800 @@
+{
+  "version": 1,
+  "exceptions": [
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 1,
+      "commonChapter": 16,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 2,
+      "commonChapter": 16,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 3,
+      "commonChapter": 16,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 4,
+      "commonChapter": 16,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 5,
+      "commonChapter": 16,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 6,
+      "commonChapter": 16,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 7,
+      "commonChapter": 16,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 8,
+      "commonChapter": 16,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 9,
+      "commonChapter": 16,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 10,
+      "commonChapter": 16,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 11,
+      "commonChapter": 16,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 12,
+      "commonChapter": 16,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 13,
+      "commonChapter": 16,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 14,
+      "commonChapter": 16,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 15,
+      "commonChapter": 16,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 16,
+      "commonChapter": 16,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 17,
+      "commonChapter": 16,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 18,
+      "commonChapter": 16,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 19,
+      "commonChapter": 16,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 20,
+      "commonChapter": 16,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 21,
+      "commonChapter": 16,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 22,
+      "commonChapter": 16,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 23,
+      "commonChapter": 16,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 24,
+      "commonChapter": 16,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 25,
+      "commonChapter": 14,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 26,
+      "commonChapter": 14,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 16,
+      "verseNumber": 27,
+      "commonChapter": 14,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 1,
+      "commonChapter": 14,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 2,
+      "commonChapter": 14,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 3,
+      "commonChapter": 14,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 4,
+      "commonChapter": 14,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 5,
+      "commonChapter": 14,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 6,
+      "commonChapter": 14,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 7,
+      "commonChapter": 14,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 8,
+      "commonChapter": 14,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 9,
+      "commonChapter": 14,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 10,
+      "commonChapter": 14,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 11,
+      "commonChapter": 14,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 12,
+      "commonChapter": 14,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 13,
+      "commonChapter": 14,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 14,
+      "commonChapter": 14,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 15,
+      "commonChapter": 14,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 16,
+      "commonChapter": 14,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 17,
+      "commonChapter": 14,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 18,
+      "commonChapter": 14,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 19,
+      "commonChapter": 14,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 20,
+      "commonChapter": 14,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 21,
+      "commonChapter": 14,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 22,
+      "commonChapter": 14,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 23,
+      "commonChapter": 14,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 24,
+      "commonChapter": 14,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 25,
+      "commonChapter": 14,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 26,
+      "commonChapter": 14,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 27,
+      "commonChapter": 14,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 28,
+      "commonChapter": 14,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 29,
+      "commonChapter": 14,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 30,
+      "commonChapter": 14,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 31,
+      "commonChapter": 14,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 32,
+      "commonChapter": 14,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 33,
+      "commonChapter": 14,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 34,
+      "commonChapter": 14,
+      "commonVerse": 34
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 35,
+      "commonChapter": 14,
+      "commonVerse": 35
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 36,
+      "commonChapter": 14,
+      "commonVerse": 36
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 37,
+      "commonChapter": 14,
+      "commonVerse": 37
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 38,
+      "commonChapter": 14,
+      "commonVerse": 38
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 39,
+      "commonChapter": 14,
+      "commonVerse": 39
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 40,
+      "commonChapter": 14,
+      "commonVerse": 40
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 41,
+      "commonChapter": 14,
+      "commonVerse": 41
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 42,
+      "commonChapter": 14,
+      "commonVerse": 42
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 43,
+      "commonChapter": 14,
+      "commonVerse": 43
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 44,
+      "commonChapter": 14,
+      "commonVerse": 44
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 45,
+      "commonChapter": 14,
+      "commonVerse": 45
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 46,
+      "commonChapter": 14,
+      "commonVerse": 46
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 47,
+      "commonChapter": 14,
+      "commonVerse": 47
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 48,
+      "commonChapter": 14,
+      "commonVerse": 48
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 49,
+      "commonChapter": 14,
+      "commonVerse": 49
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 50,
+      "commonChapter": 14,
+      "commonVerse": 50
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 51,
+      "commonChapter": 14,
+      "commonVerse": 51
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 52,
+      "commonChapter": 14,
+      "commonVerse": 52
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 53,
+      "commonChapter": 14,
+      "commonVerse": 53
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 54,
+      "commonChapter": 14,
+      "commonVerse": 54
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 55,
+      "commonChapter": 14,
+      "commonVerse": 55
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 56,
+      "commonChapter": 14,
+      "commonVerse": 55
+    },
+    {
+      "bookSortOrder": 3,
+      "chapterNumber": 14,
+      "verseNumber": 57,
+      "commonChapter": 14,
+      "commonVerse": 56
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 1,
+      "commonChapter": 13,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 2,
+      "commonChapter": 13,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 3,
+      "commonChapter": 13,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 4,
+      "commonChapter": 13,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 5,
+      "commonChapter": 13,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 6,
+      "commonChapter": 13,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 7,
+      "commonChapter": 13,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 8,
+      "commonChapter": 13,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 9,
+      "commonChapter": 13,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 10,
+      "commonChapter": 13,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 11,
+      "commonChapter": 13,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 12,
+      "commonChapter": 13,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 13,
+      "commonChapter": 13,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 47,
+      "chapterNumber": 13,
+      "verseNumber": 14,
+      "commonChapter": 13,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 13,
+      "verseNumber": 1,
+      "commonChapter": 12,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 13,
+      "verseNumber": 2,
+      "commonChapter": 12,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 13,
+      "verseNumber": 3,
+      "commonChapter": 12,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 13,
+      "verseNumber": 4,
+      "commonChapter": 12,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 13,
+      "verseNumber": 5,
+      "commonChapter": 12,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 13,
+      "verseNumber": 6,
+      "commonChapter": 12,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 87,
+      "verseNumber": 1,
+      "commonChapter": 86,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 87,
+      "verseNumber": 2,
+      "commonChapter": 86,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 90,
+      "verseNumber": 1,
+      "commonChapter": 89,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 90,
+      "verseNumber": 2,
+      "commonChapter": 89,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 90,
+      "verseNumber": 3,
+      "commonChapter": 89,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 90,
+      "verseNumber": 4,
+      "commonChapter": 89,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 90,
+      "verseNumber": 5,
+      "commonChapter": 89,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 19,
+      "chapterNumber": 90,
+      "verseNumber": 6,
+      "commonChapter": 89,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 1,
+      "commonChapter": 14,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 2,
+      "commonChapter": 14,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 3,
+      "commonChapter": 14,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 4,
+      "commonChapter": 14,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 5,
+      "commonChapter": 14,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 6,
+      "commonChapter": 14,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 7,
+      "commonChapter": 14,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 8,
+      "commonChapter": 14,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 9,
+      "commonChapter": 14,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 10,
+      "commonChapter": 14,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 11,
+      "commonChapter": 14,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 12,
+      "commonChapter": 14,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 13,
+      "commonChapter": 14,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 14,
+      "commonChapter": 14,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 15,
+      "commonChapter": 14,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 16,
+      "commonChapter": 14,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 17,
+      "commonChapter": 14,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 18,
+      "commonChapter": 14,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 19,
+      "commonChapter": 14,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 20,
+      "commonChapter": 14,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 21,
+      "commonChapter": 14,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 22,
+      "commonChapter": 14,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 45,
+      "chapterNumber": 14,
+      "verseNumber": 23,
+      "commonChapter": 14,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 1,
+      "commonChapter": 12,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 2,
+      "commonChapter": 12,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 3,
+      "commonChapter": 12,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 4,
+      "commonChapter": 12,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 5,
+      "commonChapter": 12,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 6,
+      "commonChapter": 12,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 7,
+      "commonChapter": 12,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 8,
+      "commonChapter": 12,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 9,
+      "commonChapter": 12,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 10,
+      "commonChapter": 12,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 11,
+      "commonChapter": 12,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 12,
+      "commonChapter": 12,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 13,
+      "commonChapter": 12,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 14,
+      "commonChapter": 12,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 15,
+      "commonChapter": 12,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 12,
+      "verseNumber": 16,
+      "commonChapter": 13,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 1,
+      "commonChapter": 13,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 2,
+      "commonChapter": 13,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 3,
+      "commonChapter": 13,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 4,
+      "commonChapter": 13,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 5,
+      "commonChapter": 13,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 6,
+      "commonChapter": 13,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 7,
+      "commonChapter": 13,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 8,
+      "commonChapter": 13,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 9,
+      "commonChapter": 13,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 10,
+      "commonChapter": 13,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 11,
+      "commonChapter": 13,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 12,
+      "commonChapter": 13,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 13,
+      "commonChapter": 13,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 14,
+      "commonChapter": 13,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 15,
+      "commonChapter": 13,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 16,
+      "commonChapter": 13,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 17,
+      "commonChapter": 13,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 18,
+      "commonChapter": 13,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 19,
+      "commonChapter": 13,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 20,
+      "commonChapter": 13,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 21,
+      "commonChapter": 13,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 22,
+      "commonChapter": 13,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 23,
+      "commonChapter": 13,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 24,
+      "commonChapter": 13,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 25,
+      "commonChapter": 13,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 26,
+      "commonChapter": 13,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 27,
+      "commonChapter": 13,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 28,
+      "commonChapter": 13,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 29,
+      "commonChapter": 13,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 30,
+      "commonChapter": 13,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 31,
+      "commonChapter": 13,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 32,
+      "commonChapter": 13,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 13,
+      "verseNumber": 33,
+      "commonChapter": 13,
+      "commonVerse": 34
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 1,
+      "commonChapter": 29,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 2,
+      "commonChapter": 29,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 3,
+      "commonChapter": 29,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 4,
+      "commonChapter": 29,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 5,
+      "commonChapter": 29,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 6,
+      "commonChapter": 29,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 7,
+      "commonChapter": 29,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 8,
+      "commonChapter": 29,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 9,
+      "commonChapter": 29,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 10,
+      "commonChapter": 29,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 11,
+      "commonChapter": 29,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 12,
+      "commonChapter": 29,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 13,
+      "commonChapter": 29,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 14,
+      "commonChapter": 29,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 15,
+      "commonChapter": 29,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 16,
+      "commonChapter": 29,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 17,
+      "commonChapter": 29,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 18,
+      "commonChapter": 29,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 19,
+      "commonChapter": 29,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 20,
+      "commonChapter": 29,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 21,
+      "commonChapter": 29,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 22,
+      "commonChapter": 29,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 23,
+      "commonChapter": 29,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 24,
+      "commonChapter": 29,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 25,
+      "commonChapter": 29,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 26,
+      "commonChapter": 29,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 27,
+      "commonChapter": 29,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 28,
+      "commonChapter": 29,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 29,
+      "commonChapter": 29,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 30,
+      "commonChapter": 29,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 31,
+      "commonChapter": 29,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 32,
+      "commonChapter": 29,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 33,
+      "commonChapter": 29,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 34,
+      "commonChapter": 29,
+      "commonVerse": 34
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 35,
+      "commonChapter": 29,
+      "commonVerse": 35
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 36,
+      "commonChapter": 29,
+      "commonVerse": 36
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 37,
+      "commonChapter": 29,
+      "commonVerse": 37
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 38,
+      "commonChapter": 29,
+      "commonVerse": 38
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 39,
+      "commonChapter": 29,
+      "commonVerse": 39
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 29,
+      "verseNumber": 40,
+      "commonChapter": 30,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 1,
+      "commonChapter": 30,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 2,
+      "commonChapter": 30,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 3,
+      "commonChapter": 30,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 4,
+      "commonChapter": 30,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 5,
+      "commonChapter": 30,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 6,
+      "commonChapter": 30,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 7,
+      "commonChapter": 30,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 8,
+      "commonChapter": 30,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 9,
+      "commonChapter": 30,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 10,
+      "commonChapter": 30,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 11,
+      "commonChapter": 30,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 12,
+      "commonChapter": 30,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 13,
+      "commonChapter": 30,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 14,
+      "commonChapter": 30,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 15,
+      "commonChapter": 30,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 4,
+      "chapterNumber": 30,
+      "verseNumber": 16,
+      "commonChapter": 30,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 1,
+      "commonChapter": 5,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 2,
+      "commonChapter": 5,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 3,
+      "commonChapter": 5,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 4,
+      "commonChapter": 5,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 5,
+      "commonChapter": 5,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 6,
+      "commonChapter": 5,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 7,
+      "commonChapter": 5,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 8,
+      "commonChapter": 5,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 9,
+      "commonChapter": 5,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 10,
+      "commonChapter": 5,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 11,
+      "commonChapter": 5,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 12,
+      "commonChapter": 5,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 13,
+      "commonChapter": 5,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 14,
+      "commonChapter": 5,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 5,
+      "verseNumber": 15,
+      "commonChapter": 5,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 1,
+      "commonChapter": 5,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 2,
+      "commonChapter": 6,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 3,
+      "commonChapter": 6,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 4,
+      "commonChapter": 6,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 5,
+      "commonChapter": 6,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 6,
+      "commonChapter": 6,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 7,
+      "commonChapter": 6,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 8,
+      "commonChapter": 6,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 9,
+      "commonChapter": 6,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 10,
+      "commonChapter": 6,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 11,
+      "commonChapter": 6,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 12,
+      "commonChapter": 6,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 13,
+      "commonChapter": 6,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 14,
+      "commonChapter": 6,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 15,
+      "commonChapter": 6,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 16,
+      "commonChapter": 6,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 17,
+      "commonChapter": 6,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 18,
+      "commonChapter": 6,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 19,
+      "commonChapter": 6,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 20,
+      "commonChapter": 6,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 21,
+      "commonChapter": 6,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 22,
+      "commonChapter": 6,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 23,
+      "commonChapter": 6,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 24,
+      "commonChapter": 6,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 25,
+      "commonChapter": 6,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 26,
+      "commonChapter": 6,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 6,
+      "chapterNumber": 6,
+      "verseNumber": 27,
+      "commonChapter": 6,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 1,
+      "commonChapter": 20,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 2,
+      "commonChapter": 20,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 3,
+      "commonChapter": 20,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 4,
+      "commonChapter": 20,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 5,
+      "commonChapter": 20,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 6,
+      "commonChapter": 20,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 7,
+      "commonChapter": 20,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 8,
+      "commonChapter": 20,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 9,
+      "commonChapter": 20,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 10,
+      "commonChapter": 20,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 11,
+      "commonChapter": 20,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 12,
+      "commonChapter": 20,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 13,
+      "commonChapter": 20,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 14,
+      "commonChapter": 20,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 15,
+      "commonChapter": 20,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 16,
+      "commonChapter": 20,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 17,
+      "commonChapter": 20,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 18,
+      "commonChapter": 20,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 19,
+      "commonChapter": 20,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 20,
+      "commonChapter": 20,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 21,
+      "commonChapter": 20,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 22,
+      "commonChapter": 20,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 23,
+      "commonChapter": 20,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 24,
+      "commonChapter": 20,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 25,
+      "commonChapter": 20,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 26,
+      "commonChapter": 20,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 27,
+      "commonChapter": 20,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 28,
+      "commonChapter": 20,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 29,
+      "commonChapter": 20,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 30,
+      "commonChapter": 20,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 31,
+      "commonChapter": 20,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 32,
+      "commonChapter": 20,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 33,
+      "commonChapter": 20,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 34,
+      "commonChapter": 20,
+      "commonVerse": 34
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 35,
+      "commonChapter": 20,
+      "commonVerse": 35
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 36,
+      "commonChapter": 20,
+      "commonVerse": 36
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 37,
+      "commonChapter": 20,
+      "commonVerse": 37
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 38,
+      "commonChapter": 20,
+      "commonVerse": 38
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 39,
+      "commonChapter": 20,
+      "commonVerse": 39
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 40,
+      "commonChapter": 20,
+      "commonVerse": 40
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 41,
+      "commonChapter": 20,
+      "commonVerse": 41
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 20,
+      "verseNumber": 42,
+      "commonChapter": 20,
+      "commonVerse": 42
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 1,
+      "commonChapter": 23,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 2,
+      "commonChapter": 23,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 3,
+      "commonChapter": 23,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 4,
+      "commonChapter": 23,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 5,
+      "commonChapter": 23,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 6,
+      "commonChapter": 23,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 7,
+      "commonChapter": 23,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 8,
+      "commonChapter": 23,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 9,
+      "commonChapter": 23,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 10,
+      "commonChapter": 23,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 11,
+      "commonChapter": 23,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 12,
+      "commonChapter": 23,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 13,
+      "commonChapter": 23,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 14,
+      "commonChapter": 23,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 15,
+      "commonChapter": 23,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 16,
+      "commonChapter": 23,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 17,
+      "commonChapter": 23,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 18,
+      "commonChapter": 23,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 19,
+      "commonChapter": 23,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 20,
+      "commonChapter": 23,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 21,
+      "commonChapter": 23,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 22,
+      "commonChapter": 23,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 23,
+      "commonChapter": 23,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 24,
+      "commonChapter": 23,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 25,
+      "commonChapter": 23,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 26,
+      "commonChapter": 23,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 27,
+      "commonChapter": 23,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 28,
+      "commonChapter": 23,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 23,
+      "verseNumber": 29,
+      "commonChapter": 24,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 1,
+      "commonChapter": 24,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 2,
+      "commonChapter": 24,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 3,
+      "commonChapter": 24,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 4,
+      "commonChapter": 24,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 5,
+      "commonChapter": 24,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 6,
+      "commonChapter": 24,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 7,
+      "commonChapter": 24,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 8,
+      "commonChapter": 24,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 9,
+      "commonChapter": 24,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 10,
+      "commonChapter": 24,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 11,
+      "commonChapter": 24,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 12,
+      "commonChapter": 24,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 13,
+      "commonChapter": 24,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 14,
+      "commonChapter": 24,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 15,
+      "commonChapter": 24,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 16,
+      "commonChapter": 24,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 17,
+      "commonChapter": 24,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 18,
+      "commonChapter": 24,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 19,
+      "commonChapter": 24,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 20,
+      "commonChapter": 24,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 21,
+      "commonChapter": 24,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 9,
+      "chapterNumber": 24,
+      "verseNumber": 22,
+      "commonChapter": 24,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 1,
+      "commonChapter": 39,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 2,
+      "commonChapter": 39,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 3,
+      "commonChapter": 39,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 4,
+      "commonChapter": 39,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 5,
+      "commonChapter": 39,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 6,
+      "commonChapter": 39,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 7,
+      "commonChapter": 39,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 8,
+      "commonChapter": 39,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 9,
+      "commonChapter": 39,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 10,
+      "commonChapter": 39,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 11,
+      "commonChapter": 39,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 12,
+      "commonChapter": 39,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 13,
+      "commonChapter": 39,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 14,
+      "commonChapter": 39,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 15,
+      "commonChapter": 39,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 16,
+      "commonChapter": 39,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 17,
+      "commonChapter": 39,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 18,
+      "commonChapter": 39,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 19,
+      "commonChapter": 39,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 20,
+      "commonChapter": 39,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 21,
+      "commonChapter": 39,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 22,
+      "commonChapter": 39,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 23,
+      "commonChapter": 39,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 24,
+      "commonChapter": 39,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 25,
+      "commonChapter": 39,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 26,
+      "commonChapter": 39,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 27,
+      "commonChapter": 39,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 28,
+      "commonChapter": 39,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 29,
+      "commonChapter": 39,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 39,
+      "verseNumber": 30,
+      "commonChapter": 39,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 1,
+      "commonChapter": 39,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 2,
+      "commonChapter": 39,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 3,
+      "commonChapter": 39,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 4,
+      "commonChapter": 39,
+      "commonVerse": 34
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 5,
+      "commonChapter": 39,
+      "commonVerse": 35
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 6,
+      "commonChapter": 40,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 7,
+      "commonChapter": 40,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 8,
+      "commonChapter": 40,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 9,
+      "commonChapter": 40,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 10,
+      "commonChapter": 40,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 11,
+      "commonChapter": 40,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 12,
+      "commonChapter": 40,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 13,
+      "commonChapter": 40,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 14,
+      "commonChapter": 40,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 15,
+      "commonChapter": 40,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 16,
+      "commonChapter": 40,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 17,
+      "commonChapter": 40,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 18,
+      "commonChapter": 40,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 19,
+      "commonChapter": 40,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 20,
+      "commonChapter": 40,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 21,
+      "commonChapter": 40,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 22,
+      "commonChapter": 40,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 23,
+      "commonChapter": 40,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 40,
+      "verseNumber": 24,
+      "commonChapter": 40,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 1,
+      "commonChapter": 40,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 2,
+      "commonChapter": 40,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 3,
+      "commonChapter": 40,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 4,
+      "commonChapter": 40,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 5,
+      "commonChapter": 40,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 6,
+      "commonChapter": 40,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 7,
+      "commonChapter": 40,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 8,
+      "commonChapter": 40,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 9,
+      "commonChapter": 41,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 10,
+      "commonChapter": 41,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 11,
+      "commonChapter": 41,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 12,
+      "commonChapter": 41,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 13,
+      "commonChapter": 41,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 14,
+      "commonChapter": 41,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 15,
+      "commonChapter": 41,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 16,
+      "commonChapter": 41,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 17,
+      "commonChapter": 41,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 18,
+      "commonChapter": 41,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 19,
+      "commonChapter": 41,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 20,
+      "commonChapter": 41,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 21,
+      "commonChapter": 41,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 22,
+      "commonChapter": 41,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 23,
+      "commonChapter": 41,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 24,
+      "commonChapter": 41,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 25,
+      "commonChapter": 41,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 26,
+      "commonChapter": 41,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 27,
+      "commonChapter": 41,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 28,
+      "commonChapter": 41,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 29,
+      "commonChapter": 41,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 30,
+      "commonChapter": 41,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 31,
+      "commonChapter": 41,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 32,
+      "commonChapter": 41,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 33,
+      "commonChapter": 41,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 18,
+      "chapterNumber": 41,
+      "verseNumber": 34,
+      "commonChapter": 41,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 1,
+      "commonChapter": 4,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 2,
+      "commonChapter": 4,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 3,
+      "commonChapter": 4,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 4,
+      "commonChapter": 4,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 5,
+      "commonChapter": 4,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 6,
+      "commonChapter": 4,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 7,
+      "commonChapter": 4,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 8,
+      "commonChapter": 4,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 9,
+      "commonChapter": 4,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 10,
+      "commonChapter": 4,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 11,
+      "commonChapter": 4,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 12,
+      "commonChapter": 4,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 13,
+      "commonChapter": 4,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 14,
+      "commonChapter": 4,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 15,
+      "commonChapter": 4,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 4,
+      "verseNumber": 16,
+      "commonChapter": 4,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 1,
+      "commonChapter": 4,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 2,
+      "commonChapter": 5,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 3,
+      "commonChapter": 5,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 4,
+      "commonChapter": 5,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 5,
+      "commonChapter": 5,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 6,
+      "commonChapter": 5,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 7,
+      "commonChapter": 5,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 8,
+      "commonChapter": 5,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 9,
+      "commonChapter": 5,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 10,
+      "commonChapter": 5,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 11,
+      "commonChapter": 5,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 12,
+      "commonChapter": 5,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 13,
+      "commonChapter": 5,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 14,
+      "commonChapter": 5,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 15,
+      "commonChapter": 5,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 16,
+      "commonChapter": 5,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 17,
+      "commonChapter": 5,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 18,
+      "commonChapter": 5,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 19,
+      "commonChapter": 5,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 21,
+      "chapterNumber": 5,
+      "verseNumber": 20,
+      "commonChapter": 5,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 1,
+      "commonChapter": 6,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 2,
+      "commonChapter": 6,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 3,
+      "commonChapter": 6,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 4,
+      "commonChapter": 6,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 5,
+      "commonChapter": 6,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 6,
+      "commonChapter": 6,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 7,
+      "commonChapter": 6,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 8,
+      "commonChapter": 6,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 9,
+      "commonChapter": 6,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 10,
+      "commonChapter": 6,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 11,
+      "commonChapter": 6,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 12,
+      "commonChapter": 6,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 6,
+      "verseNumber": 13,
+      "commonChapter": 7,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 1,
+      "commonChapter": 7,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 2,
+      "commonChapter": 7,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 3,
+      "commonChapter": 7,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 4,
+      "commonChapter": 7,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 5,
+      "commonChapter": 7,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 6,
+      "commonChapter": 7,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 7,
+      "commonChapter": 7,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 8,
+      "commonChapter": 7,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 9,
+      "commonChapter": 7,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 10,
+      "commonChapter": 7,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 11,
+      "commonChapter": 7,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 12,
+      "commonChapter": 7,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 22,
+      "chapterNumber": 7,
+      "verseNumber": 13,
+      "commonChapter": 7,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 1,
+      "commonChapter": 3,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 2,
+      "commonChapter": 3,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 3,
+      "commonChapter": 3,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 4,
+      "commonChapter": 3,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 5,
+      "commonChapter": 3,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 6,
+      "commonChapter": 3,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 7,
+      "commonChapter": 3,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 8,
+      "commonChapter": 3,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 9,
+      "commonChapter": 3,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 10,
+      "commonChapter": 3,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 11,
+      "commonChapter": 3,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 12,
+      "commonChapter": 3,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 13,
+      "commonChapter": 3,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 14,
+      "commonChapter": 3,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 15,
+      "commonChapter": 3,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 16,
+      "commonChapter": 3,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 17,
+      "commonChapter": 3,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 18,
+      "commonChapter": 3,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 19,
+      "commonChapter": 3,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 20,
+      "commonChapter": 3,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 21,
+      "commonChapter": 3,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 22,
+      "commonChapter": 3,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 23,
+      "commonChapter": 3,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 24,
+      "commonChapter": 3,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 25,
+      "commonChapter": 3,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 26,
+      "commonChapter": 3,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 27,
+      "commonChapter": 3,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 28,
+      "commonChapter": 3,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 29,
+      "commonChapter": 3,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 3,
+      "verseNumber": 30,
+      "commonChapter": 3,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 1,
+      "commonChapter": 3,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 2,
+      "commonChapter": 3,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 3,
+      "commonChapter": 3,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 4,
+      "commonChapter": 4,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 5,
+      "commonChapter": 4,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 6,
+      "commonChapter": 4,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 7,
+      "commonChapter": 4,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 8,
+      "commonChapter": 4,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 9,
+      "commonChapter": 4,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 10,
+      "commonChapter": 4,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 11,
+      "commonChapter": 4,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 12,
+      "commonChapter": 4,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 13,
+      "commonChapter": 4,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 14,
+      "commonChapter": 4,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 15,
+      "commonChapter": 4,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 16,
+      "commonChapter": 4,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 17,
+      "commonChapter": 4,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 18,
+      "commonChapter": 4,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 19,
+      "commonChapter": 4,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 20,
+      "commonChapter": 4,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 21,
+      "commonChapter": 4,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 22,
+      "commonChapter": 4,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 23,
+      "commonChapter": 4,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 24,
+      "commonChapter": 4,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 25,
+      "commonChapter": 4,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 26,
+      "commonChapter": 4,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 27,
+      "commonChapter": 4,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 28,
+      "commonChapter": 4,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 29,
+      "commonChapter": 4,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 30,
+      "commonChapter": 4,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 31,
+      "commonChapter": 4,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 32,
+      "commonChapter": 4,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 33,
+      "commonChapter": 4,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 34,
+      "commonChapter": 4,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 35,
+      "commonChapter": 4,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 36,
+      "commonChapter": 4,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 27,
+      "chapterNumber": 4,
+      "verseNumber": 37,
+      "commonChapter": 4,
+      "commonVerse": 34
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 1,
+      "commonChapter": 13,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 2,
+      "commonChapter": 13,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 3,
+      "commonChapter": 13,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 4,
+      "commonChapter": 13,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 5,
+      "commonChapter": 13,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 6,
+      "commonChapter": 13,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 7,
+      "commonChapter": 13,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 8,
+      "commonChapter": 13,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 9,
+      "commonChapter": 13,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 10,
+      "commonChapter": 13,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 11,
+      "commonChapter": 13,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 12,
+      "commonChapter": 13,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 13,
+      "commonChapter": 13,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 14,
+      "commonChapter": 13,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 15,
+      "commonChapter": 13,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 13,
+      "verseNumber": 16,
+      "commonChapter": 14,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 1,
+      "commonChapter": 14,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 2,
+      "commonChapter": 14,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 3,
+      "commonChapter": 14,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 4,
+      "commonChapter": 14,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 5,
+      "commonChapter": 14,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 6,
+      "commonChapter": 14,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 7,
+      "commonChapter": 14,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 8,
+      "commonChapter": 14,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 28,
+      "chapterNumber": 14,
+      "verseNumber": 9,
+      "commonChapter": 14,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 1,
+      "commonChapter": 1,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 2,
+      "commonChapter": 1,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 3,
+      "commonChapter": 1,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 4,
+      "commonChapter": 1,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 5,
+      "commonChapter": 1,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 6,
+      "commonChapter": 1,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 7,
+      "commonChapter": 1,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 8,
+      "commonChapter": 1,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 9,
+      "commonChapter": 1,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 10,
+      "commonChapter": 1,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 11,
+      "commonChapter": 1,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 12,
+      "commonChapter": 1,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 13,
+      "commonChapter": 1,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 14,
+      "commonChapter": 1,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 15,
+      "commonChapter": 1,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 16,
+      "commonChapter": 1,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 1,
+      "verseNumber": 17,
+      "commonChapter": 2,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 1,
+      "commonChapter": 2,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 2,
+      "commonChapter": 2,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 3,
+      "commonChapter": 2,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 4,
+      "commonChapter": 2,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 5,
+      "commonChapter": 2,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 6,
+      "commonChapter": 2,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 7,
+      "commonChapter": 2,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 8,
+      "commonChapter": 2,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 9,
+      "commonChapter": 2,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 32,
+      "chapterNumber": 2,
+      "verseNumber": 10,
+      "commonChapter": 2,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 1,
+      "commonChapter": 19,
+      "commonVerse": 1
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 2,
+      "commonChapter": 19,
+      "commonVerse": 2
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 3,
+      "commonChapter": 19,
+      "commonVerse": 3
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 4,
+      "commonChapter": 19,
+      "commonVerse": 4
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 5,
+      "commonChapter": 19,
+      "commonVerse": 5
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 6,
+      "commonChapter": 19,
+      "commonVerse": 6
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 7,
+      "commonChapter": 19,
+      "commonVerse": 7
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 8,
+      "commonChapter": 19,
+      "commonVerse": 8
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 9,
+      "commonChapter": 19,
+      "commonVerse": 9
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 10,
+      "commonChapter": 19,
+      "commonVerse": 10
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 11,
+      "commonChapter": 19,
+      "commonVerse": 11
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 12,
+      "commonChapter": 19,
+      "commonVerse": 12
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 13,
+      "commonChapter": 19,
+      "commonVerse": 13
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 14,
+      "commonChapter": 19,
+      "commonVerse": 14
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 15,
+      "commonChapter": 19,
+      "commonVerse": 15
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 16,
+      "commonChapter": 19,
+      "commonVerse": 16
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 17,
+      "commonChapter": 19,
+      "commonVerse": 17
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 18,
+      "commonChapter": 19,
+      "commonVerse": 18
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 19,
+      "commonChapter": 19,
+      "commonVerse": 19
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 20,
+      "commonChapter": 19,
+      "commonVerse": 20
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 21,
+      "commonChapter": 19,
+      "commonVerse": 21
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 22,
+      "commonChapter": 19,
+      "commonVerse": 22
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 23,
+      "commonChapter": 19,
+      "commonVerse": 23
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 24,
+      "commonChapter": 19,
+      "commonVerse": 24
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 25,
+      "commonChapter": 19,
+      "commonVerse": 25
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 26,
+      "commonChapter": 19,
+      "commonVerse": 26
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 27,
+      "commonChapter": 19,
+      "commonVerse": 27
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 28,
+      "commonChapter": 19,
+      "commonVerse": 28
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 29,
+      "commonChapter": 19,
+      "commonVerse": 29
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 30,
+      "commonChapter": 19,
+      "commonVerse": 30
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 31,
+      "commonChapter": 19,
+      "commonVerse": 31
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 32,
+      "commonChapter": 19,
+      "commonVerse": 32
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 33,
+      "commonChapter": 19,
+      "commonVerse": 33
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 34,
+      "commonChapter": 19,
+      "commonVerse": 34
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 35,
+      "commonChapter": 19,
+      "commonVerse": 35
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 36,
+      "commonChapter": 19,
+      "commonVerse": 36
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 37,
+      "commonChapter": 19,
+      "commonVerse": 37
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 38,
+      "commonChapter": 19,
+      "commonVerse": 38
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 39,
+      "commonChapter": 19,
+      "commonVerse": 39
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 40,
+      "commonChapter": 19,
+      "commonVerse": 40
+    },
+    {
+      "bookSortOrder": 44,
+      "chapterNumber": 19,
+      "verseNumber": 41,
+      "commonChapter": 19,
+      "commonVerse": 40
+    }
+  ]
+}

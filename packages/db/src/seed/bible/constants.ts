@@ -1,11 +1,16 @@
 /** Canonical translation row from reference seed (`bible-translations.ts`). */
 export const RST_TRANSLATION_CODE = "ru-synodal";
+export const NIV_TRANSLATION_CODE = "en-niv";
 
 export const BIBLE_EXPECTED = {
   books: 66,
   chapters: 1189,
   versesRst: 31_166,
+  versesNiv: 31_103,
 } as const;
+
+export const NIV_LICENSE =
+  "Scripture quotations marked NIV are taken from the Holy Bible, New International Version®, NIV®. Copyright © 1973, 1978, 1984, 2011 by Biblica, Inc.™ Used by permission. All rights reserved worldwide.";
 
 export const BIBLE_SEED_LOCK_KEY = "7340125503";
 

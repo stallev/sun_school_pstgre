@@ -72,7 +72,12 @@ export async function seedBibleRst(prisma: PrismaClient, appEnv: string | undefi
         const bookIdBySortOrder = new Map(bookRowsDb.map((book) => [book.sortOrder, book.id]));
 
         const verses = await loadVerses(tx, translation.id, verseRows, bookIdBySortOrder);
-        const verify = await verifyTranslation(tx, translation.id, chapterRows);
+        const verify = await verifyTranslation(
+          tx,
+          translation.id,
+          chapterRows,
+          BIBLE_EXPECTED.versesRst,
+        );
 
         await finishLoad(tx, translation.id, RST_TRANSLATION_CODE, verify);
 

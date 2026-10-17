@@ -24,6 +24,8 @@
     "db:seed:admin": "npm run seed:admin -w @sunschool/db",
     "db:seed:teacher": "npm run seed:teacher -w @sunschool/db",
     "db:seed:bible": "npm run seed:bible -w @sunschool/db",
+    "db:seed:bible:niv": "npm run seed:bible:niv -w @sunschool/db",
+    "check:no-niv-in-git": "node scripts/check-no-niv-in-git.mjs",
     "rules:sync": "node scripts/sync-claude-rules.mjs",
     "rules:check": "node scripts/sync-claude-rules.mjs --check",
     "deps:check": "node scripts/check-exact-deps.mjs",

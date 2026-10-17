@@ -11,3 +11,12 @@ export const RST_FILES = {
   chapters: path.join(RST_DATA_DIR, "bible_chapter_seed.json"),
   verses: path.join(RST_DATA_DIR, "bible_verse_seed.json"),
 } as const;
+
+/** NIV relational seed (local only — bible_seed_contract §4, ADR-009 §3.2). */
+export const NIV_DATA_DIR = path.join(RST_DATA_DIR, "niv");
+
+export const NIV_FILES = {
+  books: path.join(NIV_DATA_DIR, "bible_book_seed.json"),
+  chapters: path.join(NIV_DATA_DIR, "bible_chapter_seed.json"),
+  verses: path.join(NIV_DATA_DIR, "bible_verse_seed.json"),
+} as const;
