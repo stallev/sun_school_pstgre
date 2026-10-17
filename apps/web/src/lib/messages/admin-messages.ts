@@ -1,6 +1,12 @@
 /** Serializable admin-route copy for client components (ui-messages-bundle-splitting). */
 export type AdminMessages = {
-  page: { approvalsTitle: string; usersTitle: string; profileTitle: string };
+  page: {
+    approvalsTitle: string;
+    usersTitle: string;
+    profileTitle: string;
+    yearTitle: string;
+    groupsTitle: string;
+  };
   approvals: {
     emptyTitle: string;
     emptyDescription: string;
@@ -65,8 +71,80 @@ export type AdminMessages = {
     toastNameSaved: string;
     toastMerged: string;
   };
+  year: {
+    emptyTitle: string;
+    emptyDescription: string;
+    createTitle: string;
+    nameLabel: string;
+    startsOnLabel: string;
+    endsOnLabel: string;
+    createSubmit: string;
+    submitPending: string;
+    statusActive: string;
+    statusDraft: string;
+    statusClosed: string;
+    activate: string;
+    activateConfirmTitle: string;
+    activateConfirmDescription: string;
+    close: string;
+    closeConfirmTitle: string;
+    closeConfirmDescription: string;
+    closeReasonLabel: string;
+    toastCreated: string;
+    toastActivated: string;
+    toastClosed: string;
+  };
+  group: {
+    yearContext: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    emptyNoYearTitle: string;
+    emptyNoYearDescription: string;
+    emptyNoYearAction: string;
+    createTitle: string;
+    nameLabel: string;
+    createSubmit: string;
+    submitPending: string;
+    statusActive: string;
+    statusInactive: string;
+    teacherCount: string;
+    editSubtitle: string;
+    languageTitle: string;
+    languageLabel: string;
+    languageRu: string;
+    languageEn: string;
+    languageSave: string;
+    languageConfirmTitle: string;
+    languageConfirmDescription: string;
+    settingsTitle: string;
+    settingsVerses: string;
+    settingsTest: string;
+    settingsNotebook: string;
+    settingsSinging: string;
+    settingsMaxVerses: string;
+    settingsRecitationDays: string;
+    settingsSave: string;
+    teachersTitle: string;
+    teachersEmpty: string;
+    assignTeacherLabel: string;
+    assignTeacherPlaceholder: string;
+    assignTeacher: string;
+    unassignTeacher: string;
+    noTeachersAvailable: string;
+    toastCreated: string;
+    toastLanguageSaved: string;
+    toastSettingsSaved: string;
+    toastTeacherAssigned: string;
+    toastTeacherUnassigned: string;
+  };
   form: { lastName: string; firstName: string; middleName: string; cancel: string };
 };
 
 export const formatWaitingDays = (template: string, count: number): string =>
   template.replace("{count}", String(count));
+
+export const formatTeacherCount = (template: string, count: number): string =>
+  template.replace("{count}", String(count));
+
+export const formatYearContext = (template: string, yearName: string): string =>
+  template.replace("{year}", yearName);

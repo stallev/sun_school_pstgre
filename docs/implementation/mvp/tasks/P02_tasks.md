@@ -85,11 +85,11 @@
 
 ### P02-CU7 — feat(web): add year and groups screens · Review: diff-only · Commit: auto
 
-- [ ] P02-T8 · T1 · Flow: [admin_flow §4.4](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Prototype: `year`, `groups`, `groupEdit`
+- [x] P02-T8 · T1 · Flow: [admin_flow §4.4](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Prototype: `year`, `groups`, `groupEdit`
       Files: `app/(app)/year/page.tsx`, `groups/page.tsx`, `groups/[groupId]/page.tsx`, `components/admin/{YearCard,GroupCard,GroupSettingsForm,TeacherAssignmentList}.tsx`
       Acceptance: создание/активация/закрытие с подтверждением; группа: язык с предупреждением ЯГ-4, настройки, назначения; D1 пустое состояние с действием → ручной smoke H/N
       Paths: H [admin_flow §4.4] · N [UX-05 D1, D9; ошибки кодов §6 контракта] · S [AZ-10…AZ-13: teacher → 403]
-- [ ] P02-T9 · T0 · Files: `lib/messages/{ru,en}/admin.json`
+- [x] P02-T9 · T0 · Files: `lib/messages/{ru,en}/admin.json`
       Acceptance: ключи экранов года и групп на двух языках
       Paths: n/a — copy
 

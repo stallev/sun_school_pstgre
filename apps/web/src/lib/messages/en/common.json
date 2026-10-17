@@ -7,7 +7,8 @@
     "reason_required": "Enter a reason",
     "internal": "Something went wrong. Please try again",
     "forbidden_title": "Access denied",
-    "form": "Could not complete the action. Check the form and try again."
+    "form": "Could not complete the action. Check the form and try again.",
+    "year_closed": "The school year is closed — changes are not allowed"
   },
   "states": {
     "not_found_title": "Page not found",
