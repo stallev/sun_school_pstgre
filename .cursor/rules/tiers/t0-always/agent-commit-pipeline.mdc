@@ -67,7 +67,7 @@ alwaysApply: true
 2. **Три прохода** (`reviewer`): проблема → ожидаемая форма → diff. Проблема — из задач CU в `P{N}_tasks.md` и просьбы пользователя, не из diff и не из собственного message; неясна → спросить до review
 3. **`reviewer`** — pinned субагент ([`.cursor/agents/reviewer.md`](../agents/reviewer.md), readonly), получает только проблему и scope, не summary автора. **Не** `bugbot` (платный), **не** `generalPurpose`. Один на CU.
 4. **Trace-блок** (`Review: …`) в ответе — всегда, включая `skip`
-5. **Blocker** → исправить → снова `stage` с тем же списком → re-review **только delta**, не более одного раза (§ Budget); blocker остался → не коммитить, доложить пользователю
+5. **Blocker** → исправить, включая тест на этот blocker (прочие suggestions не делать) → снова `stage` с тем же списком → re-review **только delta**. В драйвере фазы, если blocker тот же: одна фраза инварианта через `architect` (только docs), ещё одна правка и одна дельта. Дальше blocker остался → не коммитить, доложить. Третьего круга нет (§ Budget)
 6. **Suggestions only / no findings** → продолжить §4
 
 ### 4. Compose commit message

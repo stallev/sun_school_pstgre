@@ -13,7 +13,7 @@
 
 ## 1. Purpose
 
-Контракт загрузки переводов Библии и работы с общей нумерацией: что делает скрипт, что проверяет, как строится `bible_verse_map`, как приложение собирает текст золотого стиха. Читают: исполнитель P02 (`packages/db/seed/bible`), авторы `lesson_form_and_golden_verses_spec` (W9-03), `reviewer`.
+Контракт загрузки переводов Библии и работы с общей нумерацией: что делает скрипт, что проверяет, как строится `bible_verse_map`, как приложение собирает текст золотого стиха. Читают: исполнитель P03 (`packages/db/src/seed/bible`), авторы `lesson_form_and_golden_verses_spec` (W9-03), `reviewer`.
 
 ## 2. Scope / Out of scope
 
@@ -41,7 +41,7 @@
 |----------|-------|-------|
 | RST | `docs/my_specs/Bible/data/RelSQLData/bible_{edition,book,chapter,verse}_seed.json` | да |
 | NIV | `.../niv/*.json` (сборка из `niv_src`) | **нет** (ADR-009 §3.2) |
-| Карта версификации | `packages/db/seed/bible/versification.json` | да (после сверки владельцем) |
+| Карта версификации | `packages/db/src/seed/bible/versification.json` (`{ version, exceptions[] }`) | да (выборочная сверка владельцем до prod — ADR-009 Q-02) |
 
 Формат строк стиха: `edition_code`, `book_sort_order`, `chapter_number`, `verse_number`, `text`, `verse_order`. Таблица `bible_chapter` в БД **не создаётся**; `verses_count` главы вычисляется.
 
@@ -115,7 +115,7 @@
 | Гонка | Защита | Исход |
 |-------|--------|-------|
 | Повторный запуск | upsert по ключам; результат тот же | дублей нет |
-| Два запуска одновременно | `pg_advisory_lock` на перевод | второй ждёт либо завершается |
+| Два запуска одновременно | `pg_try_advisory_xact_lock` на перевод (внутри транзакции загрузки) | второй сразу завершается с ошибкой; статус загрузки не меняется |
 | Загрузка во время чтения уроков | загрузка в транзакции; пока `LOADING` перевод не назначается новым группам; существующие читают прежние строки | чтение консистентно |
 | `READY → LOADING` (перезагрузка) | группа с этим языком остаётся рабочей: статус влияет на назначение, не на чтение | без простоя |
 
@@ -134,8 +134,8 @@
 | Слой | Роль |
 |------|------|
 | `domain` | `buildVerseText`, `normalizeRange`, схемы диапазона; без I/O |
-| `db` (`packages/db/seed/bible`) | загрузка, карта, сверка, журнал |
-| `apps/web` DAL | чтение стихов по индексу, `resolveGroupTranslation`, кэш `'use cache'` с тегом перевода |
+| `db` (`packages/db/src/seed/bible`) | загрузка, карта, сверка, журнал |
+| `apps/web` DAL | чтение стихов по индексу, `resolveGroupTranslation`, кэш `'use cache'` + `cacheTag` перевода (`get-verse-text.ts`) |
 | Запрещено | загрузка из приложения; хранение текстов в JSON-полях |
 
 ## 13. Acceptance criteria
@@ -152,10 +152,10 @@
 
 | ID | Вопрос | Предложение по умолчанию | Владелец | Блокирует |
 |----|--------|--------------------------|----------|-----------|
-| Q-01 | Формат `versification.json` (плоские строки или правила по диапазонам) | Плоские строки исключений + правило Псалмов в коде | architect | P02 |
+| Q-01 | Формат `versification.json` (плоские строки или правила по диапазонам) | **Закрыто (P03):** `{ version, exceptions[] }` + правило Псалмов в `build-verse-map.ts` | architect | — |
 | Q-02 | Кто и когда сверяет карту выборочно | Владелец до prod-загрузки NIV (ADR-009 Q-02) | владелец | prod |
-| Q-03 | Нужна ли `bible_chapter` вместо вычисляемого `verses_count` | Нет (Q-01 схемы) | architect | — |
-| Q-04 | Кэширование `buildVerseText` | `'use cache'` по `(translation, диапазон)`, тег перевода; пересверить по Next.js 16.4 на P5 | architect | W9-03 |
+| Q-03 | Нужна ли `bible_chapter` вместо вычисляемого `verses_count` | **Закрыто:** нет `bible_chapter`; `verses_count` вычисляется | architect | — |
+| Q-04 | Кэширование `buildVerseText` | **Закрыто (P03 CU5):** `'use cache'` + `cacheTag` перевода в DAL | architect | — |
 
 ## 15. Related documents
 
@@ -180,3 +180,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-09) |
+| 2026-10-17 | v1.1 — Пути `packages/db/src/seed/bible`; закрыты Q-01, Q-03, Q-04 (P03) |

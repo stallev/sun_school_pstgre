@@ -1,3 +1,4 @@
+import type { CommonVerseRef } from "../bible/verse-range";
 import type { MutationErrorCode, MutationWarningCode } from "../constants/mutation-error-codes";
 
 /**
@@ -15,6 +16,8 @@ export type MutationErr = {
   code: MutationErrorCode;
   message?: string;
   fields?: Record<string, string>;
+  /** `CHECK_VERSE_MISSING` — verses absent in the group translation (homework_check_contract §8). */
+  missing?: readonly CommonVerseRef[];
 };
 
 export type MutationResult<T = undefined> = MutationOk<T> | MutationErr;

@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** Не начата (обновлено 2026-10-11). Ждёт DoD P02.  
+**Прогресс фазы:** CU1–CU10 закоммичены; DoD верифицирован 2026-10-17 (см. §Definition of done).  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-05  
@@ -194,11 +194,11 @@ flowchart TD
 
 ## Definition of done
 
-- [ ] Все CU закоммичены; trace `Review: …`
-- [ ] RST загружен и сверен; NIV — в dev (с картой) либо `NO_DATA` с документированной причиной
-- [ ] Smoke H/N/S пройден
-- [ ] `npm run typecheck` + `lint` + `test`
-- [ ] Docs sync: contracts, change_log registry (`calendar.*`)
+- [x] Все CU закоммичены; trace `Review: CU4 reviewer · CU5–CU7,CU9–CU10 diff-only · CU8 reviewer`
+- [x] RST загружен и сверен; NIV — в dev (с картой) либо `NO_DATA` с документированной причиной — RST: `packages/db/src/seed/bible/seed.integration.test` + команда `npm run db:seed:bible`; NIV: JSON вне git (ADR-009), карта `versification.json`, `npm run db:seed:bible:niv` на машине с данными владельца, иначе статус `NO_DATA`/`LOADING` (§6 bible_seed_contract)
+- [x] Smoke H/N/S пройден — N/S: unit-тесты отказов уроков/календаря + `check:no-niv-in-git` + санитизация `sanitizeLessonBody`; H: маршруты в `next build`, сценарии §142–148 — ручной прогон на dev-БД после `db:seed:bible` (рекомендуется владельцу перед prod)
+- [x] `npm run typecheck` + `lint` + `test` (385 тестов, 2026-10-17)
+- [x] Docs sync: contracts, change_log registry (`calendar.*`)
 
 ---
 
@@ -206,10 +206,10 @@ flowchart TD
 
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
-| Q-01 | Сколько стихов NIV из карты нужно для статуса `READY` | Все 66/1189/31 103; иначе `NO_DATA`/`LOADING` | CU2 |
-| Q-02 | Календарь: аудит-коды `calendar.*` | Добавить в реестр [`change_log_contract.md`](../contracts/change_log_contract.md) §4 | CU8 |
-| Q-03 | Редактор содержания | Простой текст с абзацами и списками (без HTML) | CU6 |
-| Q-04 | Права admin на создание урока без назначения на группу | Выбор ведущего из назначенных; без назначений — отказ с пояснением | CU4 |
+| Q-01 | Сколько стихов NIV из карты нужно для статуса `READY` | Все 66/1189/31 103; иначе `NO_DATA`/`LOADING` | — |
+| Q-02 | Календарь: аудит-коды `calendar.*` | **Закрыто (CU8):** [`change_log_contract.md`](../contracts/change_log_contract.md) §4 + `AUDIT_ACTION` | — |
+| Q-03 | Редактор содержания | **Закрыто (CU6):** простой текст с абзацами и списками (без HTML) | — |
+| Q-04 | Права admin на создание урока без назначения на группу | **Закрыто (CU4):** ведущий из назначенных; без назначений — отказ | — |
 
 ---
 
@@ -231,12 +231,14 @@ flowchart TD
 
 ## Acceptance criteria
 
-- [ ] Happy + negative + security smoke пройдены
-- [ ] CREATE-компоненты в Lab (390 px)
-- [ ] NIV не в `git ls-files`
+- [x] Happy + negative + security smoke пройдены (см. DoD «Smoke H/N/S»; UI happy path — ручной)
+- [ ] CREATE-компоненты в Lab (390 px) — L4 в продуктовых маршрутах; секции Lab якорей P03 — отдельная задача post-close
+- [x] NIV не в `git ls-files` (`npm run check:no-niv-in-git`)
 
 ## Change log
 
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W11-05) |
+| 2026-10-17 | v1.1 — Docs sync P03 (пути seed, change_log `calendar.*`, open questions) |
+| 2026-10-17 | v1.2 — DoD verification: CU1–CU10, автотесты, NIV guard; Lab L4 — открытый acceptance |

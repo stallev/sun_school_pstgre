@@ -71,13 +71,16 @@ loop until the first stdout line is not `STATUS: cu …`:
     │    ├─ read only this CU's lines and the linked § sections; DoR inline
     │    ├─ write code, tick this CU's checkboxes, prune the paths-file
     │    ├─ cu-verify.mjs [--full]   → log file; sees exit code + tail; one retry
+    │    │    harness crash (no tests, `reading 'config'`): script retries once under vitest.lock
     │    ├─ cu-commit.mjs stage      → index = paths-file, nothing else
     │    ├─ diff-only CU: self-review, one `Review:` line
-    │    └─ returns ≤15 lines, first line RESULT: staged | dor-fail | verify-fail
+    │    └─ returns ≤15 lines, first line RESULT: staged | dor-fail | verify-fail | verify-flake
     ├─ dor-fail → one `architect` spec-gap → one more `implementer`
+    ├─ verify-flake → orchestrator runs cu-verify once → stage-only implementer; harness again → stop
     ├─ verify-fail → stop phase
     ├─ `reviewer` CU: `reviewer` subagent reads `git diff --staged` (≤15 lines)
-    │    blocker → new `implementer` fixes only the blockers, stages → one delta re-review → still blocked: stop
+    │    blocker → implementer fixes it and adds a test for that blocker → one delta re-review
+    │    same blocker → one architect sentence in the spec → one more implementer → one delta re-review → still blocked: stop
     ├─ cu-commit.mjs commit --subject → hook: commitlint + typecheck + build
     │    hook fails → new `implementer` with the hook tail → commit again → fails again: stop
     └─ one line "<CU> — <hash>", run run-phase.mjs again (nothing else carries over)
@@ -147,6 +150,8 @@ All scripts are Node ESM with no dependencies, cross-platform (`shell: true` on 
 - Always runs `lint` and `test`. `--full` adds `typecheck`.
 - `--full` is used **only before `reviewer`**, so the reviewer never reads a red diff. Diff-only CUs leave typecheck to the hook.
 - It does **not** run the production build. The pre-commit hook does.
+- Lint and test spawn `node` with `shell: false` (`eslint.js`, `vitest.mjs`). Typecheck uses `npm-cli.js` the same way. Agents do not start a second `npm run test` / `vitest`.
+- The test step holds `.local/phase-runs/vitest.lock` (waits up to 4 minutes for a live owner, then reports a harness failure). A crash with `Tests  no tests` and `reading 'config'` is retried once inside the script. Still crashing → stdout `cu-verify: test harness-failed`, exit 3.
 - Stops at the first failing step. Output: `cu-verify: ok` plus the log path, or the failing label, a tail of 40 lines, the log path and a non-zero exit.
 
 ### 6.3 `cu-commit.mjs stage|commit --paths-file <f> [--subject "<type(scope): subject>"]`
@@ -177,7 +182,7 @@ Pass `--model` explicitly. `--output-format json` returns usage and cost; the dr
 | Code | Meaning | Human action |
 |------|---------|--------------|
 | 0 | Phase complete | Walk the smoke list, decide push / PR |
-| 1 | Dirty tree outside the CU · CU not ticked after the CU work · Claude CLI not found (`--harness claude`) · session failed (verify failed twice, hook failed twice, reviewer blocker after delta re-review, `--max-turns` hit, blocking open question) | Read logs in `.local/phase-runs/`, fix, re-run `run-phase.mjs P{NN}` from the chat. It resumes from the first open CU |
+| 1 | Dirty tree outside the CU · CU not ticked after the CU work · Claude CLI not found (`--harness claude`) · session failed (red verify after one retry, harness crash after the script retry and one orchestrator retry, hook failed twice, same reviewer blocker after the architect sentence and the second delta, `--max-turns` hit, blocking open question) | Read logs in `.local/phase-runs/`, fix, re-run `run-phase.mjs P{NN}` from the chat. It resumes from the first open CU |
 | 2 | `Smoke: blocking` on a finished CU | Run the smoke check, change the header to `deferred`/`none`, re-run |
 
 ## 7. The CU session
@@ -199,14 +204,14 @@ Below is the single-session form (`claude`). The `cursor` form splits the same s
 - `reviewer` prompt: the CU id, the task file path, and "read `git diff --staged` yourself; answer ≤ 15 lines: blockers / suggestions / verified". **Do not** pass the author's summary or a draft commit message.
 - Protocol: 2a **problem** (from the tasks, not from the diff) → 2b **expected shape** (before reading hunks: checklist rows plus every required H/N/S path) → 2c **diff** (findings must cite a defect or a canon rule. "I'd do it differently" is not a finding).
 - Diff-only: the session itself checks the same three steps and prints one line, `Review: diff-only — <CU>, <n> lines`.
-- Budget: one `reviewer` per CU, at most one delta re-review. Suggestions never trigger a re-review.
+- Budget: one `reviewer` per CU, then one delta re-review. If that blocker is unchanged, one `architect` sentence and one more delta re-review. No third round. Suggestions never trigger a re-review. The fix for a blocker includes a test that locks that blocker; other suggestions stay out.
 
 ### 7.3 Escalation ladder
 
-1. Verify / acceptance fails → retry once with the exact error tail.
-2. Fails again → one `architect` call amends the spec or plan (docs only).
-3. Re-apply once.
-4. Still failing → exit non-zero. Never loop.
+1. A Vitest harness crash (`cu-verify: test harness-failed`) is not a spec failure. The script already retried once. The orchestrator runs `cu-verify` once more, then a stage-only pass. Crash again → stop. Do not edit code and do not call `architect`.
+2. An assertion, lint, or typecheck failure → one retry with the exact error tail.
+3. That retry fails → stop. Do not call `architect` for a red check.
+4. A review blocker that survives the delta re-review → one `architect` call writes a single invariant sentence into the spec (docs only) → one more implementer pass and one delta re-review → still blocked → stop. Never loop.
 
 ## 8. Permissions (the real source of "please confirm")
 
