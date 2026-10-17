@@ -16,10 +16,10 @@
 
 ## Phase DoR audit (lean: оркестратор inline)
 
-- [ ] P02 DoD выполнен; год, группы, назначения есть
-- [ ] Задачи проходят DoR; экранные требования формы урока — в phase_description (spec-gap закрыт)
-- [ ] Доступны данные: RST JSON в репо, NIV локально (`Bible/data/.../niv`), скрипты владельца
-- [ ] `versification.json` готов к CU2 либо CU2 ограничен загрузкой NIV как `LOADING`
+- [x] P02 DoD выполнен; год, группы, назначения есть
+- [x] Задачи проходят DoR; экранные требования формы урока — в phase_description (spec-gap закрыт)
+- [x] Доступны данные: RST JSON в репо, NIV локально (`Bible/data/.../niv`), скрипты владельца
+- [x] `versification.json` готов к CU2 либо CU2 ограничен загрузкой NIV как `LOADING`
 
 ## Commit plan
 
@@ -130,8 +130,8 @@
 
 ## Verification (phase)
 
-- [ ] Все CU закоммичены; trace `Review: …`
-- [ ] Phase DoD из [`P03_phase_description.md`](../phases_tasks_descriptions/P03_phase_description.md)
+- [x] Все CU закоммичены; trace `Review: CU4 reviewer · CU5–CU7,CU9–CU10 diff-only · CU8 reviewer`
+- [x] Phase DoD из [`P03_phase_description.md`](../phases_tasks_descriptions/P03_phase_description.md) (верификация 2026-10-17)
 - [x] Docs sync — в CU10
 
 ---
@@ -148,3 +148,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W11-06) |
+| 2026-10-17 | Phase DoR + Verification DoD отмечены после верификации |
