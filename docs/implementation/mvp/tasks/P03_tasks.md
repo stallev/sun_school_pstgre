@@ -63,7 +63,7 @@
 
 ### P03-CU4 — feat(lessons): add lesson create, update, lead change and delete use-cases · Review: reviewer · Commit: auto
 
-- [ ] P03-T7 · T3 · Contract: [homework_check §5.1–§5.3, §8–§10](../contracts/homework_check_contract.md) · Invariants: INV-02, INV-21
+- [x] P03-T7 · T3 · Contract: [homework_check §5.1–§5.3, §8–§10](../contracts/homework_check_contract.md) · Invariants: INV-02, INV-21
       Files: `apps/web/src/data/lessons/{create-lesson,update-lesson,change-lead-teacher,delete-lesson}.ts`, `actions/lessons.ts`
       Acceptance: блокировка года; `golden_verse` найти/создать; ведущий назначен (R-4); пересчёт `ordinal`; правка после проверок ограничена; удаление teacher только без проверок; журнал `lesson.*` → тесты по таблице отказов
       Paths: H [§5.1–5.3] · N [§8: год, ведущий, стих, лимит, обзорный, locked] · S [AZ-30, AZ-31, AZ-P5, AZ-P6: чужая группа → `NOT_FOUND`]
