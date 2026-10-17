@@ -16,10 +16,10 @@
 
 ## Phase DoR audit (lean: оркестратор inline)
 
-- [ ] P03 DoD; уроки и стихи доступны; фикстуры уроков есть
-- [ ] Задачи проходят DoR; пути H/N/S указаны; формулы — только по контракту §6–§7
+- [x] P03 DoD; уроки и стихи доступны; фикстуры уроков есть
+- [x] Задачи проходят DoR; пути H/N/S указаны; формулы — только по контракту §6–§7
 - [x] `updated_at` у `homework_check`/`lesson` присутствует в схеме (иначе миграция в CU2)
-- [ ] Решения: Q-01/Q-02 flow spec приняты
+- [x] Решения: Q-01/Q-02 flow spec приняты (docs sync CU8)
 
 ## Commit plan
 
@@ -103,7 +103,7 @@
 
 ### P04-CU8 — docs(docs): sync P04 docs · Review: diff-only · Commit: auto
 
-- [ ] P04-T12 · T0 · Files: `docs/**` (contract, flow spec, ui_states, lifecycle)
+- [x] P04-T12 · T0 · Files: `docs/**` (contract, flow spec, ui_states, lifecycle)
       Acceptance: grep терминов; нет drift
       Paths: n/a — docs-only
 
@@ -111,7 +111,7 @@
 
 - [ ] Все CU закоммичены; trace `Review: …`
 - [ ] Phase DoD из [`P04_phase_description.md`](../phases_tasks_descriptions/P04_phase_description.md)
-- [ ] Docs sync — в CU8
+- [x] Docs sync — в CU8
 
 ---
 
