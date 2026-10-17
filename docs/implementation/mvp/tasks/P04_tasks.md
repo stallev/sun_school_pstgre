@@ -25,15 +25,15 @@
 
 ### P04-CU1 — feat(domain): add points, late and verse-to-recite rules · Review: diff-only · Commit: auto
 
-- [ ] P04-T1 · T2 · Contract: [homework_check §6](../contracts/homework_check_contract.md) · Invariants: INV-11…INV-13
+- [x] P04-T1 · T2 · Contract: [homework_check §6](../contracts/homework_check_contract.md) · Invariants: INV-11…INV-13
       Files: `packages/domain/src/check/{compute-points,scoring-snapshot}.ts`
       Acceptance: сумма стихи×вес + тест×вес + тетрадь×вес + спевка×вес; `NULL` вклад 0; присутствие не участвует; обзорный урок — тетрадь + спевка; снимок содержит веса и переключатели → unit-тесты таблицей
       Paths: H [§6] · N [выключенные параметры, `NULL`, максимумы]
-- [ ] P04-T2 · T2 · Contract: [homework_check §7](../contracts/homework_check_contract.md) · ADR: [adr_004 §4 п. 5](../../../prds/07_governance/adr_004_timezone_scheduling_model.md)
+- [x] P04-T2 · T2 · Contract: [homework_check §7](../contracts/homework_check_contract.md) · ADR: [adr_004 §4 п. 5](../../../prds/07_governance/adr_004_timezone_scheduling_model.md)
       Files: `packages/domain/src/check/{compute-late,next-lesson-date}.ts`
       Acceptance: `date(setAt in tz) > nextLessonDate`; нет следующего урока → `false`; граница полуночи, переход на летнее время, смена пояса не меняет прошлые → unit-тесты
       Paths: H [§7] · N [нет следующего урока, равные даты]
-- [ ] P04-T3 · T1 · Contract: [homework_check §4.2](../contracts/homework_check_contract.md)
+- [x] P04-T3 · T1 · Contract: [homework_check §4.2](../contracts/homework_check_contract.md)
       Files: `packages/domain/src/check/{schemas,resolve-verses-to-recite}.ts`, коды `CHECK_*` (проверка), `AUDIT_ACTION` (`check.*`)
       Acceptance: диапазоны оценок, обзорный без стихов/теста, `resolveVersesToRecite` по БП-2 (первый обычный урок года — пусто) → unit-тесты
       Paths: H [БП-2] · N [первый урок, обзорный между]
