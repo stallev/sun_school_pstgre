@@ -27,11 +27,11 @@
 
 ### P02-CU1 — feat(domain): add school rules, schemas and codes · Review: diff-only · Commit: auto
 
-- [ ] P02-T1 · T1 · Contract: [school_year §4, §6](../contracts/school_year_and_groups_contract.md)
+- [x] P02-T1 · T1 · Contract: [school_year §4, §6](../contracts/school_year_and_groups_contract.md)
       Files: `packages/domain/src/school/{year,enrollment,grade-settings}.ts`, `schemas/*`, `constants/mutation-error-codes.ts` (`SCHOOL_*`), `audit-action.ts` (`school.*`, `settings.*`)
       Acceptance: `validateYearDates`, `canActivateYear`, `canEnroll`, схемы входов; `maxVersesPerLesson` 0–10, веса целые ≥ 0 → unit-тесты границ
       Paths: H [school_year §5] · N [пересечение дат, `ageMin > ageMax`, веса < 0]
-- [ ] P02-T2 · T1 · ADR: [adr_004 §4](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [adr_008 §4.1](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md)
+- [x] P02-T2 · T1 · ADR: [adr_004 §4](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [adr_008 §4.1](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md)
       Files: `packages/domain/src/settings/{timezone,locale}.ts`
       Acceptance: `isValidIanaTimeZone` (по `Intl.supportedValuesOf`), список локалей `ru`/`en` → unit-тест
       Paths: N [неизвестная зона → false]
