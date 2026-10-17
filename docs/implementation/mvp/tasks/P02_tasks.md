@@ -76,7 +76,7 @@
 
 ### P02-CU6 — feat(settings): add application language and school timezone use-cases · Review: reviewer · Commit: auto
 
-- [ ] P02-T7 · T3 · ADR: [adr_004 §4, §7](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [adr_008 §4.2, §7](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md) · Matrix: AZ-15
+- [x] P02-T7 · T3 · ADR: [adr_004 §4, §7](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [adr_008 §4.2, §7](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md) · Matrix: AZ-15
       Files: `data/settings/{update-app-language,update-school-timezone}.ts`, кэш `ui-locale`/`school-timezone` с `updateTag`
       Acceptance: только `ADMIN`; валидация IANA; запись `settings.*_changed`; `updateTag` после commit; `<html lang>` меняется при следующей загрузке; смена пояса не пересчитывает прошлые данные → тесты
       Paths: H [adr_004 §7 H, adr_008 §7 H] · N [неизвестный пояс, неизвестная локаль] · S [AZ-15, AZ-D3]

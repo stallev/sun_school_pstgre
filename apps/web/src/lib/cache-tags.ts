@@ -5,5 +5,6 @@
  */
 export const CACHE_TAGS = {
   UI_LOCALE: "ui-locale",
+  SCHOOL_TIMEZONE: "school-timezone",
   // e.g. BIBLE_TRANSLATION: (code: string) => `bible:translation:${code}` — added in P03-CU5
 } as const;
