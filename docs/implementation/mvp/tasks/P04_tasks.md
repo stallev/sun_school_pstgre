@@ -73,11 +73,11 @@
 
 ### P04-CU5 — feat(web): add sequential check screen · Review: diff-only · Commit: auto
 
-- [ ] P04-T8 · T1 · Spec: [flow §4–§6, §8, §10](../specs/homework_check_flow_spec.md) · Prototype: `check`
+- [x] P04-T8 · T1 · Spec: [flow §4–§6, §8, §10](../specs/homework_check_flow_spec.md) · Prototype: `check`
       Files: `app/(app)/lessons/[lessonId]/check/page.tsx`, `components/teacher/{CheckPupilList,CheckCard,CheckCardHeader,ScoreGroup,LateBadge,CheckProgress,CheckBottomBar,CheckFinishedCard}.tsx`
       Acceptance: порядок блоков, режимы проверки/исправления, радиогруппы со стрелками, «—» = `NULL`, баннер исправления и причины, фокус на следующего ученика, `aria-live`, подтверждение при несохранённых изменениях, экран завершения без достижений → ручной smoke H/N
       Paths: H [flow §9] · N [flow §10] · S [flow §11: закрытый год — форма скрыта]
-- [ ] P04-T9 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
+- [x] P04-T9 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
       Acceptance: ключи проверки на двух языках
       Paths: n/a — copy
 

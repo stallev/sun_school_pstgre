@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { USER_ROLE, type MutationResult } from "@sunschool/domain";
+import { completeLessonCheck } from "@/data/checks/complete-lesson-check";
+import { correctCheck } from "@/data/checks/correct-check";
 import { saveChecked } from "@/data/checks/save-checked";
 import { savePartialCheck } from "@/data/checks/save-partial-check";
 import { requireRole } from "@/lib/auth/require-user";
@@ -41,6 +43,29 @@ export async function saveCheckedAction(
   if (result.ok) {
     const lessonId = lessonIdFromPayload(raw);
     if (lessonId) revalidateCheckSurfaces(lessonId);
+  }
+  return result;
+}
+
+export async function correctCheckAction(
+  raw: unknown,
+): Promise<MutationResult<{ checkId: string; updatedAt: string }>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const result = await correctCheck(await getPrisma(), actor.userId, raw);
+  if (result.ok) {
+    const lessonId = lessonIdFromPayload(raw);
+    if (lessonId) revalidateCheckSurfaces(lessonId);
+  }
+  return result;
+}
+
+export async function completeLessonCheckAction(
+  raw: unknown,
+): Promise<MutationResult<{ lessonId: string }>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const result = await completeLessonCheck(await getPrisma(), actor.userId, raw);
+  if (result.ok) {
+    revalidateCheckSurfaces(result.data.lessonId);
   }
   return result;
 }
