@@ -16,6 +16,7 @@
 | [`03-accessibility.md`](./03-accessibility.md) | ARIA, focus, keyboard, WCAG | [`docs/guidelines/react/ai_semantics_a11y_guidelines.md`](../guidelines/react/ai_semantics_a11y_guidelines.md) | **ui-semantics-a11y** |
 | [`04-code-splitting.md`](./04-code-splitting.md) | Bundle, dynamic import, tree shaking | [`docs/guidelines/nextjs/ai_client_lazy_loading.md`](../guidelines/nextjs/ai_client_lazy_loading.md) | **react-ui-components** |
 | [`05-browser-rendering.md`](./05-browser-rendering.md) | Reflow, repaint, GPU animations | [`docs/guidelines/react/ai_browser_rendering_performance.md`](../guidelines/react/ai_browser_rendering_performance.md) | **ui-animation-performance** |
+| [`06-agent-orchestration.md`](./06-agent-orchestration.md) | Контекстное окно, субагенты, выбор моделей, драйвер фазы | [`docs/guidelines/agent-phase-orchestration.md`](../guidelines/agent-phase-orchestration.md) | **model-routing**, **agent-commit-pipeline** |
 | [`ai_agent_ui_ux_guideline.md`](./ai_agent_ui_ux_guideline.md) | FX-1–FX-10, overlay tree, pre-merge checklist | [`docs/guidelines/react/`](../guidelines/react/) + design contracts | T2 UI rules cluster |
 
 ---

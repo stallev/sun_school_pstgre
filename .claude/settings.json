@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node scripts/cu-verify.mjs:*)",
+      "Bash(node scripts/cu-commit.mjs:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run rules:sync:*)",
+      "Bash(npm run rules:check:*)",
+      "Bash(npm run deps:check:*)",
+      "Bash(npm run encoding:check:*)",
+      "Bash(npm run docs:links:*)",
+      "Bash(npm run db:generate:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch --show-current:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git ls-files:*)",
+      "Read",
+      "Edit",
+      "Write",
+      "Grep",
+      "Glob"
+    ],
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git rebase:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git stash:*)",
+      "Bash(git clean:*)",
+      "Read(./.env*)",
+      "Edit(./.env*)",
+      "Write(./.env*)",
+      "Read(**/.env*)",
+      "Edit(**/.env*)",
+      "Write(**/.env*)",
+      "Read(./.local/dev-secrets.json)",
+      "Edit(./.local/dev-secrets.json)",
+      "Write(./.local/dev-secrets.json)"
+    ]
+  }
+}

@@ -17,6 +17,7 @@ export default defineConfig({
       "packages/*/src/**/*.test.ts",
       "packages/policy/*/src/**/*.test.ts",
       "apps/web/src/**/*.test.{ts,tsx}",
+      "scripts/**/*.test.mjs",
     ],
     exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**"],
     environment: "node",

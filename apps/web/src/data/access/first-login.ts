@@ -11,8 +11,7 @@ import { purgeRegistration } from "./purge-expired-registration";
 /**
  * Telegram sign-in against the database (auth_runtime_spec §5.1 steps 3, 4, 7, 8, 9;
  * access_requests §5.1 `firstLogin`). Never takes status or roles from the client.
- * - known identity: `DISABLED` / `DELETED` are refused; `username` / `phone` are refreshed (an empty
- *   value does not erase a stored one); `last_login_at` (and an empty `first_login_at`) are set;
+ * - known identity: `DISABLED` / `DELETED` are refused; `last_login_at` (and an empty `first_login_at`) are set;
  * - an expired `REGISTRATION` of the same person is purged and created again;
  * - unknown identity: `app_user` (`REGISTRATION`) + `login_identity` in one transaction.
  * A double first login races on `UNIQUE (provider, provider_account_id)`; the loser re-reads.
@@ -21,8 +20,6 @@ type Tx = Prisma.TransactionClient;
 
 export type TelegramSignInInput = {
   providerAccountId: string;
-  username: string | null;
-  phone: string | null;
   now: Date;
 };
 
@@ -44,14 +41,6 @@ export async function signInTelegram(tx: Tx, input: TelegramSignInInput): Promis
       return { kind: "denied" };
     }
     if (!isRegistrationExpired(user, input.now)) {
-      const nextUsername = input.username ?? identity.username;
-      const nextPhone = input.phone ?? identity.phone;
-      if (nextUsername !== identity.username || nextPhone !== identity.phone) {
-        await tx.loginIdentity.update({
-          where: { id: identity.id },
-          data: { username: nextUsername, phone: nextPhone },
-        });
-      }
       await tx.appUser.update({
         where: { id: user.id },
         data: { lastLoginAt: input.now, firstLoginAt: user.firstLoginAt ?? input.now },
@@ -74,8 +63,6 @@ export async function signInTelegram(tx: Tx, input: TelegramSignInInput): Promis
         create: {
           provider: TELEGRAM,
           providerAccountId: input.providerAccountId,
-          username: input.username,
-          phone: input.phone,
         },
       },
     },

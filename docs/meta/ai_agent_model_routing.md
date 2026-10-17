@@ -2,8 +2,8 @@
 
 **Тип:** Guide  
 **Статус:** Canonical  
-**Версия:** 2.0  
-**Дата:** 2026-10-10  
+**Версия:** 2.1  
+**Дата:** 2026-10-17  
 **Зависит от:** [`ai_first_project_methodology.md`](./ai_first_project_methodology.md) §2.2–§2.5, [`.cursor/rules/model-routing.mdc`](../../.cursor/rules/model-routing.mdc), [`documentation_creation_registry.md`](./documentation_creation_registry.md) §2.3.2a / §2.3.6  
 **Связанные документы:** [`AGENTS.md`](../../AGENTS.md), [`phase_tasks.template.md`](./phase_tasks.template.md), [`docs/guidelines/ai_code_review_protocol.md`](../guidelines/ai_code_review_protocol.md)
 
@@ -159,9 +159,39 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 | Docs / `.mdc` / tests / tooling, без runtime-кода | `diff-only` | оркестратор |
 | Есть runtime-код | `reviewer` | `.cursor/agents/reviewer.md`, модель из frontmatter |
 
+Профиль `lean` сужает строку «есть runtime-код»: `reviewer` только для T3, `Paths: S` и sensitive zone. Остальной runtime — `diff-only`. Канон глубины — [`agent-code-review-subagent.mdc`](../../.cursor/rules/agent-code-review-subagent.mdc) § Depth и D6 профиля.
+
 Вход `reviewer`: задачи CU из `P{N}_tasks.md` (2a) + `git diff --staged`; Paths H / N / S — ожидаемая форма (2b). Не передаётся summary автора и черновик commit message. Bugbot не вызывать; `reviewer` не правит код; re-review — только delta, не более одного раза.
 
 **Auto-commit** ([`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc)): в том же ходе, где отмечена последняя задача объявленного CU, агент проходит pipeline целиком; CU объявлен в tasks, ВЕРИФИКАЦИЯ зелёная, review без blockers → коммит без вопроса пользователю. Запрещено: push, `--amend`, `--no-verify`, stage `.env*` / секретов. Blocker остался после re-review → не коммитить, доложить.
+
+## Phase driver
+
+Прогон фазы — свежий сеанс на каждый CU, чтобы контекст не копился. Состояние живёт в чекбоксах `P{N}_tasks.md` и в git. Скрипты: [`scripts/cu-verify.mjs`](../../scripts/cu-verify.mjs), [`scripts/cu-commit.mjs`](../../scripts/cu-commit.mjs), [`scripts/run-phase.mjs`](../../scripts/run-phase.mjs). Полный лог пишется в `.local/phase-runs/`; в чат попадает хвост около 40 строк.
+
+**DoR.** Профиль `lean` (D3): сеанс проверяет DoR сам. `architect` вызывается, только если DoR провален или сработала эскалация. Обязательного Phase DoR audit через `architect` на `lean` нет.
+
+**Порядок сеанса.**
+
+1. Читает строки CU и указанные `§` и пишет код. `implementer` — только если чтение этого CU даёт больше ~20k токенов шума.
+2. `node scripts/cu-verify.mjs` запускает `lint` и `test`. Перед `reviewer` сеанс добавляет `--full`: тогда же выполняется `typecheck`. `build:check` сеанс не запускает.
+3. `node scripts/cu-commit.mjs stage --paths-file <файл>` кладёт в индекс только перечисленные пути. Скрипт отклоняет `.env`, `.env.*`, `.local/dev-secrets.json` и `..`.
+4. Review по D6. Заголовок CU уже содержит `Review: reviewer|diff-only`. Для `reviewer` субагент сам читает `git diff --staged` и отвечает не больше чем 15 строками. Для `diff-only` сеанс пишет одну строку `Review:`.
+5. Blocker — правка кода, снова `stage` с тем же списком, один review только дельты.
+6. `node scripts/cu-commit.mjs commit --paths-file <файл> --subject "<type(scope): subject>"`. Имя ветки подставляет скрипт. Индекс должен совпасть со списком. `--amend`, `--no-verify` и `push` скрипт не принимает. `next build` выполняет pre-commit hook.
+7. Отметка CU входит в тот же индекс. Хеш после коммита в файл задач не дописывается.
+
+**Драйвер.** `node scripts/run-phase.mjs P01`. Следующий CU — первый, у которого не все чекбоксы задач стоят `- [x]`. Пометка `✔` в заголовке сама по себе CU не закрывает. Грязные пути вне `Files:` этого CU и файла задач — отказ стартовать. Пути внутри этого списка — продолжение того же CU.
+
+`Smoke: blocking` у уже закрытого CU останавливает драйвер до следующего (код выхода 2). `Smoke: deferred` копится в `.local/phase-runs/P{N}-smoke.md`. `--harness print` (по умолчанию) печатает промпт сеанса и не запускает модель. `--harness claude` вызывает `claude -p --model sonnet --max-turns 40 --output-format json` (`--model` и `--max-turns` у драйвера меняют значения) и останавливает фазу, если сеанс вернул ненулевой код, JSON-результат с ошибкой (`error_max_turns` и т. п.) или не отметил CU. JSON сеанса сохраняется в `.local/phase-runs/<CU>-session-<время>.json`, в вывод драйвера идёт строка с turns, стоимостью и токенами.
+
+Драйвер заранее вписывает в paths-file все существующие конкретные пути из `Files:`. `cu-commit.mjs` в `stage` и `commit` пропускает пути без изменений по `git status --porcelain` (печатает `unchanged: …`), поэтому нетронутый файл из `Files:` не ломает проверку индекса.
+
+**Запуск.** Драйвер запускают из терминала или фоновой задачей агента с выводом в `.local/phase-runs/driver.log`, не foreground-командой в чате: Bash-инструмент агента обрывает команду примерно через 10 минут, а вывод сеансов раздувает контекст. Фраза — [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md).
+
+**Allowlist.** [`.claude/settings.json`](../../.claude/settings.json): разрешены `node scripts/cu-verify.mjs`, `node scripts/cu-commit.mjs`, нужные `npm run`, чтение git (`status`, `diff`, `log`, `show`, `rev-parse`), Read / Edit / Write / Grep / Glob. Запрещены `git push`, сырые `git add` и `git commit`, `reset --hard`, `rebase`, смена ветки, `stash`, `clean` и доступ к `.env*` и `.local/dev-secrets.json`. Разрешение на `git commit` с любыми флагами пропускает `--amend` и `--no-verify`, поэтому его нет. Сеанс запускает команды через Bash tool: правила заданы для него.
+
+**Остановки.** Blocking Open question. Проверка упала дважды: один повтор с текстом ошибки, затем одна правка спеки через `architect`. Reviewer-blocker остался после review дельты. Хук коммита упал повторно. `Smoke: blocking`. Сеанс не уложился в `--max-turns`.
 
 ## Acceptance criteria
 
@@ -170,7 +200,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 - [ ] Задача с проваленным DoR начинается со spec-gap; код пишется после правки документов.
 - [ ] Перед фазой отмечен Phase DoR audit.
 - [ ] Задача с признаком S — T3 и отдельный CU.
-- [ ] Каждый CU с runtime-кодом прошёл `reviewer`; trace `Review: …` в ответе.
+- [ ] CU с T3, `Paths: S` или sensitive zone прошёл `reviewer` (профиль `lean`, D6); остальной runtime — `diff-only`; trace `Review: …` в ответе.
 - [ ] Коммиты появляются только на границах CU (или по явному запросу), без push / amend / no-verify.
 - [ ] Проваленный шаг не зациклен: один повтор, затем правка spec / плана, затем стоп.
 - [ ] Модель субагента задана файлом `.cursor/agents/*.md`, не фразой в промпте.
@@ -187,6 +217,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 | `model-routing.mdc` не в tier-manifest и не в `.claude/rules/` | Bootstrap и Claude Code правило не видят | Строка в `.cursor/rules/README.md` §T0, копия в `tiers/t0-always/`, `npm run rules:sync` |
 | Имя T0–T2 у Cursor Rules и у задач | Агент путает «скопировать UI-rule» и «не звать субагента» | В тексте писать «task tier» или «rule tier» |
 | Документы стека на 16.3.3 в Pulse snapshot | Агент читает устаревший пин из `docs/examples/pulse/` | Корневые Rules / Guidelines override snapshot |
+| Агент вызывает сырой `git commit` | В контекст попадает лог `next build`; флагами можно обойти hook | `cu-commit.mjs`; allowlist только на скрипт |
 
 ## Related documents
 
@@ -198,6 +229,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 | [`ai_first_project_methodology.md`](./ai_first_project_methodology.md) | Цикл КОНТЕКСТ → TIER/DoR → … → COMMIT |
 | [`agent-code-review-subagent.mdc`](../../.cursor/rules/agent-code-review-subagent.mdc) | Review-гейт CU, sensitive zones |
 | [`agent-commit-pipeline.mdc`](../../.cursor/rules/agent-commit-pipeline.mdc) | Auto-commit на границе CU |
+| [`scripts/run-phase.mjs`](../../scripts/run-phase.mjs) | Драйвер фазы: один свежий сеанс на CU |
 | [`ai_code_review_protocol.md`](../guidelines/ai_code_review_protocol.md) | HOW трёх проходов и prompt `reviewer` |
 | [Subagents](https://cursor.com/docs/agent/subagents) | Формат `.cursor/agents/*.md` |
 

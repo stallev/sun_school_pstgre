@@ -21,13 +21,6 @@ type LinkedIdentityRowProps = {
   dictionaries: { auth: Dictionary; common: Dictionary };
 };
 
-const formatTelegramDetail = (username: string | null, phone: string | null): string => {
-  const parts: string[] = [];
-  if (username) parts.push(`@${username}`);
-  if (phone) parts.push(phone);
-  return parts.join(" · ");
-};
-
 export const LinkedIdentityRow = ({ identity, dictionaries }: LinkedIdentityRowProps) => {
   const messages = useAuthMessages();
   const [linkPending, startLink] = useTransition();
@@ -39,9 +32,7 @@ export const LinkedIdentityRow = ({ identity, dictionaries }: LinkedIdentityRowP
       : messages.profile.credentialsTitle;
 
   const detail =
-    identity.provider === LOGIN_PROVIDER.TELEGRAM
-      ? formatTelegramDetail(identity.username, identity.phone)
-      : identity.email ?? "";
+    identity.provider === LOGIN_PROVIDER.TELEGRAM ? "" : identity.email ?? "";
 
   const handleConnectTelegram = () => {
     startLink(async () => {

@@ -64,7 +64,7 @@ alwaysApply: false
 
 - `authorize()` lives in `auth.ts` (Node, DB); `auth.config.ts` stays edge-safe. Hash = **scrypt** (`node:crypto`), compare with `timingSafeEqual`; 5 failures → 15-minute lock (`failed_attempts`, `locked_until`); same answer for a wrong email and a wrong password.
 - The first admin is created by `db:seed:admin` (`FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` — dev: `.local/dev-secrets.json`, prod: operator env, never Vercel runtime). The app never reads these variables.
-- Never log, audit, return or send to Sentry a password, a hash, a phone or a Telegram username (INV-23). `login_identity.phone` / `username` come from Telegram (`phone`, `preferred_username`; both optional, an empty value does not erase a stored one) and are visible only to admin and the owner.
+- Never log, audit, return or send to Sentry a password, a hash, a phone or a Telegram username (INV-23). Telegram OIDC scope is `openid` only — the app stores `provider_account_id` (`sub`), not Telegram profile or phone fields (ADR-003 v1.2).
 
 ## Errors
 

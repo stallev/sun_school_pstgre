@@ -80,7 +80,7 @@
 | `DATABASE_URL` | pooled, приложение | Neon dev | ✔ | core |
 | `DIRECT_URL` | direct, CLI и seed | Neon dev | ✔ | core |
 | `AUTH_SECRET` | подпись JWT/cookie | `openssl rand -base64 32` | ✔ | auth |
-| `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | Telegram OIDC (scope `openid profile phone`) | BotFather Web Login | ✔ | auth |
+| `AUTH_TELEGRAM_ID`, `AUTH_TELEGRAM_SECRET` | Telegram OIDC (scope `openid`) | BotFather Web Login | ✔ | auth |
 | `AUTH_TRUST_HOST` / `AUTH_URL` | origin за прокси/туннелем | значение туннеля | при туннеле | auth |
 | `FIRST_ADMIN_EMAIL`, `ADMIN_PASSWORD` | первый admin — **только для `db:seed:admin`**, приложение не читает | `.local/dev-secrets.json` (git-ignored) | ✔ | auth |
 | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN` | Sentry (клиент предпочитает `NEXT_PUBLIC_*`) | проект Sentry (dev) | нет | sentry |

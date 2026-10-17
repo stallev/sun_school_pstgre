@@ -142,7 +142,7 @@
 
 ### 8.2 Вход в dev
 
-Вымышленные пользователи не имеют `login_identity`, которое проходит реальный OAuth. Для работы в dev используется переключатель роли «смотреть как» ([ОК-5](../../my_specs/sunday_school_data_analytics_spec.md), `responsive_navigation_contract` §8): он включён только при `APP_ENV=dev` и отсутствует в сборке prod. Реальный вход в dev: Telegram создаёт обычного `REGISTRATION` пользователя (с `username` и `phone`, если переданы); администратор из `db:seed:admin` входит по email и паролю.
+Вымышленные пользователи не имеют `login_identity`, которое проходит реальный OAuth. Для работы в dev используется переключатель роли «смотреть как» ([ОК-5](../../my_specs/sunday_school_data_analytics_spec.md), `responsive_navigation_contract` §8): он включён только при `APP_ENV=dev` и отсутствует в сборке prod. Реальный вход в dev: Telegram создаёт обычного `REGISTRATION` пользователя (только `provider_account_id`); администратор из `db:seed:admin` входит по email и паролю.
 
 ## 9. Paths (H / N / S)
 

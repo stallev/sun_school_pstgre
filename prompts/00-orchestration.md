@@ -33,7 +33,7 @@
 | **P4** | [`P4-rules-guidelines.md`](P4-rules-guidelines.md) | После W1 | T1 rules активны, guidelines проверены |
 | **P5** | [`P5-nextjs-scaffold.md`](P5-nextjs-scaffold.md) | После W8+ contracts | Monorepo + Next.js 16.4 |
 | **P6** | [`P6-design-system-lab.md`](P6-design-system-lab.md) | После P5 + UX-03 | `/design-system` + T2 rules |
-| **P7+** | Phase tasks | После P6 | `P01_tasks.md` … по фазам ([`phase_tasks.template.md`](../docs/meta/phase_tasks.template.md)); перед каждой фазой — **Phase DoR audit** (`architect` spec-gap, один вызов на фазу) |
+| **Фаза** | [`phase-implementation.md`](phase-implementation.md) | Старт фазы P01… | Одна фраза на всю фазу: `run-phase.mjs --harness claude` |
 
 ---
 

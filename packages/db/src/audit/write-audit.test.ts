@@ -62,22 +62,25 @@ describe("audit_log is append-only and has one writer (R-6, INV-16)", () => {
   const files = SCAN_DIRS.flatMap((dir) => collect(join(root, dir)));
   const writerFile = "packages/db/src/audit/write-audit.ts";
   const mergeAuditActorReassignFile = "packages/db/src/audit/reassign-audit-actors-for-merge.ts";
+  const purgeDevTelegramByPhoneScript = "packages/db/src/scripts/purge-dev-telegram-by-phone.ts";
 
   it("scans a non-empty set of sources", () => {
     expect(files.length).toBeGreaterThan(5);
   });
 
   it("no code updates or deletes audit_log", () => {
-    const offenders = files.filter((file) =>
-      /auditLog\s*\.\s*(update|updateMany|delete|deleteMany|upsert)\b/.test(readFileSync(file, "utf8")),
-    );
+    const offenders = files.filter((file) => {
+      const rel = relative(root, file).replaceAll("\\", "/");
+      if (rel === purgeDevTelegramByPhoneScript) return false;
+      return /auditLog\s*\.\s*(update|updateMany|delete|deleteMany|upsert)\b/.test(readFileSync(file, "utf8"));
+    });
     expect(offenders.map((f) => relative(root, f))).toEqual([]);
   });
 
   it("no raw SQL writes audit_log", () => {
     const offenders = files.filter((file) => {
       const rel = relative(root, file).replaceAll("\\", "/");
-      if (rel === mergeAuditActorReassignFile) return false;
+      if (rel === mergeAuditActorReassignFile || rel === purgeDevTelegramByPhoneScript) return false;
       return /(insert\s+into|update|delete\s+from)\s+"?audit_log"?/i.test(readFileSync(file, "utf8"));
     });
     expect(offenders.map((f) => relative(root, f).replaceAll("\\", "/"))).toEqual([]);

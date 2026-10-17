@@ -55,7 +55,7 @@ Browser
 | Провайдер | Заметки |
 |-----------|---------|
 | Credentials | Только администратор: `authorize()` в `auth.ts` (БД, scrypt + `timingSafeEqual`, блокировка 5 неудач / 15 минут); пользователя создаёт команда `db:seed:admin`; пароль не логировать ([`auth_runtime_spec.md`](../../prds/05_runtime/auth_runtime_spec.md) §4.4) |
-| Telegram | Custom `oidc`: `issuer: https://oauth.telegram.org`, `idToken: true`, `checks: ["pkce","state"]`, `profile().email = null`, `username` ← `preferred_username`, `phone` ← `phone_number` (необязательны), `allowDangerousEmailAccountLinking: false` |
+| Telegram | Custom `oidc`: `issuer: https://oauth.telegram.org`, `idToken: true`, scope `openid`, `checks: ["pkce","state"]`, `profile()` → `id` = `sub`, `email: null`, `allowDangerousEmailAccountLinking: false` |
 
 Обходы Telegram (укорочение `state`, синтетический `userinfo_endpoint`, `customFetch` из `next-auth`) — TG-1…TG-5 в `auth_runtime_spec` §6. Вход и привязка Telegram — **только клиентский** `signIn("telegram")`.
 

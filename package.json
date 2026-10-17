@@ -28,6 +28,9 @@
     "encoding:check": "node scripts/check-text-encoding.mjs",
     "docs:links": "node scripts/check-doc-links.mjs",
     "psi:lab": "node scripts/psi-lab/run-pagespeed.mjs",
+    "cu:verify": "node scripts/cu-verify.mjs",
+    "cu:commit": "node scripts/cu-commit.mjs",
+    "phase:run": "node scripts/run-phase.mjs",
     "prepare": "node -e \"try{require('fs').accessSync('.git');require('child_process').execSync('husky',{stdio:'inherit'})}catch(e){}\""
   },
   "devDependencies": {

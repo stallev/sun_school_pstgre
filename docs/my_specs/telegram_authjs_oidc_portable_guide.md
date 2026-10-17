@@ -136,7 +136,7 @@ export default {
 |------|----------|--------|
 | `type` | `"oidc"` | Discovery, ID token, JWKS |
 | `issuer` | `https://oauth.telegram.org` | Auth.js сам читает `/.well-known/openid-configuration` |
-| `authorization.params.scope` | `openid profile` | Без `phone` и без bot-scope, пока продукт их не требует. **Sunday School:** `openid profile phone` (телефон и `preferred_username` сохраняются в `login_identity`; без bot-scope) — [`auth_runtime_spec.md`](../prds/05_runtime/auth_runtime_spec.md) §4.1 |
+| `authorization.params.scope` | `openid profile` | Без `phone` и без bot-scope, пока продукт их не требует. **Sunday School:** `openid` only (`sub` → `provider_account_id`; без bot-scope) — [`auth_runtime_spec.md`](../prds/05_runtime/auth_runtime_spec.md) §4.1, ADR-003 v1.2 |
 | `idToken` | `true` | Claims из ID token |
 | `checks` | `["pkce", "state"]` | CSRF и PKCE |
 | `allowDangerousEmailAccountLinking` | `false` | У Telegram обычно нет email; автослияние по email опасно |

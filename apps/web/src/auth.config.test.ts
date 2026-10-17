@@ -11,30 +11,30 @@ type TelegramProvider = {
   checks: string[];
   allowDangerousEmailAccountLinking: boolean;
   authorization: { params: { scope: string } };
-  profile: (claims: Record<string, unknown>) => { email: null; username: string | null; phone: string | null };
+  profile: (claims: Record<string, unknown>) => { id: string; email: null };
 };
 
 const providers = authConfig.providers as unknown as TelegramProvider[];
 
-describe("auth.config (edge-safe, ADR-003 v1.1)", () => {
+describe("auth.config (edge-safe, ADR-003 v1.2)", () => {
   it("has the Telegram provider only: no Google, no Credentials (that one lives in auth.ts)", () => {
     expect(providers.map((p) => p.id)).toEqual(["telegram"]);
   });
 
-  it("configures Telegram as OIDC with PKCE + state and the phone scope", () => {
+  it("configures Telegram as OIDC with PKCE + state and openid scope only", () => {
     const [telegram] = providers;
     expect(telegram?.type).toBe("oidc");
     expect(telegram?.issuer).toBe(TELEGRAM_OIDC_ISSUER);
     expect(telegram?.idToken).toBe(true);
     expect(telegram?.checks).toEqual(["pkce", "state"]);
     expect(telegram?.allowDangerousEmailAccountLinking).toBe(false);
-    expect(telegram?.authorization.params.scope).toBe("openid profile phone");
-    expect(TELEGRAM_OIDC_SCOPE).toBe("openid profile phone");
+    expect(telegram?.authorization.params.scope).toBe("openid");
+    expect(TELEGRAM_OIDC_SCOPE).toBe("openid");
   });
 
-  it("maps the profile with username and phone, never an email", () => {
+  it("maps the profile to Telegram id only, never an email", () => {
     const user = providers[0]?.profile({ sub: "9", preferred_username: "pkim", phone_number: "+79001112233" });
-    expect(user).toMatchObject({ email: null, username: "pkim", phone: "+79001112233" });
+    expect(user).toEqual({ id: "9", email: null });
   });
 
   it("uses a JWT session without an adapter", () => {

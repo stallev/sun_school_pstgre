@@ -38,8 +38,9 @@
   - T3 (в т.ч. любая задача с Paths S) — всегда отдельный CU.
   - Ориентир ≤ ~400 hand-written строк на CU; больше — делить при планировании.
   - Заголовок CU = commit subject: `type(scope): subject` (agent-commit-pipeline).
-  - Review: по профилю D6 (agent-code-review-subagent § Depth): `standard` / `strict` — `reviewer` при runtime-коде; `diff-only` — только docs / .mdc / tests / tooling.
-  - Commit: auto — в том же ходе, где отмечена последняя задача CU, агент проходит pipeline (ВЕРИФИКАЦИЯ → review → commit) и коммитит без отдельного вопроса после зелёной ВЕРИФИКАЦИИ и review без blockers.
+  - Review: по профилю D6 (agent-code-review-subagent § Depth): `standard` / `strict` — `reviewer` при runtime-коде; `lean` — `reviewer` только для T3 / `Paths: S` / sensitive zone; `diff-only` — docs / .mdc / tests / tooling и остальной runtime на `lean`.
+  - Smoke: `none` | `deferred` | `blocking` (по умолчанию `none`). `blocking` у закрытого CU останавливает `scripts/run-phase.mjs` до следующего CU. `deferred` копится к концу фазы.
+  - Commit: auto — в том же ходе, где отмечена последняя задача CU, агент проходит pipeline (`cu-verify` → `cu-commit stage` → review → `cu-commit commit`) и коммитит без отдельного вопроса после зелёной проверки и review без blockers.
 Формат задачи:
   - [ ] P{N}-T{k} · T0|T1|T2|T3 · Spec: [file §N.M](…) · Contract: [file §N.M](…) · ADR/PRD: [ID](…)
         Files: <пути / globs> · Acceptance: <проверка → ожидаемый исход>
