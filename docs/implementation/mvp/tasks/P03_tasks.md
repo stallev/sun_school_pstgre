@@ -81,11 +81,11 @@
 
 ### P03-CU6 — feat(web): add lesson form with verse picker · Review: diff-only · Commit: auto
 
-- [ ] P03-T9 · T1 · Phase: [Экранные требования](../phases_tasks_descriptions/P03_phase_description.md) · UX: [forms §5–§7](../../../design/forms_and_validation_ux.md) · Prototype: `lessonForm`
+- [x] P03-T9 · T1 · Phase: [Экранные требования](../phases_tasks_descriptions/P03_phase_description.md) · UX: [forms §5–§7](../../../design/forms_and_validation_ux.md) · Prototype: `lessonForm`
       Files: `app/(app)/lessons/new/page.tsx`, `lessons/[lessonId]/edit/page.tsx`, `components/teacher/{LessonForm,VersePicker,VerseRefList}.tsx`
       Acceptance: поля и ограничения по таблице; текст выбранных стихов в переводе группы; список недостающих; сохранение блокируется при `missing`; ошибки у полей, фокус на первом → ручной smoke H/N
       Paths: H [форма] · N [§8 контракта; D10] · S [AZ-30; текст стиха — из БД, содержание санитизируется]
-- [ ] P03-T10 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
+- [x] P03-T10 · T0 · Files: `lib/messages/{ru,en}/teacher.json`
       Acceptance: ключи форм и экранов уроков на двух языках
       Paths: n/a — copy
 

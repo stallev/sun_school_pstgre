@@ -8,6 +8,7 @@ import { deleteLesson } from "@/data/lessons/delete-lesson";
 import { updateLesson } from "@/data/lessons/update-lesson";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { sanitizeLessonBody } from "@/lib/lesson/sanitize-lesson-body";
 
 const revalidateLessonSurfaces = (lessonId?: string) => {
   revalidatePath("/lessons");
@@ -37,7 +38,7 @@ export async function createLessonAction(
     lessonDate: String(formData.get("lessonDate") ?? ""),
     kind: String(formData.get("kind") ?? ""),
     leadTeacherId: String(formData.get("leadTeacherId") ?? ""),
-    body: String(formData.get("body") ?? "").trim() || undefined,
+    body: sanitizeLessonBody(String(formData.get("body") ?? "")),
     hasTest: formData.get("hasTest") === "on" || formData.get("hasTest") === "true",
     verses,
   });
@@ -64,7 +65,7 @@ export async function updateLessonAction(
     lessonDate: String(formData.get("lessonDate") ?? ""),
     kind: String(formData.get("kind") ?? ""),
     leadTeacherId: String(formData.get("leadTeacherId") ?? ""),
-    body: String(formData.get("body") ?? "").trim() || undefined,
+    body: sanitizeLessonBody(String(formData.get("body") ?? "")),
     hasTest: formData.get("hasTest") === "on" || formData.get("hasTest") === "true",
     verses,
   });

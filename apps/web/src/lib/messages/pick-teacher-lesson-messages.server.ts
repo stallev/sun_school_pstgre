@@ -1,0 +1,72 @@
+import "server-only";
+
+import type { AppLocale } from "@sunschool/domain";
+import type { Dictionary } from "@/lib/messages/get-dictionary";
+import { getMessage } from "@/lib/messages/get-dictionary";
+import type { TeacherLessonFormMessages } from "@/lib/messages/teacher-lesson-messages";
+
+const fill = (template: string, values: Record<string, string | number>): string =>
+  Object.entries(values).reduce(
+    (text, [key, value]) => text.replace(`{${key}}`, String(value)),
+    template,
+  );
+
+export const pickTeacherLessonFormMessages = (
+  teacher: Dictionary,
+  locale: AppLocale,
+): TeacherLessonFormMessages => ({
+  newTitle: getMessage(teacher, "lesson.form.new_title"),
+  editTitle: (ordinal) => fill(getMessage(teacher, "lesson.form.edit_title"), { n: ordinal }),
+  pageSubtitle: (groupName, yearName) =>
+    fill(getMessage(teacher, "lesson.form.page_subtitle"), { group: groupName, year: yearName }),
+  backToLessons: getMessage(teacher, "lesson.form.back_lessons"),
+  backToLesson: getMessage(teacher, "lesson.form.back_lesson"),
+  gradeLabel: getMessage(teacher, "lesson.form.grade_label"),
+  gradePlaceholder: getMessage(teacher, "lesson.form.grade_placeholder"),
+  dateLabel: getMessage(teacher, "lesson.form.date_label"),
+  ordinalLabel: getMessage(teacher, "lesson.form.ordinal_label"),
+  kindLabel: getMessage(teacher, "lesson.form.kind_label"),
+  kindRegular: getMessage(teacher, "lesson.form.kind_regular"),
+  kindReview: getMessage(teacher, "lesson.form.kind_review"),
+  kindRegularHint: getMessage(teacher, "lesson.form.kind_regular_hint"),
+  kindReviewHint: getMessage(teacher, "lesson.form.kind_review_hint"),
+  kindLockedHint: getMessage(teacher, "lesson.form.kind_locked_hint"),
+  titleLabel: getMessage(teacher, "lesson.form.title_label"),
+  titlePlaceholder: getMessage(teacher, "lesson.form.title_placeholder"),
+  leadLabel: getMessage(teacher, "lesson.form.lead_label"),
+  leadPlaceholder: getMessage(teacher, "lesson.form.lead_placeholder"),
+  leadHint: getMessage(teacher, "lesson.form.lead_hint"),
+  leadYouSuffix: getMessage(teacher, "lesson.form.lead_you_suffix"),
+  bodyLabel: getMessage(teacher, "lesson.form.body_label"),
+  bodyOptional: getMessage(teacher, "lesson.form.body_optional"),
+  bodyPlaceholder: getMessage(teacher, "lesson.form.body_placeholder"),
+  hasTestLabel: getMessage(teacher, "lesson.form.has_test_label"),
+  versesTitle: getMessage(teacher, "lesson.form.verses_title"),
+  versesHint: (max, translationName) =>
+    fill(getMessage(teacher, "lesson.form.verses_hint"), { max, translation: translationName }),
+  versesEmpty: getMessage(teacher, "lesson.form.verses_empty"),
+  versesRemove: (ref) => fill(getMessage(teacher, "lesson.form.verses_remove"), { ref }),
+  reviewPanelTitle: getMessage(teacher, "lesson.form.review_panel_title"),
+  reviewPanelBullets: [
+    getMessage(teacher, "lesson.form.review_bullet_1"),
+    getMessage(teacher, "lesson.form.review_bullet_2"),
+    getMessage(teacher, "lesson.form.review_bullet_3"),
+    getMessage(teacher, "lesson.form.review_bullet_4"),
+  ],
+  missingVersesTitle: getMessage(teacher, "lesson.form.missing_verses_title"),
+  missingVerseItem: (ref) => fill(getMessage(teacher, "lesson.form.missing_verse_item"), { ref }),
+  saveCreate: getMessage(teacher, "lesson.form.save_create"),
+  saveUpdate: getMessage(teacher, "lesson.form.save_update"),
+  cancel: getMessage(teacher, "lesson.form.cancel"),
+  saving: getMessage(teacher, "lesson.form.saving"),
+  toastCreated: getMessage(teacher, "lesson.toast_created"),
+  toastUpdated: getMessage(teacher, "lesson.toast_updated"),
+  pickerBook: getMessage(teacher, "lesson.form.picker_book"),
+  pickerChapter: getMessage(teacher, "lesson.form.picker_chapter"),
+  pickerFrom: getMessage(teacher, "lesson.form.picker_from"),
+  pickerTo: getMessage(teacher, "lesson.form.picker_to"),
+  pickerAdd: getMessage(teacher, "lesson.form.picker_add"),
+  pickerHint: getMessage(teacher, "lesson.form.picker_hint"),
+  pickerAtLimit: getMessage(teacher, "lesson.form.picker_at_limit"),
+  locale,
+});
