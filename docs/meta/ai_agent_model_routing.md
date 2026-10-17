@@ -167,7 +167,7 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 
 ## Phase driver
 
-Прогон фазы — свежий сеанс на каждый CU, чтобы контекст не копился. Состояние живёт в чекбоксах `P{N}_tasks.md` и в git. Скрипты: [`scripts/cu-verify.mjs`](../../scripts/cu-verify.mjs), [`scripts/cu-commit.mjs`](../../scripts/cu-commit.mjs), [`scripts/run-phase.mjs`](../../scripts/run-phase.mjs). Полный лог пишется в `.local/phase-runs/`; в чат попадает хвост около 40 строк.
+Прогон фазы — в выбранной среде (**Cursor AI** или **Claude Code**); стартовая фраза обязана назвать среду — [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md). Состояние — в чекбоксах `P{N}_tasks.md` и в git. Скрипты: [`scripts/cu-verify.mjs`](../../scripts/cu-verify.mjs), [`scripts/cu-commit.mjs`](../../scripts/cu-commit.mjs), [`scripts/run-phase.mjs`](../../scripts/run-phase.mjs). Логи в `.local/phase-runs/`; в чат — хвост ~40 строк. Канон: [`agent-phase-orchestration.md`](../guidelines/agent-phase-orchestration.md).
 
 **DoR.** Профиль `lean` (D3): сеанс проверяет DoR сам. `architect` вызывается, только если DoR провален или сработала эскалация. Обязательного Phase DoR audit через `architect` на `lean` нет.
 
@@ -181,15 +181,24 @@ Lint не заменяет `reviewer`. `reviewer` не заменяет `npm run
 6. `node scripts/cu-commit.mjs commit --paths-file <файл> --subject "<type(scope): subject>"`. Имя ветки подставляет скрипт. Индекс должен совпасть со списком. `--amend`, `--no-verify` и `push` скрипт не принимает. `next build` выполняет pre-commit hook.
 7. Отметка CU входит в тот же индекс. Хеш после коммита в файл задач не дописывается.
 
-**Драйвер.** `node scripts/run-phase.mjs P01`. Следующий CU — первый, у которого не все чекбоксы задач стоят `- [x]`. Пометка `✔` в заголовке сама по себе CU не закрывает. Грязные пути вне `Files:` этого CU и файла задач — отказ стартовать. Пути внутри этого списка — продолжение того же CU.
+**Драйвер.** `node scripts/run-phase.mjs P01 [--environment cursor|claude-code]`. Следующий CU — первый, у которого не все чекбоксы `- [x]`. Грязные пути вне `Files:` этого CU и файла задач — отказ стартовать.
 
-`Smoke: blocking` у уже закрытого CU останавливает драйвер до следующего (код выхода 2). `Smoke: deferred` копится в `.local/phase-runs/P{N}-smoke.md`. `--harness print` (по умолчанию) печатает промпт сеанса и не запускает модель. `--harness claude` вызывает `claude -p --model sonnet --max-turns 40 --output-format json` (`--model` и `--max-turns` у драйвера меняют значения) и останавливает фазу, если сеанс вернул ненулевой код, JSON-результат с ошибкой (`error_max_turns` и т. п.) или не отметил CU. JSON сеанса сохраняется в `.local/phase-runs/<CU>-session-<время>.json`, в вывод драйвера идёт строка с turns, стоимостью и токенами.
+`Smoke: blocking` → код `2`; `Smoke: deferred` → `.local/phase-runs/P{N}-smoke.md`.
+
+| Среда | Флаг | Поведение |
+|-------|------|-----------|
+| **Cursor AI** (default) | `--environment cursor` | Один CU за вызов; промпт на stdout; цикл в чате Cursor |
+| **Claude Code** | `--environment claude-code` | Драйвер крутит `claude -p` до конца фазы; JSON сеансов в `.local/phase-runs/<CU>-session-*.json` |
+
+Не смешивать: в Cursor Agent не запускать `claude-code` harness «вместо» работы в чате; в Claude Code не дублировать CU вручную, пока крутится драйвер.
 
 Драйвер заранее вписывает в paths-file все существующие конкретные пути из `Files:`. `cu-commit.mjs` в `stage` и `commit` пропускает пути без изменений по `git status --porcelain` (печатает `unchanged: …`), поэтому нетронутый файл из `Files:` не ломает проверку индекса.
 
-**Запуск.** Драйвер запускают из терминала или фоновой задачей агента с выводом в `.local/phase-runs/driver.log`, не foreground-командой в чате: Bash-инструмент агента обрывает команду примерно через 10 минут, а вывод сеансов раздувает контекст. Фраза — [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md).
+**Запуск.** Фраза из [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md) с явной строкой **Среда: Cursor AI** или **Среда: Claude Code**.
 
-**Allowlist.** [`.claude/settings.json`](../../.claude/settings.json): разрешены `node scripts/cu-verify.mjs`, `node scripts/cu-commit.mjs`, нужные `npm run`, чтение git (`status`, `diff`, `log`, `show`, `rev-parse`), Read / Edit / Write / Grep / Glob. Запрещены `git push`, сырые `git add` и `git commit`, `reset --hard`, `rebase`, смена ветки, `stash`, `clean` и доступ к `.env*` и `.local/dev-secrets.json`. Разрешение на `git commit` с любыми флагами пропускает `--amend` и `--no-verify`, поэтому его нет. Сеанс запускает команды через Bash tool: правила заданы для него.
+**Cursor AI.** Новый чат Agent; на каждый CU — `node scripts/run-phase.mjs P{N} --environment cursor`. Shell для `cu-*`; без сырого `git add` / `commit` / `push`.
+
+**Claude Code.** `node scripts/run-phase.mjs P{N} --environment claude-code` из терминала или фоновой задачи с логом; allowlist [`.claude/settings.json`](../../.claude/settings.json).
 
 **Остановки.** Blocking Open question. Проверка упала дважды: один повтор с текстом ошибки, затем одна правка спеки через `architect`. Reviewer-blocker остался после review дельты. Хук коммита упал повторно. `Smoke: blocking`. Сеанс не уложился в `--max-turns`.
 

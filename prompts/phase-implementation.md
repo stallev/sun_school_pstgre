@@ -1,48 +1,90 @@
 # Запуск имплементации фазы
 
-**Куда вставлять:** один раз на фазу.  
-**Что подставить:** номер фазы вместо `PNN` (`P02`, `P03`, …).  
-**Протокол:** [`docs/meta/ai_agent_model_routing.md`](../docs/meta/ai_agent_model_routing.md) § Phase driver.
-
-Драйвер сам открывает свежий сеанс `claude -p` (модель `sonnet`, флаг `--model` меняет её) на каждый ещё не закрытый CU и не спрашивает подтверждения между ними. Фаза идёт часами, поэтому драйвер **не** запускают как обычную команду агента: инструмент Bash у агента обрывает foreground-команду примерно через 10 минут, а вывод каждого сеанса раздувает контекст чата.
-
-Разрешения сеансов задаёт [`.claude/settings.json`](../.claude/settings.json). Без него headless-сеанс не может ответить на запрос разрешения и падает на первой команде.
+**Куда вставлять:** один раз на фазу в **новый** сеанс агента.  
+**Что подставить:** `PNN` (`P02`, …) и **среду** — `Cursor AI` или `Claude Code` (см. ниже).  
+**Протокол:** [`docs/meta/ai_agent_model_routing.md`](../docs/meta/ai_agent_model_routing.md) § Phase driver · [`docs/guidelines/agent-phase-orchestration.md`](../docs/guidelines/agent-phase-orchestration.md).
 
 ---
 
-## Способ 1. Терминал (основной)
+## Выбор среды (обязательно в стартовой фразе)
 
-```bash
-node scripts/run-phase.mjs PNN --harness claude
-```
+| | **Cursor AI** | **Claude Code** |
+|---|----------------|-----------------|
+| Где | Новый чат **Cursor Agent** | Терминал + CLI `claude`, или чат Cursor только для **запуска** драйвера в фоне |
+| Драйвер | `node scripts/run-phase.mjs PNN` (default: `--environment cursor`) — **на каждый CU** | `node scripts/run-phase.mjs PNN --environment claude-code` — **цикл** до конца фазы или ошибки |
+| Harness | `cursor` (промпт на stdout, агент в чате выполняет CU) | `claude` (`claude -p` headless, JSON в `.local/phase-runs/*-session-*.json`) |
+| Разрешения | User rules + `agent-commit-pipeline`; Shell для `cu-*` | [`.claude/settings.json`](../.claude/settings.json) allowlist |
+| Не смешивать | Не запускать `--environment claude-code` внутри Cursor Agent как способ «сделать фазу в чате» | Не ждать, что Cursor сам крутит CU без драйвера |
 
-По окончании: `echo $?` (PowerShell: `$LASTEXITCODE`). Коды выхода — ниже.
+Эквиваленты: `--environment cursor` ≡ `--harness cursor` (default); `--environment claude-code` ≡ `--harness claude`. Одновременно противоречащие пары флаг даёт ошибку `environment-harness`.
 
-## Способ 2. Из чата агента (фоновая задача)
+---
 
-Новый чат, режим Agent. Фраза:
+## Фраза: Cursor AI
 
 ```text
-Запусти имплементацию фазы PNN целиком.
+Среда: Cursor AI. Запусти имплементацию фазы PNN целиком в этом чате.
 
-Запусти драйвер как фоновую задачу (run_in_background), вывод только в файл:
-node scripts/run-phase.mjs PNN --harness claude > .local/phase-runs/driver.log 2>&1
-Не запускай его как foreground-команду и не читай лог, пока задача не закончилась.
+На каждый CU:
+1) node scripts/run-phase.mjs PNN --environment cursor
+2) выполни промпт из stdout (verify → stage → review → commit через scripts/cu-commit.mjs)
+3) снова шаг 1, пока драйвер не сообщит о завершении фазы или не вернёт код 2
 
 Задачи фазы: docs/implementation/mvp/tasks/PNN_tasks.md.
 Протокол: docs/meta/ai_agent_model_routing.md § Phase driver.
 
-Коммиты по Commit: auto для всех CU этой фазы разрешены заранее. Между CU не спрашивай подтверждения. Push не делай. Сырой git add и git commit не вызывай: их вызывает только scripts/cu-commit.mjs внутри сеанса CU. Пока драйвер работает, работу CU в этом чате не дублируй.
+Коммиты по Commit: auto для всех CU этой фазы разрешены заранее. Между CU не спрашивай подтверждения. Push не делай. Сырой git add и git commit не вызывай.
+
+Коды выхода драйвера:
+- 0 и «фаза завершена» — пройти smoke из .local/phase-runs/PNN-smoke.md
+- 2 — Smoke: blocking у закрытого CU; остановись и доложи
+- 1 — грязное дерево вне Files CU, CU не отмечен, проверка/хук/reviewer после повтора
+
+Не используй --environment claude-code в этом чате.
+```
+
+---
+
+## Фраза: Claude Code
+
+```text
+Среда: Claude Code. Запусти имплементацию фазы PNN целиком через headless harness.
+
+Запусти драйвер как фоновую задачу (run_in_background), вывод только в файл:
+node scripts/run-phase.mjs PNN --environment claude-code > .local/phase-runs/driver.log 2>&1
+Не запускай его как foreground-команду в чате и не читай лог, пока задача не закончилась.
+
+Задачи фазы: docs/implementation/mvp/tasks/PNN_tasks.md.
+Протокол: docs/meta/ai_agent_model_routing.md § Phase driver.
+
+Коммиты по Commit: auto для всех CU этой фазы разрешены заранее. Между CU не спрашивай подтверждения. Push не делай. Сырой git add и git commit не вызывает чат — только scripts/cu-commit.mjs внутри сеанса claude. Пока драйвер работает, работу CU в этом чате не дублируй.
 
 Когда задача закончится, прочитай последние 40 строк .local/phase-runs/driver.log и доложи код выхода, какие CU закоммичены, путь к .local/phase-runs/PNN-smoke.md и файлы .local/phase-runs/*-session-*.json с расходом токенов.
 
 Ненулевой код означает остановку фазы. Не перезапускай команду сам. Доложи причину и остановись.
 ```
 
+Перед первым запуском: `claude` в PATH, [`.claude/settings.json`](../.claude/settings.json) с allowlist (см. agent-phase-orchestration §8).
+
+---
+
+## Терминал (один CU, любая среда)
+
+```bash
+# Cursor: промпт одного CU
+node scripts/run-phase.mjs PNN --environment cursor
+
+# Claude Code: то же для отладки без цикла (не headless-агент)
+node scripts/run-phase.mjs PNN --environment cursor   # промпт вручную в claude -p
+
+# Полный цикл Claude Code
+node scripts/run-phase.mjs PNN --environment claude-code
+```
+
+`--harness print` — алиас dry-run для `cursor` (тот же промпт).
+
 ## Коды выхода
 
-- `0` — фаза завершена; пройти smoke из `.local/phase-runs/PNN-smoke.md`, решить push / PR.
-- `2` — у закрытого CU стоит `Smoke: blocking`, следующий CU не начат.
-- `1` — грязное дерево вне Files текущего CU, CU не отмечен в файле задач, `claude` не найден в PATH, сеанс вернул ошибку (проверка упала второй раз, хук коммита упал повторно, reviewer-blocker остался после одного review дельты, исчерпан `--max-turns`).
-
-Итог каждого сеанса (subtype, turns, стоимость, токены) драйвер печатает одной строкой и сохраняет JSON в `.local/phase-runs/<CU>-session-<время>.json`.
+- `0` — фаза завершена **или** (режим `cursor`) выдан промпт следующего CU.
+- `2` — `Smoke: blocking` у закрытого CU.
+- `1` — грязное дерево вне Files CU; CU не отмечен; `claude` не найден (`claude-code`); ошибка сеанса; проверка/хук/reviewer после повтора; конфликт `--environment` и `--harness`.

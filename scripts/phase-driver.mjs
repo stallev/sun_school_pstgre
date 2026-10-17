@@ -238,18 +238,22 @@ export function renderSmokeList(phaseId, deferredUnits) {
   return `${lines.join("\n")}\n`;
 }
 
-export function renderSessionPrompt({ unit, tasksPath, pathsFile }) {
+export function renderSessionPrompt({ unit, tasksPath, pathsFile, harness = "cursor" }) {
   const verifyCommand = unit.review === "reviewer" ? "node scripts/cu-verify.mjs --full" : "node scripts/cu-verify.mjs";
   const reviewStep =
     unit.review === "reviewer"
       ? "Вызови субагента reviewer. В промпте только идентификатор CU и путь к задачам, и просьба прочитать git diff --staged. Ответ не длиннее 15 строк."
       : "Сделай diff-only сам и оставь одну строку Review:.";
+  const shellLine =
+    harness === "claude"
+      ? "Команды запускай через Bash tool Claude Code; allowlist в .claude/settings.json."
+      : "Команды запускай через Shell в Cursor Agent. Сырой git add / git commit / push не вызывай — только cu-commit.mjs и правила agent-commit-pipeline.";
   return [
     `Выполни ${unit.id} по ${tasksPath}.`,
     "Commit: auto уже разрешён. Между шагами не спрашивай подтверждения.",
     "Прочитай только строки этого CU и указанные §. DoR проверь сам. Провал DoR — один вызов architect, затем код.",
     `Отметь чекбоксы этого CU в ${tasksPath} до коммита. Хеш после коммита не дописывай.`,
-    "Команды запускай через Bash tool: allowlist в .claude/settings.json задан для Bash.",
+    shellLine,
     `Запиши в ${pathsFile} ровно те конкретные пути, которые войдут в индекс, включая файл задач. Без glob и без секретов.`,
     `Драйвер заранее вписал в ${pathsFile} все существующие пути из Files. Удали те, что ты не менял. cu-commit пропускает неизменённые пути и печатает их как unchanged.`,
     verifyCommand,
@@ -293,15 +297,32 @@ export function parseCuCommitArgs(argv) {
   return { ok: true, mode, pathsFile, subject };
 }
 
+const RUN_PHASE_HARNESSES = new Set(["cursor", "print", "claude"]);
+/** Human-facing agent environment → driver harness (see prompts/phase-implementation.md). */
+export const RUN_PHASE_ENVIRONMENTS = {
+  cursor: "cursor",
+  "claude-code": "claude",
+};
+
 export function parseRunPhaseArgs(argv) {
   let phase = null;
-  let harness = "print";
+  let harness = "cursor";
+  let harnessExplicit = false;
+  let environment = "cursor";
+  let environmentExplicit = false;
   let maxTurns = DEFAULT_MAX_TURNS;
   let model = DEFAULT_MODEL;
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--harness") {
       harness = argv[index + 1];
+      harnessExplicit = true;
+      index += 1;
+      continue;
+    }
+    if (arg === "--environment") {
+      environment = argv[index + 1];
+      environmentExplicit = true;
       index += 1;
       continue;
     }
@@ -321,9 +342,25 @@ export function parseRunPhaseArgs(argv) {
     phase = arg;
   }
   if (!/^P\d{2}$/.test(phase ?? "")) return { ok: false, reason: "phase" };
-  if (harness !== "print" && harness !== "claude") return { ok: false, reason: "harness" };
+  if (environmentExplicit && !Object.hasOwn(RUN_PHASE_ENVIRONMENTS, environment ?? "")) {
+    return { ok: false, reason: "environment" };
+  }
+  if (environmentExplicit) {
+    const mappedHarness = RUN_PHASE_ENVIRONMENTS[environment];
+    if (harnessExplicit && harness !== mappedHarness && harness !== "print") {
+      return { ok: false, reason: "environment-harness" };
+    }
+    if (!harnessExplicit || harness === "print") harness = mappedHarness;
+  } else if (!harnessExplicit) {
+    environment = "cursor";
+  } else if (harness === "claude") {
+    environment = "claude-code";
+  } else {
+    environment = "cursor";
+  }
+  if (!RUN_PHASE_HARNESSES.has(harness)) return { ok: false, reason: "harness" };
   if (!Number.isInteger(maxTurns) || maxTurns < 1) return { ok: false, reason: "max-turns" };
-  return { ok: true, phase, harness, maxTurns, model };
+  return { ok: true, phase, harness, environment, maxTurns, model };
 }
 
 /** Reads `claude -p --output-format json` stdout into one log line; null when it is not a result object. */

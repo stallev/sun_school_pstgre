@@ -3,8 +3,8 @@
 **Тип:** Agent Instruction / Cursor Rule Reference  
 **Аудитория:** Cursor AI Agents при проектировании и реализации UI  
 **Стек:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui (Radix UI)  
-**Версия:** 2.0  
-**Дата:** 2026-05-28
+**Версия:** 2.3  
+**Дата:** 2026-10-17
 
 ---
 
@@ -29,6 +29,21 @@ UI-специфичные уточнения к канону:
 - **HTML-прототип** — visual reference only, как в каноне (subordinate to routes and MVP scope).
 
 **Visual canon:** `sunday_school_prototype.html` + `sunday_school_prototype.html`.
+
+### Фазы MVP (P01…) — среда агента
+
+UI-экраны входят в **commit units** фазы (`docs/implementation/mvp/tasks/P{NN}_tasks.md`). Канон — [`docs/guidelines/agent-phase-orchestration.md`](../guidelines/agent-phase-orchestration.md). В стартовой фразе фазы **обязательно** указать среду: **Cursor AI** или **Claude Code** ([`prompts/phase-implementation.md`](../../prompts/phase-implementation.md)).
+
+| Правило | Cursor AI | Claude Code |
+|--------|-----------|---------------|
+| Драйвер | `run-phase.mjs P{NN} --environment cursor` на **каждый** CU в этом чате | `run-phase.mjs P{NN} --environment claude-code` — цикл в терминале / фоне |
+| Этот UI-guideline | Основная среда для экранов | Те же правила Design Lab / toast / pending в сеансе `claude -p` |
+| Коммит | `cu-verify` → `cu-commit` → review → commit; `Commit: auto` | То же в сеансе `claude -p` |
+| Каталог | Design Lab, atoms / `ui` / `patterns`; без `design-lab/**` в продукте | То же |
+| Toast / pending | `ui-toast-mutations`, `ui-mutation-pending`, `ui-optimistic-mutations` | То же |
+| Верификация UI | Context7 + чеклисты; браузер — только по запросу (`next-dev-loop`) | То же |
+
+Запуск фазы одной фразой: [`prompts/phase-implementation.md`](../../prompts/phase-implementation.md).
 
 ---
 
@@ -638,6 +653,7 @@ className="md:rounded-3xl md:p-6"
 | `docs/guidelines/security/ai_security_xss_csrf_guidelines.md` | XSS, CSRF, CSP |
 | `docs/reference/pulse_project_reference.md` | Pulse reference priority |
 | `docs/general/README.md` | General → Guidelines mapping |
+| `docs/guidelines/agent-phase-orchestration.md` | Phase driver, CU loop in Cursor Agent |
 | `docs/prototypes/sunday_school_prototype.html` | Slate Cobalt visual canon |
 
 ---
@@ -646,6 +662,8 @@ className="md:rounded-3xl md:p-6"
 
 | Date | Change |
 |---|---|
+| 2026-10-17 | v2.3 — Фазы MVP: развилка Cursor AI / Claude Code в стартовой фразе |
+| 2026-10-17 | v2.2 — Фазы MVP: Cursor harness, CU/commit pipeline, ссылка на agent-phase-orchestration |
 | 2026-06-04 | v2.1 — Precedence: Guidelines + Pulse reference priority; links to new security/data/rendering guidelines |
 | 2026-05-28 | v2.0 — добавлены: Precedence, Context7 table, Synthesis/sources, 8-step Design Thinking workflow (Catalog First, Prototype Anchor, Context7 Verify, States Matrix), Pulse Enforcement Matrix, Time Inputs rules (TM-MUST/SHOULD), Component Checklists Quick Reference, расширен Pre-Merge Checklist, Related Documents, Warm Forest как explicit default |
 | 2026-05-28 | v1.0 — initial; синтез FAANG UX/UI best practices + frontend-design skill + Next.js 16 / React 19 stack |

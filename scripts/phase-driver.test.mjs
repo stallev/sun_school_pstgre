@@ -162,14 +162,31 @@ describe("log tail", () => {
 });
 
 describe("run-phase args", () => {
-  it("defaults to print, 40 turns and the sonnet model", () => {
+  it("defaults to cursor environment, 40 turns and the sonnet model", () => {
     expect(parseRunPhaseArgs(["P01"])).toEqual({
       ok: true,
       phase: "P01",
-      harness: "print",
+      harness: "cursor",
+      environment: "cursor",
       maxTurns: 40,
       model: "sonnet",
     });
+  });
+
+  it("accepts print as an alias of cursor", () => {
+    expect(parseRunPhaseArgs(["P01", "--harness", "print"]).harness).toBe("print");
+  });
+
+  it("maps --environment to harness", () => {
+    expect(parseRunPhaseArgs(["P02", "--environment", "claude-code"]).harness).toBe("claude");
+    expect(parseRunPhaseArgs(["P02", "--environment", "claude-code"]).environment).toBe("claude-code");
+    expect(parseRunPhaseArgs(["P02", "--environment", "cursor"]).harness).toBe("cursor");
+  });
+
+  it("rejects conflicting --environment and --harness", () => {
+    expect(parseRunPhaseArgs(["P01", "--environment", "cursor", "--harness", "claude"]).reason).toBe(
+      "environment-harness",
+    );
   });
 
   it("takes an explicit model and rejects a missing one", () => {

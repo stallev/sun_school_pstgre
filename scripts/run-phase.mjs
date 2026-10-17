@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Starts the next open commit unit of a phase in a fresh session.
- * print — writes the prompt and stops. claude — runs `claude -p` until a stop.
+ * Phase driver: picks the next open CU, gates dirty tree, writes paths-file and session prompt.
+ * --environment cursor (default) / print — one CU per invocation; Cursor Agent loops in chat.
+ * --environment claude-code — headless loop via `claude -p` (Claude Code CLI).
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -85,12 +86,26 @@ function prepare(units) {
   );
   fs.writeFileSync(pathsFileAbsolute, `${existing.join("\n")}\n`);
   const pathsFile = path.relative(rootDir, pathsFileAbsolute).replace(/\\/g, "/");
-  const prompt = renderSessionPrompt({ unit: step.unit, tasksPath, pathsFile });
+  const promptHarness = parsed.harness === "print" ? "cursor" : parsed.harness;
+  const prompt = renderSessionPrompt({ unit: step.unit, tasksPath, pathsFile, harness: promptHarness });
   return { unit: step.unit, prompt, dirty };
 }
 
+function resolveClaudeExecutable() {
+  if (process.platform !== "win32") return "claude";
+  const which = spawnSync("where.exe", ["claude"], { cwd: rootDir, encoding: "utf8" });
+  if (which.status === 0) {
+    const line = (which.stdout ?? "")
+      .split(/\r?\n/)
+      .map((item) => item.trim())
+      .find(Boolean);
+    if (line) return line;
+  }
+  return "claude.cmd";
+}
+
 function runClaude(prompt) {
-  const command = process.platform === "win32" ? "claude.cmd" : "claude";
+  const command = resolveClaudeExecutable();
   const args = ["-p", "--model", parsed.model, "--max-turns", String(parsed.maxTurns), "--output-format", "json"];
   return spawnSync(command, args, {
     cwd: rootDir,
@@ -124,13 +139,21 @@ function logSession(unitId, stdout) {
   return summary;
 }
 
-if (parsed.harness === "print") {
-  const prepared = prepare(readUnits());
+function emitCursorStep(prepared) {
   if (prepared.dirty.continuable.length > 0) {
     console.error(`run-phase: продолжение ${prepared.unit.id}, в дереве уже есть файлы этого CU`);
   }
-  console.error(`run-phase: ${prepared.unit.id}`);
+  console.error(`run-phase: ${prepared.unit.id} · environment ${parsed.environment} · harness ${parsed.harness}`);
+  console.error(`paths: .local/phase-runs/${prepared.unit.id}.paths`);
+  console.error("prompt: ---");
   console.log(prepared.prompt);
+  console.error("prompt: ---");
+  console.error(`run-phase: после коммита снова: node scripts/run-phase.mjs ${parsed.phase}`);
+}
+
+if (parsed.harness === "cursor" || parsed.harness === "print") {
+  const prepared = prepare(readUnits());
+  emitCursorStep(prepared);
   process.exit(0);
 }
 
@@ -138,7 +161,9 @@ let guard = readUnits().length + 1;
 while (guard > 0) {
   guard -= 1;
   const before = prepare(readUnits());
-  console.error(`run-phase: сеанс ${before.unit.id}, model ${parsed.model}, max-turns ${parsed.maxTurns}`);
+  console.error(
+    `run-phase: сеанс ${before.unit.id}, environment ${parsed.environment}, harness claude, model ${parsed.model}, max-turns ${parsed.maxTurns}`,
+  );
   const session = runClaude(before.prompt);
   if (session.error) {
     console.error(`run-phase: не удалось запустить claude (${session.error.code ?? session.error.message})`);
