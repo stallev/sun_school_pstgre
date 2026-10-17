@@ -97,7 +97,7 @@
 
 ### P02-CU8 — feat(web): add people screen with consent and enrollment · Review: diff-only · Commit: auto
 
-- [ ] P02-T10 · T1 · Flow: [admin_flow §4.5](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Prototype: `people`, `pupil`
+- [x] P02-T10 · T1 · Flow: [admin_flow §4.5](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Prototype: `people`, `pupil`
       Files: `app/(app)/people/page.tsx`, `components/admin/{PupilRow,PupilCardForm,ConsentDialog,EnrollDialog,TransferDialog}.tsx`
       Acceptance: список (все / без группы / неактивные), карточка, бумажное согласие, зачисление/перевод/исключение; статус «нет согласия» виден admin → ручной smoke H/N
       Paths: H [admin_flow §4.5] · N [§6 контракта; UX-05 D11] · S [AZ-20…AZ-23; ФИО не в URL]
