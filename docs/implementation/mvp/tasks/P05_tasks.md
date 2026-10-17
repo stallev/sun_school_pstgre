@@ -64,11 +64,11 @@
 
 ### P05-CU4 — feat(domain): add analytics sample, averages, dynamics and rating rules · Review: diff-only · Commit: auto
 
-- [ ] P05-T5 · T2 · Spec: [спец. БП-1…БП-4](../../../my_specs/sunday_school_data_analytics_spec.md) · Invariants: INV-11, INV-12, INV-15
+- [x] P05-T5 · T2 · Spec: [спец. БП-1…БП-4](../../../my_specs/sunday_school_data_analytics_spec.md) · Invariants: INV-11, INV-12, INV-15
       Files: `packages/domain/src/analytics/{sample-layers,attendance,averages}.ts`
       Acceptance: слои A/B/C/D, порог явки 50% от даты зачисления; среднее по тесту/тетради (присутствие либо «сдано позже»; `NULL` не входит, 0 входит); стихи по БП-2 → unit-тесты таблицами, включая обзорный и первый урок
       Paths: H · N [нет проверенных, нет зачисления, малая выборка]
-- [ ] P05-T6 · T2 · Spec: [спец. §9.1.3, РТ-3](../../../my_specs/sunday_school_data_analytics_spec.md)
+- [x] P05-T6 · T2 · Spec: [спец. §9.1.3, РТ-3](../../../my_specs/sunday_school_data_analytics_spec.md)
       Files: `packages/domain/src/analytics/{normalized-score,smoothing,trend,rating}.ts`
       Acceptance: нормированный балл по максимуму урока; скользящее среднее по 3; разность; тренд МНК по 6 урокам, < 4 точек → «мало данных»; метрика рейтинга по Q-01 → unit-тесты
       Paths: H · N [пропуск точки ≠ 0, < 4 точек]
