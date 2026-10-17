@@ -41,6 +41,9 @@ export const AUDIT_ACTION = {
   SCHOOL_LEGACY_DEADLINE_EXTENDED: "school.legacy_deadline_extended",
   SCHOOL_LEGACY_PUPIL_IMPORTED: "school.legacy_pupil_imported",
   SEED_RUN: "seed.run",
+  BIBLE_LOAD_STARTED: "bible.load_started",
+  BIBLE_LOAD_FINISHED: "bible.load_finished",
+  BIBLE_LOAD_FAILED: "bible.load_failed",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 
@@ -61,5 +64,6 @@ export const AUDIT_ENTITY_TYPE = {
   CHILD_DATA_CONSENT: "child_data_consent",
   ENROLLMENT: "enrollment",
   SEED: "seed",
+  BIBLE_TRANSLATION: "bible_translation",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];

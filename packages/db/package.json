@@ -16,7 +16,8 @@
     "db:migrate:status": "prisma migrate status",
     "seed:reference": "tsx src/seed/reference/run.ts",
     "seed:admin": "tsx src/seed/admin/run.ts",
-    "seed:teacher": "tsx src/seed/teacher/run.ts"
+    "seed:teacher": "tsx src/seed/teacher/run.ts",
+    "seed:bible": "tsx src/seed/bible/run.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

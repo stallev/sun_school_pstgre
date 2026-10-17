@@ -2,26 +2,45 @@
 // packages/domain and policy checks for S paths; no coverage thresholds; no e2e.
 // Guide: docs/guidelines/testing/ai_testing_guidelines.md
 import path from "node:path";
-import { defineConfig } from "vitest/config";
+import { defineConfig, defineProject } from "vitest/config";
+
+const resolveAlias = {
+  "@": path.resolve(import.meta.dirname, "apps/web/src"),
+  "server-only": path.resolve(import.meta.dirname, "apps/web/src/test/server-only-stub.ts"),
+};
+
+const DB_SEED_INTEGRATION = "packages/db/src/seed/**/*.integration.test.ts";
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      // apps/web path alias and the `server-only` marker (a no-op outside the React server graph).
-      "@": path.resolve(import.meta.dirname, "apps/web/src"),
-      "server-only": path.resolve(import.meta.dirname, "apps/web/src/test/server-only-stub.ts"),
-    },
-  },
   test: {
-    include: [
-      "packages/*/src/**/*.test.ts",
-      "packages/policy/*/src/**/*.test.ts",
-      "apps/web/src/**/*.test.{ts,tsx}",
-      "scripts/**/*.test.mjs",
+    projects: [
+      defineProject({
+        resolve: { alias: resolveAlias },
+        test: {
+          name: "unit",
+          include: [
+            "packages/*/src/**/*.test.ts",
+            "packages/policy/*/src/**/*.test.ts",
+            "apps/web/src/**/*.test.{ts,tsx}",
+            "scripts/**/*.test.mjs",
+          ],
+          exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**", DB_SEED_INTEGRATION],
+          environment: "node",
+          server: { deps: { inline: [/next-auth/, /@auth\/core/] } },
+        },
+      }),
+      defineProject({
+        resolve: { alias: resolveAlias },
+        test: {
+          name: "db-seed-integration",
+          include: [DB_SEED_INTEGRATION],
+          exclude: ["**/node_modules/**", "**/generated/**"],
+          environment: "node",
+          fileParallelism: false,
+          maxWorkers: 1,
+          sequence: { concurrent: false },
+        },
+      }),
     ],
-    exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**"],
-    environment: "node",
-    // next-auth imports `next/server` without an extension; let Vite resolve it instead of Node ESM.
-    server: { deps: { inline: [/next-auth/, /@auth\/core/] } },
   },
 });

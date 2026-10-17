@@ -25,11 +25,11 @@
 
 ### P03-CU1 — feat(db): add Bible loader for Synodal translation with count verification · Review: reviewer · Commit: auto
 
-- [ ] P03-T1 · T3 · Contract: [bible_seed §3–§5, §7](../contracts/bible_seed_contract.md) · Spec: [seed_data_spec §7](../../../prds/03_data_model/seed_data_spec.md)
+- [x] P03-T1 · T3 · Contract: [bible_seed §3–§5, §7](../contracts/bible_seed_contract.md) · Spec: [seed_data_spec §7](../../../prds/03_data_model/seed_data_spec.md)
       Files: `packages/db/seed/bible/{load-books,load-verses,verify,run}.ts`, скрипт `seed:bible`
       Acceptance: upsert без `TRUNCATE`; проверки 66/1189/31 166, `SUM(verses_count)`, уникальность `verse_order`; переходы `startLoad` → `finishLoad` / `failLoad` (статус `READY` только после сверки); журнал `bible.*` + `seed.run` → интеграционный тест на копии БД
       Paths: H [§5.1] · N [§8: счётчики, окружение] · S [маркер БД, `DIRECT_URL`; нет вызова из приложения]
-- [ ] P03-T2 · T3 · Spec: [Bible/README §4 п. 1, 3, 6](../../../my_specs/Bible/README.md)
+- [x] P03-T2 · T3 · Spec: [Bible/README §4 п. 1, 3, 6](../../../my_specs/Bible/README.md)
       Files: перенос скриптов в `packages/db/seed/bible/`, правка имён таблиц под схему §5.4
       Acceptance: `bible_chapter` не создаётся; `verse_order` сохраняется; повторный запуск идемпотентен → тест
       Paths: H · N [повторный запуск] · S [нет секретов в логах]
