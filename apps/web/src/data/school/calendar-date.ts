@@ -8,3 +8,10 @@ export const calendarDateFromIso = (iso: string): Date => {
 };
 
 export const isoFromCalendarDate = (value: Date): string => value.toISOString().slice(0, 10);
+
+/** Subtract whole calendar days from an ISO date (`YYYY-MM-DD`). */
+export const subtractCalendarDays = (iso: string, days: number): string => {
+  const date = calendarDateFromIso(iso);
+  date.setUTCDate(date.getUTCDate() - days);
+  return isoFromCalendarDate(date);
+};

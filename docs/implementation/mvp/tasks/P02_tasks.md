@@ -67,7 +67,7 @@
 
 ### P02-CU5 — feat(school): add enrollment, unenrollment and transfer use-cases · Review: reviewer · Commit: auto
 
-- [ ] P02-T6 · T3 · Contract: [school_year §5.9–§5.11, §8](../contracts/school_year_and_groups_contract.md) · Invariants: INV-07…INV-10
+- [x] P02-T6 · T3 · Contract: [school_year §5.9–§5.11, §8](../contracts/school_year_and_groups_contract.md) · Invariants: INV-07…INV-10
       Files: `data/school/{enroll-pupil,unenroll-pupil,transfer-pupil}.ts`
       Acceptance: зачисление требует действующего согласия и активной группы; перевод — одна транзакция (закрыть + открыть); история проверок и остаток не меняются; teacher — только своя группа активного года → тесты, включая гонку перевода/исключения
       Paths: H [§5.9–5.11] · N [§6: нет согласия, уже зачислен, не зачислен, группа неактивна, закрытый год] · S [AZ-23, AZ-P6: чужая группа → `NOT_FOUND`]
