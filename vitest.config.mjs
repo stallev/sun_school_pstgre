@@ -9,7 +9,10 @@ const resolveAlias = {
   "server-only": path.resolve(import.meta.dirname, "apps/web/src/test/server-only-stub.ts"),
 };
 
-const DB_SEED_INTEGRATION = "packages/db/src/seed/**/*.integration.test.ts";
+const DB_INTEGRATION = [
+  "packages/db/src/seed/**/*.integration.test.ts",
+  "packages/db/src/deletion/**/*.integration.test.ts",
+];
 
 export default defineConfig({
   test: {
@@ -24,7 +27,7 @@ export default defineConfig({
             "apps/web/src/**/*.test.{ts,tsx}",
             "scripts/**/*.test.mjs",
           ],
-          exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**", DB_SEED_INTEGRATION],
+          exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**", ...DB_INTEGRATION],
           environment: "node",
           server: { deps: { inline: [/next-auth/, /@auth\/core/] } },
         },
@@ -33,7 +36,7 @@ export default defineConfig({
         resolve: { alias: resolveAlias },
         test: {
           name: "db-seed-integration",
-          include: [DB_SEED_INTEGRATION],
+          include: DB_INTEGRATION,
           exclude: ["**/node_modules/**", "**/generated/**"],
           environment: "node",
           fileParallelism: false,

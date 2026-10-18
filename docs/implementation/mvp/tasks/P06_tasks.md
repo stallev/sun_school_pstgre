@@ -34,7 +34,7 @@
 
 ### P06-CU2 — feat(db): add privileged deletion procedures and migration · Review: reviewer · Commit: auto
 
-- [ ] P06-T2 · T3 · Contract: [deletion_requests §12, Q-03](../contracts/deletion_requests_contract.md) · Invariants: INV-16, INV-17, R-6
+- [x] P06-T2 · T3 · Contract: [deletion_requests §12, Q-03](../contracts/deletion_requests_contract.md) · Invariants: INV-16, INV-17, R-6
       Files: `packages/db/prisma/migrations/*_deletion_procedures/`, `packages/db/src/deletion/*`
       Acceptance: функции БД выполняют только `DELETE` по `brick_ledger` ребёнка и очистку значений/текста `audit_log`; роль приложения не имеет прямых `UPDATE`/`DELETE`; вызов возможен только из процедуры → тесты на БД (отказ прямого `DELETE`, успех процедуры)
       Paths: H · N [субъект не существует] · S [R-6: прямой `UPDATE audit_log` → отказ; `SECURITY DEFINER` с фиксированным `search_path`]
