@@ -25,7 +25,7 @@
 
 ### P06-CU1 — feat(domain): add deletion plan, due date and codes · Review: diff-only · Commit: auto
 
-- [ ] P06-T1 · T2 · Contract: [deletion_requests §4–§7](../contracts/deletion_requests_contract.md)
+- [x] P06-T1 · T2 · Contract: [deletion_requests §4–§7](../contracts/deletion_requests_contract.md)
       Files: `packages/domain/src/deletion/{build-plan,compute-due-on,can-execute}.ts`, коды `DELETION_*`, `AUDIT_ACTION` (`deletion.*`)
       Acceptance: план по категориям (удалить/обезличить) из описания данных; `due_on` = +15 календарных дней в поясе школы; `canExecute` — последний admin, свой запрос → unit-тесты
       Paths: H [§5.3] · N [последний admin, свой запрос, статус]
