@@ -29,6 +29,14 @@
   "person": {
     "deleted_user": "Deleted user #{ordinal}"
   },
+  "plural": {
+    "lessons_count": {
+      "one": "{count} lesson",
+      "few": "{count} lessons",
+      "many": "{count} lessons",
+      "other": "{count} lessons"
+    }
+  },
   "shell": {
     "skip_to_content": "Skip to content",
     "brand": "Sunday School",

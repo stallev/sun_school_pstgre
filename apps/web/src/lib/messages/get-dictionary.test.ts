@@ -14,9 +14,11 @@ describe("getMessage", () => {
     expect(() => getMessage(common, "errors")).toThrow(/Missing message/);
   });
 
-  it("keeps the ru and en keys of the common and auth slices in step", async () => {
-    for (const namespace of ["common", "auth", "admin"] as const) {
-      expect(keys(await getDictionary("ru", namespace)).sort()).toEqual(keys(await getDictionary("en", namespace)).sort());
+  it("keeps ru and en keys in step for every namespace", async () => {
+    for (const namespace of ["common", "auth", "teacher", "admin", "analytics"] as const) {
+      expect(keys(await getDictionary("ru", namespace)).sort()).toEqual(
+        keys(await getDictionary("en", namespace)).sort(),
+      );
     }
   });
 

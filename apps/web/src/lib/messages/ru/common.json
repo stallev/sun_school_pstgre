@@ -29,6 +29,14 @@
   "person": {
     "deleted_user": "Удалённый пользователь №{ordinal}"
   },
+  "plural": {
+    "lessons_count": {
+      "one": "{count} урок",
+      "few": "{count} урока",
+      "many": "{count} уроков",
+      "other": "{count} урока"
+    }
+  },
   "shell": {
     "skip_to_content": "К содержимому",
     "brand": "Sunday School",

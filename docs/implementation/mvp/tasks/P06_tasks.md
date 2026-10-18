@@ -19,7 +19,7 @@
 - [ ] P05 DoD; данные ребёнка есть (проверки, кирпичики) для интеграционных тестов
 - [ ] Q-01 (механизм привилегий БД) принят до CU2
 - [ ] Задачи проходят DoR; процедура удаления сверена со схемой §9 (все таблицы с ПД перечислены)
-- [ ] Словари P01–P05 существуют; сверка en/ru готова к CU9
+- [x] Словари P01–P05 существуют; сверка en/ru готова к CU9
 
 ## Commit plan
 
@@ -104,11 +104,11 @@
 
 ### P06-CU9 — feat(i18n): complete ru and en dictionaries · Review: diff-only · Commit: auto
 
-- [ ] P06-T11 · T1 · ADR: [adr_008 §4.1, §4.4, §6](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md) · Rule: `ui-messages-and-copy`, `ui-messages-bundle-splitting`
+- [x] P06-T11 · T1 · ADR: [adr_008 §4.1, §4.4, §6](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md) · Rule: `ui-messages-and-copy`, `ui-messages-bundle-splitting`
       Files: `apps/web/src/lib/messages/{ru,en}/{common,auth,teacher,admin,analytics}.json`, `lib/messages/plural.ts`, lint-проверка запрета строк в JSX
       Acceptance: каждый namespace на двух языках с одинаковыми ключами (сборка падает при пропуске); формы множественного числа (`one/few/many/other`); даты и числа через `Intl` с поясом школы; клиентский бандл teacher не содержит ключей admin → тесты типа, анализ бандла
       Paths: H [adr_008 §7] · N [нет ключа → ошибка сборки; сбой загрузки → fallback `ru`] · S [смена языка только admin]
-- [ ] P06-T12 · T0 · Files: словари `en`
+- [x] P06-T12 · T0 · Files: словари `en`
       Acceptance: ручной просмотр ключевых экранов на `en` (вход, регистрация, проверка, кирпичики, журнал); запас длины +30 %
       Paths: n/a — copy
 
