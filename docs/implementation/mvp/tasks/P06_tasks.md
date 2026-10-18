@@ -116,7 +116,7 @@
 
 ### P06-CU10 — docs(docs): sync P06 docs · Review: diff-only · Commit: auto
 
-- [ ] P06-T13 · T0 · Files: `docs/**` (deletion/change_log contracts, schema §9, ADR-008, ui_states)
+- [x] P06-T13 · T0 · Files: `docs/**` (deletion/change_log contracts, schema §9, ADR-008, ui_states)
       Acceptance: grep терминов; нет drift; закрытые Q записаны
       Paths: n/a — docs-only
 
@@ -124,7 +124,7 @@
 
 - [ ] Все CU закоммичены; trace `Review: …`
 - [ ] Phase DoD из [`P06_phase_description.md`](../phases_tasks_descriptions/P06_phase_description.md)
-- [ ] Docs sync — в CU10
+- [x] Docs sync — в CU10
 
 ---
 

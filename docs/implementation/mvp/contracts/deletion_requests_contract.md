@@ -42,7 +42,7 @@
 | `createChildDeletionRequest` | `pupilId`, `guardianNote` | ребёнок существует; `guardianNote` — кто обратился (текстом, **без** ФИО в журнале — INV-23) |
 | `rejectRequest` | `requestId`, `reason` | **обязательна**, ≤ 500; видна автору (УД-6) |
 | `cancelRequest` | `requestId` | запрос `NEW`/`IN_PROGRESS`; автор |
-| `executeDeletion` | `requestId`, `confirmWord`, `acknowledgePlan` | слово подтверждения — по ключу словаря (`admin.deletions.confirm_word`, ru: «удалить»); `acknowledgePlan = true` |
+| `executeDeletion` | `requestId`, `confirmWord`, `acknowledgePlan` | слово подтверждения — `admin.deletions.confirm_word` (ru «удалить», en «delete»); проверка `matchesDeletionConfirmWord` в `@sunschool/domain`; `acknowledgePlan = true` |
 
 `due_on` = дата создания + 15 календарных дней в поясе школы (УД-5); вычисляется сервером.
 
@@ -102,6 +102,16 @@
 
 Групповые средние и графики пересчитываются при следующем чтении; admin видит пометку «данные изменены: удаление по запросу опекуна» на экранах аналитики периода (спец. 9.1). Ранее выгруженные отчёты не меняются.
 
+### 6.4 Категории плана (`DELETION_DATA_CATEGORY`)
+
+Строки плана (`previewDeletionPlan`, `summary`) используют коды из `packages/domain/src/deletion/constants.ts` (`DELETION_DATA_CATEGORY`, `DELETION_PLAN_ACTION`). Ключи UI — `admin.deletions.category_*`.
+
+| Код | Тип запроса | Действие по умолчанию |
+|-----|-------------|------------------------|
+| `login_identity`, `user_role`, `teacher_assignment`, `pupil`, `enrollment`, `child_data_consent`, `homework_*`, `brick_ledger`, `achievement_award`, `penalty`, `recitation_attempt` | account / child | `delete` (счётчик = число строк) |
+| `app_user`, `privacy_consent`, `access_request`, `audit_log_user_text`, `audit_log_child` | account / child | `anonymize` |
+| `deletion_request` | оба | `keep` (1) |
+
 ## 7. Предупреждения плана
 
 | Условие | Предупреждение |
@@ -154,7 +164,7 @@
 |------|-------|
 | Новая таблица с ПД не включена в процедуру | при добавлении таблицы с ПД — строка в §6 и схеме §9 (review) |
 | Журнал хранит ФИО текстом | INV-23, тест сериализации |
-| Срок 15 дней изменён законом | значение в `app_setting`/константе домена, не в UI; Q-02 |
+| Срок 15 дней изменён законом | `DELETION_DUE_CALENDAR_DAYS` в `@sunschool/domain`, не в UI; Q-01 |
 | Обезличивание «Удалённый пользователь №N» нарушает уникальность | `deleted_ordinal` — последовательность в организации |
 | Backup-окно не указано в согласии | чек-лист prod (P07) |
 
@@ -165,7 +175,7 @@
 | `domain` | `computeDueOn`, `buildDeletionPlan` (чистая), `canExecute` |
 | `policy-server` | `requireRole(ADMIN)`, «не свой запрос» |
 | DAL (`src/data/deletions/**`) | единая транзакция, `anonymizeUser`, `eraseChildData`, запись журнала |
-| Роль БД | отдельный механизм: `DELETE` на `brick_ledger` и `UPDATE` текстовых полей `audit_log` доступны только процедуре (функция БД / отдельная роль) — Q-03 |
+| Роль БД | `packages/db/src/deletion/*` + миграция `*_deletion_procedures`: `SECURITY DEFINER`, контекст `sunschool.deletion_privileged=1`; роль приложения без прямого `DELETE`/`UPDATE` (Q-03 ✔) |
 
 ## 13. Acceptance criteria
 
@@ -184,9 +194,9 @@
 |----|--------|--------------------------|----------|-----------|
 | Q-01 | ✔ **Решено 2026-10-11.** Юридическая проверка срока 15 дней (12.2 п. 26) | Принять 15 дней до проверки; значение в константе домена | владелец | prod |
 | Q-02 | ✔ **Решено 2026-10-11.** Слово подтверждения в английском интерфейсе | Ключ словаря: ru «удалить», en «delete» | architect | W9 |
-| Q-03 | Как технически разрешить процедуре `DELETE`/`UPDATE` журнала при роли приложения без этих прав | Функция БД `SECURITY DEFINER`, вызываемая только из процедуры | architect | P01 |
+| Q-03 | ✔ **Решено 2026-10-18 (P06-CU2).** Привилегированное `DELETE`/`UPDATE` при роли приложения без прав | Миграция `20261018120000_deletion_procedures`; `packages/db/src/deletion/*` | architect | — |
 | Q-04 | Нужна ли пометка «данные изменены» в аналитике постоянно или временно | Постоянная заметка в периоде, где были данные | владелец | `analytics_screens_spec` |
-| Q-05 | Может ли admin создавать запрос на удаление своей записи без второго admin | Да, выполняет тот же с отдельным подтверждением (УД-9) | владелец | — |
+| Q-05 | ✔ **Решено 2026-10-11 (P06-CU5).** Admin создаёт запрос на свою запись | Запрос разрешён; при ≥2 admin выполняет другой (`DELETION_SELF_EXECUTE`); единственный admin — выполняет сам с подтверждением (УД-9) | владелец | — |
 
 ## 15. Related documents
 
@@ -211,3 +221,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-08) |
+| 2026-10-18 | v1.1 — §6.4 категории плана; Q-03/Q-05 закрыты; confirm word en; реализация БД (P06) |

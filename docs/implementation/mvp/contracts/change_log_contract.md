@@ -144,7 +144,8 @@
 | `domain` | `AUDIT_ACTION`, `serializeAuditValues` (отбрасывает ПД-поля), типы |
 | DAL (`src/data/audit/**`) | `writeAudit(tx, record)` — единственная точка записи; вызывается внутри транзакции use-case |
 | `policy-server` | `requireRole(ADMIN)` для чтения |
-| Запрещено | прямой `prisma.auditLog.create` вне `writeAudit`; `update`/`delete` |
+| `packages/db/src/deletion/*` | единственное место `UPDATE` текстовых полей `audit_log` и `DELETE` по `brick_ledger` (привилегированный контекст; deletion_requests §12, change_log §9 S-2) |
+| Запрещено | прямой `prisma.auditLog.create` вне `writeAudit`; иные `update`/`delete` над `audit_log` |
 
 ## 12. Acceptance criteria
 
@@ -187,3 +188,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-07) |
 | 2026-10-17 | v1.1 — P03: реестр §4 сверен с `AUDIT_ACTION` (`lesson.*`, `calendar.*`, `bible.*`) |
+| 2026-10-18 | v1.2 — §11: привилегированное изменение `audit_log` / `brick_ledger` через `packages/db/src/deletion` (P06) |
