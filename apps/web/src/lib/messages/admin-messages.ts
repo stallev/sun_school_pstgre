@@ -9,6 +9,7 @@ export type AdminMessages = {
     peopleTitle: string;
     settingsTitle: string;
     schoolTitle: string;
+    deletionsTitle: string;
   };
   settings: {
     pageSubtitle: string;
@@ -230,6 +231,60 @@ export type AdminMessages = {
     enroll_date_format: string;
     signer_required: string;
   };
+  deletions: {
+    pageSubtitle: string;
+    tabOpen: string;
+    tabDone: string;
+    tabClosed: string;
+    emptyTitle: string;
+    emptyDescription: string;
+    typeAccount: string;
+    typeChild: string;
+    requestedOn: string;
+    requestedBySelf: string;
+    requestedBy: string;
+    reasonPrefix: string;
+    daysLeft: string;
+    daysOverdue: string;
+    takenBy: string;
+    statusNew: string;
+    statusInProgress: string;
+    statusDone: string;
+    statusRejected: string;
+    statusCancelled: string;
+    planDelete: string;
+    planAnonymize: string;
+    warningTitle: string;
+    take: string;
+    execute: string;
+    reject: string;
+    rejectTitle: string;
+    rejectDescription: string;
+    rejectReason: string;
+    submitReject: string;
+    submitPending: string;
+    executeTitle: string;
+    executeSummary: string;
+    confirmLabel: string;
+    confirmWord: string;
+    executeSubmit: string;
+    toastTaken: string;
+    toastExecuted: string;
+    toastRejected: string;
+    resolvedDone: string;
+    resolvedRejected: string;
+    resolvedCancelled: string;
+    childRequestAction: string;
+    childRequestTitle: string;
+    childRequestDescription: string;
+    guardianNoteLabel: string;
+    childRequestSubmit: string;
+    toastChildCreated: string;
+    profileLink: string;
+    pupilLink: string;
+    categoryLabels: Record<string, string>;
+    warningLabels: Record<string, string>;
+  };
 };
 
 export const formatWaitingDays = (template: string, count: number): string =>
@@ -240,3 +295,6 @@ export const formatTeacherCount = (template: string, count: number): string =>
 
 export const formatYearContext = (template: string, yearName: string): string =>
   template.replace("{year}", yearName);
+
+export const formatDeletionDays = (template: string, count: number): string =>
+  template.replace("{count}", String(Math.abs(count)));

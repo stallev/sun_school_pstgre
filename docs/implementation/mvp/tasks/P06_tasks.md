@@ -86,7 +86,7 @@
 
 ### P06-CU7 — feat(web): add deletions screen, profile block and pupil request action · Review: diff-only · Commit: auto
 
-- [ ] P06-T9 · T1 · Flow: [admin_flow §4.6](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Prototype: `deletions`, `profile`
+- [x] P06-T9 · T1 · Flow: [admin_flow §4.6](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) · Prototype: `deletions`, `profile`
       Files: `app/(app)/deletions/page.tsx`, `components/admin/{DeletionRequestCard,DeletionPlanView,DeletionConfirmDialog}.tsx`, блок в `/profile`, действие в карточке ученика
       Acceptance: вкладки «Открытые / Выполненные / Отклонённые и отменённые»; срок с подсветкой просрочки; диалог выполнения со словом подтверждения и планом; блок профиля (создать/отменить) → ручной smoke H/N
       Paths: H [admin_flow §4.6] · N [UX-05; ошибки §8] · S [AZ-06, AZ-07]

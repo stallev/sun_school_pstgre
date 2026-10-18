@@ -6,6 +6,7 @@ import { cancelDeletionRequest } from "@/data/deletions/cancel-request";
 import { createChildDeletionRequest } from "@/data/deletions/create-child-request";
 import { createDeletionRequest } from "@/data/deletions/create-request";
 import { rejectDeletionRequest } from "@/data/deletions/reject-request";
+import { executeDeletion } from "@/data/deletions/execute-deletion";
 import { takeDeletionRequest } from "@/data/deletions/take-request";
 import { uuidFromForm } from "@/lib/auth/admin-access-form";
 import { requireNonDeletedUser, requireRole } from "@/lib/auth/require-user";
@@ -73,6 +74,21 @@ export async function cancelDeletionRequestAction(
   const actor = await requireNonDeletedUser();
   const raw = { requestId: uuidFromForm(formData, "requestId") };
   const result = await cancelDeletionRequest(await getPrisma(), actor.userId, raw, new Date());
+  if (result.ok) revalidateDeletionSurfaces();
+  return result;
+}
+
+export async function executeDeletionRequestAction(
+  _prev: MutationResult | null,
+  formData: FormData,
+): Promise<MutationResult> {
+  const actor = await requireRole(USER_ROLE.ADMIN);
+  const raw = {
+    requestId: uuidFromForm(formData, "requestId"),
+    confirmWord: String(formData.get("confirmWord") ?? "").trim(),
+    acknowledgePlan: formData.get("acknowledgePlan") === "true",
+  };
+  const result = await executeDeletion(await getPrisma(), actor.userId, raw, new Date());
   if (result.ok) revalidateDeletionSurfaces();
   return result;
 }

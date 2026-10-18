@@ -5,6 +5,7 @@ import { ContentText } from "@/components/atoms/ContentText";
 import { ConsentDialog } from "@/components/admin/ConsentDialog";
 import { EnrollDialog } from "@/components/admin/EnrollDialog";
 import { PupilCardForm } from "@/components/admin/PupilCardForm";
+import { ChildDeletionRequestDialog } from "@/components/admin/ChildDeletionRequestDialog.client";
 import { TransferDialog } from "@/components/admin/TransferDialog";
 import { StatusText } from "@/components/ui/status-text";
 import { Button } from "@/components/ui/button";
@@ -111,6 +112,13 @@ export const PupilRow = ({
             closeLabel={closeLabel}
           />
         ) : null}
+        <ChildDeletionRequestDialog
+          pupilId={row.pupilId}
+          displayName={row.displayName}
+          dictionaries={dictionaries}
+          formError={formError}
+          closeLabel={closeLabel}
+        />
         {row.isActive && row.groupName ? (
           <>
             <TransferDialog

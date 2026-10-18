@@ -1,4 +1,7 @@
 {
+  "deletion": {
+    "already_open": "An open deletion request already exists"
+  },
   "errors": {
     "unauthorized": "Sign in to continue",
     "forbidden": "You do not have permission for this action",
