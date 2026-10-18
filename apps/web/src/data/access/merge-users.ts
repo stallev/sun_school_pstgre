@@ -8,7 +8,13 @@ import {
   mergeUsersInputSchema,
   type MutationResult,
 } from "@sunschool/domain";
-import { reassignAuditActorsForUserMerge, writeAudit, type Prisma, type PrismaClient } from "@sunschool/db";
+import {
+  reassignAuditActorsForUserMerge,
+  scrubAuditLogForUserPrivileged,
+  writeAudit,
+  type Prisma,
+  type PrismaClient,
+} from "@sunschool/db";
 import { anonymizeUserInTransaction } from "../deletions/anonymize-user";
 import { userHasAdminRole } from "./access-admin-guards.server";
 import { mutationFromZodError } from "./map-zod-fields";
@@ -110,6 +116,7 @@ export async function mergeUsers(
     await tx.lesson.updateMany({ where: { leadTeacherId: merge.id }, data: { leadTeacherId: keep.id } });
     await tx.homeworkCheck.updateMany({ where: { checkedById: merge.id }, data: { checkedById: keep.id } });
     await tx.brickLedger.updateMany({ where: { issuedById: merge.id }, data: { issuedById: keep.id } });
+    await scrubAuditLogForUserPrivileged(tx, merge.id);
     await reassignAuditActorsForUserMerge(tx, merge.id, keep.id);
 
     await anonymizeUserInTransaction(tx, merge.id, merge.organizationId);

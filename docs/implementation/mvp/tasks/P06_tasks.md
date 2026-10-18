@@ -65,7 +65,7 @@
 
 ### P06-CU5 — feat(deletion): add child data erasure and request execution · Review: reviewer · Commit: auto
 
-- [ ] P06-T6 · T3 · Contract: [deletion_requests §5.4, §6.2, §10](../contracts/deletion_requests_contract.md) · Invariants: INV-22
+- [x] P06-T6 · T3 · Contract: [deletion_requests §5.4, §6.2, §10](../contracts/deletion_requests_contract.md) · Invariants: INV-22
       Files: `data/deletions/{erase-child-data,execute-deletion}.ts`
       Acceptance: одна транзакция: удалить карточку, зачисления, согласия, проверки, события оценок, кирпичики; в журнале значения стёрты, ссылка «ребёнок (данные удалены)»; `summary` без ФИО; слово подтверждения и подтверждение плана; повтор идемпотентен; откат при сбое → тесты, включая откат и гонку с проверкой ДЗ
       Paths: H [§5.4] · N [§8: слово, план, статус, последний admin, self-execute] · S [AZ-07, S-4…S-6 контракта]

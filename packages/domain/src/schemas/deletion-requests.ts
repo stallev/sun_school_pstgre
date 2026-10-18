@@ -37,3 +37,13 @@ export const rejectDeletionRequestInputSchema = z
   .strict();
 
 export type RejectDeletionRequestInput = z.infer<typeof rejectDeletionRequestInputSchema>;
+
+export const executeDeletionInputSchema = z
+  .object({
+    requestId: z.uuid(),
+    confirmWord: z.string().trim().min(1),
+    acknowledgePlan: z.literal(true, { error: "admin.deletions.plan_required" }),
+  })
+  .strict();
+
+export type ExecuteDeletionInput = z.infer<typeof executeDeletionInputSchema>;

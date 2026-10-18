@@ -1,6 +1,14 @@
 /** deletion_requests_contract §4, Q-01 — calendar days until due_on (legal review pending for prod). */
 export const DELETION_DUE_CALENDAR_DAYS = 15;
 
+/** `admin.deletions.confirm_word` — ru «удалить», en «delete» (deletion_requests §4, Q-02). */
+export const DELETION_CONFIRM_WORDS = ["удалить", "delete"] as const;
+
+export const matchesDeletionConfirmWord = (word: string): boolean => {
+  const normalized = word.trim().toLowerCase();
+  return DELETION_CONFIRM_WORDS.some((allowed) => allowed === normalized);
+};
+
 /** Plan line categories — deletion_requests §6, database_schema_v1 §9. */
 export const DELETION_DATA_CATEGORY = {
   LOGIN_IDENTITY: "login_identity",

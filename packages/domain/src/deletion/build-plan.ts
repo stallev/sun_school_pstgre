@@ -152,3 +152,16 @@ export const sumDeletionPlanByAction = (
   action: DeletionPlanAction,
 ): number =>
   plan.items.reduce((total, item) => (item.action === action ? total + item.count : total), 0);
+
+export type DeletionExecutionSummary = {
+  items: DeletionPlanItem[];
+};
+
+/** Stored on `deletion_request.summary` — category counters only, no PII (§5.4, S-6). */
+export const buildDeletionExecutionSummary = (plan: DeletionPlan): DeletionExecutionSummary => ({
+  items: plan.items.map((item) => ({
+    category: item.category,
+    action: item.action,
+    count: item.count,
+  })),
+});

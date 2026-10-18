@@ -24,7 +24,7 @@ import { lockDeletionRequest } from "./deletion-shared.server";
 
 type Tx = Prisma.TransactionClient;
 
-async function gatherAccountPlanInput(
+export async function gatherAccountPlanInput(
   tx: Tx,
   userId: string,
   organizationId: string,
@@ -82,7 +82,7 @@ async function gatherAccountPlanInput(
   };
 }
 
-async function gatherChildPlanInput(tx: Tx, pupilId: string): Promise<ChildDeletionPlanInput> {
+export async function gatherChildPlanInput(tx: Tx, pupilId: string): Promise<ChildDeletionPlanInput> {
   const [
     enrollmentCount,
     childDataConsentCount,
