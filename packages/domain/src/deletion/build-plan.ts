@@ -28,6 +28,7 @@ export type AccountDeletionPlanInput = {
   auditLogUserTextCount: number;
   assignedToActiveYearGroup: boolean;
   lessonsWithIncompleteChecks: number;
+  isSoleAdmin: boolean;
 };
 
 export type ChildDeletionPlanInput = {
@@ -51,6 +52,9 @@ const line = (
 
 const buildAccountPlan = (input: AccountDeletionPlanInput): DeletionPlan => {
   const warnings: DeletionPlanWarningCode[] = [];
+  if (input.isSoleAdmin) {
+    warnings.push(DELETION_PLAN_WARNING.LAST_ADMIN);
+  }
   if (input.assignedToActiveYearGroup) {
     warnings.push(DELETION_PLAN_WARNING.TEACHER_ASSIGNED_ACTIVE_YEAR);
   }

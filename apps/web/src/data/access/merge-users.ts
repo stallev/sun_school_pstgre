@@ -9,7 +9,7 @@ import {
   type MutationResult,
 } from "@sunschool/domain";
 import { reassignAuditActorsForUserMerge, writeAudit, type Prisma, type PrismaClient } from "@sunschool/db";
-import { anonymizeUserInTransaction } from "./anonymize-user.server";
+import { anonymizeUserInTransaction } from "../deletions/anonymize-user";
 import { userHasAdminRole } from "./access-admin-guards.server";
 import { mutationFromZodError } from "./map-zod-fields";
 

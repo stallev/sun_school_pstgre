@@ -24,3 +24,4 @@ export {
   withDeletionPrivilegedContext,
 } from "./deletion/privileged-context";
 export { scrubAuditLogForPupilPrivileged } from "./deletion/scrub-audit-log-for-pupil";
+export { scrubAuditLogForUserPrivileged } from "./deletion/scrub-audit-log-for-user";

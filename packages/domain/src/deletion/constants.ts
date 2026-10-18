@@ -37,6 +37,7 @@ export type DeletionPlanAction = (typeof DELETION_PLAN_ACTION)[keyof typeof DELE
 
 /** deletion_requests_contract §7 — non-blocking plan warnings. */
 export const DELETION_PLAN_WARNING = {
+  LAST_ADMIN: "last_admin",
   TEACHER_ASSIGNED_ACTIVE_YEAR: "teacher_assigned_active_year",
   INCOMPLETE_HOMEWORK_CHECKS: "incomplete_homework_checks",
 } as const;

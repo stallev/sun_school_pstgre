@@ -23,6 +23,9 @@
     "timezone_unset_description": "Пока используется UTC. Выберите IANA-пояс в настройках — расписание и даты будут точнее.",
     "choose_timezone_action": "Выбрать часовой пояс"
   },
+  "person": {
+    "deleted_user": "Удалённый пользователь №{ordinal}"
+  },
   "shell": {
     "skip_to_content": "К содержимому",
     "brand": "Sunday School",

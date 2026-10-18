@@ -52,11 +52,11 @@
 
 ### P06-CU4 — feat(deletion): add plan preview and user anonymization · Review: reviewer · Commit: auto
 
-- [ ] P06-T4 · T3 · Contract: [deletion_requests §5.3, §6.1](../contracts/deletion_requests_contract.md)
+- [x] P06-T4 · T3 · Contract: [deletion_requests §5.3, §6.1](../contracts/deletion_requests_contract.md)
       Files: `data/deletions/{preview-plan,anonymize-user}.ts`
       Acceptance: план вычисляется по данным в транзакции; `anonymizeUser`: стереть `login_identity`, ФИО, email; `deleted_ordinal`; роли/назначения удалены; авторство сохранено; `privacy_consent`/`access_request` обезличены → тесты, проверка отображения «Удалённый пользователь №N»
       Paths: H · N [последний admin, назначен на группу — предупреждение] · S [INV-23: нет ФИО в журнале]
-- [ ] P06-T5 · T3 · Contract: [access_requests §5.9](../contracts/access_requests_and_roles_contract.md)
+- [x] P06-T5 · T3 · Contract: [access_requests §5.9](../contracts/access_requests_and_roles_contract.md)
       Files: `data/access/merge-users.ts` (использует `anonymizeUser`)
       Acceptance: дубликат после `mergeUsers` обезличен единообразно; регрессия P01-тестов → тест
       Paths: H · N · S [AZ-04]

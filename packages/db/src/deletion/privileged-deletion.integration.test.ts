@@ -13,6 +13,7 @@ import { writeAudit } from "../audit/write-audit";
 import { DELETION_PRIVILEGED_CONTEXT_REQUIRED } from "./constants";
 import { deleteBrickLedgerForPupilPrivileged } from "./delete-brick-ledger-for-pupil";
 import { scrubAuditLogForPupilPrivileged } from "./scrub-audit-log-for-pupil";
+import { scrubAuditLogForUserPrivileged } from "./scrub-audit-log-for-user";
 
 loadEnv({ path: path.resolve(import.meta.dirname, "../../../../../.env"), quiet: true });
 
@@ -137,6 +138,37 @@ describe.skipIf(!enabled)("privileged deletion procedures on dev database", () =
       });
       expect(row?.newValue).toBeNull();
       expect(row?.oldValue).toBeNull();
+      expect(row?.reason).toBeNull();
+    });
+  }, 60_000);
+
+  it("scrubs reject reason with PII for anonymized actor", async () => {
+    if (!migrationReady) return;
+    const org = await prisma.organization.findFirst();
+    if (!org) return;
+
+    await rolledBack(async (tx) => {
+      const actor = await tx.appUser.create({
+        data: {
+          organizationId: org.id,
+          lastName: "Админов",
+          firstName: "Тест",
+          status: "ACTIVE",
+        },
+      });
+      const requestId = randomUUID();
+      await writeAudit(tx, {
+        actorUserId: actor.id,
+        source: AUDIT_SOURCE.USER,
+        entityType: AUDIT_ENTITY_TYPE.DELETION_REQUEST,
+        entityId: requestId,
+        action: AUDIT_ACTION.DELETION_REJECTED,
+        reason: "Не подтверждено: Иванов Иван Иванович",
+      });
+
+      const scrubbed = await scrubAuditLogForUserPrivileged(tx, actor.id);
+      expect(scrubbed).toBe(1);
+      const row = await tx.auditLog.findFirst({ where: { actorUserId: actor.id } });
       expect(row?.reason).toBeNull();
     });
   }, 60_000);

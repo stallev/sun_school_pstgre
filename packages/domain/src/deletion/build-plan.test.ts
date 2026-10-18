@@ -21,6 +21,7 @@ const accountCounts: AccountDeletionPlanInput = {
   auditLogUserTextCount: 4,
   assignedToActiveYearGroup: true,
   lessonsWithIncompleteChecks: 2,
+  isSoleAdmin: false,
 };
 
 const childCounts: ChildDeletionPlanInput = {
@@ -55,6 +56,14 @@ describe("buildDeletionPlan (deletion_requests §6)", () => {
       DELETION_PLAN_WARNING.TEACHER_ASSIGNED_ACTIVE_YEAR,
       DELETION_PLAN_WARNING.INCOMPLETE_HOMEWORK_CHECKS,
     ]);
+  });
+
+  it("warns when the subject is the sole admin", () => {
+    const plan = buildDeletionPlan({
+      type: DELETION_REQUEST_TYPE.ACCOUNT,
+      counts: { ...accountCounts, isSoleAdmin: true },
+    });
+    expect(plan.warnings).toContain(DELETION_PLAN_WARNING.LAST_ADMIN);
   });
 
   it("deletes child data categories and anonymizes audit rows", () => {
