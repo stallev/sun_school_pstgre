@@ -77,10 +77,22 @@ for (const filePath of unchanged) console.log(`unchanged: ${filePath}`);
 if (allowed.length === 0) fail("в списке путей нет изменённых файлов");
 
 if (parsed.mode === "stage") {
-  const added = git(["add", "--", ...allowed]);
-  const output = `${added.stdout ?? ""}${added.stderr ?? ""}`;
-  fs.writeFileSync(logPath, output);
-  if (added.status !== 0) fail("git add failed", output);
+  const cached = git(["diff", "--cached", "--name-only", "-z"]);
+  if (cached.status !== 0) fail("не удалось прочитать индекс", `${cached.stdout ?? ""}${cached.stderr ?? ""}`);
+  const cachedSet = new Set(
+    (cached.stdout ?? "").split("\0").map((filePath) => filePath.trim()).filter(Boolean),
+  );
+  const pathsToAdd = allowed.filter((filePath) => {
+    if (fs.existsSync(path.join(rootDir, filePath))) return true;
+    return !cachedSet.has(filePath);
+  });
+  const outputParts = [];
+  if (pathsToAdd.length > 0) {
+    const added = git(["add", "--", ...pathsToAdd]);
+    outputParts.push(`${added.stdout ?? ""}${added.stderr ?? ""}`);
+    if (added.status !== 0) fail("git add failed", outputParts.join(""));
+  }
+  const output = outputParts.join("");
   console.log("cu-commit: staged");
   for (const filePath of allowed) console.log(filePath);
   process.exit(0);

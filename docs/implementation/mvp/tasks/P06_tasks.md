@@ -95,7 +95,7 @@
 
 ### P06-CU8 — feat(analytics): add deleted-data note and update badge counters · Review: diff-only · Commit: auto
 
-- [ ] P06-T10 · T1 · Spec: [спец. §9.1 «Удалённые данные»](../../../my_specs/sunday_school_data_analytics_spec.md) · Matrix: AZ-07
+- [x] P06-T10 · T1 · Spec: [спец. §9.1 «Удалённые данные»](../../../my_specs/sunday_school_data_analytics_spec.md) · Matrix: AZ-07
       Files: `components/analytics/DeletedDataNote.tsx`, `data/analytics/*` (счётчик за период), `components/shell/nav-badge.tsx`
       Acceptance: пометка только admin, число детей скрыто при < 3; бейдж «Люди» = заявки + открытые запросы; «Заявки» — только заявки → тесты порога, ручной smoke
       Paths: H · N [< 3 детей] · S [admin only]

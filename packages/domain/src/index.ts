@@ -48,6 +48,7 @@ export * from "./analytics/normalized-score";
 export * from "./analytics/smoothing";
 export * from "./analytics/trend";
 export * from "./analytics/rating";
+export * from "./analytics/deleted-data-disclosure";
 export * from "./deletion/constants";
 export * from "./deletion/compute-due-on";
 export * from "./deletion/build-plan";

@@ -18,4 +18,6 @@ export const CACHE_TAGS = {
     `analytics:conducted:${gradeId}:${yearId}`,
   analyticsDataQuality: (gradeId: string, yearId: string) =>
     `analytics:data-quality:${gradeId}:${yearId}`,
+  analyticsDeletedData: (gradeId: string, yearId: string) =>
+    `analytics:deleted-data:${gradeId}:${yearId}`,
 } as const;
