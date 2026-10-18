@@ -83,7 +83,6 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     profileStatus: getMessage(admin, "users.profile_status"),
     profileLoginMethods: getMessage(admin, "users.profile_login_methods"),
     profileAuditLink: getMessage(admin, "users.profile_audit_link"),
-    profileAuditSoon: getMessage(admin, "users.profile_audit_soon"),
     saveRoles: getMessage(admin, "users.save_roles"),
     disableAccess: getMessage(admin, "users.disable_access"),
     enableAccess: getMessage(admin, "users.enable_access"),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ContentText } from "@/components/atoms/ContentText";
 import { ConsentDialog } from "@/components/admin/ConsentDialog";
 import { EnrollDialog } from "@/components/admin/EnrollDialog";
@@ -29,6 +29,7 @@ type PupilRowProps = {
   formError: string;
   closeLabel: string;
   messages: AdminMessages;
+  historySlot?: ReactNode;
 };
 
 export const PupilRow = ({
@@ -40,6 +41,7 @@ export const PupilRow = ({
   formError,
   closeLabel,
   messages,
+  historySlot,
 }: PupilRowProps) => {
   const [editOpen, setEditOpen] = useState(false);
   const consentLabel = row.hasEnrollableConsent
@@ -83,6 +85,7 @@ export const PupilRow = ({
               formError={formError}
               onSuccess={() => setEditOpen(false)}
             />
+            {historySlot}
           </DialogContent>
         </Dialog>
         {!row.hasEnrollableConsent ? (

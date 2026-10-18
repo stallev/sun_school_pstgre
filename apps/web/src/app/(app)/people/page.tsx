@@ -1,6 +1,7 @@
 import { USER_ROLE } from "@sunschool/domain";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
 import { PupilCardForm } from "@/components/admin/PupilCardForm";
+import { PupilEntityHistoryList } from "@/components/admin/EntityHistoryList";
 import { PupilRow } from "@/components/admin/PupilRow";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
@@ -95,6 +96,7 @@ const PeoplePage = async ({ searchParams }: PeoplePageProps) => {
                 formError={formError}
                 closeLabel={closeLabel}
                 messages={adminMessages}
+                historySlot={<PupilEntityHistoryList pupilId={row.pupilId} />}
               />
             ))}
           </ul>

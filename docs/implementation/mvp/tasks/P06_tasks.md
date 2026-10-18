@@ -74,11 +74,11 @@
 
 ### P06-CU6 — feat(web): add audit log read use-cases and screen · Review: diff-only · Commit: auto
 
-- [ ] P06-T7 · T1 · Contract: [change_log §6](../contracts/change_log_contract.md) · Prototype: `audit`
+- [x] P06-T7 · T1 · Contract: [change_log §6](../contracts/change_log_contract.md) · Prototype: `audit`
       Files: `data/audit/{list-audit-log,get-entity-history}.ts`, `app/(app)/audit/page.tsx`, `components/admin/{AuditTable,AuditFilterBar,AuditEntryRow}.tsx`
       Acceptance: фильтры (период, актор, `entity_type`, `action`), курсорная пагинация, имена подставляются по ссылкам, «Удалённый пользователь №N»; teacher → 403 → ручной smoke, тест выборок
       Paths: H · N [пусто] · S [AZ-08: только admin; нет update/delete]
-- [ ] P06-T8 · T1 · Files: `components/admin/EntityHistoryList.tsx` в `/users/[userId]` и карточке ученика
+- [x] P06-T8 · T1 · Files: `components/admin/EntityHistoryList.tsx` в `/users/[userId]` и карточке ученика
       Acceptance: последние записи по сущности → ручной smoke
       Paths: H · N [нет записей] · S [AZ-08]
 

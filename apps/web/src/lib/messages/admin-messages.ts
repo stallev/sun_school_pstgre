@@ -78,7 +78,6 @@ export type AdminMessages = {
     profileStatus: string;
     profileLoginMethods: string;
     profileAuditLink: string;
-    profileAuditSoon: string;
     saveRoles: string;
     disableAccess: string;
     enableAccess: string;

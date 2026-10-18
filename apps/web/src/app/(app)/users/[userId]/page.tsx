@@ -6,9 +6,9 @@ import { EnableAccessConfirm } from "@/components/admin/EnableAccessConfirm.clie
 import { MergeUsersDialog } from "@/components/admin/MergeUsersDialog.client";
 import { UpdateUserNameForm } from "@/components/admin/UpdateUserNameForm.client";
 import { UserProfileRoles } from "@/components/admin/UserProfileRoles.client";
+import { UserEntityHistoryList } from "@/components/admin/EntityHistoryList";
 import { FormSection } from "@/components/patterns/FormSection";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { Button } from "@/components/ui/button";
 import { runAdminLazyPurge } from "@/data/access/admin-lazy-purge.server";
 import { loadUserProfile } from "@/data/access/load-user-profile.server";
 import { formatAccountStatusLabel } from "@/lib/admin/format-account-status-label";
@@ -79,9 +79,7 @@ const UserProfilePage = async ({ params }: UserProfilePageProps) => {
           />
         </FormSection>
         <FormSection title={adminMessages.users.profileAuditLink}>
-          <Button type="button" variant="outline" disabled>
-            {adminMessages.users.profileAuditSoon}
-          </Button>
+          <UserEntityHistoryList userId={profile.userId} />
         </FormSection>
         <section className="flex flex-wrap gap-2">
           {profile.status === ACCOUNT_STATUS.ACTIVE ? (
