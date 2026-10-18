@@ -1,4 +1,7 @@
 {
+  "deletion": {
+    "already_open": "Уже есть открытый запрос на удаление"
+  },
   "errors": {
     "unauthorized": "Войдите, чтобы продолжить",
     "forbidden": "Недостаточно прав для этого действия",
@@ -22,6 +25,17 @@
     "timezone_unset_title": "Часовой пояс школы не выбран",
     "timezone_unset_description": "Пока используется UTC. Выберите IANA-пояс в настройках — расписание и даты будут точнее.",
     "choose_timezone_action": "Выбрать часовой пояс"
+  },
+  "person": {
+    "deleted_user": "Удалённый пользователь №{ordinal}"
+  },
+  "plural": {
+    "lessons_count": {
+      "one": "{count} урок",
+      "few": "{count} урока",
+      "many": "{count} уроков",
+      "other": "{count} урока"
+    }
   },
   "shell": {
     "skip_to_content": "К содержимому",

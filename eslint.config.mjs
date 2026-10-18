@@ -15,6 +15,20 @@ const PRISMA_DIRECT = [
 ];
 
 const WEB_FILES = ["apps/web/**/*.{ts,tsx}"];
+const CLIENT_ENTRY_FILES = ["apps/web/**/*.client.{ts,tsx}"];
+const CYRILLIC_IN_JSX = [
+  {
+    selector: "JSXText[value=/[\\u0400-\\u04FF]/]",
+    message: "User-visible Cyrillic in JSX — use @/lib/messages keys (ADR-008 §4.1.7).",
+  },
+];
+const CLIENT_MESSAGE_IMPORTS = [
+  {
+    name: "@/lib/messages/get-dictionary",
+    importNames: ["getDictionary", "getMessage"],
+    message: "Client entry must not load dictionaries — pass a typed message slice via props.",
+  },
+];
 const DESIGN_LAB_FILES = [
   "apps/web/src/components/design-lab/**",
   "apps/web/src/lib/design-lab/**",
@@ -133,6 +147,17 @@ export default tseslint.config(
     rules: { "no-restricted-syntax": ["error", ...NO_RAW_COLOR] },
   },
   // proxy.ts: JWT-only layer (PKG-02, ADR-002 §3)
+  {
+    files: CLIENT_ENTRY_FILES,
+    rules: {
+      "no-restricted-imports": ["error", { paths: CLIENT_MESSAGE_IMPORTS }],
+    },
+  },
+  {
+    files: ["apps/web/src/**/*.{tsx,jsx}"],
+    ignores: [...DESIGN_LAB_FILES, "apps/web/src/components/ui/**", "apps/web/src/**/*.test.{tsx,jsx}"],
+    rules: { "no-restricted-syntax": ["error", ...CYRILLIC_IN_JSX] },
+  },
   boundary(["apps/web/src/proxy.ts", "apps/web/src/middleware.ts"], [
     ...WEB_PATTERNS,
     {

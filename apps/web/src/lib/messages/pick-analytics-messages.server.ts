@@ -91,7 +91,15 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     title: getMessage(analytics, "data_quality.title"),
     missingRecords: (count) => fill(getMessage(analytics, "data_quality.missing_records"), { count }),
   },
-  deletionRecalculated: getMessage(analytics, "deletion_recalculated"),
+  deletedData: {
+    title: getMessage(analytics, "deleted_data.title"),
+    note: (dateLabel) => fill(getMessage(analytics, "deleted_data.note"), { date: dateLabel }),
+    noteWithCount: (dateLabel, count) =>
+      fill(getMessage(analytics, "deleted_data.note_with_count"), {
+        date: dateLabel,
+        count,
+      }),
+  },
   formatPercent: (value) => fill(getMessage(analytics, "format.percent"), { value }),
   formatAverage: (value) => fill(getMessage(analytics, "format.average"), { value }),
   formatChartValue: (point) =>

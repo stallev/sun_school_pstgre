@@ -65,6 +65,7 @@ function mockTx(overrides: Record<string, unknown> = {}) {
     $queryRaw: vi
       .fn()
       .mockResolvedValueOnce([{ id: yearId }])
+      .mockResolvedValueOnce([{ id: pupilId }])
       .mockResolvedValue([]),
     lesson: {
       findFirst: vi.fn().mockResolvedValue(lessonRow),
@@ -153,6 +154,7 @@ describe("saveCheckInTransaction", () => {
       $queryRaw: vi
         .fn()
         .mockResolvedValueOnce([{ id: yearId }])
+        .mockResolvedValueOnce([{ id: pupilId }])
         .mockResolvedValueOnce([
           {
             id: checkId,
@@ -262,6 +264,7 @@ describe("saveCheckInTransaction", () => {
     vi.mocked(tx.$queryRaw)
       .mockReset()
       .mockResolvedValueOnce([{ id: yearId }])
+      .mockResolvedValueOnce([{ id: pupilId }])
       .mockResolvedValueOnce([
         {
           id: checkId,
@@ -294,6 +297,7 @@ describe("saveCheckInTransaction", () => {
       $queryRaw: vi
         .fn()
         .mockResolvedValueOnce([{ id: yearId }])
+        .mockResolvedValueOnce([{ id: pupilId }])
         .mockResolvedValueOnce([
           {
             id: checkId,

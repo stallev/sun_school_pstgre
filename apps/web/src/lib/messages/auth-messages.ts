@@ -108,7 +108,15 @@ export type AuthMessages = {
     localeRu: string;
     localeEn: string;
     deletionSection: string;
-    deletionStub: string;
+    deletionIntro: string;
+    deletionRequestBtn: string;
+    deletionCancelBtn: string;
+    deletionReasonLabel: string;
+    deletionReasonOptional: string;
+    deletionPending: string;
+    deletionSubmitPending: string;
+    deletionToastCreated: string;
+    deletionToastCancelled: string;
     signOut: string;
   };
 };
@@ -219,7 +227,15 @@ export const pickAuthMessages = (auth: Dictionary): AuthMessages => ({
     localeRu: getMessage(auth, "profile.locale_ru"),
     localeEn: getMessage(auth, "profile.locale_en"),
     deletionSection: getMessage(auth, "profile.deletion_section"),
-    deletionStub: getMessage(auth, "profile.deletion_stub"),
+    deletionIntro: getMessage(auth, "profile.deletion_intro"),
+    deletionRequestBtn: getMessage(auth, "profile.deletion_request_btn"),
+    deletionCancelBtn: getMessage(auth, "profile.deletion_cancel_btn"),
+    deletionReasonLabel: getMessage(auth, "profile.deletion_reason_label"),
+    deletionReasonOptional: getMessage(auth, "profile.deletion_reason_optional"),
+    deletionPending: getMessage(auth, "profile.deletion_pending"),
+    deletionSubmitPending: getMessage(auth, "profile.deletion_submit_pending"),
+    deletionToastCreated: getMessage(auth, "profile.deletion_toast_created"),
+    deletionToastCancelled: getMessage(auth, "profile.deletion_toast_cancelled"),
     signOut: getMessage(auth, "profile.sign_out"),
   },
 });

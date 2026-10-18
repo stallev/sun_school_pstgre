@@ -8,6 +8,7 @@ export function revalidateAnalyticsForGradeYear(gradeId: string, yearId: string)
   updateTag(CACHE_TAGS.analyticsGroup(gradeId, yearId));
   updateTag(CACHE_TAGS.analyticsConducted(gradeId, yearId));
   updateTag(CACHE_TAGS.analyticsDataQuality(gradeId, yearId));
+  updateTag(CACHE_TAGS.analyticsDeletedData(gradeId, yearId));
 }
 
 export function revalidateAnalyticsForPupilYear(pupilId: string, yearId: string): void {

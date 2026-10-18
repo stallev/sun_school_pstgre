@@ -19,7 +19,7 @@ vi.mock("@/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/db.server", () => ({ getPrisma: async () => ({ appUser: { findUnique: mocks.findUnique } }) }));
 
 import { canVisitRoutePrefix } from "@sunschool/policy-edge";
-import { requireActiveUser, requireRole, requireSession } from "./require-user";
+import { requireActiveUser, requireNonDeletedUser, requireRole, requireSession } from "./require-user";
 
 const row = (status: string, roles: string[]) => ({ id: "u1", status, roles: roles.map((role) => ({ role })) });
 const outcome = async (run: () => Promise<unknown>) => {
@@ -90,6 +90,37 @@ describe("requireActiveUser (AZ-D2, AZ-D5): status and roles come from the datab
     mocks.findUnique.mockResolvedValue(row("ACTIVE", ["ADMIN"]));
     await outcome(requireActiveUser);
     expect(mocks.findUnique).toHaveBeenCalledWith(expect.objectContaining({ where: { id: "u1" } }));
+  });
+});
+
+describe("requireNonDeletedUser (AZ-06, AZ-P4): non-DELETED account gate for self-service deletion", () => {
+  beforeEach(() => mocks.auth.mockResolvedValue({ user: { id: "u1" } }));
+
+  it.each(["ACTIVE", "REQUEST_PENDING", "REJECTED", "REGISTRATION", "DISABLED"])(
+    "returns context for %s (not ACTIVE-only)",
+    async (status) => {
+      mocks.findUnique.mockResolvedValue(row(status, ["TEACHER"]));
+      expect(await outcome(requireNonDeletedUser)).toEqual({
+        ok: true,
+        value: { userId: "u1", status, roles: ["TEACHER"] },
+      });
+    },
+  );
+
+  it("sends DELETED to the terminal error page", async () => {
+    mocks.findUnique.mockResolvedValue(row("DELETED", []));
+    expect(await outcome(requireNonDeletedUser)).toEqual({
+      ok: false,
+      redirectTo: "/login?error=AccessDenied",
+    });
+  });
+
+  it("sends a missing user row to the terminal error page", async () => {
+    mocks.findUnique.mockResolvedValue(null);
+    expect(await outcome(requireNonDeletedUser)).toEqual({
+      ok: false,
+      redirectTo: "/login?error=AccessDenied",
+    });
   });
 });
 

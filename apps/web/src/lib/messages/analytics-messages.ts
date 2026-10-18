@@ -82,7 +82,11 @@ export type AnalyticsMessages = {
     title: string;
     missingRecords: (count: number) => string;
   };
-  deletionRecalculated: string;
+  deletedData: {
+    title: string;
+    note: (dateLabel: string) => string;
+    noteWithCount: (dateLabel: string, count: number) => string;
+  };
   formatPercent: (value: number) => string;
   formatAverage: (value: number) => string;
   formatChartValue: (point: AnalyticsChartPoint) => string;

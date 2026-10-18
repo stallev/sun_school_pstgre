@@ -12,6 +12,10 @@ import type { GroupAnalyticsSnapshot } from "./analytics-compute.server";
 import { getGroupAnalytics } from "./get-group-analytics";
 import { getConductedLessons, type ConductedLessonsSnapshot } from "./get-conducted-lessons";
 import { getDataQuality, type DataQualitySnapshot } from "./get-data-quality";
+import {
+  getDeletedDataInPeriod,
+  type DeletedDataInPeriodSnapshot,
+} from "./get-deleted-data-in-period";
 
 export type AnalyticsPageSearchParams = {
   gradeId?: string;
@@ -37,6 +41,7 @@ export type AnalyticsPageData =
       analytics: GroupAnalyticsSnapshot;
       conducted: ConductedLessonsSnapshot;
       dataQuality: DataQualitySnapshot | null;
+      deletedDataInPeriod: DeletedDataInPeriodSnapshot | null;
     };
 
 async function loadGradeOptions(
@@ -122,10 +127,15 @@ export async function loadAnalyticsPage(
   }
 
   let dataQuality: DataQualitySnapshot | null = null;
+  let deletedDataInPeriod: DeletedDataInPeriodSnapshot | null = null;
   if (isAdmin) {
     const qualityResult = await getDataQuality(db, actorUserId, gradeId, periodFilter);
     if (!isMutationErr(qualityResult)) {
       dataQuality = qualityResult.data;
+    }
+    const deletedResult = await getDeletedDataInPeriod(db, actorUserId, gradeId, periodFilter);
+    if (!isMutationErr(deletedResult)) {
+      deletedDataInPeriod = deletedResult.data;
     }
   }
 
@@ -143,5 +153,6 @@ export async function loadAnalyticsPage(
     analytics: analyticsResult.data,
     conducted: conductedResult.data,
     dataQuality,
+    deletedDataInPeriod,
   };
 }

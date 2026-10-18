@@ -98,6 +98,7 @@
 | `global_shell_spec.md` (W9-01) | Загрузка словарей оболочки |
 | `ui-messages-and-copy.mdc`, `ui-messages-bundle-splitting.mdc` | Правила применяются в P6 |
 | [`copy_and_messages.md`](../../guidelines/react/copy_and_messages.md) | Срезы словаря — по §4.3 |
+| `messages/{ru,en}/admin.json` → `deletions.*`, `audit.*` | P06: `/deletions`, `/audit`, блок удаления в `/profile`; confirm word ru/en (`admin.deletions.confirm_word`) |
 
 ## 9. Acceptance criteria
 
@@ -136,3 +137,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — ACCEPTED (W4-06) |
+| 2026-10-18 | v1.1 — §8: ключи P06 (`admin.deletions`, `admin.audit`) |

@@ -13,3 +13,15 @@ export { writeAudit } from "./audit/write-audit";
 export type { AuditEntry } from "./audit/write-audit";
 export { reassignAuditActorsForUserMerge } from "./audit/reassign-audit-actors-for-merge";
 export { getDummyPasswordHash, hashPassword, verifyPassword } from "./auth/password";
+export {
+  DELETION_PRIVILEGED_CONTEXT_REQUIRED,
+  DELETION_PRIVILEGED_GUC,
+  DELETION_PRIVILEGED_SQL_FUNCTIONS,
+} from "./deletion/constants";
+export { deleteBrickLedgerForPupilPrivileged } from "./deletion/delete-brick-ledger-for-pupil";
+export {
+  setDeletionPrivilegedContext,
+  withDeletionPrivilegedContext,
+} from "./deletion/privileged-context";
+export { scrubAuditLogForPupilPrivileged } from "./deletion/scrub-audit-log-for-pupil";
+export { scrubAuditLogForUserPrivileged } from "./deletion/scrub-audit-log-for-user";

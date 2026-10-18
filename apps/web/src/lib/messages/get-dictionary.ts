@@ -1,5 +1,7 @@
 import "server-only";
 
+import * as Sentry from "@sentry/nextjs";
+
 import type { Dictionary, MessageLocale, MessageNamespace } from "@/lib/messages/dictionary-types";
 
 export type { Dictionary, MessageLocale, MessageNamespace } from "@/lib/messages/dictionary-types";
@@ -32,8 +34,15 @@ export async function getDictionary(
   locale: MessageLocale,
   namespace: MessageNamespace,
 ): Promise<Dictionary> {
-  const dictionary = await loaders[locale][namespace]();
-  return dictionary.default;
+  try {
+    const dictionary = await loaders[locale][namespace]();
+    return dictionary.default;
+  } catch (error) {
+    Sentry.captureException(error);
+    if (locale === "ru") throw error;
+    const fallback = await loaders.ru[namespace]();
+    return fallback.default;
+  }
 }
 
 /** Reads a string by dotted path (`errors.forbidden`); a missing key is a bug, not an empty string. */

@@ -1,8 +1,25 @@
 import "server-only";
 
+import { DELETION_DATA_CATEGORY, DELETION_PLAN_WARNING } from "@sunschool/domain";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+
+const deletionCategoryLabels = (admin: Dictionary): Record<string, string> =>
+  Object.fromEntries(
+    Object.values(DELETION_DATA_CATEGORY).map((category) => [
+      category,
+      getMessage(admin, `deletions.category_${category}`),
+    ]),
+  );
+
+const deletionWarningLabels = (admin: Dictionary): Record<string, string> =>
+  Object.fromEntries(
+    Object.values(DELETION_PLAN_WARNING).map((code) => [
+      code,
+      getMessage(admin, `deletions.warning_${code}`),
+    ]),
+  );
 
 export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
   page: {
@@ -14,6 +31,7 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     peopleTitle: getMessage(admin, "page.people_title"),
     settingsTitle: getMessage(admin, "page.settings_title"),
     schoolTitle: getMessage(admin, "page.school_title"),
+    deletionsTitle: getMessage(admin, "page.deletions_title"),
   },
   settings: {
     pageSubtitle: getMessage(admin, "settings.page_subtitle"),
@@ -83,7 +101,6 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     profileStatus: getMessage(admin, "users.profile_status"),
     profileLoginMethods: getMessage(admin, "users.profile_login_methods"),
     profileAuditLink: getMessage(admin, "users.profile_audit_link"),
-    profileAuditSoon: getMessage(admin, "users.profile_audit_soon"),
     saveRoles: getMessage(admin, "users.save_roles"),
     disableAccess: getMessage(admin, "users.disable_access"),
     enableAccess: getMessage(admin, "users.enable_access"),
@@ -240,5 +257,59 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     not_enrolled: getMessage(admin, "people.not_enrolled"),
     enroll_date_format: getMessage(admin, "people.enroll_date_format"),
     signer_required: getMessage(admin, "people.signer_required"),
+  },
+  deletions: {
+    pageSubtitle: getMessage(admin, "deletions.page_subtitle"),
+    tabOpen: getMessage(admin, "deletions.tab_open"),
+    tabDone: getMessage(admin, "deletions.tab_done"),
+    tabClosed: getMessage(admin, "deletions.tab_closed"),
+    emptyTitle: getMessage(admin, "deletions.empty_title"),
+    emptyDescription: getMessage(admin, "deletions.empty_description"),
+    typeAccount: getMessage(admin, "deletions.type_account"),
+    typeChild: getMessage(admin, "deletions.type_child"),
+    requestedOn: getMessage(admin, "deletions.requested_on"),
+    requestedBySelf: getMessage(admin, "deletions.requested_by_self"),
+    requestedBy: getMessage(admin, "deletions.requested_by"),
+    reasonPrefix: getMessage(admin, "deletions.reason_prefix"),
+    daysLeft: getMessage(admin, "deletions.days_left"),
+    daysOverdue: getMessage(admin, "deletions.days_overdue"),
+    takenBy: getMessage(admin, "deletions.taken_by"),
+    statusNew: getMessage(admin, "deletions.status_new"),
+    statusInProgress: getMessage(admin, "deletions.status_in_progress"),
+    statusDone: getMessage(admin, "deletions.status_done"),
+    statusRejected: getMessage(admin, "deletions.status_rejected"),
+    statusCancelled: getMessage(admin, "deletions.status_cancelled"),
+    planDelete: getMessage(admin, "deletions.plan_delete"),
+    planAnonymize: getMessage(admin, "deletions.plan_anonymize"),
+    warningTitle: getMessage(admin, "deletions.plan_warning_title"),
+    take: getMessage(admin, "deletions.take"),
+    execute: getMessage(admin, "deletions.execute"),
+    reject: getMessage(admin, "deletions.reject"),
+    rejectTitle: getMessage(admin, "deletions.reject_title"),
+    rejectDescription: getMessage(admin, "deletions.reject_description"),
+    rejectReason: getMessage(admin, "deletions.reject_reason"),
+    submitReject: getMessage(admin, "deletions.submit_reject"),
+    submitPending: getMessage(admin, "deletions.submit_pending"),
+    executeTitle: getMessage(admin, "deletions.execute_title"),
+    executeSummary: getMessage(admin, "deletions.execute_summary"),
+    confirmLabel: getMessage(admin, "deletions.confirm_label"),
+    confirmWord: getMessage(admin, "deletions.confirm_word"),
+    executeSubmit: getMessage(admin, "deletions.execute_submit"),
+    toastTaken: getMessage(admin, "deletions.toast_taken"),
+    toastExecuted: getMessage(admin, "deletions.toast_executed"),
+    toastRejected: getMessage(admin, "deletions.toast_rejected"),
+    resolvedDone: getMessage(admin, "deletions.resolved_done"),
+    resolvedRejected: getMessage(admin, "deletions.resolved_rejected"),
+    resolvedCancelled: getMessage(admin, "deletions.resolved_cancelled"),
+    childRequestAction: getMessage(admin, "deletions.child_request_action"),
+    childRequestTitle: getMessage(admin, "deletions.child_request_title"),
+    childRequestDescription: getMessage(admin, "deletions.child_request_description"),
+    guardianNoteLabel: getMessage(admin, "deletions.guardian_note_label"),
+    childRequestSubmit: getMessage(admin, "deletions.child_request_submit"),
+    toastChildCreated: getMessage(admin, "deletions.toast_child_created"),
+    profileLink: getMessage(admin, "deletions.profile_link"),
+    pupilLink: getMessage(admin, "deletions.pupil_link"),
+    categoryLabels: deletionCategoryLabels(admin),
+    warningLabels: deletionWarningLabels(admin),
   },
 });

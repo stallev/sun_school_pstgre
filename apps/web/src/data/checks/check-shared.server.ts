@@ -29,6 +29,7 @@ import {
   loadLessonInOrganization,
   lockLessonYearAndAssertActive,
 } from "../lessons/lesson-shared.server";
+import { lockPupilRow } from "../school/school-pupil-shared.server";
 import { loadAcademicYearForOrganization, lockAcademicYearRow } from "../school/school-year-guards.server";
 
 type Tx = Prisma.TransactionClient;
@@ -96,6 +97,14 @@ async function assertPupilOnLesson(
     select: { id: true },
   });
   if (!enrollment) {
+    return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+  }
+  return null;
+}
+
+async function lockPupilForHomeworkCheck(tx: Tx, pupilId: string): Promise<MutationErr | null> {
+  const locked = await lockPupilRow(tx, pupilId);
+  if (!locked) {
     return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
   }
   return null;
@@ -351,6 +360,9 @@ export async function saveCheckInTransaction(
 
   const pupilError = await assertPupilOnLesson(tx, input.pupilId, lesson);
   if (pupilError) return pupilError;
+
+  const pupilLockError = await lockPupilForHomeworkCheck(tx, input.pupilId);
+  if (pupilLockError) return pupilLockError;
 
   const existing = await lockHomeworkCheckByLessonPupil(tx, input.lessonId, input.pupilId);
   const conflict = assertExpectedUpdatedAt(input.expectedUpdatedAt, existing);

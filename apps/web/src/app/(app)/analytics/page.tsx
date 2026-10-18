@@ -5,6 +5,7 @@ import { AnalyticsPeriodFilter } from "@/components/analytics/AnalyticsPeriodFil
 import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
 import { ConductedLessonsTable } from "@/components/analytics/ConductedLessonsTable";
 import { DataQualityNote } from "@/components/analytics/DataQualityNote";
+import { DeletedDataNote } from "@/components/analytics/DeletedDataNote";
 import { GroupAnalyticsTables } from "@/components/analytics/GroupAnalyticsTables";
 import { MethodologyNote } from "@/components/analytics/MethodologyNote";
 import { SampleCompositionRow } from "@/components/analytics/SampleCompositionRow";
@@ -88,6 +89,15 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
       {data.isAdmin && data.dataQuality && data.dataQuality.missingPupilRecordsOnCheckedLessons > 0 ? (
         <DataQualityNote
           missingRecords={data.dataQuality.missingPupilRecordsOnCheckedLessons}
+          messages={messages}
+        />
+      ) : null}
+      {data.isAdmin &&
+      data.deletedDataInPeriod &&
+      data.deletedDataInPeriod.latestResolvedAtIso ? (
+        <DeletedDataNote
+          deletedChildCount={data.deletedDataInPeriod.deletedChildCount}
+          latestResolvedDateLabel={formatDate(data.deletedDataInPeriod.latestResolvedAtIso.slice(0, 10))}
           messages={messages}
         />
       ) : null}

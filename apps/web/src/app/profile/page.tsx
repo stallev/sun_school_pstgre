@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { ACCOUNT_STATUS, USER_ROLE } from "@sunschool/domain";
 import { AuthSignOutLink } from "@/components/auth/AuthSignOutLink.client";
 import { LinkedIdentityRow } from "@/components/auth/LinkedIdentityRow";
-import { ProfileDeletionStub } from "@/components/auth/ProfileDeletionStub";
+import { ProfileDeletionPanel } from "@/components/auth/ProfileDeletionPanel.client";
 import { ProfileLinkToast } from "@/components/auth/ProfileLinkToast.client";
 import { ProfileNameForm } from "@/components/auth/ProfileNameForm.client";
 import { ContentText } from "@/components/atoms";
@@ -11,6 +11,7 @@ import { CustomLink } from "@/components/ui/custom-link";
 import { FormSection } from "@/components/patterns/FormSection";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { loadOwnProfile } from "@/data/access/load-own-profile.server";
+import { loadOwnDeletionRequest } from "@/data/deletions/load-own-deletion-request.server";
 import { requireSession } from "@/lib/auth/require-user";
 import { loadSessionPolicyContext } from "@/lib/auth/load-session-policy.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
@@ -48,7 +49,9 @@ const formatProfileSubtitle = (
 const ProfilePage = async () => {
   const { uid } = await requireSession();
   const policy = await loadSessionPolicyContext();
-  const profile = await loadOwnProfile(await getPrisma(), uid);
+  const prisma = await getPrisma();
+  const profile = await loadOwnProfile(prisma, uid);
+  const openDeletionRequest = await loadOwnDeletionRequest(prisma, uid);
 
   const locale = await getUiLocale();
   const [authDict, common] = await Promise.all([getDictionary(locale, "auth"), getDictionary(locale, "common")]);
@@ -137,7 +140,11 @@ const ProfilePage = async () => {
           </FormSection>
 
           <FormSection title={authMessages.profile.deletionSection}>
-            <ProfileDeletionStub messages={authMessages.profile} />
+            <ProfileDeletionPanel
+              openRequest={openDeletionRequest}
+              locale={locale}
+              dictionaries={dictionaries}
+            />
           </FormSection>
         </div>
       </div>

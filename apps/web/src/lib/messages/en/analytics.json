@@ -132,7 +132,11 @@
     "title": "Data quality",
     "missing_records": "Missing records on checked lessons: {count}"
   },
-  "deletion_recalculated": "Metrics were recalculated after a data deletion request.",
+  "deleted_data": {
+    "title": "Deleted data",
+    "note": "Metrics were recalculated after a guardian data deletion request on {date}.",
+    "note_with_count": "Metrics were recalculated after a guardian data deletion request on {date}. Children affected: {count}."
+  },
   "format": {
     "percent": "{value}%",
     "average": "{value}",

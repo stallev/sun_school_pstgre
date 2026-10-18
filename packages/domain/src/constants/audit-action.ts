@@ -57,6 +57,12 @@ export const AUDIT_ACTION = {
   CALENDAR_EVENT_DELETED: "calendar.event_deleted",
   BRICKS_ISSUED: "bricks.issued",
   BRICKS_COMPENSATED: "bricks.compensated",
+  DELETION_REQUESTED: "deletion.requested",
+  DELETION_TAKEN: "deletion.taken",
+  DELETION_CANCELLED: "deletion.cancelled",
+  DELETION_REJECTED: "deletion.rejected",
+  DELETION_EXECUTED: "deletion.executed",
+  DELETION_USER_ANONYMIZED: "deletion.user_anonymized",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 
@@ -82,5 +88,6 @@ export const AUDIT_ENTITY_TYPE = {
   GRADE_EVENT: "grade_event",
   HOMEWORK_CHECK: "homework_check",
   BRICK_LEDGER: "brick_ledger",
+  DELETION_REQUEST: "deletion_request",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];
