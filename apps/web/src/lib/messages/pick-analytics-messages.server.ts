@@ -101,6 +101,46 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
           value: point.value,
           n: point.observationCount,
         }),
+  rating: {
+    pageTitle: getMessage(analytics, "rating.page_title"),
+    pageSubtitleGroup: (group, year) =>
+      fill(getMessage(analytics, "rating.page_subtitle_group"), { group, year }),
+    pageSubtitleSchool: (year) =>
+      fill(getMessage(analytics, "rating.page_subtitle_school"), { year }),
+    privacyNote: getMessage(analytics, "rating.privacy_note"),
+    footnote: getMessage(analytics, "rating.footnote"),
+    columnPlace: getMessage(analytics, "rating.column_place"),
+    columnPupil: getMessage(analytics, "rating.column_pupil"),
+    columnMetric: getMessage(analytics, "rating.column_metric"),
+    empty: getMessage(analytics, "rating.empty"),
+    scopeGroup: getMessage(analytics, "rating.scope_group"),
+    scopeSchool: getMessage(analytics, "rating.scope_school"),
+  },
+  school: {
+    pageTitle: getMessage(analytics, "school.page_title"),
+    pageSubtitle: (year) => fill(getMessage(analytics, "school.page_subtitle"), { year }),
+    groupsTableTitle: getMessage(analytics, "school.groups_table_title"),
+    groupsTableHint: getMessage(analytics, "school.groups_table_hint"),
+    columnGroup: getMessage(analytics, "school.column_group"),
+    columnTeachers: getMessage(analytics, "school.column_teachers"),
+    columnPupils: getMessage(analytics, "school.column_pupils"),
+    columnAttendance: getMessage(analytics, "school.column_attendance"),
+    columnAverage: getMessage(analytics, "school.column_average"),
+    columnLastLesson: getMessage(analytics, "school.column_last_lesson"),
+    lastLessonOk: (label) => fill(getMessage(analytics, "school.last_lesson_ok"), { label }),
+    lastLessonWarn: (label) => fill(getMessage(analytics, "school.last_lesson_warn"), { label }),
+    lastLessonIdle: getMessage(analytics, "school.last_lesson_idle"),
+    attendanceChartTitle: getMessage(analytics, "school.attendance_chart_title"),
+    attendanceChartHint: getMessage(analytics, "school.attendance_chart_hint"),
+    attentionTitle: getMessage(analytics, "school.attention_title"),
+    attentionPending: (count) =>
+      fill(getMessage(analytics, "school.attention_pending"), { count }),
+    attentionNegativeBricks: (count) =>
+      fill(getMessage(analytics, "school.attention_negative_bricks"), { count }),
+    attentionPendingHint: getMessage(analytics, "school.attention_pending_hint"),
+    attentionNegativeBricksHint: getMessage(analytics, "school.attention_negative_bricks_hint"),
+    conductedGradeLabel: getMessage(analytics, "school.conducted_grade_label"),
+  },
 });
 
 export const pickPupilAnalyticsMessages = (analytics: Dictionary): PupilAnalyticsMessages => ({

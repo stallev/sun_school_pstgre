@@ -108,11 +108,11 @@
 
 ### P05-CU8 — feat(web): add rating, school overview and conducted lessons · Review: diff-only · Commit: auto
 
-- [ ] P05-T11 · T1 · Phase: [экранные требования `/rating`](../phases_tasks_descriptions/P05_phase_description.md) · Prototype: `rating`
+- [x] P05-T11 · T1 · Phase: [экранные требования `/rating`](../phases_tasks_descriptions/P05_phase_description.md) · Prototype: `rating`
       Files: `app/(app)/rating/page.tsx`, `components/analytics/RatingTable.tsx`
       Acceptance: рейтинг группы/школы по метрике Q-01; без режима показа; admin — школа → ручной smoke
       Paths: H · N [нет данных] · S [AZ-47, РТ-1: teacher только своя]
-- [ ] P05-T12 · T1 · Spec: [спец. §9.1.2, §9.1.4](../../../my_specs/sunday_school_data_analytics_spec.md) · Prototype: `school`
+- [x] P05-T12 · T1 · Spec: [спец. §9.1.2, §9.1.4](../../../my_specs/sunday_school_data_analytics_spec.md) · Prototype: `school`
       Files: `app/(app)/school/page.tsx` (показатели), `components/analytics/ConductedLessonsTable.tsx`
       Acceptance: сравнение групп, график по линии на группу (≤ 4), «требует внимания», блок «кто какие уроки провёл» (0 для не ведших; «уже не в группе») → ручной smoke
       Paths: H · N [одна группа, нет данных] · S [AZ-16, AZ-44]

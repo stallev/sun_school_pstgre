@@ -86,6 +86,42 @@ export type AnalyticsMessages = {
   formatPercent: (value: number) => string;
   formatAverage: (value: number) => string;
   formatChartValue: (point: AnalyticsChartPoint) => string;
+  rating: {
+    pageTitle: string;
+    pageSubtitleGroup: (group: string, year: string) => string;
+    pageSubtitleSchool: (year: string) => string;
+    privacyNote: string;
+    footnote: string;
+    columnPlace: string;
+    columnPupil: string;
+    columnMetric: string;
+    empty: string;
+    scopeGroup: string;
+    scopeSchool: string;
+  };
+  school: {
+    pageTitle: string;
+    pageSubtitle: (year: string) => string;
+    groupsTableTitle: string;
+    groupsTableHint: string;
+    columnGroup: string;
+    columnTeachers: string;
+    columnPupils: string;
+    columnAttendance: string;
+    columnAverage: string;
+    columnLastLesson: string;
+    lastLessonOk: (label: string) => string;
+    lastLessonWarn: (label: string) => string;
+    lastLessonIdle: string;
+    attendanceChartTitle: string;
+    attendanceChartHint: string;
+    attentionTitle: string;
+    attentionPending: (count: number) => string;
+    attentionPendingHint: string;
+    attentionNegativeBricks: (count: number) => string;
+    attentionNegativeBricksHint: string;
+    conductedGradeLabel: string;
+  };
 };
 
 export type PupilAnalyticsMessages = AnalyticsMessages & {

@@ -1,83 +1,110 @@
+import { notFound } from "next/navigation";
 import { USER_ROLE } from "@sunschool/domain";
-import { Banner } from "@/components/patterns/Banner";
+import { AnalyticsPeriodFilter } from "@/components/analytics/AnalyticsPeriodFilter";
+import { ConductedLessonsTable } from "@/components/analytics/ConductedLessonsTable";
+import { SchoolAttendanceChart } from "@/components/analytics/SchoolAttendanceChart";
+import { SchoolAttentionList } from "@/components/analytics/SchoolAttentionList";
+import { SchoolGroupsTable } from "@/components/analytics/SchoolGroupsTable";
+import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { NumberDisplay } from "@/components/atoms/NumberDisplay";
-import { SectionTitle } from "@/components/atoms";
+import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
-import { CustomLink } from "@/components/ui/custom-link";
-import { loadSchoolDashboardCounts } from "@/data/school/load-school-dashboard.server";
-import { loadShellBanners, type ShellBannerCopy } from "@/data/shell/load-shell-banners.server";
+import { Card } from "@/components/ui/card";
+import { LessonsGradeFilter } from "@/components/teacher/LessonsGradeFilter";
+import { loadSchoolAnalyticsPage } from "@/data/analytics/load-school-analytics-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
-import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
+import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 
-const SchoolPage = async () => {
+type SchoolPageProps = {
+  searchParams: Promise<{
+    gradeId?: string;
+    mode?: string;
+    month?: string;
+    from?: string;
+    to?: string;
+  }>;
+};
+
+const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
+  const params = await searchParams;
   const actor = await requireRole(USER_ROLE.ADMIN);
-  const prisma = await getPrisma();
+  const data = await loadSchoolAnalyticsPage(await getPrisma(), actor.userId, params);
   const locale = await getUiLocale();
-  const [adminDict, commonDict, counts] = await Promise.all([
-    getDictionary(locale, "admin"),
-    getDictionary(locale, "common"),
-    loadSchoolDashboardCounts(prisma),
-  ]);
-  const adminMessages = pickAdminMessages(adminDict);
-  const bannerCopy: ShellBannerCopy = {
-    noActiveYearTitle: getMessage(commonDict, "states.no_active_year_title"),
-    noActiveYearDescriptionAdmin: getMessage(commonDict, "states.no_active_year_admin"),
-    noActiveYearDescriptionTeacher: getMessage(commonDict, "states.no_active_year_teacher"),
-    createYearAction: getMessage(commonDict, "states.create_year_action"),
-    timezoneUnsetTitle: getMessage(commonDict, "states.timezone_unset_title"),
-    timezoneUnsetDescription: getMessage(commonDict, "states.timezone_unset_description"),
-    chooseTimezoneAction: getMessage(commonDict, "states.choose_timezone_action"),
-  };
-  const banners = await loadShellBanners(actor, bannerCopy);
+  const appLocale = messageLocaleToAppLocale(locale);
+  const analyticsDict = await getDictionary(locale, "analytics");
+  const teacherDict = await getDictionary(locale, "teacher");
+  const messages = pickAnalyticsMessages(analyticsDict);
+  const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
+  const formatDate = (iso: string) =>
+    new Intl.DateTimeFormat(appLocale, { day: "numeric", month: "short" }).format(
+      new Date(`${iso}T12:00:00Z`),
+    );
 
-  const statCards = [
-    { label: adminMessages.school.groupsLabel, value: counts.groupCount, href: "/groups" },
-    { label: adminMessages.school.pupilsLabel, value: counts.pupilCount, href: "/people" },
-    { label: adminMessages.school.requestsLabel, value: counts.pendingRequests, href: "/approvals" },
-  ];
+  if (data.kind === "forbidden") notFound();
+
+  if (data.kind === "no_active_year") {
+    return (
+      <div className="space-y-6">
+        <PageHeader title={messages.school.pageTitle} />
+        <EmptyState
+          title={getMessage(teacherDict, "lesson.no_year_title")}
+          description={getMessage(teacherDict, "lesson.no_year_description")}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <PageHeader title={adminMessages.page.schoolTitle} description={adminMessages.school.pageSubtitle} />
-      {banners.length > 0 ? (
-        <div className="space-y-3">
-          {banners.map((item, index) => (
-            <Banner key={`${item.title}-${index}`} tone="warning" title={item.title}>
-              <p>{item.description}</p>
-              {item.actionHref && item.actionLabel ? (
-                <CustomLink href={item.actionHref} className="mt-2 inline-block text-cobalt-ink underline">
-                  {item.actionLabel}
-                </CustomLink>
-              ) : null}
-            </Banner>
-          ))}
-        </div>
-      ) : null}
-      <section>
-        <SectionTitle>{adminMessages.school.statsTitle}</SectionTitle>
-        <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {statCards.map((card) => (
-            <li key={card.href} className="h-full">
-              <CustomLink
-                href={card.href}
-                className="flex h-full flex-col rounded-xl border border-line bg-surface p-4 hover:bg-paper"
-              >
-                <ContentText tone="secondary" className="text-sm">
-                  {card.label}
-                </ContentText>
-                <NumberDisplay className="mt-2 text-3xl">{card.value}</NumberDisplay>
-              </CustomLink>
-            </li>
-          ))}
-        </ul>
+    <div className="space-y-8">
+      <PageHeader
+        title={messages.school.pageTitle}
+        description={messages.school.pageSubtitle(data.yearName)}
+      />
+      <AnalyticsPeriodFilter
+        gradeId={data.gradeId}
+        periodFilter={data.periodFilter}
+        messages={messages}
+        actionPath="/school"
+      />
+      <SchoolGroupsTable
+        rows={data.groupRows}
+        messages={messages.school}
+        formatPercent={messages.formatPercent}
+      />
+      <section className="space-y-2">
+        <SectionTitle as="h2" className="text-lg">{messages.school.attendanceChartTitle}</SectionTitle>
+        <ContentText className="text-sm text-muted-foreground">
+          {messages.school.attendanceChartHint}
+        </ContentText>
+        <Card className="p-4">
+          <SchoolAttendanceChart
+            labels={data.chartLabels}
+            series={data.chartSeries}
+            formatLabel={formatDate}
+            formatPercent={messages.formatPercent}
+            ariaLabel={messages.school.attendanceChartTitle}
+          />
+        </Card>
       </section>
-      <ContentText tone="secondary" className="text-sm">
-        {adminMessages.school.scaffoldNote}
-      </ContentText>
+      <SchoolAttentionList items={data.attention} messages={messages.school} />
+      {data.grades.length > 1 ? (
+        <LessonsGradeFilter
+          grades={data.grades}
+          gradeId={data.gradeId}
+          messages={lessonMessages}
+          actionPath="/school"
+          hiddenFields={{ mode: data.periodFilter.mode }}
+        />
+      ) : null}
+      <div className="space-y-2">
+        <SectionTitle as="h2" className="text-lg">{messages.school.conductedGradeLabel}</SectionTitle>
+        <ConductedLessonsTable snapshot={data.conducted} messages={messages} />
+      </div>
     </div>
   );
 };

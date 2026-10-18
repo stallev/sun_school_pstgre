@@ -137,5 +137,41 @@
     "percent": "{value}%",
     "average": "{value}",
     "chart_value": "{value} (N={n})"
+  },
+  "rating": {
+    "page_title": "Ranking",
+    "page_subtitle_group": "{group} · {year}",
+    "page_subtitle_school": "Whole school · {year}",
+    "privacy_note": "Visible to teachers and administrators only. Not shown to parents or pupils and not for display mode.",
+    "footnote": "Place is by lesson points for the year. Achievements and penalties are not included in place (penalties post-MVP).",
+    "column_place": "Place",
+    "column_pupil": "Pupil",
+    "column_metric": "Lesson points",
+    "empty": "No checked lesson points yet.",
+    "scope_group": "Group",
+    "scope_school": "School"
+  },
+  "school": {
+    "page_title": "School",
+    "page_subtitle": "{year}",
+    "groups_table_title": "Group indicators",
+    "groups_table_hint": "Pupils: main sample / total. Averages use the main sample.",
+    "column_group": "Group",
+    "column_teachers": "Teachers",
+    "column_pupils": "Pupils",
+    "column_attendance": "Attendance",
+    "column_average": "Avg. test",
+    "column_last_lesson": "Last lesson",
+    "last_lesson_ok": "Checked {label}",
+    "last_lesson_warn": "Incomplete {label}",
+    "last_lesson_idle": "No checked lessons",
+    "attendance_chart_title": "Attendance by lesson",
+    "attendance_chart_hint": "Share present in the main sample, %.",
+    "attention_title": "Needs attention",
+    "attention_pending": "{count} users awaiting role approval",
+    "attention_pending_hint": "Registered and consented to data processing",
+    "attention_negative_bricks": "{count} pupils with negative brick balance",
+    "attention_negative_bricks_hint": "Scores were corrected after bricks were issued",
+    "conducted_grade_label": "Conducted lessons for group"
   }
 }
