@@ -1,0 +1,93 @@
+import { TREND_LABEL } from "@sunschool/domain";
+import { SectionTitle } from "@/components/atoms/SectionTitle";
+import { ContentText } from "@/components/atoms/ContentText";
+import { EmptyState } from "@/components/patterns/EmptyState";
+import { Card } from "@/components/ui/card";
+import { BarChart } from "@/components/analytics/BarChart";
+import { LineChart } from "@/components/analytics/LineChart";
+import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
+import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
+
+const MIN_DYNAMICS_POINTS = 2;
+
+type DynamicsBlockProps = {
+  dynamics: PupilAnalyticsView["dynamics"];
+  messages: PupilAnalyticsMessages;
+  formatDate: (iso: string) => string;
+  formatPercent: (value: number) => string;
+  formatDelta: (value: number) => string;
+};
+
+export const DynamicsBlock = ({
+  dynamics,
+  messages,
+  formatDate,
+  formatPercent,
+  formatDelta,
+}: DynamicsBlockProps) => {
+  const chartPoints = dynamics.smoothed.filter((point) => point.value !== null);
+  const hasChart = chartPoints.length >= MIN_DYNAMICS_POINTS;
+  const trendStyle = messages.dynamicsTrendLabels[dynamics.trendLabel];
+  const deltaValues = dynamics.deltaValues.filter((value): value is number => value !== null);
+  const deltaLimit = Math.max(4, Math.ceil(Math.max(...deltaValues.map(Math.abs), 0)));
+
+  return (
+    <Card className="flex flex-col gap-4 p-4 sm:p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <SectionTitle as="h2" className="text-lg">{messages.dynamicsTitle}</SectionTitle>
+          <ContentText className="mt-1 max-w-prose text-sm text-ink-2">{messages.dynamicsHint}</ContentText>
+        </div>
+        <div className="text-right">
+          <ContentText className={`font-semibold ${trendStyle.toneClass}`}>{trendStyle.label}</ContentText>
+          {dynamics.trendSlope !== null && dynamics.trendLabel !== TREND_LABEL.INSUFFICIENT_DATA ? (
+            <ContentText className="text-sm tabular-nums text-ink-2">
+              {messages.dynamicsSlope(formatDelta(dynamics.trendSlope))}
+            </ContentText>
+          ) : null}
+        </div>
+      </div>
+      {!hasChart ? (
+        <EmptyState
+          title={messages.charts.insufficientDataTitle}
+          description={
+            dynamics.trendPointCount < 4
+              ? messages.dynamicsInsufficientPoints
+              : messages.charts.insufficientDataDescription
+          }
+        />
+      ) : (
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="min-w-0 space-y-2">
+            <ContentText className="text-sm font-medium">{messages.dynamicsNormalizedTitle}</ContentText>
+            <LineChart
+              points={dynamics.smoothed}
+              formatLabel={formatDate}
+              formatValue={(point) => formatPercent(point.value as number)}
+              yDomain={[0, 100]}
+              ariaLabel={messages.dynamicsNormalizedAria}
+            />
+          </div>
+          <div className="min-w-0 space-y-2">
+            <ContentText className="text-sm font-medium">{messages.dynamicsDeltaTitle}</ContentText>
+            {deltaValues.length >= 1 ? (
+              <BarChart
+                labels={dynamics.deltaLabels}
+                values={dynamics.deltaValues}
+                formatLabel={formatDate}
+                formatValue={formatDelta}
+                yDomain={[-deltaLimit, deltaLimit]}
+                ariaLabel={messages.dynamicsDeltaAria}
+              />
+            ) : (
+              <EmptyState
+                title={messages.charts.insufficientDataTitle}
+                description={messages.charts.insufficientDataDescription}
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+};

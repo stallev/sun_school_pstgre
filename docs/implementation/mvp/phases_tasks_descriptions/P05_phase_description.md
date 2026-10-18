@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** Не начата (обновлено 2026-10-11). Ждёт DoD P04; spec-gap `analytics_screens_spec.md` закрывается в P05-CU0.  
+**Прогресс фазы:** CU1–CU8 реализованы (обновлено 2026-10-18); CU9 — docs sync. Ручной smoke H/N/S — владельцу перед prod.  
 **Версия:** 1.0  
 **Дата:** 2026-10-11  
 **Волна:** W11-09  
@@ -25,7 +25,7 @@
 |---|----------|-------|
 | 1 | [`P05_tasks.md`](../tasks/P05_tasks.md) | Чек-лист и CU |
 | 2 | [`bricks_ledger_contract.md`](../contracts/bricks_ledger_contract.md) | Остаток, выдача, компенсация |
-| 3 | [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) | Экраны аналитики (создаётся в CU0) |
+| 3 | [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) | Экраны аналитики (W9-07, P05-CU0) |
 | 4 | Спец. [§5](../../../my_specs/sunday_school_data_analytics_spec.md), [§8–§9](../../../my_specs/sunday_school_data_analytics_spec.md) | Метрики, рейтинг, графики |
 | 5 | [`homework_check_contract.md`](../contracts/homework_check_contract.md) §6–§7 | Баллы, «сдано позже» |
 | 6 | [`ui_states_contract.md`](../../../design/ui_states_contract.md) §5 | D6, D8, D12 |
@@ -42,8 +42,8 @@
 
 | Область | Результат |
 |---------|-----------|
-| Spec-gap (CU0) | `analytics_screens_spec.md` (W9-07): экраны, фильтры, графики, методология — **создаётся первым CU** |
-| `domain` | `computeBalance`, `canIssue`, слои выборки A/B/C/D (БП-1), средние (БП-2…БП-4), посещаемость, нормированный балл, сглаживание, тренд, метрика рейтинга |
+| `analytics_screens_spec.md` (W9-07) | Экраны, фильтры, графики (recharts), методология — P05-CU0…CU8 |
+| `domain` | `computeBalance`, `canIssue`, слои выборки A/B/C/D (БП-1), средние (БП-2…БП-4), посещаемость, нормированный балл, сглаживание, тренд, `computeRatingMetric`, `rankRatingRows` |
 | Кирпичики | `getBalance`, `listLedger`, `issueBricks`, `compensateBricks` |
 | Рейтинг | `getGroupRating`, `getSchoolRating` (метрика — см. Q-01) |
 | Аналитика | группа, ученик (с динамикой 9.1.3), школа, «кто какие уроки провёл» (9.1.4), строка качества данных |
@@ -93,7 +93,7 @@
 | **CREATE** (L4) | `BalanceTable`, `IssueBricksDialog`, `CompensateBricksDialog`, `LedgerList`, `RatingTable`, `AnalyticsKpiRow`, `SampleCompositionRow`, `LineChart`, `BarChart`, `ChartTableToggle`, `MethodologyNote`, `PupilLessonTable`, `DynamicsBlock`, `ConductedLessonsTable`, `DataQualityNote` | Lab-first; якоря: `bricks`, `rating`, `analytics`, `pupil`, `school` |
 | **MUST NOT** | две оси Y на одном графике; цвет как единственный носитель смысла; 3D/градиенты | спец. §9.5 |
 
-Библиотека графиков — Q-02; выбор фиксируется на CU6 после проверки по документации.
+Библиотека графиков — **recharts** `3.10.1` (Q-02 закрыт в CU6; см. `analytics_screens_spec` §17 Q-01).
 
 ---
 
@@ -105,7 +105,7 @@
 | **P02** (зачисления) | Да | дата отсчёта БП-1, слои выборки |
 | **P03** (уроки, ведущие) | Да | блок «кто какие уроки провёл» |
 | Метрика рейтинга (спец. 12.2 п. 5) | Нет | значение по умолчанию принято, пересмотр — владелец |
-| `analytics_screens_spec` | Да (экраны) | создаётся в CU0 фазы |
+| `analytics_screens_spec` | Да (экраны) | Canonical с CU0 |
 | P06 | Нет | пометка «данные удалены» подключится позже |
 
 ---
@@ -201,7 +201,7 @@ flowchart TD
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
 | Q-01 | ✔ **Решено 2026-10-11.** Метрика рейтинга (РТ-3, 12.2 п. 5) | Сумма баллов за год по проверенным записям; ученики вне основной выборки показываются отдельно; пересмотр — владелец | — |
-| Q-02 | Библиотека графиков | Выбрать по документации на CU6 (лёгкая, SSR-friendly, доступная); без 3D | CU6 |
+| Q-02 | ✔ **Решено 2026-10-18 (P05-CU6).** Библиотека графиков | **recharts** `3.10.1` exact; client components + `ChartTableToggle`; без 3D | — |
 | Q-03 | Порог явки 50% и тренд ±1 п.п. — константы или настройка | Константы домена; настройка — post-MVP | CU4 |
 | Q-04 | Период: год / месяц / диапазон | Год по умолчанию; месяц и диапазон — фильтр | CU5 |
 
@@ -234,3 +234,4 @@ flowchart TD
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W11-09) |
+| 2026-10-18 | v1.1 — Прогресс CU1–CU8; Q-02 recharts; domain rating (P05-CU9) |

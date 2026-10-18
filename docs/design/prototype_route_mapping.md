@@ -46,9 +46,9 @@
 | `rating` | `vRating` | `/rating` | teacher, admin | [`bricks_ledger_contract`](../implementation/mvp/contracts/bricks_ledger_contract.md), [P05: экранные требования](../implementation/mvp/phases_tasks_descriptions/P05_phase_description.md) |
 | `calendar` | `vCalendar` | `/calendar` | teacher, admin | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
 | `verses` | `vVerses` | `/verses` | teacher, admin | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
-| `analytics` | `vAnalytics` | `/analytics` | teacher, admin | `analytics_screens_spec` (создаётся в [P05-CU0](../implementation/mvp/tasks/P05_tasks.md)) |
-| `pupil` | `vPupil` | `/analytics/pupils/[pupilId]` | teacher, admin | `analytics_screens_spec` (создаётся в [P05-CU0](../implementation/mvp/tasks/P05_tasks.md)) |
-| `school` | `vSchool` | `/school` | admin | `analytics_screens_spec` (создаётся в [P05-CU0](../implementation/mvp/tasks/P05_tasks.md)) |
+| `analytics` | `vAnalytics` | `/analytics` | teacher, admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) (P05) |
+| `pupil` | `vPupil` | `/analytics/pupils/[pupilId]` | teacher, admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) (P05) |
+| `school` | `vSchool` | `/school` | admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) (P05) |
 | `approvals` | `vApprovals` | `/approvals` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
 | `users` | `vUsers` | `/users` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
 | `userProfile` | `vUserProfile` | `/users/[userId]` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |

@@ -1,1 +1,177 @@
-{}
+{
+  "page": {
+    "title": "Аналитика",
+    "subtitle": "{group} · {year}"
+  },
+  "filters": {
+    "grade_label": "Группа",
+    "grade_apply": "Показать",
+    "period_year": "Учебный год",
+    "period_month": "Месяц",
+    "period_range": "Диапазон",
+    "month_label": "Месяц",
+    "range_from": "С",
+    "range_to": "По",
+    "period_apply": "Применить"
+  },
+  "kpi": {
+    "attendance_label": "Средняя явка",
+    "attendance_hint": "основная выборка · {count} детей",
+    "verses_label": "Стихи",
+    "test_label": "Тест",
+    "notebook_label": "Тетрадь",
+    "with_n": "{value} (N={n})",
+    "empty": "—"
+  },
+  "sample": {
+    "composition": "основная A · реже 50% B · неактивные C · без уроков D — {a} · {b} · {c} · {d}",
+    "included": "Явка не ниже 50% проверенных уроков после зачисления.",
+    "excluded_b": "Явка ниже 50% проверенных уроков после зачисления.",
+    "excluded_c": "Неактивный ученик — в групповую статистику не входит.",
+    "excluded_d": "Нет ни одного проверенного урока после даты зачисления — явку посчитать не из чего.",
+    "in_group_averages": "Учитывается в групповых средних: {included}",
+    "included_yes": "да",
+    "included_no": "нет"
+  },
+  "pupil": {
+    "page_subtitle": "Учебный год {year}",
+    "back_to_group": "Аналитика группы",
+    "personal_suffix": "(личное)",
+    "attendance_checked": "{attended} из {checked}",
+    "presence_title": "Присутствие",
+    "presence_present": "Был",
+    "presence_absent": "Не был",
+    "presence_missing": "Нет записи",
+    "lessons_title": "По урокам",
+    "lessons_empty": "В периоде нет проверенных уроков.",
+    "lesson_column_date": "Дата",
+    "lesson_column_topic": "Тема",
+    "lesson_column_present": "Был",
+    "lesson_column_verses": "Стихи",
+    "lesson_column_test": "Тест",
+    "lesson_column_notebook": "Тетрадь",
+    "present_yes": "был",
+    "present_no": "не был",
+    "present_missing": "нет записи",
+    "verses_of": "{recited} из {total}",
+    "test_not_conducted": "не проводился",
+    "submitted_late": "сдано позже · {date}",
+    "dynamics_title": "Динамика успеваемости",
+    "dynamics_hint": "Нормированный балл урока (% от максимума), скользящее среднее за 3 урока, тренд — наклон по последним 6 урокам.",
+    "dynamics_normalized_title": "Балл за урок, % от максимума (сглаженный)",
+    "dynamics_delta_title": "Изменение за урок, п.п.",
+    "dynamics_normalized_aria": "Сглаженный нормированный балл за урок",
+    "dynamics_delta_aria": "Изменение скользящего среднего от урока к уроку",
+    "dynamics_insufficient_points": "Для тренда нужно не меньше четырёх уроков с оценками.",
+    "dynamics_slope": "{delta} п.п. за урок",
+    "dynamics_trend_growing": "Растёт",
+    "dynamics_trend_declining": "Снижается",
+    "dynamics_trend_stable": "Стабильно",
+    "dynamics_trend_insufficient": "Мало данных для тренда"
+  },
+  "charts": {
+    "attendance_title": "Посещаемость",
+    "verses_title": "Стихи за урок",
+    "test_title": "Тест",
+    "notebook_title": "Тетрадь",
+    "column_date": "Дата",
+    "column_value": "Значение",
+    "column_observations": "N",
+    "show_chart": "График",
+    "show_table": "Таблица"
+  },
+  "chart": {
+    "insufficient_data_title": "Пока мало данных",
+    "insufficient_data": "Нужно больше проверенных уроков в выбранном периоде."
+  },
+  "tables": {
+    "layer_a_title": "Основная выборка",
+    "layer_b_title": "Реже 50% явки",
+    "layer_c_title": "Неактивные",
+    "layer_d_title": "Без проверенных уроков",
+    "birth_year_title": "По году рождения",
+    "birth_year_note": "Только основная выборка; при малой выборке цифры ориентировочные.",
+    "empty_section": "Таких учеников нет",
+    "column_name": "Ученик",
+    "column_birth_year": "Год рождения",
+    "column_attendance": "Явка %",
+    "column_attended": "Был",
+    "column_checked": "Проверено",
+    "column_verses": "Стихи",
+    "column_test": "Тест",
+    "column_notebook": "Тетрадь",
+    "column_enrolled_since": "В группе с"
+  },
+  "empty": {
+    "no_pupils_title": "В группе нет учеников",
+    "no_pupils_description": "Добавьте учеников в группу, чтобы увидеть аналитику.",
+    "no_checked_lessons_title": "Нет проверенных уроков",
+    "no_checked_lessons": "В выбранном периоде ещё нет проверенных уроков."
+  },
+  "conducted": {
+    "title": "Кто какие уроки провёл",
+    "subtitle": "Ведущий урока может отличаться от проверяющего.",
+    "column_teacher": "Учитель",
+    "column_conducted": "Провёл",
+    "column_regular": "Обычных",
+    "column_review": "Обзорных",
+    "column_planned": "Запланировано",
+    "column_lessons": "Уроки",
+    "no_longer_assigned": "уже не в группе",
+    "empty": "Нет данных за период."
+  },
+  "methodology": {
+    "title": "Как мы считали",
+    "body": "Групповые средние и графики — только для основной выборки (явка от 50% с даты зачисления). NULL в журнале — «не оценивалось», 0 входит в среднее. «Сдано позже» учитывается как сдача.",
+    "attendance": "Доля присутствующих от основной выборки на каждый проверенный урок.",
+    "verses": "Среднее число рассказанных стихов; обзорные и первый урок года без точки.",
+    "test": "Средний балл 0–10; уроки без теста без точки.",
+    "notebook": "Средний балл тетради 0–10 по основной выборке."
+  },
+  "data_quality": {
+    "title": "Качество данных",
+    "missing_records": "Пропущенные записи на проверенных уроках: {count}"
+  },
+  "deletion_recalculated": "Показатели пересчитаны после удаления данных по запросу.",
+  "format": {
+    "percent": "{value}%",
+    "average": "{value}",
+    "chart_value": "{value} (N={n})"
+  },
+  "rating": {
+    "page_title": "Рейтинг",
+    "page_subtitle_group": "{group} · {year}",
+    "page_subtitle_school": "Вся школа · {year}",
+    "privacy_note": "Видят только учителя и администратор. Родителям и детям не показывается, на проектор не выводится.",
+    "footnote": "Место по баллам уроков за год. Достижения и штрафы в место не входят (штрафы — post-MVP).",
+    "column_place": "Место",
+    "column_pupil": "Ученик",
+    "column_metric": "Баллы уроков",
+    "empty": "Проверенных баллов пока нет.",
+    "scope_group": "Группа",
+    "scope_school": "Школа"
+  },
+  "school": {
+    "page_title": "Школа",
+    "page_subtitle": "{year}",
+    "groups_table_title": "Показатели групп",
+    "groups_table_hint": "Ученики: основная выборка / всего. Средние — по основной выборке.",
+    "column_group": "Группа",
+    "column_teachers": "Учителя",
+    "column_pupils": "Ученики",
+    "column_attendance": "Посещаемость",
+    "column_average": "Ср. тест",
+    "column_last_lesson": "Последний урок",
+    "last_lesson_ok": "Проверено {label}",
+    "last_lesson_warn": "Не всё {label}",
+    "last_lesson_idle": "Нет проверенных уроков",
+    "attendance_chart_title": "Посещаемость групп по урокам",
+    "attendance_chart_hint": "Доля присутствовавших от основной выборки, %.",
+    "attention_title": "Требует внимания",
+    "attention_pending": "{count} пользователей ждут роль",
+    "attention_pending_hint": "Прошли регистрацию и дали согласие",
+    "attention_negative_bricks": "{count} учеников с отрицательным остатком кирпичиков",
+    "attention_negative_bricks_hint": "Оценку исправили после выдачи",
+    "conducted_grade_label": "Кто какие уроки провёл (группа)"
+  }
+}

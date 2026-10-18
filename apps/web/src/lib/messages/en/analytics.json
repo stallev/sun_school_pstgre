@@ -1,1 +1,177 @@
-{}
+{
+  "page": {
+    "title": "Analytics",
+    "subtitle": "{group} · {year}"
+  },
+  "filters": {
+    "grade_label": "Group",
+    "grade_apply": "Show",
+    "period_year": "School year",
+    "period_month": "Month",
+    "period_range": "Range",
+    "month_label": "Month",
+    "range_from": "From",
+    "range_to": "To",
+    "period_apply": "Apply"
+  },
+  "kpi": {
+    "attendance_label": "Average attendance",
+    "attendance_hint": "main sample · {count} pupils",
+    "verses_label": "Verses",
+    "test_label": "Test",
+    "notebook_label": "Notebook",
+    "with_n": "{value} (N={n})",
+    "empty": "—"
+  },
+  "sample": {
+    "composition": "main A · under 50% B · inactive C · no lessons D — {a} · {b} · {c} · {d}",
+    "included": "Attendance is at least 50% of checked lessons since enrollment.",
+    "excluded_b": "Attendance is below 50% of checked lessons since enrollment.",
+    "excluded_c": "Inactive pupil — excluded from group averages.",
+    "excluded_d": "No checked lessons after enrollment — attendance cannot be calculated.",
+    "in_group_averages": "Counted in group averages: {included}",
+    "included_yes": "yes",
+    "included_no": "no"
+  },
+  "pupil": {
+    "page_subtitle": "School year {year}",
+    "back_to_group": "Group analytics",
+    "personal_suffix": "(personal)",
+    "attendance_checked": "{attended} of {checked}",
+    "presence_title": "Attendance",
+    "presence_present": "Present",
+    "presence_absent": "Absent",
+    "presence_missing": "No record",
+    "lessons_title": "By lesson",
+    "lessons_empty": "No checked lessons in this period.",
+    "lesson_column_date": "Date",
+    "lesson_column_topic": "Topic",
+    "lesson_column_present": "Present",
+    "lesson_column_verses": "Verses",
+    "lesson_column_test": "Test",
+    "lesson_column_notebook": "Notebook",
+    "present_yes": "Yes",
+    "present_no": "No",
+    "present_missing": "No record",
+    "verses_of": "{recited} of {total}",
+    "test_not_conducted": "Not conducted",
+    "submitted_late": "Submitted later · {date}",
+    "dynamics_title": "Progress dynamics",
+    "dynamics_hint": "Normalized lesson score (% of that lesson’s maximum), 3-lesson moving average, trend — slope over the last 6 lessons.",
+    "dynamics_normalized_title": "Score per lesson, % of maximum (smoothed)",
+    "dynamics_delta_title": "Change per lesson, p.p.",
+    "dynamics_normalized_aria": "Smoothed normalized score per lesson",
+    "dynamics_delta_aria": "Change in moving average from lesson to lesson",
+    "dynamics_insufficient_points": "At least four lessons with scores are needed for a trend.",
+    "dynamics_slope": "{delta} p.p. per lesson",
+    "dynamics_trend_growing": "Growing",
+    "dynamics_trend_declining": "Declining",
+    "dynamics_trend_stable": "Stable",
+    "dynamics_trend_insufficient": "Not enough data for trend"
+  },
+  "charts": {
+    "attendance_title": "Attendance",
+    "verses_title": "Verses per lesson",
+    "test_title": "Test",
+    "notebook_title": "Notebook",
+    "column_date": "Date",
+    "column_value": "Value",
+    "column_observations": "N",
+    "show_chart": "Chart",
+    "show_table": "Table"
+  },
+  "chart": {
+    "insufficient_data_title": "Not enough data yet",
+    "insufficient_data": "More checked lessons are needed in the selected period."
+  },
+  "tables": {
+    "layer_a_title": "Main sample",
+    "layer_b_title": "Under 50% attendance",
+    "layer_c_title": "Inactive",
+    "layer_d_title": "No checked lessons",
+    "birth_year_title": "By birth year",
+    "birth_year_note": "Main sample only; small groups are indicative.",
+    "empty_section": "No pupils in this group",
+    "column_name": "Pupil",
+    "column_birth_year": "Birth year",
+    "column_attendance": "Attendance %",
+    "column_attended": "Attended",
+    "column_checked": "Checked",
+    "column_verses": "Verses",
+    "column_test": "Test",
+    "column_notebook": "Notebook",
+    "column_enrolled_since": "Enrolled since"
+  },
+  "empty": {
+    "no_pupils_title": "No pupils in this group",
+    "no_pupils_description": "Add pupils to the group to see analytics.",
+    "no_checked_lessons_title": "No checked lessons",
+    "no_checked_lessons": "There are no checked lessons in the selected period yet."
+  },
+  "conducted": {
+    "title": "Who led which lessons",
+    "subtitle": "Lead teacher may differ from the checker.",
+    "column_teacher": "Teacher",
+    "column_conducted": "Led",
+    "column_regular": "Regular",
+    "column_review": "Review",
+    "column_planned": "Planned",
+    "column_lessons": "Lessons",
+    "no_longer_assigned": "no longer assigned",
+    "empty": "No data for this period."
+  },
+  "methodology": {
+    "title": "How we calculated",
+    "body": "Group averages and charts use the main sample only (≥50% attendance since enrollment). NULL means not graded; 0 counts. Late submission counts as submitted.",
+    "attendance": "Share of the main sample present on each checked lesson.",
+    "verses": "Average verses recited; review and first regular lesson have no point.",
+    "test": "Average score 0–10; lessons without a test have no point.",
+    "notebook": "Average notebook score 0–10 for the main sample."
+  },
+  "data_quality": {
+    "title": "Data quality",
+    "missing_records": "Missing records on checked lessons: {count}"
+  },
+  "deletion_recalculated": "Metrics were recalculated after a data deletion request.",
+  "format": {
+    "percent": "{value}%",
+    "average": "{value}",
+    "chart_value": "{value} (N={n})"
+  },
+  "rating": {
+    "page_title": "Ranking",
+    "page_subtitle_group": "{group} · {year}",
+    "page_subtitle_school": "Whole school · {year}",
+    "privacy_note": "Visible to teachers and administrators only. Not shown to parents or pupils and not for display mode.",
+    "footnote": "Place is by lesson points for the year. Achievements and penalties are not included in place (penalties post-MVP).",
+    "column_place": "Place",
+    "column_pupil": "Pupil",
+    "column_metric": "Lesson points",
+    "empty": "No checked lesson points yet.",
+    "scope_group": "Group",
+    "scope_school": "School"
+  },
+  "school": {
+    "page_title": "School",
+    "page_subtitle": "{year}",
+    "groups_table_title": "Group indicators",
+    "groups_table_hint": "Pupils: main sample / total. Averages use the main sample.",
+    "column_group": "Group",
+    "column_teachers": "Teachers",
+    "column_pupils": "Pupils",
+    "column_attendance": "Attendance",
+    "column_average": "Avg. test",
+    "column_last_lesson": "Last lesson",
+    "last_lesson_ok": "Checked {label}",
+    "last_lesson_warn": "Incomplete {label}",
+    "last_lesson_idle": "No checked lessons",
+    "attendance_chart_title": "Attendance by lesson",
+    "attendance_chart_hint": "Share present in the main sample, %.",
+    "attention_title": "Needs attention",
+    "attention_pending": "{count} users awaiting role approval",
+    "attention_pending_hint": "Registered and consented to data processing",
+    "attention_negative_bricks": "{count} pupils with negative brick balance",
+    "attention_negative_bricks_hint": "Scores were corrected after bricks were issued",
+    "conducted_grade_label": "Conducted lessons for group"
+  }
+}
