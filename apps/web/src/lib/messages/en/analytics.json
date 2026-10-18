@@ -1,1 +1,98 @@
-{}
+{
+  "page": {
+    "title": "Analytics",
+    "subtitle": "{group} · {year}"
+  },
+  "filters": {
+    "grade_label": "Group",
+    "grade_apply": "Show",
+    "period_year": "School year",
+    "period_month": "Month",
+    "period_range": "Range",
+    "month_label": "Month",
+    "range_from": "From",
+    "range_to": "To",
+    "period_apply": "Apply"
+  },
+  "kpi": {
+    "attendance_label": "Average attendance",
+    "attendance_hint": "main sample · {count} pupils",
+    "verses_label": "Verses",
+    "test_label": "Test",
+    "notebook_label": "Notebook",
+    "with_n": "{value} (N={n})",
+    "empty": "—"
+  },
+  "sample": {
+    "composition": "main A · under 50% B · inactive C · no lessons D — {a} · {b} · {c} · {d}"
+  },
+  "charts": {
+    "attendance_title": "Attendance",
+    "verses_title": "Verses per lesson",
+    "test_title": "Test",
+    "notebook_title": "Notebook",
+    "column_date": "Date",
+    "column_value": "Value",
+    "column_observations": "N",
+    "show_chart": "Chart",
+    "show_table": "Table"
+  },
+  "chart": {
+    "insufficient_data_title": "Not enough data yet",
+    "insufficient_data": "More checked lessons are needed in the selected period."
+  },
+  "tables": {
+    "layer_a_title": "Main sample",
+    "layer_b_title": "Under 50% attendance",
+    "layer_c_title": "Inactive",
+    "layer_d_title": "No checked lessons",
+    "birth_year_title": "By birth year",
+    "birth_year_note": "Main sample only; small groups are indicative.",
+    "empty_section": "No pupils in this group",
+    "column_name": "Pupil",
+    "column_birth_year": "Birth year",
+    "column_attendance": "Attendance %",
+    "column_attended": "Attended",
+    "column_checked": "Checked",
+    "column_verses": "Verses",
+    "column_test": "Test",
+    "column_notebook": "Notebook",
+    "column_enrolled_since": "Enrolled since"
+  },
+  "empty": {
+    "no_pupils_title": "No pupils in this group",
+    "no_pupils_description": "Add pupils to the group to see analytics.",
+    "no_checked_lessons_title": "No checked lessons",
+    "no_checked_lessons": "There are no checked lessons in the selected period yet."
+  },
+  "conducted": {
+    "title": "Who led which lessons",
+    "subtitle": "Lead teacher may differ from the checker.",
+    "column_teacher": "Teacher",
+    "column_conducted": "Led",
+    "column_regular": "Regular",
+    "column_review": "Review",
+    "column_planned": "Planned",
+    "column_lessons": "Lessons",
+    "no_longer_assigned": "no longer assigned",
+    "empty": "No data for this period."
+  },
+  "methodology": {
+    "title": "How we calculated",
+    "body": "Group averages and charts use the main sample only (≥50% attendance since enrollment). NULL means not graded; 0 counts. Late submission counts as submitted.",
+    "attendance": "Share of the main sample present on each checked lesson.",
+    "verses": "Average verses recited; review and first regular lesson have no point.",
+    "test": "Average score 0–10; lessons without a test have no point.",
+    "notebook": "Average notebook score 0–10 for the main sample."
+  },
+  "data_quality": {
+    "title": "Data quality",
+    "missing_records": "Missing records on checked lessons: {count}"
+  },
+  "deletion_recalculated": "Metrics were recalculated after a data deletion request.",
+  "format": {
+    "percent": "{value}%",
+    "average": "{value}",
+    "chart_value": "{value} (N={n})"
+  }
+}

@@ -86,11 +86,11 @@
 
 ### P05-CU6 — feat(web): add group analytics screen with charts · Review: diff-only · Commit: auto
 
-- [ ] P05-T8 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · Prototype: `analytics`
+- [x] P05-T8 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · Prototype: `analytics`
       Files: `app/(app)/analytics/page.tsx`, `components/analytics/{AnalyticsKpiRow,SampleCompositionRow,LineChart,ChartTableToggle,MethodologyNote,DataQualityNote}.tsx`
       Acceptance: ключевые цифры, состав выборки, 4 графика (одна ось), таблицы, «как мы считали», пустые состояния D12, строка качества данных для admin → ручной smoke H/N, проверка DOM
       Paths: H · N [D12] · S [AZ-45: чужая группа → 404]
-- [ ] P05-T9 · T2 · Phase Q-02 (библиотека графиков)
+- [x] P05-T9 · T2 · Phase Q-02 (библиотека графиков)
       Files: решение в [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md), зависимость в `apps/web/package.json` (exact)
       Acceptance: версия и API сверены по документации; `deps:check` зелёный; графики доступны (подписи, таблица) → отчёт
       Paths: n/a — выбор зависимости (`dependency-pinning`)

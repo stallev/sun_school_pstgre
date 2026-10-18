@@ -8,7 +8,7 @@
 **Migrated from:** [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) §5, §9.1–§9.6  
 **Зависит от:** [`homework_check_contract.md`](../contracts/homework_check_contract.md) §6–§7, [`school_year_and_groups_contract.md`](../contracts/school_year_and_groups_contract.md), [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (D12), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-44…AZ-46, AZ-D4), [`canonical_routes.md`](../../../design/canonical_routes.md), [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §5 (`use cache`)  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`vAnalytics`, `vPupil`, `vSchool`), [`teacher_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md), [`P05_phase_description.md`](../phases_tasks_descriptions/P05_phase_description.md)  
-**Проверено по:** формулы и экраны — спецификация владельца §5, §9 (2026-10-17). Рендер графиков — библиотека фиксируется в §15 Q-01 (P05-CU6). Next.js 16.4 `loading` / `error` — [`ui_states_contract.md`](../../../design/ui_states_contract.md).
+**Проверено по:** формулы и экраны — спецификация владельца §5, §9 (2026-10-17). Рендер графиков — **recharts** `3.10.1` (`LineChart`, `ResponsiveContainer`, a11y: табличная альтернатива `ChartTableToggle`). Next.js 16.4 `loading` / `error` — [`ui_states_contract.md`](../../../design/ui_states_contract.md).
 
 ---
 
@@ -192,7 +192,7 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 
 | ID | Вопрос | Владелец | Блокирует |
 |----|--------|----------|-----------|
-| Q-01 | Библиотека графиков (версия, API, a11y) | architect | P05-T9 (CU6) |
+| Q-01 | ✔ **Решено 2026-10-18 (P05-CU6).** Библиотека графиков | **recharts** `3.10.1` exact в `apps/web`; `LineChart` + `ChartTableToggle` (подписи, tooltip, таблица); lazy через client components | — |
 | Q-02 | Пометка «данные пересчитаны после удаления» — постоянная или только в периоде с удалением | владелец | P06 (резерв в §5.1) |
 | Q-03 | Хранить `points_total` для обзорного урока отдельно для нормирования | architect | domain `normalized-score` |
 

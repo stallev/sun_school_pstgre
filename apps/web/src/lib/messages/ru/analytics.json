@@ -1,1 +1,98 @@
-{}
+{
+  "page": {
+    "title": "Аналитика",
+    "subtitle": "{group} · {year}"
+  },
+  "filters": {
+    "grade_label": "Группа",
+    "grade_apply": "Показать",
+    "period_year": "Учебный год",
+    "period_month": "Месяц",
+    "period_range": "Диапазон",
+    "month_label": "Месяц",
+    "range_from": "С",
+    "range_to": "По",
+    "period_apply": "Применить"
+  },
+  "kpi": {
+    "attendance_label": "Средняя явка",
+    "attendance_hint": "основная выборка · {count} детей",
+    "verses_label": "Стихи",
+    "test_label": "Тест",
+    "notebook_label": "Тетрадь",
+    "with_n": "{value} (N={n})",
+    "empty": "—"
+  },
+  "sample": {
+    "composition": "основная A · реже 50% B · неактивные C · без уроков D — {a} · {b} · {c} · {d}"
+  },
+  "charts": {
+    "attendance_title": "Посещаемость",
+    "verses_title": "Стихи за урок",
+    "test_title": "Тест",
+    "notebook_title": "Тетрадь",
+    "column_date": "Дата",
+    "column_value": "Значение",
+    "column_observations": "N",
+    "show_chart": "График",
+    "show_table": "Таблица"
+  },
+  "chart": {
+    "insufficient_data_title": "Пока мало данных",
+    "insufficient_data": "Нужно больше проверенных уроков в выбранном периоде."
+  },
+  "tables": {
+    "layer_a_title": "Основная выборка",
+    "layer_b_title": "Реже 50% явки",
+    "layer_c_title": "Неактивные",
+    "layer_d_title": "Без проверенных уроков",
+    "birth_year_title": "По году рождения",
+    "birth_year_note": "Только основная выборка; при малой выборке цифры ориентировочные.",
+    "empty_section": "Таких учеников нет",
+    "column_name": "Ученик",
+    "column_birth_year": "Год рождения",
+    "column_attendance": "Явка %",
+    "column_attended": "Был",
+    "column_checked": "Проверено",
+    "column_verses": "Стихи",
+    "column_test": "Тест",
+    "column_notebook": "Тетрадь",
+    "column_enrolled_since": "В группе с"
+  },
+  "empty": {
+    "no_pupils_title": "В группе нет учеников",
+    "no_pupils_description": "Добавьте учеников в группу, чтобы увидеть аналитику.",
+    "no_checked_lessons_title": "Нет проверенных уроков",
+    "no_checked_lessons": "В выбранном периоде ещё нет проверенных уроков."
+  },
+  "conducted": {
+    "title": "Кто какие уроки провёл",
+    "subtitle": "Ведущий урока может отличаться от проверяющего.",
+    "column_teacher": "Учитель",
+    "column_conducted": "Провёл",
+    "column_regular": "Обычных",
+    "column_review": "Обзорных",
+    "column_planned": "Запланировано",
+    "column_lessons": "Уроки",
+    "no_longer_assigned": "уже не в группе",
+    "empty": "Нет данных за период."
+  },
+  "methodology": {
+    "title": "Как мы считали",
+    "body": "Групповые средние и графики — только для основной выборки (явка от 50% с даты зачисления). NULL в журнале — «не оценивалось», 0 входит в среднее. «Сдано позже» учитывается как сдача.",
+    "attendance": "Доля присутствующих от основной выборки на каждый проверенный урок.",
+    "verses": "Среднее число рассказанных стихов; обзорные и первый урок года без точки.",
+    "test": "Средний балл 0–10; уроки без теста без точки.",
+    "notebook": "Средний балл тетради 0–10 по основной выборке."
+  },
+  "data_quality": {
+    "title": "Качество данных",
+    "missing_records": "Пропущенные записи на проверенных уроках: {count}"
+  },
+  "deletion_recalculated": "Показатели пересчитаны после удаления данных по запросу.",
+  "format": {
+    "percent": "{value}%",
+    "average": "{value}",
+    "chart_value": "{value} (N={n})"
+  }
+}
