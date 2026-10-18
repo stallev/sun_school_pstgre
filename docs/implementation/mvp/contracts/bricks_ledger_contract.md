@@ -13,12 +13,12 @@
 
 ## 1. Purpose
 
-Контракт учёта кирпичиков: как вычисляется остаток, как выдаются и исправляются записи журнала, что видит какая роль. Читают: исполнитель P04, авторы `bricks_and_rating_spec` (W9-06), `reviewer`.
+Контракт учёта кирпичиков: как вычисляется остаток, как выдаются и исправляются записи журнала, что видит какая роль. Читают: исполнитель P05, `reviewer`.
 
 ## 2. Scope / Out of scope
 
 **В scope:** `brick_ledger`, баланс «ученик + учебный год», выдача и компенсация.  
-**Вне scope:** баллы за достижения и штрафы (post-MVP: в MVP слагаемые равны 0); рейтинг ([`analytics_screens_spec`](../../../prds/architecture_master_index.md)); расчёт `points_total` ([`homework_check_contract.md`](./homework_check_contract.md) §6).
+**Вне scope:** баллы за достижения и штрафы (post-MVP: в MVP слагаемые равны 0); рейтинг ([`P05_phase_description.md`](../phases_tasks_descriptions/P05_phase_description.md) §`/rating`, `computeRatingMetric` в domain); расчёт `points_total` ([`homework_check_contract.md`](./homework_check_contract.md) §6).
 
 ## 3. Определения
 
@@ -177,3 +177,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-06) |
+| 2026-10-18 | v1.1 — Purpose P05; ссылка на рейтинг вместо индекса (P05-CU9) |

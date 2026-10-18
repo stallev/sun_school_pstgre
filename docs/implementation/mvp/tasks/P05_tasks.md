@@ -18,7 +18,7 @@
 
 - [ ] P04 DoD; в БД есть проверенные записи
 - [x] **Spec-gap:** `analytics_screens_spec.md` отсутствует — CU0 создаёт его (docs-only) до CU6–CU8
-- [ ] Решения: Q-01 метрика рейтинга, Q-02 библиотека графиков (в CU6)
+- [x] Решения: Q-01 метрика рейтинга (2026-10-11), Q-02 библиотека графиков — recharts `3.10.1` (P05-CU6)
 - [ ] Остальные задачи проходят DoR; формулы — только по спец. §5, §9 и контрактам
 
 ## Commit plan
@@ -121,7 +121,7 @@
 
 ### P05-CU9 — docs(docs): sync P05 docs · Review: diff-only · Commit: auto
 
-- [ ] P05-T13 · T0 · Files: `docs/**` (bricks contract, analytics spec, ui_states, индекс)
+- [x] P05-T13 · T0 · Files: `docs/**` (bricks contract, analytics spec, ui_states, индекс)
       Acceptance: grep терминов; нет drift; Q-01/Q-02 записаны
       Paths: n/a — docs-only
 
@@ -129,7 +129,7 @@
 
 - [ ] Все CU закоммичены; trace `Review: …`
 - [ ] Phase DoD из [`P05_phase_description.md`](../phases_tasks_descriptions/P05_phase_description.md)
-- [ ] Docs sync — в CU9
+- [x] Docs sync — в CU9
 
 ---
 
