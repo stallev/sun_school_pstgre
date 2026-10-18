@@ -99,7 +99,7 @@
 
 ### P05-CU7 — feat(web): add pupil analytics with dynamics · Review: diff-only · Commit: auto
 
-- [ ] P05-T10 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · Prototype: `pupil`
+- [x] P05-T10 · T1 · Spec: [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) · Prototype: `pupil`
       Files: `app/(app)/analytics/pupils/[pupilId]/page.tsx`, `components/analytics/{PupilLessonTable,DynamicsBlock,BarChart}.tsx`
       Acceptance: слой выборки и причина, личные средние с N, графики, таблица по урокам («сдано позже», «тест не проводился»), блок динамики (сглаживание, изменение, тренд) → ручной smoke
       Paths: H · N [нет данных, < 4 точек] · S [AZ-45]

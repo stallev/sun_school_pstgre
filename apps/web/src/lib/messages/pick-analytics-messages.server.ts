@@ -2,7 +2,8 @@ import "server-only";
 
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
-import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
+import { TREND_LABEL } from "@sunschool/domain";
+import type { AnalyticsMessages, PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 const fill = (template: string, values: Record<string, string | number>): string =>
   Object.entries(values).reduce(
@@ -100,4 +101,68 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
           value: point.value,
           n: point.observationCount,
         }),
+});
+
+export const pickPupilAnalyticsMessages = (analytics: Dictionary): PupilAnalyticsMessages => ({
+  ...pickAnalyticsMessages(analytics),
+  pupilPageSubtitle: (year) => fill(getMessage(analytics, "pupil.page_subtitle"), { year }),
+  backToGroupAnalytics: getMessage(analytics, "pupil.back_to_group"),
+  sampleIncluded: getMessage(analytics, "sample.included"),
+  sampleExcludedB: getMessage(analytics, "sample.excluded_b"),
+  sampleExcludedC: getMessage(analytics, "sample.excluded_c"),
+  sampleExcludedD: getMessage(analytics, "sample.excluded_d"),
+  sampleInGroupAverages: (included) =>
+    fill(getMessage(analytics, "sample.in_group_averages"), {
+      included: included
+        ? getMessage(analytics, "sample.included_yes")
+        : getMessage(analytics, "sample.included_no"),
+    }),
+  personalMetricSuffix: getMessage(analytics, "pupil.personal_suffix"),
+  attendanceChecked: (attended, checked) =>
+    fill(getMessage(analytics, "pupil.attendance_checked"), { attended, checked }),
+  presenceTitle: getMessage(analytics, "pupil.presence_title"),
+  presencePresent: getMessage(analytics, "pupil.presence_present"),
+  presenceAbsent: getMessage(analytics, "pupil.presence_absent"),
+  presenceMissing: getMessage(analytics, "pupil.presence_missing"),
+  lessonsTitle: getMessage(analytics, "pupil.lessons_title"),
+  lessonsEmpty: getMessage(analytics, "pupil.lessons_empty"),
+  lessonColumnDate: getMessage(analytics, "pupil.lesson_column_date"),
+  lessonColumnTopic: getMessage(analytics, "pupil.lesson_column_topic"),
+  lessonColumnPresent: getMessage(analytics, "pupil.lesson_column_present"),
+  lessonColumnVerses: getMessage(analytics, "pupil.lesson_column_verses"),
+  lessonColumnTest: getMessage(analytics, "pupil.lesson_column_test"),
+  lessonColumnNotebook: getMessage(analytics, "pupil.lesson_column_notebook"),
+  presentYes: getMessage(analytics, "pupil.present_yes"),
+  presentNo: getMessage(analytics, "pupil.present_no"),
+  presentMissing: getMessage(analytics, "pupil.present_missing"),
+  versesOf: (recited, total) =>
+    fill(getMessage(analytics, "pupil.verses_of"), { recited, total }),
+  testNotConducted: getMessage(analytics, "pupil.test_not_conducted"),
+  submittedLate: (dateLabel) => fill(getMessage(analytics, "pupil.submitted_late"), { date: dateLabel }),
+  dynamicsTitle: getMessage(analytics, "pupil.dynamics_title"),
+  dynamicsHint: getMessage(analytics, "pupil.dynamics_hint"),
+  dynamicsNormalizedTitle: getMessage(analytics, "pupil.dynamics_normalized_title"),
+  dynamicsDeltaTitle: getMessage(analytics, "pupil.dynamics_delta_title"),
+  dynamicsNormalizedAria: getMessage(analytics, "pupil.dynamics_normalized_aria"),
+  dynamicsDeltaAria: getMessage(analytics, "pupil.dynamics_delta_aria"),
+  dynamicsInsufficientPoints: getMessage(analytics, "pupil.dynamics_insufficient_points"),
+  dynamicsSlope: (delta) => fill(getMessage(analytics, "pupil.dynamics_slope"), { delta }),
+  dynamicsTrendLabels: {
+    [TREND_LABEL.GROWING]: {
+      label: getMessage(analytics, "pupil.dynamics_trend_growing"),
+      toneClass: "text-ok",
+    },
+    [TREND_LABEL.DECLINING]: {
+      label: getMessage(analytics, "pupil.dynamics_trend_declining"),
+      toneClass: "text-danger",
+    },
+    [TREND_LABEL.STABLE]: {
+      label: getMessage(analytics, "pupil.dynamics_trend_stable"),
+      toneClass: "text-ink",
+    },
+    [TREND_LABEL.INSUFFICIENT_DATA]: {
+      label: getMessage(analytics, "pupil.dynamics_trend_insufficient"),
+      toneClass: "text-muted-foreground",
+    },
+  },
 });

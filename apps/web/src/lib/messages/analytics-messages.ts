@@ -1,3 +1,4 @@
+import type { TrendLabel } from "@sunschool/domain";
 import type { AnalyticsChartPoint } from "@/data/analytics/analytics-compute.server";
 
 export type AnalyticsChartSeriesMessages = {
@@ -85,4 +86,46 @@ export type AnalyticsMessages = {
   formatPercent: (value: number) => string;
   formatAverage: (value: number) => string;
   formatChartValue: (point: AnalyticsChartPoint) => string;
+};
+
+export type PupilAnalyticsMessages = AnalyticsMessages & {
+  pupilPageSubtitle: (year: string) => string;
+  backToGroupAnalytics: string;
+  sampleIncluded: string;
+  sampleExcludedB: string;
+  sampleExcludedC: string;
+  sampleExcludedD: string;
+  sampleInGroupAverages: (included: boolean) => string;
+  personalMetricSuffix: string;
+  attendanceChecked: (attended: number, checked: number) => string;
+  presenceTitle: string;
+  presencePresent: string;
+  presenceAbsent: string;
+  presenceMissing: string;
+  lessonsTitle: string;
+  lessonsEmpty: string;
+  lessonColumnDate: string;
+  lessonColumnTopic: string;
+  lessonColumnPresent: string;
+  lessonColumnVerses: string;
+  lessonColumnTest: string;
+  lessonColumnNotebook: string;
+  presentYes: string;
+  presentNo: string;
+  presentMissing: string;
+  versesOf: (recited: number, total: number) => string;
+  testNotConducted: string;
+  submittedLate: (dateLabel: string) => string;
+  dynamicsTitle: string;
+  dynamicsHint: string;
+  dynamicsNormalizedTitle: string;
+  dynamicsDeltaTitle: string;
+  dynamicsNormalizedAria: string;
+  dynamicsDeltaAria: string;
+  dynamicsInsufficientPoints: string;
+  dynamicsSlope: (delta: string) => string;
+  dynamicsTrendLabels: Record<
+    TrendLabel,
+    { label: string; toneClass: string }
+  >;
 };
