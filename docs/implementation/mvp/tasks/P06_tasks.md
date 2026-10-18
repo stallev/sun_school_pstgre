@@ -43,7 +43,7 @@
 
 ### P06-CU3 — feat(deletion): add request lifecycle use-cases · Review: reviewer · Commit: auto
 
-- [ ] P06-T3 · T3 · Contract: [deletion_requests §5.1–§5.2, §8–§10](../contracts/deletion_requests_contract.md)
+- [x] P06-T3 · T3 · Contract: [deletion_requests §5.1–§5.2, §8–§10](../contracts/deletion_requests_contract.md)
       Files: `apps/web/src/data/deletions/{create-request,create-child-request,take-request,cancel-request,reject-request}.ts`, `actions/deletions.ts`
       Acceptance: partial unique на открытый запрос на субъект; `due_on` серверный; причина отклонения обязательна; отмена только автором; журнал `deletion.*` → тесты по таблице отказов, гонка двух открытых
       Paths: H [§5.1–5.2] · N [§8: уже открыт, статус, нет причины] · S [AZ-06, AZ-07: teacher не создаёт запрос на ребёнка]

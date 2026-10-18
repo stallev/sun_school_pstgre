@@ -52,6 +52,19 @@ export async function requireActiveUser(): Promise<PolicySessionContext> {
   return context;
 }
 
+/**
+ * AZ-06 / AZ-P4: session + DB context for users who may self-service deletion (not `DELETED`);
+ * non-`ACTIVE` statuses (`REQUEST_PENDING`, `REJECTED`, …) are allowed — unlike `requireActiveUser`.
+ */
+export async function requireNonDeletedUser(): Promise<PolicySessionContext> {
+  const { uid } = await requireSession();
+  const context = await loadPolicyContext(uid);
+  if (!context || context.status === ACCOUNT_STATUS.DELETED) {
+    redirect(ACCESS_DENIED_ROUTE);
+  }
+  return context;
+}
+
 /** AZ-D3: an ACTIVE user without one of the roles gets the 403 page (not a redirect). */
 export async function requireRole(...allowed: UserRole[]): Promise<PolicySessionContext> {
   const context = await requireActiveUser();
