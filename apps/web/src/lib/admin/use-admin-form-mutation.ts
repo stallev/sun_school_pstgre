@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { MUTATION_ERROR_CODES, type MutationResult } from "@sunschool/domain";
 import type { Dictionary } from "@/lib/messages/dictionary-types";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
+import { useMutationResultEffect } from "@/lib/ui/use-mutation-result-effects";
 
 type AdminFormMutationOptions = {
   state: MutationResult | null;
@@ -25,20 +25,19 @@ export const useAdminFormMutation = ({
 }: AdminFormMutationOptions): void => {
   const router = useRouter();
 
-  useEffect(() => {
-    if (!state) return;
-    if (state.ok) {
+  useMutationResultEffect(state, (result) => {
+    if (result.ok) {
       toast.success(successMessage, { duration: PRODUCT_TOAST_DURATION_MS });
       onSuccess?.();
       router.refresh();
       return;
     }
-    const message = state.message
-      ? resolveMessageKey(dictionaries, state.message)
+    const message = result.message
+      ? resolveMessageKey(dictionaries, result.message)
       : formErrorFallback;
     toast.error(message, { duration: PRODUCT_TOAST_DURATION_MS });
-    if (state.code === MUTATION_ERROR_CODES.ACCESS_REQUEST_DECIDED) {
+    if (result.code === MUTATION_ERROR_CODES.ACCESS_REQUEST_DECIDED) {
       router.refresh();
     }
-  }, [state, dictionaries, successMessage, formErrorFallback, onSuccess, router]);
+  });
 };

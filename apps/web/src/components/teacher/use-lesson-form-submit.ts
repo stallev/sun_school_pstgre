@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { MUTATION_ERROR_CODES, type MutationResult } from "@sunschool/domain";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
+import { useMutationResultEffect } from "@/lib/ui/use-mutation-result-effects";
 
 type UseLessonFormSubmitOptions = {
   state: MutationResult<{ lessonId: string }> | MutationResult | null;
@@ -31,14 +31,13 @@ export const useLessonFormSubmit = ({
 }: UseLessonFormSubmitOptions): void => {
   const router = useRouter();
 
-  useEffect(() => {
-    if (!state) return;
-    if (state.ok) {
+  useMutationResultEffect(state, (result) => {
+    if (result.ok) {
       const message = mode === "create" ? toastCreated : toastUpdated;
       toast.success(message, { duration: PRODUCT_TOAST_DURATION_MS });
       const createdId =
-        "data" in state && state.data && typeof state.data === "object" && "lessonId" in state.data
-          ? state.data.lessonId
+        "data" in result && result.data && typeof result.data === "object" && "lessonId" in result.data
+          ? result.data.lessonId
           : null;
       const targetId = createdId ?? lessonId;
       if (targetId) {
@@ -48,22 +47,10 @@ export const useLessonFormSubmit = ({
       }
       return;
     }
-    const message = state.message
-      ? resolveMessageKey(dictionaries, state.message)
-      : formError;
+    const message = result.message ? resolveMessageKey(dictionaries, result.message) : formError;
     toast.error(message, { duration: PRODUCT_TOAST_DURATION_MS });
-    if (state.code === MUTATION_ERROR_CODES.CHECK_VERSE_MISSING) {
+    if (result.code === MUTATION_ERROR_CODES.CHECK_VERSE_MISSING) {
       onServerMissing?.();
     }
-  }, [
-    state,
-    mode,
-    dictionaries,
-    formError,
-    toastCreated,
-    toastUpdated,
-    lessonId,
-    onServerMissing,
-    router,
-  ]);
+  });
 };

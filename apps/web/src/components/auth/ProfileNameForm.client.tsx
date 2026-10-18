@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 import type { MutationResult } from "@sunschool/domain";
@@ -14,6 +14,7 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
 import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
+import { useMutationResultEffect } from "@/lib/ui/use-mutation-result-effects";
 
 type ProfileNameFormProps = {
   initialNames: { lastName: string; firstName: string; middleName: string };
@@ -27,11 +28,11 @@ export const ProfileNameForm = ({ initialNames, dictionaries }: ProfileNameFormP
     null,
   );
 
-  useEffect(() => {
-    if (state?.ok) {
+  useMutationResultEffect(state, (result) => {
+    if (result.ok) {
       toast.success(messages.profile.savedToast, { duration: PRODUCT_TOAST_DURATION_MS });
     }
-  }, [messages.profile.savedToast, state]);
+  });
 
   const formError =
     state && !state.ok
