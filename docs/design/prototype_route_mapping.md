@@ -46,9 +46,10 @@
 | `rating` | `vRating` | `/rating` | teacher, admin | [`bricks_ledger_contract`](../implementation/mvp/contracts/bricks_ledger_contract.md), [P05: экранные требования](../implementation/mvp/phases_tasks_descriptions/P05_phase_description.md) |
 | `calendar` | `vCalendar` | `/calendar` | teacher, admin | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
 | `verses` | `vVerses` | `/verses` | teacher, admin | [P03: экранные требования](../implementation/mvp/phases_tasks_descriptions/P03_phase_description.md), [`homework_check_contract`](../implementation/mvp/contracts/homework_check_contract.md) §5.1 |
-| `analytics` | `vAnalytics` | `/analytics` | teacher, admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) (P05) |
-| `pupil` | `vPupil` | `/analytics/pupils/[pupilId]` | teacher, admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) (P05) |
-| `school` | `vSchool` | `/school` | admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) (P05) |
+| `analytics` | `vAnalytics`, `analyticsClosedView`, `yearChips`, `yearsTable`, `kpiTiles` | `/analytics` | teacher, admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) §5.5 (P05, P08) |
+| `pupil` | `vPupil`, `pupilYearsSection`, `pupilClosedYear` | `/analytics/pupils/[pupilId]` | teacher, admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) §6.5 (P05, P08) |
+| `school` | `vSchool`, `schoolClosedBlock` | `/school` | admin | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) §7.1 (P05, P08) |
+| `group` (итоги года) | `groupYearSummary` в `vGroup` | `/group` | teacher | [`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) §5.6 (P08) |
 | `approvals` | `vApprovals` | `/approvals` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
 | `users` | `vUsers` | `/users` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
 | `userProfile` | `vUserProfile` | `/users/[userId]` | admin | [`access_requests_and_roles_contract`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) (P01) |
@@ -120,3 +121,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W2-05) |
+| 2026-10-19 | v1.1 — аналитика по годам: функции прототипа блока «ГОДЫ» сопоставлены с экранами (P08) |

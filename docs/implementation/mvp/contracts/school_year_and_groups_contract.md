@@ -61,8 +61,8 @@
 
 - `createYear`: статус `DRAFT`; для каждой активной группы копируются `grade_settings` и назначения прошлого года (admin правит до активации). Журнал `school.year_created`.
 - `activateYear`: блокировка строк `academic_year` организации; нет другого `ACTIVE` (R-1, INV-01) → `ACTIVE`. Журнал `school.year_activated`. Пока год не активен, уроки создавать нельзя.
-- `closeYear`: статус `CLOSED`; активные зачисления получают `enrollment.ends_on = academic_year.ends_on`; назначения учителей остаются привязаны к `academic_year_id` без отдельного `ends_on` в DDL — действие назначения для прав доступа определяется статусом года (AZ-P5, read-only teacher для `CLOSED`). Группа остаётся активной. Журнал `school.year_closed`. Год **не** переоткрывается (Q-01 lifecycle).
-- **Постусловие:** после `closeYear` нет `ACTIVE` года до следующей `activateYear` (экраны показывают D1, [`ui_states_contract.md`](../../../design/ui_states_contract.md)).
+- `closeYear`: статус `CLOSED`; активные зачисления получают `enrollment.ends_on = academic_year.ends_on`; назначения учителей остаются привязаны к `academic_year_id` без отдельного `ends_on` в DDL — действие назначения для прав доступа определяется статусом года (AZ-P5, read-only teacher для `CLOSED`). Группа остаётся активной. **В той же транзакции** создаются снимки итогов года группы и учеников ([`analytics_year_snapshots_contract.md`](./analytics_year_snapshots_contract.md) §6.1, INV-26); ошибка расчёта откатывает закрытие. Журнал `school.year_closed` и `analytics.snapshot_created`. Год **не** переоткрывается (Q-01 lifecycle).
+- **Постусловие:** после `closeYear` нет `ACTIVE` года до следующей `activateYear`; экраны **операционных** разделов показывают D1 ([`ui_states_contract.md`](../../../design/ui_states_contract.md)), а экраны **аналитики** открывают последний закрытый год (год по умолчанию, контракт снимков §6.5).
 
 ### 5.2 `createGroup` / `updateGroup` / `deactivateGroup`
 
@@ -210,3 +210,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-04) |
+| 2026-10-19 | v1.1 — §5.1: `closeYear` создаёт снимки итогов года в той же транзакции; аналитика открывает последний закрытый год (P08) |

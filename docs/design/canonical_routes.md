@@ -48,8 +48,8 @@
 | `/calendar` | `calendar` | teacher, admin | События группы (admin — в меню «Учёба») |
 | `/rating` | `rating` | teacher, admin | Рейтинг группы / школы |
 | `/verses` | `verses` | teacher, admin | Золотые стихи (справочник) |
-| `/analytics` | `analytics` | teacher, admin | Аналитика группы |
-| `/analytics/pupils/[pupilId]` | `pupil` | teacher, admin | Аналитика ученика |
+| `/analytics` | `analytics` | teacher, admin | Аналитика группы; `?year=` — учебный год (по умолчанию: активный → последний закрытый), `?gradeId=` (admin) |
+| `/analytics/pupils/[pupilId]` | `pupil` | teacher, admin | Аналитика ученика; «По годам»; `?pupilYear=`, `?metric=` ([`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) §4, §6.5) |
 
 ### 4.3 Teacher
 
@@ -70,7 +70,7 @@
 
 | Маршрут | Экран | Назначение |
 |---------|-------|------------|
-| `/school` | `school` | Школа: показатели, строка качества данных |
+| `/school` | `school` | Школа: показатели, строка качества данных; `?year=` — учебный год (admin) |
 | `/approvals` | `approvals` | Заявки на доступ |
 | `/users` | `users` | Пользователи |
 | `/users/[userId]` | `userProfile` | Профиль пользователя |
@@ -144,3 +144,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W1-F5) |
+| 2026-10-19 | §4.2: query-параметры года для `/analytics`, `/analytics/pupils/[pupilId]` (P08); `/school` — `?year=`; новых путей нет |

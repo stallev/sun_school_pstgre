@@ -2,7 +2,7 @@
 
 **Тип:** Index  
 **Статус:** Canonical  
-**Версия:** 1.1  
+**Версия:** 1.2  
 **Дата:** 2026-10-19  
 **Волна:** W14-06  
 **Зависит от:** [`architecture_master_index.md`](../../prds/architecture_master_index.md), [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md)
@@ -11,7 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**Статус (2026-10-19):** фазы P01…P07 реализованы; prod smoke и docs sync — [`P07_tasks.md`](./tasks/P07_tasks.md) CU9. Импорт данных из старого приложения — вне проекта (владелец).
+**Статус (2026-10-19):** фазы P01…P07 реализованы; prod smoke и docs sync — [`P07_tasks.md`](./tasks/P07_tasks.md) CU9. **P08 «Аналитика по учебным годам» — документы готовы, код не начат** ([`P08_tasks.md`](./tasks/P08_tasks.md)). Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 
@@ -31,8 +31,9 @@
 | P05 | Кирпичики, рейтинг, аналитика | [P05](./phases_tasks_descriptions/P05_phase_description.md) | [P05](./tasks/P05_tasks.md) |
 | P06 | Журнал, запросы на удаление, локализация | [P06](./phases_tasks_descriptions/P06_phase_description.md) | [P06](./tasks/P06_tasks.md) |
 | P07 | Переходный период согласий и prod-готовность | [P07](./phases_tasks_descriptions/P07_phase_description.md) | [P07](./tasks/P07_tasks.md) |
+| P08 | Аналитика по учебным годам | [P08](./phases_tasks_descriptions/P08_phase_description.md) | [P08](./tasks/P08_tasks.md) |
 
-Нумерация фаз реализации (P01…P07) не совпадает с промптами bootstrap (P0…P6).
+Нумерация фаз реализации (P01…P08) не совпадает с промптами bootstrap (P0…P6).
 
 ## Контракты
 
@@ -46,6 +47,7 @@
 | [`change_log_contract.md`](./contracts/change_log_contract.md) | Журнал изменений, action-коды |
 | [`deletion_requests_contract.md`](./contracts/deletion_requests_contract.md) | Запросы на удаление |
 | [`bible_seed_contract.md`](./contracts/bible_seed_contract.md) | Загрузка Библии, нумерация |
+| [`analytics_year_snapshots_contract.md`](./contracts/analytics_year_snapshots_contract.md) | Снимки итогов учебного года, пороги, год по умолчанию (P08) |
 
 ## Specs
 
@@ -54,7 +56,7 @@
 | [`global_shell_spec.md`](./specs/global_shell_spec.md) | Оболочка и навигация |
 | [`access_and_registration_spec.md`](./specs/access_and_registration_spec.md) | Вход, регистрация, профиль |
 | [`homework_check_flow_spec.md`](./specs/homework_check_flow_spec.md) | Экраны проверки и сводной таблицы |
-| [`analytics_screens_spec.md`](./specs/analytics_screens_spec.md) | Аналитика группы, ученика, школа (W9-07) |
+| [`analytics_screens_spec.md`](./specs/analytics_screens_spec.md) | Аналитика группы, ученика, школа (W9-07); v1.2 — по учебным годам (P08) |
 | [`design_system_lab_spec.md`](./specs/design_system_lab_spec.md) | Каталог компонентов `/design-system` |
 
 Остальные specs W9 на lean **не создаются**, кроме [`analytics_screens_spec.md`](./specs/analytics_screens_spec.md): требования — в контрактах, UX-контрактах и разделе «Экранные требования» описаний фаз P03/P05.
