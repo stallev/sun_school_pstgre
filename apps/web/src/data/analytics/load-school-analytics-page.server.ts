@@ -223,9 +223,16 @@ export async function loadSchoolAnalyticsPage(
   }
   const chartLabels = [...labelSet].sort();
 
+  const activeYear = await db.academicYear.findFirst({
+    where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+    select: { id: true },
+  });
+
   const [dashboardCounts, negativeBricks] = await Promise.all([
     loadSchoolDashboardCounts(db),
-    countNegativeBrickBalances(db, organizationId, year.id),
+    activeYear
+      ? countNegativeBrickBalances(db, organizationId, activeYear.id)
+      : Promise.resolve(0),
   ]);
 
   const attention: SchoolAttentionItem[] = [];

@@ -175,6 +175,17 @@ export type AnalyticsMessages = {
     attentionNegativeBricks: (count: number) => string;
     attentionNegativeBricksHint: string;
     conductedGradeLabel: string;
+    closedTableCaption: (year: string) => string;
+    columnKidsSample: string;
+    columnLessonsChecked: string;
+    columnVersesShort: string;
+    columnTestShort: string;
+    columnNotebookShort: string;
+    noGroupInYear: string;
+    closedCompositionNote: string;
+  };
+  groupYear: {
+    sectionTitle: (year: string) => string;
   };
 };
 

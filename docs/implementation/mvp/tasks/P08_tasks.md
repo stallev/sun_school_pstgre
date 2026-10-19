@@ -112,7 +112,7 @@
 
 ### P08-CU10 — feat(web): add year view to school analytics and group summary · Review: reviewer · Commit: auto
 
-- [ ] P08-T10 · T2 · Spec: [analytics_screens §5.6, §7.1](../specs/analytics_screens_spec.md) · Prototype: `vSchool`, `schoolClosedBlock`, `groupYearSummary`
+- [x] P08-T10 · T2 · Spec: [analytics_screens §5.6, §7.1](../specs/analytics_screens_spec.md) · Prototype: `vSchool`, `schoolClosedBlock`, `groupYearSummary`
       Files: `apps/web/src/app/(app)/school/page.tsx`, `apps/web/src/app/(app)/group/page.tsx`, `apps/web/src/components/analytics/*` (композиция), загрузчики из CU6
       Acceptance: `/school` — полоса лет (`?year=`), в закрытом году таблица групп из снимков с разницей; «В этом году группы не было»; блок «Требует внимания» не зависит от года; `/group` — «Итоги года · {год}», `KpiTiles` с разницей и «Все годы» → `/analytics`; роль `/school` только admin
       Paths: H [admin выбирает год; teacher открывает «Все годы»] · N [группы нет в году, мало данных, нет лет] · S [AZ-44: `/school` только admin; AZ-48]

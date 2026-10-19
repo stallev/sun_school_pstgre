@@ -176,7 +176,18 @@
     "attention_pending_hint": "Прошли регистрацию и дали согласие",
     "attention_negative_bricks": "{count} учеников с отрицательным остатком кирпичиков",
     "attention_negative_bricks_hint": "Оценку исправили после выдачи",
-    "conducted_grade_label": "Кто какие уроки провёл (группа)"
+    "conducted_grade_label": "Кто какие уроки провёл (группа)",
+    "closed_table_caption": "Итоги групп за {year}",
+    "column_kids_sample": "Детей в основной выборке",
+    "column_lessons_checked": "Уроков проверено",
+    "column_verses_short": "Стихи",
+    "column_test_short": "Тест",
+    "column_notebook_short": "Тетрадь",
+    "no_group_in_year": "В этом году группы не было",
+    "closed_composition_note": "Группы сравниваются только внутри выбранного года. Состав групп в разные годы разный."
+  },
+  "group_year": {
+    "section_title": "Итоги года · {year}"
   },
   "years": {
     "strip_label": "Учебный год",

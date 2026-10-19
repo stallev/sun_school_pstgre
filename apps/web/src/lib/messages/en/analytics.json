@@ -176,7 +176,18 @@
     "attention_pending_hint": "Registered and consented to data processing",
     "attention_negative_bricks": "{count} pupils with negative brick balance",
     "attention_negative_bricks_hint": "Scores were corrected after bricks were issued",
-    "conducted_grade_label": "Conducted lessons for group"
+    "conducted_grade_label": "Conducted lessons for group",
+    "closed_table_caption": "Group totals for {year}",
+    "column_kids_sample": "Kids in main sample",
+    "column_lessons_checked": "Lessons checked",
+    "column_verses_short": "Verses",
+    "column_test_short": "Test",
+    "column_notebook_short": "Notebook",
+    "no_group_in_year": "This group did not exist this year",
+    "closed_composition_note": "Groups are compared only within the selected year. Group membership differs across years."
+  },
+  "group_year": {
+    "section_title": "Year totals · {year}"
   },
   "years": {
     "strip_label": "School year",

@@ -206,6 +206,18 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     attentionPendingHint: getMessage(analytics, "school.attention_pending_hint"),
     attentionNegativeBricksHint: getMessage(analytics, "school.attention_negative_bricks_hint"),
     conductedGradeLabel: getMessage(analytics, "school.conducted_grade_label"),
+    closedTableCaption: (year) =>
+      fill(getMessage(analytics, "school.closed_table_caption"), { year }),
+    columnKidsSample: getMessage(analytics, "school.column_kids_sample"),
+    columnLessonsChecked: getMessage(analytics, "school.column_lessons_checked"),
+    columnVersesShort: getMessage(analytics, "school.column_verses_short"),
+    columnTestShort: getMessage(analytics, "school.column_test_short"),
+    columnNotebookShort: getMessage(analytics, "school.column_notebook_short"),
+    noGroupInYear: getMessage(analytics, "school.no_group_in_year"),
+    closedCompositionNote: getMessage(analytics, "school.closed_composition_note"),
+  },
+  groupYear: {
+    sectionTitle: (year) => fill(getMessage(analytics, "group_year.section_title"), { year }),
   },
 });
 

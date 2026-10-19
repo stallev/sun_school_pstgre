@@ -5,7 +5,6 @@ import {
   ACADEMIC_YEAR_STATUS,
   ANALYTICS_METHODOLOGY_VERSION,
   MUTATION_ERROR_CODES,
-  computeYearDiff,
   type GroupYearTotals,
   type MutationResult,
   type YearMetricDiff,
@@ -16,6 +15,7 @@ import { userHasAdminRole } from "../../access/access-admin-guards.server";
 import { getDefaultOrganizationId } from "../../access/get-organization-id.server";
 import { computeGroupYearSnapshotMetrics } from "./compute-year-snapshots.server";
 import { groupSnapshotRowToTotals } from "./year-snapshot-read.server";
+import { resolveSchoolGroupYearComparison } from "./resolve-school-group-year-comparison";
 
 export type SchoolGroupYearRow = {
   gradeId: string;
@@ -23,6 +23,8 @@ export type SchoolGroupYearRow = {
   hadGroupInYear: boolean;
   totals: GroupYearTotals | null;
   diff: YearMetricDiff | null;
+  hasPreviousYear: boolean;
+  comparisonReliable: boolean;
   methodologyVersion: string;
   snapshotMissing: boolean;
 };
@@ -40,12 +42,17 @@ async function loadCachedSchoolYearRows(
   yearId: string,
   yearStatus: typeof ACADEMIC_YEAR_STATUS.ACTIVE | typeof ACADEMIC_YEAR_STATUS.CLOSED,
   grades: { id: string; name: string }[],
-): Promise<Omit<SchoolGroupYearRow, "diff">[]> {
+): Promise<
+  Omit<SchoolGroupYearRow, "diff" | "hasPreviousYear" | "comparisonReliable">[]
+> {
   "use cache";
   cacheTag(CACHE_TAGS.analyticsSchool(organizationId, yearId));
   cacheLife("minutes");
 
-  const rows: Omit<SchoolGroupYearRow, "diff">[] = [];
+  const rows: Omit<
+    SchoolGroupYearRow,
+    "diff" | "hasPreviousYear" | "comparisonReliable"
+  >[] = [];
   for (const grade of grades) {
     const hadSettings = await db.gradeSettings.findFirst({
       where: { gradeId: grade.id, academicYearId: yearId },
@@ -108,14 +115,19 @@ async function attachSchoolDiffs(
   db: PrismaClient,
   organizationId: string,
   yearId: string,
-  rows: Omit<SchoolGroupYearRow, "diff">[],
+  rows: Omit<SchoolGroupYearRow, "diff" | "hasPreviousYear" | "comparisonReliable">[],
 ): Promise<SchoolGroupYearRow[]> {
   const currentYear = await db.academicYear.findUnique({
     where: { id: yearId },
     select: { startsOn: true },
   });
   if (!currentYear) {
-    return rows.map((row) => ({ ...row, diff: null }));
+    return rows.map((row) => ({
+      ...row,
+      diff: null,
+      hasPreviousYear: false,
+      comparisonReliable: false,
+    }));
   }
 
   const previousYear = await db.academicYear.findFirst({
@@ -129,12 +141,24 @@ async function attachSchoolDiffs(
   });
 
   if (!previousYear) {
-    return rows.map((row) => ({ ...row, diff: null }));
+    return rows.map((row) => ({
+      ...row,
+      diff: null,
+      hasPreviousYear: false,
+      comparisonReliable: false,
+    }));
   }
 
   return Promise.all(
     rows.map(async (row) => {
-      if (!row.totals) return { ...row, diff: null };
+      if (!row.totals) {
+        return {
+          ...row,
+          diff: null,
+          hasPreviousYear: false,
+          comparisonReliable: false,
+        };
+      }
 
       let previousTotals: GroupYearTotals | null = null;
       if (previousYear.status === ACADEMIC_YEAR_STATUS.ACTIVE) {
@@ -147,9 +171,12 @@ async function attachSchoolDiffs(
         previousTotals = snapshot ? groupSnapshotRowToTotals(snapshot) : null;
       }
 
+      const comparison = resolveSchoolGroupYearComparison(row.totals, previousTotals);
       return {
         ...row,
-        diff: previousTotals ? computeYearDiff(row.totals, previousTotals) : null,
+        diff: comparison.diff,
+        hasPreviousYear: comparison.hasPreviousYear,
+        comparisonReliable: comparison.comparisonReliable,
       };
     }),
   );
