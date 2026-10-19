@@ -29,8 +29,8 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
           result = await body(tx);
           throw ROLLBACK;
         },
-        // closeAllActiveYears walks a seeded dev year (db:seed:dev); the default 5 s is not enough over Neon
-        { maxWait: 20_000, timeout: 60_000 },
+        // closeAllActiveYears snapshots the seeded dev year (3 groups); Neon needs more than 60 s
+        { maxWait: 20_000, timeout: 180_000 },
       )
       .catch((error: unknown) => {
         if (error !== ROLLBACK) throw error;
@@ -105,7 +105,7 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
     }
     expect(out.year?.status).toBe(ACADEMIC_YEAR_STATUS.CLOSED);
     expect(out.activeCount).toBe(0);
-  }, 60_000);
+  }, 180_000);
 
   it("second activateYear returns SCHOOL_YEAR_ACTIVE_EXISTS", async () => {
     const out = await rolledBack(async (tx) => {
@@ -135,7 +135,7 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
       code: MUTATION_ERROR_CODES.SCHOOL_YEAR_ACTIVE_EXISTS,
       message: "admin.year.active_exists",
     });
-  }, 60_000);
+  }, 180_000);
 
   it("parallel activations yield one success and one SCHOOL_YEAR_ACTIVE_EXISTS", async () => {
     const priorActive = await prisma.academicYear.findFirst({
@@ -144,8 +144,9 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
     });
     const priorActiveYearId = priorActive?.id ?? null;
     if (priorActiveYearId) {
-      await prisma.$transaction((tx) =>
-        closeYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
+      await prisma.$transaction(
+        (tx) => closeYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
+        { maxWait: 20_000, timeout: 180_000 },
       );
     }
 
@@ -203,9 +204,10 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
     await prisma.academicYear.deleteMany({ where: { id: { in: [yearA.id, yearB.id] } } });
 
     if (priorActiveYearId) {
-      await prisma.$transaction((tx) =>
-        activateYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
+      await prisma.$transaction(
+        (tx) => activateYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
+        { maxWait: 20_000, timeout: 180_000 },
       );
     }
-  }, 60_000);
+  }, 240_000);
 });

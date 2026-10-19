@@ -87,13 +87,17 @@ export async function closeYear(
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
   let organizationId: string | null = null;
-  const result: MutationResult<CloseYearSuccess> = await db.$transaction(async (tx) => {
-    organizationId = await loadActorOrganizationId(tx, actorUserId);
-    if (!organizationId) {
-      return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
-    }
-    return closeYearInTransaction(tx, actorUserId, organizationId, parsed.data);
-  });
+  // Snapshots for a full year (dev fixture: 3 groups) do not finish inside Prisma's 5s default.
+  const result: MutationResult<CloseYearSuccess> = await db.$transaction(
+    async (tx) => {
+      organizationId = await loadActorOrganizationId(tx, actorUserId);
+      if (!organizationId) {
+        return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+      }
+      return closeYearInTransaction(tx, actorUserId, organizationId, parsed.data);
+    },
+    { maxWait: 20_000, timeout: 180_000 },
+  );
 
   if (!result.ok) return result;
 

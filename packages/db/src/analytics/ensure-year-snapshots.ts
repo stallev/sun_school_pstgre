@@ -17,12 +17,15 @@ export async function ensureYearSnapshots(
     throw new Error("ensureYearSnapshots: academic year not found");
   }
 
-  return db.$transaction(async (tx) =>
-    createYearSnapshots(tx, yearId, ANALYTICS_SNAPSHOT_REASON.BACKFILL, {
-      actorUserId: null,
-      auditSource: AUDIT_SOURCE.SYSTEM,
-      writeAuditEntry: true,
-      skipExisting: true,
-    }),
+  // Prisma's 5s default is too short for a full closed year (dev fixture: 3 groups, ~60 pupils).
+  return db.$transaction(
+    async (tx) =>
+      createYearSnapshots(tx, yearId, ANALYTICS_SNAPSHOT_REASON.BACKFILL, {
+        actorUserId: null,
+        auditSource: AUDIT_SOURCE.SYSTEM,
+        writeAuditEntry: true,
+        skipExisting: true,
+      }),
+    { maxWait: 20_000, timeout: 180_000 },
   );
 }
