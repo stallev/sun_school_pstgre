@@ -183,6 +183,15 @@ enum RecitationStatus {
   @@map("recitation_status_enum")
 }
 
+enum AnalyticsSnapshotReason {
+  CLOSE
+  CORRECTION
+  ERASURE
+  BACKFILL
+
+  @@map("analytics_snapshot_reason_enum")
+}
+
 // ---------------------------------------------------------------- 5.1 organization, users, access
 
 model Organization {
@@ -334,6 +343,8 @@ model AcademicYear {
   lessons       Lesson[]
   bricks        BrickLedger[]
   awards        AchievementAward[]
+  groupYearSnapshots AnalyticsGroupYearSnapshot[]
+  pupilYearSnapshots AnalyticsPupilYearSnapshot[]
 
   // partial unique "one ACTIVE year per organization" (R-1) — in migration SQL
   @@index([organizationId, status])
@@ -359,6 +370,7 @@ model Grade {
   enrollments Enrollment[]
   lessons     Lesson[]
   events      GradeEvent[]
+  groupYearSnapshots AnalyticsGroupYearSnapshot[]
 
   @@index([organizationId])
   @@map("grade")
@@ -432,6 +444,7 @@ model Pupil {
   penalties      Penalty[]
   recitations    RecitationAttempt[]
   voicePhoto     VoicePhotoConsent[]
+  yearSnapshots  AnalyticsPupilYearSnapshot[]
 
   @@index([organizationId])
   @@map("pupil")
@@ -709,6 +722,55 @@ model BrickLedger {
   // append-only (R-6); CHECK quantity <> 0 — in migration SQL
   @@index([pupilId, academicYearId])
   @@map("brick_ledger")
+}
+
+// ---------------------------------------------------------------- 5.7 analytics year snapshots (append-only; R-10, R-11)
+
+model AnalyticsGroupYearSnapshot {
+  gradeId            String                  @map("grade_id") @db.Uuid
+  academicYearId     String                  @map("academic_year_id") @db.Uuid
+  version            Int
+  kids               Int
+  lessons            Int
+  attendance         Decimal?                @db.Decimal(6, 5)
+  verses             Decimal?                @db.Decimal(4, 2)
+  test               Decimal?                @db.Decimal(5, 1)
+  notebook           Decimal?                @db.Decimal(5, 1)
+  methodologyVersion String                  @map("methodology_version")
+  reason             AnalyticsSnapshotReason
+  createdAt          DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  grade        Grade        @relation(fields: [gradeId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  // CHECK: version >= 1; kids, lessons >= 0; metric ranges — in migration SQL
+  @@id([gradeId, academicYearId, version])
+  @@index([academicYearId])
+  @@map("analytics_group_year_snapshot")
+}
+
+model AnalyticsPupilYearSnapshot {
+  pupilId            String                  @map("pupil_id") @db.Uuid
+  academicYearId     String                  @map("academic_year_id") @db.Uuid
+  version            Int
+  gradeIds           String[]                @map("grade_ids") @db.Uuid
+  lessons            Int
+  attendance         Decimal?                @db.Decimal(6, 5)
+  verses             Decimal?                @db.Decimal(4, 2)
+  test               Decimal?                @db.Decimal(5, 1)
+  notebook           Decimal?                @db.Decimal(5, 1)
+  bricksEarned       Int                     @map("bricks_earned")
+  methodologyVersion String                  @map("methodology_version")
+  reason             AnalyticsSnapshotReason
+  createdAt          DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  pupil        Pupil        @relation(fields: [pupilId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  // CHECK: version >= 1; lessons, bricks_earned >= 0; grade_ids length >= 1; metric ranges — in migration SQL
+  @@id([pupilId, academicYearId, version])
+  @@index([academicYearId])
+  @@map("analytics_pupil_year_snapshot")
 }
 
 // ---------------------------------------------------------------- 5.6 calendar, audit, deletion, settings

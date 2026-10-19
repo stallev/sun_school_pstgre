@@ -28,7 +28,7 @@
 
 ### P08-CU1 — feat(db): add analytics year snapshot tables · Review: reviewer · Commit: auto
 
-- [ ] P08-T1 · T3 · Contract: [snapshots §4](../contracts/analytics_year_snapshots_contract.md) · Schema: [§5.7](../../../prds/03_data_model/database_schema_v1.md) · Invariants: INV-26
+- [x] P08-T1 · T3 · Contract: [snapshots §4](../contracts/analytics_year_snapshots_contract.md) · Schema: [§5.7](../../../prds/03_data_model/database_schema_v1.md) · Invariants: INV-26
       Files: `packages/db/prisma/schema.prisma`, `packages/db/prisma/migrations/*`, `packages/domain/src/constants/enums.ts` (`ANALYTICS_SNAPSHOT_REASON`)
       Acceptance: модели `analytics_group_year_snapshot` и `analytics_pupil_year_snapshot`, enum `analytics_snapshot_reason_enum`; `UNIQUE (grade_id, academic_year_id, version)` и `(pupil_id, academic_year_id, version)`; `CHECK` (`version ≥ 1`, `kids ≥ 0`, `lessons ≥ 0`, диапазоны метрик); индексы `(academic_year_id)`; FK без каскада; `prisma validate` и `migrate` на копии; Prisma-модели PascalCase с `@@map`
       Paths: H [создание версии 1] · N [дубликат версии, значение вне диапазона → ошибка БД] · S [нет ПД кроме id; нет `UPDATE` из приложения, R-11]
