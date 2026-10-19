@@ -35,7 +35,19 @@ export async function correctCheck(
     await revalidateBricksCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
     await revalidateAnalyticsCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
     if (result.data.yearSnapshotCache) {
-      revalidateYearSnapshotCaches(result.data.yearSnapshotCache);
+      const lesson = await db.lesson.findUnique({
+        where: { id: parsed.data.lessonId },
+        select: {
+          academicYearId: true,
+          grade: { select: { organizationId: true } },
+        },
+      });
+      if (lesson) {
+        revalidateYearSnapshotCaches(result.data.yearSnapshotCache, {
+          organizationId: lesson.grade.organizationId,
+          yearIds: [lesson.academicYearId],
+        });
+      }
     }
   }
   return result;

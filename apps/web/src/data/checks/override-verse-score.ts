@@ -38,7 +38,19 @@ export async function overrideVerseScore(
   });
 
   if (result.ok && result.data.yearSnapshotCache) {
-    revalidateYearSnapshotCaches(result.data.yearSnapshotCache);
+    const lesson = await db.lesson.findUnique({
+      where: { id: parsed.data.lessonId },
+      select: {
+        academicYearId: true,
+        grade: { select: { organizationId: true } },
+      },
+    });
+    if (lesson) {
+      revalidateYearSnapshotCaches(result.data.yearSnapshotCache, {
+        organizationId: lesson.grade.organizationId,
+        yearIds: [lesson.academicYearId],
+      });
+    }
   }
 
   return result;

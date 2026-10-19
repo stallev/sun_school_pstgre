@@ -86,8 +86,9 @@ export async function closeYear(
   const parsed = closeYearInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
+  let organizationId: string | null = null;
   const result: MutationResult<CloseYearSuccess> = await db.$transaction(async (tx) => {
-    const organizationId = await loadActorOrganizationId(tx, actorUserId);
+    organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
     }
@@ -96,6 +97,9 @@ export async function closeYear(
 
   if (!result.ok) return result;
 
-  revalidateYearSnapshotCaches(result.data.snapshotCache);
+  revalidateYearSnapshotCaches(result.data.snapshotCache, {
+    organizationId: organizationId!,
+    yearIds: [parsed.data.yearId],
+  });
   return result;
 }

@@ -1,6 +1,12 @@
 import "server-only";
 
-import { ACADEMIC_YEAR_STATUS, SAMPLE_LAYER, computeBalance } from "@sunschool/domain";
+import {
+  ACADEMIC_YEAR_STATUS,
+  MUTATION_ERROR_CODES,
+  SAMPLE_LAYER,
+  computeBalance,
+  type AcademicYearStatus,
+} from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
 import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
@@ -13,6 +19,12 @@ import { getConductedLessons, type ConductedLessonsSnapshot } from "./get-conduc
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { loadSchoolDashboardCounts } from "../school/load-school-dashboard.server";
 import { loadBricksEarnedAndIssued } from "../bricks/bricks-shared.server";
+import {
+  listSchoolYearTotals,
+  type ListSchoolYearTotalsData,
+} from "./years/list-school-year-totals";
+import { loadSchoolYearStrip } from "./years/resolve-default-year.server";
+import { resolveYearSelection } from "./years/year-analytics-access.server";
 export type SchoolGroupRow = {
   gradeId: string;
   gradeName: string;
@@ -41,6 +53,8 @@ export type SchoolChartSeries = {
 export type SchoolAnalyticsPageData =
   | { kind: "no_active_year" }
   | { kind: "forbidden" }
+  | { kind: "not_found" }
+  | { kind: "snapshot_missing" }
   | {
       kind: "page";
       yearId: string;
@@ -48,6 +62,8 @@ export type SchoolAnalyticsPageData =
       gradeId: string;
       grades: LessonsListGradeOption[];
       periodFilter: ReturnType<typeof buildAnalyticsPeriodFilter>;
+      yearStrip: { id: string; name: string; status: string }[];
+      schoolYearTotals: ListSchoolYearTotalsData | null;
       groupRows: SchoolGroupRow[];
       chartSeries: SchoolChartSeries[];
       chartLabels: string[];
@@ -83,11 +99,33 @@ export async function loadSchoolAnalyticsPage(
   if (!isAdmin) return { kind: "forbidden" };
 
   const organizationId = await getDefaultOrganizationId(db);
+  const yearStrip = await loadSchoolYearStrip(db, organizationId);
+  const stripRefs = yearStrip.map((row) => ({
+    id: row.id,
+    status: row.status as AcademicYearStatus,
+    startsOn: row.startsOn,
+  }));
+  const yearSelection = resolveYearSelection(stripRefs, params.year);
+  if (yearSelection.kind === "not_found") return { kind: "not_found" as const };
+  if (yearSelection.kind === "none") return { kind: "no_active_year" };
+
   const year = await db.academicYear.findFirst({
-    where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
-    select: { id: true, name: true },
+    where: { id: yearSelection.yearId, organizationId },
+    select: { id: true, name: true, status: true },
   });
   if (!year) return { kind: "no_active_year" };
+
+  let schoolYearTotals: ListSchoolYearTotalsData | null = null;
+  if (year.status === ACADEMIC_YEAR_STATUS.CLOSED) {
+    const totalsResult = await listSchoolYearTotals(db, actorUserId, year.id);
+    if (isMutationErr(totalsResult)) {
+      if (totalsResult.code === MUTATION_ERROR_CODES.ANALYTICS_SNAPSHOT_MISSING) {
+        return { kind: "snapshot_missing" };
+      }
+      return { kind: "no_active_year" };
+    }
+    schoolYearTotals = totalsResult.data;
+  }
 
   const grades = await db.grade.findMany({
     where: { organizationId, isActive: true },
@@ -223,6 +261,8 @@ export async function loadSchoolAnalyticsPage(
     gradeId,
     grades: gradeOptions,
     periodFilter,
+    yearStrip: yearStrip.map((row) => ({ id: row.id, name: row.name, status: row.status })),
+    schoolYearTotals,
     groupRows,
     chartSeries,
     chartLabels,

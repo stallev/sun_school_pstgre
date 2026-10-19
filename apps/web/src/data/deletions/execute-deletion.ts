@@ -251,7 +251,21 @@ export async function executeDeletion(
     { maxWait: 10_000, timeout: 60_000 },
   );
   if (result.ok && result.data.yearSnapshotCache) {
-    revalidateYearSnapshotCaches(result.data.yearSnapshotCache);
+    const grade = await db.grade.findFirst({
+      where: { id: { in: result.data.yearSnapshotCache.gradeIds } },
+      select: { organizationId: true },
+    });
+    const yearRows = await db.gradeSettings.findMany({
+      where: { gradeId: { in: result.data.yearSnapshotCache.gradeIds } },
+      select: { academicYearId: true },
+      distinct: ["academicYearId"],
+    });
+    if (grade) {
+      revalidateYearSnapshotCaches(result.data.yearSnapshotCache, {
+        organizationId: grade.organizationId,
+        yearIds: yearRows.map((row) => row.academicYearId),
+      });
+    }
   }
   return result;
 }

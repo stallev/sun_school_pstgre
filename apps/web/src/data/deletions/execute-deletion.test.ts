@@ -219,6 +219,12 @@ describe("executeDeletion (deletion_requests §5.4, §8, §10)", () => {
     };
     const db = {
       $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+      grade: {
+        findFirst: vi.fn().mockResolvedValue({ organizationId: "org" }),
+      },
+      gradeSettings: {
+        findMany: vi.fn().mockResolvedValue([{ academicYearId: "year-1" }]),
+      },
     };
 
     const result = await executeDeletion(
@@ -229,10 +235,16 @@ describe("executeDeletion (deletion_requests §5.4, §8, §10)", () => {
     );
 
     expect(result.ok).toBe(true);
-    expect(revalidateYearSnapshotCaches).toHaveBeenCalledWith({
-      gradeIds: [gradeId],
-      pupilIds: [pupilId],
-    });
+    expect(revalidateYearSnapshotCaches).toHaveBeenCalledWith(
+      {
+        gradeIds: [gradeId],
+        pupilIds: [pupilId],
+      },
+      {
+        organizationId: "org",
+        yearIds: ["year-1"],
+      },
+    );
   });
 
   it("executes child request in one flow", async () => {

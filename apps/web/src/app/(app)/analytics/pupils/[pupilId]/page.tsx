@@ -85,6 +85,18 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
 
   if (data.kind === "not_found") notFound();
 
+  if (data.kind === "snapshot_missing") {
+    return (
+      <div className="space-y-6">
+        <PageHeader title={messages.pageTitle} />
+        <EmptyState
+          title={getMessage(analyticsDict, "empty.no_checked_lessons_title")}
+          description={getMessage(analyticsDict, "empty.no_checked_lessons")}
+        />
+      </div>
+    );
+  }
+
   if (data.kind === "no_active_year") {
     return (
       <div className="space-y-6">

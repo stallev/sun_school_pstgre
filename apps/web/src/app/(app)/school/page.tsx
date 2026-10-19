@@ -45,7 +45,19 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
       new Date(`${iso}T12:00:00Z`),
     );
 
-  if (data.kind === "forbidden") notFound();
+  if (data.kind === "forbidden" || data.kind === "not_found") notFound();
+
+  if (data.kind === "snapshot_missing") {
+    return (
+      <div className="space-y-6">
+        <PageHeader title={messages.school.pageTitle} />
+        <EmptyState
+          title={getMessage(analyticsDict, "empty.no_checked_lessons_title")}
+          description={getMessage(analyticsDict, "empty.no_checked_lessons")}
+        />
+      </div>
+    );
+  }
 
   if (data.kind === "no_active_year") {
     return (

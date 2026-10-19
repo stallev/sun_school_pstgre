@@ -73,7 +73,7 @@
 
 ### P08-CU6 — feat(analytics): add year-aware read models · Review: reviewer · Commit: auto
 
-- [ ] P08-T6 · T3 · Contract: [snapshots §6.4–§7](../contracts/analytics_year_snapshots_contract.md) · Spec: [analytics_screens §4, §5.5–§7.1](../specs/analytics_screens_spec.md)
+- [x] P08-T6 · T3 · Contract: [snapshots §6.4–§7](../contracts/analytics_year_snapshots_contract.md) · Spec: [analytics_screens §4, §5.5–§7.1](../specs/analytics_screens_spec.md)
       Files: `apps/web/src/data/analytics/years/{list-group-year-totals.ts,list-pupil-year-rows.ts,list-school-year-totals.ts,resolve-default-year.server.ts}` + тесты, `apps/web/src/data/analytics/{load-analytics-page.server.ts,load-pupil-analytics-page.server.ts,load-school-analytics-page.server.ts}`, `apps/web/src/data/school/*` (загрузчик `/group`), `apps/web/src/lib/cache-tags.ts`
       Acceptance: загрузчики экранов принимают `year` / `pupilYear` / `metric` (валидируются на сервере); год по умолчанию (активный → последний закрытый → `none`); закрытые годы — из снимков, активный — вживую; детали закрытого года (графики по урокам, таблицы A / B) — теми же функциями P05 с `academicYearId`; разница по порогам; `bricks_issued` вживую; `?year=` вне назначения → `NOT_FOUND`; закрытый год без снимка → `ANALYTICS_SNAPSHOT_MISSING`; теги кэша и `updateTag` из `issueBricks` / `compensateBricks` → тесты DAL (teacher: 2025–2026 и 2026–2027; admin: три; переведённый ребёнок — все годы; чужая группа — 404)
       Paths: H [`teacher@` открывает годы, разница, строки лет] · N [мало данных, нет предыдущего года, нет снимка, нет лет] · S [AZ-48, AZ-49, AZ-50: прошлый год среди видимых; чужой год и чужая группа недоступны; авторизация вне `'use cache'`]
