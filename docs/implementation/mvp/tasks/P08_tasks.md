@@ -46,7 +46,7 @@
 
 ### P08-CU3 — feat(policy): add analytics year access checks · Review: reviewer · Commit: auto
 
-- [ ] P08-T3 · T3 · Contract: [snapshots §7, §9](../contracts/analytics_year_snapshots_contract.md) · AZ: AZ-48…AZ-50, AZ-D4
+- [x] P08-T3 · T3 · Contract: [snapshots §7, §9](../contracts/analytics_year_snapshots_contract.md) · AZ: AZ-48…AZ-50, AZ-D4
       Files: `packages/policy/server/src/analytics-year.ts` + `analytics-year.test.ts`, `packages/policy/server/src/index.ts`
       Acceptance: `canViewGroupYear` (teacher — только год назначения на группу; admin — любой), `canViewPupilYears` (доступ к ученику как P05/AZ-45; все годы), решение — типизированный результат без `redirect`/`notFound`; тесты allow / foreign-resource / wrong-role на каждую функцию; `@sunschool/policy-server` не импортируется из `proxy.ts`
       Paths: H [свой год, своя группа] · N [год вне назначения, чужой ученик → отказ] · S [AZ-48, AZ-49, AZ-50: переход в аналитику чужой группы запрещён]
