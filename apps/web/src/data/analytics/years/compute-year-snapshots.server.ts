@@ -30,20 +30,31 @@ async function countCheckedLessonsForGradeYear(
   tx: Tx,
   gradeId: string,
   yearId: string,
+  excludePupilId?: string,
 ): Promise<number> {
   return tx.lesson.count({
     where: {
       gradeId,
       academicYearId: yearId,
-      checks: { some: { homeworkChecked: true } },
+      checks: {
+        some: {
+          homeworkChecked: true,
+          ...(excludePupilId ? { pupilId: { not: excludePupilId } } : {}),
+        },
+      },
     },
   });
 }
+
+export type ComputeGroupYearSnapshotOptions = {
+  excludePupilId?: string;
+};
 
 export async function computeGroupYearSnapshotMetrics(
   tx: Tx,
   gradeId: string,
   yearId: string,
+  options?: ComputeGroupYearSnapshotOptions,
 ): Promise<GroupYearTotals> {
   const year = await tx.academicYear.findUniqueOrThrow({
     where: { id: yearId },
@@ -55,9 +66,16 @@ export async function computeGroupYearSnapshotMetrics(
     toIso: isoFromCalendarDate(year.endsOn),
   };
 
-  const snapshot = await computeGroupAnalyticsSnapshot(tx as PrismaClient, gradeId, period);
+  const snapshot = await computeGroupAnalyticsSnapshot(tx as PrismaClient, gradeId, period, {
+    excludePupilId: options?.excludePupilId,
+  });
   const layerARows = snapshot.pupilsByLayer[SAMPLE_LAYER.A];
-  const checkedLessonCount = await countCheckedLessonsForGradeYear(tx, gradeId, yearId);
+  const checkedLessonCount = await countCheckedLessonsForGradeYear(
+    tx,
+    gradeId,
+    yearId,
+    options?.excludePupilId,
+  );
 
   return computeGroupYearTotals({
     checkedLessonCount,

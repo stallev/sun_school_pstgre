@@ -10,12 +10,15 @@ import {
   scrubAuditLogForPupilPrivileged,
   type Prisma,
 } from "@sunschool/db";
+import { eraseChildSnapshots } from "../analytics/years/erase-child-snapshots";
+import type { YearSnapshotCacheTargets } from "../analytics/years/create-year-snapshots";
 import { gatherChildPlanInput } from "./preview-plan";
 
 type Tx = Prisma.TransactionClient;
 
 export type EraseChildDataResult = {
   plan: DeletionPlan;
+  snapshotCache: YearSnapshotCacheTargets;
 };
 
 /** Full pupil data erasure (deletion_requests_contract §6.2). Caller must hold `FOR UPDATE` on pupil. */
@@ -25,6 +28,8 @@ export async function eraseChildDataInTransaction(
 ): Promise<EraseChildDataResult> {
   const counts = await gatherChildPlanInput(tx, pupilId);
   const plan = buildDeletionPlan({ type: DELETION_REQUEST_TYPE.CHILD_DATA, counts });
+
+  const snapshotCache = await eraseChildSnapshots(tx, pupilId);
 
   await tx.homeworkScoreEvent.deleteMany({ where: { check: { pupilId } } });
   await tx.homeworkVerseScore.deleteMany({ where: { check: { pupilId } } });
@@ -40,5 +45,5 @@ export async function eraseChildDataInTransaction(
   await tx.childDataConsent.deleteMany({ where: { pupilId } });
   await tx.pupil.delete({ where: { id: pupilId } });
 
-  return { plan };
+  return { plan, snapshotCache };
 }

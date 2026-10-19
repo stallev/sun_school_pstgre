@@ -18,9 +18,19 @@ vi.mock("./anonymize-user", () => ({
   anonymizeUserInTransaction: vi.fn().mockResolvedValue({ deletedOrdinal: 7 }),
 }));
 
+const revalidateYearSnapshotCaches = vi.hoisted(() => vi.fn());
+
+vi.mock("../analytics/years/revalidate-year-snapshot-cache", () => ({
+  revalidateYearSnapshotCaches,
+}));
+
 vi.mock("./erase-child-data", () => ({
   eraseChildDataInTransaction: vi.fn().mockResolvedValue({
     plan: { items: [{ category: "pupil", action: "delete", count: 1 }], warnings: [] },
+    snapshotCache: {
+      gradeIds: ["44444444-4444-4444-8444-444444444444"],
+      pupilIds: ["88888888-8888-4888-8888-888888888888"],
+    },
   }),
 }));
 
@@ -173,6 +183,58 @@ describe("executeDeletion (deletion_requests §5.4, §8, §10)", () => {
     expect(anonymizeUserInTransaction).not.toHaveBeenCalled();
   });
 
+  it("revalidates year snapshot caches after child erasure (snapshots §6.4)", async () => {
+    const tx = {
+      userRoleAssignment: {
+        findFirst: vi.fn().mockResolvedValue({ id: "admin" }),
+        count: vi.fn().mockResolvedValue(2),
+      },
+      $queryRaw: vi
+        .fn()
+        .mockResolvedValueOnce([
+          {
+            id: requestId,
+            status: DELETION_REQUEST_STATUS.IN_PROGRESS,
+            requestedById: "other",
+            subjectUserId: null,
+            subjectPupilId: pupilId,
+          },
+        ])
+        .mockResolvedValueOnce([{ id: pupilId }]),
+      deletionRequest: {
+        findUnique: vi.fn().mockResolvedValue({
+          type: DELETION_REQUEST_TYPE.CHILD_DATA,
+          subjectUserId: null,
+          subjectPupilId: pupilId,
+          requestedById: "other",
+        }),
+        update: vi.fn().mockResolvedValue({}),
+      },
+      appUser: {
+        findUnique: vi.fn().mockResolvedValue({ organizationId: "org" }),
+      },
+      pupil: {
+        findFirst: vi.fn().mockResolvedValue({ id: pupilId, isActive: true }),
+      },
+    };
+    const db = {
+      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+    };
+
+    const result = await executeDeletion(
+      db as never,
+      actorId,
+      { requestId, confirmWord: "удалить", acknowledgePlan: true },
+      now,
+    );
+
+    expect(result.ok).toBe(true);
+    expect(revalidateYearSnapshotCaches).toHaveBeenCalledWith({
+      gradeIds: [gradeId],
+      pupilIds: [pupilId],
+    });
+  });
+
   it("executes child request in one flow", async () => {
     const tx = {
       userRoleAssignment: {
@@ -257,6 +319,7 @@ describe("executeDeletion (deletion_requests §5.4, §8, §10)", () => {
       pupilDeleted = true;
       return {
         plan: { items: [{ category: "pupil", action: "delete", count: 1 }], warnings: [] },
+        snapshotCache: { gradeIds: [], pupilIds: [] },
       };
     });
 

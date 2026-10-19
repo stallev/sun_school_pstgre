@@ -9,6 +9,7 @@ import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActorOrganizationId } from "../lessons/lesson-shared.server";
 import { revalidateBricksCachesForLessonCheck } from "../bricks/revalidate-bricks-cache";
 import { revalidateAnalyticsCachesForLessonCheck } from "../analytics/revalidate-analytics-cache";
+import { revalidateYearSnapshotCaches } from "../analytics/years/revalidate-year-snapshot-cache";
 import { correctCheckInTransaction } from "./check-shared.server";
 
 export async function correctCheck(
@@ -33,6 +34,9 @@ export async function correctCheck(
   if (result.ok) {
     await revalidateBricksCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
     await revalidateAnalyticsCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
+    if (result.data.yearSnapshotCache) {
+      revalidateYearSnapshotCaches(result.data.yearSnapshotCache);
+    }
   }
   return result;
 }

@@ -64,7 +64,7 @@
 
 ### P08-CU5 — feat(analytics): version snapshots on closed-year corrections and child data erasure · Review: reviewer · Commit: auto
 
-- [ ] P08-T5 · T3 · Contract: [snapshots §6.2–§6.3](../contracts/analytics_year_snapshots_contract.md) · Contract: [homework_check §5.6](../contracts/homework_check_contract.md), [deletion_requests §6.2](../contracts/deletion_requests_contract.md) · Invariants: INV-22, INV-26
+- [x] P08-T5 · T3 · Contract: [snapshots §6.2–§6.3](../contracts/analytics_year_snapshots_contract.md) · Contract: [homework_check §5.6](../contracts/homework_check_contract.md), [deletion_requests §6.2](../contracts/deletion_requests_contract.md) · Invariants: INV-22, INV-26
       Files: `apps/web/src/data/analytics/years/{recompute-year-snapshots.ts,erase-child-snapshots.ts}` + тесты, `apps/web/src/data/checks/{correct-check.ts,override-verse-score.ts}`, `apps/web/src/data/deletions/erase-child-data.ts`
       Acceptance: правка admin записи `CLOSED` года в той же транзакции вызывает `recomputeYearSnapshots` (под блокировкой года): новая версия снимка группы и ученика только если итоги изменились; снимки ученика удаляются, групповые снимки затронутых пар пересчитываются без ребёнка с удалением прежних версий — **до** удаления проверок; в `erase-child-data` порядок по [deletion §6.2](../contracts/deletion_requests_contract.md); `analytics.snapshot_versioned` без имён → тесты: версия при изменении, нет версии при равенстве, вклад удалённого ребёнка исчез
       Paths: H [версия `n+1`] · N [правка без изменения итогов; teacher в закрытом году отклонён AZ-34] · S [удаление данных ребёнка полное, INV-22; нет ПД в audit, INV-23]
