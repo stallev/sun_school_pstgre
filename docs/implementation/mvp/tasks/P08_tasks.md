@@ -122,12 +122,12 @@
 
 ### P08-CU11 — docs(docs): sync P08 docs, seed snapshots and record smoke · Review: diff-only · Commit: auto
 
-- [ ] P08-T11 · T1 · Contract: [snapshots §6](../contracts/analytics_year_snapshots_contract.md) · Seed: [seed_data_spec §8.3](../../../prds/03_data_model/seed_data_spec.md)
+- [x] P08-T11 · T1 · Contract: [snapshots §6](../contracts/analytics_year_snapshots_contract.md) · Seed: [seed_data_spec §8.3](../../../prds/03_data_model/seed_data_spec.md)
       Files: `packages/db/src/seed/dev/index.ts` (вызов `ensureYearSnapshots` для закрытых лет), `packages/db/src/scripts/delete-academic-year.ts` (удаление снимков года и ученика), `docs/**`, `AGENTS.md` и `.cursor/rules/project-context.mdc` («Текущая фаза»), индексы
       Acceptance: `seed:dev` после заливки создаёт снимки закрытых лет (идемпотентно, `BACKFILL`); `delete-academic-year` не падает на FK снимков; smoke H/N/S пройден; статус проекта обновлён; нет drift
       Paths: n/a — docs-only и tooling (dev-скрипты, вне sensitive zone runtime)
 
-**Smoke report (заполняется в CU11):** H · N · S по [`P08_phase_description.md`](../phases_tasks_descriptions/P08_phase_description.md) §Happy / Negative / Security.
+**Smoke report (2026-10-19):** **H** — `db:seed:dev` + teacher/admin на dev: `/group` итоги года и «Все годы», `/analytics` полоса лет и KPI, карточка ученика «По годам», admin `/school` закрытый год из снимков (CU7–CU10 UI-verify, расхождений 0). **N** — мало данных/уроков, `?year=` вне назначения → 404, закрытый год без снимка → error (покрыто тестами DAL/domain + UI states). **S** — AZ-48…AZ-51: policy/DAL, запись снимков только системными use-case (grep), dev-пароли не в репо; `delete-academic-year` и seed backfill без prod URL.
 
 **CU DoD:** `encoding:check` · `docs:links` · `typecheck` · `lint`
 
@@ -135,7 +135,7 @@
 
 - [ ] Все CU закоммичены; trace `Review: …`; у CU7–CU10 trace `UI-verify: …, расхождений 0`
 - [ ] Phase DoD из [`P08_phase_description.md`](../phases_tasks_descriptions/P08_phase_description.md)
-- [ ] Docs sync — в CU11
+- [x] Docs sync — в CU11
 
 ---
 

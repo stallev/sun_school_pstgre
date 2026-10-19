@@ -112,4 +112,4 @@ Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Telegram + emai
 
 ## Repository status
 
-**Текущая фаза:** MVP реализации P01…P07 завершена (2026-10-19): prod-готовность и переходный период согласий (P07); bootstrap P6 (Design Lab, T2-правила). **P08 «Аналитика по учебным годам»** — документы готовы (контракт, spec v1.2, `P08_tasks.md`), код не начат; в UI-CU P08 агент сам сверяет UX/UI с прототипом под ролями teacher и admin (`P08_phase_description.md` § UX/UI verification loop) — явное исключение из «runtime только по запросу». Дальнейшие изменения — post-MVP или явная фаза/контракт. См. [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).
+**Текущая фаза:** MVP реализации P01…P08 завершена (2026-10-19): P08 «Аналитика по учебным годам» (снимки, экраны, seed backfill); P07 prod и LEGACY_PENDING; bootstrap P6 (Design Lab, T2-правила). Дальнейшие изменения — post-MVP или явная фаза/контракт. См. [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).

@@ -94,4 +94,4 @@ Task classification T0–T3 (orchestrator) is a different axis from this table: 
 
 ## Repository status
 
-**Текущая фаза:** MVP реализации P01…P07 завершена (2026-10-19), включая P07 (prod, LEGACY_PENDING, pre-prod checklist). Bootstrap P6 — Design Lab `/design-system`, T2-правила, shadcn Base UI `base-vega`. Не расширять реализацию без явной фазы и contract. **P08 «Аналитика по учебным годам»** — документы готовы, код не начат ([`P08_tasks.md`](docs/implementation/mvp/tasks/P08_tasks.md)). Навигатор — [`P01…P08`](docs/implementation/mvp/README.md).
+**Текущая фаза:** MVP реализации P01…P08 завершена (2026-10-19), включая P08 (аналитика по учебным годам, снимки, seed backfill) и P07 (prod, LEGACY_PENDING). Bootstrap P6 — Design Lab `/design-system`, T2-правила, shadcn Base UI `base-vega`. Не расширять реализацию без явной фазы и contract. Навигатор — [`P01…P08`](docs/implementation/mvp/README.md).

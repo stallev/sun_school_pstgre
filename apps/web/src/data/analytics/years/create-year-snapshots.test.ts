@@ -11,7 +11,7 @@ const yearId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const gradeId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 const pupilId = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
 
-vi.mock("./compute-year-snapshots.server", () => ({
+vi.mock("../../../../../../packages/db/src/analytics/compute-year-snapshots", () => ({
   computeGroupYearSnapshotMetrics: vi.fn().mockResolvedValue({
     kids: 2,
     lessons: 4,
@@ -54,13 +54,9 @@ vi.mock("./compute-year-snapshots.server", () => ({
   }),
 }));
 
-vi.mock("@sunschool/db", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@sunschool/db")>();
-  return {
-    ...actual,
-    writeAudit: vi.fn(),
-  };
-});
+vi.mock("../../../../../../packages/db/src/audit/write-audit", () => ({
+  writeAudit: vi.fn(),
+}));
 
 function buildTx(overrides?: {
   skipGroup?: boolean;
@@ -105,7 +101,7 @@ describe("createYearSnapshots", () => {
     expect(result.pupilsCreated).toBe(1);
     expect(tx._groupCreate).toHaveBeenCalledOnce();
     expect(tx._pupilCreate).toHaveBeenCalledOnce();
-    const { writeAudit } = await import("@sunschool/db");
+    const { writeAudit } = await import("../../../../../../packages/db/src/audit/write-audit");
     expect(writeAudit).toHaveBeenCalledWith(
       tx,
       expect.objectContaining({
@@ -130,7 +126,7 @@ describe("createYearSnapshots", () => {
     expect(result.pupilsCreated).toBe(0);
     expect(tx._groupCreate).not.toHaveBeenCalled();
     expect(tx._pupilCreate).not.toHaveBeenCalled();
-    const { writeAudit } = await import("@sunschool/db");
+    const { writeAudit } = await import("../../../../../../packages/db/src/audit/write-audit");
     expect(writeAudit).not.toHaveBeenCalled();
   });
 });

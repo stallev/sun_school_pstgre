@@ -27,6 +27,7 @@ import {
   type FixtureLesson,
   type GradeKey,
 } from "./fixture";
+import { ensureClosedYearSnapshotsAfterDevSeed } from "./ensure-year-snapshots";
 
 /**
  * `db:seed:dev` — fake data for the multi-year analytics screens (seed_data_spec set D):
@@ -331,7 +332,7 @@ export async function seedDev(prisma: PrismaClient, appEnv: string | undefined):
   if (appEnv !== "dev") {
     throw new DevSeedFailure(DEV_SEED_ERROR.NOT_DEV, "db:seed:dev runs only when APP_ENV=dev");
   }
-  return prisma.$transaction(
+  const report = await prisma.$transaction(
     async (tx) => {
       await tx.$executeRawUnsafe(`SELECT pg_advisory_xact_lock(${DEV_FIXTURE_LOCK_KEY})`);
       await assertDbEnvironment(tx, appEnv, { allowMarkerWrite: false });
@@ -339,4 +340,6 @@ export async function seedDev(prisma: PrismaClient, appEnv: string | undefined):
     },
     { maxWait: 20_000, timeout: 180_000 },
   );
+  await ensureClosedYearSnapshotsAfterDevSeed(prisma);
+  return report;
 }
