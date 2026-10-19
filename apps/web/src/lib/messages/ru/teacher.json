@@ -8,6 +8,7 @@
     "enrolled_since": "В группе с {date}",
     "consent_yes": "Согласие есть",
     "consent_no": "Согласия нет",
+    "consent_no_legacy": "Согласия нет (перенесён)",
     "add_pupil_label": "Добавить ученика",
     "add_pupil_placeholder": "Выберите ученика",
     "add_pupil_submit": "Зачислить",

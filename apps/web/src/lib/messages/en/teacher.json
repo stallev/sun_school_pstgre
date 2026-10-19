@@ -8,6 +8,7 @@
     "enrolled_since": "In group since {date}",
     "consent_yes": "Consent on file",
     "consent_no": "No consent",
+    "consent_no_legacy": "No consent (migrated)",
     "add_pupil_label": "Add pupil",
     "add_pupil_placeholder": "Choose a pupil",
     "add_pupil_submit": "Enroll",

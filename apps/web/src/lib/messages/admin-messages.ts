@@ -191,6 +191,18 @@ export type AdminMessages = {
     consentPaper: string;
     consentLegacy: string;
     consentMissing: string;
+    legacyListTitle: string;
+    legacyListDescription: string;
+    legacyDeadlineLabel: string;
+    legacyDaysRemaining: string;
+    legacyDaysOverdue: string;
+    legacyExtendAction: string;
+    legacyExtendTitle: string;
+    legacyExtendDescription: string;
+    legacyExtendSubmit: string;
+    legacyExtendReasonLabel: string;
+    legacyNewDeadlineLabel: string;
+    toastLegacyDeadlineExtended: string;
     statusInactive: string;
     bornYear: string;
     birthUnknown: string;

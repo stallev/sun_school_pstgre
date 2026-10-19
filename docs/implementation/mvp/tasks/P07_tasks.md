@@ -32,15 +32,15 @@
 
 ### P07-CU1 — feat(school): add legacy pending consent status and deadline handling · Review: reviewer · Commit: auto
 
-- [ ] P07-T1 · T3 · ADR: [adr_011](../../../prds/07_governance/adr_011_transitional_child_consent.md) · Invariants: INV-08
+- [x] P07-T1 · T3 · ADR: [adr_011](../../../prds/07_governance/adr_011_transitional_child_consent.md) · Invariants: INV-08
       Files: `packages/db/prisma/migrations/*`, `packages/domain/src/school/can-enroll.ts`, `apps/web/src/data/school/{list-legacy-pending,resolve-legacy-consent,extend-legacy-deadline}.ts`
       Acceptance: `LEGACY_PENDING` допускает зачисление только для перенесённых до срока; новый ребёнок требует `ACTIVE`; `recordPaperConsent` переводит в `ACTIVE`; `extendLegacyDeadline` (причина, журнал); автоудаления нет → тесты на **синтетических** данных
       Paths: H [ADR-011 §7] · N [срок истёк, согласие отсутствует, не-перенесённый] · S [AZ-20, AZ-22: только admin; teacher видит «есть/нет»]
-- [ ] P07-T2 · T1 · UX: [forms §5](../../../design/forms_and_validation_ux.md) · Prototype: `people`
+- [x] P07-T2 · T1 · UX: [forms §5](../../../design/forms_and_validation_ux.md) · Prototype: `people`
       Files: `components/admin/{LegacyConsentBadge,LegacyConsentList}.tsx`, `components/shell/ConsentDeadlineBanner.tsx`
       Acceptance: список «без согласия (перенесён)», срок, оставшиеся дни, баннер у admin и пометка у teacher → ручной smoke
       Paths: H · N [срок истёк] · S [AZ-21]
-- [ ] P07-T2a · T2 · Doc: [P07 §Совместимость](../phases_tasks_descriptions/P07_phase_description.md)
+- [x] P07-T2a · T2 · Doc: [P07 §Совместимость](../phases_tasks_descriptions/P07_phase_description.md)
       Files: тест-фикстуры `packages/db/test/fixtures/legacy-compatible/*` (синтетика), проверка инвариантов
       Acceptance: набор синтетических данных, соответствующих §Совместимость п. 3–6, проходит `enrollPupil`/аналитику/кирпичики без нарушений → тест
       Paths: H · N [нарушение требования → тест падает] · S [нет реальных ПД]

@@ -2,6 +2,7 @@ import { USER_ROLE } from "@sunschool/domain";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
 import { PupilCardForm } from "@/components/admin/PupilCardForm";
 import { PupilEntityHistoryList } from "@/components/admin/EntityHistoryList";
+import { LegacyConsentList } from "@/components/admin/LegacyConsentList";
 import { PupilRow } from "@/components/admin/PupilRow";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
@@ -12,6 +13,10 @@ import {
   parsePeopleListFilter,
   PEOPLE_LIST_FILTER,
 } from "@/data/school/load-people-admin-list.server";
+import {
+  listLegacyPendingPupils,
+  suggestNextLegacyDeadlineOn,
+} from "@/data/school/list-legacy-pending";
 import { isoTodayUtc } from "@/data/school/school-pupil-shared.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
@@ -36,9 +41,16 @@ const PeoplePage = async ({ searchParams }: PeoplePageProps) => {
     getDictionary(locale, "common"),
   ]);
   const adminMessages = pickAdminMessages(adminDict);
-  const list = await loadPeopleAdminList(prisma, filter);
-  const consentTextVersion = await readConsentTextVersionFromDb(prisma);
   const defaultDate = isoTodayUtc();
+  const [list, legacyPending] = await Promise.all([
+    loadPeopleAdminList(prisma, filter),
+    listLegacyPendingPupils(prisma),
+  ]);
+  const legacyDefaultDeadline =
+    legacyPending.deadlineOn !== null
+      ? suggestNextLegacyDeadlineOn(legacyPending.deadlineOn)
+      : defaultDate;
+  const consentTextVersion = await readConsentTextVersionFromDb(prisma);
   const dictionaries = { admin: adminDict, common: commonDict };
   const formError = getMessage(commonDict, "errors.form");
   const closeLabel = adminMessages.form.cancel;
@@ -77,6 +89,15 @@ const PeoplePage = async ({ searchParams }: PeoplePageProps) => {
             </CustomLink>
           ))}
         </nav>
+        <LegacyConsentList
+          deadlineOn={legacyPending.deadlineOn}
+          rows={legacyPending.rows}
+          defaultNewDeadlineOn={legacyDefaultDeadline}
+          dictionaries={dictionaries}
+          formError={formError}
+          closeLabel={closeLabel}
+          messages={adminMessages}
+        />
         <PupilCardForm dictionaries={dictionaries} formError={formError} mode="create" />
         {list.pupils.length === 0 ? (
           <EmptyState

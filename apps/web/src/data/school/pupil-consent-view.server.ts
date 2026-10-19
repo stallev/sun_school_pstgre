@@ -4,6 +4,7 @@ import { CONSENT_STATUS, type ConsentStatus } from "@sunschool/domain";
 /** Teacher roster / check UI — consent flag only (school_year §7 S-3, AZ-21). */
 export type TeacherPupilConsentView = {
   hasConsent: boolean;
+  isLegacyPending: boolean;
 };
 
 export const hasEnrollableConsentStatus = (
@@ -27,4 +28,5 @@ export const toTeacherPupilConsentView = (
   hasConsent:
     consentStatus !== null &&
     hasEnrollableConsentStatus(consentStatus, todayIso, legacyConsentDeadlineOn),
+  isLegacyPending: consentStatus === CONSENT_STATUS.LEGACY_PENDING,
 });

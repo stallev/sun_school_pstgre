@@ -20,6 +20,8 @@ export * from "./schemas/app-settings";
 export * from "./schemas/deletion-requests";
 export * from "./school/year";
 export * from "./school/enrollment";
+export * from "./school/can-enroll";
+export * from "./school/legacy-consent";
 export * from "./school/grade-settings";
 export * from "./settings/timezone";
 export * from "./settings/locale";

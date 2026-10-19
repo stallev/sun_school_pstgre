@@ -38,6 +38,16 @@ describe("canEnroll", () => {
     ).toBe(MUTATION_ERROR_CODES.SCHOOL_CONSENT_REQUIRED);
   });
 
+  it("does not treat LEGACY_PENDING without a deadline like ACTIVE", () => {
+    expect(
+      canEnroll({
+        ...base,
+        consentStatus: CONSENT_STATUS.LEGACY_PENDING,
+        legacyConsentDeadlineOn: null,
+      })?.code,
+    ).toBe(MUTATION_ERROR_CODES.SCHOOL_CONSENT_REQUIRED);
+  });
+
   it("rejects without consent", () => {
     expect(canEnroll({ ...base, consentStatus: null })?.code).toBe(
       MUTATION_ERROR_CODES.SCHOOL_CONSENT_REQUIRED,
