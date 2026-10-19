@@ -86,7 +86,7 @@
 
 ### P07-CU8 — docs(prds): close pre-production checklist · Review: diff-only · Commit: auto
 
-- [ ] P07-T11 · T2 · Files: `docs/prds/06_operations/` (чек-лист) или раздел `migration_runbook`; `/privacy` v1 (финал); ADR-009 (лицензия)
+- [x] P07-T11 · T2 · Files: `docs/prds/06_operations/` (чек-лист) или раздел `migration_runbook`; `/privacy` v1 (финал); ADR-009 (лицензия)
       Acceptance: лицензия NIV подтверждена (или BSB выбран); юр. срок удаления и переходного периода проверены; окно backup Neon указано в тексте согласия; security review T3-зон выполнен; план отката → чек-лист с датами и ответственными
       Paths: n/a — docs-only
 

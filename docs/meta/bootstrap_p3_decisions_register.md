@@ -70,14 +70,16 @@ Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и spe
 
 ## 5. Блокеры prod (ждут владельца или юриста)
 
+Чек-лист подписей: [`pre_production_checklist.md`](../prds/06_operations/pre_production_checklist.md) §2–§3 (P07-CU8). Техническая сверка сроков и текст `/privacy` v1 закрыта в CU8; cut-over — после ☐ владельца/юриста.
+
 | # | Что | Блокирует | Источник |
 |---|-----|-----------|----------|
-| 1 | Лицензия Biblica на NIV (или переход на BSB) | загрузка NIV в prod | ADR-009 §3.2 |
-| 2 | Юридическая проверка срока удаления 15 дней | prod | deletion contract Q-01 |
-| 3 | Юридическая проверка основания обработки данных перенесённых детей в переходный период; подтверждение срока 60 дней | prod | ADR-011 Q-01, Q-02 |
-| 4 | Окно восстановления Neon и его текст в согласии | prod, `/privacy` | runbook §9 |
+| 1 | Лицензия Biblica на NIV (или переход на BSB) — подпись L-4 | загрузка NIV в prod | ADR-009 §3.2, checklist L-4 |
+| 2 | Юридическая подпись срока удаления 15 дней — L-1 | prod cut-over | checklist L-1 |
+| 3 | Юридическая подпись переходного периода 60 дней — L-2 | prod cut-over | ADR-011, checklist L-2 |
+| 4 | Подпись окна Neon 1 сутки — L-3 | prod cut-over | checklist L-3, `/privacy` |
 | 5 | Prod-домен; Telegram-бот prod (Google не используется — решение 2026-10-16) | P07 | vercel_deploy_guide Q-04 |
-| 6 | Финальный текст согласия `/privacy` v1 | P07 | access_and_registration_spec |
+| 6 | Подпись текста `/privacy` v1 — L-5 | prod cut-over | checklist L-5 |
 
 ## 6. Работы bootstrap P4–P6 (вытекают из аудита W14)
 
