@@ -31,7 +31,7 @@
 | Install | `npm ci` | lockfile обязателен; Vercel определяет менеджер по lockfile |
 | Build | скрипт `build` пакета `@sunschool/web`: `prisma generate` (`db:generate` в `@sunschool/db`), затем `next build` | клиент в `packages/db/src/generated/` вне git; `prisma` остаётся devDependency — Vercel ставит devDependencies на время сборки |
 | Framework | Next.js 16.4.x (точная версия) | ADR-002 |
-| `vercel.json` | без `crons`; заголовки/CSP — по P07-CU7 | |
+| `vercel.json` | `apps/web/vercel.json`: `installCommand` / `buildCommand` для монорепо; **без** `crons`; CSP nonce — `apps/web/src/proxy.ts`; baseline headers — `next.config.ts` `headers()` | |
 | Skip unaffected builds | по умолчанию включено для GitHub | не отключать без причины |
 | Функции | Node.js runtime; `proxy.ts` на nodejs | ADR-002 §3 |
 
@@ -76,7 +76,7 @@ Telegram требует заранее зарегистрированный HTTP
 | 2 | `prisma migrate deploy` на prod-БД | релизный шаг CI (protected environment) | `migrate status` чист |
 | 3 | Деплой приложения | Vercel (Git) | сборка зелёная |
 | 4 | Проверка старта | автоматически | `APP_ENV` ↔ маркер БД совпали |
-| 5 | Справочники (первый релиз/при изменении) | оператор по чек-листу | `seed:reference`, `seed:bible` (NIV — по лицензии) |
+| 5 | Справочники и первый admin (первый релиз/при изменении) | оператор по [`migration_runbook.md`](../../../prds/06_operations/migration_runbook.md) §8 | `db:seed:reference` → `db:seed:bible` (RST; `db:seed:bible:niv` — по лицензии) → `db:seed:admin` |
 | 6 | Smoke | оператор | §8 |
 
 Порядок «миграции → деплой» (совместимость схемы); несовместимые изменения — expand/contract ([`migration_runbook.md`](../../../prds/06_operations/migration_runbook.md) §8).
@@ -143,7 +143,7 @@ Telegram требует заранее зарегистрированный HTTP
 |----|--------|-------------|-----------|
 | Q-01 | Root Directory: `apps/web` или корень монорепо; включение файлов вне Root Directory | Проверить на P5 по документации и фактической сборке; зафиксировать здесь | P5 |
 | Q-02 | Где выполняется `prisma generate` | **Закрыт (2026-10-16):** в скрипте `build` `@sunschool/web`, до `next build`. `prisma` — devDependency `@sunschool/db`, не prod-зависимость | — |
-| Q-03 | Поля `vercel.json` для заголовков/CSP | Определить в P07-CU7 по документации | P07 |
+| Q-03 | Поля `vercel.json` для заголовков/CSP | **Закрыт (P07-CU7):** `vercel.json` — только install/build; CSP в `proxy.ts`; baseline headers в `next.config.ts` | — |
 | Q-04 | Домен prod и preview-хост | Выбор владельца | P07 |
 
 ## 14. Related documents

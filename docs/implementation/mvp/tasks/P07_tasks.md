@@ -73,11 +73,11 @@
 
 ### P07-CU7 — chore(config): prepare production deployment · Review: reviewer · Commit: auto
 
-- [ ] P07-T9 · T3 · ADR: [adr_001 §3.4](../../../prds/07_governance/adr_001_stack_and_runtime.md) · Guide: [vercel_deploy_guide](../guides/vercel_deploy_guide.md)
+- [x] P07-T9 · T3 · ADR: [adr_001 §3.4](../../../prds/07_governance/adr_001_stack_and_runtime.md) · Guide: [vercel_deploy_guide](../guides/vercel_deploy_guide.md)
       Files: `vercel.json` (без `crons`), `next.config.*` (заголовки, CSP), `.env.example`, ссылки в guides
       Acceptance: Node 24.x; pooled/direct URL; `AUTH_*` отдельные; `APP_ENV=prod` и маркер БД; нет `NEXT_PUBLIC_*` секретов; заголовки безопасности и cookie; `/design-system` 404; dev-переключатель отсутствует → проверка сборки и маршрутов
       Paths: H · N [`APP_ENV` не совпал] · S [CSP, cookie, секреты; INV-24]
-- [ ] P07-T10 · T3 · Spec: [seed_data_spec §4](../../../prds/03_data_model/seed_data_spec.md) · Runbook: [migration_runbook §8](../../../prds/06_operations/migration_runbook.md)
+- [x] P07-T10 · T3 · Spec: [seed_data_spec §4](../../../prds/03_data_model/seed_data_spec.md) · Runbook: [migration_runbook §8](../../../prds/06_operations/migration_runbook.md)
       Files: релизные шаги: миграции → `seed:reference` → `seed:bible` (RST; NIV по лицензии) → первый admin
       Acceptance: на пустой prod-подобной ветке приложение работает; в БД нет фикстур → ручной smoke
       Paths: H · N [NIV без флага] · S [маркер `prod`]

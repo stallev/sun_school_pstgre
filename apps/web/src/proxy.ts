@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import { canVisitRoutePrefix, type EdgeSession } from "@sunschool/policy-edge";
 import authConfig from "@/auth.config";
+import { applyRequestSecurity } from "@/lib/security/request-security";
 
 /**
  * Request interception (Next.js 16 `proxy.ts`, Node runtime).
@@ -19,9 +20,12 @@ export default auth((request) => {
 
   const decision = canVisitRoutePrefix(session, `${request.nextUrl.pathname}${request.nextUrl.search}`);
   if (decision.kind === "redirect") {
-    return NextResponse.redirect(new URL(decision.to, request.nextUrl));
+    return applyRequestSecurity(
+      request,
+      NextResponse.redirect(new URL(decision.to, request.nextUrl)),
+    );
   }
-  return NextResponse.next();
+  return applyRequestSecurity(request, NextResponse.next());
 });
 
 export const config = {
