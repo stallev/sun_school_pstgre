@@ -13,6 +13,7 @@ import { ShapeMotion } from "@/components/design-lab/ShapeMotion";
 import { TableMatrix } from "@/components/design-lab/TableMatrix";
 import { TypeScale } from "@/components/design-lab/TypeScale";
 import { WidthFrame } from "@/components/design-lab/WidthFrame";
+import { AnalyticsYearsLab } from "@/components/design-lab/AnalyticsYearsLab";
 import { Heading } from "@/components/atoms/Heading";
 import { ContentText } from "@/components/atoms/ContentText";
 
@@ -29,6 +30,7 @@ const ANCHORS = [
   { id: "tables", label: "Tables" },
   { id: "patterns", label: "Patterns" },
   { id: "shell", label: "Shell" },
+  { id: "analytics-years", label: "Analytics years" },
 ] as const;
 
 const DesignSystemPage = () => (
@@ -82,6 +84,16 @@ const DesignSystemPage = () => (
 
       <LabSection id="shell" title="L3 · Shell" hint="global_shell_spec §4 — navigation chrome">
         <ShellMatrix />
+      </LabSection>
+
+      <LabSection
+        id="analytics-years"
+        title="L3 · Analytics by year"
+        hint="YearStrip, YearTotalsTable, DiffBadge, KpiTiles, pupil years — prototype §5.5 / §6.5"
+      >
+        <WidthFrame>
+          <AnalyticsYearsLab />
+        </WidthFrame>
       </LabSection>
     </main>
   </>

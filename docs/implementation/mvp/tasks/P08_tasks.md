@@ -82,7 +82,7 @@
 
 ### P08-CU7 — feat(ui): add year analytics components and Design Lab sections · Review: reviewer · Commit: auto
 
-- [ ] P08-T7 · T2 · Spec: [analytics_screens §5.5, §6.5, §14](../specs/analytics_screens_spec.md) · Prototype: `yearChips`, `yearsTable`, `kpiTiles`, `diffBadge`, `pupilYearsSection`, `methodNote`, `readOnlyNote` · Rule: `ui-design-system-shadcn`
+- [x] P08-T7 · T2 · Spec: [analytics_screens §5.5, §6.5, §14](../specs/analytics_screens_spec.md) · Prototype: `yearChips`, `yearsTable`, `kpiTiles`, `diffBadge`, `pupilYearsSection`, `methodNote`, `readOnlyNote` · Rule: `ui-design-system-shadcn`
       Files: `apps/web/src/components/analytics/years/{YearStrip,YearTotalsTable,DiffBadge,KpiTiles,PupilYearsSection,ReadOnlyYearNote,MethodologyVersionNote}.tsx`, `apps/web/src/components/analytics/{BarChart,ChartTableToggle}.tsx` (`xLabel`), секции в `apps/web/src/app/(dev)/design-system/` и `components/design-lab/*`, `apps/web/src/lib/messages/{ru,en}/analytics*` (`years.*`, `pupil_years.*`, парити ru/en)
       Acceptance: один компонент на файл (≤140 строк); только токены Slate Cobalt, без hex; `radiogroup` + `aria-checked` у полос; `DiffBadge` — слова и стрелка, не только цвет; в Lab — все состояния (разница вверх / вниз / как в прошлом году / мало данных; год активный / закрытый; методология v1 / текущая) на 390 px и `lg`; ключи в `@/lib/messages`, срез `analytics`, парити ru/en
       Paths: H [компоненты рендерят состояния] · N [нет данных, одна строка, длинные названия] · S n/a — presentational

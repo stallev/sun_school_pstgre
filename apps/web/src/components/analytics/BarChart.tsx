@@ -19,6 +19,7 @@ export type AnalyticsBarChartProps = {
   positiveClassName?: string;
   negativeClassName?: string;
   yDomain: [number, number];
+  xLabel?: string;
   ariaLabel: string;
 };
 
@@ -35,6 +36,7 @@ export const BarChart = ({
   positiveClassName = "fill-cobalt-ink",
   negativeClassName = "fill-danger",
   yDomain,
+  xLabel,
   ariaLabel,
 }: AnalyticsBarChartProps) => {
   const rows: ChartRow[] = labels
@@ -48,7 +50,10 @@ export const BarChart = ({
   if (rows.length === 0) return null;
 
   return (
-    <div className="h-48 w-full" role="img" aria-label={ariaLabel}>
+    <div className="h-48 w-full space-y-1" role="img" aria-label={ariaLabel}>
+      {xLabel ? (
+        <p className="text-center text-xs text-muted-foreground">{xLabel}</p>
+      ) : null}
       <ResponsiveContainer width="100%" height="100%">
         <RechartsBarChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-line" vertical={false} />

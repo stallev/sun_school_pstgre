@@ -29,6 +29,8 @@ type ChartTableToggleProps = {
   formatDate: (iso: string) => string;
   formatValue: (point: AnalyticsChartPoint) => string;
   yDomain?: [number, number];
+  /** When set (e.g. year axis), replaces the date column header in table mode. */
+  xLabel?: string;
 };
 
 export const ChartTableToggle = ({
@@ -40,6 +42,7 @@ export const ChartTableToggle = ({
   formatDate,
   formatValue,
   yDomain,
+  xLabel,
 }: ChartTableToggleProps) => {
   const storageKey = `analytics-chart-view-${chartId}`;
   const [showTable, setShowTable] = useState(
@@ -88,7 +91,7 @@ export const ChartTableToggle = ({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead scope="col">{messages.columnDate}</TableHead>
+              <TableHead scope="col">{xLabel ?? messages.columnDate}</TableHead>
               <TableHead scope="col">{messages.columnValue}</TableHead>
               <TableHead scope="col">{messages.columnObservations}</TableHead>
             </TableRow>
