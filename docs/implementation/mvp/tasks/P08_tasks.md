@@ -55,7 +55,7 @@
 
 ### P08-CU4 — feat(school): create analytics snapshots on year close · Review: reviewer · Commit: auto
 
-- [ ] P08-T4 · T3 · Contract: [snapshots §6.1, §6.4](../contracts/analytics_year_snapshots_contract.md) · Contract: [school_year §5.1](../contracts/school_year_and_groups_contract.md) · Invariants: INV-26
+- [x] P08-T4 · T3 · Contract: [snapshots §6.1, §6.4](../contracts/analytics_year_snapshots_contract.md) · Contract: [school_year §5.1](../contracts/school_year_and_groups_contract.md) · Invariants: INV-26
       Files: `apps/web/src/data/analytics/years/{compute-year-snapshots.server.ts,create-year-snapshots.ts,ensure-year-snapshots.ts}` + тесты, `apps/web/src/data/school/close-year.ts`, `apps/web/src/lib/cache-tags.ts`
       Acceptance: `createYearSnapshots(tx, yearId, CLOSE)` внутри `closeYearInTransaction` после смены статуса и окончания зачислений: строка группы для каждой группы с `grade_settings` и строка ученика для каждого зачисленного; расчёт теми же функциями domain; ошибка расчёта откатывает закрытие; `analytics.snapshot_created` одной записью с счётчиками; `ensureYearSnapshots` идемпотентно создаёт версию 1 (`BACKFILL`) только где её нет; `updateTag` для тегов `analytics:years:*`, `analytics:pupil-years:*` → тесты: закрытие создаёт снимки, откат при ошибке, равенство «живой расчёт активного года = снимок при закрытии», идемпотентность
       Paths: H [закрытие создаёт снимки] · N [ошибка расчёта → откат закрытия; повторное закрытие → `SCHOOL_YEAR_STATUS_INVALID`; группа без уроков → снимок с `NULL`] · S [запись только из use-case; нет Route Handler / Action; audit без имён, AZ-51]

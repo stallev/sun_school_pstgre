@@ -11,18 +11,27 @@ import {
   type MutationResult,
 } from "@sunschool/domain";
 import { writeAudit, type Prisma, type PrismaClient } from "@sunschool/db";
+import {
+  createYearSnapshotsOnClose,
+  type CreateYearSnapshotsResult,
+} from "../analytics/years/create-year-snapshots";
+import { revalidateYearSnapshotCaches } from "../analytics/years/revalidate-year-snapshot-cache";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadAcademicYearForOrganization, lockAcademicYearRow } from "./school-year-guards.server";
 
 type Tx = Prisma.TransactionClient;
 
+export type CloseYearSuccess = {
+  snapshotCache: CreateYearSnapshotsResult;
+};
+
 export async function closeYearInTransaction(
   tx: Tx,
   actorUserId: string,
   organizationId: string,
   input: CloseYearInput,
-): Promise<MutationResult> {
+): Promise<MutationResult<CloseYearSuccess>> {
   const locked = await lockAcademicYearRow(tx, input.yearId);
   if (!locked) {
     return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -45,6 +54,8 @@ export async function closeYearInTransaction(
     data: { endsOn: loaded.endsOn },
   });
 
+  const snapshotCache = await createYearSnapshotsOnClose(tx, loaded.id, actorUserId);
+
   await writeAudit(tx, {
     actorUserId,
     source: AUDIT_SOURCE.USER,
@@ -56,7 +67,7 @@ export async function closeYearInTransaction(
     reason: input.reason ?? null,
   });
 
-  return { ok: true };
+  return { ok: true, data: { snapshotCache } };
 }
 
 async function loadActorOrganizationId(tx: Tx, actorUserId: string): Promise<string | null> {
@@ -71,15 +82,20 @@ export async function closeYear(
   db: PrismaClient,
   actorUserId: string,
   raw: unknown,
-): Promise<MutationResult> {
+): Promise<MutationResult<CloseYearSuccess>> {
   const parsed = closeYearInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  return db.$transaction(async (tx) => {
+  const result: MutationResult<CloseYearSuccess> = await db.$transaction(async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
     }
     return closeYearInTransaction(tx, actorUserId, organizationId, parsed.data);
   });
+
+  if (!result.ok) return result;
+
+  revalidateYearSnapshotCaches(result.data.snapshotCache);
+  return result;
 }

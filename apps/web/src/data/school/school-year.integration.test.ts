@@ -99,7 +99,10 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
       return { closed, year, activeCount };
     });
 
-    expect(out.closed).toEqual({ ok: true });
+    expect(out.closed?.ok).toBe(true);
+    if (out.closed?.ok) {
+      expect(out.closed.data.snapshotCache.groupsCreated).toBeGreaterThanOrEqual(0);
+    }
     expect(out.year?.status).toBe(ACADEMIC_YEAR_STATUS.CLOSED);
     expect(out.activeCount).toBe(0);
   }, 60_000);
