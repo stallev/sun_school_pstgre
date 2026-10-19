@@ -17,6 +17,8 @@
     "seed:reference": "tsx src/seed/reference/run.ts",
     "seed:admin": "tsx src/seed/admin/run.ts",
     "seed:teacher": "tsx src/seed/teacher/run.ts",
+    "seed:dev": "tsx src/seed/dev/run.ts",
+    "delete:year": "tsx src/scripts/delete-academic-year.ts",
     "seed:bible": "tsx src/seed/bible/run.ts",
     "seed:bible:niv": "tsx src/seed/bible/run-niv.ts"
   },
