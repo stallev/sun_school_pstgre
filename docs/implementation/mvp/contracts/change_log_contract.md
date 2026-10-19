@@ -77,6 +77,8 @@
 | `settings.language_changed` / `settings.timezone_changed` | настройки приложения | `app_setting` | seed_data_spec, ADR-004, ADR-008 |
 | `bible.load_started` / `bible.load_finished` / `bible.load_failed` | загрузка перевода | `bible_translation` | W8-09 |
 | `seed.run` | запуск `seed:reference` / `seed:bible` / `seed:dev` | `seed` | seed_data_spec |
+| `analytics.snapshot_created` | созданы снимки итогов года при закрытии (`SYSTEM`/`USER` по инициатору; значения — только счётчики и версия методологии) | `analytics_snapshot` (`entity_id` = год) | analytics_year_snapshots_contract §6.1 |
+| `analytics.snapshot_versioned` | новая версия снимка после правки закрытого года | `analytics_snapshot` | analytics_year_snapshots_contract §6.2 |
 | `auth.password_set` | пароль администратора создан или сброшен командой `db:seed:admin` (`SYSTEM`; без пароля и хэша — INV-23) | `login_identity` | ADR-003 v1.1 |
 | `migration.run` | запуск импорта владельца (необязательно: пишет скрипт владельца, если подключён к `writeAudit`); счётчики в `new_value` | `seed` | P07, ADR-011 |
 | `school.legacy_deadline_extended` | продлён общий срок переходного периода согласий | `app_setting` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
@@ -189,3 +191,4 @@
 | 2026-10-11 | v1.0 — Canonical (W8-07) |
 | 2026-10-17 | v1.1 — P03: реестр §4 сверен с `AUDIT_ACTION` (`lesson.*`, `calendar.*`, `bible.*`) |
 | 2026-10-18 | v1.2 — §11: привилегированное изменение `audit_log` / `brick_ledger` через `packages/db/src/deletion` (P06) |
+| 2026-10-19 | v1.3 — §4: `analytics.snapshot_created`, `analytics.snapshot_versioned`, сущность `analytics_snapshot` (P08) |

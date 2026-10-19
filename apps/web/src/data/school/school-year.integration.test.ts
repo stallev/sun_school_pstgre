@@ -24,10 +24,14 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
   const rolledBack = async <T>(body: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> => {
     let result: T | undefined;
     await prisma
-      .$transaction(async (tx) => {
-        result = await body(tx);
-        throw ROLLBACK;
-      })
+      .$transaction(
+        async (tx) => {
+          result = await body(tx);
+          throw ROLLBACK;
+        },
+        // closeAllActiveYears walks a seeded dev year (db:seed:dev); the default 5 s is not enough over Neon
+        { maxWait: 20_000, timeout: 60_000 },
+      )
       .catch((error: unknown) => {
         if (error !== ROLLBACK) throw error;
       });

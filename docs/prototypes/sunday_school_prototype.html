@@ -53,6 +53,7 @@
   Уроки                [+] lessons, lesson, lessonForm, verses, calendar; [~] диапазон золотых стихов — форма выбора стиха, проверить диапазоны
   Проверка ДЗ          [+] check, lessonTable (сдано позже, корректировка проверенных уроков)
   Кирпичики, рейтинг   [+] bricks, rating
+  Аналитика по годам   [+] полоса лет и таблица итогов на analytics, school, pupil; итоги года и «Все годы» на group; разница с прошлым годом, пороги N=10 / M=4 (не утверждены), год по умолчанию, снимки закрытых лет (multi_year_analytics.md)
   Аналитика            [+] analytics, school; [~] «кто какие уроки провёл» (9.1.4), динамика успеваемости (9.1.3), строка качества данных (9.1) — присутствуют фрагментарно
   Журнал изменений     [+] audit
   Локализация          [+] settings (словари ru / en); тексты в JS-словарях прототипа — в приложении переносятся в @/lib/messages
@@ -467,7 +468,7 @@ const S = {
   rec:{ state:'idle', t:0, verse:'Еф. 4:32', lid:8, timer:null, showText:false }, debtLid:7,
   consent:{ 1:{ voice:true, photo:true }, 2:{ voice:false, photo:true } },
   bricksOpen:null, fixOpen:null, peopleTab:'pupils', usersTab:'pending', userOpen:null,
-  yearClosed:false, period:'year', anaGroup:'Средняя', month:11, verseQ:'', groupSel:[], groupEdit:'Средняя',
+  yearClosed:false, year:null, pupilYear:null, pupilMetric:'att', period:'year', anaGroup:'Средняя', month:11, verseQ:'', groupSel:[], groupEdit:'Средняя',
   lf:null, lang:'ru', loginAdminOpen:false
 };
 
@@ -812,6 +813,208 @@ function personal(pid){
 function missingRecords(){ return PUPILS.reduce((a,p)=>a+pupilStats(p).missing,0); }
 
 /* =========================================================
+   ГОДЫ: история, снимки итогов, разница с прошлым годом (docs/prds/01_product_scope/multi_year_analytics.md)
+   Закрытые годы читают зафиксированные при закрытии снимки итогов, активный год считается вживую.
+   Подробные данные по урокам и ученикам есть только у Средней группы; у остальных групп — годовые итоги.
+   ========================================================= */
+const SNAP_N = 10, SNAP_M = 4;        /* пороги достоверности: детей / уроков — значения не утверждены (§9 PRD) */
+const METHOD_NOW = 'v2';              /* версия методологии, по которой считается активный год */
+const YEARS = [
+  { id:'2024', name:'2024–2025', status:'closed', method:'v1' },
+  { id:'2025', name:'2025–2026', status:'closed', method:'v2' },
+  { id:'2026', name:'2026–2027', status:'active', method:'v2' }
+];
+const yearOf = id => YEARS.find(y=>y.id===id);
+const yearState = y => (y.id==='2026' && S.yearClosed) ? 'closed' : y.status;
+/* Год по умолчанию: активный → последний закрытый → заглушка «год не начался» только без лет (§3 PRD) */
+function defaultYearId(){
+  const act = YEARS.find(y=>yearState(y)==='active');
+  if (act) return act.id;
+  const closed = YEARS.filter(y=>yearState(y)==='closed');
+  return closed.length ? closed[closed.length-1].id : null;
+}
+const clampN = (v, a, b) => Math.min(b, Math.max(a, v));
+const TEACHER_YEARS = { 'Средняя':['2025','2026'] };   /* учитель видит только годы своего назначения на группу */
+
+/* Итоги групп без поимённых данных (Младшая, Старшая) и закрытые годы; Средняя считается из истории учеников */
+const GROUP_SNAP = {
+  'Младшая': { '2024':{ kids:8,  lessons:9,  att:.78, verses:1.9, test:7.0, nb:7.6 },
+               '2025':{ kids:11, lessons:10, att:.81, verses:2.0, test:7.3, nb:7.9 },
+               '2026':{ kids:9,  lessons:8,  att:.82, verses:2.1, test:7.2, nb:8.0 } },
+  'Старшая': { '2025':{ kids:6,  lessons:6,  att:.61, verses:1.3, test:5.9, nb:6.4 },
+               '2026':{ kids:6,  lessons:8,  att:.64, verses:1.4, test:6.1, nb:6.8 } }
+};
+/* История учеников Средней группы: в каких группах ученик был в году. Два имени — перевод в середине года */
+const HIST_GROUPS = {
+  '2024': { 1:['Средняя'], 2:['Средняя'], 3:['Младшая'], 4:['Средняя'], 5:['Средняя'], 6:['Средняя'], 8:['Средняя'], 9:['Средняя'], 10:['Средняя'], 11:['Средняя'], 12:['Средняя'], 13:['Средняя'], 15:['Средняя'] },
+  '2025': { 1:['Средняя'], 2:['Средняя'], 3:['Младшая','Средняя'], 4:['Средняя'], 5:['Средняя'], 6:['Средняя'], 7:['Средняя'], 8:['Средняя'], 9:['Средняя'], 10:['Средняя'], 11:['Средняя'], 12:['Средняя'], 13:['Средняя'], 14:['Средняя'], 15:['Средняя'] }
+};
+const HIST_YEAR_LESSONS = { '2024':9, '2025':10 };
+const HIST_LESSONS_OVERRIDE = { '2025|14':3 };           /* пришёл поздно: меньше M уроков */
+function histRow(pid, yid){
+  const g = (HIST_GROUPS[yid]||{})[pid]; if (!g) return null;
+  const r = k => ((pid*41 + Number(yid)*3 + k*29) % 89) / 89;
+  const low = pid===12 || pid===13 || (pid===15 && yid==='2024');
+  const lift = yid==='2024' ? -0.07 : 0, strong = pid===1 ? 0.2 : 0;
+  const lessons = HIST_LESSONS_OVERRIDE[yid+'|'+pid] ?? HIST_YEAR_LESSONS[yid];
+  const att = low ? 0.3 + r(1)*0.15 : clampN(0.62 + r(1)*0.34 + lift/2 + strong*0.3, 0.55, 0.98);
+  const verses = clampN(1.3 + r(2)*1.2 + lift + strong*1.5, 0, 3);
+  const test = clampN(5.2 + r(3)*3.6 + lift*5 + strong*8, 0, 10);
+  const nb = clampN(5.8 + r(4)*3.4 + lift*5 + strong*8, 0, 10);
+  const earnedPts = Math.round(att * lessons * (verses + 0.6*test + 0.6*nb + 0.7));
+  return { yid, groups:g, att, verses, test, nb, lessons, earned:earnedPts, issued:Math.round(earnedPts*(low?0.9:0.78)), method:yearOf(yid).method };
+}
+function liveHistRow(p){
+  const keep = S.period; S.period = 'year';
+  try { const st = pupilStats(p), av = personalAvgs(p.id);
+    return { yid:'2026', groups:['Средняя'], att:st.rate, verses:av.v, test:av.t, nb:av.n, lessons:st.nE, earned:earned(p.id), issued:issued(p.id), method:METHOD_NOW };
+  } finally { S.period = keep; }
+}
+const pupilYearRows = pid => YEARS.map(y=> y.id==='2026' ? (PUPILS.find(p=>p.id===pid) ? liveHistRow(PUPILS.find(p=>p.id===pid)) : null) : histRow(pid, y.id)).filter(Boolean);
+function closedPupils(group, yid){
+  if (group!=='Средняя') return [];
+  return Object.keys(HIST_GROUPS[yid]||{}).map(Number).filter(pid=>{ const g=HIST_GROUPS[yid][pid]; return g[g.length-1]===group; })
+    .map(pid=>({ id:pid, name:(pupil(pid)||{ name:'Ученик '+pid }).name, row:histRow(pid, yid) }));
+}
+function liveSnap(){
+  const keep = S.period; S.period = 'year';
+  try {
+    const A = layers().A, ser = series(A.map(p=>p.id)), av = A.map(p=>personalAvgs(p.id));
+    const m = k => mean(av.map(a=>a[k]).filter(x=>x!=null));
+    return { kids:A.length, lessons:ser.length, att:mean(A.map(p=>pupilStats(p).rate)), verses:m('v'), test:m('t'), nb:m('n'), method:METHOD_NOW };
+  } finally { S.period = keep; }
+}
+function aggSnap(group, yid){
+  const list = closedPupils(group, yid).filter(p=>p.row.att>=0.5);
+  const m = k => mean(list.map(p=>p.row[k]).filter(x=>x!=null));
+  return { kids:list.length, lessons:HIST_YEAR_LESSONS[yid], att:m('att'), verses:m('verses'), test:m('test'), nb:m('nb'), method:yearOf(yid).method };
+}
+function groupSnap(group, yid){
+  if (group==='Средняя') return yid==='2026' ? liveSnap() : (HIST_GROUPS[yid] ? aggSnap(group, yid) : null);
+  const s = (GROUP_SNAP[group]||{})[yid];
+  return s ? { ...s, method:yearOf(yid).method } : null;
+}
+const visibleYears = group => YEARS.filter(y=> groupSnap(group, y.id) && (S.role==='admin' || (TEACHER_YEARS[group]||[]).includes(y.id)));
+function analyticsYear(group){
+  const ys = visibleYears(group); if (!ys.length) return null;
+  const want = S.year || defaultYearId();
+  return (ys.find(y=>y.id===want) || ys[ys.length-1]).id;
+}
+/* Предыдущий год с данными — ближайший более ранний из доступных пользователю */
+function prevSnapFor(group, yid){
+  const ys = visibleYears(group).map(y=>y.id), i = ys.indexOf(yid);
+  for (let j=i-1; j>=0; j--){ const s = groupSnap(group, ys[j]); if (s) return { yid:ys[j], name:yearOf(ys[j]).name, snap:s }; }
+  return null;
+}
+const SNAP_KEYS = [['att','Явка'],['verses','Стихов за урок'],['test','Тест'],['nb','Тетрадь']];
+const fmtSnap = (k, v) => v==null ? '—' : k==='att' ? pct(v) : f1(v);
+const reliable = (a, b) => !!a && !!b && a.kids>=SNAP_N && b.kids>=SNAP_N && a.lessons>=SNAP_M && b.lessons>=SNAP_M;
+/* Разница с прошлым годом: значение и слова, не только цвет; при малой выборке — «мало данных» */
+function diffBadge(k, cur, prev, ok, prevName){
+  if (!ok) return `<span class="text-muted">мало данных для сравнения</span>`;
+  if (cur==null || prev==null) return '';
+  const d = k==='att' ? Math.round((cur-prev)*100) : Math.round((cur-prev)*10)/10;
+  if (d===0) return `<span title="Сравнение с ${prevName}">как в прошлом году</span>`;
+  const amount = k==='att' ? Math.abs(d)+' п. п.' : f1(Math.abs(d));
+  return `<span class="inline-flex items-center gap-1" title="Сравнение с ${prevName}">${ic('i-down','size-3.5 '+(d>0?'rotate-180':''))}на ${amount} ${d>0?'выше':'ниже'}</span>`;
+}
+function snapDiff(group, yid, k){
+  const cur = groupSnap(group, yid), p = prevSnapFor(group, yid);
+  return cur && p ? diffBadge(k, cur[k], p.snap[k], reliable(cur, p.snap), p.name) : '';
+}
+function yearChips(group, act, sel){
+  return `<div class="mb-5 flex flex-wrap items-center gap-2" role="radiogroup" aria-label="Учебный год">${visibleYears(group).map(y=>`<button type="button" role="radio" aria-checked="${sel===y.id}" data-act="${act}" data-val="${y.id}"
+    class="h-9 rounded-lg border px-3 text-sm ${sel===y.id ? SEG_ON : SEG_OFF}">${y.name}${yearState(y)==='active' ? ' · идёт' : ''}</button>`).join('')}</div>`;
+}
+const methodNote = m => m!==METHOD_NOW ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-alert','size-4 mt-0.5 text-warn')} Год посчитан по методологии ${m}, сейчас действует ${METHOD_NOW}. Итоги закрытого года не пересчитываются.</p>` : '';
+const readOnlyNote = `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-lock','size-4 mt-0.5')} Закрытый год — только чтение. Итоги зафиксированы при закрытии года.</p>`;
+function kpiTiles(group, yid){
+  const s = groupSnap(group, yid); if (!s) return '';
+  return `<dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">${SNAP_KEYS.map(([k,l])=>`<div class="${CARD} p-4"><dt class="text-sm text-muted">${l}</dt>
+      <dd class="mt-1 font-display text-2xl tabular-nums">${fmtSnap(k, s[k])}</dd>${k==='test'||k==='nb' ? '<dd class="text-xs text-muted">из 10</dd>' : ''}
+      <dd class="mt-1 text-xs text-ink-2">${snapDiff(group, yid, k)}</dd></div>`).join('')}</dl>
+    <p class="mt-2 text-sm text-muted">Детей в основной выборке: <b class="font-bold">${s.kids}</b> · проверено уроков: <b class="font-bold">${s.lessons}</b></p>`;
+}
+function yearsTable(group, sel){
+  const ys = visibleYears(group);
+  return `<section class="mb-6"><h2 class="${H2} mb-1">Итоги по годам</h2>
+    <p class="mb-3 text-sm text-ink-2">Годовые итоги основной выборки. Строка открывает год. В разные годы в группе могли быть разные дети: это сравнение составов, а не одних и тех же учеников.</p>
+    <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[46rem] text-left"><caption class="sr-only">Итоги группы ${group} по учебным годам</caption>
+      <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Год</th><th scope="col" class="px-3 py-3 text-right font-normal">Детей в основной выборке</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
+      <tbody class="divide-y divide-line">${ys.map(y=>{ const s = groupSnap(group, y.id);
+        return `<tr class="${sel===y.id ? 'bg-paper' : ''}"><th scope="row" class="px-5 py-3 font-medium"><button type="button" data-act="ana-year" data-val="${y.id}" ${sel===y.id?'aria-current="true"':''} class="text-left hover:text-cobalt">${y.name}</button>
+          <span class="block text-xs font-normal text-muted">${yearState(y)==='active' ? 'идёт' : 'закрыт'}${s.method!==METHOD_NOW ? ' · методология '+s.method : ''}</span></th>
+          <td class="px-3 py-3 text-right tabular-nums">${s.kids}</td><td class="px-3 py-3 text-right tabular-nums">${s.lessons}</td>
+          ${SNAP_KEYS.map(([k],i)=>`<td class="${i===3?'px-5':'px-3'} py-3 text-right tabular-nums">${fmtSnap(k, s[k])}<span class="block text-xs font-normal text-ink-2">${snapDiff(group, y.id, k)}</span></td>`).join('')}</tr>`; }).join('')}</tbody></table></div></section>`;
+}
+const histDate = (yid, i) => { const d = new Date(Date.UTC(Number(yid), 8, 8+14*i)); return String(d.getUTCDate()).padStart(2,'0')+'.'+String(d.getUTCMonth()+1).padStart(2,'0'); };
+/* Закрытый год в прототипе: значения по урокам смоделированы вокруг зафиксированных итогов */
+function closedSeries(group, yid){
+  const s = groupSnap(group, yid); if (!s) return [];
+  const out = [];
+  for (let i=0; i<s.lessons; i++){
+    const d = histDate(yid, i), m = Number(d.slice(3));
+    if (!(S.period==='year' || (S.period==='sep' && m===9) || (S.period==='oct' && m===10))) continue;
+    const w = k => ((i*37 + k*53 + Number(yid) + group.length*17) % 97)/97 - 0.5;
+    const review = i%5===4, testLesson = !review && i%3===1, withVerses = !review && i>0;
+    const present = Math.round(clampN(s.att + w(1)*0.16, 0.3, 1) * s.kids);
+    out.push({ lid:null, d, review, att:present/s.kids, present, base:s.kids,
+      verses: withVerses ? clampN(s.verses + w(2)*0.5, 0, 3) : null, nV:Math.round(s.kids*0.9), slots: withVerses ? 2 : 0,
+      test: testLesson ? clampN(s.test + w(3)*1.6, 0, 10) : null, nTest:Math.round(s.kids*0.9), testNA:!testLesson,
+      nb: clampN(s.nb + w(4)*1.2, 0, 10), nNb:Math.round(s.kids*0.85) });
+  }
+  return out;
+}
+function closedPersonal(pid, row){
+  const out = [];
+  for (let i=0; i<row.lessons; i++){
+    const r = k => ((pid*37 + i*91 + k*53 + Number(row.yid)) % 97)/97;
+    const present = r(1) < row.att, review = i%5===4, testLesson = !review && i%3===1;
+    out.push({ lid:null, d:histDate(row.yid, i), t:'', has:true, r:{ present, late:{} }, testNA:!testLesson,
+      vo: present && !review && i>0 ? { recited:clampN(Math.round(row.verses + (r(2)-0.5)*1.6), 0, 3), slots:3 } : null,
+      test: present && testLesson ? clampN(Math.round(row.test + (r(3)-0.5)*3), 0, 10) : null,
+      nb: present ? clampN(Math.round(row.nb + (r(4)-0.5)*2.4), 0, 10) : null });
+  }
+  return out;
+}
+const pupilSel = rows => { const want = S.pupilYear || defaultYearId(); return (rows.find(r=>r.yid===want) || rows[rows.length-1] || {}).yid; };
+const PUPIL_METRICS = {
+  att:{ label:'Явка', min:0, max:1, ticks:[0,0.25,0.5,0.75,1], tickFmt:t=>Math.round(t*100)+'%', fmt:v=>pct(v) },
+  verses:{ label:'Стихи', min:0, max:3, ticks:[0,1,2,3], fmt:v=>f1(v) },
+  test:{ label:'Тест', min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v) },
+  nb:{ label:'Тетрадь', min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v) }
+};
+function pupilYearsSection(p, rows, sel){
+  const M = PUPIL_METRICS[S.pupilMetric] || PUPIL_METRICS.att, mk = PUPIL_METRICS[S.pupilMetric] ? S.pupilMetric : 'att';
+  const few = r => r.lessons < SNAP_M;
+  const foreign = S.role==='teacher' && rows.some(r=>r.groups.some(g=>g!=='Средняя'));
+  const chips = `<div class="mb-4 flex flex-wrap gap-2" role="radiogroup" aria-label="Учебный год ученика">${rows.map(r=>`<button type="button" role="radio" aria-checked="${sel===r.yid}" data-act="pupil-year" data-val="${r.yid}"
+    class="h-9 rounded-lg border px-3 text-sm ${sel===r.yid ? SEG_ON : SEG_OFF}">${yearOf(r.yid).name}</button>`).join('')}</div>`;
+  return `<section class="mb-6"><h2 class="${H2} mb-2">По годам</h2>${chips}
+    <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[44rem] text-left"><caption class="sr-only">Итоги ученика по учебным годам</caption>
+      <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Год</th><th scope="col" class="px-3 py-3 font-normal">Группа</th><th scope="col" class="px-3 py-3 text-right font-normal">Явка</th><th scope="col" class="px-3 py-3 text-right font-normal">Стихи</th><th scope="col" class="px-3 py-3 text-right font-normal">Тест</th><th scope="col" class="px-3 py-3 text-right font-normal">Тетрадь</th><th scope="col" class="px-5 py-3 text-right font-normal">Кирпичики: набрано / выдано</th></tr></thead>
+      <tbody class="divide-y divide-line">${rows.map(r=>`<tr class="${sel===r.yid ? 'bg-paper' : ''}">
+        <th scope="row" class="px-5 py-3 font-medium"><button type="button" data-act="pupil-year" data-val="${r.yid}" ${sel===r.yid?'aria-current="true"':''} class="text-left hover:text-cobalt">${yearOf(r.yid).name}</button>${few(r) ? '<span class="block text-xs font-normal text-muted">мало уроков: '+r.lessons+'</span>' : ''}</th>
+        <td class="px-3 py-3 text-sm">${r.groups.join(' → ')}</td>
+        <td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : pct(r.att)}</td><td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : f1(r.verses)}</td>
+        <td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : f1(r.test)}</td><td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : f1(r.nb)}</td>
+        <td class="px-5 py-3 text-right tabular-nums">${r.earned} / ${r.issued}</td></tr>`).join('')}</tbody></table></div>
+    ${foreign ? `<p class="mt-2 text-sm text-muted">Годы в группах других учителей показаны как строка итогов ребёнка; аналитика этих групп вам недоступна.</p>` : ''}
+    <div class="${CARD} mt-4 p-5"><div class="mb-3 max-w-md">${seg('Показатель', Object.entries(PUPIL_METRICS).map(([k,v])=>[k,v.label]), mk, 'pupil-metric')}</div>
+      ${chart({ h:200, type:'bar', xLabel:'Год', labels:rows.map(r=>yearOf(r.yid).name), series:[{ name:M.label, color:'var(--color-series-1)', neg:'var(--color-series-1)', values:rows.map(r=> few(r) ? null : r[mk]) }],
+        min:M.min, max:M.max, ticks:M.ticks, tickFmt:M.tickFmt, fmt:M.fmt, extra:i=> few(rows[i]) ? 'мало данных' : rows[i].lessons+' '+plural(rows[i].lessons,'урок','урока','уроков'), aria:M.label+' по учебным годам' })}
+      <p class="mt-2 text-sm text-muted">Одна ось — годы, точка — годовой итог. Уроки разных лет на одну ось не складываются.</p></div></section>`;
+}
+function pupilClosedYear(p, row){
+  if (!row) return '';
+  const tile = (k, v) => `<div class="${CARD} p-4"><dt class="text-sm text-muted">${k}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${v}</dd></div>`;
+  return `${readOnlyNote}${methodNote(row.method)}
+  <dl class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-5">${tile('Явка', pct(row.att))}${tile('Стихов за урок', f1(row.verses))}${tile('Тест', f1(row.test))}${tile('Тетрадь', f1(row.nb))}${tile('Кирпичики', row.earned+' / '+row.issued)}</dl>
+  ${personalCharts(p.id, 'lg:grid-cols-3', closedPersonal(p.id, row))}
+  <p class="mt-3 text-sm text-muted">В прототипе значения по урокам закрытого года смоделированы вокруг зафиксированных итогов.</p>`;
+}
+
+/* =========================================================
    ГРАФИКИ (SVG, одна ось Y, наведение показывает значения)
    ========================================================= */
 const CHARTS = {};
@@ -823,7 +1026,7 @@ function chart(spec){
   return `<div class="relative h-[${spec.h||210}px]" data-chart="${key}"></div>
     ${spec.series.length>1 ? `<div class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-2">${spec.series.map(s=>`<span class="inline-flex items-center gap-2"><span class="inline-block h-0.5 w-5 rounded-full ${s.color.replace(/var\(--color-(.+)\)/,'bg-$1')}"></span>${s.name}</span>`).join('')}</div>` : ''}
     <details class="group mt-2"><summary class="inline-flex h-9 cursor-pointer list-none items-center gap-1 rounded-md text-sm text-ink-2 hover:text-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} Показать таблицей</summary>
-      <table class="mt-1 w-full text-sm"><thead><tr class="text-left text-muted"><th class="py-1 pr-4 font-normal">Урок</th>${spec.series.map(s=>`<th class="py-1 pr-4 text-right font-normal">${s.name}</th>`).join('')}${spec.extra?'<th class="py-1 text-right font-normal">N</th>':''}</tr></thead><tbody>${rows}</tbody></table></details>`;
+      <table class="mt-1 w-full text-sm"><thead><tr class="text-left text-muted"><th class="py-1 pr-4 font-normal">${spec.xLabel||'Урок'}</th>${spec.series.map(s=>`<th class="py-1 pr-4 text-right font-normal">${s.name}</th>`).join('')}${spec.extra?'<th class="py-1 text-right font-normal">N</th>':''}</tr></thead><tbody>${rows}</tbody></table></details>`;
 }
 function svgChart(spec, W){
   const H = spec.h || 210, multi = spec.series.length > 1, endLbl = multi && W >= 480 && !spec.noEnd;
@@ -1383,11 +1586,19 @@ function vCheck(){
   </div>`;
 }
 
+/* Итоги года на странице группы: четыре показателя и разница с прошлым годом; «Все годы» ведёт в аналитику группы */
+function groupYearSummary(){
+  const dflt = defaultYearId(), yid = visibleYears('Средняя').some(y=>y.id===dflt) ? dflt : analyticsYear('Средняя'); if (!yid) return '';
+  return `<section class="mb-6" aria-labelledby="gys-title"><div class="mb-3 flex flex-wrap items-end justify-between gap-2">
+      <h2 id="gys-title" class="${H2}">Итоги года · ${yearOf(yid).name}</h2>
+      <button type="button" data-act="go" data-view="analytics" class="${B_OUTLINE} h-9 px-3 text-sm">Все годы ${ic('i-right','size-4')}</button></div>
+    ${kpiTiles('Средняя', yid)}</section>`;
+}
 /* ---------- Моя группа (состав) ---------- */
 function vGroup(){
   const list = PUPILS;
   return pageHead('Моя группа', `Средняя · 9–11 лет · ${list.length} ${plural(list.length,'ученик','ученика','учеников')} · ведут Павел Ким и Елена Гусева`,
-    `<button type="button" data-act="add-pupils" class="${B_OUTLINE}">${ic('i-plus','size-4')} Добавить учеников</button>`) + achModeCard() + `
+    `<button type="button" data-act="add-pupils" class="${B_OUTLINE}">${ic('i-plus','size-4')} Добавить учеников</button>`) + achModeCard() + groupYearSummary() + `
   <div class="${CARD}">
     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
       <label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" data-act="sel-all" ${S.groupSel.length===list.length?'checked':''} class="size-4 accent-cobalt"> Выбрать всех</label>
@@ -1570,7 +1781,7 @@ function groupCharts(ser){
     ${c('Посещаемость по урокам','Доля присутствовавших от основной выборки на этот урок. Число детей — в подсказке.',
       { labels, series:[{ name:'Посещаемость', color:'var(--color-series-1)', values:ser.map(s=>s.att) }], min:0, max:1, ticks:[0,0.25,0.5,0.75,1], tickFmt:t=>Math.round(t*100)+'%', fmt:v=>pct(v), extra:i=>`${ser[i].present} из ${ser[i].base}`, aria:'Посещаемость по урокам' })}
     ${c('Золотые стихи за урок','Стихи урока N рассказывают на уроке N+1 — точка стоит на нём. Первый урок года не участвует. Рассказан — оценка 1 или 2, только при присутствии.',
-      { labels, series:[{ name:'Стихов', color:'var(--color-series-1)', values:ser.map(s=>s.verses) }], min:0, max:3, ticks:[0,1,2,3], fmt:v=>f1(v), extra:i=> ser[i].slots ? `N=${ser[i].nV}` : isReview(lessonById(ser[i].lid)) ? 'обзорный урок' : 'стихов ещё не задавали', aria:'Среднее число рассказанных стихов' })}
+      { labels, series:[{ name:'Стихов', color:'var(--color-series-1)', values:ser.map(s=>s.verses) }], min:0, max:3, ticks:[0,1,2,3], fmt:v=>f1(v), extra:i=> ser[i].slots ? `N=${ser[i].nV}` : (ser[i].review || isReview(lessonById(ser[i].lid))) ? 'обзорный урок' : 'стихов ещё не задавали', aria:'Среднее число рассказанных стихов' })}
     ${c('Средний балл теста','Оценки при присутствии на проверенном уроке и «сдано позже». Пропуск точки — тест не проводился.',
       { labels, series:[{ name:'Тест', color:'var(--color-series-1)', values:ser.map(s=>s.test) }], min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v), extra:i=> ser[i].testNA ? 'не проводился' : 'N='+ser[i].nTest, aria:'Средний балл теста' })}
     ${c('Средний балл тетради','Оценки при присутствии и «сдано позже». «Не оценивалось» в среднее не входит.',
@@ -1578,8 +1789,27 @@ function groupCharts(ser){
   </div>`;
 }
 
+/* Закрытый год группы: те же графики и таблицы, только чтение; итоги — из снимка при закрытии года */
+function analyticsClosedView(group, yid, yTop){
+  const y = yearOf(yid), s = groupSnap(group, yid), ser = closedSeries(group, yid);
+  const pl = closedPupils(group, yid), main = pl.filter(p=>p.row.att>=0.5), low = pl.filter(p=>p.row.att<0.5);
+  const cols = [['Ученик'],['Группы',p=>p.row.groups.join(' → ')],['Явка',p=>pct(p.row.att)],['Стихов',p=>f1(p.row.verses)],['Тест',p=>f1(p.row.test)],['Тетрадь',p=>f1(p.row.nb)]];
+  return pageHead(t('analytics.title'), `${group} группа · учебный год ${y.name} · ${ser.length} ${plural(ser.length,'урок','урока','уроков')}`, periodChips()) + `
+  ${S.role==='admin' ? groupChips() : ''}${yTop}${readOnlyNote}${methodNote(s.method)}
+  ${kpiTiles(group, yid)}
+  <div class="mt-6">${groupCharts(ser)}</div>
+  <h2 class="${H2} mt-8 mb-3">Основная выборка</h2>${pupilTable(main, cols)}
+  <h2 class="${H2} mt-8 mb-1">Не входят в средние: явка ниже 50%</h2>
+  <p class="mb-3 text-sm text-ink-2">Состав выборки в каждом году свой.</p>
+  ${low.length ? pupilTable(low, cols) : '<p class="text-muted">Таких учеников нет.</p>'}
+  <p class="mt-6 max-w-3xl text-sm text-muted">В прототипе значения по урокам закрытого года смоделированы вокруг зафиксированных итогов. Блоки «качество данных» и «кто какие уроки провёл» показаны только для активного года.</p>`;
+}
+
 function vAnalytics(){
-  if (S.anaGroup !== 'Средняя') return pageHead(t('analytics.title'), `${S.anaGroup} группа`, '') + (S.role==='admin'?groupChips():'') + `<p class="${CARD} max-w-xl p-5 text-ink-2">В прототипе подробные данные есть только у Средней группы.</p>`;
+  const sel = analyticsYear(S.anaGroup);
+  const yTop = sel ? yearChips(S.anaGroup, 'ana-year', sel) + yearsTable(S.anaGroup, sel) : '';
+  if (S.anaGroup !== 'Средняя') return pageHead(t('analytics.title'), `${S.anaGroup} группа${sel ? ' · учебный год '+yearOf(sel).name : ''}`, '') + (S.role==='admin'?groupChips():'') + yTop + (sel ? kpiTiles(S.anaGroup, sel) : '') + `<p class="${CARD} mt-6 max-w-xl p-5 text-ink-2">В прототипе подробные данные по урокам и ученикам есть только у Средней группы.</p>`;
+  if (sel && sel!=='2026') return analyticsClosedView('Средняя', sel, yTop);
   const L = layers(), A = L.A, ids = A.map(p=>p.id);
   const ser = series(ids);
   const attA = mean(A.map(p=>pupilStats(p).rate));
@@ -1589,7 +1819,7 @@ function vAnalytics(){
   const cohorts = [...new Set(A.filter(p=>p.born).map(p=>p.born))].sort().map(y=>{ const ps=A.filter(p=>p.born===y); const av=ps.map(p=>personalAvgs(p.id));
     return { y, n:ps.length, att:mean(ps.map(p=>pupilStats(p).rate)), v:mean(av.map(a=>a.v).filter(x=>x!=null)), t:mean(av.map(a=>a.t).filter(x=>x!=null)), nb:mean(av.map(a=>a.n).filter(x=>x!=null)) }; });
   return pageHead(t('analytics.title'), `Средняя группа · ${S.period==='year' ? 'учебный год '+YEAR : S.period==='oct' ? 'октябрь' : 'сентябрь'} · ${ser.length} ${plural(ser.length,'урок','урока','уроков')}`, periodChips()) + `
-  ${S.role==='admin' ? groupChips() : ''}
+  ${S.role==='admin' ? groupChips() : ''}${yTop}${yearState(yearOf('2026'))==='closed' ? readOnlyNote : ''}
   ${S.role==='admin' && S.kidsDeleted.length ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-alert','size-4 mt-0.5 text-warn')} Показатели пересчитаны после удаления данных по запросу опекуна, ${S.kidsDeleted[S.kidsDeleted.length-1]}.</p>` : ''}
   <section class="${CARD} grid grid-cols-1 gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:items-center">
     <div>
@@ -1658,12 +1888,12 @@ function presenceStrip(pid){
   return `<ol class="flex flex-wrap gap-1.5" aria-label="Присутствие по урокам">${rows.map(x=>{ const st = !x.has ? ['bg-paper text-muted border-line','нет записи','—'] : x.r.present ? ['bg-ink text-surface border-ink','был',ic('i-ok','size-4')] : ['bg-surface text-ink-2 border-line-strong','не был',ic('i-x','size-4')];
     return `<li class="flex w-14 flex-col items-center gap-1 rounded-lg border px-1 py-2 ${st[0]}" title="${x.d}: ${st[1]}"><span class="text-xs tabular-nums">${x.d}</span><span class="text-sm" aria-label="${st[1]}">${st[2]}</span></li>`;}).join('')}</ol>`;
 }
-function personalCharts(pid, cols='lg:grid-cols-3'){
-  const rows = personal(pid), labels = rows.map(x=>x.d);
+function personalCharts(pid, cols='lg:grid-cols-3', rowsIn){
+  const rows = rowsIn || personal(pid), labels = rows.map(x=>x.d);
   const c = (title, spec) => `<section class="${CARD} min-w-0 p-5"><h3 class="font-display text-lg font-medium">${title}</h3><div class="mt-4">${chart({ h:180, ...spec })}</div></section>`;
   return `<div class="grid grid-cols-1 gap-4 ${cols}">
     ${c('Стихи за урок', { labels, series:[{ name:'Стихов', color:'var(--color-series-1)', values:rows.map(x=>x.vo?x.vo.recited:null) }], min:0, max:3, ticks:[0,1,2,3], fmt:v=>String(v), extra:i=> rows[i].vo ? `из ${rows[i].vo.slots}` : '', aria:'Стихи за урок' })}
-    ${c('Тест', { labels, series:[{ name:'Тест', color:'var(--color-series-1)', values:rows.map(x=>x.test) }], min:0, max:10, ticks:[0,5,10], fmt:v=>String(v), extra:i=> !lessonById(rows[i].lid).test ? 'не проводился' : rows[i].has && rows[i].r.late.test ? 'сдано позже' : '', aria:'Балл теста' })}
+    ${c('Тест', { labels, series:[{ name:'Тест', color:'var(--color-series-1)', values:rows.map(x=>x.test) }], min:0, max:10, ticks:[0,5,10], fmt:v=>String(v), extra:i=> (rows[i].testNA || (rows[i].lid!=null && !lessonById(rows[i].lid).test)) ? 'не проводился' : rows[i].has && rows[i].r.late.test ? 'сдано позже' : '', aria:'Балл теста' })}
     ${c('Тетрадь', { labels, series:[{ name:'Тетрадь', color:'var(--color-series-1)', values:rows.map(x=>x.nb) }], min:0, max:10, ticks:[0,5,10], fmt:v=>String(v), extra:i=> rows[i].has && rows[i].r.late.nb ? 'сдано '+rows[i].r.late.nb : '', aria:'Балл тетради' })}
   </div>`;
 }
@@ -1673,7 +1903,10 @@ function vPupil(){
   const p = pupil(S.pupilId), lay = layerOf(p), st = pupilStats(p), av = personalAvgs(p.id);
   const inAvg = lay==='A';
   const canFix = S.role!=='parent';
-  return pageHead(p.name, `${p.born ? p.born+' г. р.' : 'личные данные удалены'} · Средняя группа · ${p.active?'активен':'неактивен'}`, '', backLink('analytics','Аналитика группы')) + `
+  const rows = pupilYearRows(p.id), sel = pupilSel(rows), selRow = rows.find(r=>r.yid===sel);
+  const groupLine = selRow ? selRow.groups.join(' → ') + (selRow.groups.length>1 ? '' : ' группа') : 'Средняя группа';
+  const head = pageHead(p.name, `${p.born ? p.born+' г. р.' : 'личные данные удалены'} · ${groupLine} · ${p.active?'активен':'неактивен'}`, '', backLink('analytics','Аналитика группы'));
+  const body = () => `
   <p class="mb-6 flex max-w-3xl items-start gap-3 rounded-xl ${inAvg ? 'bg-ok-soft' : 'bg-warn-soft'} px-4 py-3">${ic(inAvg?'i-ok':'i-alert','size-5 '+(inAvg?'text-ok':'text-warn'))}
     <span><b class="font-bold">Учитывается в групповых средних: ${inAvg?'да':'нет'}.</b> ${LAYER_TEXT[lay]}${st.nE ? ` Явка ${pct(st.rate)}.` : ''}</span></p>
   <dl class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -1708,6 +1941,7 @@ function vPupil(){
         <td class="px-3 py-3 text-right tabular-nums">${!L.test ? '<span class="text-xs text-muted">не проводился</span>' : x.has ? cell(r.test, r.late.test) : '—'}</td>
         <td class="px-3 py-3 text-right tabular-nums">${x.has ? cell(r.nb, r.late.nb) : '—'}</td>
         ${canFix ? `<td class="px-5 py-2 text-right">${x.has && x.lid < CUR ? `<button type="button" data-act="fix-pupil" data-lid="${x.lid}" data-pid="${p.id}" class="inline-flex h-9 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-edit','size-4')} Исправить</button>` : ''}</td>` : ''}</tr>`; }).join('')}</tbody></table></div>`;
+  return head + pupilYearsSection(p, rows, sel) + (sel==='2026' ? (yearState(yearOf('2026'))==='closed' ? readOnlyNote : '') + body() : pupilClosedYear(p, selRow));
 }
 
 /* =========================================================
@@ -1956,12 +2190,25 @@ function vChildData(){
 /* =========================================================
    АДМИН
    ========================================================= */
+/* Школа за закрытый год: сравнение групп внутри одного выбранного года, итоги из снимков */
+function schoolClosedBlock(yid){
+  const rows = GROUPS.map(g=>({ g, s:groupSnap(g.name, yid) }));
+  return `${readOnlyNote}${methodNote(yearOf(yid).method)}
+  <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[46rem] text-left"><caption class="sr-only">Итоги групп за ${yearOf(yid).name}</caption>
+    <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Группа</th><th scope="col" class="px-3 py-3 text-right font-normal">Детей в основной выборке</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
+    <tbody class="divide-y divide-line">${rows.map(({g,s})=> s ? `<tr><th scope="row" class="px-5 py-4 text-left font-medium">${g.name}<span class="block text-sm font-normal text-muted">${g.age}</span></th>
+      <td class="px-3 py-4 text-right tabular-nums">${s.kids}</td><td class="px-3 py-4 text-right tabular-nums">${s.lessons}</td>
+      ${SNAP_KEYS.map(([k],i)=>`<td class="${i===3?'px-5':'px-3'} py-4 text-right tabular-nums">${fmtSnap(k, s[k])}<span class="block text-xs font-normal text-ink-2">${snapDiff(g.name, yid, k)}</span></td>`).join('')}</tr>`
+      : `<tr><th scope="row" class="px-5 py-4 text-left font-medium">${g.name}</th><td colspan="6" class="px-3 py-4 text-sm text-muted">В этом году группы не было</td></tr>`).join('')}</tbody></table></div>
+  <p class="mt-3 text-sm text-muted">Группы сравниваются только внутри выбранного года. Состав групп в разные годы разный.</p>`;
+}
 function vSchool(){
   const neg = PUPILS.filter(p=>earned(p.id)-issued(p.id)<0).length;
   const mid = series(layers().A.map(p=>p.id)).map(s=>s.att==null?null:Math.round(s.att*100));
   const labels = HELD.map(l=>lessonById(l).d);
   const pending = pendingCount();
-  return pageHead('Школа', `${YEAR} · активен с 6 сентября · проведено 8 уроков`) + `
+  const sel = analyticsYear('Средняя'), closedYear = !!sel && sel!=='2026';
+  return pageHead('Школа', closedYear ? `${yearOf(sel).name} · завершён` : `${YEAR} · ${S.yearClosed ? 'завершён' : 'активен'} с 6 сентября · проведено 8 уроков`) + yearChips('Средняя', 'ana-year', sel) + (closedYear ? schoolClosedBlock(sel) : `
   <div class="${CARD} overflow-x-auto">
     <table class="w-full min-w-[46rem] text-left">
       <caption class="sr-only">Показатели групп</caption>
@@ -1989,7 +2236,7 @@ function vSchool(){
       { name:'Средняя', color:'var(--color-series-2)', values:mid },
       { name:'Старшая', color:'var(--color-series-3)', values:SCHOOL_ATT['Старшая'] }],
       min:0, max:100, ticks:[0,25,50,75,100], tickFmt:t=>t+'%', fmt:v=>v+'%', aria:'Посещаемость трёх групп по урокам' })}</div>
-  </section>
+  </section>`) + `
 
   <section class="mt-8">
     <h2 class="${H2} mb-3">Требует внимания</h2>
@@ -3332,8 +3579,11 @@ document.addEventListener('click', e=>{
     case 'remove-do': { const n=S.groupSel.length; S.groupSel.forEach(id=>{ const i=PUPILS.findIndex(p=>p.id===id); const p=PUPILS.splice(i,1)[0]; REMOVED.push(p); UNASSIGNED.push({ id:p.id, name:p.name, born:p.born, note:'Исключён из Средней '+TODAY }); audit(`Состав · ${p.name}`,'Исключён из группы Средняя'); }); S.groupSel=[]; closeDialog(); render(); toast(`Исключено: ${n}. История сохранена.`); break; }
 
     /* аналитика */
-    case 'pupil-open': closeDialog(); S.pupilId = +el.dataset.pid; go('pupil'); break;
+    case 'pupil-open': closeDialog(); S.pupilId = +el.dataset.pid; S.pupilYear = null; go('pupil'); break;
     case 'period': S.period = el.dataset.val; render(); break;
+    case 'ana-year': S.year = el.dataset.val; render(); break;
+    case 'pupil-year': S.pupilYear = el.dataset.val; render(); break;
+    case 'pupil-metric': S.pupilMetric = el.dataset.val; render(); break;
     case 'ana-group': S.anaGroup = el.dataset.val; render(); break;
 
     /* кирпичики */
@@ -3418,7 +3668,7 @@ document.addEventListener('click', e=>{
     case 'ach-toggle': { const x = ach(el.dataset.code); if (x.code==='practice') { toast('Включится после теста распознавания'); break; } x.active = !x.active; render(); break; }
     case 'ach-edit': achDialog(el.dataset.code ? ach(el.dataset.code) : null); break;
     case 'close-year': closeYearDialog(); break;
-    case 'close-year-do': S.yearClosed = true; audit('Учебный год '+YEAR,'Завершён'); closeDialog(); render(); toast(`Учебный год ${YEAR} завершён`); break;
+    case 'close-year-do': S.yearClosed = true; S.year = null; S.pupilYear = null; audit('Учебный год '+YEAR,'Завершён'); closeDialog(); render(); toast(`Учебный год ${YEAR} завершён`); break;
     case 'year-new': yearNewDialog(); break;
     case 'dlg-close': closeDialog(); break;
   }

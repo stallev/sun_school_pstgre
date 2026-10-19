@@ -509,6 +509,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W8-07 | `docs/implementation/mvp/contracts/change_log_contract.md` — журнал изменений (БП-8, перечень 3.16) | authorization_matrix | authorization_matrix |
 | W8-08 | `docs/implementation/mvp/contracts/deletion_requests_contract.md` — запросы на удаление (УД-1…УД-11) | lifecycle_models, privacy_data_handling | lifecycle_models |
 | W8-09 | `docs/implementation/mvp/contracts/bible_seed_contract.md` — скрипты загрузки переводов (ПБ-1…ПБ-5) | adr_009, seed_data_spec, `Bible/README.md` | seed_data_spec |
+| W8-10 | `docs/implementation/mvp/contracts/analytics_year_snapshots_contract.md` — снимки итогов учебного года, пороги достоверности, год по умолчанию (БП-6, БП-7, БП-11; `multi_year_analytics`) | school_year_and_groups_contract, homework_check_contract, bricks_ledger_contract, deletion_requests_contract | lifecycle_models, authorization_matrix |
 
 **Lean:** W8-01 + контракты мутаций с признаком S / N: W8-03…W8-08; W8-09 — перед написанием скриптов загрузки. W8-02 — при необходимости (модуль `auth`). `file_upload_contract` и `email_notifications_contract` не требуются (модули `s3_uploads`, `email_jobs` выключены).
 
@@ -577,6 +578,8 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W11-12 | `P06_tasks.md` | P06_phase | — |
 | W11-13 | `P07_phase_description.md` — переходный период согласий, prod-готовность (**перенос данных из действующего приложения вне проекта**, решение владельца 2026-10-11) | migration_runbook, seed_data_spec, adr_011, accessibility (правило `ui-semantics-a11y`) | methodology |
 | W11-14 | `P07_tasks.md` | P07_phase | — |
+| W11-15 | `P08_phase_description.md` — аналитика по учебным годам (снимки, год по умолчанию, разница, закрытый год, UX/UI verification loop) | analytics_year_snapshots_contract, analytics_screens_spec v1.2, `multi_year_analytics` | methodology |
+| W11-16 | `P08_tasks.md` | P08_phase | — |
 
 Деление на фазы **предварительное**, фиксируется при написании W11; нумерация фаз реализации (P01…) не путается с промптами bootstrap P0…P6.
 
@@ -712,10 +715,10 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W5 | 2 | authorization_matrix, auth_runtime_spec |
 | W6 | 1 | seed_data_spec |
 | W7 | 2 | UX-05, UX-06 |
-| W8 | 7–9 | monorepo_boundaries, W8-03…W8-09 |
+| W8 | 8–10 | monorepo_boundaries, W8-03…W8-10 |
 | W9 | 2 | global_shell, homework_check_flow |
 | W15 | 1 | design_system_lab_spec |
-| W11 | 14 | 7 фаз × (description + tasks) |
+| W11 | 16 | 8 фаз × (description + tasks) |
 | W12 | 4 | migration_runbook, local_dev_setup, vercel_deploy, neon_prisma_migrations |
 | W14 | — | облегчённый проход |
 
@@ -736,6 +739,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 | Date | Change |
 |------|--------|
+| 2026-10-19 | W8-10 `analytics_year_snapshots_contract`; W11-15 / W11-16 `P08_phase_description` и `P08_tasks` (аналитика по учебным годам); статистика W8 / W11 |
 | 2026-10-10 | v1.2 — P2: Canonical для Sunday School (lean); Pulse-строки W4 / W8 / W9 / W11 / W13 заменены доменными; `default_docs` → `my_specs`; добавлены ADR-008 (i18n), ADR-009 (Bible); ADR-003 → `adr_003_auth_oidc_jwt_rbac.md` |
 | 2026-10-10 | Template cleanup — removed Pulse project history (waves W16, W22–W24, completion log, MVP status); W10 as generic patterns; domain rows marked as Pulse examples |
 | 2026-05-23 | v1.1 — §2.3 path coverage (happy/negative/security/races/drift), contract/spec templates, `failure_modes_catalog` in W3 |

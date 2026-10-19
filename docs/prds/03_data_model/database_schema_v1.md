@@ -55,6 +55,7 @@
 | `PENALTY_STATUS` | `ACTIVE`, `CANCELLED` | post-MVP `penalty.status` |
 | `CONSENT_TYPE` | `PD_PROCESSING`, `CHILD_DATA`, `VOICE`, `PHOTO` | `privacy_consent` / `child_data_consent` |
 | `RECITATION_STATUS` | `UPLOADED`, `PROCESSING`, `SCORED`, `FAILED` | post-MVP `recitation_attempt.status` |
+| `ANALYTICS_SNAPSHOT_REASON` | `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL` | `analytics_*_year_snapshot.reason` (§5.7, P08) |
 
 ## 5. Таблицы MVP
 
@@ -119,6 +120,17 @@
 | `deletion_request` | `type`, `subject_user_id · null`, `subject_pupil_id · null`, `requested_by`, `requested_at`, `reason · null`, `status`, `due_on date`, `taken_by · null`, `resolved_by · null`, `resolved_at · null`, `reject_reason · null`, `summary jsonb · null` | не более одного открытого на субъект; субъект — ровно один из двух |
 | `app_setting` | `key text`, `value jsonb` | `UNIQUE (key)`; ключи: `ui_locale`, `school_timezone` (IANA, [ADR-004](../07_governance/adr_004_timezone_scheduling_model.md); до выбора — `UTC`), `features.achievements`, `features.parents`, `features.voice` ([ADR-005](../07_governance/adr_005_schema_complete_post_mvp_tables.md)), `consent_text_version`, `legacy_consent_deadline_on` (`date`, появляется при миграции; [ADR-011](../07_governance/adr_011_transitional_child_consent.md)) |
 
+### 5.7 Снимки итогов учебного года
+
+Контракт — [`analytics_year_snapshots_contract.md`](../../implementation/mvp/contracts/analytics_year_snapshots_contract.md) §3–§4. Новая версия добавляется строкой, прежняя не изменяется.
+
+| Таблица | Колонки | Ограничения |
+|---------|---------|-------------|
+| `analytics_group_year_snapshot` | `grade_id`, `academic_year_id`, `version int`, `kids int`, `lessons int`, `attendance numeric · null` (0…1), `verses numeric · null` (0…3), `test numeric · null` (0…10), `notebook numeric · null` (0…10), `methodology_version text`, `reason ANALYTICS_SNAPSHOT_REASON`, `created_at` | `UNIQUE (grade_id, academic_year_id, version)`; `version ≥ 1`; `kids ≥ 0`, `lessons ≥ 0`; создаётся для групп, у которых в году есть `grade_settings` |
+| `analytics_pupil_year_snapshot` | `pupil_id`, `academic_year_id`, `version int`, `grade_ids uuid[]` (≥ 1), `lessons int`, `attendance`, `verses`, `test`, `notebook` (как выше, `NULL` при `lessons = 0`), `bricks_earned int`, `methodology_version text`, `reason`, `created_at` | `UNIQUE (pupil_id, academic_year_id, version)`; «выдано» не хранится (читается из `brick_ledger`) |
+
+Enum `ANALYTICS_SNAPSHOT_REASON`: `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL`. Имена и контакты в таблицах не хранятся.
+
 ## 6. Таблицы post-MVP (создаются сразу, без UI)
 
 | Волна | Таблица | Колонки (кратко) | Ограничения |
@@ -150,6 +162,8 @@
 | R-7 | Остаток кирпичиков = набрано − выдано; выдача не превышает остаток | БП-11 | транзакция с блокировкой строк ученика+года |
 | R-8 | Не снять роль `ADMIN` у последнего admin и у себя | §2.4 | транзакция с `SELECT … FOR UPDATE` |
 | R-9 | Золотой стих собирается из диапазона в переводе группы; нет стиха — урок не сохраняется | ПБ-5 | приложение |
+| R-10 | Снимок итогов закрытого года создаётся в транзакции закрытия года; версия снимка не изменяется — новая версия добавляется строкой; читается максимальная | INV-26, PRD аналитики по годам §7 | транзакция `closeYear`; `UNIQUE (…, version)` |
+| R-11 | Снимки ученика удаляются при стирании данных ребёнка вместе с вкладом в групповые версии; иных `UPDATE`/`DELETE` над снимками нет (исключение: dev-скрипт `delete-academic-year`) | INV-22, INV-26 | репозиторий без update; тест стирания |
 
 ## 8. Индексы (ориентир)
 
@@ -162,6 +176,8 @@
 | `audit_log` | `(entity_type, entity_id)`, `(occurred_at)` | журнал |
 | `brick_ledger` | `(pupil_id, academic_year_id)` | баланс |
 | `login_identity` | unique `(provider, provider_account_id)` | вход |
+| `analytics_group_year_snapshot` | unique `(grade_id, academic_year_id, version)`, `(academic_year_id)` | итоги группы по годам, сводка школы |
+| `analytics_pupil_year_snapshot` | unique `(pupil_id, academic_year_id, version)`, `(academic_year_id)` | строки лет ученика |
 
 Подробности — `indexing_strategy` (W6-02, не требуется на lean).
 
@@ -175,6 +191,7 @@
 | Карточка ребёнка | `pupil.*` | ПД ребёнка | удалить полностью |
 | Проверки, оценки, комментарии ребёнка | `homework_*` | ПД ребёнка | удалить |
 | Кирпичики ребёнка | `brick_ledger` | ПД ребёнка | удалить (исключение из «только добавление») |
+| Годовые итоги ребёнка | `analytics_pupil_year_snapshot` | ПД ребёнка (агрегаты по `pupil_id`) | удалить все версии; вклад в `analytics_group_year_snapshot` убрать пересчётом групп-лет (контракт снимков §6.3) |
 | Достижения и штрафы ребёнка | `achievement_award`, `penalty` | ПД ребёнка | удалить |
 | Голосовые попытки (post-MVP) | `recitation_attempt` | ПД ребёнка | удалить (MVP: таблица пуста) |
 | Зачисления, согласия по ребёнку | `enrollment`, `child_data_consent` | ПД ребёнка | удалить |
@@ -240,3 +257,4 @@
 | 2026-10-10 | v1.0 — Canonical (W1-F6), схема целиком |
 | 2026-10-11 | Реализовано в `packages/db/prisma/schema.prisma` (P5): 39 таблиц, миграция `init`. Соглашения реализации: модели PascalCase с `@@map`, enum-типы БД с суффиксом `_enum`, модель таблицы `user_role` называется `UserRoleAssignment`; ограничения вне Prisma (partial unique R-1, R-2, один PENDING-запрос, один default на язык, открытый запрос на удаление, один активный штраф, МАТЬ/ОТЕЦ; CHECK: subject удаления, `signed_on` при `LEGACY_PENDING`, диапазоны оценок, `quantity <> 0`) — в SQL миграции; запрет UPDATE/DELETE (R-6) — репозиторием, роль БД — P07 |
 | 2026-10-18 | §9: `recitation_attempt` в классификации удаления ребёнка (P06) |
+| 2026-10-19 | §5.7: снимки итогов учебного года (`analytics_group_year_snapshot`, `analytics_pupil_year_snapshot`), enum `ANALYTICS_SNAPSHOT_REASON`, R-10, R-11, индексы §8, ПД §9 (P08) |

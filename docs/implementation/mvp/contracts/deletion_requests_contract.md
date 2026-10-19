@@ -94,6 +94,7 @@
 | `enrollment`, `child_data_consent` | удалить |
 | `homework_check`, `homework_verse_score`, `homework_score_event` | удалить |
 | `brick_ledger` | удалить (исключение INV-17) |
+| `analytics_pupil_year_snapshot` | удалить все версии; затем пересчитать `analytics_group_year_snapshot` затронутых «группа + год» без ребёнка и удалить прежние версии этих пар — вклад ребёнка не остаётся в агрегатах (P08, [`analytics_year_snapshots_contract.md`](./analytics_year_snapshots_contract.md) §6.3, INV-22); выполняется **до** удаления `homework_check` |
 | Post-MVP (`achievement_award`, `penalty`, `recitation_attempt`, голос, семья) | удалить / исключить при включении волн; в MVP таблицы пусты |
 | `audit_log` записи о ребёнке | оставить; `old_value`/`new_value` стереть, ссылка — «ребёнок (данные удалены)» (исключение БП-8) |
 | `deletion_request` | оставить: без ФИО ребёнка |
@@ -222,3 +223,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-08) |
 | 2026-10-18 | v1.1 — §6.4 категории плана; Q-03/Q-05 закрыты; confirm word en; реализация БД (P06) |
+| 2026-10-19 | v1.2 — §6.2: снимки итогов года ребёнка и их вклад в групповые версии (P08) |
