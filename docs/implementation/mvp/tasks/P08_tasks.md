@@ -102,7 +102,7 @@
 
 ### P08-CU9 — feat(web): add year history to pupil analytics · Review: reviewer · Commit: auto
 
-- [ ] P08-T9 · T2 · Spec: [analytics_screens §6.5](../specs/analytics_screens_spec.md) · Prototype: `vPupil`, `pupilYearsSection`, `pupilClosedYear`
+- [x] P08-T9 · T2 · Spec: [analytics_screens §6.5](../specs/analytics_screens_spec.md) · Prototype: `vPupil`, `pupilYearsSection`, `pupilClosedYear`
       Files: `apps/web/src/app/(app)/analytics/pupils/[pupilId]/{page.tsx,loading.tsx}`, `apps/web/src/components/analytics/years/PupilYearsSection.tsx` (композиция), загрузчик из CU6
       Acceptance: «По годам» над карточкой: полоса лет, таблица (группа, при переводе «Группа 1 → Группа 2»; «—» и «мало уроков: k»; «Кирпичики: набрано / выдано» — выдано вживую), график столбцами по годам с переключателем показателя и таблицей к графику; активный год — карточка P05; закрытый год — read-only плитки и графики по урокам этого года; teacher видит все годы доступного ученика и название чужой группы без перехода; чужой ученик → 404; `?pupilYear=`, `?metric=`
       Paths: H [строки всех лет, раскрытие года] · N [один год, `lessons < M`, ребёнок без истории] · S [AZ-49, AZ-50: нет перехода в чужую группу; AZ-D4]

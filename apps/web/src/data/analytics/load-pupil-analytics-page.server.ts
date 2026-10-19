@@ -1,6 +1,6 @@
 import "server-only";
 
-import { MUTATION_ERROR_CODES } from "@sunschool/domain";
+import { MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { getDefaultOrganizationId } from "../access/get-organization-id.server";
@@ -15,6 +15,10 @@ import {
   listPupilYearRows,
   type ListPupilYearRowsData,
 } from "./years/list-pupil-year-rows";
+import {
+  resolveBackToGroupGradeId,
+  resolvePupilYearAnalyticsGrade,
+} from "./years/resolve-pupil-year-grade";
 import { resolveYearSelection } from "./years/year-analytics-access.server";
 
 export type PupilAnalyticsPageSearchParams = AnalyticsPageSearchParams & {
@@ -31,13 +35,15 @@ export type PupilAnalyticsPageData =
       pupilId: string;
       pupilName: string;
       gradeId: string;
+      backToGroupGradeId: string | null;
       yearId: string;
       yearName: string;
       chartMetric: PupilYearMetric;
       periodFilter: AnalyticsPeriodFilter;
       pupilYearRows: ListPupilYearRowsData;
-      snapshot: PupilAnalyticsSnapshot;
-      view: PupilAnalyticsView;
+      isForeignGroupYearSnapshot: boolean;
+      snapshot: PupilAnalyticsSnapshot | null;
+      view: PupilAnalyticsView | null;
     };
 
 export async function loadPupilAnalyticsPage(
@@ -87,14 +93,84 @@ export async function loadPupilAnalyticsPage(
   if (!pupil) return { kind: "not_found" };
 
   const periodFilter = buildAnalyticsPeriodFilter(year.id, params);
-  const enrollment = await db.enrollment.findFirst({
+  const enrollments = await db.enrollment.findMany({
     where: { pupilId, academicYearId: year.id },
     select: { gradeId: true },
-    orderBy: { startsOn: "desc" },
+    orderBy: { startsOn: "asc" },
   });
-  if (!enrollment) return { kind: "not_found" };
+  const enrollmentGradeIds = enrollments.map((row) => row.gradeId);
+  const yearGradeIds =
+    selectedRow?.gradeIds.length ? selectedRow.gradeIds : enrollmentGradeIds;
+  if (yearGradeIds.length === 0) return { kind: "not_found" };
 
-  const gradeId = params.gradeId ?? enrollment.gradeId;
+  const isAdmin =
+    (await db.userRoleAssignment.findFirst({
+      where: { userId: actorUserId, role: USER_ROLE.ADMIN },
+      select: { id: true },
+    })) !== null;
+
+  const teacherAssignments = isAdmin
+    ? []
+    : await db.teacherAssignment.findMany({
+        where: {
+          userId: actorUserId,
+          academicYearId: year.id,
+          gradeId: { in: [...yearGradeIds] },
+        },
+        select: { gradeId: true },
+      });
+  const teacherAssignedGradeIds = teacherAssignments.map((row) => row.gradeId);
+
+  const gradeResolution = resolvePupilYearAnalyticsGrade({
+    isAdmin,
+    yearGradeIds,
+    enrollmentGradeIdsOrdered: enrollmentGradeIds,
+    teacherAssignedGradeIds,
+    requestedGradeId: params.gradeId,
+  });
+
+  const teacherAssignedByYear = new Map<string, string[]>();
+  if (!isAdmin) {
+    const yearIds = pupilYearRowsResult.data.rows.map((row) => row.yearId);
+    const allAssignments = await db.teacherAssignment.findMany({
+      where: { userId: actorUserId, academicYearId: { in: yearIds } },
+      select: { academicYearId: true, gradeId: true },
+    });
+    for (const row of pupilYearRowsResult.data.rows) {
+      const gradeIdSet = new Set(row.gradeIds);
+      teacherAssignedByYear.set(
+        row.yearId,
+        allAssignments
+          .filter(
+            (item) => item.academicYearId === row.yearId && gradeIdSet.has(item.gradeId),
+          )
+          .map((item) => item.gradeId),
+      );
+    }
+  }
+  const backToGroupGradeId = isAdmin
+    ? yearGradeIds[0] ?? null
+    : resolveBackToGroupGradeId(pupilYearRowsResult.data.rows, teacherAssignedByYear);
+
+  if (gradeResolution.mode === "foreign_snapshot_only") {
+    return {
+      kind: "page",
+      pupilId,
+      pupilName: formatDisplayName(pupil),
+      gradeId: yearGradeIds[0]!,
+      backToGroupGradeId,
+      yearId: year.id,
+      yearName: year.name,
+      chartMetric,
+      periodFilter,
+      pupilYearRows: pupilYearRowsResult.data,
+      isForeignGroupYearSnapshot: true,
+      snapshot: null,
+      view: null,
+    };
+  }
+
+  const gradeId = gradeResolution.gradeId;
 
   const analyticsResult = await getPupilAnalytics(db, actorUserId, pupilId, gradeId, periodFilter);
   if (isMutationErr(analyticsResult)) {
@@ -111,11 +187,13 @@ export async function loadPupilAnalyticsPage(
     pupilId,
     pupilName: formatDisplayName(pupil),
     gradeId,
+    backToGroupGradeId,
     yearId: year.id,
     yearName: year.name,
     chartMetric,
     periodFilter,
     pupilYearRows: pupilYearRowsResult.data,
+    isForeignGroupYearSnapshot: false,
     snapshot: analyticsResult.data,
     view,
   };
