@@ -37,7 +37,7 @@
 
 ### P08-CU2 — feat(domain): add year comparison thresholds and default-year rules · Review: reviewer · Commit: auto
 
-- [ ] P08-T2 · T2 · Contract: [snapshots §5–§6.6](../contracts/analytics_year_snapshots_contract.md) · Invariants: INV-26, INV-27
+- [x] P08-T2 · T2 · Contract: [snapshots §5–§6.6](../contracts/analytics_year_snapshots_contract.md) · Invariants: INV-26, INV-27
       Files: `packages/domain/src/analytics/{year-comparison.ts,methodology.ts,default-year.ts,visible-years.ts,year-totals.ts}` + `*.test.ts`, `packages/domain/src/constants/{mutation-error-codes.ts,audit-action.ts}` (`ANALYTICS_SNAPSHOT_MISSING`, `analytics.snapshot_created`, `analytics.snapshot_versioned`, `ANALYTICS_SNAPSHOT`), экспорт из `index.ts`
       Acceptance: константы N=10, M=4, `ANALYTICS_METHODOLOGY_VERSION='v1'`; чистые функции `computeYearTotals` (те же формулы, что P05), `computeYearDiff` (явка — целые п. п., остальное — 1 знак), `isComparisonReliable` (`kids ≥ N` и `lessons ≥ M` у обоих лет), `resolveDefaultYear` (активный → последний закрытый → `none`), `filterVisibleYears` (teacher — годы назначения, admin — все); нет литералов порогов вне domain → unit-тесты, grep
       Paths: H [разница считается] · N [`kids < N`, `lessons < M`, `NULL`-значения, нет прошлого года, нет лет] · S n/a — чистые функции
