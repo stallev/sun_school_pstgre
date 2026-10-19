@@ -15,6 +15,7 @@ import { isMutationErr } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { readChildConsentTextVersion } from "./child-consent-text-version.server";
 import { calendarDateFromIso } from "./calendar-date";
+import { assertAdminActor } from "./school-enrollment-shared.server";
 import {
   isoTodayUtc,
   loadActorOrganizationId,
@@ -32,6 +33,9 @@ export async function recordPaperConsentInTransaction(
   input: RecordPaperConsentInput,
   todayIso: string,
 ): Promise<MutationResult<{ consentId: string }>> {
+  const adminError = await assertAdminActor(tx, actorUserId);
+  if (adminError) return adminError;
+
   const signedOnError = validateSignedOnNotInFuture(input.signedOn, todayIso);
   if (signedOnError) return signedOnError;
 

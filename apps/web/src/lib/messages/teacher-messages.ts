@@ -6,6 +6,7 @@ export type TeacherRosterMessages = {
   enrolledSince: (isoDate: string) => string;
   consentYes: string;
   consentNo: string;
+  consentNoLegacy: string;
   addPupilLabel: string;
   addPupilPlaceholder: string;
   addPupilSubmit: string;

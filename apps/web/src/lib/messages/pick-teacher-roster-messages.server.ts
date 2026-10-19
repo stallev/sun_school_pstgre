@@ -17,6 +17,7 @@ export const pickTeacherRosterMessages = (teacher: Dictionary): TeacherRosterMes
   enrolledSince: (isoDate) => fill(getMessage(teacher, "group.enrolled_since"), { date: isoDate }),
   consentYes: getMessage(teacher, "group.consent_yes"),
   consentNo: getMessage(teacher, "group.consent_no"),
+  consentNoLegacy: getMessage(teacher, "group.consent_no_legacy"),
   addPupilLabel: getMessage(teacher, "group.add_pupil_label"),
   addPupilPlaceholder: getMessage(teacher, "group.add_pupil_placeholder"),
   addPupilSubmit: getMessage(teacher, "group.add_pupil_submit"),

@@ -15,6 +15,7 @@ type CheckPupilListProps = {
   pupils: CheckPupilListItem[];
   activePupilId: string;
   lateLabel: string;
+  listLabel: string;
   onSelect: (pupilId: string) => void;
 };
 
@@ -22,9 +23,10 @@ export const CheckPupilList = ({
   pupils,
   activePupilId,
   lateLabel,
+  listLabel,
   onSelect,
 }: CheckPupilListProps) => (
-  <ul className="space-y-0.5" aria-label="Pupils">
+  <ul className="space-y-0.5" aria-label={listLabel}>
     {pupils.map((pupil) => {
       const active = pupil.pupilId === activePupilId;
       return (

@@ -11,12 +11,14 @@ export type TeacherRosterRow = {
   displayName: string;
   enrolledSinceIso: string;
   hasConsent: boolean;
+  isLegacyPending: boolean;
 };
 
 export type TeacherAddCandidate = {
   pupilId: string;
   displayName: string;
   hasConsent: boolean;
+  isLegacyPending: boolean;
 };
 
 export type TeacherGroupPageData =
@@ -87,6 +89,7 @@ export async function loadTeacherGroupPage(
       displayName: formatDisplayName(row.pupil),
       enrolledSinceIso: row.startsOn.toISOString().slice(0, 10),
       hasConsent: consent.hasConsent,
+      isLegacyPending: consent.isLegacyPending,
     };
   });
 
@@ -113,6 +116,7 @@ export async function loadTeacherGroupPage(
       pupilId: pupil.id,
       displayName: formatDisplayName(pupil),
       hasConsent: consent.hasConsent,
+      isLegacyPending: consent.isLegacyPending,
     };
   });
 

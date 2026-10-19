@@ -112,4 +112,4 @@ Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Telegram + emai
 
 ## Repository status
 
-**Текущая фаза:** Bootstrap — P6 завершена (Design Lab `/design-system`, T2-правила, shadcn на Base UI `base-vega`; гейт G5); следующая — фазы реализации P01…P07. См. [`documentation_creation_registry.md`](docs/meta/documentation_creation_registry.md) и [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).
+**Текущая фаза:** MVP реализации P01…P07 завершена (2026-10-19): prod-готовность и переходный период согласий (P07); bootstrap P6 (Design Lab, T2-правила). Дальнейшие изменения — post-MVP или явная фаза/контракт. См. [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).

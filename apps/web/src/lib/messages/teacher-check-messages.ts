@@ -8,6 +8,7 @@ export type TeacherCheckMessages = {
   correctionBanner: string;
   progressLabel: (checked: number, total: number) => string;
   pupilsToggle: (checked: number, total: number) => string;
+  pupilsListLabel: string;
   pupilIndex: (index: number, total: number) => string;
   birthYear: (year: number) => string;
   birthYearUnknown: string;

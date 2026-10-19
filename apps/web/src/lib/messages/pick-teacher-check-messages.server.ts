@@ -25,6 +25,7 @@ export const pickTeacherCheckMessages = (
     fill(getMessage(teacher, "check.progress"), { checked, total }),
   pupilsToggle: (checked, total) =>
     fill(getMessage(teacher, "check.pupils_toggle"), { checked, total }),
+  pupilsListLabel: getMessage(teacher, "check.pupils_list"),
   pupilIndex: (index, total) =>
     fill(getMessage(teacher, "check.pupil_index"), { index, total }),
   birthYear: (year) => fill(getMessage(teacher, "check.birth_year"), { year }),

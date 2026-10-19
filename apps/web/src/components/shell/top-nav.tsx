@@ -53,7 +53,7 @@ const TopNavGroup = ({
         ref={buttonRef}
         type="button"
         variant="ghost"
-        className={cn(groupActive && "bg-cobalt-soft text-cobalt-ink")}
+        className={cn("min-h-11", groupActive && "bg-cobalt-soft text-cobalt-ink")}
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}

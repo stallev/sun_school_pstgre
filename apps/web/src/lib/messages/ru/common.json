@@ -14,6 +14,7 @@
     "year_closed": "Учебный год закрыт — изменения недоступны"
   },
   "states": {
+    "page_loading": "Загрузка страницы",
     "not_found_title": "Страница не найдена",
     "not_found_description": "Проверьте адрес или вернитесь на главную.",
     "error_title": "Не удалось загрузить страницу",
@@ -24,7 +25,10 @@
     "create_year_action": "Создать учебный год",
     "timezone_unset_title": "Часовой пояс школы не выбран",
     "timezone_unset_description": "Пока используется UTC. Выберите IANA-пояс в настройках — расписание и даты будут точнее.",
-    "choose_timezone_action": "Выбрать часовой пояс"
+    "choose_timezone_action": "Выбрать часовой пояс",
+    "legacy_consent_banner_title": "Переходный период согласий",
+    "legacy_consent_banner_active": "{count} перенесённых учеников без согласия. Срок {date}. Осталось {days} дн.",
+    "legacy_consent_banner_overdue": "Срок истёк {date}. {count} учеников всё ещё без согласия."
   },
   "person": {
     "deleted_user": "Удалённый пользователь №{ordinal}"

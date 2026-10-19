@@ -32,15 +32,15 @@
 
 ### P07-CU1 — feat(school): add legacy pending consent status and deadline handling · Review: reviewer · Commit: auto
 
-- [ ] P07-T1 · T3 · ADR: [adr_011](../../../prds/07_governance/adr_011_transitional_child_consent.md) · Invariants: INV-08
+- [x] P07-T1 · T3 · ADR: [adr_011](../../../prds/07_governance/adr_011_transitional_child_consent.md) · Invariants: INV-08
       Files: `packages/db/prisma/migrations/*`, `packages/domain/src/school/can-enroll.ts`, `apps/web/src/data/school/{list-legacy-pending,resolve-legacy-consent,extend-legacy-deadline}.ts`
       Acceptance: `LEGACY_PENDING` допускает зачисление только для перенесённых до срока; новый ребёнок требует `ACTIVE`; `recordPaperConsent` переводит в `ACTIVE`; `extendLegacyDeadline` (причина, журнал); автоудаления нет → тесты на **синтетических** данных
       Paths: H [ADR-011 §7] · N [срок истёк, согласие отсутствует, не-перенесённый] · S [AZ-20, AZ-22: только admin; teacher видит «есть/нет»]
-- [ ] P07-T2 · T1 · UX: [forms §5](../../../design/forms_and_validation_ux.md) · Prototype: `people`
+- [x] P07-T2 · T1 · UX: [forms §5](../../../design/forms_and_validation_ux.md) · Prototype: `people`
       Files: `components/admin/{LegacyConsentBadge,LegacyConsentList}.tsx`, `components/shell/ConsentDeadlineBanner.tsx`
       Acceptance: список «без согласия (перенесён)», срок, оставшиеся дни, баннер у admin и пометка у teacher → ручной smoke
       Paths: H · N [срок истёк] · S [AZ-21]
-- [ ] P07-T2a · T2 · Doc: [P07 §Совместимость](../phases_tasks_descriptions/P07_phase_description.md)
+- [x] P07-T2a · T2 · Doc: [P07 §Совместимость](../phases_tasks_descriptions/P07_phase_description.md)
       Files: тест-фикстуры `packages/db/test/fixtures/legacy-compatible/*` (синтетика), проверка инвариантов
       Acceptance: набор синтетических данных, соответствующих §Совместимость п. 3–6, проходит `enrollPupil`/аналитику/кирпичики без нарушений → тест
       Paths: H · N [нарушение требования → тест падает] · S [нет реальных ПД]
@@ -53,10 +53,12 @@
 
 ### P07-CU5 — fix(web): complete accessibility pass on key screens · Review: diff-only · Commit: auto
 
-- [ ] P07-T7 · T1 · Rule: `ui-semantics-a11y` · UX: [UX-03 §9](../../../design/visual_identity_contract.md), [global_shell_spec §16](../specs/global_shell_spec.md)
+- [x] P07-T7 · T1 · Rule: `ui-semantics-a11y` · UX: [UX-03 §9](../../../design/visual_identity_contract.md), [global_shell_spec §16](../specs/global_shell_spec.md)
       Files: компоненты по результатам прохода
       Acceptance: чек-лист для `/login`, `/register`, `/pending`, `/today`, проверка ДЗ, `/bricks`, `/approvals`, `/deletions`, `/audit` — клавиатура, фокус, имена, контраст по таблице UX-03, 390 px, `prefers-reduced-motion`; дефекты исправлены → отчёт в CU
       Paths: n/a — a11y-исправления без изменения поведения (по §2.3.2a)
+
+**A11y report (2026-10-19):** маршруты `/login`, `/register`, `/pending` — h1, landmarks, disclosure `aria-expanded`/`aria-controls` (admin login, consent). Оболочка — skip-link + `#main`, nav `aria-current`, drawer Esc, user menu Esc/outside close, touch ≥44px на top-nav group. `/today`, `/approvals` — PageHeader h1, списки семантичны. Проверка ДЗ — i18n `aria-label` списка учеников, `aria-live` прогресс. `/bricks` — убран неклавиатурный `tr onClick`, выбор через кнопку + `aria-current`. `/deletions` — `aria-label` вкладок, `aria-current` на активной. `/audit` — `scope="col"` в таблице. `(app)/loading` — локализованный `aria-label`. Контраст/ motion — без изменений (токены UX-03, `prefers-reduced-motion` в globals).
 
 **CU DoD:** `typecheck` · `lint` · ручной проход чек-листа
 
@@ -71,11 +73,11 @@
 
 ### P07-CU7 — chore(config): prepare production deployment · Review: reviewer · Commit: auto
 
-- [ ] P07-T9 · T3 · ADR: [adr_001 §3.4](../../../prds/07_governance/adr_001_stack_and_runtime.md) · Guide: [vercel_deploy_guide](../guides/vercel_deploy_guide.md)
+- [x] P07-T9 · T3 · ADR: [adr_001 §3.4](../../../prds/07_governance/adr_001_stack_and_runtime.md) · Guide: [vercel_deploy_guide](../guides/vercel_deploy_guide.md)
       Files: `vercel.json` (без `crons`), `next.config.*` (заголовки, CSP), `.env.example`, ссылки в guides
       Acceptance: Node 24.x; pooled/direct URL; `AUTH_*` отдельные; `APP_ENV=prod` и маркер БД; нет `NEXT_PUBLIC_*` секретов; заголовки безопасности и cookie; `/design-system` 404; dev-переключатель отсутствует → проверка сборки и маршрутов
       Paths: H · N [`APP_ENV` не совпал] · S [CSP, cookie, секреты; INV-24]
-- [ ] P07-T10 · T3 · Spec: [seed_data_spec §4](../../../prds/03_data_model/seed_data_spec.md) · Runbook: [migration_runbook §8](../../../prds/06_operations/migration_runbook.md)
+- [x] P07-T10 · T3 · Spec: [seed_data_spec §4](../../../prds/03_data_model/seed_data_spec.md) · Runbook: [migration_runbook §8](../../../prds/06_operations/migration_runbook.md)
       Files: релизные шаги: миграции → `seed:reference` → `seed:bible` (RST; NIV по лицензии) → первый admin
       Acceptance: на пустой prod-подобной ветке приложение работает; в БД нет фикстур → ручной smoke
       Paths: H · N [NIV без флага] · S [маркер `prod`]
@@ -84,7 +86,7 @@
 
 ### P07-CU8 — docs(prds): close pre-production checklist · Review: diff-only · Commit: auto
 
-- [ ] P07-T11 · T2 · Files: `docs/prds/06_operations/` (чек-лист) или раздел `migration_runbook`; `/privacy` v1 (финал); ADR-009 (лицензия)
+- [x] P07-T11 · T2 · Files: `docs/prds/06_operations/` (чек-лист) или раздел `migration_runbook`; `/privacy` v1 (финал); ADR-009 (лицензия)
       Acceptance: лицензия NIV подтверждена (или BSB выбран); юр. срок удаления и переходного периода проверены; окно backup Neon указано в тексте согласия; security review T3-зон выполнен; план отката → чек-лист с датами и ответственными
       Paths: n/a — docs-only
 
@@ -92,15 +94,17 @@
 
 ### P07-CU9 — docs(docs): sync P07 docs and record production smoke · Review: diff-only · Commit: auto
 
-- [ ] P07-T12 · T0 · Files: `docs/**`, индекс, `AGENTS.md`/`project-context.mdc` («Текущая фаза»)
+- [x] P07-T12 · T0 · Files: `docs/**`, индекс, `AGENTS.md`/`project-context.mdc` («Текущая фаза»)
       Acceptance: smoke prod пройден (H/N/S), статус проекта обновлён, нет drift
       Paths: n/a — docs-only
+
+**Prod smoke report (2026-10-19):** **H** — [`vercel_deploy_guide`](../guides/vercel_deploy_guide.md) §8 на production: HTTPS `/login`, вход первого admin после `db:seed:admin`, регистрация → `/pending`, одобрение teacher, проверка ДЗ, кирпичики, журнал `/audit`; LEGACY_PENDING UI (список, баннер, бумажное согласие) на prod-подобной ветке со синтетикой до импорта владельца. **N** — `SCHOOL_CONSENT_REQUIRED` после срока и для нового ребёнка без `ACTIVE` (`packages/domain` enrollment + legacy fixtures); NIV без `--confirm-license` не грузится; `APP_ENV` ≠ маркер БД — отказ старта; `seed:dev` в prod — отказ; просрочка без автоудаления (ADR-011). **S** — §Security smoke P07: `/design-system` 404, нет dev-переключателя роли, CSP/cookie (CU7), Sentry без ПД (CU6), teacher видит только «есть/нет» согласия; секреты не в `NEXT_PUBLIC_*`.
 
 ## Verification (phase)
 
 - [ ] Все CU закоммичены; trace `Review: …`
 - [ ] Phase DoD из [`P07_phase_description.md`](../phases_tasks_descriptions/P07_phase_description.md)
-- [ ] Docs sync — в CU9
+- [x] Docs sync — в CU9
 
 ---
 
@@ -117,3 +121,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W11-14) |
 | 2026-10-11 | v1.1 — CU2–CU4 исключены (перенос данных вне проекта); добавлена P07-T2a (совместимость) |
+| 2026-10-19 | P07-T12 — prod smoke H/N/S зафиксирован; docs sync (CU9) |

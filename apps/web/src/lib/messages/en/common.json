@@ -14,6 +14,7 @@
     "year_closed": "The school year is closed — changes are not allowed"
   },
   "states": {
+    "page_loading": "Loading page",
     "not_found_title": "Page not found",
     "not_found_description": "Check the address or go back to the home screen.",
     "error_title": "Could not load this page",
@@ -24,7 +25,10 @@
     "create_year_action": "Create school year",
     "timezone_unset_title": "School time zone is not set",
     "timezone_unset_description": "UTC is used for now. Pick an IANA time zone in settings for accurate schedules and dates.",
-    "choose_timezone_action": "Choose time zone"
+    "choose_timezone_action": "Choose time zone",
+    "legacy_consent_banner_title": "Transitional consent period",
+    "legacy_consent_banner_active": "{count} migrated students without consent. Deadline {date}. {days} days left.",
+    "legacy_consent_banner_overdue": "Deadline passed on {date}. {count} students still without consent."
   },
   "person": {
     "deleted_user": "Deleted user #{ordinal}"

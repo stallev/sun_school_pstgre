@@ -1,10 +1,13 @@
 import type { ReactNode } from "react";
+import { USER_ROLE } from "@sunschool/domain";
 import { homeRouteFor } from "@sunschool/policy-edge";
 
 /** Product shell reads the session on every request — Block per ADR-002 (auth + nav). */
 export const instant = false;
 import { AppShell } from "@/components/shell/app-shell";
+import { ConsentDeadlineBanner } from "@/components/shell/ConsentDeadlineBanner";
 import { ShellBanners } from "@/components/shell/ShellBanners";
+import { loadLegacyConsentDeadlineSummary } from "@/data/school/list-legacy-pending";
 import { buildShellNav } from "@/data/shell/build-shell-nav.server";
 import { loadShellBadgeCounts } from "@/data/shell/load-shell-badge-counts.server";
 import { loadShellBanners, type ShellBannerCopy } from "@/data/shell/load-shell-banners.server";
@@ -13,11 +16,18 @@ import { requireActiveUser } from "@/lib/auth/require-user";
 import { getServerEnv } from "@/lib/env.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { getPrisma } from "@/lib/db.server";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
 
 type AppGroupLayoutProps = {
   children: ReactNode;
 };
+
+const fillTemplate = (template: string, values: Record<string, string | number>): string =>
+  Object.entries(values).reduce(
+    (text, [key, value]) => text.replace(`{${key}}`, String(value)),
+    template,
+  );
 
 const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
   const context = await requireActiveUser();
@@ -44,6 +54,35 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
   };
   const shellBanners = await loadShellBanners(context, bannerCopy);
 
+  let legacyConsentBanner: ReactNode = null;
+  if (context.roles.includes(USER_ROLE.ADMIN)) {
+    const prisma = await getPrisma();
+    const legacySummary = await loadLegacyConsentDeadlineSummary(prisma);
+    if (legacySummary.pendingCount > 0 && legacySummary.deadlineOn) {
+      const title = getMessage(common, "states.legacy_consent_banner_title");
+      const description = fillTemplate(
+        getMessage(
+          common,
+          legacySummary.isOverdue
+            ? "states.legacy_consent_banner_overdue"
+            : "states.legacy_consent_banner_active",
+        ),
+        {
+          count: legacySummary.pendingCount,
+          date: legacySummary.deadlineOn,
+          days: legacySummary.daysRemaining ?? 0,
+        },
+      );
+      legacyConsentBanner = (
+        <ConsentDeadlineBanner
+          title={title}
+          description={description}
+          isOverdue={legacySummary.isOverdue}
+        />
+      );
+    }
+  }
+
   return (
     <AppShell
       shellMessages={shellMessages}
@@ -52,6 +91,7 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
       nav={nav}
       badgeCounts={badgeCounts}
     >
+      {legacyConsentBanner}
       <ShellBanners banners={shellBanners} />
       {children}
     </AppShell>

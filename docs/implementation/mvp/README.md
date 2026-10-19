@@ -2,14 +2,16 @@
 
 **Тип:** Index  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.1  
+**Дата:** 2026-10-19  
 **Волна:** W14-06  
 **Зависит от:** [`architecture_master_index.md`](../../prds/architecture_master_index.md), [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md)
 
 ---
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
+
+**Статус (2026-10-19):** фазы P01…P07 реализованы; prod smoke и docs sync — [`P07_tasks.md`](./tasks/P07_tasks.md) CU9. Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 

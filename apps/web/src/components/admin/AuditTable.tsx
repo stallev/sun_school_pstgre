@@ -33,11 +33,11 @@ export const AuditTable = ({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{columnOccurred}</TableHead>
-          <TableHead>{columnActor}</TableHead>
-          <TableHead>{columnAction}</TableHead>
-          <TableHead>{columnEntity}</TableHead>
-          <TableHead>{columnDetails}</TableHead>
+          <TableHead scope="col">{columnOccurred}</TableHead>
+          <TableHead scope="col">{columnActor}</TableHead>
+          <TableHead scope="col">{columnAction}</TableHead>
+          <TableHead scope="col">{columnEntity}</TableHead>
+          <TableHead scope="col">{columnDetails}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

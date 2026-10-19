@@ -5,6 +5,7 @@ import { USER_ROLE, type MutationResult } from "@sunschool/domain";
 import { createPupil } from "@/data/school/create-pupil";
 import { deactivatePupil } from "@/data/school/deactivate-pupil";
 import { enrollPupil } from "@/data/school/enroll-pupil";
+import { extendLegacyDeadline } from "@/data/school/extend-legacy-deadline";
 import { recordPaperConsent } from "@/data/school/record-paper-consent";
 import { transferPupil } from "@/data/school/transfer-pupil";
 import { unenrollPupil } from "@/data/school/unenroll-pupil";
@@ -17,6 +18,7 @@ const revalidatePeople = () => {
   revalidatePath("/people");
   revalidatePath("/group");
   revalidatePath("/school");
+  revalidatePath("/", "layout");
 };
 
 export async function createPupilAction(
@@ -59,6 +61,19 @@ export async function deactivatePupilAction(
   const actor = await requireRole(USER_ROLE.ADMIN);
   const result = await deactivatePupil(await getPrisma(), actor.userId, {
     pupilId: uuidFromForm(formData, "pupilId"),
+  });
+  if (result.ok) revalidatePeople();
+  return result;
+}
+
+export async function extendLegacyDeadlineAction(
+  _prev: MutationResult<{ deadlineOn: string }> | null,
+  formData: FormData,
+): Promise<MutationResult<{ deadlineOn: string }>> {
+  const actor = await requireRole(USER_ROLE.ADMIN);
+  const result = await extendLegacyDeadline(await getPrisma(), actor.userId, {
+    newDeadlineOn: String(formData.get("newDeadlineOn") ?? "").trim(),
+    reason: String(formData.get("reason") ?? "").trim(),
   });
   if (result.ok) revalidatePeople();
   return result;

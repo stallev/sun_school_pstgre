@@ -116,16 +116,21 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
               pupils={screen.pupils}
               activePupilId={pupil.pupilId}
               lateLabel={messages.lateSubmitted}
+              listLabel={messages.pupilsListLabel}
               onSelect={screen.moveTo}
             />
           </div>
         </details>
 
-        <aside className="hidden rounded-xl border border-line bg-surface p-1.5 lg:sticky lg:top-6 lg:block">
+        <aside
+          className="hidden rounded-xl border border-line bg-surface p-1.5 lg:sticky lg:top-6 lg:block"
+          aria-label={messages.pupilsListLabel}
+        >
           <CheckPupilList
             pupils={screen.pupils}
             activePupilId={pupil.pupilId}
             lateLabel={messages.lateSubmitted}
+            listLabel={messages.pupilsListLabel}
             onSelect={screen.moveTo}
           />
         </aside>

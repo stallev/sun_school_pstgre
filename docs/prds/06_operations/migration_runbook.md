@@ -91,7 +91,7 @@
 | 2 | `migrate deploy` | применены только pending, без ошибок |
 | 3 | `prisma generate` (если не в сборке) | типы актуальны |
 | 4 | Деплой приложения | старт проходит проверку `APP_ENV` ↔ маркер |
-| 5 | Справочники (при необходимости) | `seed:reference`; `seed:bible` — по чек-листу |
+| 5 | Справочники и первый admin (первый релиз / по чек-листу) | `npm run db:seed:reference` → `npm run db:seed:bible` (RST; `db:seed:bible:niv` — только при подтверждённой лицензии NIV) → `npm run db:seed:admin` (email и пароль — env оператора на время команды, не Vercel runtime) |
 
 Порядок: **миграции → деплой** (приложение совместимо с новой схемой); для несовместимых изменений — расширяющая миграция → деплой → сужающая миграция (expand/contract).
 
@@ -172,7 +172,7 @@
 | ID | Вопрос | Предложение | Владелец | Блокирует |
 |----|--------|-------------|----------|-----------|
 | Q-01 | Поведение `migrate dev`/`migrate status`/shadow DB не сверено с документацией в этой сессии | Сверить по prisma.io на P5 (preflight) | architect | P5 |
-| Q-02 | Окно восстановления Neon для prod | 1 сутки (платный тариф) как минимум; значение — владелец | владелец | P07 |
+| Q-02 | ✔ **Решено 2026-10-19 (P07-CU8).** Окно восстановления Neon для prod | **1 календарный день** (платный тариф PITR); текст — `/privacy` v1, [`pre_production_checklist.md`](./pre_production_checklist.md) L-3 | владелец | — |
 | Q-03 | Релизный шаг: GitHub Actions или Vercel build hook | GitHub Actions с protected environment для prod | architect | P07 |
 | Q-04 | `prisma` как production-зависимость при деплое на Vercel | проверить на P5 | architect | P5 |
 
@@ -183,6 +183,7 @@
 | [`neon_prisma_migrations_guide.md`](../../implementation/mvp/guides/neon_prisma_migrations_guide.md) | Команды и настройка |
 | [`vercel_deploy_guide.md`](../../implementation/mvp/guides/vercel_deploy_guide.md) | Релиз приложения |
 | [`adr_011_transitional_child_consent.md`](../07_governance/adr_011_transitional_child_consent.md) | Переходный период |
+| [`pre_production_checklist.md`](./pre_production_checklist.md) | Закрытие P07: юр. сроки, лицензия, security, откат |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W12-02
 

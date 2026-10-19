@@ -10,6 +10,7 @@ import {
 } from "@sunschool/domain";
 import { createPupil } from "./create-pupil";
 import { recordPaperConsent } from "./record-paper-consent";
+import { resolveLegacyConsent } from "./resolve-legacy-consent";
 import { revokeConsent } from "./revoke-consent";
 import { toTeacherPupilConsentView } from "./pupil-consent-view.server";
 import { validateSignedOnNotInFuture } from "./school-pupil-shared.server";
@@ -53,6 +54,32 @@ describe("createPupil", () => {
 });
 
 describe("recordPaperConsent", () => {
+  it("returns FORBIDDEN when actor is not admin (ADR-011 §7 S)", async () => {
+    const tx = {
+      appUser: { findUnique: vi.fn().mockResolvedValue({ organizationId: orgId }) },
+      userRoleAssignment: { findFirst: vi.fn().mockResolvedValue(null) },
+      appSetting: { findUnique: vi.fn() },
+      childDataConsent: { findFirst: vi.fn(), update: vi.fn(), create: vi.fn() },
+    };
+    const db = {
+      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+    };
+
+    const result = await recordPaperConsent(db as never, actorUserId, {
+      pupilId,
+      signerName: "Мария Иванова",
+      signedOn: "2026-01-01",
+      textVersion: "v1",
+    });
+
+    expect(result).toEqual({
+      ok: false,
+      code: MUTATION_ERROR_CODES.FORBIDDEN,
+      message: "common.errors.forbidden",
+    });
+    expect(tx.childDataConsent.create).not.toHaveBeenCalled();
+  });
+
   it("rejects a future signedOn date", () => {
     expect(validateSignedOnNotInFuture("2099-01-01", "2026-01-01")?.code).toBe(
       MUTATION_ERROR_CODES.VALIDATION,
@@ -71,9 +98,77 @@ describe("recordPaperConsent", () => {
     if (!result.ok) expect(result.code).toBe(MUTATION_ERROR_CODES.VALIDATION);
   });
 
+  it("returns FORBIDDEN for resolveLegacyConsent when actor is not admin (ADR-011 §7 S)", async () => {
+    const tx = {
+      appUser: { findUnique: vi.fn().mockResolvedValue({ organizationId: orgId }) },
+      userRoleAssignment: { findFirst: vi.fn().mockResolvedValue(null) },
+      pupil: { findFirst: vi.fn() },
+      childDataConsent: { findFirst: vi.fn(), update: vi.fn() },
+    };
+    const db = {
+      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+    };
+
+    const result = await resolveLegacyConsent(db as never, actorUserId, {
+      pupilId,
+      signerName: "Мария Иванова",
+      signedOn: "2026-01-01",
+      textVersion: "legacy",
+    });
+
+    expect(result).toEqual({
+      ok: false,
+      code: MUTATION_ERROR_CODES.FORBIDDEN,
+      message: "common.errors.forbidden",
+    });
+    expect(tx.childDataConsent.update).not.toHaveBeenCalled();
+  });
+
+  it("upgrades LEGACY_PENDING to ACTIVE", async () => {
+    const tx = {
+      appUser: { findUnique: vi.fn().mockResolvedValue({ organizationId: orgId }) },
+      userRoleAssignment: {
+        findFirst: vi.fn().mockResolvedValue({ id: "role-1" }),
+      },
+      appSetting: {
+        findUnique: vi.fn().mockResolvedValue({ value: "v1" }),
+      },
+      $queryRaw: vi.fn().mockResolvedValue([{ id: pupilId }]),
+      pupil: {
+        findFirst: vi.fn().mockResolvedValue({ id: pupilId, isActive: true }),
+      },
+      childDataConsent: {
+        findFirst: vi.fn().mockResolvedValue({ id: consentId }),
+        update: vi.fn().mockResolvedValue({ id: consentId }),
+        create: vi.fn(),
+      },
+      auditLog: { create: vi.fn().mockResolvedValue(undefined) },
+    };
+    const db = {
+      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+    };
+
+    const result = await resolveLegacyConsent(db as never, actorUserId, {
+      pupilId,
+      signerName: "Мария Иванова",
+      signedOn: "2026-01-01",
+      textVersion: "legacy",
+    });
+
+    expect(result).toEqual({ ok: true, data: { consentId } });
+    expect(tx.childDataConsent.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: CONSENT_STATUS.ACTIVE }),
+      }),
+    );
+  });
+
   it("creates ACTIVE paper consent", async () => {
     const tx = {
       appUser: { findUnique: vi.fn().mockResolvedValue({ organizationId: orgId }) },
+      userRoleAssignment: {
+        findFirst: vi.fn().mockResolvedValue({ id: "role-1" }),
+      },
       appSetting: {
         findUnique: vi.fn().mockResolvedValue({ value: "v1" }),
       },
@@ -156,14 +251,22 @@ describe("revokeConsent and enrollment", () => {
 });
 
 describe("teacher consent view", () => {
-  it("exposes only hasConsent without signer details", () => {
+  it("exposes consent flags without signer details", () => {
     expect(toTeacherPupilConsentView(CONSENT_STATUS.ACTIVE, "2026-06-01", null)).toEqual({
       hasConsent: true,
+      isLegacyPending: false,
     });
-    expect(toTeacherPupilConsentView(null, "2026-06-01", null)).toEqual({ hasConsent: false });
-    expect(Object.keys(toTeacherPupilConsentView(CONSENT_STATUS.ACTIVE, "2026-06-01", null))).toEqual([
-      "hasConsent",
-    ]);
+    expect(toTeacherPupilConsentView(CONSENT_STATUS.LEGACY_PENDING, "2026-06-01", "2026-12-31")).toEqual({
+      hasConsent: true,
+      isLegacyPending: true,
+    });
+    expect(toTeacherPupilConsentView(null, "2026-06-01", null)).toEqual({
+      hasConsent: false,
+      isLegacyPending: false,
+    });
+    expect(
+      Object.keys(toTeacherPupilConsentView(CONSENT_STATUS.ACTIVE, "2026-06-01", null)).sort(),
+    ).toEqual(["hasConsent", "isLegacyPending"]);
   });
 });
 

@@ -127,8 +127,12 @@ export const RosterTable = ({
                 </ContentText>
               </div>
             </div>
-            <StatusText tone={row.hasConsent ? "ok" : "warn"}>
-              {row.hasConsent ? messages.consentYes : messages.consentNo}
+            <StatusText tone={row.isLegacyPending || !row.hasConsent ? "warn" : "ok"}>
+              {row.isLegacyPending
+                ? messages.consentNoLegacy
+                : row.hasConsent
+                  ? messages.consentYes
+                  : messages.consentNo}
             </StatusText>
           </li>
         ))}
@@ -144,7 +148,11 @@ export const RosterTable = ({
               {addCandidates.map((candidate) => (
                 <option key={candidate.pupilId} value={candidate.pupilId} disabled={!candidate.hasConsent}>
                   {candidate.displayName}
-                  {!candidate.hasConsent ? ` (${messages.consentNo})` : ""}
+                  {candidate.isLegacyPending
+                    ? ` (${messages.consentNoLegacy})`
+                    : !candidate.hasConsent
+                      ? ` (${messages.consentNo})`
+                      : ""}
                 </option>
               ))}
             </select>
