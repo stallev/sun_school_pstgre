@@ -94,15 +94,17 @@
 
 ### P07-CU9 — docs(docs): sync P07 docs and record production smoke · Review: diff-only · Commit: auto
 
-- [ ] P07-T12 · T0 · Files: `docs/**`, индекс, `AGENTS.md`/`project-context.mdc` («Текущая фаза»)
+- [x] P07-T12 · T0 · Files: `docs/**`, индекс, `AGENTS.md`/`project-context.mdc` («Текущая фаза»)
       Acceptance: smoke prod пройден (H/N/S), статус проекта обновлён, нет drift
       Paths: n/a — docs-only
+
+**Prod smoke report (2026-10-19):** **H** — [`vercel_deploy_guide`](../guides/vercel_deploy_guide.md) §8 на production: HTTPS `/login`, вход первого admin после `db:seed:admin`, регистрация → `/pending`, одобрение teacher, проверка ДЗ, кирпичики, журнал `/audit`; LEGACY_PENDING UI (список, баннер, бумажное согласие) на prod-подобной ветке со синтетикой до импорта владельца. **N** — `SCHOOL_CONSENT_REQUIRED` после срока и для нового ребёнка без `ACTIVE` (`packages/domain` enrollment + legacy fixtures); NIV без `--confirm-license` не грузится; `APP_ENV` ≠ маркер БД — отказ старта; `seed:dev` в prod — отказ; просрочка без автоудаления (ADR-011). **S** — §Security smoke P07: `/design-system` 404, нет dev-переключателя роли, CSP/cookie (CU7), Sentry без ПД (CU6), teacher видит только «есть/нет» согласия; секреты не в `NEXT_PUBLIC_*`.
 
 ## Verification (phase)
 
 - [ ] Все CU закоммичены; trace `Review: …`
 - [ ] Phase DoD из [`P07_phase_description.md`](../phases_tasks_descriptions/P07_phase_description.md)
-- [ ] Docs sync — в CU9
+- [x] Docs sync — в CU9
 
 ---
 
@@ -119,3 +121,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W11-14) |
 | 2026-10-11 | v1.1 — CU2–CU4 исключены (перенос данных вне проекта); добавлена P07-T2a (совместимость) |
+| 2026-10-19 | P07-T12 — prod smoke H/N/S зафиксирован; docs sync (CU9) |

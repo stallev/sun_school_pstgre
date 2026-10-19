@@ -145,3 +145,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-10-11 | v1.33 — bootstrap P5: каркас монорепо (`packages/{domain,db,policy}`, `apps/web`), схема v1 реализована и мигрирована на dev-Neon; ADR-001 Q-01, Q-02 решены, Q-05 (PG 18) открыт |
 | 2026-10-11 | v1.32 — bootstrap P4: активированы T1-правила; `auth-security` и auth-гайд переписаны под ADR-003; guidelines очищены от несозданных ссылок |
 | 2026-10-18 | v1.34 — W9-07 `analytics_screens_spec` → Canonical (P05-CU9) |
+| 2026-10-19 | v1.35 — P07 MVP prod-ready: `pre_production_checklist`, smoke CU9; статус проекта в `AGENTS.md` |
