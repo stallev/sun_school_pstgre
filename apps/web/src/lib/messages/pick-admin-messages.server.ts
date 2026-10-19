@@ -272,6 +272,7 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
   },
   deletions: {
     pageSubtitle: getMessage(admin, "deletions.page_subtitle"),
+    tabNav: getMessage(admin, "deletions.tab_nav"),
     tabOpen: getMessage(admin, "deletions.tab_open"),
     tabDone: getMessage(admin, "deletions.tab_done"),
     tabClosed: getMessage(admin, "deletions.tab_closed"),

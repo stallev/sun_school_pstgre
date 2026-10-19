@@ -323,6 +323,7 @@
   },
   "deletions": {
     "page_subtitle": "Due within 15 calendar days of the request. Unlinked data is deleted; linked records are anonymised.",
+    "tab_nav": "Deletion request tabs",
     "tab_open": "Open",
     "tab_done": "Completed",
     "tab_closed": "Rejected and cancelled",

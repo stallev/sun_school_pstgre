@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { ContentText, SectionTitle } from "@/components/atoms";
 import { CustomLink } from "@/components/ui/custom-link";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,6 +25,7 @@ export const ConsentBlock = ({
   disabled = false,
 }: ConsentBlockProps) => {
   const messages = useAuthMessages();
+  const panelId = useId();
   const [disclosureOpen, setDisclosureOpen] = useState(false);
 
   return (
@@ -39,14 +40,15 @@ export const ConsentBlock = ({
       </ul>
       <button
         type="button"
-        className="text-cobalt-ink text-sm underline-offset-4 hover:underline"
+        className="min-h-11 text-cobalt-ink text-sm underline-offset-4 hover:underline"
         aria-expanded={disclosureOpen}
+        aria-controls={panelId}
         onClick={() => setDisclosureOpen((open) => !open)}
       >
         {disclosureOpen ? messages.register.hideFullConsent : messages.register.showFullConsent} ({consentVersion})
       </button>
       {disclosureOpen ? (
-        <div className="space-y-2 rounded-xl border border-line bg-surface p-3">
+        <div id={panelId} className="space-y-2 rounded-xl border border-line bg-surface p-3">
           {fullTextParagraphs.map((paragraph) => (
             <ContentText key={paragraph}>{paragraph}</ContentText>
           ))}

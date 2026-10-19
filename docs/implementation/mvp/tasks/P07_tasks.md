@@ -53,10 +53,12 @@
 
 ### P07-CU5 — fix(web): complete accessibility pass on key screens · Review: diff-only · Commit: auto
 
-- [ ] P07-T7 · T1 · Rule: `ui-semantics-a11y` · UX: [UX-03 §9](../../../design/visual_identity_contract.md), [global_shell_spec §16](../specs/global_shell_spec.md)
+- [x] P07-T7 · T1 · Rule: `ui-semantics-a11y` · UX: [UX-03 §9](../../../design/visual_identity_contract.md), [global_shell_spec §16](../specs/global_shell_spec.md)
       Files: компоненты по результатам прохода
       Acceptance: чек-лист для `/login`, `/register`, `/pending`, `/today`, проверка ДЗ, `/bricks`, `/approvals`, `/deletions`, `/audit` — клавиатура, фокус, имена, контраст по таблице UX-03, 390 px, `prefers-reduced-motion`; дефекты исправлены → отчёт в CU
       Paths: n/a — a11y-исправления без изменения поведения (по §2.3.2a)
+
+**A11y report (2026-10-19):** маршруты `/login`, `/register`, `/pending` — h1, landmarks, disclosure `aria-expanded`/`aria-controls` (admin login, consent). Оболочка — skip-link + `#main`, nav `aria-current`, drawer Esc, user menu Esc/outside close, touch ≥44px на top-nav group. `/today`, `/approvals` — PageHeader h1, списки семантичны. Проверка ДЗ — i18n `aria-label` списка учеников, `aria-live` прогресс. `/bricks` — убран неклавиатурный `tr onClick`, выбор через кнопку + `aria-current`. `/deletions` — `aria-label` вкладок, `aria-current` на активной. `/audit` — `scope="col"` в таблице. `(app)/loading` — локализованный `aria-label`. Контраст/ motion — без изменений (токены UX-03, `prefers-reduced-motion` в globals).
 
 **CU DoD:** `typecheck` · `lint` · ручной проход чек-листа
 

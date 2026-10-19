@@ -245,6 +245,7 @@ export type AdminMessages = {
   };
   deletions: {
     pageSubtitle: string;
+    tabNav: string;
     tabOpen: string;
     tabDone: string;
     tabClosed: string;

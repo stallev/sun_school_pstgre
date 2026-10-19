@@ -147,6 +147,7 @@
     "correction_banner": "Урок уже проверен. Изменения пересчитают баллы и кирпичики и попадут в журнал; новые оценки получат отметку «сдано позже». Присутствие задним числом не меняйте.",
     "progress": "Проверено {checked} из {total}",
     "pupils_toggle": "Ученики · {checked} из {total}",
+    "pupils_list": "Ученики",
     "pupil_index": "{index} из {total}",
     "birth_year": "{year} г. р.",
     "birth_year_unknown": "данные удалены",

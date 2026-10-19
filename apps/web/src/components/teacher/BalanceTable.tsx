@@ -83,13 +83,13 @@ export const BalanceTable = ({
               return (
                 <TableRow
                   key={row.pupilId}
-                  className={cn(isSelected && "bg-cobalt-soft/40", "cursor-pointer")}
-                  onClick={() => selectPupil(row.pupilId)}
+                  className={cn(isSelected && "bg-cobalt-soft/40")}
                 >
                   <TableCell>
                     <button
                       type="button"
-                      className="text-left font-medium text-ink underline-offset-2 hover:underline"
+                      className="min-h-11 w-full text-left font-medium text-ink underline-offset-2 hover:underline"
+                      aria-current={isSelected ? "true" : undefined}
                       onClick={() => selectPupil(row.pupilId)}
                     >
                       {row.displayName}
