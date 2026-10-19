@@ -24,6 +24,7 @@ const GROUP_ROWS: YearTotalsTableRow[] = [
     methodologyVersion: "v0",
     totals: { kids: 8, lessons: 6, attendance: 0.72, verses: 1.2, test: 7.1, notebook: 6.8 },
     diff: null,
+    hasPreviousYear: false,
     comparisonReliable: false,
   },
   {
@@ -33,6 +34,7 @@ const GROUP_ROWS: YearTotalsTableRow[] = [
     methodologyVersion: ANALYTICS_METHODOLOGY_VERSION,
     totals: { kids: 14, lessons: 8, attendance: 0.78, verses: 1.5, test: 7.4, notebook: 7.0 },
     diff: { attendance: 6, verses: 0.3, test: 0.3, notebook: 0.2 },
+    hasPreviousYear: true,
     comparisonReliable: true,
     previousYearName: "2024–2025",
   },
@@ -43,6 +45,7 @@ const GROUP_ROWS: YearTotalsTableRow[] = [
     methodologyVersion: ANALYTICS_METHODOLOGY_VERSION,
     totals: { kids: 12, lessons: 5, attendance: 0.81, verses: 1.6, test: 7.8, notebook: 7.2 },
     diff: { attendance: 3, verses: 0.1, test: 0.4, notebook: 0.2 },
+    hasPreviousYear: true,
     comparisonReliable: true,
     previousYearName: "2025–2026",
   },
@@ -61,10 +64,10 @@ export const AnalyticsYearsMatrix = ({ analyticsDictionary }: AnalyticsYearsMatr
       <div className="space-y-3">
         <p className="text-sm font-medium text-ink">DiffBadge</p>
         <div className="flex flex-wrap gap-4">
-          <DiffBadge metric="attendance" delta={6} comparisonReliable previousYearName="2024–2025" messages={yearMessages} />
-          <DiffBadge metric="verses" delta={-0.4} comparisonReliable previousYearName="2024–2025" messages={yearMessages} />
-          <DiffBadge metric="test" delta={0} comparisonReliable messages={yearMessages} />
-          <DiffBadge metric="notebook" delta={0.2} comparisonReliable={false} messages={yearMessages} />
+          <DiffBadge metric="attendance" delta={6} hasPreviousYear comparisonReliable previousYearName="2024–2025" messages={yearMessages} />
+          <DiffBadge metric="verses" delta={-0.4} hasPreviousYear comparisonReliable previousYearName="2024–2025" messages={yearMessages} />
+          <DiffBadge metric="test" delta={0} hasPreviousYear comparisonReliable messages={yearMessages} />
+          <DiffBadge metric="notebook" delta={0.2} hasPreviousYear comparisonReliable={false} messages={yearMessages} />
         </div>
       </div>
       <ReadOnlyYearNote messages={yearMessages} />
@@ -95,6 +98,7 @@ export const AnalyticsYearsMatrix = ({ analyticsDictionary }: AnalyticsYearsMatr
         <KpiTiles
           totals={selectedRow.totals}
           diff={selectedRow.diff}
+          hasPreviousYear={selectedRow.hasPreviousYear}
           comparisonReliable={selectedRow.comparisonReliable}
           previousYearName={selectedRow.previousYearName}
           messages={messages}

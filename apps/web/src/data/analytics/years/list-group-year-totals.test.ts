@@ -126,10 +126,28 @@ describe("listGroupYearTotals (AZ-48)", () => {
     if (result.ok) {
       expect(result.data.selectedYearId).toBe(year2026Id);
       expect(result.data.rows).toHaveLength(2);
+      expect(result.data.selectedSnapshotMissing).toBe(false);
       expect(result.data.rows.map((row) => row.yearName).sort()).toEqual([
         "2025–2026",
         "2026–2027",
       ]);
+    }
+  });
+
+  it("returns rows and selectedSnapshotMissing when selected closed year lacks snapshot", async () => {
+    const tx = buildTx();
+    const db = {
+      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+      analyticsGroupYearSnapshot: { findFirst: vi.fn().mockResolvedValue(null) },
+    };
+
+    const result = await listGroupYearTotals(db as never, actorTeacherId, gradeId, year2025Id);
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.selectedYearId).toBe(year2025Id);
+      expect(result.data.selectedSnapshotMissing).toBe(true);
+      expect(result.data.rows.some((row) => row.snapshotMissing)).toBe(true);
     }
   });
 

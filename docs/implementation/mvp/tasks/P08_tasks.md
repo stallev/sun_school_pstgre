@@ -92,7 +92,7 @@
 
 ### P08-CU8 — feat(web): add year selector and closed-year view to group analytics · Review: reviewer · Commit: auto
 
-- [ ] P08-T8 · T2 · Spec: [analytics_screens §5.5, §9, §12](../specs/analytics_screens_spec.md) · Prototype: `vAnalytics`, `analyticsClosedView`
+- [x] P08-T8 · T2 · Spec: [analytics_screens §5.5, §9, §12](../specs/analytics_screens_spec.md) · Prototype: `vAnalytics`, `analyticsClosedView`
       Files: `apps/web/src/app/(app)/analytics/{page.tsx,loading.tsx}`, `apps/web/src/components/analytics/*` (композиция), загрузчик из CU6
       Acceptance: порядок блоков по spec §5.5 (заголовок → группа (admin) → полоса лет → таблица итогов → пометки → KPI → графики → таблицы → блок учителей только в активном году); выбор года пишет `?year=`; закрытый год — read-only с `ReadOnlyYearNote` и, при другой версии, `MethodologyVersionNote`; после закрытия года открывается последний закрытый год; недоступный `?year=` → 404; `loading.tsx` без пустых оболочек
       Paths: H [teacher / admin выбирают год, разница, закрытый год] · N [мало данных, нет снимка → `error`, нет лет] · S [AZ-48, AZ-D4: teacher не открывает год и группу вне назначения]

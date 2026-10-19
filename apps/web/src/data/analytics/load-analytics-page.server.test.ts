@@ -75,7 +75,12 @@ describe("loadAnalyticsPage (AZ-48)", () => {
     assertTeacherAssignedToGradeInYear.mockResolvedValue(null);
     listGroupYearTotals.mockResolvedValue({
       ok: true,
-      data: { gradeId, selectedYearId: priorYearId, rows: [] },
+      data: {
+        gradeId,
+        selectedYearId: priorYearId,
+        rows: [],
+        selectedSnapshotMissing: false,
+      },
     });
   });
 
@@ -112,5 +117,26 @@ describe("loadAnalyticsPage (AZ-48)", () => {
 
     expect(result.kind).toBe("page");
     expect(listGroupYearTotals).toHaveBeenCalledWith(db, actorTeacherId, gradeId, undefined);
+  });
+
+  it("returns page with selectedSnapshotMissing when closed year has no snapshot", async () => {
+    listGroupYearTotals.mockResolvedValue({
+      ok: true,
+      data: {
+        gradeId,
+        selectedYearId: priorYearId,
+        rows: [],
+        selectedSnapshotMissing: true,
+      },
+    });
+    const db = buildDb([{ id: gradeId, name: "Старшая 2" }]);
+
+    const result = await loadAnalyticsPage(db as never, actorTeacherId, { year: priorYearId });
+
+    expect(result.kind).toBe("page");
+    if (result.kind === "page") {
+      expect(result.selectedSnapshotMissing).toBe(true);
+      expect(result.analytics.hasCheckedLessonsInPeriod).toBe(false);
+    }
   });
 });

@@ -38,6 +38,7 @@ export type ListGroupYearTotalsData = {
   gradeId: string;
   selectedYearId: string;
   rows: GroupYearTotalRow[];
+  selectedSnapshotMissing: boolean;
 };
 
 type YearMeta = {
@@ -196,14 +197,7 @@ export async function listGroupYearTotals(
 
   const body = await loadCachedGroupYearRows(db, gradeId, access.years);
   const selectedRow = body.find((row) => row.yearId === access.selectedYearId);
-  if (selectedRow?.snapshotMissing) {
-    return {
-      ok: false,
-      code: MUTATION_ERROR_CODES.ANALYTICS_SNAPSHOT_MISSING,
-      message: "analytics.years.snapshot_missing",
-    };
-  }
-
+  const selectedSnapshotMissing = selectedRow?.snapshotMissing ?? false;
   const startsOnByYearId = new Map(access.years.map((year) => [year.id, year.startsOn]));
 
   return {
@@ -212,6 +206,7 @@ export async function listGroupYearTotals(
       gradeId,
       selectedYearId: access.selectedYearId,
       rows: attachYearDiffs(body, startsOnByYearId),
+      selectedSnapshotMissing,
     },
   };
 }

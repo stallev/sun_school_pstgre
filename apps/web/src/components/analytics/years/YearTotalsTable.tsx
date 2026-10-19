@@ -22,6 +22,7 @@ export type YearTotalsTableRow = {
   methodologyVersion: string;
   totals: GroupYearTotals | null;
   diff: YearMetricDiff | null;
+  hasPreviousYear: boolean;
   comparisonReliable: boolean;
   previousYearName?: string;
 };
@@ -123,6 +124,7 @@ export const YearTotalsTable = ({
                       <DiffBadge
                         metric={key}
                         delta={row.diff?.[key] ?? null}
+                        hasPreviousYear={row.hasPreviousYear}
                         comparisonReliable={row.comparisonReliable}
                         previousYearName={row.previousYearName}
                         messages={yearMessages}

@@ -8,6 +8,7 @@ import { DiffBadge, type YearDiffMetric } from "./DiffBadge";
 type KpiTilesProps = {
   totals: GroupYearTotals;
   diff: YearMetricDiff | null;
+  hasPreviousYear: boolean;
   comparisonReliable: boolean;
   previousYearName?: string;
   messages: AnalyticsMessages;
@@ -42,6 +43,7 @@ const formatValue = (
 export const KpiTiles = ({
   totals,
   diff,
+  hasPreviousYear,
   comparisonReliable,
   previousYearName,
   messages,
@@ -62,6 +64,7 @@ export const KpiTiles = ({
             <DiffBadge
               metric={key}
               delta={diff?.[key] ?? null}
+              hasPreviousYear={hasPreviousYear}
               comparisonReliable={comparisonReliable}
               previousYearName={previousYearName}
               messages={yearMessages}

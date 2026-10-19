@@ -7,6 +7,7 @@ export type YearDiffMetric = "attendance" | "verses" | "test" | "notebook";
 type DiffBadgeProps = {
   metric: YearDiffMetric;
   delta: number | null;
+  hasPreviousYear: boolean;
   comparisonReliable: boolean;
   previousYearName?: string;
   messages: AnalyticsYearMessages;
@@ -21,10 +22,14 @@ const formatAmount = (metric: YearDiffMetric, delta: number): string => {
 export const DiffBadge = ({
   metric,
   delta,
+  hasPreviousYear,
   comparisonReliable,
   previousYearName,
   messages,
 }: DiffBadgeProps) => {
+  if (!hasPreviousYear) {
+    return null;
+  }
   if (!comparisonReliable) {
     return (
       <span className="text-xs text-muted-foreground">{messages.insufficientForComparison}</span>
