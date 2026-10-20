@@ -5,13 +5,11 @@ import { RatingTable } from "@/components/analytics/RatingTable";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { ContentText } from "@/components/atoms/ContentText";
-import { LessonsGradeFilter } from "@/components/teacher/LessonsGradeFilter";
 import { loadRatingPage } from "@/data/analytics/load-rating-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
-import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
@@ -31,13 +29,17 @@ const RatingPage = async ({ searchParams }: RatingPageProps) => {
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickAnalyticsMessages(analyticsDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
+  const ratingPageTitle =
+    actor.roles.includes(USER_ROLE.ADMIN)
+      ? messages.rating.pageTitle
+      : messages.rating.pageTitleGroup;
 
   if (data.kind === "not_found") notFound();
 
   if (data.kind === "no_active_year") {
     return (
       <div className="space-y-6">
-        <PageHeader title={messages.rating.pageTitle} />
+        <PageHeader title={ratingPageTitle} />
         <EmptyState
           title={getMessage(teacherDict, "lesson.no_year_title")}
           description={getMessage(teacherDict, "lesson.no_year_description")}
@@ -49,7 +51,7 @@ const RatingPage = async ({ searchParams }: RatingPageProps) => {
   if (data.kind === "unassigned") {
     return (
       <div className="space-y-6">
-        <PageHeader title={messages.rating.pageTitle} />
+        <PageHeader title={ratingPageTitle} />
         <EmptyState
           title={lessonMessages.unassignedTitle}
           description={lessonMessages.unassignedDescription}
@@ -58,19 +60,11 @@ const RatingPage = async ({ searchParams }: RatingPageProps) => {
     );
   }
 
-  const subtitle =
-    data.scope === "school" && data.isAdmin
-      ? fillMessage(messages.rating.pageSubtitleSchool, { year: data.yearName })
-      : fillMessage(messages.rating.pageSubtitleGroup, {
-          group: data.gradeName,
-          year: data.yearName,
-        });
-
   const scopeBase = `/rating?${data.gradeId ? `gradeId=${data.gradeId}&` : ""}`;
 
   return (
     <div className="space-y-6">
-      <PageHeader title={messages.rating.pageTitle} description={subtitle} />
+      <PageHeader title={ratingPageTitle} description={messages.rating.pageDescription} />
       <p className="flex max-w-3xl items-start gap-2 text-sm text-ink-2">
         <LockIcon className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden />
         {messages.rating.privacyNote}
@@ -98,12 +92,28 @@ const RatingPage = async ({ searchParams }: RatingPageProps) => {
         </div>
       ) : null}
       {data.isAdmin && data.scope === "group" && data.grades.length > 1 ? (
-        <LessonsGradeFilter
-          grades={data.grades}
-          gradeId={data.gradeId}
-          messages={lessonMessages}
-          actionPath="/rating"
-        />
+        <div
+          className="flex flex-wrap gap-2"
+          role="radiogroup"
+          aria-label={lessonMessages.gradeFilterLabel}
+        >
+          {data.grades.map((grade) => (
+            <CustomLink
+              key={grade.gradeId}
+              href={`/rating?gradeId=${grade.gradeId}&scope=group`}
+              role="radio"
+              aria-checked={grade.gradeId === data.gradeId}
+              className={cn(
+                "inline-flex h-11 items-center rounded-lg border px-3 text-sm",
+                grade.gradeId === data.gradeId
+                  ? "border-line-strong bg-surface font-medium"
+                  : "border-line",
+              )}
+            >
+              {grade.name}
+            </CustomLink>
+          ))}
+        </div>
       ) : null}
       <RatingTable rows={data.rows} messages={messages.rating} />
       <ContentText className="text-sm text-muted-foreground">{messages.rating.footnote}</ContentText>

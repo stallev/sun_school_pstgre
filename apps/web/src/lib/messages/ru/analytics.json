@@ -144,6 +144,8 @@
   },
   "rating": {
     "page_title": "Рейтинг",
+    "page_title_group": "Рейтинг группы",
+    "page_description": "Рабочий инструмент: кому нужна помощь и кого отметить.",
     "page_subtitle_group": "{group} · {year}",
     "page_subtitle_school": "Вся школа · {year}",
     "privacy_note": "Видят только учителя и администратор. Родителям и детям не показывается, на проектор не выводится.",

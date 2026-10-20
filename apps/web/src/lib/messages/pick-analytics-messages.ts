@@ -142,6 +142,8 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   },
   rating: {
     pageTitle: getMessage(analytics, "rating.page_title"),
+    pageTitleGroup: getMessage(analytics, "rating.page_title_group"),
+    pageDescription: getMessage(analytics, "rating.page_description"),
     pageSubtitleGroup: getMessage(analytics, "rating.page_subtitle_group"),
     pageSubtitleSchool: getMessage(analytics, "rating.page_subtitle_school"),
     privacyNote: getMessage(analytics, "rating.privacy_note"),

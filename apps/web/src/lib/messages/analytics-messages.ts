@@ -143,6 +143,8 @@ export type AnalyticsMessages = {
   formatChartValue: string;
   rating: {
     pageTitle: string;
+    pageTitleGroup: string;
+    pageDescription: string;
     pageSubtitleGroup: string;
     pageSubtitleSchool: string;
     privacyNote: string;

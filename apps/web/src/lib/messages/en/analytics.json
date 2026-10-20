@@ -144,6 +144,8 @@
   },
   "rating": {
     "page_title": "Ranking",
+    "page_title_group": "Group ranking",
+    "page_description": "A working tool: who needs help and who to recognize in class.",
     "page_subtitle_group": "{group} · {year}",
     "page_subtitle_school": "Whole school · {year}",
     "privacy_note": "Visible to teachers and administrators only. Not shown to parents or pupils and not for display mode.",
