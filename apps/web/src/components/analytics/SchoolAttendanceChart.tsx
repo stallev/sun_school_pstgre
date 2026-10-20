@@ -11,6 +11,13 @@ import {
   YAxis,
 } from "recharts";
 import type { SchoolChartSeries } from "@/data/analytics/load-school-analytics-page.server";
+import {
+  formatAnalyticsPercent,
+  formatAnalyticsShortDate,
+} from "@/lib/analytics/format-analytics-display";
+
+const CHART_HEIGHT_PX = 240;
+const CHART_TICK = { fill: "var(--color-muted-foreground)", fontSize: 14 } as const;
 
 const SERIES_COLORS = [
   "var(--color-cobalt-ink)",
@@ -22,18 +29,20 @@ const SERIES_COLORS = [
 type SchoolAttendanceChartProps = {
   labels: string[];
   series: SchoolChartSeries[];
-  formatLabel: (dateIso: string) => string;
-  formatPercent: (value: number) => string;
+  locale: string;
+  percentTemplate: string;
   ariaLabel: string;
 };
 
 export const SchoolAttendanceChart = ({
   labels,
   series,
-  formatLabel,
-  formatPercent,
+  locale,
+  percentTemplate,
   ariaLabel,
 }: SchoolAttendanceChartProps) => {
+  const formatLabel = (dateIso: string) => formatAnalyticsShortDate(dateIso, locale);
+  const formatPercent = (value: number) => formatAnalyticsPercent(percentTemplate, value);
   const rows = labels.map((date) => {
     const row: Record<string, string | number | null> = { date };
     for (const item of series) {
@@ -46,12 +55,19 @@ export const SchoolAttendanceChart = ({
   if (rows.length === 0) return null;
 
   return (
-    <div className="h-60 w-full" role="img" aria-label={ariaLabel}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full" role="img" aria-label={ariaLabel}>
+      <ResponsiveContainer width="100%" height={CHART_HEIGHT_PX}>
         <LineChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-line" vertical={false} />
-          <XAxis dataKey="date" tickFormatter={formatLabel} tick={{ fontSize: 12 }} />
-          <YAxis domain={[0, 100]} tickFormatter={(v) => formatPercent(Number(v))} width={44} />
+          <XAxis dataKey="date" tickFormatter={formatLabel} tick={CHART_TICK} tickLine={false} axisLine={false} />
+          <YAxis
+            domain={[0, 100]}
+            tick={CHART_TICK}
+            tickFormatter={(v) => formatPercent(Number(v))}
+            tickLine={false}
+            axisLine={false}
+            width={48}
+          />
           <Tooltip
             labelFormatter={(label) => formatLabel(String(label))}
             formatter={(value) => [formatPercent(Number(value)), ""]}

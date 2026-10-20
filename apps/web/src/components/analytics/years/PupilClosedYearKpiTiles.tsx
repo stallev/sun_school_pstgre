@@ -2,6 +2,11 @@ import type { PupilYearTotals } from "@sunschool/domain";
 import { NumberDisplay } from "@/components/atoms/NumberDisplay";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { Card } from "@/components/ui/card";
+import {
+  formatAnalyticsAverage,
+  formatAnalyticsPercent,
+} from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages, AnalyticsPupilYearMessages } from "@/lib/messages/analytics-messages";
 
 type PupilClosedYearKpiTilesProps = {
@@ -19,9 +24,9 @@ const formatMetric = (
 ): string => {
   if (value === null) return messages.kpiEmpty;
   if (key === "attendance") {
-    return messages.formatPercent(Number((value * 100).toFixed(1)));
+    return formatAnalyticsPercent(messages.formatPercent, Number((value * 100).toFixed(1)));
   }
-  return messages.formatAverage(Number(value.toFixed(1)));
+  return formatAnalyticsAverage(messages.formatAverage, Number(value.toFixed(1)));
 };
 
 export const PupilClosedYearKpiTiles = ({
@@ -55,7 +60,10 @@ export const PupilClosedYearKpiTiles = ({
           {pupilYearMessages.columnBricks}
         </SectionTitle>
         <NumberDisplay className="text-2xl">
-          {pupilYearMessages.bricksRatio(totals.bricksEarned, bricksIssued)}
+          {fillMessage(pupilYearMessages.bricksRatio, {
+            earned: totals.bricksEarned,
+            issued: bricksIssued,
+          })}
         </NumberDisplay>
       </Card>
     </div>

@@ -6,22 +6,30 @@ import type { MutationResult } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import {
   assertBricksReadAccess,
   loadBricksBalanceInTransaction,
   loadOrganizationIdForActor,
 } from "./bricks-shared.server";
 
-async function loadCachedBricksBalance(
+async function loadBricksBalanceFromDb(
   db: PrismaClient,
+  pupilId: string,
+  yearId: string,
+): Promise<BricksBalanceSnapshot> {
+  return db.$transaction((tx) => loadBricksBalanceInTransaction(tx, pupilId, yearId));
+}
+
+async function loadCachedBricksBalance(
   pupilId: string,
   yearId: string,
 ): Promise<BricksBalanceSnapshot> {
   "use cache";
   cacheTag(CACHE_TAGS.bricksBalance(pupilId, yearId));
   cacheLife("minutes");
-
-  return db.$transaction((tx) => loadBricksBalanceInTransaction(tx, pupilId, yearId));
+  const db = await getPrisma();
+  return loadBricksBalanceFromDb(db, pupilId, yearId);
 }
 
 export async function getBalance(
@@ -37,6 +45,6 @@ export async function getBalance(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedBricksBalance(db, pupilId, yearId);
+  const data = await loadCachedBricksBalance(pupilId, yearId);
   return { ok: true, data };
 }

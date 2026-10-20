@@ -12,6 +12,8 @@ import { AnalyticsRetryButton } from "@/components/analytics/AnalyticsRetryButto
 import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
 import { DynamicsBlock } from "@/components/analytics/DynamicsBlock";
 import { PupilLessonTable } from "@/components/analytics/PupilLessonTable";
+import { AnalyticsYearDetail } from "@/components/analytics/years/AnalyticsYearDetail.client";
+import { AnalyticsYearScope } from "@/components/analytics/years/AnalyticsYearScope.client";
 import { PupilAnalyticsYearNav } from "@/components/analytics/years/PupilAnalyticsYearNav.client";
 import { PupilClosedYearKpiTiles } from "@/components/analytics/years/PupilClosedYearKpiTiles";
 import { MethodologyVersionNote } from "@/components/analytics/years/MethodologyVersionNote";
@@ -32,6 +34,12 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import {
+  formatAnalyticsAverage,
+  formatAnalyticsPercent,
+  formatAnalyticsShortDate,
+} from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickPupilAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
@@ -81,8 +89,8 @@ const formatPersonalMetric = (
   isMain: boolean,
 ): string => {
   if (average === null || n === 0) return messages.kpiEmpty;
-  const value = messages.formatAverage(Number(average.toFixed(1)));
-  const core = messages.kpiWithN(value, n);
+  const value = formatAnalyticsAverage(messages.formatAverage, Number(average.toFixed(1)));
+  const core = fillMessage(messages.kpiWithN, { value, n });
   return isMain ? core : `${core} ${messages.personalMetricSuffix}`;
 };
 
@@ -105,14 +113,6 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
     messages.attendanceChecked,
   );
 
-  const formatDate = (iso: string) =>
-    new Intl.DateTimeFormat(appLocale, { day: "numeric", month: "short" }).format(
-      new Date(`${iso}T12:00:00Z`),
-    );
-  const formatDelta = (value: number) => {
-    const sign = value > 0 ? "+" : value < 0 ? "−" : "";
-    return `${sign}${Math.abs(value).toFixed(1)}`;
-  };
   const retryLabel = getMessage(commonDict, "states.error_retry");
 
   if (data.kind === "not_found") notFound();
@@ -159,7 +159,7 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
   const attendancePercent =
     snapshot?.attendanceRate === null || snapshot === null
       ? messages.kpiEmpty
-      : messages.formatPercent(Number(snapshot.attendanceRate.toFixed(1)));
+      : formatAnalyticsPercent(messages.formatPercent, Number(snapshot.attendanceRate.toFixed(1)));
   const sampleReason = snapshot ? sampleLayerReason(snapshot.sampleLayer, messages) : messages.sampleIncluded;
   const kpiCards: [string, string, boolean][] | null =
     view === null
@@ -206,8 +206,11 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
         methodology={messages.charts.methodologyVerses}
         points={view.charts.verses}
         messages={messages.charts}
-        formatDate={formatDate}
-        formatValue={messages.formatChartValue}
+        locale={appLocale}
+        valueKind="chart"
+        percentTemplate={messages.formatPercent}
+        chartValueTemplate={messages.formatChartValue}
+        emptyLabel={messages.kpiEmpty}
         yDomain={[0, 3]}
       />
       <ChartTableToggle
@@ -216,8 +219,11 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
         methodology={messages.charts.methodologyTest}
         points={view.charts.test}
         messages={messages.charts}
-        formatDate={formatDate}
-        formatValue={messages.formatChartValue}
+        locale={appLocale}
+        valueKind="chart"
+        percentTemplate={messages.formatPercent}
+        chartValueTemplate={messages.formatChartValue}
+        emptyLabel={messages.kpiEmpty}
         yDomain={[0, 10]}
       />
       <ChartTableToggle
@@ -226,8 +232,11 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
         methodology={messages.charts.methodologyNotebook}
         points={view.charts.notebook}
         messages={messages.charts}
-        formatDate={formatDate}
-        formatValue={messages.formatChartValue}
+        locale={appLocale}
+        valueKind="chart"
+        percentTemplate={messages.formatPercent}
+        chartValueTemplate={messages.formatChartValue}
+        emptyLabel={messages.kpiEmpty}
         yDomain={[0, 10]}
       />
     </div>
@@ -237,7 +246,7 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
     <div className="space-y-6">
       <PageHeader
         title={data.pupilName}
-        description={messages.pageSubtitle(gradeLabels, data.yearName)}
+        description={fillMessage(messages.pageSubtitle, { group: gradeLabels, year: data.yearName })}
         actions={
           data.backToGroupGradeId ? (
             <CustomLink href={`/analytics?gradeId=${data.backToGroupGradeId}`}>
@@ -246,6 +255,7 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
           ) : undefined
         }
       />
+      <AnalyticsYearScope committedYearId={data.yearId}>
       <Suspense fallback={<PupilYearsFallback />}>
         <PupilAnalyticsYearNav
           pupilYearRows={data.pupilYearRows.rows}
@@ -255,6 +265,7 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
           messages={messages}
         />
       </Suspense>
+      <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
       {isForeignGroupYearSnapshot || !isActiveYear ? (
         <ReadOnlyYearNote messages={yearMessages} />
       ) : null}
@@ -277,7 +288,9 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
       {view ? (
         <Banner
           tone={view.isInMainSample ? "success" : "warning"}
-          title={messages.sampleInGroupAverages(view.isInMainSample)}
+          title={fillMessage(messages.sampleInGroupAverages, {
+            included: view.isInMainSample ? messages.sampleIncludedYes : messages.sampleIncludedNo,
+          })}
         >
           <ContentText className="text-sm text-ink-2">
             {sampleReason}
@@ -311,7 +324,7 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
                 <span
                   key={segment.lessonId}
                   role="listitem"
-                  title={`${formatDate(segment.lessonDate)} — ${
+                  title={`${formatAnalyticsShortDate(segment.lessonDate, appLocale)} — ${
                     segment.state === "present"
                       ? messages.presencePresent
                       : segment.state === "absent"
@@ -333,9 +346,7 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
           <DynamicsBlock
             dynamics={view!.dynamics}
             messages={messages}
-            formatDate={formatDate}
-            formatPercent={(value) => messages.formatPercent(Number(value.toFixed(1)))}
-            formatDelta={formatDelta}
+            locale={appLocale}
           />
         </>
       ) : selectedYearRow?.totals && !isForeignGroupYearSnapshot ? (
@@ -354,10 +365,11 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
         <PupilLessonTable
           lessons={snapshot.lessons}
           messages={messages}
-          formatDate={formatDate}
-          formatLateDate={formatDate}
+          locale={appLocale}
         />
       ) : null}
+      </AnalyticsYearDetail>
+      </AnalyticsYearScope>
     </div>
   );
 };

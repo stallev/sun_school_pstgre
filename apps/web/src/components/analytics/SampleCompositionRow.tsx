@@ -1,5 +1,6 @@
 import { ContentText } from "@/components/atoms/ContentText";
 import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.server";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type SampleCompositionRowProps = {
@@ -11,7 +12,7 @@ export const SampleCompositionRow = ({ snapshot, messages }: SampleCompositionRo
   const { A, B, C, D } = snapshot.sampleCounts;
   return (
     <ContentText className="text-sm text-ink-2">
-      {messages.sampleComposition(A, B, C, D)}
+      {fillMessage(messages.sampleComposition, { a: A, b: B, c: C, d: D })}
     </ContentText>
   );
 };

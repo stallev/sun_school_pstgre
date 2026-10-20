@@ -19,6 +19,9 @@ export type AnalyticsLineChartProps = {
   ariaLabel: string;
 };
 
+const CHART_HEIGHT_PX = 224;
+const CHART_TICK = { fill: "var(--color-muted-foreground)", fontSize: 14 } as const;
+
 type ChartRow = {
   date: string;
   value: number;
@@ -41,20 +44,20 @@ export const LineChart = ({
     }));
 
   return (
-    <div className="h-56 w-full" role="img" aria-label={ariaLabel}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full" role="img" aria-label={ariaLabel}>
+      <ResponsiveContainer width="100%" height={CHART_HEIGHT_PX}>
         <RechartsLineChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="var(--color-line)" vertical={false} />
           <XAxis
             dataKey="date"
             tickFormatter={formatLabel}
-            tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
+            tick={CHART_TICK}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
             domain={yDomain ?? ["auto", "auto"]}
-            tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
+            tick={CHART_TICK}
             tickLine={false}
             axisLine={false}
             width={40}

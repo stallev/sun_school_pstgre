@@ -12,6 +12,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import {
+  formatAnalyticsAverage,
+  formatAnalyticsPercent,
+} from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages, AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
 import { DiffBadge, type YearDiffMetric } from "./DiffBadge";
 
@@ -51,8 +56,10 @@ const cellValue = (
   if (!totals) return messages.kpiEmpty;
   const value = totals[key];
   if (value === null) return messages.kpiEmpty;
-  if (key === "attendance") return messages.formatPercent(Number((value * 100).toFixed(0)));
-  return messages.formatAverage(Number(value.toFixed(1)));
+  if (key === "attendance") {
+    return formatAnalyticsPercent(messages.formatPercent, Number((value * 100).toFixed(0)));
+  }
+  return formatAnalyticsAverage(messages.formatAverage, Number(value.toFixed(1)));
 };
 
 export const YearTotalsTable = ({
@@ -69,9 +76,9 @@ export const YearTotalsTable = ({
     </SectionTitle>
     <ContentText className="mb-3 text-sm text-ink-2">{yearMessages.compositionNote}</ContentText>
     <Card className="overflow-x-auto">
-      <Table className="min-w-[46rem] text-left">
-        <caption className="sr-only">{yearMessages.tableCaption(groupLabel)}</caption>
-        <TableHeader className="border-b border-line text-sm text-muted-foreground">
+      <Table className="min-w-[46rem] text-left text-base">
+        <caption className="sr-only">{fillMessage(yearMessages.tableCaption, { group: groupLabel })}</caption>
+        <TableHeader className="border-b border-line text-base text-muted-foreground">
           <TableRow>
             <TableHead scope="col" className="px-5 py-3 font-normal">
               {yearMessages.columnYear}
@@ -106,9 +113,11 @@ export const YearTotalsTable = ({
                   >
                     {row.yearName}
                   </button>
-                  <span className="block text-xs font-normal text-muted-foreground">
+                  <span className="block text-sm font-normal text-muted-foreground">
                     {isActive ? yearMessages.activeBadge : yearMessages.closedBadge}
-                    {staleMethod ? ` · ${yearMessages.methodologyBadge(row.methodologyVersion)}` : ""}
+                    {staleMethod
+                      ? ` · ${fillMessage(yearMessages.methodologyBadge, { version: row.methodologyVersion })}`
+                      : ""}
                   </span>
                 </TableHead>
                 <TableCell className="px-3 py-3 text-right tabular-nums">
@@ -120,7 +129,7 @@ export const YearTotalsTable = ({
                 {METRIC_COLS.map(({ key }) => (
                   <TableCell key={key} className="px-3 py-3 text-right tabular-nums">
                     {cellValue(key, row.totals, messages)}
-                    <span className="block text-xs font-normal text-ink-2">
+                    <span className="block text-sm font-normal text-ink-2">
                       <DiffBadge
                         metric={key}
                         delta={row.diff?.[key] ?? null}

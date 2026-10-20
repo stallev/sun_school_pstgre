@@ -1,20 +1,19 @@
 import type { TrendLabel } from "@sunschool/domain";
-import type { AnalyticsChartPoint } from "@/data/analytics/analytics-compute.server";
 
 export type AnalyticsYearMessages = {
   stripLabel: string;
   title: string;
   compositionNote: string;
-  tableCaption: (group: string) => string;
+  tableCaption: string;
   insufficientForComparison: string;
-  diffHigher: (amount: string, unit: string) => string;
-  diffLower: (amount: string, unit: string) => string;
+  diffHigher: string;
+  diffLower: string;
   diffSame: string;
   diffPointsUnit: string;
   none: string;
   readonlyNote: string;
-  methodologyNote: (snapshotVersion: string, currentVersion: string) => string;
-  methodologyBadge: (version: string) => string;
+  methodologyNote: string;
+  methodologyBadge: string;
   snapshotMissing: string;
   allYearsLink: string;
   activeBadge: string;
@@ -26,14 +25,15 @@ export type AnalyticsYearMessages = {
   columnVerses: string;
   columnTest: string;
   columnNotebook: string;
-  sampleMeta: (kids: number, lessons: number) => string;
+  sampleMeta: string;
   outOfTen: string;
+  detailPending: string;
 };
 
 export type AnalyticsPupilYearMessages = {
   title: string;
   tableCaption: string;
-  fewLessons: (count: number) => string;
+  fewLessons: string;
   metricAttendance: string;
   metricVerses: string;
   metricTest: string;
@@ -43,10 +43,13 @@ export type AnalyticsPupilYearMessages = {
   chartNote: string;
   chartColumnYear: string;
   chartInsufficient: string;
-  chartAria: (metric: "attendance" | "verses" | "test" | "notebook") => string;
+  chartAriaAttendance: string;
+  chartAriaVerses: string;
+  chartAriaTest: string;
+  chartAriaNotebook: string;
   columnGroup: string;
   columnBricks: string;
-  bricksRatio: (earned: number, issued: number) => string;
+  bricksRatio: string;
 };
 
 export type AnalyticsChartSeriesMessages = {
@@ -69,7 +72,7 @@ export type AnalyticsChartSeriesMessages = {
 
 export type AnalyticsMessages = {
   pageTitle: string;
-  pageSubtitle: (group: string, year: string) => string;
+  pageSubtitle: string;
   gradeFilterLabel: string;
   gradeFilterApply: string;
   periodYear: string;
@@ -80,13 +83,13 @@ export type AnalyticsMessages = {
   rangeTo: string;
   periodApply: string;
   kpiAttendanceLabel: string;
-  kpiAttendanceHint: (count: number) => string;
+  kpiAttendanceHint: string;
   kpiVersesLabel: string;
   kpiTestLabel: string;
   kpiNotebookLabel: string;
-  kpiWithN: (value: string, n: number) => string;
+  kpiWithN: string;
   kpiEmpty: string;
-  sampleComposition: (a: number, b: number, c: number, d: number) => string;
+  sampleComposition: string;
   charts: AnalyticsChartSeriesMessages;
   tables: {
     layerATitle: string;
@@ -128,20 +131,20 @@ export type AnalyticsMessages = {
   };
   dataQuality: {
     title: string;
-    missingRecords: (count: number) => string;
+    missingRecords: string;
   };
   deletedData: {
     title: string;
-    note: (dateLabel: string) => string;
-    noteWithCount: (dateLabel: string, count: number) => string;
+    note: string;
+    noteWithCount: string;
   };
-  formatPercent: (value: number) => string;
-  formatAverage: (value: number) => string;
-  formatChartValue: (point: AnalyticsChartPoint) => string;
+  formatPercent: string;
+  formatAverage: string;
+  formatChartValue: string;
   rating: {
     pageTitle: string;
-    pageSubtitleGroup: (group: string, year: string) => string;
-    pageSubtitleSchool: (year: string) => string;
+    pageSubtitleGroup: string;
+    pageSubtitleSchool: string;
     privacyNote: string;
     footnote: string;
     columnPlace: string;
@@ -155,7 +158,7 @@ export type AnalyticsMessages = {
   pupilYears: AnalyticsPupilYearMessages;
   school: {
     pageTitle: string;
-    pageSubtitle: (year: string) => string;
+    pageSubtitle: string;
     groupsTableTitle: string;
     groupsTableHint: string;
     columnGroup: string;
@@ -164,18 +167,18 @@ export type AnalyticsMessages = {
     columnAttendance: string;
     columnAverage: string;
     columnLastLesson: string;
-    lastLessonOk: (label: string) => string;
-    lastLessonWarn: (label: string) => string;
+    lastLessonOk: string;
+    lastLessonWarn: string;
     lastLessonIdle: string;
     attendanceChartTitle: string;
     attendanceChartHint: string;
     attentionTitle: string;
-    attentionPending: (count: number) => string;
+    attentionPending: string;
     attentionPendingHint: string;
-    attentionNegativeBricks: (count: number) => string;
+    attentionNegativeBricks: string;
     attentionNegativeBricksHint: string;
     conductedGradeLabel: string;
-    closedTableCaption: (year: string) => string;
+    closedTableCaption: string;
     columnKidsSample: string;
     columnLessonsChecked: string;
     columnVersesShort: string;
@@ -185,20 +188,22 @@ export type AnalyticsMessages = {
     closedCompositionNote: string;
   };
   groupYear: {
-    sectionTitle: (year: string) => string;
+    sectionTitle: string;
   };
 };
 
 export type PupilAnalyticsMessages = AnalyticsMessages & {
-  pupilPageSubtitle: (year: string) => string;
+  pupilPageSubtitle: string;
   backToGroupAnalytics: string;
   sampleIncluded: string;
   sampleExcludedB: string;
   sampleExcludedC: string;
   sampleExcludedD: string;
-  sampleInGroupAverages: (included: boolean) => string;
+  sampleInGroupAverages: string;
+  sampleIncludedYes: string;
+  sampleIncludedNo: string;
   personalMetricSuffix: string;
-  attendanceChecked: (attended: number, checked: number) => string;
+  attendanceChecked: string;
   presenceTitle: string;
   presencePresent: string;
   presenceAbsent: string;
@@ -214,9 +219,9 @@ export type PupilAnalyticsMessages = AnalyticsMessages & {
   presentYes: string;
   presentNo: string;
   presentMissing: string;
-  versesOf: (recited: number, total: number) => string;
+  versesOf: string;
   testNotConducted: string;
-  submittedLate: (dateLabel: string) => string;
+  submittedLate: string;
   dynamicsTitle: string;
   dynamicsHint: string;
   dynamicsNormalizedTitle: string;
@@ -224,7 +229,7 @@ export type PupilAnalyticsMessages = AnalyticsMessages & {
   dynamicsNormalizedAria: string;
   dynamicsDeltaAria: string;
   dynamicsInsufficientPoints: string;
-  dynamicsSlope: (delta: string) => string;
+  dynamicsSlope: string;
   dynamicsTrendLabels: Record<
     TrendLabel,
     { label: string; toneClass: string }

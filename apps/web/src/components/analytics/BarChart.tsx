@@ -23,6 +23,9 @@ export type AnalyticsBarChartProps = {
   ariaLabel: string;
 };
 
+const CHART_HEIGHT_PX = 192;
+const CHART_TICK = { fill: "var(--color-muted-foreground)", fontSize: 14 } as const;
+
 type ChartRow = {
   date: string;
   value: number;
@@ -50,20 +53,15 @@ export const BarChart = ({
   if (rows.length === 0) return null;
 
   return (
-    <div className="h-48 w-full space-y-1" role="img" aria-label={ariaLabel}>
+    <div className="flex w-full flex-col gap-1" role="img" aria-label={ariaLabel}>
       {xLabel ? (
-        <p className="text-center text-xs text-muted-foreground">{xLabel}</p>
+        <p className="text-center text-sm text-muted-foreground">{xLabel}</p>
       ) : null}
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height={CHART_HEIGHT_PX}>
         <RechartsBarChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-line" vertical={false} />
-          <XAxis
-            dataKey="date"
-            tickFormatter={formatLabel}
-            tick={{ fontSize: 12 }}
-            className="text-muted"
-          />
-          <YAxis domain={yDomain} tick={{ fontSize: 12 }} className="text-muted" />
+          <XAxis dataKey="date" tickFormatter={formatLabel} tick={CHART_TICK} tickLine={false} axisLine={false} />
+          <YAxis domain={yDomain} tick={CHART_TICK} tickLine={false} axisLine={false} width={40} />
           <Tooltip
             formatter={(value) => formatValue(typeof value === "number" ? value : Number(value ?? 0))}
             labelFormatter={(label) => formatLabel(String(label))}

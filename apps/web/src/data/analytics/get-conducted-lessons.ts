@@ -5,6 +5,7 @@ import { LESSON_KIND, type MutationResult } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { analyticsPeriodFilterSchema } from "./analytics-period";
 import type { ResolvedAnalyticsPeriod } from "./analytics-period";
 import {
@@ -34,15 +35,11 @@ export type ConductedLessonsSnapshot = {
   teachers: ConductedLessonsTeacherRow[];
 };
 
-async function loadCachedConductedLessons(
+async function loadConductedLessonsFromDb(
   db: PrismaClient,
   gradeId: string,
   period: ResolvedAnalyticsPeriod,
 ): Promise<ConductedLessonsSnapshot> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsConducted(gradeId, period.academicYearId));
-  cacheLife("minutes");
-
   const { gte, lte } = periodDateRange(period);
   const todayDate = new Date();
   const today = isoFromCalendarDate(
@@ -138,6 +135,17 @@ async function loadCachedConductedLessons(
   };
 }
 
+async function loadCachedConductedLessons(
+  gradeId: string,
+  period: ResolvedAnalyticsPeriod,
+): Promise<ConductedLessonsSnapshot> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsConducted(gradeId, period.academicYearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadConductedLessonsFromDb(db, gradeId, period);
+}
+
 export async function getConductedLessons(
   db: PrismaClient,
   actorUserId: string,
@@ -168,6 +176,6 @@ export async function getConductedLessons(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedConductedLessons(db, gradeId, access.period);
+  const data = await loadCachedConductedLessons(gradeId, access.period);
   return { ok: true, data };
 }

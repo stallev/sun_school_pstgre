@@ -2,9 +2,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
 import { getGroupAnalytics } from "./get-group-analytics";
 
+const getPrisma = vi.hoisted(() => vi.fn());
+
 vi.mock("next/cache", () => ({
   cacheLife: vi.fn(),
   cacheTag: vi.fn(),
+}));
+
+vi.mock("@/lib/db.server", () => ({
+  getPrisma,
 }));
 
 vi.mock("./analytics-compute.server", () => ({
@@ -86,6 +92,7 @@ describe("getGroupAnalytics (AZ-45)", () => {
     const db = {
       $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
     };
+    getPrisma.mockResolvedValue(db);
 
     const result = await getGroupAnalytics(db as never, actorTeacherId, gradeId, period);
 

@@ -16,12 +16,13 @@ import { BarChart } from "@/components/analytics/BarChart";
 import { cn } from "@/lib/utils";
 import type { AnalyticsMessages, AnalyticsPupilYearMessages } from "@/lib/messages/analytics-messages";
 import type { PupilYearMetric, PupilYearTableRow } from "./PupilYearsSection";
-import { formatPupilYearMetric } from "./format-pupil-year-metric";
+import { formatPupilYearMetric, pupilYearChartAria } from "./format-pupil-year-metric";
 
 type PupilYearsMetricPanelProps = {
   rows: readonly PupilYearTableRow[];
   selectedMetric: PupilYearMetric;
   onSelectMetric: (metric: PupilYearMetric) => void;
+  isPending?: boolean;
   messages: AnalyticsMessages;
   pupilYearMessages: AnalyticsPupilYearMessages;
 };
@@ -44,6 +45,7 @@ export const PupilYearsMetricPanel = ({
   rows,
   selectedMetric,
   onSelectMetric,
+  isPending = false,
   messages,
   pupilYearMessages,
 }: PupilYearsMetricPanelProps) => {
@@ -54,8 +56,8 @@ export const PupilYearsMetricPanel = ({
   );
 
   return (
-    <Card className="mt-4 space-y-3 p-5">
-      <div className="max-w-md">
+    <Card className="mt-4 space-y-3 overflow-visible p-5">
+      <div className="max-w-md" aria-busy={isPending}>
         <SegmentedControl
           options={METRIC_OPTIONS(pupilYearMessages)}
           value={selectedMetric}
@@ -67,7 +69,7 @@ export const PupilYearsMetricPanel = ({
         <button
           type="button"
           className={cn(
-            "min-h-11 rounded-lg border px-3 text-sm",
+            "min-h-11 rounded-lg border px-3 text-base",
             !showTable && "border-cobalt-ink bg-cobalt-soft",
           )}
           aria-pressed={!showTable}
@@ -78,7 +80,7 @@ export const PupilYearsMetricPanel = ({
         <button
           type="button"
           className={cn(
-            "min-h-11 rounded-lg border px-3 text-sm",
+            "min-h-11 rounded-lg border px-3 text-base",
             showTable && "border-cobalt-ink bg-cobalt-soft",
           )}
           aria-pressed={showTable}
@@ -88,7 +90,7 @@ export const PupilYearsMetricPanel = ({
         </button>
       </div>
       {showTable ? (
-        <Table>
+        <Table className="text-base">
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{pupilYearMessages.chartColumnYear}</TableHead>
@@ -120,10 +122,10 @@ export const PupilYearsMetricPanel = ({
           formatValue={(value) => formatPupilYearMetric(selectedMetric, value, messages)}
           yDomain={metricDomain(selectedMetric)}
           xLabel={pupilYearMessages.chartColumnYear}
-          ariaLabel={pupilYearMessages.chartAria(selectedMetric)}
+          ariaLabel={pupilYearChartAria(pupilYearMessages, selectedMetric)}
         />
       )}
-      <ContentText className="text-sm text-muted-foreground">{pupilYearMessages.chartNote}</ContentText>
+      <ContentText className="text-base text-muted-foreground">{pupilYearMessages.chartNote}</ContentText>
     </Card>
   );
 };

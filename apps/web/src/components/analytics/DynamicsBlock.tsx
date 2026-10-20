@@ -1,3 +1,5 @@
+"use client";
+
 import { TREND_LABEL } from "@sunschool/domain";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
@@ -6,6 +8,12 @@ import { Card } from "@/components/ui/card";
 import { BarChart } from "@/components/analytics/BarChart";
 import { LineChart } from "@/components/analytics/LineChart";
 import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
+import {
+  formatAnalyticsDelta,
+  formatAnalyticsPercent,
+  formatAnalyticsShortDate,
+} from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 const MIN_DYNAMICS_POINTS = 2;
@@ -13,18 +21,17 @@ const MIN_DYNAMICS_POINTS = 2;
 type DynamicsBlockProps = {
   dynamics: PupilAnalyticsView["dynamics"];
   messages: PupilAnalyticsMessages;
-  formatDate: (iso: string) => string;
-  formatPercent: (value: number) => string;
-  formatDelta: (value: number) => string;
+  locale: string;
 };
 
 export const DynamicsBlock = ({
   dynamics,
   messages,
-  formatDate,
-  formatPercent,
-  formatDelta,
+  locale,
 }: DynamicsBlockProps) => {
+  const formatDate = (iso: string) => formatAnalyticsShortDate(iso, locale);
+  const formatPercent = (value: number) =>
+    formatAnalyticsPercent(messages.formatPercent, Number(value.toFixed(1)));
   const chartPoints = dynamics.smoothed.filter((point) => point.value !== null);
   const hasChart = chartPoints.length >= MIN_DYNAMICS_POINTS;
   const trendStyle = messages.dynamicsTrendLabels[dynamics.trendLabel];
@@ -32,7 +39,7 @@ export const DynamicsBlock = ({
   const deltaLimit = Math.max(4, Math.ceil(Math.max(...deltaValues.map(Math.abs), 0)));
 
   return (
-    <Card className="flex flex-col gap-4 p-4 sm:p-5">
+    <Card className="flex flex-col gap-4 overflow-visible p-4 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <SectionTitle as="h2" className="text-lg">{messages.dynamicsTitle}</SectionTitle>
@@ -42,7 +49,7 @@ export const DynamicsBlock = ({
           <ContentText className={`font-semibold ${trendStyle.toneClass}`}>{trendStyle.label}</ContentText>
           {dynamics.trendSlope !== null && dynamics.trendLabel !== TREND_LABEL.INSUFFICIENT_DATA ? (
             <ContentText className="text-sm tabular-nums text-ink-2">
-              {messages.dynamicsSlope(formatDelta(dynamics.trendSlope))}
+              {fillMessage(messages.dynamicsSlope, { delta: formatAnalyticsDelta(dynamics.trendSlope) })}
             </ContentText>
           ) : null}
         </div>
@@ -75,7 +82,7 @@ export const DynamicsBlock = ({
                 labels={dynamics.deltaLabels}
                 values={dynamics.deltaValues}
                 formatLabel={formatDate}
-                formatValue={formatDelta}
+                formatValue={formatAnalyticsDelta}
                 yDomain={[-deltaLimit, deltaLimit]}
                 ariaLabel={messages.dynamicsDeltaAria}
               />

@@ -9,6 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ContentText } from "@/components/atoms/ContentText";
+import {
+  formatAnalyticsAverage,
+  formatAnalyticsPercent,
+} from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import { DiffBadge, type YearDiffMetric } from "./DiffBadge";
 
@@ -34,8 +39,10 @@ const cellValue = (
   if (!totals) return messages.kpiEmpty;
   const value = totals[key];
   if (value === null) return messages.kpiEmpty;
-  if (key === "attendance") return messages.formatPercent(Number((value * 100).toFixed(0)));
-  return messages.formatAverage(Number(value.toFixed(1)));
+  if (key === "attendance") {
+    return formatAnalyticsPercent(messages.formatPercent, Number((value * 100).toFixed(0)));
+  }
+  return formatAnalyticsAverage(messages.formatAverage, Number(value.toFixed(1)));
 };
 
 export const SchoolClosedGroupsTable = ({
@@ -49,9 +56,9 @@ export const SchoolClosedGroupsTable = ({
   return (
     <section className="space-y-3">
       <Card className="overflow-x-auto">
-        <Table className="min-w-[46rem] text-left">
-          <caption className="sr-only">{schoolMessages.closedTableCaption(yearName)}</caption>
-          <TableHeader className="border-b border-line text-sm text-muted-foreground">
+        <Table className="min-w-[46rem] text-left text-base">
+          <caption className="sr-only">{fillMessage(schoolMessages.closedTableCaption, { year: yearName })}</caption>
+          <TableHeader className="border-b border-line text-base text-muted-foreground">
             <TableRow>
               <TableHead scope="col" className="px-5 py-3 font-normal">
                 {schoolMessages.columnGroup}
@@ -98,7 +105,7 @@ export const SchoolClosedGroupsTable = ({
                   {METRIC_COLS.map(({ key }) => (
                     <TableCell key={key} className="px-3 py-4 text-right tabular-nums">
                       {cellValue(key, row, messages)}
-                      <span className="block text-xs font-normal text-ink-2">
+                      <span className="block text-sm font-normal text-ink-2">
                         <DiffBadge
                           metric={key}
                           delta={row.diff?.[key] ?? null}

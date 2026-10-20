@@ -5,6 +5,7 @@ import { SAMPLE_LAYER, type MutationResult } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { analyticsPeriodFilterSchema } from "./analytics-period";
 import type { ResolvedAnalyticsPeriod } from "./analytics-period";
 import {
@@ -29,15 +30,11 @@ export type SchoolOverviewSnapshot = {
   groups: SchoolGroupOverviewRow[];
 };
 
-async function loadCachedSchoolOverview(
+async function loadSchoolOverviewFromDb(
   db: PrismaClient,
   organizationId: string,
   period: ResolvedAnalyticsPeriod,
 ): Promise<SchoolOverviewSnapshot> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsSchool(organizationId, period.academicYearId));
-  cacheLife("minutes");
-
   const grades = await db.grade.findMany({
     where: { organizationId },
     select: { id: true, name: true },
@@ -64,6 +61,17 @@ async function loadCachedSchoolOverview(
   return { period, groups };
 }
 
+async function loadCachedSchoolOverview(
+  organizationId: string,
+  period: ResolvedAnalyticsPeriod,
+): Promise<SchoolOverviewSnapshot> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsSchool(organizationId, period.academicYearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadSchoolOverviewFromDb(db, organizationId, period);
+}
+
 export async function getSchoolOverview(
   db: PrismaClient,
   actorUserId: string,
@@ -87,6 +95,6 @@ export async function getSchoolOverview(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedSchoolOverview(db, access.organizationId, access.period);
+  const data = await loadCachedSchoolOverview(access.organizationId, access.period);
   return { ok: true, data };
 }

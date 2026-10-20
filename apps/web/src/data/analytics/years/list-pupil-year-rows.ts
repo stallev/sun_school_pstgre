@@ -12,6 +12,7 @@ import {
 } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { isMutationErr } from "../../access/access-admin-guards.server";
 import { loadBricksEarnedAndIssued } from "../../bricks/bricks-shared.server";
 import { loadActorOrganizationIdForAnalytics } from "../analytics-shared.server";
@@ -40,16 +41,12 @@ export type ListPupilYearRowsData = {
 
 type CachedPupilYearRow = Omit<PupilYearRow, "hasForeignGroupForTeacher">;
 
-async function loadCachedPupilYearRows(
+async function loadPupilYearRowsFromDb(
   db: PrismaClient,
   pupilId: string,
   organizationId: string,
   yearIds: string[],
 ): Promise<CachedPupilYearRow[]> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsPupilYears(pupilId));
-  cacheLife("minutes");
-
   const years = await db.academicYear.findMany({
     where: { id: { in: yearIds }, organizationId },
     select: { id: true, name: true, status: true },
@@ -138,6 +135,18 @@ async function loadCachedPupilYearRows(
   return rows;
 }
 
+async function loadCachedPupilYearRows(
+  pupilId: string,
+  organizationId: string,
+  yearIds: string[],
+): Promise<CachedPupilYearRow[]> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsPupilYears(pupilId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadPupilYearRowsFromDb(db, pupilId, organizationId, yearIds);
+}
+
 export async function listPupilYearRows(
   db: PrismaClient,
   actorUserId: string,
@@ -173,7 +182,7 @@ export async function listPupilYearRows(
 
   if (isMutationErr(access)) return access;
 
-  const cachedRows = await loadCachedPupilYearRows(db, pupilId, access.organizationId, access.yearIds);
+  const cachedRows = await loadCachedPupilYearRows(pupilId, access.organizationId, access.yearIds);
 
   const isAdmin = await db.userRoleAssignment.findFirst({
     where: { userId: actorUserId, role: USER_ROLE.ADMIN },

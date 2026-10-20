@@ -25,7 +25,7 @@ export const RatingTable = ({ rows, messages }: RatingTableProps) => {
 
   return (
     <Card className="overflow-x-auto p-0">
-      <Table>
+      <Table className="text-base">
         <TableHeader>
           <TableRow>
             <TableHead scope="col" className="w-14">{messages.columnPlace}</TableHead>

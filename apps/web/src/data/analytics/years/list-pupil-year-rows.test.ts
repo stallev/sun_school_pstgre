@@ -2,9 +2,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
 import { listPupilYearRows } from "./list-pupil-year-rows";
 
+const getPrisma = vi.hoisted(() => vi.fn());
+
 vi.mock("next/cache", () => ({
   cacheLife: vi.fn(),
   cacheTag: vi.fn(),
+}));
+
+vi.mock("@/lib/db.server", () => ({
+  getPrisma,
 }));
 
 vi.mock("./compute-year-snapshots.server", () => ({
@@ -137,6 +143,7 @@ describe("listPupilYearRows (AZ-49)", () => {
       },
       analyticsPupilYearSnapshot: { findFirst: vi.fn().mockResolvedValue(null) },
     };
+    getPrisma.mockResolvedValue(db);
 
     const result = await listPupilYearRows(db as never, actorTeacherId, pupilId);
 

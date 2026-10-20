@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { AnalyticsMessages, AnalyticsPupilYearMessages, AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
 import type { PupilYearTableRow } from "./PupilYearsSection";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { formatPupilYearMetric } from "./format-pupil-year-metric";
 
 type PupilYearsRowsTableProps = {
@@ -34,9 +35,9 @@ export const PupilYearsRowsTable = ({
 }: PupilYearsRowsTableProps) => (
   <>
     <Card className="overflow-x-auto">
-      <Table className="min-w-[44rem] text-left">
+      <Table className="min-w-[44rem] text-left text-base">
         <caption className="sr-only">{pupilYearMessages.tableCaption}</caption>
-        <TableHeader className="border-b border-line text-sm text-muted-foreground">
+        <TableHeader className="border-b border-line text-base text-muted-foreground">
           <TableRow>
             <TableHead scope="col" className="px-5 py-3 font-normal">
               {yearMessages.columnYear}
@@ -77,12 +78,12 @@ export const PupilYearsRowsTable = ({
                     {row.yearName}
                   </button>
                   {dash && (
-                    <span className="block text-xs font-normal text-muted-foreground">
-                      {pupilYearMessages.fewLessons(row.lessons)}
+                    <span className="block text-sm font-normal text-muted-foreground">
+                      {fillMessage(pupilYearMessages.fewLessons, { count: row.lessons })}
                     </span>
                   )}
                 </TableHead>
-                <TableCell className="px-3 py-3 text-sm">{row.gradeLabels}</TableCell>
+                <TableCell className="px-3 py-3">{row.gradeLabels}</TableCell>
                 {(["attendance", "verses", "test", "notebook"] as const).map((key) => (
                   <TableCell key={key} className="px-3 py-3 text-right tabular-nums">
                     {dash || row[key] === null
@@ -91,7 +92,10 @@ export const PupilYearsRowsTable = ({
                   </TableCell>
                 ))}
                 <TableCell className="px-5 py-3 text-right tabular-nums">
-                  {pupilYearMessages.bricksRatio(row.bricksEarned, row.bricksIssued)}
+                  {fillMessage(pupilYearMessages.bricksRatio, {
+                    earned: row.bricksEarned,
+                    issued: row.bricksIssued,
+                  })}
                 </TableCell>
               </TableRow>
             );

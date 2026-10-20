@@ -11,6 +11,7 @@ import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
@@ -59,8 +60,11 @@ const RatingPage = async ({ searchParams }: RatingPageProps) => {
 
   const subtitle =
     data.scope === "school" && data.isAdmin
-      ? messages.rating.pageSubtitleSchool(data.yearName)
-      : messages.rating.pageSubtitleGroup(data.gradeName, data.yearName);
+      ? fillMessage(messages.rating.pageSubtitleSchool, { year: data.yearName })
+      : fillMessage(messages.rating.pageSubtitleGroup, {
+          group: data.gradeName,
+          year: data.yearName,
+        });
 
   const scopeBase = `/rating?${data.gradeId ? `gradeId=${data.gradeId}&` : ""}`;
 

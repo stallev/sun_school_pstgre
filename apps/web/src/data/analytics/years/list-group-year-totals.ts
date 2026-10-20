@@ -13,6 +13,7 @@ import {
 } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { isMutationErr } from "../../access/access-admin-guards.server";
 import { loadActorOrganizationIdForAnalytics } from "../analytics-shared.server";
 import {
@@ -48,15 +49,11 @@ type YearMeta = {
   startsOn: string;
 };
 
-async function loadCachedGroupYearRows(
+async function loadGroupYearRowsFromDb(
   db: PrismaClient,
   gradeId: string,
   years: YearMeta[],
 ): Promise<Omit<GroupYearTotalRow, "diff">[]> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsYears(gradeId));
-  cacheLife("minutes");
-
   const rows: Omit<GroupYearTotalRow, "diff">[] = [];
   for (const year of years) {
     if (year.status === ACADEMIC_YEAR_STATUS.ACTIVE) {
@@ -98,6 +95,17 @@ async function loadCachedGroupYearRows(
     });
   }
   return rows;
+}
+
+async function loadCachedGroupYearRows(
+  gradeId: string,
+  years: YearMeta[],
+): Promise<Omit<GroupYearTotalRow, "diff">[]> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsYears(gradeId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadGroupYearRowsFromDb(db, gradeId, years);
 }
 
 function attachYearDiffs(
@@ -195,7 +203,7 @@ export async function listGroupYearTotals(
 
   if (isMutationErr(access)) return access;
 
-  const body = await loadCachedGroupYearRows(db, gradeId, access.years);
+  const body = await loadCachedGroupYearRows(gradeId, access.years);
   const selectedRow = body.find((row) => row.yearId === access.selectedYearId);
   const selectedSnapshotMissing = selectedRow?.snapshotMissing ?? false;
   const startsOnByYearId = new Map(access.years.map((year) => [year.id, year.startsOn]));
