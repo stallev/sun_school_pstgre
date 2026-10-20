@@ -1,6 +1,54 @@
 import type { TrendLabel } from "@sunschool/domain";
 import type { AnalyticsChartPoint } from "@/data/analytics/analytics-compute.server";
 
+export type AnalyticsYearMessages = {
+  stripLabel: string;
+  title: string;
+  compositionNote: string;
+  tableCaption: (group: string) => string;
+  insufficientForComparison: string;
+  diffHigher: (amount: string, unit: string) => string;
+  diffLower: (amount: string, unit: string) => string;
+  diffSame: string;
+  diffPointsUnit: string;
+  none: string;
+  readonlyNote: string;
+  methodologyNote: (snapshotVersion: string, currentVersion: string) => string;
+  methodologyBadge: (version: string) => string;
+  snapshotMissing: string;
+  allYearsLink: string;
+  activeBadge: string;
+  closedBadge: string;
+  columnYear: string;
+  columnKids: string;
+  columnLessons: string;
+  columnAttendance: string;
+  columnVerses: string;
+  columnTest: string;
+  columnNotebook: string;
+  sampleMeta: (kids: number, lessons: number) => string;
+  outOfTen: string;
+};
+
+export type AnalyticsPupilYearMessages = {
+  title: string;
+  tableCaption: string;
+  fewLessons: (count: number) => string;
+  metricAttendance: string;
+  metricVerses: string;
+  metricTest: string;
+  metricNotebook: string;
+  metricSelectorLabel: string;
+  foreignGroupNote: string;
+  chartNote: string;
+  chartColumnYear: string;
+  chartInsufficient: string;
+  chartAria: (metric: "attendance" | "verses" | "test" | "notebook") => string;
+  columnGroup: string;
+  columnBricks: string;
+  bricksRatio: (earned: number, issued: number) => string;
+};
+
 export type AnalyticsChartSeriesMessages = {
   attendanceTitle: string;
   versesTitle: string;
@@ -103,6 +151,8 @@ export type AnalyticsMessages = {
     scopeGroup: string;
     scopeSchool: string;
   };
+  years: AnalyticsYearMessages;
+  pupilYears: AnalyticsPupilYearMessages;
   school: {
     pageTitle: string;
     pageSubtitle: (year: string) => string;
@@ -125,6 +175,17 @@ export type AnalyticsMessages = {
     attentionNegativeBricks: (count: number) => string;
     attentionNegativeBricksHint: string;
     conductedGradeLabel: string;
+    closedTableCaption: (year: string) => string;
+    columnKidsSample: string;
+    columnLessonsChecked: string;
+    columnVersesShort: string;
+    columnTestShort: string;
+    columnNotebookShort: string;
+    noGroupInYear: string;
+    closedCompositionNote: string;
+  };
+  groupYear: {
+    sectionTitle: (year: string) => string;
   };
 };
 

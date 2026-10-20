@@ -112,6 +112,7 @@ async function erasePupils(tx: Tx, pupilIds: string[]): Promise<void> {
   await tx.deletionRequest.deleteMany({ where: { subjectPupilId: { in: pupilIds } } });
   await tx.enrollment.deleteMany({ where: { pupilId: { in: pupilIds } } });
   await tx.childDataConsent.deleteMany({ where: { pupilId: { in: pupilIds } } });
+  await tx.analyticsPupilYearSnapshot.deleteMany({ where: { pupilId: { in: pupilIds } } });
   await tx.pupil.deleteMany({ where: { id: { in: pupilIds } } });
 
   for (const familyId of new Set(familyIds)) {
@@ -139,6 +140,8 @@ async function eraseYear(tx: Tx, yearId: string): Promise<void> {
   await tx.teacherAssignment.deleteMany({ where: { academicYearId: yearId } });
   await tx.gradeAchievementPeriod.deleteMany({ where: { gradeSettings: { academicYearId: yearId } } });
   await tx.gradeSettings.deleteMany({ where: { academicYearId: yearId } });
+  await tx.analyticsPupilYearSnapshot.deleteMany({ where: { academicYearId: yearId } });
+  await tx.analyticsGroupYearSnapshot.deleteMany({ where: { academicYearId: yearId } });
   await tx.academicYear.delete({ where: { id: yearId } });
 }
 

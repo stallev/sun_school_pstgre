@@ -2,6 +2,8 @@
  * CLI: `npm run db:seed:dev` (seed_data_spec set D). Dev only.
  * Prerequisites: `db:seed:reference`, `db:seed:teacher`, and no ACTIVE academic year
  * (`npm run db:delete:year -- --confirm` removes the current one).
+ * `--replace` deletes this fixture (and empty `Race-*` years) and inserts it again.
+ * Dev only: `APP_ENV=dev` and the database marker `dev`.
  */
 import path from "node:path";
 import { config as loadEnv } from "dotenv";
@@ -23,11 +25,12 @@ async function main(): Promise<void> {
   console.log(`seed:dev → APP_ENV=${appEnv}, host=${new URL(connectionString).host}`);
   const prisma = createPrismaClient(connectionString);
   try {
-    const report = await seedDev(prisma, appEnv);
+    const replace = process.argv.includes("--replace");
+    const report = await seedDev(prisma, appEnv, { replace });
     console.log(
       report.skipped
-        ? "fixture already present — nothing changed"
-        : `seeded: ${report.pupils} pupils, ${report.lessons} lessons, ${report.checks} checks, ${report.bricks} brick rows`,
+        ? "fixture already present — nothing changed (pass --replace to rebuild)"
+        : `seeded: ${report.pupils} pupils, ${report.lessons} lessons, ${report.checks} checks, ${report.bricks} brick rows, ${report.accessRequests} access requests, ${report.deletions} deletion requests, ${report.events} calendar events`,
     );
   } finally {
     await prisma.$disconnect();

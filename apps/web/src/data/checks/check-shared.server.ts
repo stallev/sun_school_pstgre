@@ -31,6 +31,8 @@ import {
 } from "../lessons/lesson-shared.server";
 import { lockPupilRow } from "../school/school-pupil-shared.server";
 import { loadAcademicYearForOrganization, lockAcademicYearRow } from "../school/school-year-guards.server";
+import { recomputeYearSnapshotsOnCorrection } from "../analytics/years/recompute-year-snapshots";
+import type { YearSnapshotCacheTargets } from "../analytics/years/create-year-snapshots";
 
 type Tx = Prisma.TransactionClient;
 
@@ -646,6 +648,36 @@ async function assertCheckCorrectionActor(
   return actor;
 }
 
+type CheckMutationSuccess = {
+  checkId: string;
+  updatedAt: string;
+  yearSnapshotCache?: YearSnapshotCacheTargets;
+};
+
+async function maybeRecomputeClosedYearSnapshots(
+  tx: Tx,
+  actor: { mode: "admin" | "teacher" },
+  lesson: { gradeId: string; academicYearId: string },
+  pupilId: string,
+  actorUserId: string,
+): Promise<YearSnapshotCacheTargets | undefined> {
+  if (actor.mode !== "admin") return undefined;
+  const year = await tx.academicYear.findUnique({
+    where: { id: lesson.academicYearId },
+    select: { status: true },
+  });
+  if (year?.status !== ACADEMIC_YEAR_STATUS.CLOSED) return undefined;
+
+  const result = await recomputeYearSnapshotsOnCorrection(
+    tx,
+    lesson.academicYearId,
+    { gradeId: lesson.gradeId, pupilId },
+    actorUserId,
+  );
+  if (!result.versioned) return undefined;
+  return { gradeIds: result.gradeIds, pupilIds: result.pupilIds };
+}
+
 async function snapshotCheckFields(
   tx: Tx,
   checkId: string,
@@ -753,7 +785,7 @@ export async function correctCheckInTransaction(
   actorUserId: string,
   organizationId: string,
   input: CorrectCheckInput,
-): Promise<MutationResult<{ checkId: string; updatedAt: string }>> {
+): Promise<MutationResult<CheckMutationSuccess>> {
   const lesson = await loadLessonInOrganization(tx, input.lessonId, organizationId);
   if (isMutationErr(lesson)) return lesson;
 
@@ -896,7 +928,21 @@ export async function correctCheckInTransaction(
       newValue: newSnapshot,
       reason: input.reason ?? null,
     });
-    return { ok: true, data: { checkId: updated.id, updatedAt: updated.updatedAt.toISOString() } };
+    const yearSnapshotCache = await maybeRecomputeClosedYearSnapshots(
+      tx,
+      actor,
+      lesson,
+      input.pupilId,
+      actorUserId,
+    );
+    return {
+      ok: true,
+      data: {
+        checkId: updated.id,
+        updatedAt: updated.updatedAt.toISOString(),
+        yearSnapshotCache,
+      },
+    };
   }
 
   const verseMap = await loadVerseScoreMap(tx, existing.id);
@@ -965,7 +1011,22 @@ export async function correctCheckInTransaction(
     reason: input.reason ?? null,
   });
 
-  return { ok: true, data: { checkId: updated.id, updatedAt: updated.updatedAt.toISOString() } };
+  const yearSnapshotCache = await maybeRecomputeClosedYearSnapshots(
+    tx,
+    actor,
+    lesson,
+    input.pupilId,
+    actorUserId,
+  );
+
+  return {
+    ok: true,
+    data: {
+      checkId: updated.id,
+      updatedAt: updated.updatedAt.toISOString(),
+      yearSnapshotCache,
+    },
+  };
 }
 
 export async function overrideVerseScoreInTransaction(
@@ -973,7 +1034,7 @@ export async function overrideVerseScoreInTransaction(
   actorUserId: string,
   organizationId: string,
   input: OverrideVerseScoreInput,
-): Promise<MutationResult<{ checkId: string; updatedAt: string }>> {
+): Promise<MutationResult<CheckMutationSuccess>> {
   const lesson = await loadLessonInOrganization(tx, input.lessonId, organizationId);
   if (isMutationErr(lesson)) return lesson;
 
@@ -1036,5 +1097,20 @@ export async function overrideVerseScoreInTransaction(
     newValue: { lessonVerseId: input.lessonVerseId, score: input.score },
   });
 
-  return { ok: true, data: { checkId: updated.id, updatedAt: updated.updatedAt.toISOString() } };
+  const yearSnapshotCache = await maybeRecomputeClosedYearSnapshots(
+    tx,
+    actor,
+    lesson,
+    input.pupilId,
+    actorUserId,
+  );
+
+  return {
+    ok: true,
+    data: {
+      checkId: updated.id,
+      updatedAt: updated.updatedAt.toISOString(),
+      yearSnapshotCache,
+    },
+  };
 }

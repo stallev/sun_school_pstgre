@@ -84,3 +84,12 @@ export const RECITATION_STATUS = {
   FAILED: "FAILED",
 } as const;
 export type RecitationStatus = (typeof RECITATION_STATUS)[keyof typeof RECITATION_STATUS];
+
+export const ANALYTICS_SNAPSHOT_REASON = {
+  CLOSE: "CLOSE",
+  CORRECTION: "CORRECTION",
+  ERASURE: "ERASURE",
+  BACKFILL: "BACKFILL",
+} as const;
+export type AnalyticsSnapshotReason =
+  (typeof ANALYTICS_SNAPSHOT_REASON)[keyof typeof ANALYTICS_SNAPSHOT_REASON];

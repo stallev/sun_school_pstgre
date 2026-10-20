@@ -13,6 +13,14 @@ vi.mock("@sunschool/db", async (importOriginal) => {
   };
 });
 
+const eraseChildSnapshots = vi.hoisted(() =>
+  vi.fn().mockResolvedValue({ gradeIds: [], pupilIds: ["88888888-8888-4888-8888-888888888888"] }),
+);
+
+vi.mock("../analytics/years/erase-child-snapshots", () => ({
+  eraseChildSnapshots,
+}));
+
 vi.mock("./preview-plan", () => ({
   gatherChildPlanInput: vi.fn().mockResolvedValue({
     enrollmentCount: 1,
@@ -65,6 +73,10 @@ describe("eraseChildDataInTransaction (deletion_requests §6.2)", () => {
       pupil: { delete: vi.fn().mockResolvedValue({}) },
     };
 
+    eraseChildSnapshots.mockImplementation(async () => {
+      calls.push("snapshots");
+      return { gradeIds: [], pupilIds: [pupilId] };
+    });
     scrubAuditLogForPupilPrivileged.mockImplementation(async () => {
       calls.push("scrubAudit");
       return 2;
@@ -76,6 +88,7 @@ describe("eraseChildDataInTransaction (deletion_requests §6.2)", () => {
 
     const result = await eraseChildDataInTransaction(tx as never, pupilId);
 
+    expect(calls.indexOf("snapshots")).toBeLessThan(calls.indexOf("checks"));
     expect(calls.indexOf("scrubAudit")).toBeLessThan(calls.indexOf("checks"));
     expect(calls.indexOf("scrubAudit")).toBeLessThan(calls.indexOf("bricks"));
     expect(tx.pupil.delete).toHaveBeenCalledWith({ where: { id: pupilId } });

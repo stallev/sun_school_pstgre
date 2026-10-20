@@ -27,6 +27,8 @@ import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadPupilInOrganization, lockPupilRow } from "../school/school-pupil-shared.server";
 import { anonymizeUserInTransaction } from "./anonymize-user";
 import { deletionStatusInvalidResult, lockDeletionRequest } from "./deletion-shared.server";
+import { revalidateYearSnapshotCaches } from "../analytics/years/revalidate-year-snapshot-cache";
+import type { YearSnapshotCacheTargets } from "../analytics/years/create-year-snapshots";
 import { eraseChildDataInTransaction } from "./erase-child-data";
 import { gatherAccountPlanInput } from "./preview-plan";
 
@@ -51,7 +53,9 @@ export async function executeDeletionInTransaction(
   actorUserId: string,
   input: ExecuteDeletionInput,
   now: Date,
-): Promise<MutationResult<{ summary: DeletionExecutionSummary }>> {
+): Promise<
+  MutationResult<{ summary: DeletionExecutionSummary; yearSnapshotCache?: YearSnapshotCacheTargets }>
+> {
   if (!(await userHasAdminRole(tx, actorUserId))) {
     return { ok: false, code: MUTATION_ERROR_CODES.FORBIDDEN, message: "common.errors.forbidden" };
   }
@@ -193,7 +197,10 @@ export async function executeDeletionInTransaction(
     },
   });
 
-  const { plan } = await eraseChildDataInTransaction(tx, subjectPupilId);
+  const { plan, snapshotCache: yearSnapshotCache } = await eraseChildDataInTransaction(
+    tx,
+    subjectPupilId,
+  );
   const summary = buildDeletionExecutionSummary(plan);
 
   await tx.deletionRequest.update({
@@ -215,7 +222,7 @@ export async function executeDeletionInTransaction(
     newValue: { summary },
   });
 
-  return { ok: true, data: { summary } };
+  return { ok: true, data: { summary, yearSnapshotCache } };
 }
 
 /** `IN_PROGRESS → DONE` (deletion_requests_contract §5.4, AZ-07). */
@@ -224,7 +231,9 @@ export async function executeDeletion(
   actorUserId: string,
   raw: unknown,
   now: Date,
-): Promise<MutationResult<{ summary: DeletionExecutionSummary }>> {
+): Promise<
+  MutationResult<{ summary: DeletionExecutionSummary; yearSnapshotCache?: YearSnapshotCacheTargets }>
+> {
   const parsed = executeDeletionInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
@@ -237,8 +246,26 @@ export async function executeDeletion(
     };
   }
 
-  return db.$transaction(
+  const result = await db.$transaction(
     (tx) => executeDeletionInTransaction(tx, actorUserId, parsed.data, now),
     { maxWait: 10_000, timeout: 60_000 },
   );
+  if (result.ok && result.data.yearSnapshotCache) {
+    const grade = await db.grade.findFirst({
+      where: { id: { in: result.data.yearSnapshotCache.gradeIds } },
+      select: { organizationId: true },
+    });
+    const yearRows = await db.gradeSettings.findMany({
+      where: { gradeId: { in: result.data.yearSnapshotCache.gradeIds } },
+      select: { academicYearId: true },
+      distinct: ["academicYearId"],
+    });
+    if (grade) {
+      revalidateYearSnapshotCaches(result.data.yearSnapshotCache, {
+        organizationId: grade.organizationId,
+        yearIds: yearRows.map((row) => row.academicYearId),
+      });
+    }
+  }
+  return result;
 }

@@ -9,6 +9,7 @@ import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActorOrganizationId } from "../lessons/lesson-shared.server";
 import { revalidateBricksCachesForLessonCheck } from "../bricks/revalidate-bricks-cache";
 import { revalidateAnalyticsCachesForLessonCheck } from "../analytics/revalidate-analytics-cache";
+import { revalidateYearSnapshotCaches } from "../analytics/years/revalidate-year-snapshot-cache";
 import { correctCheckInTransaction } from "./check-shared.server";
 
 export async function correctCheck(
@@ -33,6 +34,21 @@ export async function correctCheck(
   if (result.ok) {
     await revalidateBricksCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
     await revalidateAnalyticsCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
+    if (result.data.yearSnapshotCache) {
+      const lesson = await db.lesson.findUnique({
+        where: { id: parsed.data.lessonId },
+        select: {
+          academicYearId: true,
+          grade: { select: { organizationId: true } },
+        },
+      });
+      if (lesson) {
+        revalidateYearSnapshotCaches(result.data.yearSnapshotCache, {
+          organizationId: lesson.grade.organizationId,
+          yearIds: [lesson.academicYearId],
+        });
+      }
+    }
   }
   return result;
 }

@@ -1,0 +1,108 @@
+import { ContentText } from "@/components/atoms/ContentText";
+import { Card } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import type { AnalyticsMessages, AnalyticsPupilYearMessages, AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
+import type { PupilYearTableRow } from "./PupilYearsSection";
+import { formatPupilYearMetric } from "./format-pupil-year-metric";
+
+type PupilYearsRowsTableProps = {
+  rows: readonly PupilYearTableRow[];
+  selectedYearId: string;
+  onSelectYear: (yearId: string) => void;
+  messages: AnalyticsMessages;
+  pupilYearMessages: AnalyticsPupilYearMessages;
+  yearMessages: AnalyticsYearMessages;
+  showForeignGroupNote: boolean;
+};
+
+export const PupilYearsRowsTable = ({
+  rows,
+  selectedYearId,
+  onSelectYear,
+  messages,
+  pupilYearMessages,
+  yearMessages,
+  showForeignGroupNote,
+}: PupilYearsRowsTableProps) => (
+  <>
+    <Card className="overflow-x-auto">
+      <Table className="min-w-[44rem] text-left">
+        <caption className="sr-only">{pupilYearMessages.tableCaption}</caption>
+        <TableHeader className="border-b border-line text-sm text-muted-foreground">
+          <TableRow>
+            <TableHead scope="col" className="px-5 py-3 font-normal">
+              {yearMessages.columnYear}
+            </TableHead>
+            <TableHead scope="col" className="px-3 py-3 font-normal">
+              {pupilYearMessages.columnGroup}
+            </TableHead>
+            <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+              {yearMessages.columnAttendance}
+            </TableHead>
+            <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+              {yearMessages.columnVerses}
+            </TableHead>
+            <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+              {yearMessages.columnTest}
+            </TableHead>
+            <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+              {yearMessages.columnNotebook}
+            </TableHead>
+            <TableHead scope="col" className="px-5 py-3 text-right font-normal">
+              {pupilYearMessages.columnBricks}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody className="divide-y divide-line">
+          {rows.map((row) => {
+            const selected = row.yearId === selectedYearId;
+            const dash = row.insufficientLessons;
+            return (
+              <TableRow key={row.yearId} className={cn(selected && "bg-paper")}>
+                <TableHead scope="row" className="px-5 py-3 font-medium">
+                  <button
+                    type="button"
+                    onClick={() => onSelectYear(row.yearId)}
+                    aria-current={selected ? "true" : undefined}
+                    className="text-left hover:text-cobalt-ink"
+                  >
+                    {row.yearName}
+                  </button>
+                  {dash && (
+                    <span className="block text-xs font-normal text-muted-foreground">
+                      {pupilYearMessages.fewLessons(row.lessons)}
+                    </span>
+                  )}
+                </TableHead>
+                <TableCell className="px-3 py-3 text-sm">{row.gradeLabels}</TableCell>
+                {(["attendance", "verses", "test", "notebook"] as const).map((key) => (
+                  <TableCell key={key} className="px-3 py-3 text-right tabular-nums">
+                    {dash || row[key] === null
+                      ? messages.kpiEmpty
+                      : formatPupilYearMetric(key, row[key] as number, messages)}
+                  </TableCell>
+                ))}
+                <TableCell className="px-5 py-3 text-right tabular-nums">
+                  {pupilYearMessages.bricksRatio(row.bricksEarned, row.bricksIssued)}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </Card>
+    {showForeignGroupNote && (
+      <ContentText className="mt-2 text-sm text-muted-foreground">
+        {pupilYearMessages.foreignGroupNote}
+      </ContentText>
+    )}
+  </>
+);

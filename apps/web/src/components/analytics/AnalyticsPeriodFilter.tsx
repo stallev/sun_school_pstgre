@@ -8,6 +8,7 @@ type AnalyticsPeriodFilterProps = {
   periodFilter: PeriodFilter;
   messages: AnalyticsMessages;
   actionPath?: string;
+  hiddenFields?: Record<string, string>;
 };
 
 export const AnalyticsPeriodFilter = ({
@@ -15,6 +16,7 @@ export const AnalyticsPeriodFilter = ({
   periodFilter,
   messages,
   actionPath = "/analytics",
+  hiddenFields,
 }: AnalyticsPeriodFilterProps) => {
   const mode = periodFilter.mode;
   const monthDefault = periodFilter.mode === "month" ? periodFilter.month : "";
@@ -24,6 +26,11 @@ export const AnalyticsPeriodFilter = ({
   return (
     <form method="get" action={actionPath} className="flex flex-wrap items-end gap-3">
       <input type="hidden" name="gradeId" value={gradeId} />
+      {hiddenFields
+        ? Object.entries(hiddenFields).map(([name, value]) => (
+            <input key={name} type="hidden" name={name} value={value} />
+          ))
+        : null}
       <label className="grid gap-1">
         <ContentText className="text-sm font-medium text-ink">{messages.periodYear}</ContentText>
         <select

@@ -96,10 +96,15 @@ const emptySampleCounts = (): Record<SampleLayer, number> => ({
   [SAMPLE_LAYER.D]: 0,
 });
 
+export type ComputeGroupAnalyticsOptions = {
+  excludePupilId?: string;
+};
+
 export async function computeGroupAnalyticsSnapshot(
   db: PrismaClient,
   gradeId: string,
   period: ResolvedAnalyticsPeriod,
+  options?: ComputeGroupAnalyticsOptions,
 ): Promise<GroupAnalyticsSnapshot> {
   const { gte, lte } = periodDateRange(period);
   const yearId = period.academicYearId;
@@ -166,7 +171,11 @@ export async function computeGroupAnalyticsSnapshot(
   }
 
   const lessonIsChecked = (lessonId: string): boolean =>
-    (checksByLesson.get(lessonId) ?? []).some((row) => row.homeworkChecked);
+    (checksByLesson.get(lessonId) ?? []).some(
+      (row) =>
+        row.homeworkChecked &&
+        (!options?.excludePupilId || row.pupilId !== options.excludePupilId),
+    );
 
   const periodLessons = lessons.filter(
     (lesson) =>
@@ -190,6 +199,7 @@ export async function computeGroupAnalyticsSnapshot(
 
   for (const enrollment of enrollments) {
     const pupilId = enrollment.pupilId;
+    if (options?.excludePupilId && pupilId === options.excludePupilId) continue;
     const pupilChecks = checksByPupil.get(pupilId) ?? [];
     const countingStart = resolveSampleCountingStartDate(
       isoFromEnrollmentStartsOn(enrollment.startsOn),

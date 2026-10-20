@@ -63,6 +63,8 @@ export const AUDIT_ACTION = {
   DELETION_REJECTED: "deletion.rejected",
   DELETION_EXECUTED: "deletion.executed",
   DELETION_USER_ANONYMIZED: "deletion.user_anonymized",
+  ANALYTICS_SNAPSHOT_CREATED: "analytics.snapshot_created",
+  ANALYTICS_SNAPSHOT_VERSIONED: "analytics.snapshot_versioned",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 
@@ -89,5 +91,6 @@ export const AUDIT_ENTITY_TYPE = {
   HOMEWORK_CHECK: "homework_check",
   BRICK_LEDGER: "brick_ledger",
   DELETION_REQUEST: "deletion_request",
+  ANALYTICS_SNAPSHOT: "analytics_snapshot",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];

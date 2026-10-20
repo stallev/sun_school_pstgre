@@ -7,6 +7,7 @@ import { CACHE_TAGS } from "@/lib/cache-tags";
 export function revalidateBricksCaches(pupilId: string, yearId: string): void {
   updateTag(CACHE_TAGS.bricksBalance(pupilId, yearId));
   updateTag(CACHE_TAGS.bricksLedger(pupilId, yearId));
+  updateTag(CACHE_TAGS.analyticsPupilYears(pupilId));
 }
 
 export async function revalidateBricksCachesForLessonCheck(

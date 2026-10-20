@@ -25,3 +25,17 @@ export {
 } from "./deletion/privileged-context";
 export { scrubAuditLogForPupilPrivileged } from "./deletion/scrub-audit-log-for-pupil";
 export { scrubAuditLogForUserPrivileged } from "./deletion/scrub-audit-log-for-user";
+export {
+  createYearSnapshots,
+  createYearSnapshotsOnClose,
+  type CreateYearSnapshotsResult,
+  type YearSnapshotCacheTargets,
+} from "./analytics/create-year-snapshots";
+export { ensureYearSnapshots } from "./analytics/ensure-year-snapshots";
+export {
+  computeGroupYearSnapshotMetrics,
+  computePupilYearSnapshotMetrics,
+  metricsToGroupSnapshotRow,
+  metricsToPupilSnapshotRow,
+  type PupilYearSnapshotMetrics,
+} from "./analytics/compute-year-snapshots";
