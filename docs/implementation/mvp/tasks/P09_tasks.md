@@ -41,7 +41,7 @@
 
 ### P09-CU3 — fix(ui): align app shell with prototype · Review: diff-only · Commit: auto
 
-- [ ] P09-T3 · T1 · Spec: [global_shell_spec §6.1–§6.2](../specs/global_shell_spec.md) · Contract: [UX-02 §4–§5.4](../../../design/responsive_navigation_contract.md)
+- [x] P09-T3 · T1 · Spec: [global_shell_spec §6.1–§6.2](../specs/global_shell_spec.md) · Contract: [UX-02 §4–§5.4](../../../design/responsive_navigation_contract.md)
       Files: `apps/web/src/components/shell/app-shell.tsx`, `nav-drawer.tsx`, `top-nav.tsx`, `shell-navigation.client.tsx`, срезы `messages` навигации · Acceptance: учитель и админ на 390, 768 и 1024 видят бренд «Воскресная школа» только с 1024; ниже — заголовок экрана и «имя · роль». Drawer без видимого «Меню» и без пункта «Профиль»; внизу имя ведёт на `/profile`, рядом «Выйти». В раскрытом topnav у пунктов есть короткие пояснения. Подписи «Заявки на доступ», «Ученики и семьи», «Аналитика групп». Пункта «Достижения и штрафы» и radio роли нет. На `/lessons` при 390 и 768 у «Все уроки» есть `aria-current="page"`. «Something went wrong» нет.
       Paths: H [P09 §4.3] · N n/a — copy/CSS, без мутации · S n/a — набор маршрутов и права UX-02 §5 не меняются
 

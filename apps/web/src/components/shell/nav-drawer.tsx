@@ -8,23 +8,22 @@ import type { ShellNavProps } from "@/components/shell/shell-nav-types";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
 import { CustomLink } from "@/components/ui/custom-link";
 import { SignOutButton } from "@/components/shell/sign-out-button.client";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   isNavLeafActive,
   isResolvedNavGroup,
 } from "@/lib/shell/nav-resolver";
 
+type NavDrawerProps = ShellNavProps & {
+  displayName: string;
+};
+
 export const NavDrawer = ({
   items,
   activeKey,
   badgeCounts,
-}: ShellNavProps) => {
+  displayName,
+}: NavDrawerProps) => {
   const messages = useShellMessages();
   const [open, setOpen] = useState(false);
 
@@ -58,11 +57,9 @@ export const NavDrawer = ({
         closeLabel={messages.close}
         className="w-[min(20rem,86vw)] bg-surface"
         aria-modal="true"
+        aria-label={messages.menu}
       >
-        <SheetHeader>
-          <SheetTitle>{messages.menu}</SheetTitle>
-        </SheetHeader>
-        <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-2" aria-label={messages.mainNav}>
+        <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-2 pt-2" aria-label={messages.mainNav}>
           {items.map((item) => {
             if (isResolvedNavGroup(item)) {
               return (
@@ -93,15 +90,15 @@ export const NavDrawer = ({
             );
           })}
         </nav>
-        <footer className="mt-auto space-y-0.5 border-t border-line px-2 py-3">
+        <footer className="mt-auto flex items-center gap-2 border-t border-line px-2 py-3">
           <CustomLink
             href="/profile"
-            className="block min-h-11 rounded-lg px-3 py-2.5 text-ink no-underline hover:bg-paper"
+            className="min-h-11 min-w-0 flex-1 truncate rounded-lg px-3 py-2.5 text-ink no-underline hover:bg-paper"
             onClick={() => setOpen(false)}
           >
-            {messages.profile}
+            {displayName}
           </CustomLink>
-          <SignOutButton />
+          <SignOutButton className="w-auto shrink-0 px-3" />
         </footer>
       </SheetContent>
     </Sheet>

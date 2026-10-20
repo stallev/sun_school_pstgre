@@ -73,6 +73,10 @@ describe("resolveNavDefs", () => {
 });
 
 describe("resolveActiveNavKey", () => {
+  it("maps the lessons list to the all-lessons leaf", () => {
+    expect(resolveActiveNavKey("/lessons", USER_ROLE.TEACHER)).toBe("lessons-all");
+  });
+
   it("maps lesson detail paths to the lessons group", () => {
     expect(resolveActiveNavKey("/lessons/abc-123", USER_ROLE.TEACHER)).toBe("lessons");
   });

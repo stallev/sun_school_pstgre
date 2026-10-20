@@ -1,5 +1,34 @@
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import type { ShellScreenTitleKey, ShellScreenTitles } from "@/lib/shell/shell-screen-title";
+
+const SHELL_SCREEN_TITLE_KEYS: ShellScreenTitleKey[] = [
+  "today",
+  "lessons",
+  "lesson",
+  "lessonTable",
+  "lessonForm",
+  "check",
+  "analytics",
+  "pupil",
+  "group",
+  "bricks",
+  "rating",
+  "calendar",
+  "verses",
+  "school",
+  "users",
+  "approvals",
+  "people",
+  "deletions",
+  "groups",
+  "groupEdit",
+  "year",
+  "audit",
+  "settings",
+  "profile",
+  "userProfile",
+];
 
 /** Client-safe shell copy slice (serializable strings only). */
 export type ShellMessages = {
@@ -19,6 +48,9 @@ export type ShellMessages = {
   devViewAs: string;
   devRoleAdmin: string;
   devRoleTeacher: string;
+  roleNameAdmin: string;
+  roleNameTeacher: string;
+  screenTitles: ShellScreenTitles;
 };
 
 export const pickShellMessages = (common: Dictionary): ShellMessages => ({
@@ -38,4 +70,10 @@ export const pickShellMessages = (common: Dictionary): ShellMessages => ({
   devViewAs: getMessage(common, "shell.dev_view_as"),
   devRoleAdmin: getMessage(common, "shell.dev_role_admin"),
   devRoleTeacher: getMessage(common, "shell.dev_role_teacher"),
+  roleNameAdmin: getMessage(common, "shell.role_names.admin"),
+  roleNameTeacher: getMessage(common, "shell.role_names.teacher"),
+  screenTitles: SHELL_SCREEN_TITLE_KEYS.reduce<ShellScreenTitles>((titles, key) => {
+    titles[key] = getMessage(common, `shell.titles.${key}`);
+    return titles;
+  }, {} as ShellScreenTitles),
 });
