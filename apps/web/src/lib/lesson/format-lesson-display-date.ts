@@ -21,3 +21,15 @@ export const formatLessonDisplayDate = (
     day: "numeric",
     month: "long",
   });
+
+/** Compact day·month for lesson list rows (prototype `l.d`). */
+export const formatLessonListShortDate = (
+  lessonDateIso: string,
+  { locale, timeZone }: FormatLessonDisplayDateOptions,
+): string =>
+  formatDateTime(`${lessonDateIso}T12:00:00.000Z`, {
+    locale,
+    timeZone,
+    day: "numeric",
+    month: "numeric",
+  });

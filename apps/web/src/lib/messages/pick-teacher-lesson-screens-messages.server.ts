@@ -35,6 +35,12 @@ export const pickTeacherLessonScreensMessages = (
   emptyLessonsTitle: getMessage(teacher, "lesson.list.empty_title"),
   emptyLessonsDescription: getMessage(teacher, "lesson.list.empty_description"),
   emptyLessonsAction: getMessage(teacher, "lesson.list.empty_action"),
+  listOrdinalShort: (ordinal) =>
+    fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal }),
+  listCheckFraction: (checked, total) =>
+    fill(getMessage(teacher, "lesson.list.check_fraction"), { checked, total }),
+  listReviewBadge: getMessage(teacher, "lesson.list.review_badge"),
+  listReviewSubline: getMessage(teacher, "lesson.list.review_subline"),
   emptyVersesTitle: getMessage(teacher, "lesson.verses_page.empty_title"),
   emptyVersesDescription: getMessage(teacher, "lesson.verses_page.empty_description"),
   lessonCardTitle: (ordinal, title) =>

@@ -11,6 +11,10 @@ export type TeacherLessonScreensMessages = {
   emptyLessonsTitle: string;
   emptyLessonsDescription: string;
   emptyLessonsAction: string;
+  listOrdinalShort: (ordinal: number) => string;
+  listCheckFraction: (checked: number, total: number) => string;
+  listReviewBadge: string;
+  listReviewSubline: string;
   emptyVersesTitle: string;
   emptyVersesDescription: string;
   lessonCardTitle: (ordinal: number, title: string) => string;

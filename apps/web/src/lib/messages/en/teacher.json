@@ -98,7 +98,11 @@
       "grade_apply": "Show",
       "empty_title": "No lessons yet",
       "empty_description": "Create the first lesson for this group in the active year.",
-      "empty_action": "New lesson"
+      "empty_action": "New lesson",
+      "ordinal_short": "lesson {n}",
+      "check_fraction": "Checked {checked}/{total}",
+      "review_badge": "review",
+      "review_subline": "No verses or test — notebook only"
     },
     "detail": {
       "card_title": "Lesson {n} · {title}",

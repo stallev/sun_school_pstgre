@@ -98,7 +98,11 @@
       "grade_apply": "Показать",
       "empty_title": "Уроков пока нет",
       "empty_description": "Создайте первый урок для группы в активном году.",
-      "empty_action": "Новый урок"
+      "empty_action": "Новый урок",
+      "ordinal_short": "урок {n}",
+      "check_fraction": "Проверено {checked}/{total}",
+      "review_badge": "обзорный",
+      "review_subline": "Без стихов и теста — только тетрадь"
     },
     "detail": {
       "card_title": "Урок {n} · {title}",

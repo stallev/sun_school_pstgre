@@ -1,43 +1,64 @@
 import { LESSON_KIND } from "@sunschool/domain";
-import { ContentText } from "@/components/atoms/ContentText";
+import { ChevronRightIcon } from "lucide-react";
+import { ContentText, NumberDisplay } from "@/components/atoms";
 import { StatusText } from "@/components/ui/status-text";
 import { CustomLink } from "@/components/ui/custom-link";
-import type { LessonsListRow } from "@/data/lessons/load-lessons-list-page.server";
-import { formatLessonCheckProgressLabel } from "@/lib/lesson/format-lesson-check-label";
+import type { LessonListRowView } from "@/data/lessons/build-lesson-list-row-views.server";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
 type LessonListRowProps = {
-  row: LessonsListRow;
+  row: LessonListRowView;
   messages: TeacherLessonScreensMessages;
 };
 
 export const LessonListRow = ({ row, messages }: LessonListRowProps) => {
-  const kindLabel = row.kind === LESSON_KIND.REVIEW ? messages.kindReview : messages.kindRegular;
-  const checkLabel = formatLessonCheckProgressLabel(
-    {
-      checkedCount: row.checkedCount,
-      totalPupils: row.totalPupils,
-      status: row.status,
-    },
-    messages,
-  );
+  const checkedCount = Math.min(row.checkedCount, row.totalPupils);
+  const isReview = row.kind === LESSON_KIND.REVIEW;
+  const checkLabel =
+    row.totalPupils > 0
+      ? messages.listCheckFraction(checkedCount, row.totalPupils)
+      : messages.checkNotStarted;
+  const checkTone =
+    row.totalPupils === 0
+      ? "neutral"
+      : checkedCount >= row.totalPupils
+        ? "ok"
+        : "warn";
+
+  const secondaryLine = isReview ? messages.listReviewSubline : row.verseRefsLabel;
 
   return (
     <CustomLink
       href={`/lessons/${row.lessonId}`}
-      className="flex min-h-11 flex-col gap-1 px-4 py-3 transition-colors hover:bg-paper md:flex-row md:items-center md:justify-between"
+      className="grid w-full grid-cols-1 gap-3 px-4 py-4 transition-colors hover:bg-paper/70 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6"
     >
-      <div className="space-y-0.5">
+      <span className="flex items-baseline gap-3 sm:block">
+        <NumberDisplay className="text-2xl leading-none">{row.lessonDateShortLabel}</NumberDisplay>
+        <ContentText tone="secondary" className="text-sm sm:mt-1">
+          {messages.listOrdinalShort(row.ordinal)}
+        </ContentText>
+      </span>
+      <span className="min-w-0">
         <ContentText className="font-medium text-ink">
-          {messages.lessonCardTitle(row.ordinal, row.title)}
+          {row.title}
+          {isReview ? (
+            <span className="ml-2 rounded-md bg-paper px-1.5 py-px align-middle text-xs font-medium text-ink-2 ring-1 ring-line">
+              {messages.listReviewBadge}
+            </span>
+          ) : null}
         </ContentText>
-        <ContentText tone="secondary" className="text-sm">
-          {row.lessonDateIso} · {kindLabel} · {row.leadName}
-        </ContentText>
-      </div>
-      <StatusText tone="neutral" className="shrink-0 text-sm">
-        {checkLabel}
-      </StatusText>
+        {secondaryLine ? (
+          <ContentText tone="secondary" className="mt-0.5 block text-sm">
+            {secondaryLine}
+          </ContentText>
+        ) : null}
+      </span>
+      <span className="flex items-center justify-between gap-4 sm:justify-end">
+        <StatusText tone={checkTone} className="shrink-0 text-sm">
+          {checkLabel}
+        </StatusText>
+        <ChevronRightIcon aria-hidden className="size-5 shrink-0 text-muted" />
+      </span>
     </CustomLink>
   );
 };

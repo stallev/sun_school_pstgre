@@ -65,7 +65,7 @@
 
 ### P09-CU6 — fix(ui): align lesson list row · Review: diff-only · Commit: auto
 
-- [ ] P09-T6 · T1 · Spec: [P09 §4.6](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/lessons`](../phases_tasks_descriptions/P03_phase_description.md)
+- [x] P09-T6 · T1 · Spec: [P09 §4.6](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/lessons`](../phases_tasks_descriptions/P03_phase_description.md)
       Files: `apps/web/src/app/(app)/lessons/page.tsx`, строка списка урока · Acceptance: учитель на `/lessons` при 390, 768 и 1024 видит в строке крупную дату, «урок N», стихи и «Проверено n/n». «Something went wrong» нет.
       Paths: H [P09 §4.6] · N n/a — подача уже загруженного списка · S n/a — AZ-32 не меняется
 
