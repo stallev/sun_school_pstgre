@@ -2,8 +2,8 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.1  
+**Дата:** 2026-10-20  
 **Волна:** W9-01  
 **Зависит от:** [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md) (UX-02), [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`canonical_routes.md`](../../../design/canonical_routes.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) §6, [`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §10, [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md) §5, [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §3–§5.2, [`adr_008_i18n_ru_en_dictionary_slices.md`](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md), [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md)  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`#shell`, `NAV`, `render`), [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -77,10 +77,10 @@
 | Аспект | Правило |
 |--------|---------|
 | Открытие | кнопка меню `aria-expanded`, `aria-controls="nav-drawer"` |
-| Роль | `role="dialog"`, `aria-modal="true"`, имя через `aria-labelledby` (заголовок «Меню») |
+| Роль | `role="dialog"`, `aria-modal="true"`, доступное имя «Меню» (`aria-label`). Видимого заголовка «Меню» нет |
 | Фокус | при открытии — на первый пункт NAV; Tab цикличен внутри; `Esc`, клик по затемнению, выбор пункта закрывают; возврат фокуса на кнопку |
 | Прокрутка | `body` не прокручивается, пока открыт |
-| Содержимое | NAV роли (группы раскрыты списком), внизу — «Профиль» и «Выйти» |
+| Содержимое | NAV роли (группы раскрыты списком). Радио «Администратор» / «Учитель» из прототипа не копируется. Внизу — имя (ссылка на `/profile`) и «Выйти»; отдельного пункта «Профиль» нет |
 | Ширина | `min(20rem, 86vw)`; закрывается при переходе |
 
 ### 6.3 Меню пользователя
@@ -244,3 +244,4 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W9-01) |
+| 2026-10-20 | v1.1 — P09: drawer без видимого «Меню» и без пункта «Профиль»; внизу имя → `/profile` и «Выйти» |

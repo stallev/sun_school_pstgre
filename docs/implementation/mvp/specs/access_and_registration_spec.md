@@ -2,8 +2,8 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.1  
+**Дата:** 2026-10-20  
 **Волна:** W9-02  
 **Зависит от:** [`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md), [`access_requests_and_roles_contract.md`](../contracts/access_requests_and_roles_contract.md), [`deletion_requests_contract.md`](../contracts/deletion_requests_contract.md), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) §6, [`adr_003_auth_oidc_jwt_rbac.md`](../../../prds/07_governance/adr_003_auth_oidc_jwt_rbac.md), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (D15), [`global_shell_spec.md`](./global_shell_spec.md), [`canonical_routes.md`](../../../design/canonical_routes.md) §4.1, [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) (РГ-1…РГ-6, УД-2)  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`#screen-login`, `vRegister`, `vPending`, `vProfile`), [`admin_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.1, [`teacher_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) §4.1, [`telegram_authjs_oidc_portable_guide.md`](../../../my_specs/telegram_authjs_oidc_portable_guide.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -58,7 +58,7 @@
 
 | Элемент | Правило |
 |---------|---------|
-| Контент | Логотип, заголовок «Вход в приложение», краткое пояснение, кнопка «Войти через Telegram» (основная, 48 px, иконка), примечание «Учётную запись с паролем создаёт оператор» под Telegram; блок **«Вход по email»** (email + пароль + «Войти») **свёрнут по умолчанию** — раскрывается control с тем же заголовком; после раскрытия — разделитель «или», поля и submit; control «Скрыть» сворачивает блок; ошибка «Неверный email или пароль» (одинаково для обоих) и «Слишком много попыток — повторите через 15 минут» показываются **внутри раскрытого блока**; при `?error=` с этими кодами или после неудачного submit credentials блок **открыт**; OAuth/прочие ошибки — баннер над Telegram; ссылка «Согласие на обработку данных» → `/privacy`. Пароль в prod — у администратора (`db:seed:admin`); в dev той же формой входит учитель после `db:seed:teacher` |
+| Контент | Логотип, заголовок «Вход для учителей и родителей», подзаголовок «Подтвердите вход в Telegram — пароль не нужен.» (роли родителя в MVP нет — только текст), кнопка «Войти через Telegram» (основная, 48 px, иконка), пояснение «Пароль нужен только администратору.»; блок **«Вход для администратора»** (email + пароль + «Войти») **свёрнут по умолчанию** — раскрывается control с тем же заголовком; после раскрытия — разделитель «или», поля и submit; control «Скрыть» сворачивает блок; ошибка «Неверный email или пароль» (одинаково для обоих) и «Слишком много попыток — повторите через 15 минут» показываются **внутри раскрытого блока**; при `?error=` с этими кодами или после неудачного submit credentials блок **открыт**; OAuth/прочие ошибки — баннер над Telegram; ссылка «Согласие на обработку данных» → `/privacy` **остаётся** (в макете входа её нет). Пароль в prod — у администратора (`db:seed:admin`); в dev той же формой входит учитель после `db:seed:teacher` |
 | Действие | **Клиентский** `signIn("telegram", { callbackUrl })` и `signIn("credentials", { email, password, redirect: false })` из `next-auth/react`; серверный `signIn` не используется (TG-1) |
 | `callbackUrl` | только маршрут из `canonical_routes` (по умолчанию `/`) |
 | Состояния | кнопки блокируются на время перехода (`aria-busy`, «Переходим…»); повторное нажатие невозможно |
@@ -243,3 +243,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W9-02) |
+| 2026-10-20 | v1.1 — P09: заголовок и блок администратора как в прототипе; ссылка на `/privacy` и подпись «Тестовое окружение» в dev сохранены |

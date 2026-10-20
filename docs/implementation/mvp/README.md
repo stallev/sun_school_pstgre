@@ -2,8 +2,8 @@
 
 **Тип:** Index  
 **Статус:** Canonical  
-**Версия:** 1.2  
-**Дата:** 2026-10-19  
+**Версия:** 1.3  
+**Дата:** 2026-10-20  
 **Волна:** W14-06  
 **Зависит от:** [`architecture_master_index.md`](../../prds/architecture_master_index.md), [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md)
 
@@ -11,7 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**Статус (2026-10-19):** фазы P01…P08 реализованы; P08 smoke и docs sync — [`P08_tasks.md`](./tasks/P08_tasks.md) CU11; P07 prod smoke — [`P07_tasks.md`](./tasks/P07_tasks.md) CU9. Импорт данных из старого приложения — вне проекта (владелец).
+**Статус (2026-10-20):** фазы P01…P08 реализованы; P08 smoke и docs sync — [`P08_tasks.md`](./tasks/P08_tasks.md) CU11; P07 prod smoke — [`P07_tasks.md`](./tasks/P07_tasks.md) CU9. P09 (фиксы соответствия прототипу) — документы готовы, код не начат. Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 
@@ -32,8 +32,9 @@
 | P06 | Журнал, запросы на удаление, локализация | [P06](./phases_tasks_descriptions/P06_phase_description.md) | [P06](./tasks/P06_tasks.md) |
 | P07 | Переходный период согласий и prod-готовность | [P07](./phases_tasks_descriptions/P07_phase_description.md) | [P07](./tasks/P07_tasks.md) |
 | P08 | Аналитика по учебным годам | [P08](./phases_tasks_descriptions/P08_phase_description.md) | [P08](./tasks/P08_tasks.md) |
+| P09 | Фиксы соответствия UI прототипу | [P09](./phases_tasks_descriptions/P09_phase_description.md) | [P09](./tasks/P09_tasks.md) |
 
-Нумерация фаз реализации (P01…P08) не совпадает с промптами bootstrap (P0…P6).
+Нумерация фаз реализации (P01…P09) не совпадает с промптами bootstrap (P0…P6).
 
 ## Контракты
 
