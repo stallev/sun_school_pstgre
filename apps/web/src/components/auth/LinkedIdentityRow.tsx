@@ -99,6 +99,7 @@ export const LinkedIdentityRow = ({ identity, dictionaries }: LinkedIdentityRowP
         ) : (
           <Button
             type="button"
+            variant="outline"
             className="min-h-11"
             disabled={pending}
             aria-busy={linkPending}

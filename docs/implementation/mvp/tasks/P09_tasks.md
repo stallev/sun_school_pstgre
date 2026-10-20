@@ -73,7 +73,7 @@
 
 ### P09-CU7 — fix(ui): align profile actions · Review: diff-only · Commit: auto
 
-- [ ] P09-T7 · T1 · Spec: [access_and_registration_spec §9](../specs/access_and_registration_spec.md) · Contract: [P09 §4.7](../phases_tasks_descriptions/P09_phase_description.md)
+- [x] P09-T7 · T1 · Spec: [access_and_registration_spec §9](../specs/access_and_registration_spec.md) · Contract: [P09 §4.7](../phases_tasks_descriptions/P09_phase_description.md)
       Files: `apps/web/src/app/profile/**` · Acceptance: учитель на `/profile` при 390, 768 и 1024 видит прежние секции ФИО, согласие, язык, способы входа и удаление. Залита только «Сохранить». «Подключить» не залита. Удаление красное. Заголовок вкладки «Профиль — Воскресная школа». «Something went wrong» нет.
       Paths: H [P09 §4.7] · N n/a — кнопки и title, диалог удаления spec §9 не меняется · S n/a — AZ-05 / AZ-06 не меняются
 
