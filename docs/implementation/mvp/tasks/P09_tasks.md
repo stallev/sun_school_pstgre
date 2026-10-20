@@ -105,7 +105,7 @@
 
 ### P09-CU11 — fix(ui): align group analytics layout · Review: diff-only · Commit: auto
 
-- [ ] P09-T11 · T1 · Spec: [analytics_screens_spec §5](../specs/analytics_screens_spec.md) · Contract: [P09 §4.11](../phases_tasks_descriptions/P09_phase_description.md)
+- [x] P09-T11 · T1 · Spec: [analytics_screens_spec §5](../specs/analytics_screens_spec.md) · Contract: [P09 §4.11](../phases_tasks_descriptions/P09_phase_description.md)
       Files: `apps/web/src/app/(app)/analytics/page.tsx`, компоненты аналитики группы · Acceptance: учитель на `/analytics` при 390 не прокручивает страницу по горизонтали; на 390, 768 и 1024 видит «N уроков», чипы периода, «основной выборки», полный состав, графики без четырёх залитых «График», «Кто какие уроки провёл» после года рождения, таблицу «По году рождения» и секцию «Как мы считали». Админ на 390 и 1024 видит чипы группы и строку про удалённые дубли, без `select` + «Показать». «Something went wrong» нет.
       Paths: H [P09 §4.11] · N n/a — те же выборки spec §5 · S n/a — AZ-44 / AZ-45 / AZ-48 не меняются
 

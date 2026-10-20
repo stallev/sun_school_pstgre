@@ -6,6 +6,7 @@ import type { AnalyticsMessages, PupilAnalyticsMessages } from "@/lib/messages/a
 export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages => ({
   pageTitle: getMessage(analytics, "page.title"),
   pageSubtitle: getMessage(analytics, "page.subtitle"),
+  pageSubtitleWithLessons: getMessage(analytics, "page.subtitle_with_lessons"),
   gradeFilterLabel: getMessage(analytics, "filters.grade_label"),
   gradeFilterApply: getMessage(analytics, "filters.grade_apply"),
   periodYear: getMessage(analytics, "filters.period_year"),
@@ -15,8 +16,10 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   rangeFrom: getMessage(analytics, "filters.range_from"),
   rangeTo: getMessage(analytics, "filters.range_to"),
   periodApply: getMessage(analytics, "filters.period_apply"),
+  periodChipsLabel: getMessage(analytics, "filters.period_chips_label"),
   kpiAttendanceLabel: getMessage(analytics, "kpi.attendance_label"),
   kpiAttendanceHint: getMessage(analytics, "kpi.attendance_hint"),
+  kpiOutOfTen: getMessage(analytics, "kpi.out_of_ten"),
   kpiVersesLabel: getMessage(analytics, "kpi.verses_label"),
   kpiTestLabel: getMessage(analytics, "kpi.test_label"),
   kpiNotebookLabel: getMessage(analytics, "kpi.notebook_label"),
@@ -43,6 +46,7 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   tables: {
     layerATitle: getMessage(analytics, "tables.layer_a_title"),
     layerBTitle: getMessage(analytics, "tables.layer_b_title"),
+    layerBIntro: getMessage(analytics, "tables.layer_b_intro"),
     layerCTitle: getMessage(analytics, "tables.layer_c_title"),
     layerDTitle: getMessage(analytics, "tables.layer_d_title"),
     layerBirthYearTitle: getMessage(analytics, "tables.birth_year_title"),
@@ -53,6 +57,10 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnAttendance: getMessage(analytics, "tables.column_attendance"),
     columnAttended: getMessage(analytics, "tables.column_attended"),
     columnChecked: getMessage(analytics, "tables.column_checked"),
+    columnCheckedLessons: getMessage(analytics, "tables.column_checked_lessons"),
+    columnAttendedChecked: getMessage(analytics, "tables.column_attended_checked"),
+    attendedCheckedValue: getMessage(analytics, "tables.attended_checked_value"),
+    columnBirthYearKids: getMessage(analytics, "tables.column_birth_year_kids"),
     columnVerses: getMessage(analytics, "tables.column_verses"),
     columnTest: getMessage(analytics, "tables.column_test"),
     columnNotebook: getMessage(analytics, "tables.column_notebook"),
@@ -77,10 +85,18 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   methodology: {
     title: getMessage(analytics, "methodology.title"),
     body: getMessage(analytics, "methodology.body"),
+    items: [
+      getMessage(analytics, "methodology.item_1"),
+      getMessage(analytics, "methodology.item_2"),
+      getMessage(analytics, "methodology.item_3"),
+      getMessage(analytics, "methodology.item_4"),
+      getMessage(analytics, "methodology.item_5"),
+    ],
   },
   dataQuality: {
     title: getMessage(analytics, "data_quality.title"),
     missingRecords: getMessage(analytics, "data_quality.missing_records"),
+    adminSummary: getMessage(analytics, "data_quality.admin_summary"),
   },
   deletedData: {
     title: getMessage(analytics, "deleted_data.title"),

@@ -82,14 +82,15 @@ export const ChartTableToggle = ({
   };
 
   return (
-    <Card className="flex flex-col gap-3 overflow-visible p-4">
+    <Card className="flex min-w-0 flex-col gap-3 overflow-visible p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionTitle as="h2" className="text-base">{title}</SectionTitle>
         <div className="flex gap-1">
           <Button
             type="button"
             size="sm"
-            variant={showTable ? "outline" : "default"}
+            variant="outline"
+            className={showTable ? undefined : "border-line-strong bg-surface font-medium"}
             aria-pressed={!showTable}
             onClick={() => handleToggle(false)}
           >
@@ -98,7 +99,8 @@ export const ChartTableToggle = ({
           <Button
             type="button"
             size="sm"
-            variant={showTable ? "default" : "outline"}
+            variant="outline"
+            className={showTable ? "border-line-strong bg-surface font-medium" : undefined}
             aria-pressed={showTable}
             onClick={() => handleToggle(true)}
           >

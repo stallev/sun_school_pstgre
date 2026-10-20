@@ -1,6 +1,5 @@
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
-import { Card } from "@/components/ui/card";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type MethodologyNoteProps = {
@@ -8,8 +7,14 @@ type MethodologyNoteProps = {
 };
 
 export const MethodologyNote = ({ messages }: MethodologyNoteProps) => (
-  <Card className="space-y-2 p-4">
+  <section className="max-w-3xl space-y-3 border-t border-line pt-6">
     <SectionTitle as="h2">{messages.methodology.title}</SectionTitle>
-    <ContentText className="text-sm text-ink-2">{messages.methodology.body}</ContentText>
-  </Card>
+    <ul className="list-none space-y-2">
+      {messages.methodology.items.map((item) => (
+        <li key={item}>
+          <ContentText className="text-sm text-ink-2">— {item}</ContentText>
+        </li>
+      ))}
+    </ul>
+  </section>
 );

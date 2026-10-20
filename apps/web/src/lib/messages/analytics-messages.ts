@@ -73,6 +73,7 @@ export type AnalyticsChartSeriesMessages = {
 export type AnalyticsMessages = {
   pageTitle: string;
   pageSubtitle: string;
+  pageSubtitleWithLessons: string;
   gradeFilterLabel: string;
   gradeFilterApply: string;
   periodYear: string;
@@ -82,8 +83,10 @@ export type AnalyticsMessages = {
   rangeFrom: string;
   rangeTo: string;
   periodApply: string;
+  periodChipsLabel: string;
   kpiAttendanceLabel: string;
   kpiAttendanceHint: string;
+  kpiOutOfTen: string;
   kpiVersesLabel: string;
   kpiTestLabel: string;
   kpiNotebookLabel: string;
@@ -94,6 +97,7 @@ export type AnalyticsMessages = {
   tables: {
     layerATitle: string;
     layerBTitle: string;
+    layerBIntro: string;
     layerCTitle: string;
     layerDTitle: string;
     layerBirthYearTitle: string;
@@ -104,6 +108,10 @@ export type AnalyticsMessages = {
     columnAttendance: string;
     columnAttended: string;
     columnChecked: string;
+    columnCheckedLessons: string;
+    columnAttendedChecked: string;
+    attendedCheckedValue: string;
+    columnBirthYearKids: string;
     columnVerses: string;
     columnTest: string;
     columnNotebook: string;
@@ -128,10 +136,12 @@ export type AnalyticsMessages = {
   methodology: {
     title: string;
     body: string;
+    items: string[];
   };
   dataQuality: {
     title: string;
     missingRecords: string;
+    adminSummary: string;
   };
   deletedData: {
     title: string;
