@@ -95,7 +95,7 @@ export const SegmentedControl = <T extends string>({
             onClick={() => onValueChange(option.value)}
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
-              "inline-flex h-10 min-w-10 items-center justify-center rounded-lg border bg-surface px-3 text-[0.9375rem] font-medium text-ink transition-colors duration-150 ease-out-soft hover:bg-paper disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none",
+              "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border bg-surface px-3 text-[0.9375rem] font-medium text-ink transition-[color,background-color,border-color,transform] duration-100 ease-out-soft hover:bg-paper active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
               checked
                 ? "border-cobalt-ink bg-cobalt-soft text-cobalt-ink hover:bg-cobalt-soft"
                 : invalid

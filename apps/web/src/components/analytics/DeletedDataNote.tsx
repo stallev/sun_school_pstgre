@@ -3,6 +3,7 @@ import {
   shouldShowDeletedDataNote,
 } from "@sunschool/domain";
 import { Banner } from "@/components/patterns/Banner";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type DeletedDataNoteProps = {
@@ -19,8 +20,11 @@ export const DeletedDataNote = ({
   if (!shouldShowDeletedDataNote(deletedChildCount)) return null;
 
   const body = shouldDiscloseDeletedChildCount(deletedChildCount)
-    ? messages.deletedData.noteWithCount(latestResolvedDateLabel, deletedChildCount)
-    : messages.deletedData.note(latestResolvedDateLabel);
+    ? fillMessage(messages.deletedData.noteWithCount, {
+        date: latestResolvedDateLabel,
+        count: deletedChildCount,
+      })
+    : fillMessage(messages.deletedData.note, { date: latestResolvedDateLabel });
 
   return (
     <Banner tone="info" title={messages.deletedData.title}>

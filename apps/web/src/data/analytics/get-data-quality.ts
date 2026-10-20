@@ -5,6 +5,7 @@ import { MUTATION_ERROR_CODES, type MutationResult } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { analyticsPeriodFilterSchema } from "./analytics-period";
 import type { ResolvedAnalyticsPeriod } from "./analytics-period";
 import {
@@ -22,15 +23,11 @@ export type DataQualitySnapshot = {
   missingPupilRecordsOnCheckedLessons: number;
 };
 
-async function loadCachedDataQuality(
+async function loadDataQualityFromDb(
   db: PrismaClient,
   gradeId: string,
   period: ResolvedAnalyticsPeriod,
 ): Promise<DataQualitySnapshot> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsDataQuality(gradeId, period.academicYearId));
-  cacheLife("minutes");
-
   const { gte, lte } = periodDateRange(period);
 
   const checkedLessons = await db.lesson.findMany({
@@ -72,6 +69,17 @@ async function loadCachedDataQuality(
   return { gradeId, period, missingPupilRecordsOnCheckedLessons: missing };
 }
 
+async function loadCachedDataQuality(
+  gradeId: string,
+  period: ResolvedAnalyticsPeriod,
+): Promise<DataQualitySnapshot> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsDataQuality(gradeId, period.academicYearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadDataQualityFromDb(db, gradeId, period);
+}
+
 export async function getDataQuality(
   db: PrismaClient,
   actorUserId: string,
@@ -111,6 +119,6 @@ export async function getDataQuality(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedDataQuality(db, gradeId, access);
+  const data = await loadCachedDataQuality(gradeId, access);
   return { ok: true, data };
 }

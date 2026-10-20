@@ -5,6 +5,7 @@ import type { MutationResult } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import {
   assertBricksReadAccess,
   loadOrganizationIdForActor,
@@ -12,15 +13,11 @@ import {
   type BrickLedgerEntryDto,
 } from "./bricks-shared.server";
 
-async function loadCachedBrickLedger(
+async function loadBrickLedgerFromDb(
   db: PrismaClient,
   pupilId: string,
   yearId: string,
 ): Promise<BrickLedgerEntryDto[]> {
-  "use cache";
-  cacheTag(CACHE_TAGS.bricksLedger(pupilId, yearId));
-  cacheLife("minutes");
-
   const rows = await db.brickLedger.findMany({
     where: { pupilId, academicYearId: yearId },
     orderBy: [{ issuedOn: "desc" }, { createdAt: "desc" }],
@@ -38,6 +35,17 @@ async function loadCachedBrickLedger(
   return rows.map(mapBrickLedgerRow);
 }
 
+async function loadCachedBrickLedger(
+  pupilId: string,
+  yearId: string,
+): Promise<BrickLedgerEntryDto[]> {
+  "use cache";
+  cacheTag(CACHE_TAGS.bricksLedger(pupilId, yearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadBrickLedgerFromDb(db, pupilId, yearId);
+}
+
 export async function listLedger(
   db: PrismaClient,
   actorUserId: string,
@@ -51,6 +59,6 @@ export async function listLedger(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedBrickLedger(db, pupilId, yearId);
+  const data = await loadCachedBrickLedger(pupilId, yearId);
   return { ok: true, data };
 }

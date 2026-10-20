@@ -1,6 +1,7 @@
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { YearTotalsTableRow } from "./YearTotalsTable";
 import { KpiTiles } from "./KpiTiles";
@@ -24,7 +25,7 @@ export const GroupYearSummarySection = ({
     <section className="space-y-4" aria-labelledby="group-year-summary-title">
       <div className="flex flex-wrap items-end justify-between gap-2">
         <SectionTitle as="h2" id="group-year-summary-title">
-          {messages.groupYear.sectionTitle(yearRow.yearName)}
+          {fillMessage(messages.groupYear.sectionTitle, { year: yearRow.yearName })}
         </SectionTitle>
         <Button type="button" variant="outline" className="min-h-11" render={<CustomLink href={analyticsHref} />}>
           {yearMessages.allYearsLink}

@@ -3,6 +3,7 @@ import { ContentText } from "@/components/atoms/ContentText";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
 import type { SchoolAttentionItem } from "@/data/analytics/load-school-analytics-page.server";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type SchoolAttentionListProps = {
@@ -21,8 +22,8 @@ export const SchoolAttentionList = ({ items, messages }: SchoolAttentionListProp
           {items.map((item) => {
             const title =
               item.kind === "pending_access"
-                ? messages.attentionPending(item.count)
-                : messages.attentionNegativeBricks(item.count);
+                ? fillMessage(messages.attentionPending, { count: item.count })
+                : fillMessage(messages.attentionNegativeBricks, { count: item.count });
             const description =
               item.kind === "pending_access"
                 ? messages.attentionPendingHint

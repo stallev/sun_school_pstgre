@@ -3,15 +3,9 @@ import type { Dictionary } from "@/lib/messages/dictionary-types";
 import { getMessage } from "@/lib/messages/get-message";
 import type { AnalyticsMessages, PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
-const fill = (template: string, values: Record<string, string | number>): string =>
-  Object.entries(values).reduce(
-    (text, [key, value]) => text.replace(`{${key}}`, String(value)),
-    template,
-  );
-
 export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages => ({
   pageTitle: getMessage(analytics, "page.title"),
-  pageSubtitle: (group, year) => fill(getMessage(analytics, "page.subtitle"), { group, year }),
+  pageSubtitle: getMessage(analytics, "page.subtitle"),
   gradeFilterLabel: getMessage(analytics, "filters.grade_label"),
   gradeFilterApply: getMessage(analytics, "filters.grade_apply"),
   periodYear: getMessage(analytics, "filters.period_year"),
@@ -22,14 +16,13 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   rangeTo: getMessage(analytics, "filters.range_to"),
   periodApply: getMessage(analytics, "filters.period_apply"),
   kpiAttendanceLabel: getMessage(analytics, "kpi.attendance_label"),
-  kpiAttendanceHint: (count) => fill(getMessage(analytics, "kpi.attendance_hint"), { count }),
+  kpiAttendanceHint: getMessage(analytics, "kpi.attendance_hint"),
   kpiVersesLabel: getMessage(analytics, "kpi.verses_label"),
   kpiTestLabel: getMessage(analytics, "kpi.test_label"),
   kpiNotebookLabel: getMessage(analytics, "kpi.notebook_label"),
-  kpiWithN: (value, n) => fill(getMessage(analytics, "kpi.with_n"), { value, n }),
+  kpiWithN: getMessage(analytics, "kpi.with_n"),
   kpiEmpty: getMessage(analytics, "kpi.empty"),
-  sampleComposition: (a, b, c, d) =>
-    fill(getMessage(analytics, "sample.composition"), { a, b, c, d }),
+  sampleComposition: getMessage(analytics, "sample.composition"),
   charts: {
     attendanceTitle: getMessage(analytics, "charts.attendance_title"),
     versesTitle: getMessage(analytics, "charts.verses_title"),
@@ -87,44 +80,30 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   },
   dataQuality: {
     title: getMessage(analytics, "data_quality.title"),
-    missingRecords: (count) => fill(getMessage(analytics, "data_quality.missing_records"), { count }),
+    missingRecords: getMessage(analytics, "data_quality.missing_records"),
   },
   deletedData: {
     title: getMessage(analytics, "deleted_data.title"),
-    note: (dateLabel) => fill(getMessage(analytics, "deleted_data.note"), { date: dateLabel }),
-    noteWithCount: (dateLabel, count) =>
-      fill(getMessage(analytics, "deleted_data.note_with_count"), {
-        date: dateLabel,
-        count,
-      }),
+    note: getMessage(analytics, "deleted_data.note"),
+    noteWithCount: getMessage(analytics, "deleted_data.note_with_count"),
   },
-  formatPercent: (value) => fill(getMessage(analytics, "format.percent"), { value }),
-  formatAverage: (value) => fill(getMessage(analytics, "format.average"), { value }),
-  formatChartValue: (point) =>
-    point.value === null
-      ? getMessage(analytics, "kpi.empty")
-      : fill(getMessage(analytics, "format.chart_value"), {
-          value: point.value,
-          n: point.observationCount,
-        }),
+  formatPercent: getMessage(analytics, "format.percent"),
+  formatAverage: getMessage(analytics, "format.average"),
+  formatChartValue: getMessage(analytics, "format.chart_value"),
   years: {
     stripLabel: getMessage(analytics, "years.strip_label"),
     title: getMessage(analytics, "years.title"),
     compositionNote: getMessage(analytics, "years.composition_note"),
-    tableCaption: (group) => fill(getMessage(analytics, "years.table_caption"), { group }),
+    tableCaption: getMessage(analytics, "years.table_caption"),
     insufficientForComparison: getMessage(analytics, "years.insufficient_for_comparison"),
-    diffHigher: (amount, unit) =>
-      fill(getMessage(analytics, "years.diff_higher"), { amount, unit }),
-    diffLower: (amount, unit) =>
-      fill(getMessage(analytics, "years.diff_lower"), { amount, unit }),
+    diffHigher: getMessage(analytics, "years.diff_higher"),
+    diffLower: getMessage(analytics, "years.diff_lower"),
     diffSame: getMessage(analytics, "years.diff_same"),
     diffPointsUnit: getMessage(analytics, "years.diff_points_unit"),
     none: getMessage(analytics, "years.none"),
     readonlyNote: getMessage(analytics, "years.readonly_note"),
-    methodologyNote: (snapshotVersion, currentVersion) =>
-      fill(getMessage(analytics, "years.methodology_note"), { snapshotVersion, currentVersion }),
-    methodologyBadge: (version) =>
-      fill(getMessage(analytics, "years.methodology_badge"), { version }),
+    methodologyNote: getMessage(analytics, "years.methodology_note"),
+    methodologyBadge: getMessage(analytics, "years.methodology_badge"),
     snapshotMissing: getMessage(analytics, "years.snapshot_missing"),
     allYearsLink: getMessage(analytics, "years.all_years_link"),
     activeBadge: getMessage(analytics, "years.active_badge"),
@@ -136,14 +115,14 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnVerses: getMessage(analytics, "years.column_verses"),
     columnTest: getMessage(analytics, "years.column_test"),
     columnNotebook: getMessage(analytics, "years.column_notebook"),
-    sampleMeta: (kids, lessons) =>
-      fill(getMessage(analytics, "years.sample_meta"), { kids, lessons }),
+    sampleMeta: getMessage(analytics, "years.sample_meta"),
     outOfTen: getMessage(analytics, "years.out_of_ten"),
+    detailPending: getMessage(analytics, "years.detail_pending"),
   },
   pupilYears: {
     title: getMessage(analytics, "pupil_years.title"),
     tableCaption: getMessage(analytics, "pupil_years.table_caption"),
-    fewLessons: (count) => fill(getMessage(analytics, "pupil_years.few_lessons"), { count }),
+    fewLessons: getMessage(analytics, "pupil_years.few_lessons"),
     metricAttendance: getMessage(analytics, "pupil_years.metric_attendance"),
     metricVerses: getMessage(analytics, "pupil_years.metric_verses"),
     metricTest: getMessage(analytics, "pupil_years.metric_test"),
@@ -153,26 +132,18 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     chartNote: getMessage(analytics, "pupil_years.chart_note"),
     chartColumnYear: getMessage(analytics, "pupil_years.chart_column_year"),
     chartInsufficient: getMessage(analytics, "pupil_years.chart_insufficient"),
-    chartAria: (metric) => {
-      const key = {
-        attendance: "pupil_years.chart_aria_attendance",
-        verses: "pupil_years.chart_aria_verses",
-        test: "pupil_years.chart_aria_test",
-        notebook: "pupil_years.chart_aria_notebook",
-      }[metric];
-      return getMessage(analytics, key);
-    },
+    chartAriaAttendance: getMessage(analytics, "pupil_years.chart_aria_attendance"),
+    chartAriaVerses: getMessage(analytics, "pupil_years.chart_aria_verses"),
+    chartAriaTest: getMessage(analytics, "pupil_years.chart_aria_test"),
+    chartAriaNotebook: getMessage(analytics, "pupil_years.chart_aria_notebook"),
     columnGroup: getMessage(analytics, "pupil_years.column_group"),
     columnBricks: getMessage(analytics, "pupil_years.column_bricks"),
-    bricksRatio: (earned, issued) =>
-      fill(getMessage(analytics, "pupil_years.bricks_ratio"), { earned, issued }),
+    bricksRatio: getMessage(analytics, "pupil_years.bricks_ratio"),
   },
   rating: {
     pageTitle: getMessage(analytics, "rating.page_title"),
-    pageSubtitleGroup: (group, year) =>
-      fill(getMessage(analytics, "rating.page_subtitle_group"), { group, year }),
-    pageSubtitleSchool: (year) =>
-      fill(getMessage(analytics, "rating.page_subtitle_school"), { year }),
+    pageSubtitleGroup: getMessage(analytics, "rating.page_subtitle_group"),
+    pageSubtitleSchool: getMessage(analytics, "rating.page_subtitle_school"),
     privacyNote: getMessage(analytics, "rating.privacy_note"),
     footnote: getMessage(analytics, "rating.footnote"),
     columnPlace: getMessage(analytics, "rating.column_place"),
@@ -184,7 +155,7 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   },
   school: {
     pageTitle: getMessage(analytics, "school.page_title"),
-    pageSubtitle: (year) => fill(getMessage(analytics, "school.page_subtitle"), { year }),
+    pageSubtitle: getMessage(analytics, "school.page_subtitle"),
     groupsTableTitle: getMessage(analytics, "school.groups_table_title"),
     groupsTableHint: getMessage(analytics, "school.groups_table_hint"),
     columnGroup: getMessage(analytics, "school.column_group"),
@@ -193,21 +164,18 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnAttendance: getMessage(analytics, "school.column_attendance"),
     columnAverage: getMessage(analytics, "school.column_average"),
     columnLastLesson: getMessage(analytics, "school.column_last_lesson"),
-    lastLessonOk: (label) => fill(getMessage(analytics, "school.last_lesson_ok"), { label }),
-    lastLessonWarn: (label) => fill(getMessage(analytics, "school.last_lesson_warn"), { label }),
+    lastLessonOk: getMessage(analytics, "school.last_lesson_ok"),
+    lastLessonWarn: getMessage(analytics, "school.last_lesson_warn"),
     lastLessonIdle: getMessage(analytics, "school.last_lesson_idle"),
     attendanceChartTitle: getMessage(analytics, "school.attendance_chart_title"),
     attendanceChartHint: getMessage(analytics, "school.attendance_chart_hint"),
     attentionTitle: getMessage(analytics, "school.attention_title"),
-    attentionPending: (count) =>
-      fill(getMessage(analytics, "school.attention_pending"), { count }),
-    attentionNegativeBricks: (count) =>
-      fill(getMessage(analytics, "school.attention_negative_bricks"), { count }),
+    attentionPending: getMessage(analytics, "school.attention_pending"),
+    attentionNegativeBricks: getMessage(analytics, "school.attention_negative_bricks"),
     attentionPendingHint: getMessage(analytics, "school.attention_pending_hint"),
     attentionNegativeBricksHint: getMessage(analytics, "school.attention_negative_bricks_hint"),
     conductedGradeLabel: getMessage(analytics, "school.conducted_grade_label"),
-    closedTableCaption: (year) =>
-      fill(getMessage(analytics, "school.closed_table_caption"), { year }),
+    closedTableCaption: getMessage(analytics, "school.closed_table_caption"),
     columnKidsSample: getMessage(analytics, "school.column_kids_sample"),
     columnLessonsChecked: getMessage(analytics, "school.column_lessons_checked"),
     columnVersesShort: getMessage(analytics, "school.column_verses_short"),
@@ -217,27 +185,23 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     closedCompositionNote: getMessage(analytics, "school.closed_composition_note"),
   },
   groupYear: {
-    sectionTitle: (year) => fill(getMessage(analytics, "group_year.section_title"), { year }),
+    sectionTitle: getMessage(analytics, "group_year.section_title"),
   },
 });
 
 export const pickPupilAnalyticsMessages = (analytics: Dictionary): PupilAnalyticsMessages => ({
   ...pickAnalyticsMessages(analytics),
-  pupilPageSubtitle: (year) => fill(getMessage(analytics, "pupil.page_subtitle"), { year }),
+  pupilPageSubtitle: getMessage(analytics, "pupil.page_subtitle"),
   backToGroupAnalytics: getMessage(analytics, "pupil.back_to_group"),
   sampleIncluded: getMessage(analytics, "sample.included"),
   sampleExcludedB: getMessage(analytics, "sample.excluded_b"),
   sampleExcludedC: getMessage(analytics, "sample.excluded_c"),
   sampleExcludedD: getMessage(analytics, "sample.excluded_d"),
-  sampleInGroupAverages: (included) =>
-    fill(getMessage(analytics, "sample.in_group_averages"), {
-      included: included
-        ? getMessage(analytics, "sample.included_yes")
-        : getMessage(analytics, "sample.included_no"),
-    }),
+  sampleInGroupAverages: getMessage(analytics, "sample.in_group_averages"),
+  sampleIncludedYes: getMessage(analytics, "sample.included_yes"),
+  sampleIncludedNo: getMessage(analytics, "sample.included_no"),
   personalMetricSuffix: getMessage(analytics, "pupil.personal_suffix"),
-  attendanceChecked: (attended, checked) =>
-    fill(getMessage(analytics, "pupil.attendance_checked"), { attended, checked }),
+  attendanceChecked: getMessage(analytics, "pupil.attendance_checked"),
   presenceTitle: getMessage(analytics, "pupil.presence_title"),
   presencePresent: getMessage(analytics, "pupil.presence_present"),
   presenceAbsent: getMessage(analytics, "pupil.presence_absent"),
@@ -253,10 +217,9 @@ export const pickPupilAnalyticsMessages = (analytics: Dictionary): PupilAnalytic
   presentYes: getMessage(analytics, "pupil.present_yes"),
   presentNo: getMessage(analytics, "pupil.present_no"),
   presentMissing: getMessage(analytics, "pupil.present_missing"),
-  versesOf: (recited, total) =>
-    fill(getMessage(analytics, "pupil.verses_of"), { recited, total }),
+  versesOf: getMessage(analytics, "pupil.verses_of"),
   testNotConducted: getMessage(analytics, "pupil.test_not_conducted"),
-  submittedLate: (dateLabel) => fill(getMessage(analytics, "pupil.submitted_late"), { date: dateLabel }),
+  submittedLate: getMessage(analytics, "pupil.submitted_late"),
   dynamicsTitle: getMessage(analytics, "pupil.dynamics_title"),
   dynamicsHint: getMessage(analytics, "pupil.dynamics_hint"),
   dynamicsNormalizedTitle: getMessage(analytics, "pupil.dynamics_normalized_title"),
@@ -264,7 +227,7 @@ export const pickPupilAnalyticsMessages = (analytics: Dictionary): PupilAnalytic
   dynamicsNormalizedAria: getMessage(analytics, "pupil.dynamics_normalized_aria"),
   dynamicsDeltaAria: getMessage(analytics, "pupil.dynamics_delta_aria"),
   dynamicsInsufficientPoints: getMessage(analytics, "pupil.dynamics_insufficient_points"),
-  dynamicsSlope: (delta) => fill(getMessage(analytics, "pupil.dynamics_slope"), { delta }),
+  dynamicsSlope: getMessage(analytics, "pupil.dynamics_slope"),
   dynamicsTrendLabels: {
     [TREND_LABEL.GROWING]: {
       label: getMessage(analytics, "pupil.dynamics_trend_growing"),

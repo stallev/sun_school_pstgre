@@ -51,7 +51,7 @@ export async function loadPupilAnalyticsPage(
   actorUserId: string,
   pupilId: string,
   params: PupilAnalyticsPageSearchParams,
-  formatAttendanceChecked: (attended: number, checked: number) => string,
+  attendanceCheckedTemplate: string,
 ): Promise<PupilAnalyticsPageData> {
   const organizationId = await getDefaultOrganizationId(db);
   const metricParsed = pupilYearMetricSchema.safeParse(params.metric);
@@ -180,7 +180,7 @@ export async function loadPupilAnalyticsPage(
     return { kind: "not_found" };
   }
 
-  const view = buildPupilAnalyticsView(analyticsResult.data, formatAttendanceChecked);
+  const view = buildPupilAnalyticsView(analyticsResult.data, attendanceCheckedTemplate);
 
   return {
     kind: "page",

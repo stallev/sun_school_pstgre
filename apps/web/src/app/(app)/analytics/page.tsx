@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { ACADEMIC_YEAR_STATUS, ANALYTICS_METHODOLOGY_VERSION, USER_ROLE } from "@sunschool/domain";
+import { ACADEMIC_YEAR_STATUS, USER_ROLE } from "@sunschool/domain";
 import { AnalyticsPeriodFilter } from "@/components/analytics/AnalyticsPeriodFilter";
 import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
 import { ConductedLessonsTable } from "@/components/analytics/ConductedLessonsTable";
@@ -10,10 +10,10 @@ import { GroupAnalyticsTables } from "@/components/analytics/GroupAnalyticsTable
 import { MethodologyNote } from "@/components/analytics/MethodologyNote";
 import { SampleCompositionRow } from "@/components/analytics/SampleCompositionRow";
 import { buildGroupYearTableRows } from "@/components/analytics/years/build-group-year-table-rows";
+import { AnalyticsYearDetail } from "@/components/analytics/years/AnalyticsYearDetail.client";
+import { AnalyticsYearScope } from "@/components/analytics/years/AnalyticsYearScope.client";
 import { GroupAnalyticsYearNav } from "@/components/analytics/years/GroupAnalyticsYearNav.client";
-import { KpiTiles } from "@/components/analytics/years/KpiTiles";
-import { MethodologyVersionNote } from "@/components/analytics/years/MethodologyVersionNote";
-import { ReadOnlyYearNote } from "@/components/analytics/years/ReadOnlyYearNote";
+import { GroupYearSelection } from "@/components/analytics/years/GroupYearSelection.client";
 import { AnalyticsRetryButton } from "@/components/analytics/AnalyticsRetryButton.client";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { ErrorState } from "@/components/patterns/ErrorState";
@@ -26,6 +26,8 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { formatAnalyticsShortDate } from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 
@@ -63,8 +65,6 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
   const messages = pickAnalyticsMessages(analyticsDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
   const yearMessages = messages.years;
-  const formatDate = (iso: string) =>
-    new Intl.DateTimeFormat(appLocale, { day: "numeric", month: "short" }).format(new Date(`${iso}T12:00:00Z`));
 
   if (data.kind === "not_found") notFound();
 
@@ -93,12 +93,8 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
   const pupilCount = Object.values(analytics.pupilsByLayer).flat().length;
   const retryLabel = getMessage(commonDict, "states.error_retry");
   const tableRows = buildGroupYearTableRows(data.yearTotals.rows);
-  const selectedTableRow = tableRows.find((row) => row.yearId === data.yearId);
   const selectedYearRow = data.yearTotals.rows.find((row) => row.yearId === data.yearId);
   const isActiveYear = selectedYearRow?.status === ACADEMIC_YEAR_STATUS.ACTIVE;
-  const showStaleMethodology =
-    selectedYearRow &&
-    selectedYearRow.methodologyVersion !== ANALYTICS_METHODOLOGY_VERSION;
   const periodHiddenFields = { year: data.yearId };
   const gradeHiddenFields = { mode: data.periodFilter.mode, year: data.yearId };
 
@@ -106,7 +102,7 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
     <div className="space-y-6">
       <PageHeader
         title={messages.pageTitle}
-        description={messages.pageSubtitle(data.gradeName, data.yearName)}
+        description={fillMessage(messages.pageSubtitle, { group: data.gradeName, year: data.yearName })}
       />
       {data.isAdmin && data.grades.length > 1 ? (
         <LessonsGradeFilter
@@ -117,27 +113,22 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
           hiddenFields={gradeHiddenFields}
         />
       ) : null}
+      <AnalyticsYearScope committedYearId={data.yearId}>
       <Suspense fallback={<YearNavFallback />}>
         <GroupAnalyticsYearNav
           groupLabel={data.gradeName}
           tableRows={tableRows}
-          selectedYearId={data.yearId}
           messages={messages}
         />
       </Suspense>
-      {!isActiveYear ? <ReadOnlyYearNote messages={yearMessages} /> : null}
-      {showStaleMethodology ? (
-        <MethodologyVersionNote
-          snapshotVersion={selectedYearRow.methodologyVersion}
-          currentVersion={ANALYTICS_METHODOLOGY_VERSION}
-          messages={yearMessages}
-        />
-      ) : null}
+      <GroupYearSelection rows={tableRows} messages={messages} />
       {selectedSnapshotMissing ? (
-        <ErrorState
-          title={yearMessages.snapshotMissing}
-          action={<AnalyticsRetryButton retryLabel={retryLabel} />}
-        />
+        <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
+          <ErrorState
+            title={yearMessages.snapshotMissing}
+            action={<AnalyticsRetryButton retryLabel={retryLabel} />}
+          />
+        </AnalyticsYearDetail>
       ) : (
         <>
           <AnalyticsPeriodFilter
@@ -146,6 +137,7 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
             messages={messages}
             hiddenFields={periodHiddenFields}
           />
+          <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
           {isActiveYear && data.isAdmin && data.dataQuality && data.dataQuality.missingPupilRecordsOnCheckedLessons > 0 ? (
             <DataQualityNote
               missingRecords={data.dataQuality.missingPupilRecordsOnCheckedLessons}
@@ -158,19 +150,11 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
           data.deletedDataInPeriod.latestResolvedAtIso ? (
             <DeletedDataNote
               deletedChildCount={data.deletedDataInPeriod.deletedChildCount}
-              latestResolvedDateLabel={formatDate(data.deletedDataInPeriod.latestResolvedAtIso.slice(0, 10))}
+              latestResolvedDateLabel={formatAnalyticsShortDate(
+                data.deletedDataInPeriod.latestResolvedAtIso.slice(0, 10),
+                appLocale,
+              )}
               messages={messages}
-            />
-          ) : null}
-          {selectedTableRow?.totals ? (
-            <KpiTiles
-              totals={selectedTableRow.totals}
-              diff={selectedTableRow.diff}
-              hasPreviousYear={selectedTableRow.hasPreviousYear}
-              comparisonReliable={selectedTableRow.comparisonReliable}
-              previousYearName={selectedTableRow.previousYearName}
-              messages={messages}
-              yearMessages={yearMessages}
             />
           ) : null}
           {pupilCount === 0 ? (
@@ -193,11 +177,11 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
                   methodology={messages.charts.methodologyAttendance}
                   points={analytics.charts.attendance}
                   messages={messages.charts}
-                  formatDate={formatDate}
-                  formatValue={(point) =>
-                    point.value === null
-                      ? messages.kpiEmpty
-                      : messages.formatPercent(Number(point.value.toFixed(1)))}
+                  locale={appLocale}
+                  valueKind="percent"
+                  percentTemplate={messages.formatPercent}
+                  chartValueTemplate={messages.formatChartValue}
+                  emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 100]}
                 />
                 <ChartTableToggle
@@ -206,8 +190,11 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
                   methodology={messages.charts.methodologyVerses}
                   points={analytics.charts.verses}
                   messages={messages.charts}
-                  formatDate={formatDate}
-                  formatValue={messages.formatChartValue}
+                  locale={appLocale}
+                  valueKind="chart"
+                  percentTemplate={messages.formatPercent}
+                  chartValueTemplate={messages.formatChartValue}
+                  emptyLabel={messages.kpiEmpty}
                 />
                 <ChartTableToggle
                   chartId="test"
@@ -215,8 +202,11 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
                   methodology={messages.charts.methodologyTest}
                   points={analytics.charts.test}
                   messages={messages.charts}
-                  formatDate={formatDate}
-                  formatValue={messages.formatChartValue}
+                  locale={appLocale}
+                  valueKind="chart"
+                  percentTemplate={messages.formatPercent}
+                  chartValueTemplate={messages.formatChartValue}
+                  emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 10]}
                 />
                 <ChartTableToggle
@@ -225,8 +215,11 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
                   methodology={messages.charts.methodologyNotebook}
                   points={analytics.charts.notebook}
                   messages={messages.charts}
-                  formatDate={formatDate}
-                  formatValue={messages.formatChartValue}
+                  locale={appLocale}
+                  valueKind="chart"
+                  percentTemplate={messages.formatPercent}
+                  chartValueTemplate={messages.formatChartValue}
+                  emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 10]}
                 />
               </div>
@@ -237,8 +230,10 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
               <MethodologyNote messages={messages} />
             </>
           )}
+          </AnalyticsYearDetail>
         </>
       )}
+      </AnalyticsYearScope>
     </div>
   );
 };

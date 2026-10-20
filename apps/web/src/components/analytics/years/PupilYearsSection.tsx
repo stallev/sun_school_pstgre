@@ -21,7 +21,12 @@ export type PupilYearTableRow = {
   insufficientLessons: boolean;
 };
 
-export type PupilYearMetric = "attendance" | "verses" | "test" | "notebook";
+export const PUPIL_YEAR_METRICS = ["attendance", "verses", "test", "notebook"] as const;
+
+export type PupilYearMetric = (typeof PUPIL_YEAR_METRICS)[number];
+
+export const isPupilYearMetric = (value: string | undefined): value is PupilYearMetric =>
+  value !== undefined && (PUPIL_YEAR_METRICS as readonly string[]).includes(value);
 
 type PupilYearsSectionProps = {
   rows: readonly PupilYearTableRow[];
@@ -30,6 +35,8 @@ type PupilYearsSectionProps = {
   showForeignGroupNote: boolean;
   onSelectYear: (yearId: string) => void;
   onSelectMetric: (metric: PupilYearMetric) => void;
+  isYearPending?: boolean;
+  isMetricPending?: boolean;
   messages: AnalyticsMessages;
   pupilYearMessages: AnalyticsPupilYearMessages;
   yearStripMessages: AnalyticsYearMessages;
@@ -42,6 +49,8 @@ export const PupilYearsSection = ({
   showForeignGroupNote,
   onSelectYear,
   onSelectMetric,
+  isYearPending = false,
+  isMetricPending = false,
   messages,
   pupilYearMessages,
   yearStripMessages,
@@ -62,6 +71,7 @@ export const PupilYearsSection = ({
         selectedYearId={selectedYearId}
         onSelectYear={onSelectYear}
         messages={yearStripMessages}
+        isPending={isYearPending}
         className="mb-4"
       />
       <PupilYearsRowsTable
@@ -77,6 +87,7 @@ export const PupilYearsSection = ({
         rows={rows}
         selectedMetric={selectedMetric}
         onSelectMetric={onSelectMetric}
+        isPending={isMetricPending}
         messages={messages}
         pupilYearMessages={pupilYearMessages}
       />

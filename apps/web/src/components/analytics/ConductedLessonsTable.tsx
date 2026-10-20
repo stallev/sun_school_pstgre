@@ -25,7 +25,7 @@ export const ConductedLessonsTable = ({ snapshot, messages }: ConductedLessonsTa
       <ContentText className="text-sm text-muted-foreground">{messages.conducted.empty}</ContentText>
     ) : (
       <Card className="overflow-x-auto p-0">
-        <Table>
+        <Table className="text-base">
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{messages.conducted.columnTeacher}</TableHead>
@@ -42,7 +42,7 @@ export const ConductedLessonsTable = ({ snapshot, messages }: ConductedLessonsTa
                 <TableCell>
                   {row.displayName}
                   {row.noLongerAssigned ? (
-                    <ContentText className="text-xs text-muted-foreground">
+                    <ContentText className="text-sm text-muted-foreground">
                       {messages.conducted.noLongerAssigned}
                     </ContentText>
                   ) : null}

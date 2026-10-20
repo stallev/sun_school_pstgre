@@ -11,20 +11,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
+import { formatAnalyticsPercent } from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type SchoolGroupsTableProps = {
   rows: SchoolGroupRow[];
   messages: AnalyticsMessages["school"];
-  formatPercent: (value: number) => string;
+  percentTemplate: string;
 };
 
-export const SchoolGroupsTable = ({ rows, messages, formatPercent }: SchoolGroupsTableProps) => (
+export const SchoolGroupsTable = ({ rows, messages, percentTemplate }: SchoolGroupsTableProps) => (
   <section className="space-y-2">
     <SectionTitle as="h2" className="text-lg">{messages.groupsTableTitle}</SectionTitle>
     <ContentText className="text-sm text-muted-foreground">{messages.groupsTableHint}</ContentText>
     <Card className="overflow-x-auto p-0">
-      <Table>
+      <Table className="text-base">
         <TableHeader>
           <TableRow>
             <TableHead scope="col">{messages.columnGroup}</TableHead>
@@ -39,9 +41,9 @@ export const SchoolGroupsTable = ({ rows, messages, formatPercent }: SchoolGroup
           {rows.map((row) => {
             const lastLabel =
               row.lastLessonStatus === "ok"
-                ? messages.lastLessonOk(row.lastLessonLabel)
+                ? fillMessage(messages.lastLessonOk, { label: row.lastLessonLabel })
                 : row.lastLessonStatus === "warn"
-                  ? messages.lastLessonWarn(row.lastLessonLabel)
+                  ? fillMessage(messages.lastLessonWarn, { label: row.lastLessonLabel })
                   : messages.lastLessonIdle;
             const lastTone =
               row.lastLessonStatus === "ok" ? "ok" : row.lastLessonStatus === "warn" ? "warn" : "neutral";
@@ -54,7 +56,9 @@ export const SchoolGroupsTable = ({ rows, messages, formatPercent }: SchoolGroup
                   <span className="text-muted-foreground"> / {row.totalPupils}</span>
                 </TableCell>
                 <TableCell className="text-right tabular-nums">
-                  {row.attendancePercent === null ? "—" : formatPercent(row.attendancePercent)}
+                  {row.attendancePercent === null
+                    ? "—"
+                    : formatAnalyticsPercent(percentTemplate, row.attendancePercent)}
                 </TableCell>
                 <TableCell className="text-right tabular-nums">{row.testAverage}</TableCell>
                 <TableCell>

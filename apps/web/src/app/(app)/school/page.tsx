@@ -7,8 +7,9 @@ import { SchoolAttendanceChart } from "@/components/analytics/SchoolAttendanceCh
 import { SchoolAttentionList } from "@/components/analytics/SchoolAttentionList";
 import { SchoolGroupsTable } from "@/components/analytics/SchoolGroupsTable";
 import { AnalyticsRetryButton } from "@/components/analytics/AnalyticsRetryButton.client";
+import { AnalyticsYearDetail } from "@/components/analytics/years/AnalyticsYearDetail.client";
+import { AnalyticsYearScope } from "@/components/analytics/years/AnalyticsYearScope.client";
 import { MethodologyVersionNote } from "@/components/analytics/years/MethodologyVersionNote";
-import { ReadOnlyYearNote } from "@/components/analytics/years/ReadOnlyYearNote";
 import { SchoolAnalyticsYearNav } from "@/components/analytics/years/SchoolAnalyticsYearNav.client";
 import { SchoolClosedGroupsTable } from "@/components/analytics/years/SchoolClosedGroupsTable";
 import { EmptyState } from "@/components/patterns/EmptyState";
@@ -25,6 +26,7 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 
@@ -59,10 +61,6 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
   const messages = pickAnalyticsMessages(analyticsDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
   const yearMessages = messages.years;
-  const formatDate = (iso: string) =>
-    new Intl.DateTimeFormat(appLocale, { day: "numeric", month: "short" }).format(
-      new Date(`${iso}T12:00:00Z`),
-    );
 
   if (data.kind === "forbidden" || data.kind === "not_found") notFound();
 
@@ -105,19 +103,16 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
     <div className="space-y-8">
       <PageHeader
         title={messages.school.pageTitle}
-        description={messages.school.pageSubtitle(data.yearName)}
+        description={fillMessage(messages.school.pageSubtitle, { year: data.yearName })}
       />
       <SchoolAttentionList items={data.attention} messages={messages.school} />
+      <AnalyticsYearScope committedYearId={data.yearId}>
       <Suspense fallback={<YearNavFallback />}>
-        <SchoolAnalyticsYearNav
-          years={data.yearStrip}
-          selectedYearId={data.yearId}
-          messages={messages}
-        />
+        <SchoolAnalyticsYearNav years={data.yearStrip} messages={messages} />
       </Suspense>
+      <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
       {isClosedYear ? (
         <>
-          <ReadOnlyYearNote messages={yearMessages} />
           {showStaleMethodology ? (
             <MethodologyVersionNote
               snapshotVersion={
@@ -149,7 +144,7 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
           <SchoolGroupsTable
             rows={data.groupRows}
             messages={messages.school}
-            formatPercent={messages.formatPercent}
+            percentTemplate={messages.formatPercent}
           />
           <section className="space-y-2">
             <SectionTitle as="h2" className="text-lg">
@@ -158,12 +153,12 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
             <ContentText className="text-sm text-muted-foreground">
               {messages.school.attendanceChartHint}
             </ContentText>
-            <Card className="p-4">
+            <Card className="overflow-visible p-4">
               <SchoolAttendanceChart
                 labels={data.chartLabels}
                 series={data.chartSeries}
-                formatLabel={formatDate}
-                formatPercent={messages.formatPercent}
+                locale={appLocale}
+                percentTemplate={messages.formatPercent}
                 ariaLabel={messages.school.attendanceChartTitle}
               />
             </Card>
@@ -185,6 +180,8 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
           </div>
         </>
       )}
+      </AnalyticsYearDetail>
+      </AnalyticsYearScope>
     </div>
   );
 };

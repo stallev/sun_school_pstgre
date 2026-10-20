@@ -607,6 +607,7 @@ export async function approveTrainerAction(trainerId: string) {
 - **Tags** — `cacheTag(...)` inside the function; strings **must** come from the tag registry in code (`apps/web/src/lib/cache-tags.ts`) — no inline tag strings.
 - **Lifetime** — `cacheLife('minutes' | 'hours' | …)` or `cacheLife({ revalidate: N })`; deploy still busts caches — **`updateTag` after mutations is primary**.
 - **Cache keys** — automatic from function id + serializable arguments (no manual `keyParts`).
+- **PrismaClient** — do not pass a Prisma client as a `'use cache'` argument. Call `getPrisma()` from `@/lib/db.server` inside the cached function; pass only strings, numbers, and plain objects.
 - **Never cache authorization** — verify session on every read path; cache is a performance layer only.
 - **Runtime APIs** — **cannot** call `cookies()`, `headers()`, or `searchParams` inside `'use cache'`. Extract values **outside**, pass as arguments (they become part of the cache key):
 

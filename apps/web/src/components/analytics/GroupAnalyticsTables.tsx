@@ -12,6 +12,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { GroupAnalyticsSnapshot, GroupAnalyticsPupilRow } from "@/data/analytics/analytics-compute.server";
+import {
+  formatAnalyticsAverage,
+  formatAnalyticsPercent,
+} from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type GroupAnalyticsTablesProps = {
@@ -21,7 +26,10 @@ type GroupAnalyticsTablesProps = {
 
 const formatScore = (average: number | null, n: number, messages: AnalyticsMessages): string => {
   if (average === null || n === 0) return messages.kpiEmpty;
-  return messages.kpiWithN(messages.formatAverage(Number(average.toFixed(1))), n);
+  return fillMessage(messages.kpiWithN, {
+    value: formatAnalyticsAverage(messages.formatAverage, Number(average.toFixed(1))),
+    n,
+  });
 };
 
 const PupilLayerTable = ({
@@ -41,7 +49,7 @@ const PupilLayerTable = ({
       <ContentText className="text-sm text-muted-foreground">{messages.tables.emptySection}</ContentText>
     ) : (
       <Card className="overflow-x-auto p-0">
-        <Table>
+        <Table className="text-base">
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{messages.tables.columnName}</TableHead>
@@ -72,7 +80,10 @@ const PupilLayerTable = ({
                     <TableCell>
                       {row.attendanceRate === null
                         ? messages.kpiEmpty
-                        : messages.formatPercent(Number(row.attendanceRate.toFixed(1)))}
+                        : formatAnalyticsPercent(
+                            messages.formatPercent,
+                            Number(row.attendanceRate.toFixed(1)),
+                          )}
                     </TableCell>
                     <TableCell>{row.attendedLessonCount}</TableCell>
                     <TableCell>{row.checkedLessonCount}</TableCell>

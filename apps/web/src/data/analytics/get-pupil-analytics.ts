@@ -15,6 +15,7 @@ import {
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { analyticsPeriodFilterSchema } from "./analytics-period";
 import type { ResolvedAnalyticsPeriod } from "./analytics-period";
 import {
@@ -55,16 +56,12 @@ export type PupilAnalyticsSnapshot = {
   };
 };
 
-async function loadCachedPupilAnalytics(
+async function loadPupilAnalyticsFromDb(
   db: PrismaClient,
   pupilId: string,
   gradeId: string,
   period: ResolvedAnalyticsPeriod,
 ): Promise<PupilAnalyticsSnapshot> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsPupil(pupilId, period.academicYearId));
-  cacheLife("minutes");
-
   const { gte, lte } = periodDateRange(period);
   const enrollment = await db.enrollment.findFirst({
     where: { pupilId, gradeId, academicYearId: period.academicYearId },
@@ -207,6 +204,18 @@ async function loadCachedPupilAnalytics(
   };
 }
 
+async function loadCachedPupilAnalytics(
+  pupilId: string,
+  gradeId: string,
+  period: ResolvedAnalyticsPeriod,
+): Promise<PupilAnalyticsSnapshot> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsPupil(pupilId, period.academicYearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadPupilAnalyticsFromDb(db, pupilId, gradeId, period);
+}
+
 function earliestCheckedDate(
   checks: { lessonId: string; homeworkChecked: boolean }[],
   lessons: { id: string; lessonDate: Date }[],
@@ -260,6 +269,6 @@ export async function getPupilAnalytics(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedPupilAnalytics(db, pupilId, gradeId, access);
+  const data = await loadCachedPupilAnalytics(pupilId, gradeId, access);
   return { ok: true, data };
 }

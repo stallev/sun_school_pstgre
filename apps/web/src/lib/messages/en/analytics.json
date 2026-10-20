@@ -215,7 +215,8 @@
     "column_test": "Test",
     "column_notebook": "Notebook",
     "sample_meta": "Pupils in main sample: {kids} · lessons checked: {lessons}",
-    "out_of_ten": "out of 10"
+    "out_of_ten": "out of 10",
+    "detail_pending": "Updating charts and tables for the selected year"
   },
   "pupil_years": {
     "title": "By year",

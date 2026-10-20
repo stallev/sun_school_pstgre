@@ -11,6 +11,7 @@ import {
 } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { userHasAdminRole } from "../../access/access-admin-guards.server";
 import { getDefaultOrganizationId } from "../../access/get-organization-id.server";
 import { computeGroupYearSnapshotMetrics } from "./compute-year-snapshots.server";
@@ -36,19 +37,14 @@ export type ListSchoolYearTotalsData = {
   rows: SchoolGroupYearRow[];
 };
 
-async function loadCachedSchoolYearRows(
+async function loadSchoolYearRowsFromDb(
   db: PrismaClient,
-  organizationId: string,
   yearId: string,
   yearStatus: typeof ACADEMIC_YEAR_STATUS.ACTIVE | typeof ACADEMIC_YEAR_STATUS.CLOSED,
   grades: { id: string; name: string }[],
 ): Promise<
   Omit<SchoolGroupYearRow, "diff" | "hasPreviousYear" | "comparisonReliable">[]
 > {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsSchool(organizationId, yearId));
-  cacheLife("minutes");
-
   const rows: Omit<
     SchoolGroupYearRow,
     "diff" | "hasPreviousYear" | "comparisonReliable"
@@ -109,6 +105,21 @@ async function loadCachedSchoolYearRows(
     });
   }
   return rows;
+}
+
+async function loadCachedSchoolYearRows(
+  organizationId: string,
+  yearId: string,
+  yearStatus: typeof ACADEMIC_YEAR_STATUS.ACTIVE | typeof ACADEMIC_YEAR_STATUS.CLOSED,
+  grades: { id: string; name: string }[],
+): Promise<
+  Omit<SchoolGroupYearRow, "diff" | "hasPreviousYear" | "comparisonReliable">[]
+> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsSchool(organizationId, yearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadSchoolYearRowsFromDb(db, yearId, yearStatus, grades);
 }
 
 async function attachSchoolDiffs(
@@ -225,13 +236,7 @@ export async function listSchoolYearTotals(
     select: { id: true, name: true },
   });
 
-  const body = await loadCachedSchoolYearRows(
-    db,
-    organizationId,
-    year.id,
-    year.status,
-    grades,
-  );
+  const body = await loadCachedSchoolYearRows(organizationId, year.id, year.status, grades);
 
   const rows = await attachSchoolDiffs(db, organizationId, year.id, body);
 

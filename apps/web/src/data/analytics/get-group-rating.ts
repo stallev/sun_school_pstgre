@@ -9,6 +9,7 @@ import {
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { formatDisplayName } from "@/lib/person/format-display-name";
 import {
   assertAnalyticsGradeAccess,
@@ -28,15 +29,11 @@ export type GroupRatingSnapshot = {
   rows: RatingTableRow[];
 };
 
-async function loadCachedGroupRating(
+async function loadGroupRatingFromDb(
   db: PrismaClient,
   gradeId: string,
   academicYearId: string,
 ): Promise<GroupRatingSnapshot> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsGroup(gradeId, academicYearId));
-  cacheLife("minutes");
-
   const enrollments = await db.enrollment.findMany({
     where: { gradeId, academicYearId, endsOn: null },
     select: {
@@ -83,6 +80,17 @@ async function loadCachedGroupRating(
   return { academicYearId, gradeId, rows };
 }
 
+async function loadCachedGroupRating(
+  gradeId: string,
+  academicYearId: string,
+): Promise<GroupRatingSnapshot> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsGroup(gradeId, academicYearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadGroupRatingFromDb(db, gradeId, academicYearId);
+}
+
 export async function getGroupRating(
   db: PrismaClient,
   actorUserId: string,
@@ -104,6 +112,6 @@ export async function getGroupRating(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedGroupRating(db, gradeId, academicYearId);
+  const data = await loadCachedGroupRating(gradeId, academicYearId);
   return { ok: true, data };
 }

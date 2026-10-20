@@ -11,6 +11,7 @@ import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { userHasAdminRole } from "../access/access-admin-guards.server";
 import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getPrisma } from "@/lib/db.server";
 import { analyticsPeriodFilterSchema } from "./analytics-period";
 import type { ResolvedAnalyticsPeriod } from "./analytics-period";
 import {
@@ -28,15 +29,11 @@ export type DeletedDataInPeriodSnapshot = {
   latestResolvedAtIso: string | null;
 };
 
-async function loadCachedDeletedDataInPeriod(
+async function loadDeletedDataInPeriodFromDb(
   db: PrismaClient,
   gradeId: string,
   period: ResolvedAnalyticsPeriod,
 ): Promise<DeletedDataInPeriodSnapshot> {
-  "use cache";
-  cacheTag(CACHE_TAGS.analyticsDeletedData(gradeId, period.academicYearId));
-  cacheLife("minutes");
-
   const { gte, lte } = periodDateRange(period);
 
   const rows = await db.deletionRequest.findMany({
@@ -69,6 +66,17 @@ async function loadCachedDeletedDataInPeriod(
     deletedChildCount: pupilIds.size,
     latestResolvedAtIso: latestResolvedAt ? latestResolvedAt.toISOString() : null,
   };
+}
+
+async function loadCachedDeletedDataInPeriod(
+  gradeId: string,
+  period: ResolvedAnalyticsPeriod,
+): Promise<DeletedDataInPeriodSnapshot> {
+  "use cache";
+  cacheTag(CACHE_TAGS.analyticsDeletedData(gradeId, period.academicYearId));
+  cacheLife("minutes");
+  const db = await getPrisma();
+  return loadDeletedDataInPeriodFromDb(db, gradeId, period);
 }
 
 export async function getDeletedDataInPeriod(
@@ -106,6 +114,6 @@ export async function getDeletedDataInPeriod(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedDeletedDataInPeriod(db, gradeId, access);
+  const data = await loadCachedDeletedDataInPeriod(gradeId, access);
   return { ok: true, data };
 }

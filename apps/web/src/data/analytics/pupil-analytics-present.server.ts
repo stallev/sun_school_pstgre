@@ -10,6 +10,7 @@ import {
   type ScoreAverageResult,
   type TrendLabel,
 } from "@sunschool/domain";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsChartPoint } from "./analytics-compute.server";
 import type { PupilAnalyticsSnapshot, PupilLessonAnalyticsRow } from "./get-pupil-analytics";
 
@@ -70,7 +71,7 @@ const buildScorePoint = (
 
 export const buildPupilAnalyticsView = (
   snapshot: PupilAnalyticsSnapshot,
-  formatAttendanceChecked: (attended: number, checked: number) => string,
+  attendanceCheckedTemplate: string,
 ): PupilAnalyticsView => {
   const lessons = snapshot.lessons;
   const attended = lessons.filter((row) => row.present === true).length;
@@ -124,7 +125,8 @@ export const buildPupilAnalyticsView = (
       : TREND_LABEL.INSUFFICIENT_DATA;
 
   return {
-    attendanceCheckedLabel: checked > 0 ? formatAttendanceChecked(attended, checked) : null,
+    attendanceCheckedLabel:
+      checked > 0 ? fillMessage(attendanceCheckedTemplate, { attended, checked }) : null,
     versesAverage,
     testAverage,
     notebookAverage,

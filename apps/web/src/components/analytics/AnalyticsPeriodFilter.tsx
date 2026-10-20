@@ -32,11 +32,11 @@ export const AnalyticsPeriodFilter = ({
           ))
         : null}
       <label className="grid gap-1">
-        <ContentText className="text-sm font-medium text-ink">{messages.periodYear}</ContentText>
+        <ContentText className="text-base font-medium text-ink">{messages.periodYear}</ContentText>
         <select
           name="mode"
           defaultValue={mode}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
+          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
         >
           <option value="year">{messages.periodYear}</option>
           <option value="month">{messages.periodMonth}</option>
@@ -44,30 +44,30 @@ export const AnalyticsPeriodFilter = ({
         </select>
       </label>
       <label className="grid gap-1">
-        <ContentText className="text-sm font-medium text-ink">{messages.monthLabel}</ContentText>
+        <ContentText className="text-base font-medium text-ink">{messages.monthLabel}</ContentText>
         <input
           type="month"
           name="month"
           defaultValue={monthDefault}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
+          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
         />
       </label>
       <label className="grid gap-1">
-        <ContentText className="text-sm font-medium text-ink">{messages.rangeFrom}</ContentText>
+        <ContentText className="text-base font-medium text-ink">{messages.rangeFrom}</ContentText>
         <input
           type="date"
           name="from"
           defaultValue={fromDefault}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
+          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
         />
       </label>
       <label className="grid gap-1">
-        <ContentText className="text-sm font-medium text-ink">{messages.rangeTo}</ContentText>
+        <ContentText className="text-base font-medium text-ink">{messages.rangeTo}</ContentText>
         <input
           type="date"
           name="to"
           defaultValue={toDefault}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
+          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
         />
       </label>
       <Button type="submit" variant="outline">{messages.periodApply}</Button>

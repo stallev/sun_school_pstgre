@@ -215,7 +215,8 @@
     "column_test": "Тест",
     "column_notebook": "Тетрадь",
     "sample_meta": "Детей в основной выборке: {kids} · проверено уроков: {lessons}",
-    "out_of_ten": "из 10"
+    "out_of_ten": "из 10",
+    "detail_pending": "Обновляем графики и таблицы выбранного года"
   },
   "pupil_years": {
     "title": "По годам",

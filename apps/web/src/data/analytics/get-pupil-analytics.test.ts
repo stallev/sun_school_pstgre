@@ -2,9 +2,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
 import { getPupilAnalytics } from "./get-pupil-analytics";
 
+const getPrisma = vi.hoisted(() => vi.fn());
+
 vi.mock("next/cache", () => ({
   cacheLife: vi.fn(),
   cacheTag: vi.fn(),
+}));
+
+vi.mock("@/lib/db.server", () => ({
+  getPrisma,
 }));
 
 const orgId = "22222222-2222-4222-8222-222222222222";

@@ -2,9 +2,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MUTATION_ERROR_CODES, USER_ROLE } from "@sunschool/domain";
 import { listGroupYearTotals } from "./list-group-year-totals";
 
+const getPrisma = vi.hoisted(() => vi.fn());
+
 vi.mock("next/cache", () => ({
   cacheLife: vi.fn(),
   cacheTag: vi.fn(),
+}));
+
+vi.mock("@/lib/db.server", () => ({
+  getPrisma,
 }));
 
 vi.mock("./compute-year-snapshots.server", () => ({
@@ -119,6 +125,7 @@ describe("listGroupYearTotals (AZ-48)", () => {
       $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
       analyticsGroupYearSnapshot: { findFirst: vi.fn().mockResolvedValue(null) },
     };
+    getPrisma.mockResolvedValue(db);
 
     const result = await listGroupYearTotals(db as never, actorTeacherId, gradeId);
 
@@ -140,6 +147,7 @@ describe("listGroupYearTotals (AZ-48)", () => {
       $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
       analyticsGroupYearSnapshot: { findFirst: vi.fn().mockResolvedValue(null) },
     };
+    getPrisma.mockResolvedValue(db);
 
     const result = await listGroupYearTotals(db as never, actorTeacherId, gradeId, year2025Id);
 
@@ -171,6 +179,7 @@ describe("listGroupYearTotals (AZ-48)", () => {
       $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
       analyticsGroupYearSnapshot: { findFirst: vi.fn().mockResolvedValue(null) },
     };
+    getPrisma.mockResolvedValue(db);
 
     const result = await listGroupYearTotals(db as never, actorTeacherId, gradeId);
 

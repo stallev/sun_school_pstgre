@@ -15,6 +15,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { AnalyticsChartPoint } from "@/data/analytics/analytics-compute.server";
+import {
+  formatAnalyticsChartValue,
+  formatAnalyticsPercent,
+  formatAnalyticsShortDate,
+} from "@/lib/analytics/format-analytics-display";
 import type { AnalyticsChartSeriesMessages } from "@/lib/messages/analytics-messages";
 import { LineChart } from "@/components/analytics/LineChart";
 
@@ -26,8 +31,11 @@ type ChartTableToggleProps = {
   methodology: string;
   points: AnalyticsChartPoint[];
   messages: AnalyticsChartSeriesMessages;
-  formatDate: (iso: string) => string;
-  formatValue: (point: AnalyticsChartPoint) => string;
+  locale: string;
+  valueKind: "percent" | "chart";
+  percentTemplate: string;
+  chartValueTemplate: string;
+  emptyLabel: string;
   yDomain?: [number, number];
   /** When set (e.g. year axis), replaces the date column header in table mode. */
   xLabel?: string;
@@ -39,8 +47,11 @@ export const ChartTableToggle = ({
   methodology,
   points,
   messages,
-  formatDate,
-  formatValue,
+  locale,
+  valueKind,
+  percentTemplate,
+  chartValueTemplate,
+  emptyLabel,
   yDomain,
   xLabel,
 }: ChartTableToggleProps) => {
@@ -48,6 +59,19 @@ export const ChartTableToggle = ({
   const [showTable, setShowTable] = useState(
     () => typeof window !== "undefined" && sessionStorage.getItem(storageKey) === "table",
   );
+
+  const formatDate = (iso: string) => formatAnalyticsShortDate(iso, locale);
+  const formatValue = (point: AnalyticsChartPoint) =>
+    valueKind === "percent"
+      ? point.value === null
+        ? emptyLabel
+        : formatAnalyticsPercent(percentTemplate, Number(point.value.toFixed(1)))
+      : formatAnalyticsChartValue(
+          chartValueTemplate,
+          emptyLabel,
+          point.value,
+          point.observationCount,
+        );
 
   const validPoints = points.filter((point) => point.value !== null);
   const hasChart = validPoints.length >= MIN_CHART_POINTS;
@@ -58,7 +82,7 @@ export const ChartTableToggle = ({
   };
 
   return (
-    <Card className="flex flex-col gap-3 p-4">
+    <Card className="flex flex-col gap-3 overflow-visible p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionTitle as="h2" className="text-base">{title}</SectionTitle>
         <div className="flex gap-1">
@@ -88,7 +112,7 @@ export const ChartTableToggle = ({
           description={messages.insufficientDataDescription}
         />
       ) : showTable ? (
-        <Table>
+        <Table className="text-base">
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{xLabel ?? messages.columnDate}</TableHead>
@@ -115,7 +139,7 @@ export const ChartTableToggle = ({
           ariaLabel={title}
         />
       )}
-      <ContentText className="text-xs text-muted-foreground">{methodology}</ContentText>
+      <ContentText className="text-sm text-muted-foreground">{methodology}</ContentText>
     </Card>
   );
 };

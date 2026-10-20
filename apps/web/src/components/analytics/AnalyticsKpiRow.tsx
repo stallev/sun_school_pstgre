@@ -3,6 +3,11 @@ import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Card } from "@/components/ui/card";
 import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.server";
+import {
+  formatAnalyticsAverage,
+  formatAnalyticsPercent,
+} from "@/lib/analytics/format-analytics-display";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type AnalyticsKpiRowProps = {
@@ -18,8 +23,10 @@ const formatMetric = (
 ): string => {
   if (average === null || observationCount === 0) return messages.kpiEmpty;
   const rounded = Number(average.toFixed(1));
-  const value = asPercent ? messages.formatPercent(rounded) : messages.formatAverage(rounded);
-  return messages.kpiWithN(value, observationCount);
+  const value = asPercent
+    ? formatAnalyticsPercent(messages.formatPercent, rounded)
+    : formatAnalyticsAverage(messages.formatAverage, rounded);
+  return fillMessage(messages.kpiWithN, { value, n: observationCount });
 };
 
 export const AnalyticsKpiRow = ({ snapshot, messages }: AnalyticsKpiRowProps) => {
@@ -35,10 +42,13 @@ export const AnalyticsKpiRow = ({ snapshot, messages }: AnalyticsKpiRowProps) =>
         <NumberDisplay className="text-3xl">
           {kpi.attendancePercent === null
             ? messages.kpiEmpty
-            : messages.formatPercent(Number(kpi.attendancePercent.toFixed(1)))}
+            : formatAnalyticsPercent(
+                messages.formatPercent,
+                Number(kpi.attendancePercent.toFixed(1)),
+              )}
         </NumberDisplay>
         <ContentText className="text-sm text-muted-foreground">
-          {messages.kpiAttendanceHint(mainCount)}
+          {fillMessage(messages.kpiAttendanceHint, { count: mainCount })}
         </ContentText>
       </Card>
       <Card className="flex flex-col gap-2 p-4">
