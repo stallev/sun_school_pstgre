@@ -49,7 +49,7 @@
 
 ### P09-CU4 — fix(ui): align login copy with prototype · Review: diff-only · Commit: auto
 
-- [ ] P09-T4 · T1 · Spec: [access_and_registration_spec §6](../specs/access_and_registration_spec.md)
+- [x] P09-T4 · T1 · Spec: [access_and_registration_spec §6](../specs/access_and_registration_spec.md)
       Files: `apps/web/src/app/(auth)/login/page.tsx`, срезы `messages` входа · Acceptance: аноним на `/login` при 390, 768 и 1024 видит заголовок «Вход для учителей и родителей», подзаголовок про Telegram без пароля, блок «Вход для администратора» и текст «Пароль нужен только администратору.» Ссылка на согласие есть. При `APP_ENV=dev` есть «Тестовое окружение», в prod её нет. «Something went wrong» нет. Роль родителя не появляется.
       Paths: H [P09 §4.4] · N n/a — copy, проверки входа spec §6 не меняются · S n/a — `signIn` и callbackUrl не меняются
 
