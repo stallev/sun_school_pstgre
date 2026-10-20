@@ -4,17 +4,11 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
 import type { TeacherRosterMessages } from "@/lib/messages/teacher-messages";
 
-const fill = (template: string, values: Record<string, string | number>): string =>
-  Object.entries(values).reduce(
-    (text, [key, value]) => text.replace(`{${key}}`, String(value)),
-    template,
-  );
-
 export const pickTeacherRosterMessages = (teacher: Dictionary): TeacherRosterMessages => ({
   selectAll: getMessage(teacher, "group.select_all"),
-  selectPupil: (name) => fill(getMessage(teacher, "group.select_pupil"), { name }),
-  removeSelected: (count) => fill(getMessage(teacher, "group.remove_selected"), { count }),
-  enrolledSince: (isoDate) => fill(getMessage(teacher, "group.enrolled_since"), { date: isoDate }),
+  selectPupil: getMessage(teacher, "group.select_pupil"),
+  removeSelected: getMessage(teacher, "group.remove_selected"),
+  enrolledSince: getMessage(teacher, "group.enrolled_since"),
   consentYes: getMessage(teacher, "group.consent_yes"),
   consentNo: getMessage(teacher, "group.consent_no"),
   consentNoLegacy: getMessage(teacher, "group.consent_no_legacy"),
@@ -33,6 +27,5 @@ export const pickTeacherRosterMessages = (teacher: Dictionary): TeacherRosterMes
   yearClosedTitle: getMessage(teacher, "group.year_closed_title"),
   yearClosedDescription: getMessage(teacher, "group.year_closed_description"),
   pageTitle: getMessage(teacher, "group.page_title"),
-  pageSubtitle: (groupName, count) =>
-    fill(getMessage(teacher, "group.page_subtitle"), { group: groupName, count }),
+  pageSubtitle: getMessage(teacher, "group.page_subtitle"),
 });

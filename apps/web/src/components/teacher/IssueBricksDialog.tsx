@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 
 type IssueBricksDialogProps = {
   open: boolean;
@@ -62,9 +63,9 @@ export const IssueBricksDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={messages.closeLabel}>
         <DialogHeader>
-          <DialogTitle>{messages.issueDialogTitle(pupilName)}</DialogTitle>
+          <DialogTitle>{fillMessage(messages.issueDialogTitle, { name: pupilName })}</DialogTitle>
           <ContentText className="text-sm text-muted-foreground">
-            {messages.balanceHint(balance)}
+            {fillMessage(messages.balanceHint, { balance })}
           </ContentText>
         </DialogHeader>
         <form action={formAction} className="grid gap-4">

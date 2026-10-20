@@ -5,20 +5,13 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
 import type { TeacherLessonFormMessages } from "@/lib/messages/teacher-lesson-messages";
 
-const fill = (template: string, values: Record<string, string | number>): string =>
-  Object.entries(values).reduce(
-    (text, [key, value]) => text.replace(`{${key}}`, String(value)),
-    template,
-  );
-
 export const pickTeacherLessonFormMessages = (
   teacher: Dictionary,
   locale: AppLocale,
 ): TeacherLessonFormMessages => ({
   newTitle: getMessage(teacher, "lesson.form.new_title"),
-  editTitle: (ordinal) => fill(getMessage(teacher, "lesson.form.edit_title"), { n: ordinal }),
-  pageSubtitle: (groupName, yearName) =>
-    fill(getMessage(teacher, "lesson.form.page_subtitle"), { group: groupName, year: yearName }),
+  editTitle: getMessage(teacher, "lesson.form.edit_title"),
+  pageSubtitle: getMessage(teacher, "lesson.form.page_subtitle"),
   backToLessons: getMessage(teacher, "lesson.form.back_lessons"),
   backToLesson: getMessage(teacher, "lesson.form.back_lesson"),
   gradeLabel: getMessage(teacher, "lesson.form.grade_label"),
@@ -42,10 +35,9 @@ export const pickTeacherLessonFormMessages = (
   bodyPlaceholder: getMessage(teacher, "lesson.form.body_placeholder"),
   hasTestLabel: getMessage(teacher, "lesson.form.has_test_label"),
   versesTitle: getMessage(teacher, "lesson.form.verses_title"),
-  versesHint: (max, translationName) =>
-    fill(getMessage(teacher, "lesson.form.verses_hint"), { max, translation: translationName }),
+  versesHint: getMessage(teacher, "lesson.form.verses_hint"),
   versesEmpty: getMessage(teacher, "lesson.form.verses_empty"),
-  versesRemove: (ref) => fill(getMessage(teacher, "lesson.form.verses_remove"), { ref }),
+  versesRemove: getMessage(teacher, "lesson.form.verses_remove"),
   reviewPanelTitle: getMessage(teacher, "lesson.form.review_panel_title"),
   reviewPanelBullets: [
     getMessage(teacher, "lesson.form.review_bullet_1"),
@@ -54,7 +46,7 @@ export const pickTeacherLessonFormMessages = (
     getMessage(teacher, "lesson.form.review_bullet_4"),
   ],
   missingVersesTitle: getMessage(teacher, "lesson.form.missing_verses_title"),
-  missingVerseItem: (ref) => fill(getMessage(teacher, "lesson.form.missing_verse_item"), { ref }),
+  missingVerseItem: getMessage(teacher, "lesson.form.missing_verse_item"),
   saveCreate: getMessage(teacher, "lesson.form.save_create"),
   saveUpdate: getMessage(teacher, "lesson.form.save_update"),
   cancel: getMessage(teacher, "lesson.form.cancel"),

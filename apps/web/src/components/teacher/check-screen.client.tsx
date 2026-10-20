@@ -17,6 +17,7 @@ import { useSequentialCheck } from "@/components/teacher/use-sequential-check";
 import type { SequentialCheckPageData } from "@/data/checks/sequential-check-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 
 type CheckScreenProps = {
   data: Extract<SequentialCheckPageData, { kind: "page" }>;
@@ -44,8 +45,15 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
     return (
       <CheckFinishedCard
         title={messages.finishedTitle}
-        subtitle={messages.finishedSubtitle(data.lessonOrdinal, data.lessonTitle, data.pupils.length)}
-        progressLabel={messages.finishedProgress(data.pupils.length, data.pupils.length)}
+        subtitle={fillMessage(messages.finishedSubtitle, {
+          ordinal: data.lessonOrdinal,
+          title: data.lessonTitle,
+          total: data.pupils.length,
+        })}
+        progressLabel={fillMessage(messages.finishedProgress, {
+          checked: data.pupils.length,
+          total: data.pupils.length,
+        })}
         linkTableLabel={messages.linkTable}
         linkBricksLabel={messages.linkBricks}
         lessonId={data.lessonId}
@@ -57,13 +65,18 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
   if (!pupil) return null;
 
   const birthLabel =
-    pupil.birthYear !== null ? messages.birthYear(pupil.birthYear) : messages.birthYearUnknown;
+    pupil.birthYear !== null
+      ? fillMessage(messages.birthYear, { year: pupil.birthYear })
+      : messages.birthYearUnknown;
 
   return (
     <div className="space-y-4 pb-24 lg:pb-6">
       <PageHeader
         title={screen.isCorrection ? messages.pageTitleCorrection : messages.pageTitleCheck}
-        description={messages.lessonSubtitle(data.lessonOrdinal, data.lessonTitle)}
+        description={fillMessage(messages.lessonSubtitle, {
+          ordinal: data.lessonOrdinal,
+          title: data.lessonTitle,
+        })}
         actions={
           <Button variant="outline" render={<CustomLink href={`/lessons/${data.lessonId}/table`} />}>
             {messages.linkTable}
@@ -93,7 +106,10 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
         <CheckProgress
           checked={screen.checkedCount}
           total={data.pupils.length}
-          label={messages.progressLabel(screen.checkedCount, data.pupils.length)}
+          label={fillMessage(messages.progressLabel, {
+            checked: screen.checkedCount,
+            total: data.pupils.length,
+          })}
         />
       )}
 
@@ -107,7 +123,10 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
         <details className="rounded-xl border border-line bg-surface lg:hidden">
           <summary className="flex h-11 cursor-pointer list-none items-center justify-between px-3">
             <span className="text-sm text-ink-2">
-              {messages.pupilsToggle(screen.checkedCount, data.pupils.length)}
+              {fillMessage(messages.pupilsToggle, {
+                checked: screen.checkedCount,
+                total: data.pupils.length,
+              })}
             </span>
             <ChevronDownIcon className="size-5 text-ink-2" aria-hidden />
           </summary>
@@ -138,7 +157,10 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
         <Card className="px-4 pb-1 sm:px-5">
           <CheckCardHeader
             name={pupil.displayName}
-            indexLabel={messages.pupilIndex(screen.activeIndex + 1, data.pupils.length)}
+            indexLabel={fillMessage(messages.pupilIndex, {
+              index: screen.activeIndex + 1,
+              total: data.pupils.length,
+            })}
             birthLabel={birthLabel}
             points={screen.pointsPreview}
             pointsLabel={messages.pointsLabel}

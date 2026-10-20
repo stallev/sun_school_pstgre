@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 
 type CompensateBricksDialogProps = {
   open: boolean;
@@ -62,7 +63,7 @@ export const CompensateBricksDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={messages.closeLabel}>
         <DialogHeader>
-          <DialogTitle>{messages.compensateDialogTitle(pupilName)}</DialogTitle>
+          <DialogTitle>{fillMessage(messages.compensateDialogTitle, { name: pupilName })}</DialogTitle>
         </DialogHeader>
         <form action={formAction} className="grid gap-4">
           <input type="hidden" name="pupilId" value={pupilId} />

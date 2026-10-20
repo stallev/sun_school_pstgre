@@ -4,31 +4,21 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 
-const fill = (template: string, values: Record<string, string | number>): string =>
-  Object.entries(values).reduce(
-    (text, [key, value]) => text.replace(`{${key}}`, String(value)),
-    template,
-  );
-
 export const pickTeacherCheckMessages = (
   teacher: Dictionary,
   common: Dictionary,
 ): TeacherCheckMessages => ({
   pageTitleCheck: getMessage(teacher, "check.page_title"),
   pageTitleCorrection: getMessage(teacher, "check.page_title_correction"),
-  lessonSubtitle: (ordinal, title) =>
-    fill(getMessage(teacher, "check.lesson_subtitle"), { ordinal, title }),
+  lessonSubtitle: getMessage(teacher, "check.lesson_subtitle"),
   linkTable: getMessage(teacher, "check.link_table"),
   linkLesson: getMessage(teacher, "lesson.form.back_lesson"),
   correctionBanner: getMessage(teacher, "check.correction_banner"),
-  progressLabel: (checked, total) =>
-    fill(getMessage(teacher, "check.progress"), { checked, total }),
-  pupilsToggle: (checked, total) =>
-    fill(getMessage(teacher, "check.pupils_toggle"), { checked, total }),
+  progressLabel: getMessage(teacher, "check.progress"),
+  pupilsToggle: getMessage(teacher, "check.pupils_toggle"),
   pupilsListLabel: getMessage(teacher, "check.pupils_list"),
-  pupilIndex: (index, total) =>
-    fill(getMessage(teacher, "check.pupil_index"), { index, total }),
-  birthYear: (year) => fill(getMessage(teacher, "check.birth_year"), { year }),
+  pupilIndex: getMessage(teacher, "check.pupil_index"),
+  birthYear: getMessage(teacher, "check.birth_year"),
   birthYearUnknown: getMessage(teacher, "check.birth_year_unknown"),
   pointsLabel: getMessage(teacher, "check.points_label"),
   presentLabel: getMessage(teacher, "check.present_label"),
@@ -37,11 +27,10 @@ export const pickTeacherCheckMessages = (
   presentHint: getMessage(teacher, "check.present_hint"),
   singingLabel: getMessage(teacher, "check.singing_label"),
   reviewHint: getMessage(teacher, "check.review_hint"),
-  versesIntro: (lessonOrdinal) =>
-    fill(getMessage(teacher, "check.verses_intro"), { lessonOrdinal }),
+  versesIntro: getMessage(teacher, "check.verses_intro"),
   noVersesFirstLesson: getMessage(teacher, "check.no_verses_first_lesson"),
   noTestOnLesson: getMessage(teacher, "check.no_test_on_lesson"),
-  verseLabel: (position) => fill(getMessage(teacher, "check.verse_label"), { position }),
+  verseLabel: getMessage(teacher, "check.verse_label"),
   testLabel: getMessage(teacher, "check.test_label"),
   notebookLabel: getMessage(teacher, "check.notebook_label"),
   commentPlaceholder: getMessage(teacher, "check.comment_placeholder"),
@@ -62,14 +51,12 @@ export const pickTeacherCheckMessages = (
   saveNext: getMessage(teacher, "check.save_next"),
   completeCheck: getMessage(teacher, "check.complete"),
   saveCorrection: getMessage(teacher, "check.save_correction"),
-  savedToast: (name) => fill(getMessage(teacher, "check.saved_toast"), { name }),
+  savedToast: getMessage(teacher, "check.saved_toast"),
   conflictTitle: getMessage(teacher, "check.conflict_title"),
   conflictReload: getMessage(teacher, "check.conflict_reload"),
   finishedTitle: getMessage(teacher, "check.finished_title"),
-  finishedSubtitle: (ordinal, title, total) =>
-    fill(getMessage(teacher, "check.finished_subtitle"), { ordinal, title, total }),
-  finishedProgress: (checked, total) =>
-    fill(getMessage(teacher, "check.finished_progress"), { checked, total }),
+  finishedSubtitle: getMessage(teacher, "check.finished_subtitle"),
+  finishedProgress: getMessage(teacher, "check.finished_progress"),
   linkBricks: getMessage(teacher, "check.link_bricks"),
   emptyRosterTitle: getMessage(teacher, "check.empty_roster_title"),
   emptyRosterDescription: getMessage(teacher, "check.empty_roster_description"),
@@ -94,8 +81,6 @@ export const pickTeacherCheckMessages = (
   tableFootnote: getMessage(teacher, "check.table.footnote"),
   tableNoTest: getMessage(teacher, "check.table.no_test"),
   tableVersesMobile: getMessage(teacher, "check.table.verses_mobile"),
-  tableOpenPupilAria: (name) =>
-    fill(getMessage(teacher, "check.table.open_pupil_aria"), { name }),
-  tableProgressHeader: (checked, total) =>
-    fill(getMessage(teacher, "check.table.progress_header"), { checked, total }),
+  tableOpenPupilAria: getMessage(teacher, "check.table.open_pupil_aria"),
+  tableProgressHeader: getMessage(teacher, "check.table.progress_header"),
 });

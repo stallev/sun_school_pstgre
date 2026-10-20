@@ -10,6 +10,7 @@ import { StatusText } from "@/components/ui/status-text";
 import type { TeacherAddCandidate, TeacherRosterRow } from "@/data/school/load-teacher-group-page.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { TeacherRosterMessages } from "@/lib/messages/teacher-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
 import { toast } from "sonner";
@@ -102,7 +103,7 @@ export const RosterTable = ({
             aria-busy={pending}
             onClick={handleBulkUnenroll}
           >
-            {messages.removeSelected(selected.length)}
+            {fillMessage(messages.removeSelected, { count: selected.length })}
           </Button>
         </div>
       ) : null}
@@ -117,13 +118,13 @@ export const RosterTable = ({
                   checked={selected.includes(row.pupilId)}
                   onChange={() => toggleOne(row.pupilId)}
                   disabled={pending}
-                  aria-label={messages.selectPupil(row.displayName)}
+                  aria-label={fillMessage(messages.selectPupil, { name: row.displayName })}
                 />
               ) : null}
               <div className="min-w-0">
                 <ContentText className="font-medium text-ink">{row.displayName}</ContentText>
                 <ContentText tone="secondary" className="text-sm">
-                  {messages.enrolledSince(row.enrolledSinceIso)}
+                  {fillMessage(messages.enrolledSince, { date: row.enrolledSinceIso })}
                 </ContentText>
               </div>
             </div>

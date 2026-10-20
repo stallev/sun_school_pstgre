@@ -22,6 +22,7 @@ import {
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
 
 const toFormState = (pupil: SequentialCheckPupil): CheckFormState => ({
@@ -178,10 +179,11 @@ export const useSequentialCheck = ({
         setBaselines(next.map((row) => snapshot(row)));
         return next;
       });
-      toast.success(messages.savedToast(activePupil.displayName), {
+      const savedToastText = fillMessage(messages.savedToast, { name: activePupil.displayName });
+      toast.success(savedToastText, {
         duration: PRODUCT_TOAST_DURATION_MS,
       });
-      setLiveMessage(messages.savedToast(activePupil.displayName));
+      setLiveMessage(savedToastText);
       headingRef.current?.focus();
 
       if (shouldCompleteLesson) {

@@ -25,7 +25,7 @@
 
 ### P09-CU1 — fix(web): pass message strings to client · Review: reviewer · Commit: auto
 
-- [ ] P09-T1 · T3 · Spec: [P09 §4.1](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [homework_check_flow_spec §4](../specs/homework_check_flow_spec.md)
+- [x] P09-T1 · T3 · Spec: [P09 §4.1](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [homework_check_flow_spec §4](../specs/homework_check_flow_spec.md)
       Files: `apps/web/src/lib/messages/pick-teacher-lesson-messages.server.ts`, `pick-teacher-check-messages.server.ts`, `pick-teacher-roster-messages.server.ts`, `pick-teacher-bricks-messages.server.ts`, `pick-teacher-calendar-messages.server.ts`, клиенты `LessonForm`, `LessonCheckTable`, `CheckScreen`, `RosterTable`, `BalanceTable`, `CalendarEventForm` · Acceptance: учитель на 390, 768 и 1024 открывает `/lessons/new`, `/lessons/[id]/edit`, `/lessons/[id]/table`, `/check`, `/lessons/[id]/check`, `/group`, `/bricks`, `/calendar` без «Something went wrong»; админ так же открывает `/bricks` и `/calendar` на 390 и 1024. В props этих клиентов нет функций: `editTitle`, `finishedProgress`, `selectPupil`, `issueDialogTitle`, `pageSubtitle` приходят строками (Sentry SUN_SCHOOL_POSTGRES_DEV-M, N, 3, 6). Права групп не меняются.
       Paths: H [P09 §4.1] · N [P09 §4.1: нет аргумента шаблона → строка, не граница ошибки] · S [P09 §4.1, AZ-21 / AZ-30 / AZ-32 / AZ-33 / AZ-40 / AZ-42: аноним → `/login`, чужая группа teacher → 404]
 

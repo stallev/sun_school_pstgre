@@ -5,19 +5,12 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
 import type { TeacherCalendarMessages } from "@/lib/messages/teacher-calendar-messages";
 
-const fill = (template: string, values: Record<string, string | number>): string =>
-  Object.entries(values).reduce(
-    (text, [key, value]) => text.replace(`{${key}}`, String(value)),
-    template,
-  );
-
 export const pickTeacherCalendarMessages = (
   teacher: Dictionary,
   locale: AppLocale,
 ): TeacherCalendarMessages => ({
   pageTitle: getMessage(teacher, "calendar.page_title"),
-  pageSubtitle: (group, year) =>
-    fill(getMessage(teacher, "calendar.page_subtitle"), { group, year }),
+  pageSubtitle: getMessage(teacher, "calendar.page_subtitle"),
   newEvent: getMessage(teacher, "calendar.new_event"),
   monthEventsTitle: getMessage(teacher, "calendar.month_events_title"),
   emptyMonth: getMessage(teacher, "calendar.empty_month"),

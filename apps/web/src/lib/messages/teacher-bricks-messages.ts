@@ -1,6 +1,6 @@
 export type TeacherBricksMessages = {
   pageTitle: string;
-  pageSubtitle: (group: string, year: string) => string;
+  pageSubtitle: string;
   gradeFilterLabel: string;
   gradeFilterApply: string;
   columnPupil: string;
@@ -15,7 +15,7 @@ export type TeacherBricksMessages = {
   emptyPupilsDescription: string;
   emptyEarnedTitle: string;
   emptyEarnedDescription: string;
-  ledgerTitle: (name: string) => string;
+  ledgerTitle: string;
   ledgerEmpty: string;
   ledgerSelectPupil: string;
   ledgerColumnDate: string;
@@ -23,8 +23,8 @@ export type TeacherBricksMessages = {
   ledgerColumnBy: string;
   ledgerColumnNote: string;
   ledgerCompensation: string;
-  issueDialogTitle: (name: string) => string;
-  compensateDialogTitle: (name: string) => string;
+  issueDialogTitle: string;
+  compensateDialogTitle: string;
   quantityLabel: string;
   dateLabel: string;
   noteLabel: string;
@@ -35,6 +35,6 @@ export type TeacherBricksMessages = {
   saving: string;
   toastIssued: string;
   toastCompensated: string;
-  balanceHint: (balance: number) => string;
+  balanceHint: string;
   closeLabel: string;
 };
