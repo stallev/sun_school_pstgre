@@ -1,16 +1,15 @@
 import { USER_ROLE } from "@sunschool/domain";
-import { ContentText, SectionTitle } from "@/components/atoms";
-import { AlertText } from "@/components/atoms/AlertText";
-import { LessonsGradeFilter } from "@/components/teacher/LessonsGradeFilter";
+import { VersesAddVerseDialog } from "@/components/teacher/VersesAddVerseDialog.client";
+import { VersesCatalog } from "@/components/teacher/VersesCatalog.client";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { CustomLink } from "@/components/ui/custom-link";
 import { loadVersesCatalogPage } from "@/data/lessons/load-verses-catalog-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { pickTeacherLessonFormMessages } from "@/lib/messages/pick-teacher-lesson-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 
 type VersesPageProps = {
@@ -29,7 +28,9 @@ const VersesPage = async ({ searchParams }: VersesPageProps) => {
     appLocale,
   );
   const teacherDict = await getDictionary(locale, "teacher");
+  const commonDict = await getDictionary(locale, "common");
   const messages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
+  const pickerMessages = pickTeacherLessonFormMessages(teacherDict, appLocale);
 
   if (data.kind === "no_active_year") {
     return (
@@ -52,56 +53,45 @@ const VersesPage = async ({ searchParams }: VersesPageProps) => {
     );
   }
 
-  const gradeOptions = data.grades.map((g) => ({ gradeId: g.gradeId, name: g.name }));
+  const catalogRows = data.rows.map((row) => ({
+    refLabel: row.refLabel,
+    text: row.text,
+    hasMissing: row.hasMissing,
+    usages: row.usages.map((usage) => ({
+      lessonId: usage.lessonId,
+      linkLabel: messages.lessonUsageLink(usage.ordinal, usage.title),
+    })),
+  }));
 
   return (
     <div className="space-y-6">
       <PageHeader
         title={messages.versesPageTitle}
-        description={messages.versesPageSubtitle(data.gradeName, data.yearName)}
+        description={messages.versesLibraryDescription}
+        actions={
+          <VersesAddVerseDialog
+            gradeId={data.pickerGradeId}
+            books={data.books}
+            pickerMessages={pickerMessages}
+            title={messages.versesAddDialogTitle}
+            description={messages.versesAddDialogDescription}
+            triggerLabel={messages.versesAddButton}
+            closeLabel={getMessage(commonDict, "shell.close")}
+          />
+        }
       />
-      {data.grades.length > 1 ? (
-        <LessonsGradeFilter
-          grades={gradeOptions}
-          gradeId={data.gradeId}
-          messages={messages}
-          actionPath="/verses"
-        />
-      ) : null}
-      {data.rows.length === 0 ? (
-        <EmptyState
-          title={messages.emptyVersesTitle}
-          description={messages.emptyVersesDescription}
-        />
-      ) : (
-        <ul className="space-y-4">
-          {data.rows.map((row) => (
-            <li key={row.refLabel} className="space-y-3 rounded-xl border border-line bg-surface p-4">
-              <SectionTitle>{row.refLabel}</SectionTitle>
-              {row.hasMissing ? (
-                <AlertText>{messages.verseMissing}</AlertText>
-              ) : (
-                <ContentText className="text-sm whitespace-pre-wrap">{row.text}</ContentText>
-              )}
-              <div className="space-y-1">
-                <ContentText className="text-sm font-medium text-ink">{messages.usedInLessons}</ContentText>
-                <ul className="space-y-1">
-                  {row.usages.map((usage) => (
-                    <li key={`${row.refLabel}-${usage.lessonId}`}>
-                      <CustomLink
-                        href={`/lessons/${usage.lessonId}`}
-                        className="text-sm text-cobalt-ink hover:underline"
-                      >
-                        {messages.lessonUsageLink(usage.ordinal, usage.title)}
-                      </CustomLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <VersesCatalog
+        rows={catalogRows}
+        messages={{
+          searchLabel: messages.versesSearchLabel,
+          searchPlaceholder: messages.versesSearchPlaceholder,
+          searchEmpty: messages.versesSearchEmpty,
+          verseMissing: messages.verseMissing,
+          usedInLessons: messages.usedInLessons,
+          emptyTitle: messages.emptyVersesTitle,
+          emptyDescription: messages.emptyVersesDescription,
+        }}
+      />
     </div>
   );
 };

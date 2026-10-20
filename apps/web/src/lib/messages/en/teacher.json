@@ -138,10 +138,18 @@
     "verses_page": {
       "title": "Golden verses",
       "subtitle": "{group} · {year}",
+      "library_description": "School-wide verse library. Text is stored once in the Synodal translation.",
+      "search_label": "Search",
+      "search_placeholder": "Search by reference or words",
+      "search_empty": "Nothing found",
+      "add_verse": "Add verse",
+      "add_dialog_title": "Add golden verse",
+      "add_dialog_description": "Text is filled from the Synodal translation.",
       "empty_title": "No golden verses yet",
       "empty_description": "Verses appear here after you add them to lessons.",
       "used_in": "Used in lessons",
-      "usage_link": "Lesson {n} · {title}"
+      "usage_link": "Lesson {n} · {title}",
+      "usage_link_only": "Lesson {n}"
     },
     "check_stub": {
       "title": "Homework check",

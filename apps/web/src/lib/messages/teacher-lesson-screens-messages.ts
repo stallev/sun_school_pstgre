@@ -5,6 +5,13 @@ export type TeacherLessonScreensMessages = {
   listSubtitle: (group: string, year: string) => string;
   versesPageTitle: string;
   versesPageSubtitle: (group: string, year: string) => string;
+  versesLibraryDescription: string;
+  versesSearchLabel: string;
+  versesSearchPlaceholder: string;
+  versesSearchEmpty: string;
+  versesAddButton: string;
+  versesAddDialogTitle: string;
+  versesAddDialogDescription: string;
   newLesson: string;
   gradeFilterLabel: string;
   gradeFilterApply: string;

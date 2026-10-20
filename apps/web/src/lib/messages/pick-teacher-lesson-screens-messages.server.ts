@@ -29,6 +29,13 @@ export const pickTeacherLessonScreensMessages = (
   versesPageTitle: getMessage(teacher, "lesson.verses_page.title"),
   versesPageSubtitle: (group, year) =>
     fill(getMessage(teacher, "lesson.verses_page.subtitle"), { group, year }),
+  versesLibraryDescription: getMessage(teacher, "lesson.verses_page.library_description"),
+  versesSearchLabel: getMessage(teacher, "lesson.verses_page.search_label"),
+  versesSearchPlaceholder: getMessage(teacher, "lesson.verses_page.search_placeholder"),
+  versesSearchEmpty: getMessage(teacher, "lesson.verses_page.search_empty"),
+  versesAddButton: getMessage(teacher, "lesson.verses_page.add_verse"),
+  versesAddDialogTitle: getMessage(teacher, "lesson.verses_page.add_dialog_title"),
+  versesAddDialogDescription: getMessage(teacher, "lesson.verses_page.add_dialog_description"),
   newLesson: getMessage(teacher, "lesson.list.new_lesson"),
   gradeFilterLabel: getMessage(teacher, "lesson.list.grade_filter"),
   gradeFilterApply: getMessage(teacher, "lesson.list.grade_apply"),
@@ -94,8 +101,19 @@ export const pickTeacherLessonScreensMessages = (
   checkStubDescription: getMessage(teacher, "lesson.check_stub.description"),
   checkStubBack: getMessage(teacher, "lesson.form.back_lesson"),
   usedInLessons: getMessage(teacher, "lesson.verses_page.used_in"),
-  lessonUsageLink: (ordinal, title) =>
-    fill(getMessage(teacher, "lesson.verses_page.usage_link"), { n: ordinal, title }),
+  lessonUsageLink: (ordinal, title) => {
+    const trimmed = title.trim();
+    const shortOrdinal = fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal });
+    const normalize = (value: string) => value.trim().toLowerCase();
+    if (
+      normalize(trimmed) === normalize(shortOrdinal) ||
+      normalize(trimmed) === `урок ${ordinal}` ||
+      normalize(trimmed) === `lesson ${ordinal}`
+    ) {
+      return fill(getMessage(teacher, "lesson.verses_page.usage_link_only"), { n: ordinal });
+    }
+    return fill(getMessage(teacher, "lesson.verses_page.usage_link"), { n: ordinal, title: trimmed });
+  },
   unassignedTitle: getMessage(teacher, "group.unassigned_title"),
   unassignedDescription: getMessage(teacher, "group.unassigned_description"),
   yearClosedTitle: getMessage(teacher, "group.year_closed_title"),

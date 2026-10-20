@@ -138,10 +138,18 @@
     "verses_page": {
       "title": "Золотые стихи",
       "subtitle": "{group} · {year}",
+      "library_description": "Общая библиотека школы. Текст — Синодальный перевод, хранится один раз.",
+      "search_label": "Поиск",
+      "search_placeholder": "Поиск по ссылке или словам",
+      "search_empty": "Ничего не найдено",
+      "add_verse": "Добавить стих",
+      "add_dialog_title": "Добавить золотой стих",
+      "add_dialog_description": "Текст подставится из Синодального перевода.",
       "empty_title": "Золотых стихов пока нет",
       "empty_description": "Стихи появятся здесь после добавления в уроки.",
       "used_in": "Использован в уроках",
-      "usage_link": "Урок {n} · {title}"
+      "usage_link": "Урок {n} · {title}",
+      "usage_link_only": "Урок {n}"
     },
     "check_stub": {
       "title": "Проверка ДЗ",

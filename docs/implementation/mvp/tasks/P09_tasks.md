@@ -97,7 +97,7 @@
 
 ### P09-CU10 — fix(ui): align verse library · Review: diff-only · Commit: auto
 
-- [ ] P09-T10 · T1 · Spec: [P09 §4.10](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/verses`](../phases_tasks_descriptions/P03_phase_description.md)
+- [x] P09-T10 · T1 · Spec: [P09 §4.10](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/verses`](../phases_tasks_descriptions/P03_phase_description.md)
       Files: `apps/web/src/app/(app)/verses/**` · Acceptance: учитель на `/verses` при 390, 768 и 1024 видит подпись библиотеки, поиск и «Добавить стих». Админ на 390 и 1024 видит библиотеку, не выбор группы и «Показать». Ссылка урока без «Урок N · Урок N». В «Пс 22:1» нет `^^`. Пустой поиск даёт «Ничего не найдено». «Добавить стих» открывает существующий выбор диапазона формы урока, без нового endpoint. «Something went wrong» нет.
       Paths: H [P09 §4.10] · N [P09 §4.10: пустой поиск → «Ничего не найдено»] · S n/a — AZ-36, новой записи стиха нет
 

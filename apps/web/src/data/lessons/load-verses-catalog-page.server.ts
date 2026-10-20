@@ -4,10 +4,10 @@ import { ACADEMIC_YEAR_STATUS, type AppLocale } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
 import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
-import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { buildVerseTextForRange } from "@/data/bible/get-verse-text";
 import { resolveGroupTranslation } from "@/data/bible/get-group-translation";
-import { listBooks } from "@/data/bible/list-books";
+import { listBooks, type BibleBookListItem } from "@/data/bible/list-books";
+import { stripEditorialVerseMarkup } from "@/lib/bible/strip-editorial-verse-markup";
 import { formatVerseRefLabel } from "@/lib/lesson/format-verse-ref";
 
 export type VersesCatalogUsage = {
@@ -28,9 +28,8 @@ export type VersesCatalogPageData =
   | { kind: "unassigned" }
   | {
       kind: "catalog";
-      gradeId: string;
-      gradeName: string;
-      grades: { gradeId: string; name: string }[];
+      pickerGradeId: string;
+      books: BibleBookListItem[];
       yearName: string;
       rows: VersesCatalogRow[];
       locale: AppLocale;
@@ -68,31 +67,24 @@ export async function loadVersesCatalogPage(
   }
   if (grades.length === 0) return { kind: "unassigned" };
 
-  const gradeId =
-    preferredGradeId && grades.some((g) => g.gradeId === preferredGradeId)
-      ? preferredGradeId
-      : grades[0]?.gradeId;
-  if (!gradeId) return { kind: "unassigned" };
+  const pickerGradeId = grades[0]?.gradeId;
+  if (!pickerGradeId) return { kind: "unassigned" };
 
-  if (!isAdmin) {
-    const scope = await assertTeacherAssignedToGradeInYear(db, actorUserId, gradeId, year.id);
-    if (scope) return { kind: "unassigned" };
-  }
-
-  const grade = await db.grade.findFirst({
-    where: { id: gradeId },
-    select: { name: true, language: true },
+  const pickerGrade = await db.grade.findFirst({
+    where: { id: pickerGradeId },
+    select: { language: true },
   });
-  if (!grade) return { kind: "unassigned" };
+  if (!pickerGrade) return { kind: "unassigned" };
 
-  const translation = await resolveGroupTranslation(grade.language as AppLocale);
+  const translation = await resolveGroupTranslation(pickerGrade.language as AppLocale);
   if (!translation.ok) return { kind: "unassigned" };
 
   const books = await listBooks();
   const bookById = new Map(books.map((book) => [book.id, book]));
+  const gradeIds = grades.map((g) => g.gradeId);
 
   const links = await db.lessonGoldenVerse.findMany({
-    where: { lesson: { gradeId, academicYearId: year.id } },
+    where: { lesson: { gradeId: { in: gradeIds }, academicYearId: year.id } },
     select: {
       goldenVerseId: true,
       goldenVerse: {
@@ -126,7 +118,7 @@ export async function loadVersesCatalogPage(
       const built = await buildVerseTextForRange(translation.code, range);
       row = {
         refLabel,
-        text: built.ok ? built.text : null,
+        text: built.ok ? stripEditorialVerseMarkup(built.text) : null,
         hasMissing: !built.ok,
         usages: [],
       };
@@ -141,9 +133,8 @@ export async function loadVersesCatalogPage(
 
   return {
     kind: "catalog",
-    gradeId,
-    gradeName: grade.name,
-    grades,
+    pickerGradeId,
+    books,
     yearName: year.name,
     rows: [...byVerse.values()].sort((a, b) => a.refLabel.localeCompare(b.refLabel, locale)),
     locale,
