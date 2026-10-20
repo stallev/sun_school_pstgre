@@ -18,6 +18,18 @@ export type TeacherLessonScreensMessages = {
   emptyVersesTitle: string;
   emptyVersesDescription: string;
   lessonCardTitle: (ordinal: number, title: string) => string;
+  lessonMetaLine: (ordinal: number, dateLabel: string, leadName: string) => string;
+  checkSectionTitle: string;
+  actionContinueCheck: string;
+  actionStartCheck: string;
+  actionSummaryTable: string;
+  assignedVersesTitle: string;
+  assignedVersesHintNext: (nextOrdinal: number) => string;
+  assignedVersesHintNextFallback: string;
+  recitingVersesTitle: string;
+  recitingVersesHintPrev: (previousOrdinal: number) => string;
+  reviewSectionTitle: string;
+  reviewSectionDescription: string;
   dateLabel: string;
   leadLabel: string;
   kindRegular: string;

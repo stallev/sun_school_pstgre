@@ -45,6 +45,28 @@ export const pickTeacherLessonScreensMessages = (
   emptyVersesDescription: getMessage(teacher, "lesson.verses_page.empty_description"),
   lessonCardTitle: (ordinal, title) =>
     fill(getMessage(teacher, "lesson.detail.card_title"), { n: ordinal, title }),
+  lessonMetaLine: (ordinal, dateLabel, leadName) =>
+    fill(getMessage(teacher, "lesson.detail.meta_line"), {
+      n: ordinal,
+      date: dateLabel,
+      lead: leadName,
+    }),
+  checkSectionTitle: getMessage(teacher, "lesson.detail.check_section_title"),
+  actionContinueCheck: getMessage(teacher, "lesson.detail.action_continue_check"),
+  actionStartCheck: getMessage(teacher, "lesson.detail.action_start_check"),
+  actionSummaryTable: getMessage(teacher, "lesson.detail.action_summary_table"),
+  assignedVersesTitle: getMessage(teacher, "lesson.detail.assigned_verses_title"),
+  assignedVersesHintNext: (nextOrdinal) =>
+    fill(getMessage(teacher, "lesson.detail.assigned_verses_hint_next"), { n: nextOrdinal }),
+  assignedVersesHintNextFallback: getMessage(
+    teacher,
+    "lesson.detail.assigned_verses_hint_next_fallback",
+  ),
+  recitingVersesTitle: getMessage(teacher, "lesson.detail.reciting_verses_title"),
+  recitingVersesHintPrev: (previousOrdinal) =>
+    fill(getMessage(teacher, "lesson.detail.reciting_verses_hint_prev"), { n: previousOrdinal }),
+  reviewSectionTitle: getMessage(teacher, "lesson.detail.review_section_title"),
+  reviewSectionDescription: getMessage(teacher, "lesson.detail.review_section_description"),
   dateLabel: getMessage(teacher, "lesson.detail.date"),
   leadLabel: getMessage(teacher, "lesson.detail.lead"),
   kindRegular: getMessage(teacher, "lesson.form.kind_regular"),

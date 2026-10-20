@@ -81,7 +81,7 @@
 
 ### P09-CU8 — fix(ui): align lesson card · Review: diff-only · Commit: auto
 
-- [ ] P09-T8 · T1 · Spec: [P09 §4.8](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/lessons/[id]`](../phases_tasks_descriptions/P03_phase_description.md)
+- [x] P09-T8 · T1 · Spec: [P09 §4.8](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/lessons/[id]`](../phases_tasks_descriptions/P03_phase_description.md)
       Files: `apps/web/src/app/(app)/lessons/[lessonId]/page.tsx`, карточка урока · Acceptance: учитель на `/lessons/[id]` при 390, 768 и 1024 видит «Урок N · дата» без ГГГГ-ММ-ДД, блоки «Задано» и «Рассказывают», «Сводная таблица», удаление, белую «Правка» и главную «Продолжить проверку» или «Начать проверку». Подписи «Проверка ДЗ» и одного блока «Золотые стихи» нет. «Something went wrong» нет.
       Paths: H [P09 §4.8] · N n/a — состав карточки, мутации урока не меняются · S n/a — AZ-30 / AZ-32 не меняются
 
@@ -89,7 +89,7 @@
 
 ### P09-CU9 — fix(ui): align rating chrome · Review: diff-only · Commit: auto
 
-- [ ] P09-T9 · T1 · Spec: [P09 §4.9](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P05 экран `/rating`](../phases_tasks_descriptions/P05_phase_description.md)
+- [x] P09-T9 · T1 · Spec: [P09 §4.9](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P05 экран `/rating`](../phases_tasks_descriptions/P05_phase_description.md)
       Files: `apps/web/src/app/(app)/rating/**` · Acceptance: учитель на `/rating` при 390, 768 и 1024 видит «Рейтинг группы» и рабочее пояснение. Админ на 390 и 1024 переключает группу чипами, без `select` и «Показать». Колонок «Бонус», «Достижений», «Штрафов» нет. «Something went wrong» нет.
       Paths: H [P09 §4.9] · N n/a — те же данные рейтинга · S n/a — AZ-47 не меняется
 
