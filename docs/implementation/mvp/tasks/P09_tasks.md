@@ -33,7 +33,7 @@
 
 ### P09-CU2 — fix(i18n): add admin category labels · Review: reviewer · Commit: auto
 
-- [ ] P09-T2 · T3 · Spec: [P09 §4.2](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [deletion_requests_contract](../contracts/deletion_requests_contract.md)
+- [x] P09-T2 · T3 · Spec: [P09 §4.2](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [deletion_requests_contract](../contracts/deletion_requests_contract.md)
       Files: `apps/web/src/lib/messages/en/admin.json`, `apps/web/src/lib/messages/ru/admin.json` · Acceptance: админ на 390, 768 и 1024 открывает `/audit`, `/approvals`, `/users`, `/users/[id]`, `/people`, `/deletions`, `/groups`, `/groups/[id]`, `/year`, `/settings` без «Something went wrong». В en и ru есть ключи категорий `achievement_award`, `penalty`, `recitation_attempt` (Sentry SUN_SCHOOL_POSTGRES_DEV-5). Экранов достижений, штрафов и семьи нет. Teacher на `/users` получает 403.
       Paths: H [P09 §4.2] · N [P09 §4.2: отсутствующий ключ категории больше не роняет эти маршруты] · S [P09 §4.2, AZ-01 / AZ-02 / AZ-07 / AZ-08 / AZ-10 / AZ-12 / AZ-15 / AZ-20: teacher → 403]
 
