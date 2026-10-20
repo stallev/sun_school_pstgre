@@ -57,7 +57,7 @@
 
 ### P09-CU5 — fix(ui): align teacher today · Review: diff-only · Commit: auto
 
-- [ ] P09-T5 · T1 · Spec: [P09 §4.5](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/today`](../phases_tasks_descriptions/P03_phase_description.md)
+- [x] P09-T5 · T1 · Spec: [P09 §4.5](../phases_tasks_descriptions/P09_phase_description.md) · Contract: [P03 экран `/today`](../phases_tasks_descriptions/P03_phase_description.md)
       Files: `apps/web/src/app/(app)/today/**` · Acceptance: учитель на `/today` при 390, 768 и 1024 видит приветствие, одну залитую «Продолжить проверку», незалитый «Новый урок», дату не в формате ГГГГ-ММ-ДД, без типа «Обычный» и без подписи «Проверка ДЗ», и секцию «На этой неделе». Нет «Кого отметить в классе» и нет «Голосовая практика». «Something went wrong» нет.
       Paths: H [P09 §4.5] · N n/a — copy/CSS, без новой мутации · S n/a — маршрут teacher AZ не меняется
 

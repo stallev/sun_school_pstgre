@@ -1,12 +1,22 @@
 import "server-only";
 
-import { LESSON_STATUS } from "@sunschool/domain";
+import { ACADEMIC_YEAR_STATUS, LESSON_STATUS, type AppLocale } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
+import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
 import { isoTodayUtc } from "@/data/school/school-pupil-shared.server";
+import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
+import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 import {
   loadLessonsListPage,
   type LessonsListRow,
 } from "@/data/lessons/load-lessons-list-page.server";
+import { loadLessonVerseRefLabels } from "./load-lesson-verse-ref-labels.server";
+import { buildTodayWeekRows, type TodayWeekRow } from "./load-today-week-rows.server";
+
+export type TodayFocalLesson = LessonsListRow & {
+  lessonDateLabel: string;
+  verseRefsLabel: string | null;
+};
 
 export type TodayPageData =
   | { kind: "no_active_year" }
@@ -16,9 +26,12 @@ export type TodayPageData =
       gradeId: string;
       gradeName: string;
       yearName: string;
+      yearId: string;
       yearClosed: boolean;
       canMutate: boolean;
-      lesson: LessonsListRow | null;
+      teacherFirstName: string;
+      lesson: TodayFocalLesson | null;
+      weekRows: TodayWeekRow[];
     };
 
 const isHomeworkCheckIncomplete = (row: LessonsListRow): boolean => {
@@ -63,21 +76,86 @@ const pickFocalLesson = (lessons: LessonsListRow[], todayIso: string): LessonsLi
 export async function loadTodayPage(
   db: PrismaClient,
   actorUserId: string,
+  locale: AppLocale,
+  timeZone: string,
+  messages: TeacherLessonScreensMessages,
 ): Promise<TodayPageData> {
   const list = await loadLessonsListPage(db, actorUserId, null);
   if (list.kind !== "list") {
     return list;
   }
 
-  const lesson = pickFocalLesson(list.lessons, isoTodayUtc());
+  const todayIso = isoTodayUtc();
+  const focal = pickFocalLesson(list.lessons, todayIso);
+
+  const organizationId = await getDefaultOrganizationId(db);
+  const activeYear = await db.academicYear.findFirst({
+    where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+    select: { id: true },
+  });
+  const yearId = activeYear?.id ?? "";
+
+  const [teacher, grade] = await Promise.all([
+    db.appUser.findUnique({
+      where: { id: actorUserId },
+      select: { firstName: true },
+    }),
+    db.grade.findUnique({
+      where: { id: list.gradeId },
+      select: { language: true },
+    }),
+  ]);
+
+  let focalLesson: TodayFocalLesson | null = null;
+  if (focal && grade) {
+    const verseRefsLabel = await loadLessonVerseRefLabels(
+      db,
+      focal.lessonId,
+      grade.language as AppLocale,
+      locale,
+    );
+    focalLesson = {
+      ...focal,
+      lessonDateLabel: formatLessonDisplayDate(focal.lessonDateIso, {
+        locale,
+        timeZone,
+      }),
+      verseRefsLabel,
+    };
+  } else if (focal) {
+    focalLesson = {
+      ...focal,
+      lessonDateLabel: formatLessonDisplayDate(focal.lessonDateIso, {
+        locale,
+        timeZone,
+      }),
+      verseRefsLabel: null,
+    };
+  }
+
+  const weekRows =
+    yearId.length > 0
+      ? await buildTodayWeekRows({
+          db,
+          gradeId: list.gradeId,
+          yearId,
+          lessons: list.lessons,
+          todayIso,
+          timeZone,
+          messages,
+        })
+      : [];
 
   return {
     kind: "today",
     gradeId: list.gradeId,
     gradeName: list.gradeName,
     yearName: list.yearName,
+    yearId,
     yearClosed: list.yearClosed,
     canMutate: list.canMutate,
-    lesson,
+    teacherFirstName: teacher?.firstName?.trim() || "",
+    lesson: focalLesson,
+    weekRows,
   };
 }

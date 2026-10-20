@@ -1,8 +1,10 @@
 import "server-only";
 
-import type { AppLocale } from "@sunschool/domain";
+import { APP_LOCALE, type AppLocale } from "@sunschool/domain";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { formatPlural } from "@/lib/messages/plural";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
 const fill = (template: string, values: Record<string, string | number>): string =>
@@ -11,10 +13,16 @@ const fill = (template: string, values: Record<string, string | number>): string
     template,
   );
 
+const appLocaleToMessageLocale = (locale: AppLocale): MessageLocale =>
+  locale === APP_LOCALE.EN ? "en" : "ru";
+
 export const pickTeacherLessonScreensMessages = (
   teacher: Dictionary,
   locale: AppLocale,
-): TeacherLessonScreensMessages => ({
+): TeacherLessonScreensMessages => {
+  const messageLocale = appLocaleToMessageLocale(locale);
+
+  return {
   listTitle: getMessage(teacher, "lesson.list.title"),
   listSubtitle: (group, year) =>
     fill(getMessage(teacher, "lesson.list.subtitle"), { group, year }),
@@ -66,8 +74,47 @@ export const pickTeacherLessonScreensMessages = (
   yearClosedDescription: getMessage(teacher, "group.year_closed_description"),
   todayPageSubtitle: (group, year) =>
     fill(getMessage(teacher, "lesson.today.page_subtitle"), { group, year }),
+  todayGreeting: (name, part) => {
+    const key =
+      part === "morning"
+        ? "lesson.today.greeting_morning"
+        : part === "afternoon"
+          ? "lesson.today.greeting_afternoon"
+          : "lesson.today.greeting_evening";
+    return fill(getMessage(teacher, key), { name });
+  },
   todayIncompleteLabel: getMessage(teacher, "lesson.today.incomplete_label"),
   todayContinueCheck: getMessage(teacher, "lesson.today.continue_check"),
+  todayCheckedStudentsLabel: getMessage(teacher, "lesson.today.checked_students_label"),
   todayProgressStub: getMessage(teacher, "lesson.today.progress_stub"),
+  todayWeekTitle: getMessage(teacher, "lesson.today.week_title"),
+  todayWeekNextLesson: getMessage(teacher, "lesson.today.week_next_lesson"),
+  todayWeekNextLessonValue: (date, ordinal, title) =>
+    fill(getMessage(teacher, "lesson.today.week_next_lesson_value"), {
+      date,
+      n: ordinal,
+      title,
+    }),
+  todayWeekLate: getMessage(teacher, "lesson.today.week_late"),
+  todayWeekLateValue: (pupilName, lessonDate) =>
+    fill(getMessage(teacher, "lesson.today.week_late_value"), {
+      pupil: pupilName,
+      date: lessonDate,
+    }),
+  todayWeekBricks: getMessage(teacher, "lesson.today.week_bricks"),
+  todayWeekBricksValue: (count) =>
+    formatPlural(
+      {
+        one: getMessage(teacher, "lesson.today.week_bricks_value_one"),
+        few: getMessage(teacher, "lesson.today.week_bricks_value_few"),
+        many: getMessage(teacher, "lesson.today.week_bricks_value_many"),
+        other: getMessage(teacher, "lesson.today.week_bricks_value_many"),
+      },
+      count,
+      messageLocale,
+    ),
+  todayWeekBricksNegativeHint: getMessage(teacher, "lesson.today.week_bricks_negative_hint"),
+  todayWeekOpen: (label) => fill(getMessage(teacher, "lesson.today.week_open"), { label }),
   locale,
-});
+};
+};

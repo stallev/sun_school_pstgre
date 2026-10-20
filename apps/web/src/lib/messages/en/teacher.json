@@ -134,9 +134,24 @@
     "today": {
       "page_title": "Today",
       "page_subtitle": "{group} · {year}",
+      "greeting_morning": "Good morning, {name}",
+      "greeting_afternoon": "Good afternoon, {name}",
+      "greeting_evening": "Good evening, {name}",
       "incomplete_label": "Incomplete homework check",
       "continue_check": "Continue check",
-      "progress_stub": "Homework check progress will appear here in the next release."
+      "checked_students_label": "Pupils checked",
+      "progress_stub": "Homework check progress will appear here in the next release.",
+      "week_title": "This week",
+      "week_next_lesson": "Next lesson",
+      "week_next_lesson_value": "{date} · Lesson {n} · {title}",
+      "week_late": "Submitted later",
+      "week_late_value": "{pupil} brought the notebook for {date} — enter the score",
+      "week_bricks": "Bricks to issue",
+      "week_bricks_value_one": "{count} brick to issue",
+      "week_bricks_value_few": "{count} bricks to issue",
+      "week_bricks_value_many": "{count} bricks to issue",
+      "week_bricks_negative_hint": "one pupil has a negative balance",
+      "week_open": "Open: {label}"
     }
   },
   "check": {
