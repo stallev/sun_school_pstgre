@@ -23,7 +23,7 @@ import {
 import type { AnalyticsChartSeriesMessages } from "@/lib/messages/analytics-messages";
 import { LineChart } from "@/components/analytics/LineChart";
 
-const MIN_CHART_POINTS = 2;
+const DEFAULT_MIN_CHART_POINTS = 2;
 
 type ChartTableToggleProps = {
   chartId: string;
@@ -39,6 +39,7 @@ type ChartTableToggleProps = {
   yDomain?: [number, number];
   /** When set (e.g. year axis), replaces the date column header in table mode. */
   xLabel?: string;
+  minChartPoints?: number;
 };
 
 export const ChartTableToggle = ({
@@ -54,6 +55,7 @@ export const ChartTableToggle = ({
   emptyLabel,
   yDomain,
   xLabel,
+  minChartPoints = DEFAULT_MIN_CHART_POINTS,
 }: ChartTableToggleProps) => {
   const storageKey = `analytics-chart-view-${chartId}`;
   const [showTable, setShowTable] = useState(
@@ -74,7 +76,7 @@ export const ChartTableToggle = ({
         );
 
   const validPoints = points.filter((point) => point.value !== null);
-  const hasChart = validPoints.length >= MIN_CHART_POINTS;
+  const hasChart = validPoints.length >= minChartPoints;
 
   const handleToggle = (table: boolean) => {
     setShowTable(table);

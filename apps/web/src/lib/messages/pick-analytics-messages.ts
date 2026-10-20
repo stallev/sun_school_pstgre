@@ -209,8 +209,17 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
 
 export const pickPupilAnalyticsMessages = (analytics: Dictionary): PupilAnalyticsMessages => ({
   ...pickAnalyticsMessages(analytics),
+  kpiAttendanceLabel: getMessage(analytics, "pupil.kpi_attendance_label"),
+  kpiVersesLabel: getMessage(analytics, "pupil.kpi_verses_label"),
+  kpiTestLabel: getMessage(analytics, "pupil.kpi_test_label"),
+  kpiNotebookLabel: getMessage(analytics, "pupil.kpi_notebook_label"),
   pupilPageSubtitle: getMessage(analytics, "pupil.page_subtitle"),
   backToGroupAnalytics: getMessage(analytics, "pupil.back_to_group"),
+  pupilBirthYear: getMessage(analytics, "pupil.birth_year"),
+  pupilBirthYearUnknown: getMessage(analytics, "pupil.birth_year_unknown"),
+  pupilStatusActive: getMessage(analytics, "pupil.status_active"),
+  pupilStatusInactive: getMessage(analytics, "pupil.status_inactive"),
+  lessonCorrectLabel: getMessage(analytics, "pupil.lesson_correct"),
   sampleIncluded: getMessage(analytics, "sample.included"),
   sampleExcludedB: getMessage(analytics, "sample.excluded_b"),
   sampleExcludedC: getMessage(analytics, "sample.excluded_c"),

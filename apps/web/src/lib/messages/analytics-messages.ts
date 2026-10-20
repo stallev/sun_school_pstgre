@@ -207,6 +207,11 @@ export type AnalyticsMessages = {
 export type PupilAnalyticsMessages = AnalyticsMessages & {
   pupilPageSubtitle: string;
   backToGroupAnalytics: string;
+  pupilBirthYear: string;
+  pupilBirthYearUnknown: string;
+  pupilStatusActive: string;
+  pupilStatusInactive: string;
+  lessonCorrectLabel: string;
   sampleIncluded: string;
   sampleExcludedB: string;
   sampleExcludedC: string;

@@ -113,7 +113,7 @@
 
 ### P09-CU12 — fix(ui): align pupil card layout · Review: diff-only · Commit: auto
 
-- [ ] P09-T12 · T1 · Spec: [analytics_screens_spec §6](../specs/analytics_screens_spec.md) · Contract: [P09 §4.12](../phases_tasks_descriptions/P09_phase_description.md)
+- [x] P09-T12 · T1 · Spec: [analytics_screens_spec §6](../specs/analytics_screens_spec.md) · Contract: [P09 §4.12](../phases_tasks_descriptions/P09_phase_description.md)
       Files: `apps/web/src/app/(app)/analytics/pupils/[pupilId]/**` · Acceptance: учитель на карточке ученика при 390 не прокручивает страницу по горизонтали. На 390, 768 и 1024 в шапке есть год рождения и «активен»; динамика выше присутствия и графиков; нет плиток «Средняя явка» / «Стихи» вместо ряда показателей; нет трёх залитых «График»; у прошедшей строки есть «Исправить» в существующую правку проверки. Секций «Семья», «Штрафы», «Достижения» нет. «Something went wrong» нет.
       Paths: H [P09 §4.12] · N n/a — переход «Исправить» в существующий маршрут проверки · S n/a — AZ-34 / AZ-45 / AZ-49 не меняются
 
