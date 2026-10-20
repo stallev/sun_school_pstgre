@@ -121,7 +121,7 @@
 
 ### P09-CU13 — fix(ui): align school summary · Review: diff-only · Commit: auto
 
-- [ ] P09-T13 · T1 · Spec: [analytics_screens_spec §7](../specs/analytics_screens_spec.md) · Contract: [P09 §4.13](../phases_tasks_descriptions/P09_phase_description.md)
+- [x] P09-T13 · T1 · Spec: [analytics_screens_spec §7](../specs/analytics_screens_spec.md) · Contract: [P09 §4.13](../phases_tasks_descriptions/P09_phase_description.md)
       Files: `apps/web/src/app/(app)/school/**` · Acceptance: админ на `/school` при 390, 768 и 1024 видит график посещаемости групп вместо кнопки «Показать», явку с обычным округлением процентов, без колонки «Ср. тест» и без лишних блоков «Кто какие уроки провёл». «Требует внимания» не подменяет сводку одним пунктом в начале. «Something went wrong» нет.
       Paths: H [P09 §4.13] · N n/a — те же сводки spec §7 · S n/a — AZ-16 не меняется
 

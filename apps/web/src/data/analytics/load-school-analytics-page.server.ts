@@ -12,10 +12,12 @@ import { getDefaultOrganizationId } from "@/data/access/get-organization-id.serv
 import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
 import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-page.server";
 import type { AnalyticsChartPoint } from "./analytics-compute.server";
-import { computeGroupAnalyticsSnapshot } from "./analytics-compute.server";
+import {
+  computeGroupAnalyticsSnapshot,
+  type GroupAnalyticsSnapshot,
+} from "./analytics-compute.server";
 import { buildAnalyticsPeriodFilter, type AnalyticsPageSearchParams } from "./load-analytics-page.server";
 import { resolveAnalyticsPeriodForOrganization } from "./analytics-shared.server";
-import { getConductedLessons, type ConductedLessonsSnapshot } from "./get-conducted-lessons";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { loadSchoolDashboardCounts } from "../school/load-school-dashboard.server";
 import { loadBricksEarnedAndIssued } from "../bricks/bricks-shared.server";
@@ -32,7 +34,7 @@ export type SchoolGroupRow = {
   layerACount: number;
   totalPupils: number;
   attendancePercent: number | null;
-  testAverage: string;
+  scoreAverage: string;
   lastLessonStatus: "ok" | "warn" | "idle";
   lastLessonLabel: string;
 };
@@ -68,8 +70,16 @@ export type SchoolAnalyticsPageData =
       chartSeries: SchoolChartSeries[];
       chartLabels: string[];
       attention: SchoolAttentionItem[];
-      conducted: ConductedLessonsSnapshot;
     };
+
+const formatSchoolScoreAverage = (kpi: GroupAnalyticsSnapshot["kpi"]): string => {
+  const values = [kpi.versesAverage, kpi.testAverage, kpi.notebookAverage]
+    .filter((score) => score.observationCount > 0 && score.average !== null)
+    .map((score) => score.average as number);
+  if (values.length === 0) return "—";
+  const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+  return mean.toFixed(1);
+};
 
 async function countNegativeBrickBalances(
   db: PrismaClient,
@@ -161,11 +171,7 @@ export async function loadSchoolAnalyticsPage(
       .map((a) => `${a.user.firstName} ${a.user.lastName}`.trim())
       .join(", ");
 
-    const testAvg = snapshot.kpi.testAverage;
-    const testAverage =
-      testAvg.observationCount > 0 && testAvg.average !== null
-        ? testAvg.average.toFixed(1)
-        : "—";
+    const scoreAverage = formatSchoolScoreAverage(snapshot.kpi);
 
     const lastLesson = await db.lesson.findFirst({
       where: {
@@ -203,7 +209,7 @@ export async function loadSchoolAnalyticsPage(
         snapshot.sampleCounts[SAMPLE_LAYER.C] +
         snapshot.sampleCounts[SAMPLE_LAYER.D],
       attendancePercent: snapshot.kpi.attendancePercent,
-      testAverage,
+      scoreAverage,
       lastLessonStatus,
       lastLessonLabel,
     });
@@ -253,14 +259,6 @@ export async function loadSchoolAnalyticsPage(
     });
   }
 
-  const conductedResult = gradeId
-    ? await getConductedLessons(db, actorUserId, gradeId, periodFilter)
-    : null;
-  const conducted: ConductedLessonsSnapshot =
-    conductedResult && !isMutationErr(conductedResult)
-      ? conductedResult.data
-      : { gradeId, period: resolvedPeriod, teachers: [] };
-
   return {
     kind: "page",
     yearId: year.id,
@@ -274,6 +272,5 @@ export async function loadSchoolAnalyticsPage(
     chartSeries,
     chartLabels,
     attention,
-    conducted,
   };
 }

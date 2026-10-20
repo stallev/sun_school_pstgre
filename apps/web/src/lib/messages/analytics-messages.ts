@@ -171,6 +171,10 @@ export type AnalyticsMessages = {
   school: {
     pageTitle: string;
     pageSubtitle: string;
+    pageSubtitleActive: string;
+    pageSubtitleClosed: string;
+    statusActive: string;
+    statusClosed: string;
     groupsTableTitle: string;
     groupsTableHint: string;
     columnGroup: string;

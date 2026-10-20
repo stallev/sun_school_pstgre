@@ -32,13 +32,15 @@ vi.mock("./analytics-shared.server", () => ({
 }));
 vi.mock("./analytics-compute.server", () => ({
   computeGroupAnalyticsSnapshot: vi.fn().mockResolvedValue({
-    kpi: { testAverage: { observationCount: 0, average: null }, attendancePercent: null },
+    kpi: {
+      versesAverage: { observationCount: 0, average: null },
+      testAverage: { observationCount: 0, average: null },
+      notebookAverage: { observationCount: 0, average: null },
+      attendancePercent: null,
+    },
     sampleCounts: { A: 0, B: 0, C: 0, D: 0 },
     charts: { attendance: [] },
   }),
-}));
-vi.mock("./get-conducted-lessons", () => ({
-  getConductedLessons: vi.fn().mockResolvedValue({ ok: true, data: { teachers: [] } }),
 }));
 vi.mock("../bricks/bricks-shared.server", () => ({
   loadBricksEarnedAndIssued: vi.fn().mockResolvedValue({ earned: 0, issued: 0 }),

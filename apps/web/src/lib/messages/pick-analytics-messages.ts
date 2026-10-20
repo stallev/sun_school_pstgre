@@ -174,6 +174,10 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   school: {
     pageTitle: getMessage(analytics, "school.page_title"),
     pageSubtitle: getMessage(analytics, "school.page_subtitle"),
+    pageSubtitleActive: getMessage(analytics, "school.page_subtitle_active"),
+    pageSubtitleClosed: getMessage(analytics, "school.page_subtitle_closed"),
+    statusActive: getMessage(analytics, "school.status_active"),
+    statusClosed: getMessage(analytics, "school.status_closed"),
     groupsTableTitle: getMessage(analytics, "school.groups_table_title"),
     groupsTableHint: getMessage(analytics, "school.groups_table_hint"),
     columnGroup: getMessage(analytics, "school.column_group"),

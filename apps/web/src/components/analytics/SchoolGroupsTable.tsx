@@ -11,7 +11,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
-import { formatAnalyticsPercent } from "@/lib/analytics/format-analytics-display";
+import {
+  formatAnalyticsAverage,
+  formatAnalyticsPercent,
+} from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
@@ -19,9 +22,15 @@ type SchoolGroupsTableProps = {
   rows: SchoolGroupRow[];
   messages: AnalyticsMessages["school"];
   percentTemplate: string;
+  averageTemplate: string;
 };
 
-export const SchoolGroupsTable = ({ rows, messages, percentTemplate }: SchoolGroupsTableProps) => (
+export const SchoolGroupsTable = ({
+  rows,
+  messages,
+  percentTemplate,
+  averageTemplate,
+}: SchoolGroupsTableProps) => (
   <section className="space-y-2">
     <SectionTitle as="h2" className="text-lg">{messages.groupsTableTitle}</SectionTitle>
     <ContentText className="text-sm text-muted-foreground">{messages.groupsTableHint}</ContentText>
@@ -58,9 +67,16 @@ export const SchoolGroupsTable = ({ rows, messages, percentTemplate }: SchoolGro
                 <TableCell className="text-right tabular-nums">
                   {row.attendancePercent === null
                     ? "—"
-                    : formatAnalyticsPercent(percentTemplate, row.attendancePercent)}
+                    : formatAnalyticsPercent(
+                        percentTemplate,
+                        Number(row.attendancePercent.toFixed(1)),
+                      )}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">{row.testAverage}</TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {row.scoreAverage === "—"
+                    ? row.scoreAverage
+                    : formatAnalyticsAverage(averageTemplate, Number(row.scoreAverage))}
+                </TableCell>
                 <TableCell>
                   <StatusText tone={lastTone}>{lastLabel}</StatusText>
                 </TableCell>
