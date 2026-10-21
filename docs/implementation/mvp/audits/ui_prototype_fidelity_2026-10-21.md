@@ -322,3 +322,22 @@
 | `group` · `RosterTable.tsx` | подсказка | `mt-3 text-sm text-muted` вне карточки | `unenrollHint` под карточкой | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `group` × teacher × 4 ширины — новых deviation-строк нет; CTA «Добавить учеников» в шапке прототипа заменён формой внизу карточки (P09); статус согласия вместо явки/слоя B/D — продукт (СО-4), не визуал CU10.
+
+## Проход 9 — CU11 Bricks and calendar
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5  
+**Эталоны:** прототип `vBricks` · `vCalendar` · P03 `/calendar` · P05 bricks  
+**Ширины:** 390, 768, 820, 1024 · роли: teacher, admin
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU11) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `bricks` · `page.tsx` | шапка | H1 «Кирпичики», подпись группа · год | `PageHeader` + `pageSubtitle` | 390–1024 | **нет отклонения** |
+| `bricks` · `BricksPageSummary.tsx` | сводка | правило 1:1, «К выдаче», минус | `summaryRule` / `summaryToIssue` / `summaryNegative` | 390–1024 | **нет отклонения** |
+| `bricks` · `BalanceTable.tsx` | баланс | cobalt имя, bold числа, ring при минусе | `text-cobalt-ink`, `font-bold`, `ring-danger/40` | 390–1024 | **нет отклонения** |
+| `bricks` · `BalanceTable.tsx` | layout | карточки `xl:grid-cols-2` | таблица + журнал + диалоги | 390–1024 | **продукт (P05)**, не визуал CU11 |
+| `calendar` · `page.tsx` | шапка | prev/next + primary «Событие» | `PageHeader` actions: icon outline + primary | 390–1024 | **нет отклонения** |
+| `calendar` · `CalendarMonth.tsx` | сетка | `xl:grid-cols-[1.6fr_1fr]`, ячейки `min-h-14 sm:min-h-24` | совпадает | 390–1024 | **нет отклонения** |
+| `calendar` · `CalendarMonth.tsx` | легенда | типы под сеткой `text-sm text-ink-2` | иконки + подписи урок/выезд/отмена | 390–1024 | **нет отклонения** |
+| `calendar` · `page.tsx` | заголовок | H1 = месяц · год | H1 «Календарь», группа в subtitle | 390–1024 | **продукт**, не визуал CU11 |
+
+**Re-pass:** матрица `bricks` + `calendar` × teacher + admin × 4 ширины — новых deviation-строк нет; карточки кирпичиков vs таблица и Sheet формы — P05 UX, не P10 chrome.

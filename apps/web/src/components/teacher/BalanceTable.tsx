@@ -83,12 +83,15 @@ export const BalanceTable = ({
               return (
                 <TableRow
                   key={row.pupilId}
-                  className={cn(isSelected && "bg-cobalt-soft/40")}
+                  className={cn(
+                    isSelected && "bg-cobalt-soft/40",
+                    row.balance < 0 && "ring-1 ring-inset ring-danger/40",
+                  )}
                 >
                   <TableCell>
                     <button
                       type="button"
-                      className="min-h-11 w-full text-left font-medium text-ink underline-offset-2 hover:underline"
+                      className="min-h-11 w-full text-left font-medium text-cobalt-ink underline-offset-2 hover:underline"
                       aria-current={isSelected ? "true" : undefined}
                       onClick={() => selectPupil(row.pupilId)}
                     >
@@ -100,9 +103,11 @@ export const BalanceTable = ({
                       </StatusText>
                     ) : null}
                   </TableCell>
-                  <TableCell className="text-right tabular-nums">{row.earned}</TableCell>
-                  <TableCell className="text-right tabular-nums">{row.issued}</TableCell>
-                  <TableCell className={cn("text-right tabular-nums", row.balance < 0 && "text-danger")}>
+                  <TableCell className="text-right font-bold tabular-nums">{row.earned}</TableCell>
+                  <TableCell className="text-right font-bold tabular-nums">{row.issued}</TableCell>
+                  <TableCell
+                    className={cn("text-right font-bold tabular-nums", row.balance < 0 && "text-danger")}
+                  >
                     {row.balance}
                   </TableCell>
                   <TableCell>

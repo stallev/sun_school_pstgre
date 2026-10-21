@@ -90,12 +90,34 @@ const CalendarPage = async ({ searchParams }: CalendarPageProps) => {
           year: data.yearName,
         })}
         actions={
-          data.canMutate ? (
-            <Button render={<CustomLink href={calendarHref(data.gradeId, data.monthKey, { date: `${data.monthKey}-01` })} />}>
-              <Plus className="size-4" aria-hidden />
-              {messages.newEvent}
-            </Button>
-          ) : null
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                render={<CustomLink href={calendarHref(data.gradeId, prevMonth)} aria-label={messages.prevMonth} />}
+              >
+                <ChevronLeft className="size-4" aria-hidden />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                render={<CustomLink href={calendarHref(data.gradeId, nextMonth)} aria-label={messages.nextMonth} />}
+              >
+                <ChevronRight className="size-4" aria-hidden />
+              </Button>
+            </div>
+            {data.canMutate ? (
+              <Button
+                render={
+                  <CustomLink href={calendarHref(data.gradeId, data.monthKey, { date: `${data.monthKey}-01` })} />
+                }
+              >
+                <Plus className="size-4" aria-hidden />
+                {messages.newEvent}
+              </Button>
+            ) : null}
+          </div>
         }
       />
       {data.yearClosed ? (
@@ -112,22 +134,6 @@ const CalendarPage = async ({ searchParams }: CalendarPageProps) => {
           hiddenFields={{ month: data.monthKey }}
         />
       ) : null}
-      <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="icon"
-          render={<CustomLink href={calendarHref(data.gradeId, prevMonth)} aria-label={messages.prevMonth} />}
-        >
-          <ChevronLeft className="size-4" aria-hidden />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          render={<CustomLink href={calendarHref(data.gradeId, nextMonth)} aria-label={messages.nextMonth} />}
-        >
-          <ChevronRight className="size-4" aria-hidden />
-        </Button>
-      </div>
       {data.events.length === 0 && !params.date && !params.eventId ? (
         <EmptyState title={messages.emptyMonth} description={messages.emptyMonthCta} />
       ) : null}

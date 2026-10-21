@@ -110,8 +110,8 @@
 | `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [x] CU9 |
 | `check` | `/check`, `/lessons/[lessonId]/check` | teacher | экран | [x] CU9 |
 | `group` | `/group` | teacher | экран | [x] CU10 |
-| `bricks` | `/bricks` | teacher, admin | экран | [ ] CU11 |
-| `calendar` | `/calendar` | teacher, admin | экран | [ ] CU11 |
+| `bricks` | `/bricks` | teacher, admin | экран | [x] CU11 |
+| `calendar` | `/calendar` | teacher, admin | экран | [x] CU11 |
 | `rating` | `/rating` | teacher, admin | экран | [ ] CU12 |
 | `verses` | `/verses` | teacher, admin | экран | [ ] CU12 |
 | `analytics` | `/analytics` | teacher, admin | экран | [ ] CU13 |
@@ -214,7 +214,7 @@
 
 ### P10-CU11 — fix(ui): align bricks and calendar · Review: diff-only · Commit: auto
 
-- [ ] P10-T11 · T1 · Spec: P03 calendar · P05 bricks  
+- [x] P10-T11 · T1 · Spec: P03 calendar · P05 bricks  
       Files: `bricks/**`, `calendar/**`  
       Acceptance: оба ключа × teacher + admin × 4 ширины  
       Paths: H · N n/a · S n/a

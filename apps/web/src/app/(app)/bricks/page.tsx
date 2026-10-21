@@ -2,6 +2,7 @@ import { USER_ROLE } from "@sunschool/domain";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { BalanceTable } from "@/components/teacher/BalanceTable";
+import { BricksPageSummary } from "@/components/teacher/BricksPageSummary";
 import { LessonsGradeFilter } from "@/components/teacher/LessonsGradeFilter";
 import { loadBricksPage } from "@/data/bricks/load-bricks-page.server";
 import { isoTodayUtc } from "@/data/school/school-pupil-shared.server";
@@ -61,6 +62,8 @@ const BricksPage = async ({ searchParams }: BricksPageProps) => {
   }
 
   const hasEarned = data.rows.some((row) => row.earned > 0);
+  const totalToIssue = data.rows.reduce((sum, row) => sum + Math.max(0, row.balance), 0);
+  const negativeBalanceCount = data.rows.filter((row) => row.balance < 0).length;
 
   return (
     <div className="space-y-6">
@@ -84,6 +87,12 @@ const BricksPage = async ({ searchParams }: BricksPageProps) => {
       ) : !hasEarned ? (
         <EmptyState title={messages.emptyEarnedTitle} description={messages.emptyEarnedDescription} />
       ) : (
+        <>
+        <BricksPageSummary
+          totalToIssue={totalToIssue}
+          negativeBalanceCount={negativeBalanceCount}
+          messages={messages}
+        />
         <BalanceTable
           gradeId={data.gradeId}
           yearId={data.yearId}
@@ -95,6 +104,7 @@ const BricksPage = async ({ searchParams }: BricksPageProps) => {
           dictionaries={dictionaries}
           formError={formError}
         />
+        </>
       )}
     </div>
   );
