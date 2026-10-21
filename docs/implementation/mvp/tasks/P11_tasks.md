@@ -57,7 +57,7 @@
 
 ### P11-CU4 — feat(ui): add score pad to the catalog · Review: diff-only · Smoke: deferred · Commit: auto
 
-- [ ] P11-T7 · T1 · Spec: [design_system_lab_spec §5.3 `ScorePad`](../specs/design_system_lab_spec.md) · Contract: [homework_check_flow_spec §7.2](../specs/homework_check_flow_spec.md)
+- [x] P11-T7 · T1 · Spec: [design_system_lab_spec §5.3 `ScorePad`](../specs/design_system_lab_spec.md) · Contract: [homework_check_flow_spec §7.2](../specs/homework_check_flow_spec.md)
       Files: `apps/web/src/components/ui/score-pad.tsx`, `apps/web/src/components/ui/score-cell.tsx`, `apps/web/src/components/patterns/ChoiceMatrix.tsx`, секция Lab `/design-system`
       Acceptance: в Lab на 390 и md видны тихая ячейка, стихи inline, панель 0–10, одна открытая панель, Escape закрывает без выбора; `ScoreGroup` / `apps/web/src/components/teacher/ScoreGroup.tsx` не рефакторятся → ручной шаг Lab
       Paths: n/a — презентационный каталог без данных и мутаций

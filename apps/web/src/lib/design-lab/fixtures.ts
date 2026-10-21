@@ -35,6 +35,7 @@ export const LAB_TEXT = {
   tableEmpty: "Нет записей",
   drawerTitle: "Меню",
   homeworkItem: "Заучивание стиха",
+  scoreNotRated: "Не оценивалось",
 } as const;
 
 export const LAB_TABLE_ROWS = [
