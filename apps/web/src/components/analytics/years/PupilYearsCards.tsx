@@ -32,12 +32,13 @@ export const PupilYearsCards = ({
   pupilYearMessages,
   yearMessages,
 }: PupilYearsCardsProps) => (
-  <ul className="space-y-3 lg:hidden" aria-label={pupilYearMessages.tableCaption}>
+  <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={pupilYearMessages.tableCaption}>
     {rows.map((row) => {
       const selected = row.yearId === selectedYearId;
       const dash = row.insufficientLessons;
       return (
         <RecordCard
+          cardType="analytics"
           key={row.yearId}
           selected={selected}
           title={
@@ -49,7 +50,7 @@ export const PupilYearsCards = ({
             >
               {row.yearName}
               {dash ? (
-                <span className="block text-xs font-normal text-muted">
+                <span className="block text-base font-normal text-muted">
                   {fillMessage(pupilYearMessages.fewLessons, { count: row.lessons })}
                 </span>
               ) : null}

@@ -8,9 +8,10 @@ type ConductedLessonsCardsProps = {
 };
 
 export const ConductedLessonsCards = ({ snapshot, messages }: ConductedLessonsCardsProps) => (
-  <ul className="space-y-3 lg:hidden" aria-label={messages.conducted.tableCaption}>
+  <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.conducted.tableCaption}>
     {snapshot.teachers.map((row) => (
       <RecordCard
+        cardType="analytics"
         key={row.teacherId}
         title={row.displayName}
         note={row.noLongerAssigned ? messages.conducted.noLongerAssigned : undefined}

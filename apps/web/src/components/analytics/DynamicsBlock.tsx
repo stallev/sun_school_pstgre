@@ -56,11 +56,13 @@ export const DynamicsBlock = ({
   const decliningLabel = messages.dynamicsTrendLabels[TREND_LABEL.DECLINING].label;
 
   return (
-    <Card className="flex flex-col gap-4 overflow-visible p-4 sm:p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <Card className="flex flex-col gap-3 overflow-visible p-3">
+      <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <SectionTitle as="h2">{messages.dynamicsTitle}</SectionTitle>
-          <ContentText className="mt-1 max-w-prose text-sm text-ink-2">{messages.dynamicsHint}</ContentText>
+          <ContentText className="mt-1 max-w-prose text-[1.3125rem] leading-snug text-ink-2">
+            {messages.dynamicsHint}
+          </ContentText>
         </div>
         <div className="text-right">
           <p className={`inline-flex items-center gap-1.5 font-bold ${trendStyle.toneClass}`}>
@@ -68,7 +70,7 @@ export const DynamicsBlock = ({
             {trendStyle.label}
           </p>
           {dynamics.trendSlope !== null && dynamics.trendLabel !== TREND_LABEL.INSUFFICIENT_DATA ? (
-            <ContentText className="text-sm tabular-nums text-ink-2">
+            <ContentText className="text-base tabular-nums text-ink-2">
               {fillMessage(messages.dynamicsSlope, { delta: formatAnalyticsDelta(dynamics.trendSlope) })}
             </ContentText>
           ) : null}
@@ -84,9 +86,11 @@ export const DynamicsBlock = ({
           }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 border-t border-line pt-3 lg:grid-cols-2 lg:border-t-0 lg:pt-0 lg:pl-3 lg:border-l">
           <div className="min-w-0 space-y-2">
-            <ContentText className="text-sm font-medium">{messages.dynamicsNormalizedTitle}</ContentText>
+            <ContentText className="text-[1.3125rem] font-medium leading-snug">
+              {messages.dynamicsNormalizedTitle}
+            </ContentText>
             <LineChart
               points={dynamics.smoothed}
               formatLabel={formatDate}
@@ -96,7 +100,9 @@ export const DynamicsBlock = ({
             />
           </div>
           <div className="min-w-0 space-y-2">
-            <ContentText className="text-sm font-medium">{messages.dynamicsDeltaTitle}</ContentText>
+            <ContentText className="text-[1.3125rem] font-medium leading-snug">
+              {messages.dynamicsDeltaTitle}
+            </ContentText>
             {deltaValues.length >= 1 ? (
               <>
                 <BarChart
@@ -107,7 +113,7 @@ export const DynamicsBlock = ({
                   yDomain={[-deltaLimit, deltaLimit]}
                   ariaLabel={messages.dynamicsDeltaAria}
                 />
-                <p className="mt-1 flex gap-4 text-xs text-ink-2">
+                <p className="mt-1 flex gap-2 text-base text-ink-2">
                   <span className="inline-flex items-center gap-1.5">
                     <span className="size-2.5 rounded-sm bg-series-1" aria-hidden />
                     {growingLabel}

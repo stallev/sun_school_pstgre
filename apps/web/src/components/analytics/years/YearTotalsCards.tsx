@@ -30,13 +30,14 @@ export const YearTotalsCards = ({
   yearMessages,
   label,
 }: YearTotalsCardsProps) => (
-  <ul className="space-y-3 lg:hidden" aria-label={label}>
+  <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={label}>
     {rows.map((row) => {
       const selected = row.yearId === selectedYearId;
       const isActive = row.status === ACADEMIC_YEAR_STATUS.ACTIVE;
       const staleMethod = row.methodologyVersion !== ANALYTICS_METHODOLOGY_VERSION;
       return (
         <RecordCard
+          cardType="analytics"
           key={row.yearId}
           selected={selected}
           title={
@@ -47,7 +48,7 @@ export const YearTotalsCards = ({
               className="min-h-11 text-left hover:text-cobalt-ink"
             >
               {row.yearName}
-              <span className="block text-sm font-normal text-muted-foreground">
+              <span className="block text-base font-normal text-muted-foreground">
                 {isActive ? yearMessages.activeBadge : yearMessages.closedBadge}
                 {staleMethod
                   ? ` · ${fillMessage(yearMessages.methodologyBadge, { version: row.methodologyVersion })}`
@@ -63,7 +64,7 @@ export const YearTotalsCards = ({
               value: (
                 <>
                   <span className="tabular-nums">{formatYearMetricValue(key, row.totals, messages)}</span>
-                  <span className="block text-sm font-normal text-ink-2">
+                  <span className="block text-base font-normal text-ink-2">
                     <DiffBadge
                       metric={key}
                       delta={row.diff?.[key] ?? null}

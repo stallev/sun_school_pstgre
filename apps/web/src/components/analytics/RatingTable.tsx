@@ -27,9 +27,10 @@ export const RatingTable = ({ rows, messages }: RatingTableProps) => {
 
   return (
     <>
-      <ul className="space-y-3 lg:hidden" aria-label={messages.tableCaption}>
+      <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.tableCaption}>
         {rows.map((row) => (
           <RecordCard
+            cardType="analytics"
             key={row.pupilId}
             title={
               <span className="flex items-baseline gap-3">

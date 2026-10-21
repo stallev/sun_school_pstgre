@@ -28,13 +28,14 @@ export const SchoolClosedGroupCards = ({
 
   return (
     <ul
-      className="space-y-3 lg:hidden"
+      className="space-y-2 lg:space-y-3 lg:hidden"
       aria-label={fillMessage(schoolMessages.closedTableCaption, { year: yearName })}
     >
       {rows.map((row) => {
         if (!row.hadGroupInYear) {
           return (
             <RecordCard
+              cardType="analytics"
               key={row.gradeId}
               title={row.gradeName}
               note={schoolMessages.noGroupInYear}
@@ -43,6 +44,7 @@ export const SchoolClosedGroupCards = ({
         }
         return (
           <RecordCard
+            cardType="analytics"
             key={row.gradeId}
             title={row.gradeName}
             fields={[
@@ -59,7 +61,7 @@ export const SchoolClosedGroupCards = ({
                 value: (
                   <>
                     <span className="tabular-nums">{formatYearMetricValue(key, row.totals, messages)}</span>
-                    <span className="block text-sm font-normal text-ink-2">
+                    <span className="block text-base font-normal text-ink-2">
                       <DiffBadge
                         metric={key}
                         delta={row.diff?.[key] ?? null}

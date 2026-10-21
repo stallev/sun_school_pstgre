@@ -35,9 +35,10 @@ export const PupilLessonCards = ({
   locale,
   showCorrectActions = false,
 }: PupilLessonCardsProps) => (
-  <ul className="space-y-3 lg:hidden" aria-label={messages.lessonsTitle}>
+  <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.lessonsTitle}>
     {lessons.map((row) => (
       <RecordCard
+        cardType="analytics"
         key={row.lessonId}
         title={
           <span className="block">
@@ -61,7 +62,7 @@ export const PupilLessonCards = ({
                     ? messages.kpiEmpty
                     : String(row.testScore)}
                 {row.submittedLate && row.testConducted ? (
-                  <ContentText className="block text-sm text-muted">
+                  <ContentText className="block text-base text-muted">
                     {fillMessage(messages.submittedLate, {
                       date: formatAnalyticsShortDate(row.lessonDate, locale),
                     })}
@@ -76,7 +77,7 @@ export const PupilLessonCards = ({
               <>
                 {row.notebookScore === null ? messages.kpiEmpty : String(row.notebookScore)}
                 {row.submittedLate ? (
-                  <ContentText className="block text-sm text-muted">
+                  <ContentText className="block text-base text-muted">
                     {fillMessage(messages.submittedLate, {
                       date: formatAnalyticsShortDate(row.lessonDate, locale),
                     })}
@@ -90,7 +91,7 @@ export const PupilLessonCards = ({
           showCorrectActions && row.homeworkChecked ? (
             <CustomLink
               href={`/lessons/${row.lessonId}/check?pupil=${pupilId}`}
-              className="inline-flex min-h-11 items-center text-sm text-cobalt-ink hover:underline"
+              className="inline-flex min-h-11 items-center text-[1.3125rem] leading-snug text-cobalt-ink hover:underline"
             >
               {messages.lessonCorrectLabel}
             </CustomLink>

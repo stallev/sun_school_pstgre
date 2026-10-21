@@ -87,7 +87,7 @@ export const ChartTableToggle = ({
   };
 
   return (
-    <Card className={cn("flex h-full min-w-0 flex-col overflow-visible p-5", className)}>
+    <Card className={cn("flex h-full min-w-0 flex-col gap-3 overflow-visible p-3", className)}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Heading as="h3" level="section" className="text-lg">
           {title}
@@ -150,7 +150,7 @@ export const ChartTableToggle = ({
         />
       )}
       </div>
-      <ContentText className="mt-2 text-sm text-muted">{methodology}</ContentText>
+      <ContentText className="mt-1 text-base text-muted">{methodology}</ContentText>
     </Card>
   );
 };

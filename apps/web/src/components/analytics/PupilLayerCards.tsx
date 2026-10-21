@@ -75,9 +75,10 @@ const pupilFields = (
 };
 
 export const PupilLayerCards = ({ rows, messages, variant, locale }: PupilLayerCardsProps) => (
-  <ul className="space-y-3 lg:hidden" aria-label={messages.tables.columnName}>
+  <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.tables.columnName}>
     {rows.map((row) => (
       <RecordCard
+        cardType="analytics"
         key={row.pupilId}
         title={
           <CustomLink href={`/analytics/pupils/${row.pupilId}`} className="hover:text-cobalt-ink">

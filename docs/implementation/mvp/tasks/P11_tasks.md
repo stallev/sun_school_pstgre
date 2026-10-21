@@ -75,7 +75,7 @@
 
 ### P11-CU6 — feat(ui): enlarge analytics card type · Review: diff-only · Smoke: deferred · Commit: auto
 
-- [ ] P11-T9 · T1 · Spec: [analytics_screens_spec §4.1](../specs/analytics_screens_spec.md)
+- [x] P11-T9 · T1 · Spec: [analytics_screens_spec §4.1](../specs/analytics_screens_spec.md)
       Files: `apps/web/src/components/analytics/**` (только тип карточки: `Card` / `RecordCard` / мобильные карточки)
       Acceptance: тело `text-[1.3125rem] leading-snug`, мета `text-base`, `p-3`, `gap-3` / `gap-2`; KPI и заголовок страницы без изменений; не тронуты `NumberDisplay`, `BarChart`, `ContentText`, таблицы `lg+` → сверка экранов `/analytics`, ученик, школа, рейтинг на 390 и md
       Paths: H [§4.1] · N n/a — copy/CSS, без мутации · S n/a — права экранов не меняются

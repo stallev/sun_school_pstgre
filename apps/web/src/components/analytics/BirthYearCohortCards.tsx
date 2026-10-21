@@ -11,9 +11,10 @@ type BirthYearCohortCardsProps = {
 export const BirthYearCohortCards = ({ rows, messages }: BirthYearCohortCardsProps) => {
   const tables = messages.tables;
   return (
-    <ul className="space-y-3 lg:hidden" aria-label={tables.layerBirthYearTitle}>
+    <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={tables.layerBirthYearTitle}>
       {rows.map((row) => (
         <RecordCard
+          cardType="analytics"
           key={row.birthYear ?? "unknown"}
           title={row.birthYear ?? messages.kpiEmpty}
           fields={[

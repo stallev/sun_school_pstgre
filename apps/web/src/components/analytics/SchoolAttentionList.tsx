@@ -17,9 +17,9 @@ export const SchoolAttentionList = ({ items, messages }: SchoolAttentionListProp
   if (items.length === 0) return null;
 
   return (
-    <section className="mt-8 space-y-3">
+    <section className="mt-8 space-y-2 lg:space-y-3">
       <SectionTitle as="h2" className="mb-3 text-lg">{messages.attentionTitle}</SectionTitle>
-      <Card className="divide-y divide-line p-0">
+      <Card className="divide-y divide-line overflow-hidden p-0">
         <ul>
           {items.map((item) => {
             const title =
@@ -35,13 +35,13 @@ export const SchoolAttentionList = ({ items, messages }: SchoolAttentionListProp
               <li key={item.kind}>
                 <CustomLink
                   href={item.href}
-                  className="flex w-full items-center gap-4 px-5 py-4 text-left hover:bg-paper/70"
+                  className="flex w-full items-center gap-2 px-3 py-3 text-left hover:bg-paper/70"
                 >
                   <span className="min-w-0 flex-1">
-                    <StatusText tone={tone} className="block text-base">
+                    <StatusText tone={tone} className="block text-[1.3125rem] leading-snug">
                       {title}
                     </StatusText>
-                    <ContentText className="mt-0.5 block text-sm text-muted-foreground">
+                    <ContentText className="mt-1 block text-base text-muted-foreground">
                       {description}
                     </ContentText>
                   </span>

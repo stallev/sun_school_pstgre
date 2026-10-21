@@ -210,7 +210,7 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
         variant="layer-b"
         locale={locale}
       />
-      <div className="mt-8 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid min-w-0 grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
         <PupilLayerTable
           title={messages.tables.layerCTitle}
           rows={layerC}

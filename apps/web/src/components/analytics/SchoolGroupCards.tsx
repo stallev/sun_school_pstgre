@@ -26,7 +26,7 @@ export const SchoolGroupCards = ({
   percentTemplate,
   averageTemplate,
 }: SchoolGroupCardsProps) => (
-  <ul className="space-y-3 lg:hidden" aria-label={messages.groupsTableTitle}>
+  <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.groupsTableTitle}>
     {rows.map((row) => {
       const lastLabel =
         row.lastLessonStatus === "ok"
@@ -40,6 +40,7 @@ export const SchoolGroupCards = ({
       const percent = attendanceLabel(row, percentTemplate);
       return (
         <RecordCard
+          cardType="analytics"
           key={row.gradeId}
           title={row.gradeName}
           fields={[

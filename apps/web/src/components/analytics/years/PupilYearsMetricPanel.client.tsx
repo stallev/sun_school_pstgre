@@ -56,7 +56,7 @@ export const PupilYearsMetricPanel = ({
   );
 
   return (
-    <Card className="mt-4 space-y-3 overflow-visible p-4 sm:p-5">
+    <Card className="mt-4 flex flex-col gap-3 overflow-visible p-3">
       <div className="max-w-md" aria-busy={isPending}>
         <SegmentedControl
           options={METRIC_OPTIONS(pupilYearMessages)}
@@ -125,7 +125,7 @@ export const PupilYearsMetricPanel = ({
           ariaLabel={pupilYearChartAria(pupilYearMessages, selectedMetric)}
         />
       )}
-      <ContentText className="text-sm text-muted">{pupilYearMessages.chartNote}</ContentText>
+      <ContentText className="text-base text-muted">{pupilYearMessages.chartNote}</ContentText>
     </Card>
   );
 };
