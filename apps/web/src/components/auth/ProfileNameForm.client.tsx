@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useActionState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
@@ -19,9 +20,10 @@ import { useMutationResultEffect } from "@/lib/ui/use-mutation-result-effects";
 type ProfileNameFormProps = {
   initialNames: { lastName: string; firstName: string; middleName: string };
   dictionaries: { auth: Dictionary; common: Dictionary };
+  metaLines?: ReactNode;
 };
 
-export const ProfileNameForm = ({ initialNames, dictionaries }: ProfileNameFormProps) => {
+export const ProfileNameForm = ({ initialNames, dictionaries, metaLines }: ProfileNameFormProps) => {
   const messages = useAuthMessages();
   const [state, formAction, pending] = useActionState<MutationResult | null, FormData>(
     updateOwnNameAction,
@@ -46,7 +48,7 @@ export const ProfileNameForm = ({ initialNames, dictionaries }: ProfileNameFormP
   return (
     <form action={formAction} className="space-y-4" aria-busy={pending}>
       {formError ? <AlertText role="alert">{formError}</AlertText> : null}
-      <FieldGroup className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <FieldGroup className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field>
           <FieldLabel htmlFor="profile-lastName">{messages.register.lastName}</FieldLabel>
           <Input
@@ -69,8 +71,11 @@ export const ProfileNameForm = ({ initialNames, dictionaries }: ProfileNameFormP
             aria-invalid={Boolean(fieldErrors?.firstName)}
           />
         </Field>
-        <Field>
-          <FieldLabel htmlFor="profile-middleName">{messages.register.middleName}</FieldLabel>
+        <Field className="sm:col-span-2">
+          <FieldLabel htmlFor="profile-middleName">
+            {messages.register.middleName}{" "}
+            <span className="font-normal text-muted-foreground">({messages.register.middleNameOptional})</span>
+          </FieldLabel>
           <Input
             id="profile-middleName"
             name="middleName"
@@ -81,6 +86,7 @@ export const ProfileNameForm = ({ initialNames, dictionaries }: ProfileNameFormP
           />
         </Field>
       </FieldGroup>
+      {metaLines ? <div className="space-y-1 text-sm text-ink-2">{metaLines}</div> : null}
       <Button type="submit" disabled={pending} aria-busy={pending} className={FORM_SUBMIT_BUTTON_CLASS}>
         {pending ? <Loader2Icon className="size-4 animate-spin" aria-hidden /> : null}
         {pending ? messages.profile.savePending : messages.profile.save}

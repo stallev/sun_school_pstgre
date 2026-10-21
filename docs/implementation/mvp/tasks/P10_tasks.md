@@ -102,7 +102,7 @@
 | `login` | `/login` | аноним | экран | [x] CU4 |
 | `register` | `/register` | регистрация | экран | [x] CU4 |
 | `pending` | `/pending` | заявка/отклонена | экран | [x] CU4 |
-| `profile` | `/profile` | активные | экран | [ ] CU5 |
+| `profile` | `/profile` | активные | экран | [x] CU5 |
 | `today` | `/today` | teacher | экран | [ ] CU6 |
 | `lessons` | `/lessons` | teacher | экран | [ ] CU7 |
 | `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [ ] CU8 |
@@ -172,7 +172,7 @@
 
 ### P10-CU5 — fix(ui): align profile screen blocks · Review: diff-only · Commit: auto
 
-- [ ] P10-T5 · T1 · Spec: access spec §9  
+- [x] P10-T5 · T1 · Spec: access spec §9  
       Files: `apps/web/src/app/profile/**`  
       Acceptance: матрица `profile` × активная роль × 4 ширины; кнопки/секции по прототипу (не переопределять P09 CTA-логику)  
       Paths: H · N n/a · S n/a

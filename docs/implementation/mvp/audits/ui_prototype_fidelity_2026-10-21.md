@@ -220,3 +220,20 @@
 | `privacy` · `privacy/page.tsx` | заголовок | `pageHead` + версия | `PageHeader` + version description | 390–1024 | **нет отклонения** |
 
 **Re-pass:** повтор по матрице auth не добавил новых deviation-строк; копирайт P09 и ссылка согласия на `/login` не менялись.
+
+## Проход 4 — CU5 Profile screen
+
+**Субагент:** implementer / composer-2.5  
+**Эталоны:** прототип `vProfile` · access spec §9  
+**Ширины:** 390, 768, 820, 1024 · роли: teacher, admin (ACTIVE)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU5) | Ширины | Серьёзность |
+|-------------|------|----------------------------|------------------|--------|-------------|
+| `profile` · `page.tsx` | сетка | `max-w-5xl` `lg:grid-cols-2` `gap-4`, удаление `lg:col-span-2` | совпадает | 390–1024 | **нет отклонения** |
+| `profile` · `ProfileNameForm` | ФИО | `sm:grid-cols-2`, отчество optional + `col-span-2` | совпадает | 390–1024 | **нет отклонения** |
+| `profile` · `page.tsx` | роли/язык | в карточке ФИО, `text-sm text-ink-2` | `metaLines` в форме | 390–1024 | **нет отклонения** |
+| `profile` · `LinkedIdentityRow` | способы входа | `divide-y`, outline «Подключить», ok-status | `ul divide-line`, `variant outline`, `StatusText` | 390–1024 | **нет отклонения** |
+| `profile` · `page.tsx` | согласие + выход | в карточке входов, ghost «Выйти» | consent + `AuthSignOutLink` ghost | 390–1024 | **нет отклонения** |
+| `profile` · `ProfileDeletionPanel` | удаление | danger CTA; P09 диалог/причина | без изменения мутаций | 390–1024 | **сознательно** (P09) |
+
+**Re-pass:** матрица `profile` × ACTIVE teacher/admin × 4 ширины — новых deviation-строк нет; логика CTA/link/unlink/delete не менялась.
