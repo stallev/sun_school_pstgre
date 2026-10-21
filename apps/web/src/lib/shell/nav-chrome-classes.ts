@@ -7,7 +7,7 @@ export const SHELL_NAV_DROPDOWN_PANEL =
 
 /** Shared topnav control metrics — `Button` size `nav` (h-9), shell-specific color states below. */
 export const SHELL_TOPNAV_TRIGGER = cn(
-  buttonVariants({ size: "nav" }),
+  buttonVariants({ variant: "ghost", size: "nav" }),
   "active:scale-100 motion-reduce:active:scale-100 transition-[background-color,color] duration-100",
 );
 
@@ -16,7 +16,9 @@ export const shellTopNavTriggerClass = (options: {
   isOpen: boolean;
 }): string => {
   const { isActive, isOpen } = options;
-  if (isActive) return `${SHELL_TOPNAV_TRIGGER} bg-cobalt-soft font-bold text-cobalt-ink`;
-  if (isOpen) return `${SHELL_TOPNAV_TRIGGER} bg-paper text-ink`;
-  return `${SHELL_TOPNAV_TRIGGER} text-ink-2 hover:bg-paper hover:text-ink`;
+  if (isActive) {
+    return cn(SHELL_TOPNAV_TRIGGER, "bg-cobalt-soft font-bold text-cobalt-ink");
+  }
+  if (isOpen) return cn(SHELL_TOPNAV_TRIGGER, "bg-paper text-ink");
+  return cn(SHELL_TOPNAV_TRIGGER, "text-ink-2 hover:bg-paper hover:text-ink");
 };
