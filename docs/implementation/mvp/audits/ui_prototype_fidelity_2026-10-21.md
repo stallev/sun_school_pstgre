@@ -360,3 +360,22 @@
 | `verses` · `VersesCatalog.client.tsx` | строка | grid ref / italic text / «Уроки:» или «Не использован» | `px-5`, `font-display` italic, inline links | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `rating` + `verses` × teacher + admin × 4 ширины — новых deviation-строк нет; упрощённая таблица рейтинга и ссылки «Урок N» при заголовке-заглушке — P05 данные/копирайт, не P10 chrome.
+
+## Проход 11 — CU13 Group analytics
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5
+**Эталоны:** прототип `vAnalytics` · [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §5
+**Ширины:** 390, 768, 820, 1024 · роли: teacher, admin
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU13) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `analytics` · `page.tsx` | контейнер | без page-level horizontal scroll | `min-w-0 max-w-full overflow-x-hidden` | 390–1024 | **нет отклонения** |
+| `analytics` · `AnalyticsPeriodKpiSection.tsx` | главная цифра | `font-display` ~3.5rem | `NumberDisplay` `text-[3.5rem]` + KPI row `lg:grid` | 390–1024 | **нет отклонения** |
+| `analytics` · `KpiTiles.tsx` | итоги года | `text-2xl`, label `text-sm` | `NumberDisplay size="kpi"`, `text-muted` | 390–1024 | **нет отклонения** |
+| `analytics` · `YearStrip` / chips | touch | кнопки ≥44px | `min-h-11`, period chips `h-11` | 390–1024 | **нет отклонения** |
+| `analytics` · `GroupAnalyticsTables.tsx` | таблицы | `overflow-x-auto`, thead muted, px-5/py-3 | min-w 36–40rem, RatingTable-паттерн | 390–1024 | **нет отклонения** |
+| `analytics` · `ChartTableToggle.tsx` | графики | CARD `p-5`, H3 `text-lg` | `sm:p-5`, `SectionTitle` lg | 390–1024 | **нет отклонения** |
+| `analytics` · `ConductedLessonsTable.tsx` | учителя | min-w 40rem, caption sr-only | совпадает + `table_caption` | 390–1024 | **нет отклонения** |
+| `analytics` · `MethodologyNote.tsx` | методология | `mt-8`, border-t | совпадает | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `analytics` × teacher + admin × 4 ширины — новых deviation-строк нет; ссылки на уроки в колонке «Уроки» — ordinals без deep link (P08), не P10 chrome.

@@ -78,7 +78,7 @@ export const YearTotalsTable = ({
     <Card className="overflow-x-auto">
       <Table className="min-w-[46rem] text-left text-base">
         <caption className="sr-only">{fillMessage(yearMessages.tableCaption, { group: groupLabel })}</caption>
-        <TableHeader className="border-b border-line text-base text-muted-foreground">
+        <TableHeader className="border-b border-line text-sm text-muted">
           <TableRow>
             <TableHead scope="col" className="px-5 py-3 font-normal">
               {yearMessages.columnYear}

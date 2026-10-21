@@ -84,9 +84,9 @@ export const ChartTableToggle = ({
   };
 
   return (
-    <Card className="flex min-w-0 flex-col gap-3 overflow-visible p-4">
+    <Card className="flex min-w-0 flex-col gap-3 overflow-visible p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <SectionTitle as="h2" className="text-base">{title}</SectionTitle>
+        <SectionTitle as="h2" className="text-lg">{title}</SectionTitle>
         <div className="flex gap-1">
           <Button
             type="button"
@@ -143,7 +143,7 @@ export const ChartTableToggle = ({
           ariaLabel={title}
         />
       )}
-      <ContentText className="text-sm text-muted-foreground">{methodology}</ContentText>
+      <ContentText className="text-sm text-ink-2">{methodology}</ContentText>
     </Card>
   );
 };

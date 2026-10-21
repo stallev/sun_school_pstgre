@@ -39,7 +39,7 @@ export const AnalyticsPeriodChips = ({
         role="radio"
         aria-checked={yearActive}
         className={cn(
-          "inline-flex h-9 items-center rounded-lg border px-3 text-sm",
+          "inline-flex h-11 min-w-11 items-center rounded-lg border px-3 text-sm",
           yearActive ? "border-line-strong bg-surface font-medium text-ink" : "border-line text-ink-2",
         )}
       >
@@ -50,7 +50,7 @@ export const AnalyticsPeriodChips = ({
         role="radio"
         aria-checked={monthActive}
         className={cn(
-          "inline-flex h-9 items-center rounded-lg border px-3 text-sm",
+          "inline-flex h-11 min-w-11 items-center rounded-lg border px-3 text-sm",
           monthActive ? "border-line-strong bg-surface font-medium text-ink" : "border-line text-ink-2",
         )}
       >

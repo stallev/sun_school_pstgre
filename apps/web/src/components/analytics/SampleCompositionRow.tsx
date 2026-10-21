@@ -11,7 +11,7 @@ type SampleCompositionRowProps = {
 export const SampleCompositionRow = ({ snapshot, messages }: SampleCompositionRowProps) => {
   const { A, B, C, D } = snapshot.sampleCounts;
   return (
-    <ContentText className="text-sm text-ink-2">
+    <ContentText className="mb-6 text-sm text-ink-2">
       {fillMessage(messages.sampleComposition, { a: A, b: B, c: C, d: D })}
     </ContentText>
   );

@@ -56,49 +56,79 @@ const PupilLayerTable = ({
     <SectionTitle as="h2" className="text-lg">{title}</SectionTitle>
     {intro ? <ContentText className="text-sm text-ink-2">{intro}</ContentText> : null}
     {rows.length === 0 ? (
-      <ContentText className="text-sm text-muted-foreground">{messages.tables.emptySection}</ContentText>
+      <ContentText className="text-sm text-muted">{messages.tables.emptySection}</ContentText>
     ) : (
       <Card className="max-w-full overflow-x-auto p-0">
-        <Table className="min-w-[20rem] text-base">
-          <TableHeader>
-            <TableRow>
-              <TableHead scope="col">{messages.tables.columnName}</TableHead>
+        <Table
+          className={
+            variant === "layer-a"
+              ? "min-w-[40rem] text-base"
+              : variant === "layer-b"
+                ? "min-w-[34rem] text-base"
+                : "min-w-[20rem] text-base"
+          }
+        >
+          <TableHeader className="border-b border-line text-sm text-muted">
+            <TableRow className="hover:bg-transparent">
+              <TableHead scope="col" className="px-5 py-3 font-normal">
+                {messages.tables.columnName}
+              </TableHead>
               {variant !== "layer-d" ? (
-                <TableHead scope="col">{messages.tables.columnBirthYear}</TableHead>
+                <TableHead scope="col" className="px-3 py-3 font-normal">
+                  {messages.tables.columnBirthYear}
+                </TableHead>
               ) : null}
               {variant === "layer-a" ? (
                 <>
-                  <TableHead scope="col">{messages.tables.columnAttendance}</TableHead>
-                  <TableHead scope="col">{messages.tables.columnAttendedChecked}</TableHead>
-                  <TableHead scope="col">{messages.tables.columnVerses}</TableHead>
-                  <TableHead scope="col">{messages.tables.columnTest}</TableHead>
-                  <TableHead scope="col">{messages.tables.columnNotebook}</TableHead>
+                  <TableHead scope="col" className="px-3 py-3 font-normal">
+                    {messages.tables.columnAttendance}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 font-normal">
+                    {messages.tables.columnAttendedChecked}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 font-normal">
+                    {messages.tables.columnVerses}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 font-normal">
+                    {messages.tables.columnTest}
+                  </TableHead>
+                  <TableHead scope="col" className="px-5 py-3 font-normal">
+                    {messages.tables.columnNotebook}
+                  </TableHead>
                 </>
               ) : null}
               {variant === "layer-b" ? (
                 <>
-                  <TableHead scope="col">{messages.tables.columnAttended}</TableHead>
-                  <TableHead scope="col">{messages.tables.columnCheckedLessons}</TableHead>
-                  <TableHead scope="col">{messages.tables.columnAttendance}</TableHead>
+                  <TableHead scope="col" className="px-3 py-3 font-normal">
+                    {messages.tables.columnAttended}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 font-normal">
+                    {messages.tables.columnCheckedLessons}
+                  </TableHead>
+                  <TableHead scope="col" className="px-5 py-3 font-normal">
+                    {messages.tables.columnAttendance}
+                  </TableHead>
                 </>
               ) : null}
               {variant === "layer-d" ? (
-                <TableHead scope="col">{messages.tables.columnEnrolledSince}</TableHead>
+                <TableHead scope="col" className="px-5 py-3 font-normal">
+                  {messages.tables.columnEnrolledSince}
+                </TableHead>
               ) : null}
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="divide-y divide-line">
             {rows.map((row) => (
-              <TableRow key={row.pupilId}>
-                <TableCell>
+              <TableRow key={row.pupilId} className="hover:bg-transparent">
+                <TableCell className="px-5 py-3">
                   <CustomLink href={`/analytics/pupils/${row.pupilId}`}>{row.displayName}</CustomLink>
                 </TableCell>
                 {variant !== "layer-d" ? (
-                  <TableCell>{row.birthYear ?? messages.kpiEmpty}</TableCell>
+                  <TableCell className="px-3 py-3">{row.birthYear ?? messages.kpiEmpty}</TableCell>
                 ) : null}
                 {variant === "layer-a" ? (
                   <>
-                    <TableCell>
+                    <TableCell className="px-3 py-3">
                       {row.attendanceRate === null
                         ? messages.kpiEmpty
                         : formatAnalyticsPercent(
@@ -106,22 +136,28 @@ const PupilLayerTable = ({
                             Number(row.attendanceRate.toFixed(1)),
                           )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-3 py-3">
                       {fillMessage(messages.tables.attendedCheckedValue, {
                         attended: row.attendedLessonCount,
                         checked: row.checkedLessonCount,
                       })}
                     </TableCell>
-                    <TableCell>{formatScore(row.versesAverage.average, row.versesAverage.observationCount, messages)}</TableCell>
-                    <TableCell>{formatScore(row.testAverage.average, row.testAverage.observationCount, messages)}</TableCell>
-                    <TableCell>{formatScore(row.notebookAverage.average, row.notebookAverage.observationCount, messages)}</TableCell>
+                    <TableCell className="px-3 py-3">
+                      {formatScore(row.versesAverage.average, row.versesAverage.observationCount, messages)}
+                    </TableCell>
+                    <TableCell className="px-3 py-3">
+                      {formatScore(row.testAverage.average, row.testAverage.observationCount, messages)}
+                    </TableCell>
+                    <TableCell className="px-5 py-3">
+                      {formatScore(row.notebookAverage.average, row.notebookAverage.observationCount, messages)}
+                    </TableCell>
                   </>
                 ) : null}
                 {variant === "layer-b" ? (
                   <>
-                    <TableCell>{row.attendedLessonCount}</TableCell>
-                    <TableCell>{row.checkedLessonCount}</TableCell>
-                    <TableCell>
+                    <TableCell className="px-3 py-3">{row.attendedLessonCount}</TableCell>
+                    <TableCell className="px-3 py-3">{row.checkedLessonCount}</TableCell>
+                    <TableCell className="px-5 py-3">
                       {row.attendanceRate === null
                         ? messages.kpiEmpty
                         : formatAnalyticsPercent(
@@ -132,7 +168,7 @@ const PupilLayerTable = ({
                   </>
                 ) : null}
                 {variant === "layer-d" ? (
-                  <TableCell>
+                  <TableCell className="px-5 py-3">
                     {formatAnalyticsShortDate(row.enrolledSinceIso, locale)}
                   </TableCell>
                 ) : null}
@@ -189,26 +225,38 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
         <SectionTitle as="h2" className="text-lg">{messages.tables.layerBirthYearTitle}</SectionTitle>
         <ContentText className="text-sm text-ink-2">{messages.tables.layerBirthYearNote}</ContentText>
         {birthYearRows.length === 0 ? (
-          <ContentText className="text-sm text-muted-foreground">{messages.tables.emptySection}</ContentText>
+          <ContentText className="text-sm text-muted">{messages.tables.emptySection}</ContentText>
         ) : (
           <Card className="max-w-full overflow-x-auto p-0">
-            <Table className="min-w-[20rem] text-base">
-              <TableHeader>
-                <TableRow>
-                  <TableHead scope="col">{messages.tables.columnBirthYear}</TableHead>
-                  <TableHead scope="col" className="text-right">{messages.tables.columnBirthYearKids}</TableHead>
-                  <TableHead scope="col" className="text-right">{messages.tables.columnAttendance}</TableHead>
-                  <TableHead scope="col" className="text-right">{messages.tables.columnVerses}</TableHead>
-                  <TableHead scope="col" className="text-right">{messages.tables.columnTest}</TableHead>
-                  <TableHead scope="col" className="text-right">{messages.tables.columnNotebook}</TableHead>
+            <Table className="min-w-[36rem] text-base">
+              <TableHeader className="border-b border-line text-sm text-muted">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead scope="col" className="px-5 py-3 font-normal">
+                    {messages.tables.columnBirthYear}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                    {messages.tables.columnBirthYearKids}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                    {messages.tables.columnAttendance}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                    {messages.tables.columnVerses}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                    {messages.tables.columnTest}
+                  </TableHead>
+                  <TableHead scope="col" className="px-5 py-3 text-right font-normal">
+                    {messages.tables.columnNotebook}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="divide-y divide-line">
                 {birthYearRows.map((row) => (
-                  <TableRow key={row.birthYear ?? "unknown"}>
-                    <TableCell>{row.birthYear ?? messages.kpiEmpty}</TableCell>
-                    <TableCell className="text-right tabular-nums">{row.pupilCount}</TableCell>
-                    <TableCell className="text-right tabular-nums">
+                  <TableRow key={row.birthYear ?? "unknown"} className="hover:bg-transparent">
+                    <TableCell className="px-5 py-3 tabular-nums">{row.birthYear ?? messages.kpiEmpty}</TableCell>
+                    <TableCell className="px-3 py-3 text-right tabular-nums">{row.pupilCount}</TableCell>
+                    <TableCell className="px-3 py-3 text-right tabular-nums">
                       {row.attendancePercent === null
                         ? messages.kpiEmpty
                         : formatAnalyticsPercent(
@@ -216,17 +264,17 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
                             Number(row.attendancePercent.toFixed(1)),
                           )}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">
+                    <TableCell className="px-3 py-3 text-right tabular-nums">
                       {row.versesAverage === null
                         ? messages.kpiEmpty
                         : formatAnalyticsAverage(messages.formatAverage, Number(row.versesAverage.toFixed(1)))}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">
+                    <TableCell className="px-3 py-3 text-right tabular-nums">
                       {row.testAverage === null
                         ? messages.kpiEmpty
                         : formatAnalyticsAverage(messages.formatAverage, Number(row.testAverage.toFixed(1)))}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">
+                    <TableCell className="px-5 py-3 text-right tabular-nums">
                       {row.notebookAverage === null
                         ? messages.kpiEmpty
                         : formatAnalyticsAverage(messages.formatAverage, Number(row.notebookAverage.toFixed(1)))}

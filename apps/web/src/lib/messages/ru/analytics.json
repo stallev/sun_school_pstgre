@@ -135,7 +135,8 @@
     "column_planned": "Запланировано",
     "column_lessons": "Уроки",
     "no_longer_assigned": "уже не в группе",
-    "empty": "Нет данных за период."
+    "empty": "Нет данных за период.",
+    "table_caption": "Уроки по учителям"
   },
   "methodology": {
     "title": "Как мы считали цифры",

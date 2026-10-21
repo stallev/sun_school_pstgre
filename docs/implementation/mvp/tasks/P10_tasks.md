@@ -114,7 +114,7 @@
 | `calendar` | `/calendar` | teacher, admin | экран | [x] CU11 |
 | `rating` | `/rating` | teacher, admin | экран | [x] CU12 |
 | `verses` | `/verses` | teacher, admin | экран | [x] CU12 |
-| `analytics` | `/analytics` | teacher, admin | экран | [ ] CU13 |
+| `analytics` | `/analytics` | teacher, admin | экран | [x] CU13 |
 | `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [ ] CU14 |
 | `school` | `/school` | admin | экран | [ ] CU15 |
 | `approvals` | `/approvals` | admin | экран | [ ] CU16 |
@@ -228,7 +228,7 @@
 
 ### P10-CU13 — fix(ui): align group analytics · Review: diff-only · Commit: auto
 
-- [ ] P10-T13 · T1 · Spec: [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §5  
+- [x] P10-T13 · T1 · Spec: [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §5  
       Files: `analytics/**` (группа)  
       Acceptance: `analytics` × teacher + admin × 4 ширины; нет page-level horizontal scroll на 390  
       Paths: H · N n/a · S n/a

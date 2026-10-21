@@ -132,6 +132,7 @@ export type AnalyticsMessages = {
     columnLessons: string;
     noLongerAssigned: string;
     empty: string;
+    tableCaption: string;
   };
   methodology: {
     title: string;

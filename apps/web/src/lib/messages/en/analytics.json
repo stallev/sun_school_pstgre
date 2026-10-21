@@ -135,7 +135,8 @@
     "column_planned": "Planned",
     "column_lessons": "Lessons",
     "no_longer_assigned": "no longer assigned",
-    "empty": "No data for this period."
+    "empty": "No data for this period.",
+    "table_caption": "Lessons by teacher"
   },
   "methodology": {
     "title": "How we calculated the numbers",
