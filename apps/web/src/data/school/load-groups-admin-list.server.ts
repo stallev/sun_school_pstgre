@@ -12,6 +12,8 @@ export type GroupListRow = {
   name: string;
   language: AppLocale;
   isActive: boolean;
+  ageMin: number | null;
+  ageMax: number | null;
   teacherCount: number;
 };
 
@@ -46,6 +48,8 @@ export async function loadGroupsAdminList(db: PrismaClient): Promise<GroupsAdmin
           name: true,
           language: true,
           isActive: true,
+          ageMin: true,
+          ageMax: true,
         },
       },
     },
@@ -69,6 +73,8 @@ export async function loadGroupsAdminList(db: PrismaClient): Promise<GroupsAdmin
     name: entry.grade.name,
     language: entry.grade.language as AppLocale,
     isActive: entry.grade.isActive,
+    ageMin: entry.grade.ageMin,
+    ageMax: entry.grade.ageMax,
     teacherCount: countByGrade.get(entry.grade.id) ?? 0,
   }));
 

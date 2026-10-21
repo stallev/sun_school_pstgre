@@ -3,15 +3,14 @@ import { AdminMessagesProvider } from "@/components/admin/admin-messages-provide
 import { PupilCardForm } from "@/components/admin/PupilCardForm";
 import { PupilEntityHistoryList } from "@/components/admin/EntityHistoryList";
 import { LegacyConsentList } from "@/components/admin/LegacyConsentList";
+import { PeopleListFilterNav } from "@/components/admin/PeopleListFilter";
 import { PupilRow } from "@/components/admin/PupilRow";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { CustomLink } from "@/components/ui/custom-link";
 import { readConsentTextVersionFromDb } from "@/data/access/consent-text-version.server";
 import {
   loadPeopleAdminList,
   parsePeopleListFilter,
-  PEOPLE_LIST_FILTER,
 } from "@/data/school/load-people-admin-list.server";
 import {
   listLegacyPendingPupils,
@@ -23,7 +22,6 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
-import { cn } from "@/lib/utils";
 
 type PeoplePageProps = {
   searchParams: Promise<{ filter?: string }>;
@@ -55,40 +53,11 @@ const PeoplePage = async ({ searchParams }: PeoplePageProps) => {
   const formError = getMessage(commonDict, "errors.form");
   const closeLabel = adminMessages.form.cancel;
 
-  const filters = [
-    { key: PEOPLE_LIST_FILTER.ALL, href: "/people", label: adminMessages.people.filterAll },
-    {
-      key: PEOPLE_LIST_FILTER.UNASSIGNED,
-      href: `/people?filter=${PEOPLE_LIST_FILTER.UNASSIGNED}`,
-      label: adminMessages.people.filterUnassigned,
-    },
-    {
-      key: PEOPLE_LIST_FILTER.INACTIVE,
-      href: `/people?filter=${PEOPLE_LIST_FILTER.INACTIVE}`,
-      label: adminMessages.people.filterInactive,
-    },
-  ];
-
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-6">
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
         <PageHeader title={adminMessages.page.peopleTitle} />
-        <nav className="flex flex-wrap gap-2" aria-label={adminMessages.people.filterAll}>
-          {filters.map((item) => (
-            <CustomLink
-              key={item.key}
-              href={item.href}
-              className={cn(
-                "inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm",
-                filter === item.key
-                  ? "bg-cobalt-soft text-ink"
-                  : "bg-card text-muted-foreground hover:bg-paper",
-              )}
-            >
-              {item.label}
-            </CustomLink>
-          ))}
-        </nav>
+        <PeopleListFilterNav activeFilter={filter} messages={adminMessages} />
         <LegacyConsentList
           deadlineOn={legacyPending.deadlineOn}
           rows={legacyPending.rows}

@@ -427,3 +427,19 @@
 | `userProfile` · `page.tsx` | сетка | `lg:grid-cols-2`, CARD sections | двухколоночный layout `FormSection` | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `approvals`, `users`, `userProfile` × admin × 390, 768, 820, 1024 — новых deviation-строк нет; expand-in-row на `/approvals` вне MVP (диалоги одобрения/отклонения).
+
+## Проход 15 — CU17 People and groups admin
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5
+**Эталоны:** прототип `vPeople` / `vGroups` / `vGroupEdit` · [`school_year_and_groups_contract.md`](../contracts/school_year_and_groups_contract.md)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU17) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `people` · `page.tsx` | контейнер + вкладки | `border-b` tablist `h-11`, не chip-links | `PeopleListFilterNav`, `overflow-x-hidden` | 390–1024 | **нет отклонения** |
+| `people` · `PupilRow.tsx` | строка | `px-5 py-4`, edit ghost `h-9` | padding + `hover:text-cobalt-ink` на имени | 390–1024 | **нет отклонения** |
+| `groups` · `GroupCard.tsx` | строка списка | grid + `font-display text-xl`, chevron, `hover:bg-paper/70` | sm grid, age meta, teacher count | 390–1024 | **нет отклонения** |
+| `groups` · `page.tsx` | контейнер | без page-level horizontal scroll | `min-w-0 overflow-x-hidden` | 390–1024 | **нет отклонения** |
+| `groupEdit` · `page.tsx` | сетка | `lg:grid-cols-[1.4fr_1fr]`, CARD `sm:p-5` | двухколоночный layout, формы `sm:p-5` | 390–1024 | **нет отклонения** |
+| `groupEdit` · `TeacherAssignmentList.tsx` | учителя | `py-3`, ghost «Снять» | ghost `h-9`, divide-y без nested border | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `people`, `groups`, `groupEdit` × admin × 390, 768, 820, 1024 — новых deviation-строк нет; вкладки «Семьи» и имена учителей в списке групп вне MVP.

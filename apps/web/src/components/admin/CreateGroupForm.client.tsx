@@ -35,7 +35,7 @@ export const CreateGroupForm = ({ dictionaries, formError, disabled }: CreateGro
   return (
     <form
       action={formAction}
-      className="space-y-4 rounded-xl border border-line bg-surface p-4"
+      className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5"
       aria-busy={isBusy}
     >
       <SectionTitle>{messages.group.createTitle}</SectionTitle>

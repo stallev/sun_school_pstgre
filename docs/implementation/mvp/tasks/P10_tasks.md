@@ -120,9 +120,9 @@
 | `approvals` | `/approvals` | admin | экран | [x] CU16 |
 | `users` | `/users` | admin | экран | [x] CU16 |
 | `userProfile` | `/users/[userId]` | admin | экран | [x] CU16 |
-| `people` | `/people` | admin | экран | [ ] CU17 |
-| `groups` | `/groups` | admin | экран | [ ] CU17 |
-| `groupEdit` | `/groups/[groupId]` | admin | экран | [ ] CU17 |
+| `people` | `/people` | admin | экран | [x] CU17 |
+| `groups` | `/groups` | admin | экран | [x] CU17 |
+| `groupEdit` | `/groups/[groupId]` | admin | экран | [x] CU17 |
 | `year` | `/year` | admin | экран | [ ] CU18 |
 | `settings` | `/settings` | admin | экран | [ ] CU18 |
 | `deletions` | `/deletions` | admin | экран | [ ] CU18 |
@@ -256,7 +256,7 @@
 
 ### P10-CU17 — fix(ui): align people and groups admin · Review: diff-only · Commit: auto
 
-- [ ] P10-T17 · T1 · Spec: school_year contract · admin_flow  
+- [x] P10-T17 · T1 · Spec: school_year contract · admin_flow  
       Files: `people/**`, `groups/**`  
       Acceptance: `people`, `groups`, `groupEdit` × admin × 4 ширины  
       Paths: H · N n/a · S n/a

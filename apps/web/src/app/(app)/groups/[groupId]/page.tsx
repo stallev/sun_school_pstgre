@@ -38,23 +38,25 @@ const GroupDetailPage = async ({ params }: GroupDetailPageProps) => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-6">
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden lg:max-w-6xl">
         <PageHeader
           title={detail.name}
           description={formatYearContext(adminMessages.group.editSubtitle, detail.yearName)}
         />
-        <GroupSettingsForm
-          key={`${detail.gradeId}-${detail.language}`}
-          detail={detail}
-          dictionaries={dictionaries}
-          formError={formError}
-        />
-        <TeacherAssignmentList
-          detail={detail}
-          candidates={candidates}
-          dictionaries={dictionaries}
-          formError={formError}
-        />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
+          <GroupSettingsForm
+            key={`${detail.gradeId}-${detail.language}`}
+            detail={detail}
+            dictionaries={dictionaries}
+            formError={formError}
+          />
+          <TeacherAssignmentList
+            detail={detail}
+            candidates={candidates}
+            dictionaries={dictionaries}
+            formError={formError}
+          />
+        </div>
       </div>
     </AdminMessagesProvider>
   );
