@@ -2,6 +2,7 @@ import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
+import { PupilLessonCards } from "@/components/analytics/PupilLessonCards";
 import {
   Table,
   TableBody,
@@ -44,8 +45,16 @@ export const PupilLessonTable = ({
     {lessons.length === 0 ? (
       <ContentText className="text-sm text-muted">{messages.lessonsEmpty}</ContentText>
     ) : (
-      <Card className="max-w-full overflow-x-auto p-0">
-        <Table className="min-w-[44rem] text-left">
+      <>
+      <PupilLessonCards
+        pupilId={pupilId}
+        lessons={lessons}
+        messages={messages}
+        locale={locale}
+        showCorrectActions={showCorrectActions}
+      />
+      <Card className="hidden p-0 lg:block">
+        <Table className="text-left">
           <TableHeader className="border-b border-line text-sm text-muted">
             <TableRow className="hover:bg-transparent">
               <TableHead scope="col" className="px-5 py-3 font-normal">
@@ -129,6 +138,7 @@ export const PupilLessonTable = ({
           </TableBody>
         </Table>
       </Card>
+      </>
     )}
   </section>
 );

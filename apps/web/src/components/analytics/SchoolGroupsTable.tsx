@@ -1,6 +1,7 @@
 import { ContentText } from "@/components/atoms/ContentText";
 import { StatusText } from "@/components/ui/status-text";
 import { Card } from "@/components/ui/card";
+import { SchoolGroupCards } from "@/components/analytics/SchoolGroupCards";
 import {
   Table,
   TableBody,
@@ -31,8 +32,14 @@ export const SchoolGroupsTable = ({
   averageTemplate,
 }: SchoolGroupsTableProps) => (
   <section className="min-w-0 space-y-3">
-    <Card className="max-w-full overflow-x-auto p-0">
-      <Table className="min-w-[46rem] text-left text-base">
+    <SchoolGroupCards
+      rows={rows}
+      messages={messages}
+      percentTemplate={percentTemplate}
+      averageTemplate={averageTemplate}
+    />
+    <Card className="hidden p-0 lg:block">
+      <Table className="text-left text-base">
         <caption className="sr-only">{messages.groupsTableTitle}</caption>
         <TableHeader className="border-b border-line text-sm text-muted-foreground">
           <TableRow className="hover:bg-transparent">

@@ -2,6 +2,7 @@ import { NumberDisplay } from "@/components/atoms/NumberDisplay";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
+import { RecordCard } from "@/components/patterns/RecordCard";
 import {
   Table,
   TableBody,
@@ -25,8 +26,32 @@ export const RatingTable = ({ rows, messages }: RatingTableProps) => {
   }
 
   return (
-    <Card className="overflow-x-auto p-0">
-      <Table className="min-w-[34rem] text-base">
+    <>
+      <ul className="space-y-3 lg:hidden" aria-label={messages.tableCaption}>
+        {rows.map((row) => (
+          <RecordCard
+            key={row.pupilId}
+            title={
+              <span className="flex items-baseline gap-3">
+                <NumberDisplay
+                  className={row.place <= 3 ? "text-lg tabular-nums" : "text-muted tabular-nums"}
+                >
+                  {row.place}
+                </NumberDisplay>
+                <CustomLink
+                  href={`/analytics/pupils/${row.pupilId}`}
+                  className="hover:text-cobalt-ink"
+                >
+                  {row.displayName}
+                </CustomLink>
+              </span>
+            }
+            fields={[{ label: messages.columnMetric, value: row.metric }]}
+          />
+        ))}
+      </ul>
+      <Card className="hidden p-0 lg:block">
+      <Table className="text-base">
         <TableCaption className="sr-only">{messages.tableCaption}</TableCaption>
         <TableHeader className="border-line text-sm text-muted">
           <TableRow className="hover:bg-transparent">
@@ -65,5 +90,6 @@ export const RatingTable = ({ rows, messages }: RatingTableProps) => {
         </TableBody>
       </Table>
     </Card>
+    </>
   );
 };

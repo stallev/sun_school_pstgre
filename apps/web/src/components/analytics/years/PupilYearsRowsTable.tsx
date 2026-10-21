@@ -13,6 +13,7 @@ import type { AnalyticsMessages, AnalyticsPupilYearMessages, AnalyticsYearMessag
 import type { PupilYearTableRow } from "./PupilYearsSection";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { formatPupilYearMetric } from "./format-pupil-year-metric";
+import { PupilYearsCards } from "./PupilYearsCards";
 
 type PupilYearsRowsTableProps = {
   rows: readonly PupilYearTableRow[];
@@ -34,8 +35,16 @@ export const PupilYearsRowsTable = ({
   showForeignGroupNote,
 }: PupilYearsRowsTableProps) => (
   <>
-    <Card className="max-w-full overflow-x-auto p-0">
-      <Table className="min-w-[44rem] text-left text-base">
+    <PupilYearsCards
+      rows={rows}
+      selectedYearId={selectedYearId}
+      onSelectYear={onSelectYear}
+      messages={messages}
+      pupilYearMessages={pupilYearMessages}
+      yearMessages={yearMessages}
+    />
+    <Card className="hidden p-0 lg:block">
+      <Table className="text-left text-base">
         <caption className="sr-only">{pupilYearMessages.tableCaption}</caption>
         <TableHeader className="border-b border-line text-sm text-muted">
           <TableRow>

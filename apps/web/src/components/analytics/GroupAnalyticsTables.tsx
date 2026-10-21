@@ -14,12 +14,14 @@ import {
 import type { GroupAnalyticsSnapshot, GroupAnalyticsPupilRow } from "@/data/analytics/analytics-compute.server";
 import { buildBirthYearCohortRows } from "@/lib/analytics/build-birth-year-cohort-rows";
 import {
-  formatAnalyticsAverage,
   formatAnalyticsPercent,
   formatAnalyticsShortDate,
 } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
+import { BirthYearCohortCards } from "./BirthYearCohortCards";
+import { formatCohortAverage, formatCohortPercent, formatGroupScore } from "./format-group-score";
+import { PupilLayerCards } from "./PupilLayerCards";
 
 type GroupAnalyticsTablesProps = {
   snapshot: GroupAnalyticsSnapshot;
@@ -28,14 +30,6 @@ type GroupAnalyticsTablesProps = {
 };
 
 type TableVariant = "layer-a" | "layer-b" | "layer-c" | "layer-d";
-
-const formatScore = (average: number | null, n: number, messages: AnalyticsMessages): string => {
-  if (average === null || n === 0) return messages.kpiEmpty;
-  return fillMessage(messages.kpiWithN, {
-    value: formatAnalyticsAverage(messages.formatAverage, Number(average.toFixed(1))),
-    n,
-  });
-};
 
 const PupilLayerTable = ({
   title,
@@ -68,16 +62,10 @@ const PupilLayerTable = ({
     {rows.length === 0 ? (
       <ContentText className="text-sm text-muted">{messages.tables.emptySection}</ContentText>
     ) : (
-      <Card className="max-w-full overflow-x-auto p-0">
-        <Table
-          className={
-            variant === "layer-a"
-              ? "min-w-[40rem] text-base"
-              : variant === "layer-b"
-                ? "min-w-[34rem] text-base"
-                : "min-w-[20rem] text-base"
-          }
-        >
+      <>
+      <PupilLayerCards rows={rows} messages={messages} variant={variant} locale={locale} />
+      <Card className="hidden p-0 lg:block">
+        <Table className="text-base">
           <TableHeader className="border-b border-line text-sm text-muted">
             <TableRow className="hover:bg-transparent">
               <TableHead scope="col" className="px-5 py-3 font-normal">
@@ -158,13 +146,13 @@ const PupilLayerTable = ({
                       })}
                     </TableCell>
                     <TableCell className="px-3 py-3">
-                      {formatScore(row.versesAverage.average, row.versesAverage.observationCount, messages)}
+                      {formatGroupScore(row.versesAverage.average, row.versesAverage.observationCount, messages)}
                     </TableCell>
                     <TableCell className="px-3 py-3">
-                      {formatScore(row.testAverage.average, row.testAverage.observationCount, messages)}
+                      {formatGroupScore(row.testAverage.average, row.testAverage.observationCount, messages)}
                     </TableCell>
                     <TableCell className="px-5 py-3">
-                      {formatScore(row.notebookAverage.average, row.notebookAverage.observationCount, messages)}
+                      {formatGroupScore(row.notebookAverage.average, row.notebookAverage.observationCount, messages)}
                     </TableCell>
                   </>
                 ) : null}
@@ -192,6 +180,7 @@ const PupilLayerTable = ({
           </TableBody>
         </Table>
       </Card>
+      </>
     )}
   </section>
   );
@@ -245,8 +234,10 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
         {birthYearRows.length === 0 ? (
           <ContentText className="text-sm text-muted">{messages.tables.emptySection}</ContentText>
         ) : (
-          <Card className="max-w-full overflow-x-auto p-0">
-            <Table className="min-w-[36rem] text-base">
+          <>
+          <BirthYearCohortCards rows={birthYearRows} messages={messages} />
+          <Card className="hidden p-0 lg:block">
+            <Table className="text-base">
               <TableHeader className="border-b border-line text-sm text-muted">
                 <TableRow className="hover:bg-transparent">
                   <TableHead scope="col" className="px-5 py-3 font-normal">
@@ -275,33 +266,23 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
                     <TableCell className="px-5 py-3 tabular-nums">{row.birthYear ?? messages.kpiEmpty}</TableCell>
                     <TableCell className="px-3 py-3 text-right tabular-nums">{row.pupilCount}</TableCell>
                     <TableCell className="px-3 py-3 text-right tabular-nums">
-                      {row.attendancePercent === null
-                        ? messages.kpiEmpty
-                        : formatAnalyticsPercent(
-                            messages.formatPercent,
-                            Number(row.attendancePercent.toFixed(1)),
-                          )}
+                      {formatCohortPercent(row.attendancePercent, messages)}
                     </TableCell>
                     <TableCell className="px-3 py-3 text-right tabular-nums">
-                      {row.versesAverage === null
-                        ? messages.kpiEmpty
-                        : formatAnalyticsAverage(messages.formatAverage, Number(row.versesAverage.toFixed(1)))}
+                      {formatCohortAverage(row.versesAverage, messages)}
                     </TableCell>
                     <TableCell className="px-3 py-3 text-right tabular-nums">
-                      {row.testAverage === null
-                        ? messages.kpiEmpty
-                        : formatAnalyticsAverage(messages.formatAverage, Number(row.testAverage.toFixed(1)))}
+                      {formatCohortAverage(row.testAverage, messages)}
                     </TableCell>
                     <TableCell className="px-5 py-3 text-right tabular-nums">
-                      {row.notebookAverage === null
-                        ? messages.kpiEmpty
-                        : formatAnalyticsAverage(messages.formatAverage, Number(row.notebookAverage.toFixed(1)))}
+                      {formatCohortAverage(row.notebookAverage, messages)}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </Card>
+          </>
         )}
       </section>
     </div>

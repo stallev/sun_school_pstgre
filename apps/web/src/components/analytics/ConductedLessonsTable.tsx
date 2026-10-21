@@ -1,6 +1,7 @@
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Card } from "@/components/ui/card";
+import { ConductedLessonsCards } from "@/components/analytics/ConductedLessonsCards";
 import {
   Table,
   TableBody,
@@ -27,8 +28,10 @@ export const ConductedLessonsTable = ({ snapshot, messages }: ConductedLessonsTa
     {snapshot.teachers.length === 0 ? (
       <ContentText className="text-sm text-muted">{messages.conducted.empty}</ContentText>
     ) : (
-      <Card className="max-w-full overflow-x-auto p-0">
-        <Table className="min-w-[40rem] text-base">
+      <>
+      <ConductedLessonsCards snapshot={snapshot} messages={messages} />
+      <Card className="hidden p-0 lg:block">
+        <Table className="text-base">
           <TableCaption className="sr-only">{messages.conducted.tableCaption}</TableCaption>
           <TableHeader className="border-b border-line text-sm text-muted">
             <TableRow className="hover:bg-transparent">
@@ -73,6 +76,7 @@ export const ConductedLessonsTable = ({ snapshot, messages }: ConductedLessonsTa
           </TableBody>
         </Table>
       </Card>
+      </>
     )}
   </section>
 );

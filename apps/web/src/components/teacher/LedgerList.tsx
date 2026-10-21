@@ -1,3 +1,4 @@
+import { RecordCard } from "@/components/patterns/RecordCard";
 import { ContentText } from "@/components/atoms/ContentText";
 import { StatusText } from "@/components/ui/status-text";
 import {
@@ -23,13 +24,39 @@ export const LedgerList = ({ entries, messages }: LedgerListProps) => {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-line bg-surface">
+    <>
+      <ul className="space-y-3 lg:hidden">
+        {entries.map((entry) => (
+          <RecordCard
+            key={entry.id}
+            title={<span className="tabular-nums">{entry.issuedOn}</span>}
+            fields={[
+              {
+                label: messages.ledgerColumnQty,
+                value: (
+                  <span className={cn(entry.quantity < 0 && "text-danger")}>
+                    {entry.quantity}
+                    {entry.quantity < 0 ? (
+                      <StatusText tone="warn" className="ml-2 text-xs">
+                        {messages.ledgerCompensation}
+                      </StatusText>
+                    ) : null}
+                  </span>
+                ),
+              },
+              { label: messages.ledgerColumnBy, value: entry.issuedByName },
+              { label: messages.ledgerColumnNote, value: entry.note ?? "—", wide: true },
+            ]}
+          />
+        ))}
+      </ul>
+      <div className="hidden overflow-hidden rounded-xl border border-line bg-surface lg:block">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead scope="col">{messages.ledgerColumnDate}</TableHead>
             <TableHead scope="col">{messages.ledgerColumnQty}</TableHead>
-            <TableHead scope="col" className="hidden md:table-cell">{messages.ledgerColumnBy}</TableHead>
+            <TableHead scope="col">{messages.ledgerColumnBy}</TableHead>
             <TableHead scope="col">{messages.ledgerColumnNote}</TableHead>
           </TableRow>
         </TableHeader>
@@ -45,12 +72,13 @@ export const LedgerList = ({ entries, messages }: LedgerListProps) => {
                   </StatusText>
                 ) : null}
               </TableCell>
-              <TableCell className="hidden md:table-cell">{entry.issuedByName}</TableCell>
+              <TableCell>{entry.issuedByName}</TableCell>
               <TableCell>{entry.note ?? "—"}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
+    </>
   );
 };

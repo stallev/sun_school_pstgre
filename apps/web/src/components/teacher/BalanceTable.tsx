@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { CompensateBricksDialog } from "@/components/teacher/CompensateBricksDialog";
 import { IssueBricksDialog } from "@/components/teacher/IssueBricksDialog";
+import { BalanceCards } from "@/components/teacher/BalanceCards";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
 import type { BrickLedgerEntryDto } from "@/data/bricks/bricks-shared.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -66,7 +67,15 @@ export const BalanceTable = ({
 
   return (
     <div className="space-y-6">
-      <div className="overflow-x-auto rounded-xl border border-line bg-surface">
+      <BalanceCards
+        rows={rows}
+        selectedPupilId={selectedPupilId}
+        messages={messages}
+        onSelectPupil={selectPupil}
+        onIssue={(pupilId) => openDialog("issue", pupilId)}
+        onCompensate={(pupilId) => openDialog("compensate", pupilId)}
+      />
+      <div className="hidden overflow-hidden rounded-xl border border-line bg-surface lg:block">
         <Table>
           <TableHeader>
             <TableRow>

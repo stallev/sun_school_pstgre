@@ -9,13 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ContentText } from "@/components/atoms/ContentText";
-import {
-  formatAnalyticsAverage,
-  formatAnalyticsPercent,
-} from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import { DiffBadge, type YearDiffMetric } from "./DiffBadge";
+import { formatYearMetricValue } from "./format-year-metric-value";
+import { SchoolClosedGroupCards } from "./SchoolClosedGroupCards";
 
 type SchoolClosedGroupsTableProps = {
   yearName: string;
@@ -30,21 +28,6 @@ const METRIC_COLS: { key: YearDiffMetric; label: (m: AnalyticsMessages["school"]
   { key: "notebook", label: (m) => m.columnNotebookShort },
 ];
 
-const cellValue = (
-  key: YearDiffMetric,
-  row: SchoolGroupYearRow,
-  messages: AnalyticsMessages,
-): string => {
-  const totals = row.totals;
-  if (!totals) return messages.kpiEmpty;
-  const value = totals[key];
-  if (value === null) return messages.kpiEmpty;
-  if (key === "attendance") {
-    return formatAnalyticsPercent(messages.formatPercent, Number((value * 100).toFixed(0)));
-  }
-  return formatAnalyticsAverage(messages.formatAverage, Number(value.toFixed(1)));
-};
-
 export const SchoolClosedGroupsTable = ({
   yearName,
   rows,
@@ -55,8 +38,9 @@ export const SchoolClosedGroupsTable = ({
 
   return (
     <section className="space-y-3">
-      <Card className="max-w-full overflow-x-auto p-0">
-        <Table className="min-w-[46rem] text-left text-base">
+      <SchoolClosedGroupCards yearName={yearName} rows={rows} messages={messages} />
+      <Card className="hidden p-0 lg:block">
+        <Table className="text-left text-base">
           <caption className="sr-only">{fillMessage(schoolMessages.closedTableCaption, { year: yearName })}</caption>
           <TableHeader className="border-b border-line text-base text-muted-foreground">
             <TableRow>
@@ -104,7 +88,7 @@ export const SchoolClosedGroupsTable = ({
                   </TableCell>
                   {METRIC_COLS.map(({ key }) => (
                     <TableCell key={key} className="px-3 py-4 text-right tabular-nums">
-                      {cellValue(key, row, messages)}
+                      {formatYearMetricValue(key, row.totals, messages)}
                       <span className="block text-sm font-normal text-ink-2">
                         <DiffBadge
                           metric={key}

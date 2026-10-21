@@ -6,6 +6,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AuditEntryRow } from "@/components/admin/AuditEntryRow";
+import { AuditEntryCard } from "@/components/admin/AuditEntryCard";
 import type { AuditLogEntryDto } from "@/data/audit/audit-shared.server";
 
 type AuditTableProps = {
@@ -29,7 +30,22 @@ export const AuditTable = ({
   columnEntity,
   columnDetails,
 }: AuditTableProps) => (
-  <div className="overflow-x-auto rounded-xl border border-line bg-surface">
+  <>
+  <ul className="space-y-3 lg:hidden">
+    {entries.map((entry) => (
+      <AuditEntryCard
+        key={entry.id}
+        entry={entry}
+        occurredLabel={formatOccurred(entry.occurredAtIso)}
+        actionLabel={formatAction(entry.action)}
+        columnOccurred={columnOccurred}
+        columnActor={columnActor}
+        columnEntity={columnEntity}
+        columnDetails={columnDetails}
+      />
+    ))}
+  </ul>
+  <div className="hidden overflow-hidden rounded-xl border border-line bg-surface lg:block">
     <Table>
       <TableHeader>
         <TableRow>
@@ -62,4 +78,5 @@ export const AuditTable = ({
       </TableBody>
     </Table>
   </div>
+  </>
 );
