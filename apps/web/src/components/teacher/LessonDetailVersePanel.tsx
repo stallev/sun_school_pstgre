@@ -16,26 +16,28 @@ export const LessonDetailVersePanel = ({
   emptyLabel,
   verseMissing,
 }: LessonDetailVersePanelProps) => (
-  <section className="space-y-3 rounded-xl border border-line bg-surface p-4 md:p-5">
-    <h2 className="font-medium text-ink">
+  <section className="rounded-xl border border-line bg-surface p-4 sm:p-5">
+    <h2 className="mb-3 font-medium text-ink">
       {title}
-      {hint ? <span className="font-normal text-muted"> {hint}</span> : null}
+      {hint ? <span className="font-normal text-muted">{hint}</span> : null}
     </h2>
     {verses.length === 0 ? (
       <ContentText tone="secondary" className="text-sm">{emptyLabel}</ContentText>
     ) : (
-      <ul className="space-y-3">
+      <ol className="space-y-2.5">
         {verses.map((verse) => (
-          <li key={verse.refLabel} className="space-y-1 rounded-lg border border-line bg-paper p-3">
+          <li key={verse.refLabel}>
             <ContentText className="font-medium text-ink">{verse.refLabel}</ContentText>
             {verse.hasMissing ? (
-              <AlertText>{verseMissing}</AlertText>
+              <AlertText className="mt-1">{verseMissing}</AlertText>
             ) : (
-              <ContentText className="whitespace-pre-wrap text-sm">{verse.text}</ContentText>
+              <p className="mt-1 font-display text-[1.0625rem] italic leading-snug text-ink-2 whitespace-pre-wrap">
+                {verse.text}
+              </p>
             )}
           </li>
         ))}
-      </ul>
+      </ol>
     )}
   </section>
 );

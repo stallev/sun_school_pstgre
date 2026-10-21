@@ -22,7 +22,10 @@ export function buildContentSecurityPolicy(nonce: string): string {
   const directives = [
     "default-src 'self'",
     scriptSrc,
-    `style-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
+    // No nonce here: with a nonce the browser ignores 'unsafe-inline', and
+    // Sonner, Base UI, Recharts, and the Next dev overlay insert styles that
+    // cannot carry the request nonce. script-src keeps the nonce.
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data: https:",
     "font-src 'self'",
     "connect-src 'self' https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://oauth.telegram.org",

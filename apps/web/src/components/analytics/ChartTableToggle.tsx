@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SectionTitle } from "@/components/atoms/SectionTitle";
+import { Heading } from "@/components/atoms/Heading";
 import { ContentText } from "@/components/atoms/ContentText";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import {
 } from "@/lib/analytics/format-analytics-display";
 import type { AnalyticsChartSeriesMessages } from "@/lib/messages/analytics-messages";
 import { LineChart } from "@/components/analytics/LineChart";
+import { cn } from "@/lib/utils";
 
 const DEFAULT_MIN_CHART_POINTS = 2;
 
@@ -40,6 +41,7 @@ type ChartTableToggleProps = {
   /** When set (e.g. year axis), replaces the date column header in table mode. */
   xLabel?: string;
   minChartPoints?: number;
+  className?: string;
 };
 
 export const ChartTableToggle = ({
@@ -56,6 +58,7 @@ export const ChartTableToggle = ({
   yDomain,
   xLabel,
   minChartPoints = DEFAULT_MIN_CHART_POINTS,
+  className,
 }: ChartTableToggleProps) => {
   const storageKey = `analytics-chart-view-${chartId}`;
   const [showTable, setShowTable] = useState(
@@ -84,9 +87,11 @@ export const ChartTableToggle = ({
   };
 
   return (
-    <Card className="flex min-w-0 flex-col gap-3 overflow-visible p-4">
+    <Card className={cn("flex h-full min-w-0 flex-col gap-3 overflow-visible p-3", className)}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <SectionTitle as="h2" className="text-base">{title}</SectionTitle>
+        <Heading as="h3" level="section" className="text-lg">
+          {title}
+        </Heading>
         <div className="flex gap-1">
           <Button
             type="button"
@@ -110,6 +115,7 @@ export const ChartTableToggle = ({
           </Button>
         </div>
       </div>
+      <div className="mt-4 min-h-0 flex-1">
       {!hasChart ? (
         <EmptyState
           title={messages.insufficientDataTitle}
@@ -143,7 +149,8 @@ export const ChartTableToggle = ({
           ariaLabel={title}
         />
       )}
-      <ContentText className="text-sm text-muted-foreground">{methodology}</ContentText>
+      </div>
+      <ContentText className="mt-1 text-base text-muted">{methodology}</ContentText>
     </Card>
   );
 };

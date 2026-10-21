@@ -81,6 +81,7 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnLessons: getMessage(analytics, "conducted.column_lessons"),
     noLongerAssigned: getMessage(analytics, "conducted.no_longer_assigned"),
     empty: getMessage(analytics, "conducted.empty"),
+    tableCaption: getMessage(analytics, "conducted.table_caption"),
   },
   methodology: {
     title: getMessage(analytics, "methodology.title"),
@@ -167,6 +168,7 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnPlace: getMessage(analytics, "rating.column_place"),
     columnPupil: getMessage(analytics, "rating.column_pupil"),
     columnMetric: getMessage(analytics, "rating.column_metric"),
+    tableCaption: getMessage(analytics, "rating.table_caption"),
     empty: getMessage(analytics, "rating.empty"),
     scopeGroup: getMessage(analytics, "rating.scope_group"),
     scopeSchool: getMessage(analytics, "rating.scope_school"),

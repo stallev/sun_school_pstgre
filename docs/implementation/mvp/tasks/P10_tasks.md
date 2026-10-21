@@ -99,35 +99,35 @@
 | — | (shell) | teacher, admin | оболочка | [x] CU2–CU3 + delta (`96c5d70`, `d5c46b5`, `64ca12d`) |
 | — | (atoms) | — | каталог | [x] CU1 (`2ea4f13`) |
 | — | (Button, Card, PageHeader) | — | примитивы | [x] CU3 (`d5c46b5`, `64ca12d`) |
-| `login` | `/login` | аноним | экран | [ ] CU4 |
-| `register` | `/register` | регистрация | экран | [ ] CU4 |
-| `pending` | `/pending` | заявка/отклонена | экран | [ ] CU4 |
-| `profile` | `/profile` | активные | экран | [ ] CU5 |
-| `today` | `/today` | teacher | экран | [ ] CU6 |
-| `lessons` | `/lessons` | teacher | экран | [ ] CU7 |
-| `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [ ] CU8 |
-| `lesson` | `/lessons/[lessonId]` | teacher | экран | [ ] CU8 |
-| `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [ ] CU9 |
-| `check` | `/check`, `/lessons/[lessonId]/check` | teacher | экран | [ ] CU9 |
-| `group` | `/group` | teacher | экран | [ ] CU10 |
-| `bricks` | `/bricks` | teacher, admin | экран | [ ] CU11 |
-| `calendar` | `/calendar` | teacher, admin | экран | [ ] CU11 |
-| `rating` | `/rating` | teacher, admin | экран | [ ] CU12 |
-| `verses` | `/verses` | teacher, admin | экран | [ ] CU12 |
-| `analytics` | `/analytics` | teacher, admin | экран | [ ] CU13 |
-| `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [ ] CU14 |
-| `school` | `/school` | admin | экран | [ ] CU15 |
-| `approvals` | `/approvals` | admin | экран | [ ] CU16 |
-| `users` | `/users` | admin | экран | [ ] CU16 |
-| `userProfile` | `/users/[userId]` | admin | экран | [ ] CU16 |
-| `people` | `/people` | admin | экран | [ ] CU17 |
-| `groups` | `/groups` | admin | экран | [ ] CU17 |
-| `groupEdit` | `/groups/[groupId]` | admin | экран | [ ] CU17 |
-| `year` | `/year` | admin | экран | [ ] CU18 |
-| `settings` | `/settings` | admin | экран | [ ] CU18 |
-| `deletions` | `/deletions` | admin | экран | [ ] CU18 |
-| `audit` | `/audit` | admin | экран | [ ] CU18 — **только визуал**; runtime «Something went wrong» не чинить в P10 |
-| `privacy` | `/privacy` | аноним | экран | [ ] CU4 (статика, без прототип-ключа) |
+| `login` | `/login` | аноним | экран | [x] CU4 |
+| `register` | `/register` | регистрация | экран | [x] CU4 |
+| `pending` | `/pending` | заявка/отклонена | экран | [x] CU4 |
+| `profile` | `/profile` | активные | экран | [x] CU5 |
+| `today` | `/today` | teacher | экран | [x] CU6 |
+| `lessons` | `/lessons` | teacher | экран | [x] CU7 |
+| `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [x] CU8 |
+| `lesson` | `/lessons/[lessonId]` | teacher | экран | [x] CU8 |
+| `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [x] CU9 |
+| `check` | `/check`, `/lessons/[lessonId]/check` | teacher | экран | [x] CU9 |
+| `group` | `/group` | teacher | экран | [x] CU10 |
+| `bricks` | `/bricks` | teacher, admin | экран | [x] CU11 |
+| `calendar` | `/calendar` | teacher, admin | экран | [x] CU11 |
+| `rating` | `/rating` | teacher, admin | экран | [x] CU12 |
+| `verses` | `/verses` | teacher, admin | экран | [x] CU12 |
+| `analytics` | `/analytics` | teacher, admin | экран | [x] CU13 |
+| `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [x] CU14 |
+| `school` | `/school` | admin | экран | [x] CU15 |
+| `approvals` | `/approvals` | admin | экран | [x] CU16 |
+| `users` | `/users` | admin | экран | [x] CU16 |
+| `userProfile` | `/users/[userId]` | admin | экран | [x] CU16 |
+| `people` | `/people` | admin | экран | [x] CU17 |
+| `groups` | `/groups` | admin | экран | [x] CU17 |
+| `groupEdit` | `/groups/[groupId]` | admin | экран | [x] CU17 |
+| `year` | `/year` | admin | экран | [x] CU18 |
+| `settings` | `/settings` | admin | экран | [x] CU18 |
+| `deletions` | `/deletions` | admin | экран | [x] CU18 |
+| `audit` | `/audit` | admin | экран | [x] CU18 — **только визуал**; runtime «Something went wrong» не чинить в P10 |
+| `privacy` | `/privacy` | аноним | экран | [x] CU4 (статика, без прототип-ключа) |
 
 ---
 
@@ -163,7 +163,7 @@
 
 ### P10-CU4 — fix(ui): align auth screens visual chrome · Review: reviewer · Commit: auto
 
-- [ ] P10-T4 · T1 · Spec: [`access_and_registration_spec`](../specs/access_and_registration_spec.md) §6  
+- [x] P10-T4 · T1 · Spec: [`access_and_registration_spec`](../specs/access_and_registration_spec.md) §6  
       Files: `apps/web/src/app/(auth)/**`, `LoginForm.client.tsx`, `privacy` при необходимости  
       Acceptance: матрица `login` / `register` / `pending` / `privacy` × роли × 4 ширины в audit; каждый UI-блок с замером; повтор без новых строк; **не** менять копирайт P09 и ссылку согласия  
       Paths: H · N n/a · S n/a
@@ -172,98 +172,98 @@
 
 ### P10-CU5 — fix(ui): align profile screen blocks · Review: diff-only · Commit: auto
 
-- [ ] P10-T5 · T1 · Spec: access spec §9  
+- [x] P10-T5 · T1 · Spec: access spec §9  
       Files: `apps/web/src/app/profile/**`  
       Acceptance: матрица `profile` × активная роль × 4 ширины; кнопки/секции по прототипу (не переопределять P09 CTA-логику)  
       Paths: H · N n/a · S n/a
 
 ### P10-CU6 — fix(ui): align teacher today layout · Review: diff-only · Commit: auto
 
-- [ ] P10-T6 · T1 · Spec: P03 today · прототип `vToday`  
+- [x] P10-T6 · T1 · Spec: P03 today · прототип `vToday`  
       Files: `apps/web/src/app/(app)/today/**`  
       Acceptance: матрица `today` × teacher × 4 ширины; все видимые блоки (карточки, типографика, отступы)  
       Paths: H · N n/a · S n/a
 
 ### P10-CU7 — fix(ui): align lessons list row · Review: diff-only · Commit: auto
 
-- [ ] P10-T7 · T1 · Spec: P03 `/lessons` · `vLessons`  
+- [x] P10-T7 · T1 · Spec: P03 `/lessons` · `vLessons`  
       Files: `apps/web/src/app/(app)/lessons/page.tsx`, строка списка  
       Acceptance: матрица `lessons` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU8 — fix(ui): align lesson card and form · Review: diff-only · Commit: auto
 
-- [ ] P10-T8 · T1 · Spec: P03 lesson / lessonForm  
+- [x] P10-T8 · T1 · Spec: P03 lesson / lessonForm  
       Files: `apps/web/src/app/(app)/lessons/[lessonId]/**`, `lessons/new/**`, `edit/**`  
       Acceptance: `lesson` + `lessonForm` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU9 — fix(ui): align check and lesson table · Review: diff-only · Commit: auto
 
-- [ ] P10-T9 · T1 · Spec: [`homework_check_flow_spec`](../specs/homework_check_flow_spec.md)  
+- [x] P10-T9 · T1 · Spec: [`homework_check_flow_spec`](../specs/homework_check_flow_spec.md)  
       Files: check + lesson table routes/components  
       Acceptance: `check` + `lessonTable` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU10 — fix(ui): align teacher group roster · Review: diff-only · Commit: auto
 
-- [ ] P10-T10 · T1 · Spec: school_year contract · analytics §5.6 на `/group`  
+- [x] P10-T10 · T1 · Spec: school_year contract · analytics §5.6 на `/group`  
       Files: `apps/web/src/app/(app)/group/**`  
       Acceptance: `group` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU11 — fix(ui): align bricks and calendar · Review: diff-only · Commit: auto
 
-- [ ] P10-T11 · T1 · Spec: P03 calendar · P05 bricks  
+- [x] P10-T11 · T1 · Spec: P03 calendar · P05 bricks  
       Files: `bricks/**`, `calendar/**`  
       Acceptance: оба ключа × teacher + admin × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU12 — fix(ui): align rating and verses · Review: diff-only · Commit: auto
 
-- [ ] P10-T12 · T1 · Spec: P05  
-      Files: `rating/**`, `verses/**`  
-      Acceptance: оба ключа × teacher + admin × 4 ширины  
+- [x] P10-T12 · T1 · Spec: P05
+      Files: `rating/**`, `verses/**`
+      Acceptance: оба ключа × teacher + admin × 4 ширины
       Paths: H · N n/a · S n/a
 
 ### P10-CU13 — fix(ui): align group analytics · Review: diff-only · Commit: auto
 
-- [ ] P10-T13 · T1 · Spec: [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §5  
+- [x] P10-T13 · T1 · Spec: [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §5  
       Files: `analytics/**` (группа)  
       Acceptance: `analytics` × teacher + admin × 4 ширины; нет page-level horizontal scroll на 390  
       Paths: H · N n/a · S n/a
 
 ### P10-CU14 — fix(ui): align pupil analytics card · Review: diff-only · Commit: auto
 
-- [ ] P10-T14 · T1 · Spec: analytics spec §6  
+- [x] P10-T14 · T1 · Spec: analytics spec §6  
       Files: `analytics/pupils/**`  
       Acceptance: `pupil` × teacher + admin × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU15 — fix(ui): align school summary · Review: diff-only · Commit: auto
 
-- [ ] P10-T15 · T1 · Spec: analytics spec §7  
+- [x] P10-T15 · T1 · Spec: analytics spec §7  
       Files: `school/**`  
       Acceptance: `school` × admin × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU16 — fix(ui): align admin access screens · Review: diff-only · Commit: auto
 
-- [ ] P10-T16 · T1 · Spec: access_requests contract  
+- [x] P10-T16 · T1 · Spec: access_requests contract  
       Files: `approvals/**`, `users/**`  
       Acceptance: `approvals`, `users`, `userProfile` × admin × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU17 — fix(ui): align people and groups admin · Review: diff-only · Commit: auto
 
-- [ ] P10-T17 · T1 · Spec: school_year contract · admin_flow  
+- [x] P10-T17 · T1 · Spec: school_year contract · admin_flow  
       Files: `people/**`, `groups/**`  
       Acceptance: `people`, `groups`, `groupEdit` × admin × 4 ширины  
       Paths: H · N n/a · S n/a
 
 ### P10-CU18 — fix(ui): align year settings deletions audit · Review: diff-only · Commit: auto
 
-- [ ] P10-T18 · T1 · Spec: contracts P02/P06 · shell settings  
+- [x] P10-T18 · T1 · Spec: contracts P02/P06 · shell settings  
       Files: `year/**`, `settings/**`, `deletions/**`, `audit/**`  
       Acceptance: четыре ключа × admin × 4 ширины; `/audit` — только визуал до загрузки ошибки  
       Paths: H · N n/a · S n/a

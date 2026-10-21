@@ -117,7 +117,7 @@ export const NavDrawer = ({
         <footer className="mt-4 shrink-0 border-t border-line px-3 py-3">
           <CustomLink
             href="/profile"
-            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left no-underline hover:bg-paper"
+            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left no-underline hover:bg-paper hover:no-underline"
             onClick={() => setOpen(false)}
           >
             <span

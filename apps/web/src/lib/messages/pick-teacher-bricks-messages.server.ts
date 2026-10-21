@@ -42,5 +42,8 @@ export const pickTeacherBricksMessages = (teacher: Dictionary): TeacherBricksMes
   toastIssued: getMessage(teacher, "bricks.toast_issued"),
   toastCompensated: getMessage(teacher, "bricks.toast_compensated"),
   balanceHint: getMessage(teacher, "bricks.balance_hint"),
+  summaryRule: getMessage(teacher, "bricks.summary_rule"),
+  summaryToIssue: getMessage(teacher, "bricks.summary_to_issue"),
+  summaryNegative: getMessage(teacher, "bricks.summary_negative"),
   closeLabel: getMessage(teacher, "bricks.close"),
 });

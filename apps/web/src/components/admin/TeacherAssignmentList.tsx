@@ -52,20 +52,26 @@ export const TeacherAssignmentList = ({
   const pending = assignPending || unassignPending;
 
   return (
-    <section className="space-y-4 rounded-xl border border-line bg-surface p-4">
+    <section className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5">
       <SectionTitle>{messages.group.teachersTitle}</SectionTitle>
       {detail.assignments.length === 0 ? (
         <ContentText tone="secondary">{messages.group.teachersEmpty}</ContentText>
       ) : (
-        <ul className="divide-y divide-line rounded-lg border border-line">
+        <ul className="mt-3 divide-y divide-line">
           {detail.assignments.map((row) => (
-            <li key={row.userId} className="flex items-center justify-between gap-3 px-3 py-2">
+            <li key={row.userId} className="flex items-center justify-between gap-3 py-3">
               <ContentText>{row.displayName}</ContentText>
               <form action={unassignAction}>
                 <input type="hidden" name="gradeId" value={detail.gradeId} />
                 <input type="hidden" name="yearId" value={detail.yearId} />
                 <input type="hidden" name="userId" value={row.userId} />
-                <Button type="submit" variant="outline" size="sm" disabled={pending} aria-busy={pending}>
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  className="h-9 px-3 text-sm"
+                  disabled={pending}
+                  aria-busy={pending}
+                >
                   {messages.group.unassignTeacher}
                 </Button>
               </form>

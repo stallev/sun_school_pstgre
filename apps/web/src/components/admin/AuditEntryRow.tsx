@@ -11,10 +11,12 @@ type AuditEntryRowProps = {
 
 export const AuditEntryRow = ({ entry, occurredLabel, actionLabel }: AuditEntryRowProps) => (
   <TableRow>
-    <TableCell className="whitespace-nowrap tabular-nums text-sm">{occurredLabel}</TableCell>
-    <TableCell className="text-sm">{entry.actorLabel}</TableCell>
-    <TableCell className="text-sm">{actionLabel}</TableCell>
-    <TableCell className="text-sm">
+    <TableCell className="px-5 py-4 whitespace-nowrap tabular-nums text-sm text-muted">
+      {occurredLabel}
+    </TableCell>
+    <TableCell className="px-5 py-4 text-sm font-medium">{entry.actorLabel}</TableCell>
+    <TableCell className="px-5 py-4 text-sm">{actionLabel}</TableCell>
+    <TableCell className="px-5 py-4 text-sm">
       {entry.entityHref ? (
         <CustomLink href={entry.entityHref} className="text-cobalt-ink hover:underline">
           {entry.entityLabel}
@@ -23,7 +25,7 @@ export const AuditEntryRow = ({ entry, occurredLabel, actionLabel }: AuditEntryR
         entry.entityLabel
       )}
     </TableCell>
-    <TableCell className="max-w-[12rem] truncate text-sm text-muted-foreground">
+    <TableCell className="max-w-[12rem] truncate px-5 py-4 text-sm text-ink-2">
       {entry.reason ?? entry.newValueText ?? entry.oldValueText ?? "—"}
     </TableCell>
   </TableRow>

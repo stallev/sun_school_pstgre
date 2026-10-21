@@ -10,6 +10,7 @@ import { useAuthMessages } from "@/components/auth/auth-messages-provider.client
 import { ContentText } from "@/components/atoms";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
+import { StatusText } from "@/components/ui/status-text";
 import type { OwnProfileIdentity } from "@/data/access/load-own-profile.server";
 import { AUTHJS_PROVIDER_ID } from "@/lib/auth/provider-map";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
@@ -66,20 +67,23 @@ export const LinkedIdentityRow = ({ identity, dictionaries }: LinkedIdentityRowP
   const pending = linkPending || unlinkPending;
 
   return (
-    <li className="flex flex-col gap-2 rounded-lg border border-line bg-paper p-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="min-w-0 space-y-1">
-        <ContentText className="font-medium text-ink">{title}</ContentText>
-        <ContentText tone="muted">
-          {identity.connected ? messages.profile.connected : messages.profile.notConnected}
-          {identity.connected && detail ? ` — ${detail}` : ""}
-        </ContentText>
+    <li className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <div className="min-w-0 flex-1 space-y-0.5">
+          <ContentText className="font-medium text-ink">{title}</ContentText>
+          <ContentText tone="secondary" className="truncate text-sm">
+            {identity.connected
+              ? detail || messages.profile.connected
+              : messages.profile.notConnected}
+          </ContentText>
+        </div>
       </div>
       {isTelegram ? (
         identity.connected ? (
           identity.canUnlink ? (
             <ConfirmDialog
               trigger={
-                <Button type="button" variant="outline" className="min-h-11" disabled={pending}>
+                <Button type="button" variant="outline" className="min-h-11 shrink-0" disabled={pending}>
                   {unlinkPending ? messages.profile.disconnectPending : messages.profile.disconnect}
                 </Button>
               }
@@ -92,15 +96,15 @@ export const LinkedIdentityRow = ({ identity, dictionaries }: LinkedIdentityRowP
               pending={unlinkPending}
             />
           ) : (
-            <ContentText tone="muted" className="text-sm">
+            <StatusText tone="neutral" className="shrink-0 text-sm">
               {messages.profile.lastIdentityHint}
-            </ContentText>
+            </StatusText>
           )
         ) : (
           <Button
             type="button"
             variant="outline"
-            className="min-h-11"
+            className="min-h-11 shrink-0"
             disabled={pending}
             aria-busy={linkPending}
             onClick={handleConnectTelegram}
@@ -109,6 +113,10 @@ export const LinkedIdentityRow = ({ identity, dictionaries }: LinkedIdentityRowP
             {linkPending ? messages.profile.connectPending : messages.profile.connect}
           </Button>
         )
+      ) : identity.connected ? (
+        <StatusText tone="ok" className="shrink-0 text-sm">
+          {messages.profile.connected}
+        </StatusText>
       ) : null}
     </li>
   );

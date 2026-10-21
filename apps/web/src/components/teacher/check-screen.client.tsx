@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDownIcon } from "lucide-react";
+import { LESSON_KIND } from "@sunschool/domain";
+import { ChevronDownIcon, LayoutGridIcon } from "lucide-react";
 import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
@@ -13,6 +14,7 @@ import { CheckCardHeader } from "@/components/teacher/CheckCardHeader";
 import { CheckFinishedCard } from "@/components/teacher/CheckFinishedCard";
 import { CheckProgress } from "@/components/teacher/CheckProgress";
 import { CheckPupilList } from "@/components/teacher/CheckPupilList";
+import { countFilledCheckFields } from "@/components/teacher/check-filled-count";
 import { useSequentialCheck } from "@/components/teacher/use-sequential-check";
 import type { SequentialCheckPageData } from "@/data/checks/sequential-check-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -69,16 +71,39 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
       ? fillMessage(messages.birthYear, { year: pupil.birthYear })
       : messages.birthYearUnknown;
 
+  const filled = countFilledCheckFields({
+    presentChoice: pupil.presentChoice,
+    verseScores: pupil.verseScores,
+    verseIds: data.versesToRecite.map((verse) => verse.lessonVerseId),
+    hasTest: data.hasTest,
+    testScore: pupil.testScore,
+    notebookScore: pupil.notebookScore,
+    includeVersesAndTest: data.lessonKind !== LESSON_KIND.REVIEW,
+  });
+  const listStatus = {
+    statusChecked: messages.statusChecked,
+    statusUnchecked: messages.statusUnchecked,
+    statusPartial: messages.statusPartial,
+  };
+
+  const lessonMeta = `${fillMessage(messages.lessonSubtitle, {
+    ordinal: data.lessonOrdinal,
+    title: data.lessonTitle,
+  })} · ${data.lessonDateIso}`;
+
   return (
     <div className="space-y-4 pb-24 lg:pb-6">
+      <header className="space-y-1">
+        <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
+          {messages.linkLesson}
+        </CustomLink>
+      </header>
       <PageHeader
         title={screen.isCorrection ? messages.pageTitleCorrection : messages.pageTitleCheck}
-        description={fillMessage(messages.lessonSubtitle, {
-          ordinal: data.lessonOrdinal,
-          title: data.lessonTitle,
-        })}
+        description={lessonMeta}
         actions={
           <Button variant="outline" render={<CustomLink href={`/lessons/${data.lessonId}/table`} />}>
+            <LayoutGridIcon className="size-4" aria-hidden />
             {messages.linkTable}
           </Button>
         }
@@ -136,6 +161,7 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
               activePupilId={pupil.pupilId}
               lateLabel={messages.lateSubmitted}
               listLabel={messages.pupilsListLabel}
+              {...listStatus}
               onSelect={screen.moveTo}
             />
           </div>
@@ -150,6 +176,7 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
             activePupilId={pupil.pupilId}
             lateLabel={messages.lateSubmitted}
             listLabel={messages.pupilsListLabel}
+            {...listStatus}
             onSelect={screen.moveTo}
           />
         </aside>
@@ -164,6 +191,10 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
             birthLabel={birthLabel}
             points={screen.pointsPreview}
             pointsLabel={messages.pointsLabel}
+            filledLabel={fillMessage(messages.filledCount, {
+              filled: filled.filled,
+              total: filled.total,
+            })}
             headingRef={screen.headingRef}
           />
           {screen.showForm ? (

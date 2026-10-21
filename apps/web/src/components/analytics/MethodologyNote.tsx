@@ -7,12 +7,12 @@ type MethodologyNoteProps = {
 };
 
 export const MethodologyNote = ({ messages }: MethodologyNoteProps) => (
-  <section className="max-w-3xl space-y-3 border-t border-line pt-6">
+  <section className="mt-8 max-w-3xl border-t border-line pt-6">
     <SectionTitle as="h2">{messages.methodology.title}</SectionTitle>
-    <ul className="list-none space-y-2">
+    <ul className="mt-3 list-none space-y-2 text-ink-2">
       {messages.methodology.items.map((item) => (
         <li key={item}>
-          <ContentText className="text-sm text-ink-2">— {item}</ContentText>
+          <ContentText className="text-sm">— {item}</ContentText>
         </li>
       ))}
     </ul>

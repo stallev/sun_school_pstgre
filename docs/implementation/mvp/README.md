@@ -2,8 +2,8 @@
 
 **Тип:** Index  
 **Статус:** Canonical  
-**Версия:** 1.3  
-**Дата:** 2026-10-20  
+**Версия:** 1.4  
+**Дата:** 2026-10-21  
 **Волна:** W14-06  
 **Зависит от:** [`architecture_master_index.md`](../../prds/architecture_master_index.md), [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md)
 
@@ -11,7 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**Статус (2026-10-21):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). Импорт данных из старого приложения — вне проекта (владелец).
+**Статус (2026-10-21):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 
@@ -34,8 +34,9 @@
 | P08 | Аналитика по учебным годам | [P08](./phases_tasks_descriptions/P08_phase_description.md) | [P08](./tasks/P08_tasks.md) |
 | P09 | Фиксы соответствия UI прототипу | [P09](./phases_tasks_descriptions/P09_phase_description.md) | [P09](./tasks/P09_tasks.md) |
 | P10 | Визуальный дрейф UI (замеры по матрице) | — (см. [P10_tasks](./tasks/P10_tasks.md) Purpose) | [P10](./tasks/P10_tasks.md) |
+| P11 | Панель оценок сводной таблицы и тип карточки аналитики | [P11](./phases_tasks_descriptions/P11_phase_description.md) | [P11](./tasks/P11_tasks.md) |
 
-Нумерация фаз реализации (P01…P10) не совпадает с промптами bootstrap (P0…P6).
+Нумерация фаз реализации (P01…P11) не совпадает с промптами bootstrap (P0…P6).
 
 ## Контракты
 

@@ -1,0 +1,46 @@
+import {
+  BookOpenIcon,
+  BrickWallIcon,
+  CalendarIcon,
+  ChartColumnIcon,
+  ChartLineIcon,
+  ClipboardCheckIcon,
+  GlobeIcon,
+  HouseIcon,
+  KeyRoundIcon,
+  LayoutGridIcon,
+  ListIcon,
+  SchoolIcon,
+  ScrollTextIcon,
+  ShieldIcon,
+  UserIcon,
+  UsersIcon,
+  type LucideIcon,
+} from "lucide-react";
+
+/** Prototype `NAV` glyphs (`i-home`, `i-book`, …) mapped onto Lucide. */
+const NAV_ICON_BY_KEY: Record<string, LucideIcon> = {
+  today: HouseIcon,
+  lessons: BookOpenIcon,
+  "lessons-all": BookOpenIcon,
+  check: ClipboardCheckIcon,
+  verses: ScrollTextIcon,
+  group: UsersIcon,
+  "group-roster": UsersIcon,
+  bricks: BrickWallIcon,
+  rating: ChartColumnIcon,
+  calendar: CalendarIcon,
+  analytics: ChartLineIcon,
+  school: SchoolIcon,
+  audit: ListIcon,
+  people: UsersIcon,
+  approvals: KeyRoundIcon,
+  users: UserIcon,
+  deletions: ShieldIcon,
+  study: LayoutGridIcon,
+  groups: LayoutGridIcon,
+  year: CalendarIcon,
+  settings: GlobeIcon,
+};
+
+export const getNavIcon = (navKey: string): LucideIcon | null => NAV_ICON_BY_KEY[navKey] ?? null;

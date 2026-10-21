@@ -2,8 +2,8 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.1  
+**Дата:** 2026-10-21  
 **Волна:** W15-01  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) (UX-06), [`global_shell_spec.md`](./global_shell_spec.md), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md), [`canonical_routes.md`](../../../design/canonical_routes.md), [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D10), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`<head>`: token dump, gap-список; хелперы и константы), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -86,6 +86,7 @@
 | `Checkbox`, `Switch` | размер ≥ 44 px зоны касания | — | `toggle`, чекбокс согласия |
 | `SegmentedControl` | `role="radiogroup"`; 2–4 опции | UX-06 §5 | `seg()` |
 | `ScoreSelector` | «— / 0…N», `radiogroup`, 4 или 12 кнопок, сетка 6 колонок на мобильном | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §5.3 | `scoreRow()` |
+| `ScorePad` | тихая ячейка сводной таблицы: стихи — сразу `— 0 1 2`; тест/тетрадь — цифра/`—` + панель «Не оценивалось» и сетка `0…5`/`6…10`; md+ — `Popover` (`@base-ui/react` 1.9.0, flip вверх); <md — разворот под полем; одна открытая панель. Состав: `score-pad`, `score-cell`, `ChoiceMatrix`. **Не** заменяет `ScoreSelector` / `ScoreGroup` | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §7.1–§7.3 | `vLessonTable` (`data-tbl`) |
 | `Badge` | ссылка на стих (`RefBadge`), статус | — | `ref()` |
 | `CountBadge` | число у пункта меню; скрывается при нуле | — | `badge()` |
 | `Progress` | трек `line`, заливка `cobalt`, подпись числом | — | `meter()` |
@@ -263,7 +264,7 @@ apps/web/src/
 | [`ui_states_contract.md`](../../../design/ui_states_contract.md) | Состояния, паттерны |
 | [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) | Формы |
 | [`global_shell_spec.md`](./global_shell_spec.md) | Оболочка |
-| [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) | `ScoreSelector` |
+| [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) | `ScoreSelector`, `ScorePad` |
 
 **Registry:** [`documentation_creation_registry.md`](../../../meta/documentation_creation_registry.md) — wave W15-01
 
@@ -280,3 +281,4 @@ apps/web/src/
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W15-01) |
+| 2026-10-21 | v1.1 — P11: строка `ScorePad` (§5.3); `ScoreSelector` без изменений |

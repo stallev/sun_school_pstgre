@@ -30,7 +30,11 @@ export const CreateYearForm = ({ dictionaries, formError }: CreateYearFormProps)
   });
 
   return (
-    <form action={formAction} className="space-y-4 rounded-xl border border-line bg-surface p-4" aria-busy={pending}>
+    <form
+      action={formAction}
+      className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5"
+      aria-busy={pending}
+    >
       <SectionTitle>{messages.year.createTitle}</SectionTitle>
       <div className="grid gap-4 md:grid-cols-2">
         <label className="grid gap-1 text-sm">

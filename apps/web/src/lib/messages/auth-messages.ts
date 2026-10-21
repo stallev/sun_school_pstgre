@@ -34,6 +34,7 @@ export type AuthMessages = {
     lastName: string;
     firstName: string;
     middleName: string;
+    middleNameOptional: string;
     consentChildrenNote: string;
     submit: string;
     resubmit: string;
@@ -82,6 +83,7 @@ export type AuthMessages = {
     savePending: string;
     savedToast: string;
     identitiesSection: string;
+    identitiesHint: string;
     telegramTitle: string;
     credentialsTitle: string;
     connected: string;
@@ -153,6 +155,7 @@ export const pickAuthMessages = (auth: Dictionary): AuthMessages => ({
     lastName: getMessage(auth, "register.last_name"),
     firstName: getMessage(auth, "register.first_name"),
     middleName: getMessage(auth, "register.middle_name"),
+    middleNameOptional: getMessage(auth, "register.middle_name_optional"),
     consentChildrenNote: getMessage(auth, "register.consent_children_note"),
     submit: getMessage(auth, "register.submit"),
     resubmit: getMessage(auth, "register.resubmit"),
@@ -201,6 +204,7 @@ export const pickAuthMessages = (auth: Dictionary): AuthMessages => ({
     savePending: getMessage(auth, "profile.save_pending"),
     savedToast: getMessage(auth, "profile.saved_toast"),
     identitiesSection: getMessage(auth, "profile.identities_section"),
+    identitiesHint: getMessage(auth, "profile.identities_hint"),
     telegramTitle: getMessage(auth, "profile.telegram_title"),
     credentialsTitle: getMessage(auth, "profile.credentials_title"),
     connected: getMessage(auth, "profile.connected"),

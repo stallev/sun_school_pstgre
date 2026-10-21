@@ -1,3 +1,4 @@
+import { ChevronRightIcon, PlusIcon } from "lucide-react";
 import { ContentText, NumberDisplay, SectionTitle } from "@/components/atoms";
 import { Banner } from "@/components/patterns/Banner";
 import { Button } from "@/components/ui/button";
@@ -29,40 +30,41 @@ export const TodayLessonCard = ({
     : lesson.lessonDateLabel;
 
   return (
-    <article className="space-y-5 rounded-xl border border-line bg-surface p-4 md:p-6">
+    <article className="rounded-xl border border-line bg-surface p-4 sm:p-5">
       {yearClosed ? (
         <Banner tone="warning" title={messages.yearClosedTitle}>
           <p>{messages.yearClosedDescription}</p>
         </Banner>
       ) : null}
-      <div className="space-y-1">
-        <ContentText tone="secondary" className="text-sm">
-          {messages.todayIncompleteLabel}
-        </ContentText>
-        <SectionTitle>{messages.lessonCardTitle(lesson.ordinal, lesson.title)}</SectionTitle>
-        <ContentText tone="secondary" className="text-sm">
-          {dateLine}
-        </ContentText>
+      <p className="text-sm text-muted">{messages.todayIncompleteLabel}</p>
+      <SectionTitle className="mt-1">{messages.lessonCardTitle(lesson.ordinal, lesson.title)}</SectionTitle>
+      <ContentText tone="secondary" className="mt-1 text-sm">
+        {dateLine}
+      </ContentText>
+      <div className="mt-5 flex items-baseline justify-between gap-3">
+        <ContentText className="text-sm text-ink-2">{messages.todayCheckedStudentsLabel}</ContentText>
+        <NumberDisplay className="text-3xl tabular-nums">
+          {checkedCount}
+          <span className="text-base text-muted">
+            {" "}
+            {messages.todayCheckedOfWord} {lesson.totalPupils}
+          </span>
+        </NumberDisplay>
       </div>
-      <div className="space-y-2">
-        <div className="flex items-baseline justify-between gap-3">
-          <ContentText className="text-sm text-ink-2">{messages.todayCheckedStudentsLabel}</ContentText>
-          <NumberDisplay className="text-3xl tabular-nums">
-            {checkedCount}
-            <span className="text-base text-muted"> / {lesson.totalPupils}</span>
-          </NumberDisplay>
-        </div>
+      <div className="mt-2">
         <Progress value={progressValue} />
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-2">
         <Button render={<CustomLink href={`/lessons/${lesson.lessonId}/check`} />}>
           {messages.todayContinueCheck}
+          <ChevronRightIcon aria-hidden />
         </Button>
         {canMutate ? (
           <Button
-            variant="outline"
+            variant="ghost"
             render={<CustomLink href={`/lessons/new?gradeId=${gradeId}`} />}
           >
+            <PlusIcon aria-hidden />
             {messages.newLesson}
           </Button>
         ) : null}

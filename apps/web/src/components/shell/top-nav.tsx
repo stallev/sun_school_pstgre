@@ -3,6 +3,7 @@
 import { ChevronDownIcon } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { NavBadge } from "@/components/shell/nav-badge";
+import { NavIcon } from "@/components/shell/NavIcon";
 import { NavLinkRow } from "@/components/shell/nav-link-row";
 import type { ShellNavProps } from "@/components/shell/shell-nav-types";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
@@ -66,6 +67,7 @@ const TopNavGroup = ({
           if (!event.currentTarget.parentElement?.contains(event.relatedTarget)) setOpen(false);
         }}
       >
+        <NavIcon navKey={group.key} />
         <span>{group.label}</span>
         {groupBadge > 0 ? (
           <NavBadge count={groupBadge} ariaLabel={badgeLabel(messages.badgeInQueue, groupBadge)} />

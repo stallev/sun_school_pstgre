@@ -2,6 +2,7 @@ import "server-only";
 
 import { buildScoringSnapshot, LESSON_KIND } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
+import { lessonDateToIso } from "@/data/lessons/lesson-shared.server";
 import { loadCheckLessonAccess } from "./check-read-shared.server";
 import { getCheckRoster } from "./get-check-roster";
 import type {
@@ -125,6 +126,7 @@ export async function loadSequentialCheckPage(
     lessonId: roster.lessonId,
     lessonOrdinal: access.lesson.ordinal,
     lessonTitle: access.lesson.title,
+    lessonDateIso: lessonDateToIso(access.lesson.lessonDate),
     lessonStatus: roster.lessonStatus,
     lessonKind: roster.lessonKind,
     hasTest: roster.hasTest,

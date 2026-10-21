@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 const PupilAnalyticsLoading = () => (
-  <div className="space-y-6" aria-busy="true">
+  <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden" aria-busy="true">
     <Skeleton className="h-10 w-64" />
     <Skeleton className="h-5 w-48" />
     <div className="flex flex-wrap gap-2">

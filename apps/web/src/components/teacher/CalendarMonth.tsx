@@ -119,6 +119,23 @@ export const CalendarMonth = ({
             );
           })}
         </div>
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 px-1 text-sm text-ink-2">
+          {(
+            [
+              [GRADE_EVENT_TYPE.LESSON, messages.typeLesson, "text-cobalt-ink"] as const,
+              [GRADE_EVENT_TYPE.TRIP, messages.typeTrip, "text-ok"] as const,
+              [GRADE_EVENT_TYPE.CANCELLATION, messages.typeCancellation, "text-danger"] as const,
+            ] as const
+          ).map(([type, label, className]) => {
+            const meta = typeMeta(type, messages);
+            return (
+              <span key={type} className="inline-flex items-center gap-1.5">
+                <meta.icon className={cn("size-4", className)} aria-hidden />
+                {label}
+              </span>
+            );
+          })}
+        </div>
       </Card>
       <section className="min-w-0">
         <SectionTitle className="mb-3">{messages.monthEventsTitle}</SectionTitle>

@@ -12,13 +12,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import {
-  formatAnalyticsAverage,
-  formatAnalyticsPercent,
-} from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages, AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
 import { DiffBadge, type YearDiffMetric } from "./DiffBadge";
+import { formatYearMetricValue } from "./format-year-metric-value";
+import { YearTotalsCards } from "./YearTotalsCards";
 
 export type YearTotalsTableRow = {
   yearId: string;
@@ -48,20 +46,6 @@ const METRIC_COLS: { key: YearDiffMetric; label: (m: AnalyticsYearMessages) => s
   { key: "notebook", label: (m) => m.columnNotebook },
 ];
 
-const cellValue = (
-  key: YearDiffMetric,
-  totals: GroupYearTotals | null,
-  messages: AnalyticsMessages,
-): string => {
-  if (!totals) return messages.kpiEmpty;
-  const value = totals[key];
-  if (value === null) return messages.kpiEmpty;
-  if (key === "attendance") {
-    return formatAnalyticsPercent(messages.formatPercent, Number((value * 100).toFixed(0)));
-  }
-  return formatAnalyticsAverage(messages.formatAverage, Number(value.toFixed(1)));
-};
-
 export const YearTotalsTable = ({
   groupLabel,
   rows,
@@ -75,10 +59,18 @@ export const YearTotalsTable = ({
       {yearMessages.title}
     </SectionTitle>
     <ContentText className="mb-3 text-sm text-ink-2">{yearMessages.compositionNote}</ContentText>
-    <Card className="overflow-x-auto">
-      <Table className="min-w-[46rem] text-left text-base">
+    <YearTotalsCards
+      rows={rows}
+      selectedYearId={selectedYearId}
+      onSelectYear={onSelectYear}
+      messages={messages}
+      yearMessages={yearMessages}
+      label={fillMessage(yearMessages.tableCaption, { group: groupLabel })}
+    />
+    <Card className="hidden lg:block">
+      <Table className="text-left text-base">
         <caption className="sr-only">{fillMessage(yearMessages.tableCaption, { group: groupLabel })}</caption>
-        <TableHeader className="border-b border-line text-base text-muted-foreground">
+        <TableHeader className="border-b border-line text-sm text-muted">
           <TableRow>
             <TableHead scope="col" className="px-5 py-3 font-normal">
               {yearMessages.columnYear}
@@ -128,7 +120,7 @@ export const YearTotalsTable = ({
                 </TableCell>
                 {METRIC_COLS.map(({ key }) => (
                   <TableCell key={key} className="px-3 py-3 text-right tabular-nums">
-                    {cellValue(key, row.totals, messages)}
+                    {formatYearMetricValue(key, row.totals, messages)}
                     <span className="block text-sm font-normal text-ink-2">
                       <DiffBadge
                         metric={key}

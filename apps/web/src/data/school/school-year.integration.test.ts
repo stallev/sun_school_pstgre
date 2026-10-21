@@ -1,6 +1,7 @@
 /**
  * Academic year use-cases on the DEV database (school_year §5.1, §8).
- * Transactions roll back except the activation race case, which cleans up committed rows.
+ * Transactions roll back except the activation race case. That case commits a close of the
+ * current ACTIVE year, then restores it directly: activateYear accepts only DRAFT.
  */
 import path from "node:path";
 import { config as loadEnv } from "dotenv";
@@ -137,77 +138,200 @@ describe.skipIf(!enabled)("school year use-cases on the dev database", () => {
     });
   }, 180_000);
 
+  const restorePriorActiveYear = async (
+    yearId: string,
+    openEnrollmentIds: readonly string[],
+    priorGroupSnapshotKeys: ReadonlySet<string>,
+    priorPupilSnapshotKeys: ReadonlySet<string>,
+  ): Promise<void> => {
+    await prisma.academicYear.update({
+      where: { id: yearId },
+      data: { status: ACADEMIC_YEAR_STATUS.ACTIVE },
+    });
+    if (openEnrollmentIds.length > 0) {
+      await prisma.enrollment.updateMany({
+        where: { id: { in: [...openEnrollmentIds] } },
+        data: { endsOn: null },
+      });
+    }
+
+    const groupSnapshots = await prisma.analyticsGroupYearSnapshot.findMany({
+      where: { academicYearId: yearId },
+      select: { gradeId: true, version: true },
+    });
+    for (const row of groupSnapshots) {
+      if (priorGroupSnapshotKeys.has(`${row.gradeId}:${row.version}`)) continue;
+      await prisma.analyticsGroupYearSnapshot.delete({
+        where: {
+          gradeId_academicYearId_version: {
+            gradeId: row.gradeId,
+            academicYearId: yearId,
+            version: row.version,
+          },
+        },
+      });
+    }
+
+    const pupilSnapshots = await prisma.analyticsPupilYearSnapshot.findMany({
+      where: { academicYearId: yearId },
+      select: { pupilId: true, version: true },
+    });
+    for (const row of pupilSnapshots) {
+      if (priorPupilSnapshotKeys.has(`${row.pupilId}:${row.version}`)) continue;
+      await prisma.analyticsPupilYearSnapshot.delete({
+        where: {
+          pupilId_academicYearId_version: {
+            pupilId: row.pupilId,
+            academicYearId: yearId,
+            version: row.version,
+          },
+        },
+      });
+    }
+  };
+
   it("parallel activations yield one success and one SCHOOL_YEAR_ACTIVE_EXISTS", async () => {
     const priorActive = await prisma.academicYear.findFirst({
       where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
       select: { id: true },
     });
     const priorActiveYearId = priorActive?.id ?? null;
+    const openEnrollmentIds = priorActiveYearId
+      ? (
+          await prisma.enrollment.findMany({
+            where: { academicYearId: priorActiveYearId, endsOn: null },
+            select: { id: true },
+          })
+        ).map((row) => row.id)
+      : [];
+    const priorGroupSnapshotKeys = new Set(
+      priorActiveYearId
+        ? (
+            await prisma.analyticsGroupYearSnapshot.findMany({
+              where: { academicYearId: priorActiveYearId },
+              select: { gradeId: true, version: true },
+            })
+          ).map((row) => `${row.gradeId}:${row.version}`)
+        : [],
+    );
+    const priorPupilSnapshotKeys = new Set(
+      priorActiveYearId
+        ? (
+            await prisma.analyticsPupilYearSnapshot.findMany({
+              where: { academicYearId: priorActiveYearId },
+              select: { pupilId: true, version: true },
+            })
+          ).map((row) => `${row.pupilId}:${row.version}`)
+        : [],
+    );
+
     if (priorActiveYearId) {
-      await prisma.$transaction(
+      const closed = await prisma.$transaction(
         (tx) => closeYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
         { maxWait: 20_000, timeout: 180_000 },
       );
+      if (!closed.ok) {
+        throw new Error(`failed to close the prior active year: ${JSON.stringify(closed)}`);
+      }
     }
 
     const suffix = Date.now();
-    const yearA = await prisma.academicYear.create({
-      data: {
-        organizationId,
-        name: `Race-A-${suffix}`,
-        startsOn: calendarDateFromIso("2036-09-01"),
-        endsOn: calendarDateFromIso("2037-06-01"),
-        status: ACADEMIC_YEAR_STATUS.DRAFT,
-      },
-    });
-    const yearB = await prisma.academicYear.create({
-      data: {
-        organizationId,
-        name: `Race-B-${suffix}`,
-        startsOn: calendarDateFromIso("2038-09-01"),
-        endsOn: calendarDateFromIso("2039-06-01"),
-        status: ACADEMIC_YEAR_STATUS.DRAFT,
-      },
-    });
+    const raceYearIds: string[] = [];
+    let raceCleanupError: Error | undefined;
+    let assertionError: unknown;
+    try {
+      const yearA = await prisma.academicYear.create({
+        data: {
+          organizationId,
+          name: `Race-A-${suffix}`,
+          startsOn: calendarDateFromIso("2036-09-01"),
+          endsOn: calendarDateFromIso("2037-06-01"),
+          status: ACADEMIC_YEAR_STATUS.DRAFT,
+        },
+      });
+      raceYearIds.push(yearA.id);
+      const yearB = await prisma.academicYear.create({
+        data: {
+          organizationId,
+          name: `Race-B-${suffix}`,
+          startsOn: calendarDateFromIso("2038-09-01"),
+          endsOn: calendarDateFromIso("2039-06-01"),
+          status: ACADEMIC_YEAR_STATUS.DRAFT,
+        },
+      });
+      raceYearIds.push(yearB.id);
 
-    const results = await Promise.allSettled([
-      prisma.$transaction((tx) =>
-        activateYearInTransaction(tx, adminUserId, organizationId, { yearId: yearA.id }),
-      ),
-      prisma.$transaction((tx) =>
-        activateYearInTransaction(tx, adminUserId, organizationId, { yearId: yearB.id }),
-      ),
-    ]);
+      const results = await Promise.allSettled([
+        prisma.$transaction((tx) =>
+          activateYearInTransaction(tx, adminUserId, organizationId, { yearId: yearA.id }),
+        ),
+        prisma.$transaction((tx) =>
+          activateYearInTransaction(tx, adminUserId, organizationId, { yearId: yearB.id }),
+        ),
+      ]);
 
-    const values = results.map((entry) => (entry.status === "fulfilled" ? entry.value : entry.reason));
-    const successes = values.filter((value) => typeof value === "object" && value !== null && value.ok === true);
-    const blocked = values.filter(
-      (value) =>
-        typeof value === "object" &&
-        value !== null &&
-        value.ok === false &&
-        value.code === MUTATION_ERROR_CODES.SCHOOL_YEAR_ACTIVE_EXISTS,
-    );
-
-    expect(successes).toHaveLength(1);
-    expect(blocked).toHaveLength(1);
-
-    const raceWinner = await prisma.academicYear.findFirst({
-      where: { id: { in: [yearA.id, yearB.id] }, status: ACADEMIC_YEAR_STATUS.ACTIVE },
-      select: { id: true },
-    });
-    if (raceWinner) {
-      await prisma.$transaction((tx) =>
-        closeYearInTransaction(tx, adminUserId, organizationId, { yearId: raceWinner.id }),
+      const values = results.map((entry) => (entry.status === "fulfilled" ? entry.value : entry.reason));
+      const successes = values.filter((value) => typeof value === "object" && value !== null && value.ok === true);
+      const blocked = values.filter(
+        (value) =>
+          typeof value === "object" &&
+          value !== null &&
+          value.ok === false &&
+          value.code === MUTATION_ERROR_CODES.SCHOOL_YEAR_ACTIVE_EXISTS,
       );
+
+      expect(successes).toHaveLength(1);
+      expect(blocked).toHaveLength(1);
+    } catch (error) {
+      assertionError = error;
+    } finally {
+      if (raceYearIds.length > 0) {
+        try {
+          const raceWinner = await prisma.academicYear.findFirst({
+            where: { id: { in: raceYearIds }, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+            select: { id: true },
+          });
+          if (raceWinner) {
+            const closedWinner = await prisma.$transaction((tx) =>
+              closeYearInTransaction(tx, adminUserId, organizationId, { yearId: raceWinner.id }),
+            );
+            if (!closedWinner.ok) {
+              raceCleanupError = new Error(
+                `failed to close the race winner: ${JSON.stringify(closedWinner)}`,
+              );
+            }
+          }
+        } catch (error) {
+          raceCleanupError = error instanceof Error ? error : new Error(String(error));
+        } finally {
+          await prisma.analyticsGroupYearSnapshot.deleteMany({
+            where: { academicYearId: { in: raceYearIds } },
+          });
+          await prisma.analyticsPupilYearSnapshot.deleteMany({
+            where: { academicYearId: { in: raceYearIds } },
+          });
+          await prisma.academicYear.deleteMany({ where: { id: { in: raceYearIds } } });
+        }
+      }
+      if (priorActiveYearId) {
+        await restorePriorActiveYear(
+          priorActiveYearId,
+          openEnrollmentIds,
+          priorGroupSnapshotKeys,
+          priorPupilSnapshotKeys,
+        );
+      }
     }
-    await prisma.academicYear.deleteMany({ where: { id: { in: [yearA.id, yearB.id] } } });
+
+    if (raceCleanupError) throw raceCleanupError;
+    if (assertionError) throw assertionError;
 
     if (priorActiveYearId) {
-      await prisma.$transaction(
-        (tx) => activateYearInTransaction(tx, adminUserId, organizationId, { yearId: priorActiveYearId }),
-        { maxWait: 20_000, timeout: 180_000 },
-      );
+      const restored = await prisma.academicYear.findUnique({
+        where: { id: priorActiveYearId },
+        select: { status: true },
+      });
+      expect(restored?.status).toBe(ACADEMIC_YEAR_STATUS.ACTIVE);
     }
   }, 240_000);
 });

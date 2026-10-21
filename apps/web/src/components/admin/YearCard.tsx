@@ -48,7 +48,7 @@ export const YearCard = ({ row, dictionaries, formError }: YearCardProps) => {
   const statusLabel = formatAcademicYearStatusLabel(row.status, messages);
 
   return (
-    <article className="space-y-3 rounded-xl border border-line bg-surface p-4">
+    <article className="flex h-full flex-col space-y-3 rounded-xl border border-line bg-surface p-4 sm:p-5">
       <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
         <SectionTitle>{row.name}</SectionTitle>
         <ContentText tone="secondary" className="text-sm">{statusLabel}</ContentText>

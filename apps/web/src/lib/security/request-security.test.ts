@@ -10,6 +10,12 @@ describe("request-security", () => {
     expect(createCspNonce().length).toBeGreaterThan(8);
   });
 
+  it("style-src allows unsafe-inline and does not pair it with a nonce", () => {
+    const csp = buildContentSecurityPolicy("abc");
+    expect(csp).toContain("style-src 'self' 'unsafe-inline'");
+    expect(csp).not.toContain("style-src 'self' 'nonce-");
+  });
+
   it("prod CSP includes upgrade-insecure-requests", () => {
     vi.stubEnv("APP_ENV", "prod");
     vi.stubEnv("NODE_ENV", "production");

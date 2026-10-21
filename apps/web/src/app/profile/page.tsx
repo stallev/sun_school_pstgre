@@ -86,8 +86,10 @@ const ProfilePage = async () => {
 
   const shellProfile = !isAuthChrome;
 
+  const rolesOrStatusLine = formatProfileSubtitle(profile, authMessages);
+
   return (
-    <main className={shellProfile ? "mx-auto max-w-5xl space-y-8" : "space-y-8"}>
+    <main className={shellProfile ? "mx-auto max-w-5xl space-y-4" : "space-y-8"}>
       <Suspense fallback={null}>
         <ProfileLinkToast />
       </Suspense>
@@ -102,48 +104,56 @@ const ProfilePage = async () => {
         </header>
       ) : null}
 
-      <PageHeader
-        title={authMessages.profile.title}
-        description={formatProfileSubtitle(profile, authMessages)}
-        actions={
-          shellProfile ? (
-            <AuthSignOutLink
-              signOutLabel={shellMessages.signOut}
-              signOutPendingLabel={shellMessages.signOutPending}
-            />
-          ) : undefined
+      <PageHeader title={authMessages.profile.title} description={shellProfile ? undefined : rolesOrStatusLine} />
+
+      <div
+        className={
+          shellProfile
+            ? "grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch"
+            : "grid max-w-5xl grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch"
         }
-      />
-
-      <div className={shellProfile ? "grid gap-6 lg:grid-cols-2" : "space-y-8"}>
-        <FormSection title={authMessages.profile.nameSection}>
-          <ProfileNameForm
-            initialNames={{
-              lastName: profile.lastName,
-              firstName: profile.firstName,
-              middleName: profile.middleName,
-            }}
-            dictionaries={dictionaries}
-          />
-        </FormSection>
-
-        <FormSection title={authMessages.profile.identitiesSection}>
-          <ul className="space-y-3">
-            {profile.identities.map((identity) => (
-              <LinkedIdentityRow key={identity.provider} identity={identity} dictionaries={dictionaries} />
-            ))}
-          </ul>
-        </FormSection>
-
-        <div className={shellProfile ? "space-y-8 lg:col-span-2" : "space-y-8"}>
-          <FormSection title={authMessages.profile.consentSection}>
-            {consentLine ? <ContentText>{consentLine}</ContentText> : <ContentText tone="muted">—</ContentText>}
+      >
+        <div className="h-full [&>section]:h-full">
+          <FormSection title={authMessages.profile.nameSection}>
+            <ProfileNameForm
+              initialNames={{
+                lastName: profile.lastName,
+                firstName: profile.firstName,
+                middleName: profile.middleName,
+              }}
+              dictionaries={dictionaries}
+              metaLines={
+                <>
+                  <ContentText tone="secondary" className="text-sm">{rolesOrStatusLine}</ContentText>
+                  <ContentText tone="secondary" className="text-sm">{uiLocaleLine}</ContentText>
+                </>
+              }
+            />
           </FormSection>
+        </div>
 
-          <FormSection title={authMessages.profile.uiLocaleSection}>
-            <ContentText>{uiLocaleLine}</ContentText>
+        <div className="h-full [&>section]:flex [&>section]:h-full [&>section]:flex-col">
+          <FormSection title={authMessages.profile.identitiesSection} description={authMessages.profile.identitiesHint}>
+            <ul className="divide-y divide-line">
+              {profile.identities.map((identity) => (
+                <LinkedIdentityRow key={identity.provider} identity={identity} dictionaries={dictionaries} />
+              ))}
+            </ul>
+            {consentLine ? (
+              <ContentText tone="secondary" className="text-sm">
+                {consentLine}
+              </ContentText>
+            ) : null}
+            {shellProfile ? (
+              <AuthSignOutLink
+                signOutLabel={shellMessages.signOut}
+                signOutPendingLabel={shellMessages.signOutPending}
+              />
+            ) : null}
           </FormSection>
+        </div>
 
+        <div className="lg:col-span-2">
           <FormSection title={authMessages.profile.deletionSection}>
             <ProfileDeletionPanel
               openRequest={openDeletionRequest}

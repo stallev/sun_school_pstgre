@@ -1,3 +1,4 @@
+import { ChevronRightIcon } from "lucide-react";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
@@ -22,13 +23,20 @@ export const GroupYearSummarySection = ({
   const yearMessages = messages.years;
 
   return (
-    <section className="space-y-4" aria-labelledby="group-year-summary-title">
+    <section className="mb-6 space-y-4" aria-labelledby="group-year-summary-title">
       <div className="flex flex-wrap items-end justify-between gap-2">
         <SectionTitle as="h2" id="group-year-summary-title">
           {fillMessage(messages.groupYear.sectionTitle, { year: yearRow.yearName })}
         </SectionTitle>
-        <Button type="button" variant="outline" className="min-h-11" render={<CustomLink href={analyticsHref} />}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="min-h-11"
+          render={<CustomLink href={analyticsHref} />}
+        >
           {yearMessages.allYearsLink}
+          <ChevronRightIcon aria-hidden />
         </Button>
       </div>
       <KpiTiles

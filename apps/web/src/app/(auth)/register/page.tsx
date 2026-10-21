@@ -8,7 +8,7 @@ import {
 } from "@/actions/access";
 import { RegisterForm } from "@/components/auth/RegisterForm.client";
 import { AuthScreen } from "@/components/auth/AuthScreen";
-import { Heading } from "@/components/atoms";
+import { PageHeader } from "@/components/patterns/PageHeader";
 import { loadRegisterPageContext } from "@/data/access/load-register-context.server";
 import { requireSession } from "@/lib/auth/require-user";
 import { loadSessionPolicyContext } from "@/lib/auth/load-session-policy.server";
@@ -63,9 +63,7 @@ const RegisterPage = async () => {
   return (
     <AuthScreen variant="reading">
       <div className="space-y-4">
-        <header>
-          <Heading>{title}</Heading>
-        </header>
+        <PageHeader title={title} />
         <RegisterForm
           mode={registerContext.mode}
           consentVersion={registerContext.consentVersion}

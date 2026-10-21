@@ -469,7 +469,7 @@ const S = {
   consent:{ 1:{ voice:true, photo:true }, 2:{ voice:false, photo:true } },
   bricksOpen:null, fixOpen:null, peopleTab:'pupils', usersTab:'pending', userOpen:null,
   yearClosed:false, year:null, pupilYear:null, pupilMetric:'att', period:'year', anaGroup:'Средняя', month:11, verseQ:'', groupSel:[], groupEdit:'Средняя',
-  lf:null, lang:'ru', loginAdminOpen:false
+  lf:null, lang:'ru', loginAdminOpen:false, tblPad:null
 };
 
 /* Записи проверок: уроки 1–7 проверены у всех, урок 8 — у первых 9 */
@@ -1422,66 +1422,104 @@ function vLesson(){
   </div>`}`;
 }
 
-const SEL = 'h-8 rounded-md border border-muted bg-surface px-1 text-sm tabular-nums focus:border-cobalt focus:outline-none';
-function selOpts(max, val){ return `<option value="" ${val==null?'selected':''}>—</option>` + Array.from({length:max+1},(_,i)=>`<option ${val===i?'selected':''}>${i}</option>`).join(''); }
+function applyTblCell(lid, pid, k, val){
+  const r = S.hc[lid][pid];
+  const old = k.startsWith('v') ? r.v[+k.slice(1)] : r[k];
+  if (k.startsWith('v')){ r.v[+k.slice(1)] = val; r.vs[+k.slice(1)] = 'manual'; } else r[k] = val;
+  if (isCorrection(lid)){
+    if (old==null && val!=null && k!=='present' && k!=='sing') r.late[k] = TODAY;
+    audit(`Исправление в таблице · ${pupil(pid).name} · ${lessonById(lid).d}`, `${k}: ${old==null?'—':old} → ${val==null?'—':val}`);
+  }
+  const fresh = isCorrection(lid) ? recalc([pid]) : [];
+  S.tblPad = null;
+  render();
+  if (isCorrection(lid)) toast(fresh.length ? `Исправлено. Новое достижение: ${fresh.map(a=>ach(a.code).name+' · '+TIER[a.tier]).join(', ')}` : 'Исправлено и записано в журнал');
+}
+function tblPadPanel(id, k, stack, max){
+  const pick = (v,l,wide) => `<button type="button" data-act="tbl-score" data-pid="${id}" data-k="${k}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-sm tabular-nums ${SEG_OFF} hover:border-ink-2">${l}</button>`;
+  const n = v => pick(v, v, false);
+  const body = max===2
+    ? `<div class="grid grid-cols-4 gap-1">${[null,0,1,2].map(v=>pick(v, v===null?'—':v, false)).join('')}</div>`
+    : `${pick(null,'Не оценивалось',true)}<div class="mt-1 grid grid-cols-6 gap-1">${[0,1,2,3,4,5].map(n).join('')}</div><div class="mt-1 grid grid-cols-5 gap-1">${[6,7,8,9,10].map(n).join('')}</div>`;
+  return `<div data-tbl-pad class="${stack ? 'mt-2' : 'absolute left-1/2 z-30 mt-1 min-w-[12rem] -translate-x-1/2'} rounded-lg border border-line bg-surface p-2 shadow-float">${body}</div>`;
+}
 function vLessonTable(){
   const L = lessonById(S.lessonId), recs = S.hc[L.id] || {}, rv = recVerses(L.id), corr = isCorrection(L.id);
+  const all = Object.values(recs);
   const ids = Object.keys(recs).map(Number).filter(id=> (!S.lsFilter.present || recs[id].present) && (!S.lsFilter.unchecked || !recs[id].done));
-  const rowCls = r => !r.done ? 'bg-warn-soft/70' : !r.present ? 'bg-paper' : '';
+  const checked = all.filter(r=>r.done).length;
+  const presentN = all.filter(r=>r.present).length;
+  const uncheckedN = all.filter(r=>!r.done).length;
   const scoreCls = v => v==null ? '' : v>=8 ? 'text-ok' : v<=4 ? 'text-danger' : '';
-  const ctl = (id, r) => ({
-    present: `<input type="checkbox" data-tbl="present" data-pid="${id}" ${r.present?'checked':''} aria-label="Присутствие: ${pupil(id).name}" class="size-5 accent-cobalt">`,
-    v: k => `<select data-tbl="v${k}" data-pid="${id}" aria-label="${rv[k]}: ${pupil(id).name}" class="${SEL} w-14">${selOpts(2, r.v[k])}</select>`,
-    test: L.test ? `<select data-tbl="test" data-pid="${id}" aria-label="Тест: ${pupil(id).name}" class="${SEL} w-16 ${scoreCls(r.test)}">${selOpts(10, r.test)}</select>` : '<span class="text-xs text-muted">нет</span>',
-    nb: `<select data-tbl="nb" data-pid="${id}" aria-label="Тетрадь: ${pupil(id).name}" class="${SEL} w-16 ${scoreCls(r.nb)}">${selOpts(10, r.nb)}</select>`,
-    sing: `<input type="checkbox" data-tbl="sing" data-pid="${id}" ${r.sing?'checked':''} aria-label="Спевка: ${pupil(id).name}" class="size-5 accent-cobalt">`
-  });
-  const late = (r,k) => r.late[k] ? `<span class="block text-[0.6875rem] leading-none text-amber-ink">позже</span>` : '';
+  const padOpen = (id,k) => S.tblPad && S.tblPad.pid===id && S.tblPad.k===k;
+  const padCell = (id,k,val,label,stack,max) => { const open = padOpen(id,k), disp = val==null?'—':val;
+    return `<div data-tbl-pad-root class="${stack?'':'relative inline-block'}"><button type="button" data-act="tbl-pad-open" data-pid="${id}" data-k="${k}" aria-expanded="${open}" aria-label="${label}: ${pupil(id).name}" class="inline-flex h-8 min-w-[2.5rem] items-center justify-center rounded-md border border-line bg-surface px-2 text-sm tabular-nums hover:border-ink-2 ${max>2?scoreCls(val):''}">${disp}</button>${open ? tblPadPanel(id,k,stack,max) : ''}</div>`; };
+  const pressBtn = (id,k,on,label) => `<button type="button" data-act="tbl-toggle" data-k="${k}" data-pid="${id}" aria-pressed="${on}" aria-label="${label}: ${pupil(id).name}" class="inline-flex h-11 min-w-11 items-center justify-center rounded-lg border px-3 text-sm ${on?'border-cobalt-ink bg-cobalt-soft font-medium':'border-line-strong bg-surface'}">${on?ic('i-ok','size-5'):ic('i-circle','size-5 text-muted')}</button>`;
+  const chip = (k,on,label) => `<button type="button" data-act="lsf" data-k="${k}" aria-pressed="${on}" class="h-9 rounded-full border px-3 text-sm ${on?SEG_ON:SEG_OFF}">${label}</button>`;
+  const rowStatus = r => !r.done ? status('warn','не проверен') : !r.present ? status('idle','не был') : '';
+  const lateOnce = r => Object.keys(r.late).some(k=>r.late[k]) ? '<span class="text-xs text-amber-ink">позже</span>' : '';
+  const workSpan = (L.test ? 1 : 0) + 2;
   return `${backLink('lesson','К уроку')}
   <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-    <div><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1><p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t} · ${L.d}</p></div>
+    <div class="min-w-0 flex-1"><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1>
+      <p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t}</p><p class="text-sm text-muted">${L.d} · были ${presentN} · не проверены ${uncheckedN} · проверено ${checked} из ${all.length}</p>
+      <div class="mt-2 max-w-md">${meter(checked, all.length || 1, 'Проверено')}</div></div>
     <button type="button" data-act="check-open" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-check','size-4')} Последовательная проверка</button>
   </div>
   ${corr ? `<p class="mb-3 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок проверен. Правки пересчитают баллы и попадут в журнал, новые оценки получат отметку «сдано ${TODAY}».</p>` : ''}
-  <div class="mb-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-    <label class="inline-flex items-center gap-2"><input type="checkbox" data-act="lsf" data-k="present" ${S.lsFilter.present?'checked':''} class="size-4 accent-cobalt"> Только присутствовавшие</label>
-    <label class="inline-flex items-center gap-2"><input type="checkbox" data-act="lsf" data-k="unchecked" ${S.lsFilter.unchecked?'checked':''} class="size-4 accent-cobalt"> Только непроверенные</label>
-    <span class="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted sm:ml-auto"><span class="inline-flex items-center gap-1.5"><span class="size-3 rounded-sm bg-warn-soft ring-1 ring-line"></span>не проверен</span><span class="inline-flex items-center gap-1.5"><span class="size-3 rounded-sm bg-paper ring-1 ring-line"></span>не был</span></span>
+  <div class="sticky top-14 z-20 -mx-4 mb-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur-md reduce-transparency:bg-surface sm:mx-0 sm:rounded-lg sm:border sm:backdrop-blur-none">
+    <div class="flex flex-wrap items-center gap-2 text-sm">
+      ${chip('all', !S.lsFilter.present && !S.lsFilter.unchecked, 'Все')}
+      ${chip('unchecked', S.lsFilter.unchecked, 'Непроверенные')}
+      ${chip('present', S.lsFilter.present, 'Были')}
+    </div>
   </div>
 
   <div class="${CARD} hidden overflow-x-auto md:block">
     <table class="w-full text-left text-sm">
-      <thead class="border-b border-line text-muted"><tr>
-        <th scope="col" class="w-12 py-2 pl-4 font-normal">№</th><th scope="col" class="py-2 pr-2 font-normal">Ученик</th><th scope="col" class="px-2 py-2 text-center font-normal">Был</th>
-        ${rv.map(r=>`<th scope="col" class="px-1 py-2 text-center font-normal">${r}</th>`).join('')}
-        <th scope="col" class="px-1 py-2 text-center font-normal">Тест</th><th scope="col" class="px-1 py-2 text-center font-normal">Тетрадь</th><th scope="col" class="px-2 py-2 text-center font-normal">Спевка</th>
-        <th scope="col" class="px-2 py-2 text-right font-normal">Итого</th><th scope="col" class="w-10 py-2 pr-3"><span class="sr-only">Открыть</span></th></tr></thead>
+      <thead class="border-b border-line text-muted">
+        <tr>
+          <th scope="col" rowspan="2" class="w-12 py-2 pl-4 font-normal">№</th>
+          <th scope="col" rowspan="2" class="sticky left-0 z-10 bg-card py-2 pr-2 font-normal">Ученик</th>
+          <th scope="col" rowspan="2" class="px-2 py-2 text-center font-normal">Был</th>
+          ${rv.length ? `<th scope="colgroup" colspan="${rv.length}" class="px-1 py-2 text-center font-medium text-ink-2">Память</th>` : ''}
+          <th scope="colgroup" colspan="${workSpan}" class="px-1 py-2 text-center font-medium text-ink-2">Работа</th>
+          <th scope="col" rowspan="2" class="sticky right-0 z-10 bg-card px-2 py-2 text-right font-medium text-ink-2">Итог</th>
+        </tr>
+        <tr>
+          ${rv.map((r,k)=>`<th scope="col" class="px-1 py-2 text-center font-normal">Стих ${k+1}<span class="block text-xs">0–2</span></th>`).join('')}
+          ${L.test ? '<th scope="col" class="px-1 py-2 text-center font-normal">Тест<span class="block text-xs">0–10</span></th>' : ''}
+          <th scope="col" class="px-1 py-2 text-center font-normal">Тетрадь<span class="block text-xs">0–10</span></th>
+          <th scope="col" class="px-2 py-2 text-center font-normal">Спевка</th>
+        </tr>
+      </thead>
       <tbody class="divide-y divide-line">
-        ${ids.map((id,i)=>{ const r=recs[id], c=ctl(id,r); return `<tr class="${rowCls(r)}">
+        ${ids.map((id,i)=>{ const r=recs[id]; return `<tr>
           <td class="py-1.5 pl-4 pr-2 tabular-nums text-muted">${i+1}</td>
-          <td class="py-1.5 pr-2"><button type="button" data-act="pupil-open" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button></td>
-          <td class="px-2 py-1.5 text-center">${c.present}</td>
-          ${rv.map((_,k)=>`<td class="px-1 py-1.5 text-center">${c.v(k)}${late(r,'v'+k)}</td>`).join('')}
-          <td class="px-1 py-1.5 text-center">${c.test}${late(r,'test')}</td>
-          <td class="px-1 py-1.5 text-center">${c.nb}${late(r,'nb')}</td>
-          <td class="px-2 py-1.5 text-center">${c.sing}</td>
-          <td class="px-2 py-1.5 text-right font-display text-base tabular-nums">${r.done ? pts(r) : '—'}</td>
-          <td class="py-1.5 pr-3 text-right"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" aria-label="Открыть ${pupil(id).name} в последовательной проверке" class="inline-flex size-8 items-center justify-center rounded-md text-edit hover:bg-paper">${ic('i-edit','size-4')}</button></td></tr>`; }).join('')}
+          <td class="sticky left-0 z-10 bg-card py-1.5 pr-2"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button>
+            <span class="mt-0.5 flex flex-wrap items-center gap-2">${rowStatus(r)}${lateOnce(r)}</span></td>
+          <td class="px-2 py-1.5 text-center">${pressBtn(id,'present',r.present,'Присутствие')}</td>
+          ${rv.map((ref,k)=>`<td class="px-1 py-1.5 text-center">${padCell(id,'v'+k,r.v[k],ref,false,2)}</td>`).join('')}
+          ${L.test ? `<td class="px-1 py-1.5 text-center">${padCell(id,'test',r.test,'Тест',false,10)}</td>` : ''}
+          <td class="px-1 py-1.5 text-center">${padCell(id,'nb',r.nb,'Тетрадь',false,10)}</td>
+          <td class="px-2 py-1.5 text-center">${pressBtn(id,'sing',r.sing,'Спевка')}</td>
+          <td class="sticky right-0 z-10 bg-card px-2 py-1.5 text-right font-display text-base tabular-nums">${r.done ? pts(r) : '—'}</td></tr>`; }).join('')}
       </tbody></table>
   </div>
 
   <ul class="space-y-2 md:hidden">
-    ${ids.map((id,i)=>{ const r=recs[id], c=ctl(id,r); return `<li class="${CARD} ${rowCls(r)} p-3">
-      <div class="flex items-center gap-2"><span class="w-6 text-sm tabular-nums text-muted">${i+1}</span>
-        <button type="button" data-act="pupil-open" data-pid="${id}" class="min-w-0 flex-1 truncate text-left font-medium text-cobalt-ink">${pupil(id).name}</button>
-        <span class="font-display text-lg tabular-nums">${r.done ? pts(r) : '—'}</span>
-        <button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" aria-label="Открыть в последовательной проверке" class="inline-flex size-8 items-center justify-center rounded-md text-edit">${ic('i-edit','size-4')}</button></div>
-      <div class="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-        <label class="flex items-center gap-2">${c.present}<span>Был</span></label>
-        <label class="flex items-center gap-2">${c.sing}<span>Спевка</span></label>
-        ${rv.length ? `<div class="col-span-2 flex flex-wrap items-center gap-1.5"><span class="w-14 text-muted">Стихи</span>${rv.map((_,k)=>c.v(k)).join('')}</div>` : ''}
-        <div class="flex items-center gap-2"><span class="w-14 text-muted">Тест</span>${c.test}${r.late.test?'<span class="text-xs text-amber-ink">позже</span>':''}</div>
-        <div class="flex items-center gap-2"><span class="text-muted">Тетрадь</span>${c.nb}${r.late.nb?'<span class="text-xs text-amber-ink">позже</span>':''}</div>
+    ${ids.map((id,i)=>{ const r=recs[id];
+      return `<li class="${CARD} p-3">
+      <div class="flex items-start gap-2"><span class="w-6 pt-0.5 text-sm tabular-nums text-muted">${i+1}</span>
+        <div class="min-w-0 flex-1"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="block w-full truncate text-left font-medium text-cobalt-ink">${pupil(id).name}</button>
+          <span class="mt-0.5 flex flex-wrap items-center gap-2">${rowStatus(r)}${lateOnce(r)}</span></div>
+        <span class="font-display text-lg tabular-nums">${r.done ? pts(r) : '—'}</span></div>
+      <div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
+        <div class="flex items-center gap-2"><span class="text-muted">Был</span>${pressBtn(id,'present',r.present,'Присутствие')}</div>
+        <div class="flex items-center gap-2"><span class="text-muted">Спевка</span>${pressBtn(id,'sing',r.sing,'Спевка')}</div>
+        ${rv.map((ref,k)=>`<div class="col-span-2"><p class="mb-1 text-muted">Стих ${k+1} · 0–2</p>${padCell(id,'v'+k,r.v[k],ref,true,2)}</div>`).join('')}
+        ${L.test ? `<div class="col-span-2"><p class="mb-1 text-muted">Тест · 0–10</p>${padCell(id,'test',r.test,'Тест',true,10)}</div>` : ''}
+        <div class="col-span-2"><p class="mb-1 text-muted">Тетрадь · 0–10</p>${padCell(id,'nb',r.nb,'Тетрадь',true,10)}</div>
       </div></li>`; }).join('')}
   </ul>
   <p class="mt-3 text-sm text-muted">Стихи — заданные на прошлом уроке. Итого = стихи + тест + тетрадь + спевка. Зелёным — от 8, красным — до 4 баллов.</p>`;
@@ -1522,18 +1560,44 @@ function vCheck(){
   }
   const p = R[S.cur] || R[0], c = S.hc[lid][p.id];
   const list = R.map((q,i)=>{ const cq = S.hc[lid][q.id];
+    const partial = !cq.done && (cq.v.some(v=>v!=null) || cq.test!=null || cq.nb!=null);
+    const word = cq.done ? 'проверен' : partial ? 'частично' : 'не проверен';
     return `<li><button type="button" data-act="pick" data-i="${i}" ${i===S.cur?'aria-current="true"':''}
-      class="flex h-9 w-full items-center gap-2.5 rounded-md px-2.5 text-left text-[0.9375rem] transition-[background-color] duration-100 ${i===S.cur ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'hover:bg-paper'}">
+      class="flex min-h-11 w-full items-center gap-2.5 rounded-md px-2.5 text-left text-[0.9375rem] transition-[background-color] duration-100 ${i===S.cur ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'hover:bg-paper'}">
       <span class="${cq.done ? 'text-ok' : 'text-line-strong'}">${ic(cq.done?'i-ok':'i-circle','size-4')}</span>
+      <span class="text-xs ${cq.done ? 'text-ok' : 'text-muted'}">${word}</span>
       <span class="flex-1 truncate">${q.name}</span>
       ${Object.keys(cq.late).length ? '<span class="text-xs text-amber-ink">позже</span>' : ''}
       ${cq.done ? `<span class="text-sm tabular-nums text-muted">${pts(cq)}</span>` : ''}</button></li>`; }).join('');
   const lateTag = k => c.late[k] ? `<span class="text-sm text-amber-ink">сдано ${c.late[k]}</span>` : '';
+  const verseRadio = (key, val) => {
+    const btn = (v, label, quiet) => `<button type="button" role="radio" aria-checked="${val===v}" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" ${v===null?'aria-label="Не оценивалось"':''}
+      class="h-11 min-w-11 rounded-lg border px-2 text-[0.9375rem] tabular-nums ${val===v ? SEG_ON+' font-bold' : SEG_OFF} ${quiet?'text-muted':''}">${label}</button>`;
+    return `<div role="radiogroup" aria-label="Стих" class="flex flex-wrap items-center gap-1">${[0,1,2].map(v=>btn(v,v,false)).join('')}${btn(null,'не ставил',true)}</div>`;
+  };
+  const band = v => v==null ? '' : v<=4 ? 'до 4' : v>=8 ? 'от 8' : 'средний';
+  const bandCls = v => v==null ? '' : v<=4 ? 'text-danger' : v>=8 ? 'text-ok' : 'text-ink-2';
+  const checkPad = (key) => {
+    const pick = (v,l,wide) => `<button type="button" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-sm tabular-nums ${SEG_OFF}">${l}</button>`;
+    return `<div data-check-pad class="mt-2 max-w-xs rounded-lg border border-line bg-surface p-2 shadow-float">${pick(null,'Не оценивалось',true)}
+      <div class="mt-1 grid grid-cols-6 gap-1">${[0,1,2,3,4,5].map(v=>pick(v,v,false)).join('')}</div>
+      <div class="mt-1 grid grid-cols-5 gap-1">${[6,7,8,9,10].map(v=>pick(v,v,false)).join('')}</div></div>`;
+  };
+  const scaleField = (key, val, label, late) => { const open = S.checkPad===key;
+    return `<div class="py-3" data-check-pad-root><div class="flex items-center justify-between gap-2"><span class="font-medium">${label}</span>${late}</div>
+      <button type="button" data-act="check-pad" data-k="${key}" aria-expanded="${open}" aria-label="${label}" class="mt-2 font-display text-[2.5rem] leading-none tabular-nums ${bandCls(val)}">${val==null?'—':val}</button>
+      <p class="text-sm ${bandCls(val)}">${band(val)}</p>${open ? checkPad(key) : ''}</div>`; };
   const verseRows = rv.map((r,k)=>{ const voice = c.vs[k]==='voice';
-    return scoreRow('v'+k, c.v[k], 2, { aria:'Стих '+r, label: ref(r),
-      right: (voice ? `<span class="inline-flex items-center gap-1 text-sm text-ink-2">${ic('i-mic','size-4')} голос: 3 дня</span>` : '') + lateTag('v'+k),
-      below: `<details class="group"><summary class="inline-flex h-7 cursor-pointer list-none items-center gap-1 text-sm text-ink-2 hover:text-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} Текст</summary>
-        <p class="max-w-[52ch] font-display italic leading-snug text-ink-2">${VERSES[r]}</p></details>${voice ? '<p class="text-sm text-muted">Оценка из голосовой проверки. Ваша оценка заменит её.</p>' : ''}` }); }).join('');
+    return `<div class="py-3"><div class="mb-2 flex flex-wrap items-center gap-2">${ref(r)}${voice ? `<span class="inline-flex items-center gap-1 text-sm text-ink-2">${ic('i-mic','size-4')} голос: 3 дня</span>` : ''}${lateTag('v'+k)}</div>
+      ${verseRadio('v'+k, c.v[k])}
+      <details class="group mt-1"><summary class="inline-flex h-7 cursor-pointer list-none items-center gap-1 text-sm text-ink-2 hover:text-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} Текст</summary>
+        <p class="max-w-[52ch] font-display italic leading-snug text-ink-2">${VERSES[r]}</p></details>${voice ? '<p class="text-sm text-muted">Оценка из голосовой проверки. Ваша оценка заменит её.</p>' : ''}</div>`; }).join('');
+  const hasLate = Object.keys(c.late).length>0;
+  const rubricOpen = c.present || hasLate || S.revealScores;
+  let filled = c.present===true || c.present===false ? 1 : 0, need = 1;
+  rv.forEach((_,i)=>{ need++; if (c.v[i]!=null) filled++; });
+  if (L.test){ need++; if (c.test!=null) filled++; }
+  need++; if (c.nb!=null) filled++;
   const lastNew = !corr && R.filter(q=>!S.hc[lid][q.id].done && q.id!==p.id).length===0;
   const saveLabel = corr ? 'Сохранить исправление' : lastNew ? 'Завершить проверку' : 'Сохранить и далее';
   return `${backLink('lesson','К уроку')}
@@ -1554,20 +1618,22 @@ function vCheck(){
       <div class="flex items-center justify-between gap-3 border-b border-line py-3">
         <div class="min-w-0"><h2 id="pupilName" class="truncate font-display text-[1.5rem] font-medium leading-tight">${p.name}</h2>
           <p class="text-sm text-muted">${S.cur+1} из ${R.length} · ${p.born ? p.born+' г. р.' : 'данные удалены'}</p></div>
-        <div class="text-right"><p class="font-display text-[1.75rem] leading-none tabular-nums">${pts({...c, done:true})}</p><p class="text-xs text-muted">баллов</p></div>
+        <div class="text-right"><p class="font-display text-[1.75rem] leading-none tabular-nums">${pts({...c, done:true})}</p><p class="text-xs text-muted">баллов</p>
+          <p class="text-xs tabular-nums text-ink-2">заполнено ${filled} из ${need}</p></div>
       </div>
-      <div class="grid gap-3 border-b border-line py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-        <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Был на уроке</span><div class="w-56">${seg('Присутствие', [[true,'Да'],[false,'Нет']], c.present, 'present')}</div></div>
-        <div class="flex items-center gap-3"><span class="font-medium">Спевка</span>${toggle(c.sing,'sing','Был на спевке')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и спевка</span>' : ''}</div>
-        <p class="text-xs text-muted sm:col-span-2">Присутствие на баллы не влияет: задания можно сдать позже.</p>
+      <div class="border-b border-line py-3">
+        <span class="font-medium">Был на уроке</span>
+        <div class="mt-2">${seg('Присутствие', [[true,'Да'],[false,'Нет']], c.present, 'present')}</div>
+        <p class="mt-2 text-xs text-muted">Присутствие на баллы не влияет: задания можно сдать позже.</p>
       </div>
-      ${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${prevRegular(lid).n} — рассказывают сегодня</p><div class="divide-y divide-line border-b border-line">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не рассказывают, теста нет.' : 'На первом уроке года стихов не рассказывают.'}</p>`}
+      <div class="flex flex-wrap items-center gap-3 border-b border-line py-3"><span class="font-medium">Спевка</span>${toggle(c.sing,'sing','Был на спевке')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и спевка</span>' : ''}</div>
+      ${rubricOpen ? `${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${prevRegular(lid).n} — рассказывают сегодня</p><div class="divide-y divide-line border-b border-line">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не рассказывают, теста нет.' : 'На первом уроке года стихов не рассказывают.'}</p>`}
       <div class="divide-y divide-line border-b border-line">
-        ${L.test ? scoreRow('test', c.test, 10, { aria:'Тест', label:'<span class="font-medium">Тест</span>', right: lateTag('test') }) : (isReview(L) ? '' : '<p class="py-3 text-sm text-muted">Тест на этом уроке не проводился.</p>')}
-        ${scoreRow('nb', c.nb, 10, { aria:'Тетрадь', label:'<span class="font-medium">Тетрадь</span>', right: lateTag('nb') })}
-      </div>
-      <div class="py-3"><label for="cmt" class="sr-only">Комментарий учителя</label>
-        <input id="cmt" data-input="comment" value="${c.comment}" class="${FIELD}" placeholder="Комментарий учителя — необязательно"></div>
+        ${L.test ? scaleField('test', c.test, 'Тест', lateTag('test')) : (isReview(L) ? '' : '<p class="py-3 text-sm text-muted">Тест на этом уроке не проводился.</p>')}
+        ${scaleField('nb', c.nb, 'Тетрадь', lateTag('nb'))}
+      </div>` : `<div class="border-b border-line py-3"><button type="button" data-act="reveal-scores" class="${B_OUTLINE}">Показать оценки</button></div>`}
+      <div class="py-3"><label for="cmt" class="mb-1 block text-sm font-medium text-ink">Комментарий</label>
+        <input id="cmt" data-input="comment" value="${c.comment}" class="${FIELD}" placeholder="Необязательно"></div>
       ${penRow(p.id, lid)}
       ${corr ? `<div class="flex flex-wrap items-center gap-2 border-t border-line py-3"><span class="text-sm font-medium">Причина:</span>${['Сдал позже','Ошибка ввода','Другое'].map(r=>`<button type="button" data-act="reason" data-val="${r}" aria-pressed="${S.reason===r}" class="h-8 rounded-md border px-2.5 text-sm ${S.reason===r ? SEG_ON : SEG_OFF}">${r}</button>`).join('')}</div>` : ''}
       <div class="hidden items-center justify-between gap-2 border-t border-line py-3 lg:flex">
@@ -1677,7 +1743,7 @@ function vRating(){
   return pageHead(isAdmin ? 'Рейтинг' : 'Рейтинг группы', 'Рабочий инструмент: кому нужна помощь и кого отметить.') + `
   <p class="mb-5 flex max-w-3xl items-start gap-2 text-sm text-ink-2">${ic('i-lock','size-4 mt-0.5 text-muted')} Видят только учителя и администратор. Родителям и детям рейтинг не показывается, на проектор не выводится.</p>
   ${isAdmin ? groupChips() : ''}
-  ${isAdmin && S.anaGroup!=='Средняя' ? `<p class="${CARD} max-w-xl p-5 text-ink-2">В прототипе рейтинг есть только у Средней группы.</p>` : `<div class="${CARD} overflow-x-auto">
+  ${isAdmin && S.anaGroup!=='Средняя' ? `<p class="${CARD} max-w-xl p-3 text-[1.3125rem] leading-snug text-ink-2">В прототипе рейтинг есть только у Средней группы.</p>` : `<div class="${CARD} overflow-x-auto">
     <table class="w-full min-w-[34rem] text-left">
       <caption class="sr-only">Рейтинг по баллам за уроки</caption>
       <thead class="border-b border-line text-sm text-muted"><tr>
@@ -1808,7 +1874,7 @@ function analyticsClosedView(group, yid, yTop){
 function vAnalytics(){
   const sel = analyticsYear(S.anaGroup);
   const yTop = sel ? yearChips(S.anaGroup, 'ana-year', sel) + yearsTable(S.anaGroup, sel) : '';
-  if (S.anaGroup !== 'Средняя') return pageHead(t('analytics.title'), `${S.anaGroup} группа${sel ? ' · учебный год '+yearOf(sel).name : ''}`, '') + (S.role==='admin'?groupChips():'') + yTop + (sel ? kpiTiles(S.anaGroup, sel) : '') + `<p class="${CARD} mt-6 max-w-xl p-5 text-ink-2">В прототипе подробные данные по урокам и ученикам есть только у Средней группы.</p>`;
+  if (S.anaGroup !== 'Средняя') return pageHead(t('analytics.title'), `${S.anaGroup} группа${sel ? ' · учебный год '+yearOf(sel).name : ''}`, '') + (S.role==='admin'?groupChips():'') + yTop + (sel ? kpiTiles(S.anaGroup, sel) : '') + `<p class="${CARD} mt-6 max-w-xl p-3 text-[1.3125rem] leading-snug text-ink-2">В прототипе подробные данные по урокам и ученикам есть только у Средней группы.</p>`;
   if (sel && sel!=='2026') return analyticsClosedView('Средняя', sel, yTop);
   const L = layers(), A = L.A, ids = A.map(p=>p.id);
   const ser = series(ids);
@@ -1821,16 +1887,16 @@ function vAnalytics(){
   return pageHead(t('analytics.title'), `Средняя группа · ${S.period==='year' ? 'учебный год '+YEAR : S.period==='oct' ? 'октябрь' : 'сентябрь'} · ${ser.length} ${plural(ser.length,'урок','урока','уроков')}`, periodChips()) + `
   ${S.role==='admin' ? groupChips() : ''}${yTop}${yearState(yearOf('2026'))==='closed' ? readOnlyNote : ''}
   ${S.role==='admin' && S.kidsDeleted.length ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-alert','size-4 mt-0.5 text-warn')} Показатели пересчитаны после удаления данных по запросу опекуна, ${S.kidsDeleted[S.kidsDeleted.length-1]}.</p>` : ''}
-  <section class="${CARD} grid grid-cols-1 gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:items-center">
+  <section class="${CARD} grid grid-cols-1 gap-3 p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:items-center">
     <div>
       <p class="text-sm text-muted">Средняя явка основной выборки</p>
       <p class="mt-1 font-display text-[3.5rem] font-medium leading-none tabular-nums tracking-[-0.02em]">${pct(attA)}</p>
-      <p class="mt-2 text-sm text-ink-2">${A.length} ${plural(A.length,'ребёнок','ребёнка','детей')} с явкой от 50%</p>
+      <p class="mt-1 text-sm text-ink-2">${A.length} ${plural(A.length,'ребёнок','ребёнка','детей')} с явкой от 50%</p>
     </div>
-    <dl class="grid grid-cols-3 gap-4 border-t border-line pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
-      <div><dt class="text-sm text-muted">Стихов за урок</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('v'))}</dd><dd class="text-xs text-muted">N=${nObs('nV')}</dd></div>
-      <div><dt class="text-sm text-muted">Тест</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('t'))}</dd><dd class="text-xs text-muted">из 10 · N=${nObs('nT')}</dd></div>
-      <div><dt class="text-sm text-muted">Тетрадь</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('n'))}</dd><dd class="text-xs text-muted">из 10 · N=${nObs('nN')}</dd></div>
+    <dl class="grid grid-cols-3 gap-2 border-t border-line pt-3 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-3">
+      <div><dt class="text-sm text-muted">Стихов за урок</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('v'))}</dd><dd class="text-base text-muted">N=${nObs('nV')}</dd></div>
+      <div><dt class="text-sm text-muted">Тест</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('t'))}</dd><dd class="text-base text-muted">из 10 · N=${nObs('nT')}</dd></div>
+      <div><dt class="text-sm text-muted">Тетрадь</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('n'))}</dd><dd class="text-base text-muted">из 10 · N=${nObs('nN')}</dd></div>
     </dl>
   </section>
   ${S.role==='admin' ? `<p class="mt-3 text-sm text-ink-2">${ic('i-alert','size-4 inline text-warn')} Качество данных: пропущенных записей на проверенных уроках — <b class="font-bold">${missingRecords()}</b> · удалено дублей при переносе — <b class="font-bold">2</b></p>` : ''}
@@ -1847,7 +1913,7 @@ function vAnalytics(){
   <p class="mb-3 text-sm text-ink-2">Редкие посещения не должны искажать картину группы. Личные средние этих детей видны в их карточках.</p>
   ${L.B.length ? pupilTable(L.B, [['Ученик'],['Год рожд.',p=>p.born ?? '—'],['Был',p=>pupilStats(p).nP],['Проверено уроков',p=>pupilStats(p).nE],['Явка',p=>pct(pupilStats(p).rate)]]) : '<p class="text-muted">Таких учеников нет.</p>'}
 
-  <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <div class="mt-8 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
     <section class="min-w-0"><h2 class="${H2} mb-3">Неактивные</h2>${pupilTable(L.C, [['Ученик'],['Год рожд.',p=>p.born ?? '—']])}</section>
     <section class="min-w-0"><h2 class="${H2} mb-3">Без проверенных уроков</h2>${pupilTable(L.D, [['Ученик'],['В группе с',p=>p.from]])}</section>
   </div>
@@ -1899,7 +1965,7 @@ function personalCharts(pid, cols='lg:grid-cols-3', rowsIn){
 }
 
 function vPupil(){
-  if (pupil(S.pupilId).gone) return pageHead('Данные удалены', '', '', backLink('analytics','Аналитика группы')) + `<p class="${CARD} max-w-xl p-5 text-ink-2">Данные этого ребёнка удалены по запросу опекуна. Групповые показатели пересчитаны без него.</p>`;
+  if (pupil(S.pupilId).gone) return pageHead('Данные удалены', '', '', backLink('analytics','Аналитика группы')) + `<p class="${CARD} max-w-xl p-3 text-[1.3125rem] leading-snug text-ink-2">Данные этого ребёнка удалены по запросу опекуна. Групповые показатели пересчитаны без него.</p>`;
   const p = pupil(S.pupilId), lay = layerOf(p), st = pupilStats(p), av = personalAvgs(p.id);
   const inAvg = lay==='A';
   const canFix = S.role!=='parent';
@@ -1909,24 +1975,24 @@ function vPupil(){
   const body = () => `
   <p class="mb-6 flex max-w-3xl items-start gap-3 rounded-xl ${inAvg ? 'bg-ok-soft' : 'bg-warn-soft'} px-4 py-3">${ic(inAvg?'i-ok':'i-alert','size-5 '+(inAvg?'text-ok':'text-warn'))}
     <span><b class="font-bold">Учитывается в групповых средних: ${inAvg?'да':'нет'}.</b> ${LAYER_TEXT[lay]}${st.nE ? ` Явка ${pct(st.rate)}.` : ''}</span></p>
-  <dl class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-    ${[['Явка', st.nE ? `${st.nP} из ${st.nE}` : '—'],['Стихов за урок', f1(av.v)+` <span class="text-sm text-muted">N=${av.nV}</span>`],['Тест', f1(av.t)+` <span class="text-sm text-muted">N=${av.nT}</span>`],['Тетрадь', f1(av.n)+` <span class="text-sm text-muted">N=${av.nN}</span>`]]
-      .map(([k,v])=>`<div class="${CARD} p-4"><dt class="text-sm text-muted">${k}${inAvg?'':' (личное)'}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${v}</dd></div>`).join('')}
+  <dl class="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-3">
+    ${[['Явка', st.nE ? `${st.nP} из ${st.nE}` : '—'],['Стихов за урок', f1(av.v)+` <span class="text-base text-muted">N=${av.nV}</span>`],['Тест', f1(av.t)+` <span class="text-base text-muted">N=${av.nT}</span>`],['Тетрадь', f1(av.n)+` <span class="text-base text-muted">N=${av.nN}</span>`]]
+      .map(([k,v])=>`<div class="${CARD} p-3"><dt class="text-sm text-muted">${k}${inAvg?'':' (личное)'}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${v}</dd></div>`).join('')}
   </dl>
   ${famContacts(p.id)}
   <div class="mb-4">${progressBlock(p.id)}</div>
   <section class="mb-4"><h2 class="${H2} mb-2">Присутствие</h2>${presenceStrip(p.id)}</section>
   ${personalCharts(p.id)}
-  <section class="${CARD} mt-4 p-4 sm:p-5">
+  <section class="${CARD} mt-4 p-3">
     <div class="flex flex-wrap items-start justify-between gap-3">
-      <div><h2 class="${H2}">Штрафы</h2><p class="mt-1 max-w-[62ch] text-sm text-ink-2">За поведение. Уменьшают кирпичики, но не оценки и не аналитику. Родитель видит причину.</p></div>
+      <div><h2 class="${H2}">Штрафы</h2><p class="mt-1 max-w-[62ch] text-[1.3125rem] leading-snug text-ink-2">За поведение. Уменьшают кирпичики, но не оценки и не аналитику. Родитель видит причину.</p></div>
       ${canFix && S.achMode.on ? `<button type="button" data-act="pen-open" data-pid="${p.id}" class="${B_PENALTY_OUTLINE}">${ic('i-flag','size-4')} Выдать штраф</button>` : ''}
     </div>
     <div class="mt-1">${penList(p.id, canFix)}</div>
   </section>
-  <section class="${CARD} mt-4 p-4 sm:p-5">
+  <section class="${CARD} mt-4 p-3">
     <div class="flex flex-wrap items-start justify-between gap-3">
-      <div><h2 class="${H2}">Достижения</h2><p class="mt-1 max-w-[62ch] text-sm text-ink-2">У каждой выдачи — уроки-доказательства. За одни и те же уроки одно достижение одного уровня выдаётся один раз.</p></div>
+      <div><h2 class="${H2}">Достижения</h2><p class="mt-1 max-w-[62ch] text-[1.3125rem] leading-snug text-ink-2">У каждой выдачи — уроки-доказательства. За одни и те же уроки одно достижение одного уровня выдаётся один раз.</p></div>
       ${canFix && S.achMode.on ? `<button type="button" data-act="award-open" data-pid="${p.id}" class="${B_OUTLINE}">${ic('i-award','size-4')} Выдать вручную</button>` : ''}
     </div>
     <div class="mt-1">${awardList(p.id, S.role==='admin')}</div>
@@ -2228,9 +2294,9 @@ function vSchool(){
   </div>
   <p class="mt-3 text-sm text-muted">Ученики: основная выборка (посещаемость от 50%) / всего. Средние считаются по основной выборке.</p>
 
-  <section class="${CARD} mt-8 p-4 sm:p-5">
+  <section class="${CARD} mt-8 p-3">
     <h2 class="${H2}">Посещаемость групп по урокам</h2>
-    <p class="mt-1 text-sm text-ink-2">Доля присутствовавших от основной выборки группы, %.</p>
+    <p class="mt-1 text-[1.3125rem] leading-snug text-ink-2">Доля присутствовавших от основной выборки группы, %.</p>
     <div class="mt-4">${chart({ h:240, labels, series:[
       { name:'Младшая', color:'var(--color-series-1)', values:SCHOOL_ATT['Младшая'] },
       { name:'Средняя', color:'var(--color-series-2)', values:mid },
@@ -3520,6 +3586,8 @@ function savePupil(){
    СОБЫТИЯ
    ========================================================= */
 document.addEventListener('click', e=>{
+  if (S.tblPad && !e.target.closest('[data-tbl-pad-root]')){ S.tblPad = null; render(); }
+  if (S.checkPad && !e.target.closest('[data-check-pad-root]')){ S.checkPad = null; render(); }
   const el = e.target.closest('[data-act]');
   if (!el && S.dd && !e.target.closest('[role=menu]')){ S.dd = null; renderChrome(); }
   if (!el || el.disabled) return;
@@ -3552,8 +3620,17 @@ document.addEventListener('click', e=>{
       const r = `${pk.book} ${pk.ch}:${pk.from}${pk.to && pk.to!==pk.from ? '–'+pk.to : ''}`;
       if (S.lf.v.includes(r)){ toast('Этот стих уже добавлен'); break; }
       S.lf.v.push(r); S.lf.picker = { book:pk.book, ch:'', from:'', to:'' }; delete S.lf.err.v; render(); break; }
-    case 'lsf': S.lsFilter[el.dataset.k] = el.checked; render(); break;
-    case 'lesson-table': closeDialog(); S.lessonId = +el.dataset.lid; S.lsFilter = { present:false, unchecked:false }; go('lessonTable'); break;
+    case 'lsf': {
+      if (el.dataset.k==='all') S.lsFilter = { present:false, unchecked:false };
+      else S.lsFilter[el.dataset.k] = !S.lsFilter[el.dataset.k];
+      S.tblPad = null; render(); break; }
+    case 'lesson-table': { closeDialog(); S.lessonId = +el.dataset.lid; const recs = S.hc[S.lessonId] || {};
+      const values = Object.values(recs); const allDone = values.length>0 && values.every(r=>r.done);
+      S.lsFilter = { present:false, unchecked: !isCorrection(S.lessonId) && !allDone }; S.tblPad = null; go('lessonTable'); break; }
+    case 'tbl-score': applyTblCell(S.lessonId, +el.dataset.pid, el.dataset.k, el.dataset.val==='null' ? null : +el.dataset.val); break;
+    case 'tbl-toggle': applyTblCell(S.lessonId, +el.dataset.pid, el.dataset.k, el.dataset.k==='present' ? !S.hc[S.lessonId][+el.dataset.pid].present : !S.hc[S.lessonId][+el.dataset.pid].sing); break;
+    case 'tbl-pad-open': { const pid = +el.dataset.pid, k = el.dataset.k;
+      S.tblPad = S.tblPad && S.tblPad.pid===pid && S.tblPad.k===k ? null : { pid, k }; render(); break; }
     case 'lesson-del': confirmDialog('Удалить урок?', 'Урок ещё не проверялся, поэтому удаление безопасно. Событие в календаре останется — удалите его отдельно, если нужно.', 'lesson-del-do', 'Удалить урок'); S.delLid = +el.dataset.lid; break;
     case 'lesson-del-do': { const i = LESSONS.findIndex(l=>l.id===S.delLid); const L = LESSONS.splice(i,1)[0]; audit('Урок '+L.n, 'Удалён: '+L.t); closeDialog(); go('lessons'); toast('Урок удалён'); break; }
     case 'bricks-hist': S.bricksOpen = el.parentElement.open ? null : +el.dataset.pid; break;
@@ -3561,10 +3638,12 @@ document.addEventListener('click', e=>{
     /* проверка */
     case 'check-open': openCheck(+el.dataset.lid); break;
     case 'fix-pupil': openCheck(+el.dataset.lid, +el.dataset.pid); break;
-    case 'pick': S.cur = +el.dataset.i; snapCur(); render(); document.getElementById('pupilName')?.scrollIntoView({ block:'start', behavior: reduceMotion() ? 'auto':'smooth' }); break;
-    case 'present': c.present = el.dataset.val==='true'; render(); break;
+    case 'pick': S.cur = +el.dataset.i; S.revealScores = false; S.checkPad = null; snapCur(); render(); document.getElementById('pupilName')?.scrollIntoView({ block:'start', behavior: reduceMotion() ? 'auto':'smooth' }); break;
+    case 'present': c.present = el.dataset.val==='true'; if (c.present) S.revealScores = false; render(); break;
+    case 'reveal-scores': S.revealScores = true; render(); break;
+    case 'check-pad': S.checkPad = S.checkPad===el.dataset.k ? null : el.dataset.k; render(); break;
     case 'score': { const k = el.dataset.k, v = el.dataset.val==='null' ? null : +el.dataset.val;
-      if (k.startsWith('v')) { const i=+k.slice(1); c.v[i]=v; c.vs[i]='manual'; } else c[k]=v; render(); break; }
+      if (k.startsWith('v')) { const i=+k.slice(1); c.v[i]=v; c.vs[i]='manual'; } else { c[k]=v; S.checkPad = null; } render(); break; }
     case 'sing': c.sing = !c.sing; render(); break;
     case 'reason': S.reason = el.dataset.val; render(); break;
     case 'save': savePupil(); break;
@@ -3686,17 +3765,9 @@ document.addEventListener('input', e=>{
 document.addEventListener('change', e=>{
   const t = e.target;
   if (t.dataset.tbl){
-    const lid = S.lessonId, pid = +t.dataset.pid, r = S.hc[lid][pid], k = t.dataset.tbl;
+    const lid = S.lessonId, pid = +t.dataset.pid, k = t.dataset.tbl;
     const val = t.type==='checkbox' ? t.checked : (t.value==='' ? null : +t.value);
-    const old = k.startsWith('v') ? r.v[+k.slice(1)] : r[k];
-    if (k.startsWith('v')){ r.v[+k.slice(1)] = val; r.vs[+k.slice(1)] = 'manual'; } else r[k] = val;
-    if (isCorrection(lid)){
-      if (old==null && val!=null && k!=='present' && k!=='sing') r.late[k] = TODAY;
-      audit(`Исправление в таблице · ${pupil(pid).name} · ${lessonById(lid).d}`, `${k}: ${old==null?'—':old} → ${val==null?'—':val}`);
-    }
-    if (!r.done){ r.done = true; }
-    const fresh = isCorrection(lid) ? recalc([pid]) : [];
-    render(); toast(fresh.length ? `Исправлено. Новое достижение: ${fresh.map(a=>ach(a.code).name+' · '+TIER[a.tier]).join(', ')}` : isCorrection(lid) ? 'Исправлено и записано в журнал' : `Сохранено: ${pupil(pid).name}`); return;
+    applyTblCell(lid, pid, k, val); return;
   }
   if (t.dataset.input==='pen-type'){ const p = t.selectedOptions[0].dataset.pts; document.getElementById('pn-q').value = p; document.getElementById('pn-hint').textContent = `По каталогу: ${p}. Меньше — можно, больше — нельзя.`; }
   if (t.dataset.input==='award-re'){ const f = t.form, [code,tier] = f.ach.value.split('|'), pts = f.ach.selectedOptions[0].dataset.pts;
@@ -3826,7 +3897,7 @@ document.addEventListener('submit', e=>{
 });
 
 document.addEventListener('keydown', e=>{
-  if (e.key==='Escape'){ if (S.dd){ const id=S.dd; S.dd=null; renderChrome(); document.querySelector(`[data-act=dd][data-id="${id}"]`)?.focus(); return; } closeMenu(); closeDialog(); }
+  if (e.key==='Escape'){ if (S.tblPad){ S.tblPad=null; render(); return; } if (S.dd){ const id=S.dd; S.dd=null; renderChrome(); document.querySelector(`[data-act=dd][data-id="${id}"]`)?.focus(); return; } closeMenu(); closeDialog(); }
   if (S.view==='check' && !S.finished && !['TEXTAREA','INPUT','SELECT'].includes(document.activeElement?.tagName) && document.getElementById('dialog').classList.contains('hidden')){
     const R = roster(S.checkLesson);
     if (e.key==='Enter'){ e.preventDefault(); savePupil(); }

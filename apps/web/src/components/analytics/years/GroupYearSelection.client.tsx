@@ -2,7 +2,6 @@
 
 import { ACADEMIC_YEAR_STATUS, ANALYTICS_METHODOLOGY_VERSION } from "@sunschool/domain";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
-import { KpiTiles } from "./KpiTiles";
 import { MethodologyVersionNote } from "./MethodologyVersionNote";
 import { ReadOnlyYearNote } from "./ReadOnlyYearNote";
 import { useAnalyticsYearScope } from "./AnalyticsYearScope.client";
@@ -22,6 +21,8 @@ export const GroupYearSelection = ({ rows, messages }: GroupYearSelectionProps) 
   const isActiveYear = row.status === ACADEMIC_YEAR_STATUS.ACTIVE;
   const showStaleMethodology = row.methodologyVersion !== ANALYTICS_METHODOLOGY_VERSION;
 
+  if (isActiveYear && !showStaleMethodology) return null;
+
   return (
     <>
       {isActiveYear ? null : <ReadOnlyYearNote messages={yearMessages} />}
@@ -30,17 +31,6 @@ export const GroupYearSelection = ({ rows, messages }: GroupYearSelectionProps) 
           snapshotVersion={row.methodologyVersion}
           currentVersion={ANALYTICS_METHODOLOGY_VERSION}
           messages={yearMessages}
-        />
-      ) : null}
-      {row.totals ? (
-        <KpiTiles
-          totals={row.totals}
-          diff={row.diff}
-          hasPreviousYear={row.hasPreviousYear}
-          comparisonReliable={row.comparisonReliable}
-          previousYearName={row.previousYearName}
-          messages={messages}
-          yearMessages={yearMessages}
         />
       ) : null}
     </>

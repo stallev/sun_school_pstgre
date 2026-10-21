@@ -13,6 +13,7 @@ import type { AnalyticsMessages, AnalyticsPupilYearMessages, AnalyticsYearMessag
 import type { PupilYearTableRow } from "./PupilYearsSection";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { formatPupilYearMetric } from "./format-pupil-year-metric";
+import { PupilYearsCards } from "./PupilYearsCards";
 
 type PupilYearsRowsTableProps = {
   rows: readonly PupilYearTableRow[];
@@ -34,10 +35,18 @@ export const PupilYearsRowsTable = ({
   showForeignGroupNote,
 }: PupilYearsRowsTableProps) => (
   <>
-    <Card className="overflow-x-auto">
-      <Table className="min-w-[44rem] text-left text-base">
+    <PupilYearsCards
+      rows={rows}
+      selectedYearId={selectedYearId}
+      onSelectYear={onSelectYear}
+      messages={messages}
+      pupilYearMessages={pupilYearMessages}
+      yearMessages={yearMessages}
+    />
+    <Card className="hidden p-0 lg:block">
+      <Table className="text-left text-base">
         <caption className="sr-only">{pupilYearMessages.tableCaption}</caption>
-        <TableHeader className="border-b border-line text-base text-muted-foreground">
+        <TableHeader className="border-b border-line text-sm text-muted">
           <TableRow>
             <TableHead scope="col" className="px-5 py-3 font-normal">
               {yearMessages.columnYear}
@@ -67,7 +76,7 @@ export const PupilYearsRowsTable = ({
             const selected = row.yearId === selectedYearId;
             const dash = row.insufficientLessons;
             return (
-              <TableRow key={row.yearId} className={cn(selected && "bg-paper")}>
+              <TableRow key={row.yearId} className={cn("hover:bg-transparent", selected && "bg-paper")}>
                 <TableHead scope="row" className="px-5 py-3 font-medium">
                   <button
                     type="button"
@@ -78,7 +87,7 @@ export const PupilYearsRowsTable = ({
                     {row.yearName}
                   </button>
                   {dash && (
-                    <span className="block text-sm font-normal text-muted-foreground">
+                    <span className="block text-xs font-normal text-muted">
                       {fillMessage(pupilYearMessages.fewLessons, { count: row.lessons })}
                     </span>
                   )}
@@ -104,7 +113,7 @@ export const PupilYearsRowsTable = ({
       </Table>
     </Card>
     {showForeignGroupNote && (
-      <ContentText className="mt-2 text-sm text-muted-foreground">
+      <ContentText className="mt-2 text-sm text-muted">
         {pupilYearMessages.foreignGroupNote}
       </ContentText>
     )}

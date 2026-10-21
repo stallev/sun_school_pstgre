@@ -70,7 +70,7 @@ const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 const cspHeader = `
   default-src 'self';
   script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
-  style-src 'self' 'nonce-${nonce}';
+  style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https:;
   object-src 'none';
   frame-ancestors 'none';
@@ -80,7 +80,7 @@ requestHeaders.set("x-nonce", nonce);
 requestHeaders.set("Content-Security-Policy", cspHeader);
 ```
 
-Server Component: `(await headers()).get("x-nonce")` → `next/script` `nonce`.
+Server Component: `(await headers()).get("x-nonce")` → `next/script` `nonce`. `style-src` stays `'self' 'unsafe-inline'` without a nonce: a nonce makes the browser ignore `'unsafe-inline'`, and Sonner, Base UI, Recharts, and the Next dev overlay insert styles that cannot carry the request nonce. Script execution stays on the nonce.
 
 > **Next.js 16:** request interception — **`proxy.ts`**, не новая логика в `middleware.ts`.
 

@@ -36,5 +36,8 @@ export type TeacherBricksMessages = {
   toastIssued: string;
   toastCompensated: string;
   balanceHint: string;
+  summaryRule: string;
+  summaryToIssue: string;
+  summaryNegative: string;
   closeLabel: string;
 };

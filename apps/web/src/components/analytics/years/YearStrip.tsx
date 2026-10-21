@@ -42,10 +42,10 @@ export const YearStrip = ({
           aria-checked={selected}
           onClick={() => onSelectYear(year.id)}
           className={cn(
-            "min-h-11 rounded-lg border px-3 text-base transition-[transform,background-color,border-color] duration-100 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100",
+            "inline-flex h-11 min-w-11 items-center rounded-lg border px-3 text-sm font-medium transition-[transform,background-color,border-color,color] duration-100 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100",
             selected
-              ? "border-cobalt-ink bg-cobalt-soft text-ink"
-              : "border-line bg-surface text-ink-2 hover:border-line-strong",
+              ? "border-ink bg-ink text-surface"
+              : "border-line-strong bg-surface text-ink",
           )}
         >
           {year.name}

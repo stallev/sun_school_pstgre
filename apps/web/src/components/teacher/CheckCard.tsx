@@ -1,16 +1,14 @@
 "use client";
 
-import { LESSON_KIND } from "@sunschool/domain";
 import type { LessonKind, LessonVerseToRecite } from "@sunschool/domain";
-import { AlertText } from "@/components/atoms/AlertText";
-import { ContentText } from "@/components/atoms";
+import { LESSON_KIND } from "@sunschool/domain";
+import { AlertText, ContentText } from "@/components/atoms";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Switch } from "@/components/ui/switch";
-import { LateBadge } from "@/components/teacher/LateBadge";
-import { ScoreGroup } from "@/components/teacher/ScoreGroup";
+import { CheckScoresSection } from "@/components/teacher/CheckScoresSection";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
-import { fillMessage } from "@/lib/messages/fill-message";
 import type { SequentialCheckPupil } from "@/data/checks/sequential-check-types";
 
 export type CheckFormState = SequentialCheckPupil & {
@@ -57,101 +55,63 @@ export const CheckCard = ({
   onReasonChange,
 }: CheckCardProps) => {
   const isReview = lessonKind === LESSON_KIND.REVIEW;
-  const presentValue =
-    pupil.presentChoice === null ? null : pupil.presentChoice ? "yes" : "no";
+  const presentValue = pupil.presentChoice === null ? null : pupil.presentChoice ? "yes" : "no";
+  const commentId = `check-comment-${pupil.pupilId}`;
 
   return (
     <div className="divide-y divide-line">
-      <div className="grid gap-3 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-        <div className="space-y-2">
-          <ContentText className="font-medium text-ink">{messages.presentLabel}</ContentText>
-          <SegmentedControl
-            aria-label={messages.presentLabel}
-            options={[
-              { value: "yes", label: messages.presentYes },
-              { value: "no", label: messages.presentNo },
-            ]}
-            value={presentValue}
-            onValueChange={(next) => onPresentChange(next === "yes")}
-            disabled={disabled}
-            invalid={Boolean(presentError)}
-          />
-          {presentError ? <AlertText>{presentError}</AlertText> : null}
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <ContentText className="font-medium text-ink">{messages.singingLabel}</ContentText>
-          <Switch
-            checked={pupil.singing}
-            onCheckedChange={onSingingChange}
-            disabled={disabled}
-            aria-label={messages.singingLabel}
-          />
-          {isReview ? (
-            <ContentText tone="secondary" className="text-sm">{messages.reviewHint}</ContentText>
-          ) : null}
-        </div>
-        <ContentText tone="secondary" className="text-xs sm:col-span-2">{messages.presentHint}</ContentText>
-      </div>
-
-      {isReview ? null : versesToRecite.length > 0 ? (
-        <div className="space-y-1 py-3">
-          {previousLessonOrdinal !== null ? (
-            <ContentText tone="secondary" className="text-sm">
-              {fillMessage(messages.versesIntro, { lessonOrdinal: previousLessonOrdinal })}
-            </ContentText>
-          ) : null}
-          {versesToRecite.map((verse) => (
-            <ScoreGroup
-              key={verse.lessonVerseId}
-              label={fillMessage(messages.verseLabel, { position: verse.position })}
-              max={2}
-              value={pupil.verseScores[verse.lessonVerseId] ?? null}
-              notRatedLabel={messages.scoreNotRated}
-              disabled={disabled}
-              onValueChange={(value) => onVerseScoreChange(verse.lessonVerseId, value)}
-              trailing={pupil.late ? <LateBadge label={messages.lateSubmitted} /> : null}
-            />
-          ))}
-        </div>
-      ) : (
-        <ContentText tone="secondary" className="py-3 text-sm">{messages.noVersesFirstLesson}</ContentText>
-      )}
-
-      {isReview ? null : hasTest ? (
-        <ScoreGroup
-          label={messages.testLabel}
-          max={10}
-          value={pupil.testScore}
-          notRatedLabel={messages.scoreNotRated}
+      <div className="space-y-2 py-3">
+        <ContentText className="font-medium text-ink">{messages.presentLabel}</ContentText>
+        <SegmentedControl
+          aria-label={messages.presentLabel}
+          className="grid w-full grid-cols-2"
+          options={[
+            { value: "yes", label: messages.presentYes },
+            { value: "no", label: messages.presentNo },
+          ]}
+          value={presentValue}
+          onValueChange={(next) => onPresentChange(next === "yes")}
           disabled={disabled}
-          onValueChange={onTestScoreChange}
-          trailing={pupil.late ? <LateBadge label={messages.lateSubmitted} /> : null}
+          invalid={Boolean(presentError)}
         />
-      ) : (
-        <ContentText tone="secondary" className="py-3 text-sm">{messages.noTestOnLesson}</ContentText>
-      )}
-
-      <ScoreGroup
-        label={messages.notebookLabel}
-        max={10}
-        value={pupil.notebookScore}
-        notRatedLabel={messages.scoreNotRated}
+        {presentError ? <AlertText>{presentError}</AlertText> : null}
+        <ContentText tone="secondary" className="text-xs">{messages.presentHint}</ContentText>
+      </div>
+      <div className="flex flex-wrap items-center gap-3 py-3">
+        <ContentText className="font-medium text-ink">{messages.singingLabel}</ContentText>
+        <Switch
+          checked={pupil.singing}
+          onCheckedChange={onSingingChange}
+          disabled={disabled}
+          aria-label={messages.singingLabel}
+        />
+        {isReview ? (
+          <ContentText tone="secondary" className="text-sm">{messages.reviewHint}</ContentText>
+        ) : null}
+      </div>
+      <CheckScoresSection
+        pupil={pupil}
+        lessonKind={lessonKind}
+        hasTest={hasTest}
+        versesToRecite={versesToRecite}
+        previousLessonOrdinal={previousLessonOrdinal}
         disabled={disabled}
-        onValueChange={onNotebookScoreChange}
-        trailing={pupil.late ? <LateBadge label={messages.lateSubmitted} /> : null}
+        messages={messages}
+        onVerseScoreChange={onVerseScoreChange}
+        onTestScoreChange={onTestScoreChange}
+        onNotebookScoreChange={onNotebookScoreChange}
       />
-
-      <div className="py-3">
+      <div className="space-y-1 py-3">
+        <Label htmlFor={commentId}>{messages.commentLabel}</Label>
         <Input
+          id={commentId}
           value={pupil.comment}
           onChange={(event) => onCommentChange(event.target.value)}
           placeholder={messages.commentPlaceholder}
           disabled={disabled}
           maxLength={500}
-          aria-label={messages.commentPlaceholder}
         />
       </div>
-
       {isCorrection ? (
         <div className="flex flex-wrap items-center gap-2 py-3">
           <ContentText className="text-sm font-medium">{messages.reasonLabel}</ContentText>

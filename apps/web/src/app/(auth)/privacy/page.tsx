@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { ContentText, Heading, SectionTitle } from "@/components/atoms";
+import { ContentText, SectionTitle } from "@/components/atoms";
+import { PageHeader } from "@/components/patterns/PageHeader";
 import { CustomLink } from "@/components/ui/custom-link";
 import { readConsentTextVersionFromDb } from "@/data/access/consent-text-version.server";
 import { getPrisma } from "@/lib/db.server";
@@ -37,12 +38,10 @@ const PrivacyPage = async () => {
   return (
     <AuthScreen variant="reading">
       <div className="space-y-6">
-      <header className="space-y-2">
-        <Heading>{authMessages.privacy.title}</Heading>
-        <ContentText tone="muted" className="text-muted-foreground">
-          {authMessages.privacy.versionLabel}: {consentVersion}
-        </ContentText>
-      </header>
+        <PageHeader
+          title={authMessages.privacy.title}
+          description={`${authMessages.privacy.versionLabel}: ${consentVersion}`}
+        />
 
       {content.sections.map((section) => (
         <section key={section.title} className="space-y-2">

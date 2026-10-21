@@ -7,6 +7,7 @@ type CheckCardHeaderProps = {
   birthLabel: string;
   points: number;
   pointsLabel: string;
+  filledLabel: string;
   headingRef?: React.RefObject<HTMLHeadingElement | null>;
 };
 
@@ -16,6 +17,7 @@ export const CheckCardHeader = ({
   birthLabel,
   points,
   pointsLabel,
+  filledLabel,
   headingRef,
 }: CheckCardHeaderProps) => (
   <div className="flex items-center justify-between gap-3 border-b border-line py-3">
@@ -25,7 +27,7 @@ export const CheckCardHeader = ({
         level="section"
         ref={headingRef}
         tabIndex={-1}
-        className="truncate"
+        className="truncate text-[1.5rem] leading-tight"
       >
         {name}
       </Heading>
@@ -34,10 +36,11 @@ export const CheckCardHeader = ({
       </ContentText>
     </div>
     <div className="text-right">
-      <NumberDisplay className="font-display text-[1.75rem] leading-none tabular-nums">
+      <NumberDisplay className="text-[1.75rem] leading-none">
         {points}
       </NumberDisplay>
       <ContentText tone="secondary" className="text-xs">{pointsLabel}</ContentText>
+      <ContentText className="text-xs tabular-nums text-ink-2">{filledLabel}</ContentText>
     </div>
   </div>
 );

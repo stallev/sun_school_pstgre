@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
+import { XIcon } from "lucide-react";
 import type { MutationResult } from "@sunschool/domain";
 import { deleteLessonAction } from "@/actions/lessons";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
@@ -15,6 +16,7 @@ type LessonDeleteButtonProps = {
   messages: TeacherLessonScreensMessages;
   dictionaries: Record<string, Dictionary>;
   formError: string;
+  iconOnly?: boolean;
 };
 
 export const LessonDeleteButton = ({
@@ -22,6 +24,7 @@ export const LessonDeleteButton = ({
   messages,
   dictionaries,
   formError,
+  iconOnly = false,
 }: LessonDeleteButtonProps) => {
   const router = useRouter();
   const [state, formAction, pending] = useActionState<MutationResult | null, FormData>(
@@ -44,9 +47,23 @@ export const LessonDeleteButton = ({
       <input type="hidden" name="lessonId" value={lessonId} />
       <ConfirmDialog
         trigger={
-          <Button type="button" variant="destructive" disabled={pending} aria-busy={pending}>
-            {messages.actionDelete}
-          </Button>
+          iconOnly ? (
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              className="size-10 shrink-0"
+              disabled={pending}
+              aria-busy={pending}
+              aria-label={messages.actionDelete}
+            >
+              <XIcon className="size-4" aria-hidden />
+            </Button>
+          ) : (
+            <Button type="button" variant="destructive" disabled={pending} aria-busy={pending}>
+              {messages.actionDelete}
+            </Button>
+          )
         }
         title={messages.deleteConfirmTitle}
         description={messages.deleteConfirmDescription}

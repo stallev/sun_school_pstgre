@@ -31,6 +31,7 @@ export type SequentialCheckPageData =
       lessonId: string;
       lessonOrdinal: number;
       lessonTitle: string;
+      lessonDateIso: string;
       lessonStatus: LessonStatus;
       lessonKind: LessonKind;
       hasTest: boolean;

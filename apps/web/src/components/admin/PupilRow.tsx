@@ -54,9 +54,9 @@ export const PupilRow = ({
   const meta = formatPupilMeta(messages, row);
 
   return (
-    <li className="flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between">
+    <li className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 space-y-1">
-        <ContentText className="font-medium text-ink">{row.displayName}</ContentText>
+        <ContentText className="font-medium text-ink hover:text-cobalt-ink">{row.displayName}</ContentText>
         <ContentText tone="secondary" className="text-sm">{meta}</ContentText>
         <StatusText tone={row.hasEnrollableConsent ? "ok" : "warn"}>{consentLabel}</StatusText>
         {!row.isActive ? (
@@ -65,7 +65,15 @@ export const PupilRow = ({
       </div>
       <div className="flex flex-wrap gap-2">
         <Dialog open={editOpen} onOpenChange={setEditOpen}>
-          <DialogTrigger render={<Button type="button" variant="ghost" className="min-h-11" />}>
+          <DialogTrigger
+            render={
+              <Button
+                type="button"
+                variant="ghost"
+                className="h-9 gap-1 px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink"
+              />
+            }
+          >
             {messages.people.editAction}
           </DialogTrigger>
           <DialogContent className="max-h-[90vh] overflow-y-auto">

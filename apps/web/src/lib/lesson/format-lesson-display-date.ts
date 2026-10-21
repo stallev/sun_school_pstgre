@@ -30,6 +30,6 @@ export const formatLessonListShortDate = (
   formatDateTime(`${lessonDateIso}T12:00:00.000Z`, {
     locale,
     timeZone,
-    day: "numeric",
-    month: "numeric",
+    day: "2-digit",
+    month: "2-digit",
   });

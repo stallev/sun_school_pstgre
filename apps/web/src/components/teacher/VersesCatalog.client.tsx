@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { SearchIcon } from "lucide-react";
-import { AlertText, ContentText, SectionTitle } from "@/components/atoms";
+import { AlertText, ContentText } from "@/components/atoms";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { CustomLink } from "@/components/ui/custom-link";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,8 @@ type VersesCatalogMessages = {
   searchPlaceholder: string;
   searchEmpty: string;
   verseMissing: string;
-  usedInLessons: string;
+  lessonsPrefix: string;
+  notUsed: string;
   emptyTitle: string;
   emptyDescription: string;
 };
@@ -63,15 +64,15 @@ export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
         />
       </div>
       {filteredRows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{messages.searchEmpty}</p>
+        <ContentText className="text-sm text-muted">{messages.searchEmpty}</ContentText>
       ) : (
         <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
           {filteredRows.map((row) => (
             <li
               key={row.refLabel}
-              className="grid grid-cols-1 gap-3 px-4 py-4 md:grid-cols-[8rem_minmax(0,1fr)_12rem] md:gap-6 md:px-5"
+              className="grid grid-cols-1 gap-2 px-5 py-4 md:grid-cols-[8rem_minmax(0,1fr)_12rem] md:gap-6"
             >
-              <SectionTitle className="text-base">{row.refLabel}</SectionTitle>
+              <ContentText>{row.refLabel}</ContentText>
               {row.hasMissing ? (
                 <AlertText>{messages.verseMissing}</AlertText>
               ) : (
@@ -79,25 +80,26 @@ export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
                   {row.text}
                 </ContentText>
               )}
-              <div className="space-y-1 md:text-right">
-                <ContentText className="text-sm font-medium text-ink">{messages.usedInLessons}</ContentText>
+              <ContentText className="text-sm text-muted md:text-right">
                 {row.usages.length === 0 ? (
-                  <ContentText className="text-sm text-muted-foreground">—</ContentText>
+                  messages.notUsed
                 ) : (
-                  <ul className="space-y-1">
-                    {row.usages.map((usage) => (
-                      <li key={`${row.refLabel}-${usage.lessonId}`}>
+                  <>
+                    {messages.lessonsPrefix}{" "}
+                    {row.usages.map((usage, index) => (
+                      <span key={`${row.refLabel}-${usage.lessonId}`}>
+                        {index > 0 ? ", " : null}
                         <CustomLink
                           href={`/lessons/${usage.lessonId}`}
-                          className="text-sm text-cobalt-ink hover:underline"
+                          className="text-cobalt-ink hover:underline"
                         >
                           {usage.linkLabel}
                         </CustomLink>
-                      </li>
+                      </span>
                     ))}
-                  </ul>
+                  </>
                 )}
-              </div>
+              </ContentText>
             </li>
           ))}
         </ul>

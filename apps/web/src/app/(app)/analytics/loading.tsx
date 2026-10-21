@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 const AnalyticsLoading = () => (
-  <div className="space-y-6" aria-busy="true">
+  <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden" aria-busy="true">
     <Skeleton className="h-10 w-64" />
     <div className="flex flex-wrap gap-2">
       {Array.from({ length: 3 }).map((_, index) => (

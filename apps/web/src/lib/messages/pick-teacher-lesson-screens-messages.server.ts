@@ -101,6 +101,8 @@ export const pickTeacherLessonScreensMessages = (
   checkStubDescription: getMessage(teacher, "lesson.check_stub.description"),
   checkStubBack: getMessage(teacher, "lesson.form.back_lesson"),
   usedInLessons: getMessage(teacher, "lesson.verses_page.used_in"),
+  versesLessonsPrefix: getMessage(teacher, "lesson.verses_page.lessons_prefix"),
+  versesNotUsed: getMessage(teacher, "lesson.verses_page.not_used"),
   lessonUsageLink: (ordinal, title) => {
     const trimmed = title.trim();
     const shortOrdinal = fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal });
@@ -132,6 +134,7 @@ export const pickTeacherLessonScreensMessages = (
   todayIncompleteLabel: getMessage(teacher, "lesson.today.incomplete_label"),
   todayContinueCheck: getMessage(teacher, "lesson.today.continue_check"),
   todayCheckedStudentsLabel: getMessage(teacher, "lesson.today.checked_students_label"),
+  todayCheckedOfWord: getMessage(teacher, "lesson.today.checked_of_word"),
   todayProgressStub: getMessage(teacher, "lesson.today.progress_stub"),
   todayWeekTitle: getMessage(teacher, "lesson.today.week_title"),
   todayWeekNextLesson: getMessage(teacher, "lesson.today.week_next_lesson"),

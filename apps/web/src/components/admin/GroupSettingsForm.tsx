@@ -50,7 +50,11 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
 
   return (
     <div className="space-y-6">
-      <form action={languageAction} id={`lang-form-${detail.gradeId}`} className="space-y-3 rounded-xl border border-line bg-surface p-4">
+      <form
+        action={languageAction}
+        id={`lang-form-${detail.gradeId}`}
+        className="space-y-3 rounded-xl border border-line bg-surface p-4 sm:p-5"
+      >
         <SectionTitle>{messages.group.languageTitle}</SectionTitle>
         <input type="hidden" name="gradeId" value={detail.gradeId} />
         <input type="hidden" name="language" value={nextLanguage} />
@@ -88,7 +92,11 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
         ) : null}
       </form>
 
-      <form action={settingsAction} className="space-y-4 rounded-xl border border-line bg-surface p-4" aria-busy={pending}>
+      <form
+        action={settingsAction}
+        className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5"
+        aria-busy={pending}
+      >
         <SectionTitle>{messages.group.settingsTitle}</SectionTitle>
         <input type="hidden" name="gradeId" value={detail.gradeId} />
         <input type="hidden" name="yearId" value={detail.yearId} />

@@ -58,12 +58,12 @@ export const KpiTiles = ({
     <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {(["attendance", "verses", "test", "notebook"] as const).map((key) => (
         <Card key={key} className="flex flex-col gap-1 p-4">
-          <dt className="text-base text-muted-foreground">{metricLabel(key, messages)}</dt>
+          <dt className="text-sm text-muted">{metricLabel(key, messages)}</dt>
           <dd>
-            <NumberDisplay className="text-2xl">{formatValue(key, totals[key], messages)}</NumberDisplay>
+            <NumberDisplay size="kpi">{formatValue(key, totals[key], messages)}</NumberDisplay>
           </dd>
           {(key === "test" || key === "notebook") && (
-            <dd className="text-sm text-muted-foreground">{yearMessages.outOfTen}</dd>
+            <dd className="text-sm text-muted">{yearMessages.outOfTen}</dd>
           )}
           <dd className="mt-1">
             <DiffBadge
@@ -78,7 +78,7 @@ export const KpiTiles = ({
         </Card>
       ))}
     </dl>
-    <ContentText className="text-sm text-muted-foreground">
+    <ContentText className="text-sm text-muted">
       {fillMessage(yearMessages.sampleMeta, { kids: totals.kids, lessons: totals.lessons })}
     </ContentText>
   </div>

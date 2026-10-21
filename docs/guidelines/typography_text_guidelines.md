@@ -59,6 +59,7 @@ From design system — **mobile-first** (base = mobile, `md:`/`lg:` = desktop):
 | Section title | `text-xl` | `text-2xl` |
 | Body | `text-base` | `text-base` |
 | Caption / meta | `text-sm text-muted-foreground` | same |
+| Analytics cards only | тело `text-[1.3125rem] leading-snug` (~22 px); мета (`N=`, «из 10») `text-base` (17 px). KPI (`NumberDisplay size="kpi"`, hero `text-[3.5rem]`) и заголовок страницы не менять. Тело приложения остаётся `text-base` — это исключение типа карточки, не глобальная шкала | same |
 
 **Prototype parity:** match font family, weight, and size from [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html) — Cursor rule **ui-prototype-fidelity**.
 

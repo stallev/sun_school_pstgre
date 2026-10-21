@@ -65,7 +65,7 @@ export const RegisterForm = ({
   return (
     <form action={formAction} className="space-y-4" aria-busy={pending}>
       {rejectReason ? (
-        <Banner tone="error" title={messages.register.titleResubmit}>
+        <Banner tone="error">
           <ContentText>{rejectReason}</ContentText>
         </Banner>
       ) : null}
@@ -134,11 +134,11 @@ export const RegisterForm = ({
         {consentChecked ? <input type="hidden" name="consentAccepted" value="true" /> : null}
       </section>
 
-      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center">
         <AuthSignOutLink signOutLabel={signOutLabel} signOutPendingLabel={signOutPendingLabel} />
         <Button
           type="submit"
-          className={FORM_SUBMIT_BUTTON_CLASS}
+          className={`${FORM_SUBMIT_BUTTON_CLASS} sm:ml-auto sm:min-w-56 sm:max-w-none`}
           disabled={pending || !consentChecked}
           aria-busy={pending}
         >
