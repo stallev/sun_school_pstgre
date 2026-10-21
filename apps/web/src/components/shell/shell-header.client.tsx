@@ -62,7 +62,7 @@ export const ShellHeader = ({ homeHref, displayName, nav, badgeCounts }: ShellHe
   };
 
   return (
-    <header className="sticky top-0 z-40 overflow-visible border-b border-line bg-surface/90 backdrop-blur-sm reduce-transparency:bg-surface">
+    <header className="sticky top-0 z-40 overflow-visible border-b border-line bg-surface/90 backdrop-blur-md reduce-transparency:bg-surface reduce-transparency:backdrop-blur-none">
       <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-2 sm:px-4 lg:gap-4 lg:px-8">
         <NavDrawer {...drawerProps} />
         <CustomLink href={homeHref} className="min-w-0 flex-1 shrink no-underline lg:shrink-0 lg:flex-none">

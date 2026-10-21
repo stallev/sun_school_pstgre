@@ -145,3 +145,37 @@
 | `TypeScale.tsx` / `tokens.ts` | Lab L1 | шкала §6 + витрина вариантов атомов | добавлены hero/KPI строки и блок catalog atoms | n/a | **нет отклонения** |
 
 **Вне CU1 (экраны):** потребители `NumberDisplay` с `className` override (`text-5xl`, `text-lg`) — норма до CU4; не менялись в этом шаге.
+
+## Проход 3 — CU2 Shell
+
+**Субагент:** implementer / composer-2.5  
+**Эталоны:** прототип `#shell` (`gap-2 lg:gap-4 lg:px-8`, topnav `h-9` / `text-[0.9375rem]`, active `font-bold`, DD `rounded-xl` + shadow-float), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md)  
+**Среда:** `http://localhost:3000`, сессии teacher/admin (`.local/dev-secrets.json`, без логирования учёток)  
+**Метод:** Playwright computed styles + slot geometry (`.local/shell-measure-pass3.mjs`); повтор после правок — **без новых deviation-строк**
+
+### Матрица `shell` (после правок)
+
+| Роль | Ширина | Порядок слотов (&lt;lg: menu→brand→hdrRight) | menu по центру | row gap | row padding (L/R) | topnav (≥lg) | active weight | dropdown (≥lg, open) | mobile title |
+|------|--------|-----------------------------------------------|----------------|---------|-------------------|--------------|---------------|----------------------|--------------|
+| teacher | 390 | menu `left≈9` → brand `64` → hdrRight `228` | нет | `8.5px` (`gap-2`) | `8.5px` / `8.5px` | скрыт | n/a | n/a | `19.125px` / `500` |
+| teacher | 768 | `17` → `72` → `598` | нет | `8.5px` | `17px` / `17px` | скрыт | n/a | n/a | `19.125px` / `500` |
+| teacher | 820 | `17` → `72` → `650` | нет | `8.5px` | `17px` / `17px` | скрыт | n/a | n/a | `19.125px` / `500` |
+| teacher | 1024 | brand `34` → topnav `256` → hdrRight `837`; menu `display:none` | нет | `17px` (`lg:gap-4`) | `34px` / `34px` | `h≈38.25px`, `15.9375px`, active `700` | `700` | `radius≈12.75px` (`rounded-xl`), shadow-float | n/a (brand) |
+| admin | 390 | menu `9` → brand `64` → hdrRight `257` | нет | `8.5px` | `8.5px` / `8.5px` | скрыт | n/a | n/a | `19.125px` / `500` |
+| admin | 768 | `17` → `72` → hdrRight `647` (было `326` + switcher **425px** до fix) | нет | `8.5px` | `17px` / `17px` | скрыт | n/a | n/a | `19.125px` / `500` |
+| admin | 820 | `17` → `72` → hdrRight `699` (switcher убран с `md`) | нет | `8.5px` | `17px` / `17px` | скрыт | n/a | n/a | `19.125px` / `500` |
+| admin | 1024 | brand `34` → topnav `256` → hdrRight `565` (+ dev switcher в hdrRight) | нет | `17px` | `34px` / `34px` | `h≈38.25px`, `15.9375px`, active `700` | `700` | `radius≈12.75px`, shadow-float | n/a |
+
+**Общее:** высота шапки `≈61px` (`h-14` + `border-b` при base 17px); drawer не открывался в автомате — layout footer/секций сверен с прототипом в коде (`nav-drawer.tsx`: `h-14` close, `text-xs font-bold` group labels, footer avatar column).
+
+### Исправления в этом проходе
+
+| Файл | Отклонение (до) | После |
+|------|-----------------|-------|
+| `dev-role-switcher.tsx` | `md:flex` сжимал hdrRight на 768–820 (admin hdrRight ~425px) | `lg:flex` — switcher только с topnav |
+| `shell-header.client.tsx` | `backdrop-blur-sm`, без `reduce-transparency:backdrop-blur-none` | как прототип: `backdrop-blur-md` + reduce-transparency pair |
+| `user-menu.tsx` | trigger `min-h-11` (44px) vs hdr `h-9` | `h-9` + `text-[0.9375rem]` + `px-1.5 hover:bg-paper` |
+
+**Уже соответствовало (код CU2/CU3):** `shell-header` порядок `NavDrawer` → brand → `ShellNavigation` (только `lg`) → hdrRight; `nav-chrome-classes` (`h-9`, active `font-bold`, `rounded-xl` panel); topnav без `justify-center` на tablet.
+
+**Сознательно не копируем:** иконки в пунктах drawer/topnav; role switcher внутри drawer (продукт — dev-only в hdrRight ≥lg).

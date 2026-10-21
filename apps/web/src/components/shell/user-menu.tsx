@@ -48,7 +48,7 @@ export const UserMenu = ({ displayName }: UserMenuProps) => {
         ref={buttonRef}
         type="button"
         variant="ghost"
-        className="max-w-[12rem] truncate min-h-11"
+        className="h-9 max-w-[12rem] truncate px-1.5 text-[0.9375rem] hover:bg-paper"
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls={panelId}

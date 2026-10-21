@@ -14,7 +14,7 @@ export const DevRoleSwitcher = ({ previewRole, onPreviewRoleChange }: DevRoleSwi
   const messages = useShellMessages();
 
   return (
-    <div className="hidden max-w-[min(100%,20rem)] items-center gap-2 md:flex">
+    <div className="hidden max-w-[min(100%,20rem)] items-center gap-2 lg:flex">
       <span className="text-xs text-muted">{messages.devViewAs}</span>
       <SegmentedControl
         value={previewRole}
