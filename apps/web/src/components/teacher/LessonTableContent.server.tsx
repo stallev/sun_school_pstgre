@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { USER_ROLE } from "@sunschool/domain";
 import { notFound } from "next/navigation";
 import { LessonCheckTable } from "@/components/teacher/LessonCheckTable";
@@ -13,6 +14,7 @@ type LessonTableContentProps = {
 };
 
 export const LessonTableContent = async ({ params }: LessonTableContentProps) => {
+  await connection();
   const { lessonId } = await params;
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
   const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);

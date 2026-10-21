@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { USER_ROLE } from "@sunschool/domain";
 import { CreateYearForm } from "@/components/admin/CreateYearForm.client";
 import { YearCard } from "@/components/admin/YearCard";
@@ -18,6 +19,7 @@ type YearPageContentProps = {
 };
 
 export const YearPageContent = async ({ messages, dictionaries, formError }: YearPageContentProps) => {
+  await connection();
   await requireRole(USER_ROLE.ADMIN);
   const prisma = await getPrisma();
   const organizationId = await getDefaultOrganizationId(prisma);

@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { USER_ROLE } from "@sunschool/domain";
 import { DeletionRequestCard } from "@/components/admin/DeletionRequestCard";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
@@ -30,6 +31,7 @@ export const DeletionAdminList = async ({
   dictionaries,
   formError,
 }: DeletionAdminListProps) => {
+  await connection();
   const actor = await requireRole(USER_ROLE.ADMIN);
   const { tab: tabRaw } = await searchParams;
   const tab = parseDeletionListTab(tabRaw);

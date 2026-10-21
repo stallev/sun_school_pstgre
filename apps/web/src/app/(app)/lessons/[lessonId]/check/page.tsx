@@ -1,43 +1,18 @@
-import { USER_ROLE } from "@sunschool/domain";
-import { notFound } from "next/navigation";
-import { CheckScreen } from "@/components/teacher/check-screen.client";
-import { loadSequentialCheckPage } from "@/data/checks/load-sequential-check-page.server";
-import { requireRole } from "@/lib/auth/require-user";
-import { getPrisma } from "@/lib/db.server";
+import { Suspense } from "react";
+import { PagePendingSkeleton } from "@/components/patterns/PagePendingSkeleton";
+import { LessonCheckPageContent, type LessonCheckPageProps } from "@/components/teacher/LessonCheckPageContent.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
-import { getDictionary } from "@/lib/messages/get-dictionary";
-import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-messages.server";
+import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
-type LessonCheckPageProps = {
-  params: Promise<{ lessonId: string }>;
-  searchParams: Promise<{ pupil?: string }>;
-};
-
-const LessonCheckPage = async ({ params, searchParams }: LessonCheckPageProps) => {
-  const { lessonId } = await params;
-  const { pupil: pupilParam } = await searchParams;
-  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
-  const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);
+const LessonCheckPage = async (props: LessonCheckPageProps) => {
   const locale = await getUiLocale();
-  const data = await loadSequentialCheckPage(await getPrisma(), actor.userId, lessonId, isAdmin);
-  const [teacherDict, commonDict] = await Promise.all([
-    getDictionary(locale, "teacher"),
-    getDictionary(locale, "common"),
-  ]);
-  const messages = pickTeacherCheckMessages(teacherDict, commonDict);
-  const dictionaries = { teacher: teacherDict, common: commonDict };
-
-  if (data.kind === "not_found") {
-    notFound();
-  }
+  const commonDict = await getDictionary(locale, "common");
+  const pendingLabel = getMessage(commonDict, "states.page_loading");
 
   return (
-    <CheckScreen
-      data={data}
-      initialPupilId={pupilParam ?? null}
-      messages={messages}
-      dictionaries={dictionaries}
-    />
+    <Suspense fallback={<PagePendingSkeleton pendingLabel={pendingLabel} />}>
+      <LessonCheckPageContent {...props} />
+    </Suspense>
   );
 };
 

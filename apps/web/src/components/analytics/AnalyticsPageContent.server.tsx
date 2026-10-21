@@ -58,6 +58,7 @@ const YearNavFallback = () => (
 );
 
 export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageContentProps) => {
+  await connection();
   const params = await searchParams;
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
   const data = await loadAnalyticsPage(await getPrisma(), actor.userId, params);
@@ -122,7 +123,6 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
   } else {
     periodQuery.mode = "year";
   }
-  await connection();
   const currentMonth = new Date().toISOString().slice(0, 7);
   const monthChipValue =
     data.periodFilter.mode === "month" ? data.periodFilter.month : currentMonth;
