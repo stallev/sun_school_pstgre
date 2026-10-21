@@ -1708,7 +1708,7 @@ function vRating(){
   return pageHead(isAdmin ? 'Рейтинг' : 'Рейтинг группы', 'Рабочий инструмент: кому нужна помощь и кого отметить.') + `
   <p class="mb-5 flex max-w-3xl items-start gap-2 text-sm text-ink-2">${ic('i-lock','size-4 mt-0.5 text-muted')} Видят только учителя и администратор. Родителям и детям рейтинг не показывается, на проектор не выводится.</p>
   ${isAdmin ? groupChips() : ''}
-  ${isAdmin && S.anaGroup!=='Средняя' ? `<p class="${CARD} max-w-xl p-5 text-ink-2">В прототипе рейтинг есть только у Средней группы.</p>` : `<div class="${CARD} overflow-x-auto">
+  ${isAdmin && S.anaGroup!=='Средняя' ? `<p class="${CARD} max-w-xl p-3 text-[1.3125rem] leading-snug text-ink-2">В прототипе рейтинг есть только у Средней группы.</p>` : `<div class="${CARD} overflow-x-auto">
     <table class="w-full min-w-[34rem] text-left">
       <caption class="sr-only">Рейтинг по баллам за уроки</caption>
       <thead class="border-b border-line text-sm text-muted"><tr>
@@ -1839,7 +1839,7 @@ function analyticsClosedView(group, yid, yTop){
 function vAnalytics(){
   const sel = analyticsYear(S.anaGroup);
   const yTop = sel ? yearChips(S.anaGroup, 'ana-year', sel) + yearsTable(S.anaGroup, sel) : '';
-  if (S.anaGroup !== 'Средняя') return pageHead(t('analytics.title'), `${S.anaGroup} группа${sel ? ' · учебный год '+yearOf(sel).name : ''}`, '') + (S.role==='admin'?groupChips():'') + yTop + (sel ? kpiTiles(S.anaGroup, sel) : '') + `<p class="${CARD} mt-6 max-w-xl p-5 text-ink-2">В прототипе подробные данные по урокам и ученикам есть только у Средней группы.</p>`;
+  if (S.anaGroup !== 'Средняя') return pageHead(t('analytics.title'), `${S.anaGroup} группа${sel ? ' · учебный год '+yearOf(sel).name : ''}`, '') + (S.role==='admin'?groupChips():'') + yTop + (sel ? kpiTiles(S.anaGroup, sel) : '') + `<p class="${CARD} mt-6 max-w-xl p-3 text-[1.3125rem] leading-snug text-ink-2">В прототипе подробные данные по урокам и ученикам есть только у Средней группы.</p>`;
   if (sel && sel!=='2026') return analyticsClosedView('Средняя', sel, yTop);
   const L = layers(), A = L.A, ids = A.map(p=>p.id);
   const ser = series(ids);
@@ -1852,16 +1852,16 @@ function vAnalytics(){
   return pageHead(t('analytics.title'), `Средняя группа · ${S.period==='year' ? 'учебный год '+YEAR : S.period==='oct' ? 'октябрь' : 'сентябрь'} · ${ser.length} ${plural(ser.length,'урок','урока','уроков')}`, periodChips()) + `
   ${S.role==='admin' ? groupChips() : ''}${yTop}${yearState(yearOf('2026'))==='closed' ? readOnlyNote : ''}
   ${S.role==='admin' && S.kidsDeleted.length ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-alert','size-4 mt-0.5 text-warn')} Показатели пересчитаны после удаления данных по запросу опекуна, ${S.kidsDeleted[S.kidsDeleted.length-1]}.</p>` : ''}
-  <section class="${CARD} grid grid-cols-1 gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:items-center">
+  <section class="${CARD} grid grid-cols-1 gap-3 p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:items-center">
     <div>
       <p class="text-sm text-muted">Средняя явка основной выборки</p>
       <p class="mt-1 font-display text-[3.5rem] font-medium leading-none tabular-nums tracking-[-0.02em]">${pct(attA)}</p>
-      <p class="mt-2 text-sm text-ink-2">${A.length} ${plural(A.length,'ребёнок','ребёнка','детей')} с явкой от 50%</p>
+      <p class="mt-1 text-sm text-ink-2">${A.length} ${plural(A.length,'ребёнок','ребёнка','детей')} с явкой от 50%</p>
     </div>
-    <dl class="grid grid-cols-3 gap-4 border-t border-line pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
-      <div><dt class="text-sm text-muted">Стихов за урок</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('v'))}</dd><dd class="text-xs text-muted">N=${nObs('nV')}</dd></div>
-      <div><dt class="text-sm text-muted">Тест</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('t'))}</dd><dd class="text-xs text-muted">из 10 · N=${nObs('nT')}</dd></div>
-      <div><dt class="text-sm text-muted">Тетрадь</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('n'))}</dd><dd class="text-xs text-muted">из 10 · N=${nObs('nN')}</dd></div>
+    <dl class="grid grid-cols-3 gap-2 border-t border-line pt-3 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-3">
+      <div><dt class="text-sm text-muted">Стихов за урок</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('v'))}</dd><dd class="text-base text-muted">N=${nObs('nV')}</dd></div>
+      <div><dt class="text-sm text-muted">Тест</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('t'))}</dd><dd class="text-base text-muted">из 10 · N=${nObs('nT')}</dd></div>
+      <div><dt class="text-sm text-muted">Тетрадь</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('n'))}</dd><dd class="text-base text-muted">из 10 · N=${nObs('nN')}</dd></div>
     </dl>
   </section>
   ${S.role==='admin' ? `<p class="mt-3 text-sm text-ink-2">${ic('i-alert','size-4 inline text-warn')} Качество данных: пропущенных записей на проверенных уроках — <b class="font-bold">${missingRecords()}</b> · удалено дублей при переносе — <b class="font-bold">2</b></p>` : ''}
@@ -1878,7 +1878,7 @@ function vAnalytics(){
   <p class="mb-3 text-sm text-ink-2">Редкие посещения не должны искажать картину группы. Личные средние этих детей видны в их карточках.</p>
   ${L.B.length ? pupilTable(L.B, [['Ученик'],['Год рожд.',p=>p.born ?? '—'],['Был',p=>pupilStats(p).nP],['Проверено уроков',p=>pupilStats(p).nE],['Явка',p=>pct(pupilStats(p).rate)]]) : '<p class="text-muted">Таких учеников нет.</p>'}
 
-  <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <div class="mt-8 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
     <section class="min-w-0"><h2 class="${H2} mb-3">Неактивные</h2>${pupilTable(L.C, [['Ученик'],['Год рожд.',p=>p.born ?? '—']])}</section>
     <section class="min-w-0"><h2 class="${H2} mb-3">Без проверенных уроков</h2>${pupilTable(L.D, [['Ученик'],['В группе с',p=>p.from]])}</section>
   </div>
@@ -1930,7 +1930,7 @@ function personalCharts(pid, cols='lg:grid-cols-3', rowsIn){
 }
 
 function vPupil(){
-  if (pupil(S.pupilId).gone) return pageHead('Данные удалены', '', '', backLink('analytics','Аналитика группы')) + `<p class="${CARD} max-w-xl p-5 text-ink-2">Данные этого ребёнка удалены по запросу опекуна. Групповые показатели пересчитаны без него.</p>`;
+  if (pupil(S.pupilId).gone) return pageHead('Данные удалены', '', '', backLink('analytics','Аналитика группы')) + `<p class="${CARD} max-w-xl p-3 text-[1.3125rem] leading-snug text-ink-2">Данные этого ребёнка удалены по запросу опекуна. Групповые показатели пересчитаны без него.</p>`;
   const p = pupil(S.pupilId), lay = layerOf(p), st = pupilStats(p), av = personalAvgs(p.id);
   const inAvg = lay==='A';
   const canFix = S.role!=='parent';
@@ -1940,24 +1940,24 @@ function vPupil(){
   const body = () => `
   <p class="mb-6 flex max-w-3xl items-start gap-3 rounded-xl ${inAvg ? 'bg-ok-soft' : 'bg-warn-soft'} px-4 py-3">${ic(inAvg?'i-ok':'i-alert','size-5 '+(inAvg?'text-ok':'text-warn'))}
     <span><b class="font-bold">Учитывается в групповых средних: ${inAvg?'да':'нет'}.</b> ${LAYER_TEXT[lay]}${st.nE ? ` Явка ${pct(st.rate)}.` : ''}</span></p>
-  <dl class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-    ${[['Явка', st.nE ? `${st.nP} из ${st.nE}` : '—'],['Стихов за урок', f1(av.v)+` <span class="text-sm text-muted">N=${av.nV}</span>`],['Тест', f1(av.t)+` <span class="text-sm text-muted">N=${av.nT}</span>`],['Тетрадь', f1(av.n)+` <span class="text-sm text-muted">N=${av.nN}</span>`]]
-      .map(([k,v])=>`<div class="${CARD} p-4"><dt class="text-sm text-muted">${k}${inAvg?'':' (личное)'}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${v}</dd></div>`).join('')}
+  <dl class="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-3">
+    ${[['Явка', st.nE ? `${st.nP} из ${st.nE}` : '—'],['Стихов за урок', f1(av.v)+` <span class="text-base text-muted">N=${av.nV}</span>`],['Тест', f1(av.t)+` <span class="text-base text-muted">N=${av.nT}</span>`],['Тетрадь', f1(av.n)+` <span class="text-base text-muted">N=${av.nN}</span>`]]
+      .map(([k,v])=>`<div class="${CARD} p-3"><dt class="text-sm text-muted">${k}${inAvg?'':' (личное)'}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${v}</dd></div>`).join('')}
   </dl>
   ${famContacts(p.id)}
   <div class="mb-4">${progressBlock(p.id)}</div>
   <section class="mb-4"><h2 class="${H2} mb-2">Присутствие</h2>${presenceStrip(p.id)}</section>
   ${personalCharts(p.id)}
-  <section class="${CARD} mt-4 p-4 sm:p-5">
+  <section class="${CARD} mt-4 p-3">
     <div class="flex flex-wrap items-start justify-between gap-3">
-      <div><h2 class="${H2}">Штрафы</h2><p class="mt-1 max-w-[62ch] text-sm text-ink-2">За поведение. Уменьшают кирпичики, но не оценки и не аналитику. Родитель видит причину.</p></div>
+      <div><h2 class="${H2}">Штрафы</h2><p class="mt-1 max-w-[62ch] text-[1.3125rem] leading-snug text-ink-2">За поведение. Уменьшают кирпичики, но не оценки и не аналитику. Родитель видит причину.</p></div>
       ${canFix && S.achMode.on ? `<button type="button" data-act="pen-open" data-pid="${p.id}" class="${B_PENALTY_OUTLINE}">${ic('i-flag','size-4')} Выдать штраф</button>` : ''}
     </div>
     <div class="mt-1">${penList(p.id, canFix)}</div>
   </section>
-  <section class="${CARD} mt-4 p-4 sm:p-5">
+  <section class="${CARD} mt-4 p-3">
     <div class="flex flex-wrap items-start justify-between gap-3">
-      <div><h2 class="${H2}">Достижения</h2><p class="mt-1 max-w-[62ch] text-sm text-ink-2">У каждой выдачи — уроки-доказательства. За одни и те же уроки одно достижение одного уровня выдаётся один раз.</p></div>
+      <div><h2 class="${H2}">Достижения</h2><p class="mt-1 max-w-[62ch] text-[1.3125rem] leading-snug text-ink-2">У каждой выдачи — уроки-доказательства. За одни и те же уроки одно достижение одного уровня выдаётся один раз.</p></div>
       ${canFix && S.achMode.on ? `<button type="button" data-act="award-open" data-pid="${p.id}" class="${B_OUTLINE}">${ic('i-award','size-4')} Выдать вручную</button>` : ''}
     </div>
     <div class="mt-1">${awardList(p.id, S.role==='admin')}</div>
@@ -2259,9 +2259,9 @@ function vSchool(){
   </div>
   <p class="mt-3 text-sm text-muted">Ученики: основная выборка (посещаемость от 50%) / всего. Средние считаются по основной выборке.</p>
 
-  <section class="${CARD} mt-8 p-4 sm:p-5">
+  <section class="${CARD} mt-8 p-3">
     <h2 class="${H2}">Посещаемость групп по урокам</h2>
-    <p class="mt-1 text-sm text-ink-2">Доля присутствовавших от основной выборки группы, %.</p>
+    <p class="mt-1 text-[1.3125rem] leading-snug text-ink-2">Доля присутствовавших от основной выборки группы, %.</p>
     <div class="mt-4">${chart({ h:240, labels, series:[
       { name:'Младшая', color:'var(--color-series-1)', values:SCHOOL_ATT['Младшая'] },
       { name:'Средняя', color:'var(--color-series-2)', values:mid },

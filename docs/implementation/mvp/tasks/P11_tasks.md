@@ -48,7 +48,7 @@
 
 ### P11-CU3 — docs(prototype): denser analytics cards · Review: diff-only · Smoke: none · Commit: auto
 
-- [ ] P11-T6 · T1 · Spec: [analytics_screens_spec §4.1](../specs/analytics_screens_spec.md)
+- [x] P11-T6 · T1 · Spec: [analytics_screens_spec §4.1](../specs/analytics_screens_spec.md)
       Files: `docs/prototypes/sunday_school_prototype.html` (только `vAnalytics`, `vPupil`, `vRating`, `vSchool`)
       Acceptance: тело карточки ~22 px, мета 17 px, `p-3` / `gap-3`; KPI и `lg+` таблицы не менялись; `CARD` глобально не менялся → сверка прототипа
       Paths: n/a — docs-only (прототип)
