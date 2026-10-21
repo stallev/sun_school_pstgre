@@ -1,9 +1,15 @@
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 /** Topnav / dropdown panel — prototype `DD_PANEL`, shadow via `shadow-float` (UX-03). */
 export const SHELL_NAV_DROPDOWN_PANEL =
   "absolute top-full z-50 mt-1.5 min-w-64 origin-top rounded-xl border border-line bg-surface p-1.5 shadow-float";
 
-export const SHELL_TOPNAV_TRIGGER =
-  "inline-flex h-9 items-center gap-2 rounded-lg px-3 text-[0.9375rem] transition-[background-color,color] duration-100";
+/** Shared topnav control metrics — `Button` size `nav` (h-9), shell-specific color states below. */
+export const SHELL_TOPNAV_TRIGGER = cn(
+  buttonVariants({ size: "nav" }),
+  "active:scale-100 motion-reduce:active:scale-100 transition-[background-color,color] duration-100",
+);
 
 export const shellTopNavTriggerClass = (options: {
   isActive: boolean;

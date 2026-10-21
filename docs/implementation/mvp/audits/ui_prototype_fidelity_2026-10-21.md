@@ -179,3 +179,23 @@
 **Уже соответствовало (код CU2/CU3):** `shell-header` порядок `NavDrawer` → brand → `ShellNavigation` (только `lg`) → hdrRight; `nav-chrome-classes` (`h-9`, active `font-bold`, `rounded-xl` panel); topnav без `justify-center` на tablet.
 
 **Сознательно не копируем:** иконки в пунктах drawer/topnav; role switcher внутри drawer (продукт — dev-only в hdrRight ≥lg).
+
+## Проход 3 — CU3 Primitives
+
+**Субагент:** implementer / composer-2.5  
+**Эталоны:** прототип `BTN` (`h-10`), topnav `h-9` / `text-[0.9375rem]`, `H2` / `pageHead` (`mb-5` · `lg:mb-6`), UX-03 §8  
+**Среда:** `http://localhost:3000` — `/login`, `/today`, `/lessons` (teacher, `.local/dev-secrets.json`)  
+**Метод:** Playwright computed styles (`.local/primitives-measure-pass3.mjs`); повтор после правок
+
+| Файл / узел | Ожидание | До | После (re-pass) | Ширины | Серьёзность |
+|-------------|----------|-----|-----------------|--------|-------------|
+| `button.tsx` `size="default"` | `h-10` (~42.5px @ 17px base) | совпадало | совпадало (`PageHeader` CTA на `/lessons`) | 390, 1024 | **нет отклонения** |
+| `button.tsx` `size="nav"` | topnav `h-9` (~38.25px), не `text-sm` | дублирование в `nav-chrome-classes` | вариант `nav` + `SHELL_TOPNAV_TRIGGER` через `buttonVariants` | 1024 | **исправлено** |
+| `button.tsx` vs shell | primary CTA ≠ nav chrome | `sm` = `h-9` + `text-sm` путали с nav | `nav` отдельно от `sm` | 1024 | **исправлено (каталог)** |
+| `card.tsx` `CardTitle` | `text-[1.25rem]` как `H2` / `SectionTitle` | `text-lg` → ~19.1px | ~21.25px (= section `h2` на `/today`) | 390, 1024 | **исправлено** |
+| `PageHeader.tsx` | `mb-5` / `lg:mb-6` как `pageHead` | совпадало | `marginBottom` 21.25px / 25.5px на `/today`, `/lessons` | 390, 1024 | **нет отклонения** |
+| `nav-link-row.tsx` / `top-nav.tsx` | topnav через shared chrome | уже `shellTopNavTriggerClass` | без смены поведения; метрики topnav `h≈38.3px`, `15.9375px` | 1024 | **нет отклонения** |
+| `PatternsGallery.tsx` / `matrices.ts` | Lab: `nav` size + CardTitle parity | не было | `BUTTON_SIZES` + блок CardTitle vs `SectionTitle` | n/a | **нет отклонения** |
+| `/login` submit | отдельный паттерн | `h-12` (`FORM_SUBMIT_BUTTON_CLASS`) | без изменений (не `Button` default) | 390 | **сознательно** |
+
+**Re-pass:** topnav и section `h2` на teacher matrix — в пределах прототипа; новых deviation-строк нет.

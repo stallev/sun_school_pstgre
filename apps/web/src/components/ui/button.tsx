@@ -19,6 +19,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+        /** Topnav / compact chrome — prototype `h-9` + `text-[0.9375rem]` (UX-03 §8), not `text-sm`. */
+        nav: "h-9 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
         sm: "h-9 px-3 text-sm",
         lg: "h-11 px-5",
         icon: "size-10",

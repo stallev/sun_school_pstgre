@@ -10,7 +10,8 @@ import { FormSection } from "@/components/patterns/FormSection";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { ScoreGroup } from "@/components/patterns/ScoreGroup";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LAB_STUDENT, LAB_TEXT } from "@/lib/design-lab/fixtures";
@@ -48,6 +49,17 @@ export const PatternsGallery = () => {
         <ForbiddenState title={LAB_TEXT.forbiddenTitle} description={LAB_TEXT.forbiddenBody} />
       </div>
       <div className="grid gap-3 md:grid-cols-2">
+        <MatrixCell label="CardTitle (= section H2 · 1.25rem)">
+          <Card>
+            <CardHeader>
+              <CardTitle>{LAB_TEXT.fieldLabel}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SectionTitle as="h2">{LAB_TEXT.fieldLabel}</SectionTitle>
+              <p className="mt-1 text-sm text-muted">CardTitle and SectionTitle should match.</p>
+            </CardContent>
+          </Card>
+        </MatrixCell>
         <FormSection title={LAB_TEXT.fieldLabel} description={LAB_TEXT.fieldHelp}>
           <div className="space-y-1.5">
             <Label htmlFor="lab-pattern-input" className="text-sm font-medium">
