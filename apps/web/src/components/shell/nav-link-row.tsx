@@ -2,6 +2,7 @@
 
 import { CustomLink } from "@/components/ui/custom-link";
 import { NavBadge } from "@/components/shell/nav-badge";
+import { NavIcon } from "@/components/shell/NavIcon";
 import type { NavBadgeSlotId } from "@/components/shell/nav-config";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
 import type { ResolvedNavLeaf } from "@/lib/shell/nav-resolver";
@@ -40,9 +41,10 @@ export const NavLinkRow = ({
         onClick={onNavigate}
         className={cn(
           shellTopNavTriggerClass({ isActive, isOpen: false }),
-          "no-underline",
+          "no-underline hover:no-underline",
         )}
       >
+        <NavIcon navKey={leaf.key} />
         {leaf.label}
       </CustomLink>
     );
@@ -54,13 +56,14 @@ export const NavLinkRow = ({
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
       className={cn(
-        "flex w-full rounded-lg text-left text-[0.9375rem] no-underline hover:bg-paper",
+        "flex w-full rounded-lg text-left text-[0.9375rem] no-underline hover:bg-paper hover:no-underline",
         density === "topnav" ? "items-start gap-3 px-2.5 py-2" : "h-11 min-h-11 items-center gap-3 px-3",
         isActive
           ? "bg-cobalt-soft font-bold text-cobalt-ink"
           : "text-ink-2 hover:text-ink",
       )}
     >
+      <NavIcon navKey={leaf.key} className={cn(showDescription && "mt-0.5", !isActive && "text-ink-2")} />
       <span className="min-w-0 flex-1">
         <span className={cn("flex items-center gap-2", !isActive && density === "topnav" && "font-medium")}>
           {leaf.label}

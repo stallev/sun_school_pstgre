@@ -162,9 +162,6 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
               monthChipLabel={monthChipLabel}
             />
           ) : null}
-          {!selectedSnapshotMissing && analytics.hasCheckedLessonsInPeriod ? (
-            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} />
-          ) : null}
         </div>
         {selectedSnapshotMissing ? (
           <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
@@ -175,6 +172,9 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
           </AnalyticsYearDetail>
         ) : (
           <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
+          {analytics.hasCheckedLessonsInPeriod ? (
+            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} />
+          ) : null}
           {isActiveYear && data.isAdmin ? (
             <div className="mt-3">
               <AnalyticsAdminDataQualityRow
