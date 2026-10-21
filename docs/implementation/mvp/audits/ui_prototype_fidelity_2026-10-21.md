@@ -123,3 +123,25 @@
 Остаётся vs прототип (не в этом проходе): иконки в пунктах меню, role switcher внутри drawer (в продукте только dev switcher в шапке).
 
 Коммиты по CU — по запросу (разбить paths-file на 4 коммита или один squash).
+
+## Проход 3 — CU1 Atoms
+
+**Субагент:** implementer / composer-2.5  
+**Эталоны:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) §6, [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), прототип `H2` / `vLogin` / KPI `tile`  
+**Ширины:** 390, 768, 1024 (классы атомов width-agnostic)
+
+| Файл | Узел / вариант | Ожидание (UX-03 / прототип) | Факт (после CU1) | Ширины | Серьёзность |
+|------|----------------|----------------------------|------------------|--------|-------------|
+| `Heading.tsx` | `level="page"` | `font-display text-[1.75rem] sm:text-[2.125rem] font-medium leading-[1.1] tracking-[-0.01em]` | совпадает | все | **нет отклонения** |
+| `Heading.tsx` | `level="section"` | `font-display text-[1.25rem] font-medium leading-snug` | совпадает | все | **нет отклонения** |
+| `Heading.tsx` | `level="hero"` | login `text-[2.25rem] leading-[1.05] tracking-[-0.015em]` | совпадает | все | **нет отклонения** |
+| `SectionTitle.tsx` | default | делегирует `Heading` `section` | совпадает | все | **нет отклонения** |
+| `ContentText.tsx` | `body` / `secondary` / `muted` | `text-base` / `text-ink-2` / `text-sm text-muted` + `font-body` | `font-body` явно на всех tone | все | **нет отклонения** |
+| `NumberDisplay.tsx` | `size="score"` | `font-display text-3xl tabular-nums` | совпадает | все | **нет отклонения** |
+| `NumberDisplay.tsx` | `size="kpi"` | KPI tile `text-2xl tabular-nums` | совпадает | все | **нет отклонения** |
+| `AlertText.tsx` | `tone="error"` | `text-sm` + семантический цвет | `font-body text-sm text-danger`, `role="alert"` | все | **нет отклонения** |
+| `Icon.tsx` | default | `size-4`, `stroke-width` 1.75, decorative `aria-hidden` | совпадает | все | **нет отклонения** |
+| `.cursor/rules/ui-prototype-fidelity.mdc` (+ tier mirror) | таблица гарнитур | Alegreya / Alegreya Sans / `ui-monospace` | было Source Serif / Manrope — **исправлено** | n/a | **исправлено (док)** |
+| `TypeScale.tsx` / `tokens.ts` | Lab L1 | шкала §6 + витрина вариантов атомов | добавлены hero/KPI строки и блок catalog atoms | n/a | **нет отклонения** |
+
+**Вне CU1 (экраны):** потребители `NumberDisplay` с `className` override (`text-5xl`, `text-lg`) — норма до CU4; не менялись в этом шаге.

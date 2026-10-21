@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const alertTextVariants = cva("text-sm", {
+const alertTextVariants = cva("font-body text-sm", {
   variants: {
     tone: {
       error: "text-danger",
