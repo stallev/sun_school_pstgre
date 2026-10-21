@@ -3,8 +3,8 @@ import type { AppLocale } from "@sunschool/domain";
 /** Serializable copy for lesson form client components. */
 export type TeacherLessonFormMessages = {
   newTitle: string;
-  editTitle: (ordinal: number) => string;
-  pageSubtitle: (groupName: string, yearName: string) => string;
+  editTitle: string;
+  pageSubtitle: string;
   backToLessons: string;
   backToLesson: string;
   gradeLabel: string;
@@ -28,13 +28,13 @@ export type TeacherLessonFormMessages = {
   bodyPlaceholder: string;
   hasTestLabel: string;
   versesTitle: string;
-  versesHint: (max: number, translationName: string) => string;
+  versesHint: string;
   versesEmpty: string;
-  versesRemove: (ref: string) => string;
+  versesRemove: string;
   reviewPanelTitle: string;
   reviewPanelBullets: readonly string[];
   missingVersesTitle: string;
-  missingVerseItem: (ref: string) => string;
+  missingVerseItem: string;
   saveCreate: string;
   saveUpdate: string;
   cancel: string;

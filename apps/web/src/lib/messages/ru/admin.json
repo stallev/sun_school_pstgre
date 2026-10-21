@@ -397,7 +397,10 @@
     "category_homework_verse_score": "Оценки стихов",
     "category_homework_score_event": "События оценок",
     "category_brick_ledger": "Кирпичики",
-    "category_audit_log_child": "Записи журнала о ребёнке"
+    "category_audit_log_child": "Записи журнала о ребёнке",
+    "category_achievement_award": "Выдачи достижений",
+    "category_penalty": "Штрафы",
+    "category_recitation_attempt": "Попытки чтения наизусть"
   },
   "form": {
     "last_name": "Фамилия",

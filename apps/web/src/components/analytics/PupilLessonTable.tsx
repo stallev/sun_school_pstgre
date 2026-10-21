@@ -1,6 +1,7 @@
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Card } from "@/components/ui/card";
+import { CustomLink } from "@/components/ui/custom-link";
 import {
   Table,
   TableBody,
@@ -15,9 +16,11 @@ import { fillMessage } from "@/lib/messages/fill-message";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type PupilLessonTableProps = {
+  pupilId: string;
   lessons: PupilLessonAnalyticsRow[];
   messages: PupilAnalyticsMessages;
   locale: string;
+  showCorrectActions?: boolean;
 };
 
 const formatVerses = (
@@ -30,17 +33,19 @@ const formatVerses = (
 };
 
 export const PupilLessonTable = ({
+  pupilId,
   lessons,
   messages,
   locale,
+  showCorrectActions = false,
 }: PupilLessonTableProps) => (
   <section className="space-y-2">
     <SectionTitle as="h2" className="text-lg">{messages.lessonsTitle}</SectionTitle>
     {lessons.length === 0 ? (
       <ContentText className="text-sm text-muted-foreground">{messages.lessonsEmpty}</ContentText>
     ) : (
-      <Card className="overflow-x-auto p-0">
-        <Table className="text-base">
+      <Card className="max-w-full overflow-x-auto p-0">
+        <Table className="w-full min-w-0 text-base">
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{messages.lessonColumnDate}</TableHead>
@@ -49,6 +54,7 @@ export const PupilLessonTable = ({
               <TableHead scope="col" className="text-right">{messages.lessonColumnVerses}</TableHead>
               <TableHead scope="col" className="text-right">{messages.lessonColumnTest}</TableHead>
               <TableHead scope="col" className="text-right">{messages.lessonColumnNotebook}</TableHead>
+              {showCorrectActions ? <TableHead scope="col" className="w-0" /> : null}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -92,6 +98,18 @@ export const PupilLessonTable = ({
                     </ContentText>
                   ) : null}
                 </TableCell>
+                {showCorrectActions ? (
+                  <TableCell className="text-right">
+                    {row.homeworkChecked ? (
+                      <CustomLink
+                        href={`/lessons/${row.lessonId}/check?pupil=${pupilId}`}
+                        className="text-sm text-cobalt-ink hover:underline"
+                      >
+                        {messages.lessonCorrectLabel}
+                      </CustomLink>
+                    ) : null}
+                  </TableCell>
+                ) : null}
               </TableRow>
             ))}
           </TableBody>

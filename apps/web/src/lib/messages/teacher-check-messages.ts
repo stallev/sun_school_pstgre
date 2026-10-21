@@ -2,15 +2,15 @@
 export type TeacherCheckMessages = {
   pageTitleCheck: string;
   pageTitleCorrection: string;
-  lessonSubtitle: (ordinal: number, title: string) => string;
+  lessonSubtitle: string;
   linkTable: string;
   linkLesson: string;
   correctionBanner: string;
-  progressLabel: (checked: number, total: number) => string;
-  pupilsToggle: (checked: number, total: number) => string;
+  progressLabel: string;
+  pupilsToggle: string;
   pupilsListLabel: string;
-  pupilIndex: (index: number, total: number) => string;
-  birthYear: (year: number) => string;
+  pupilIndex: string;
+  birthYear: string;
   birthYearUnknown: string;
   pointsLabel: string;
   presentLabel: string;
@@ -19,10 +19,10 @@ export type TeacherCheckMessages = {
   presentHint: string;
   singingLabel: string;
   reviewHint: string;
-  versesIntro: (lessonOrdinal: number) => string;
+  versesIntro: string;
   noVersesFirstLesson: string;
   noTestOnLesson: string;
-  verseLabel: (position: number) => string;
+  verseLabel: string;
   testLabel: string;
   notebookLabel: string;
   commentPlaceholder: string;
@@ -43,12 +43,12 @@ export type TeacherCheckMessages = {
   saveNext: string;
   completeCheck: string;
   saveCorrection: string;
-  savedToast: (name: string) => string;
+  savedToast: string;
   conflictTitle: string;
   conflictReload: string;
   finishedTitle: string;
-  finishedSubtitle: (ordinal: number, title: string, total: number) => string;
-  finishedProgress: (checked: number, total: number) => string;
+  finishedSubtitle: string;
+  finishedProgress: string;
   linkBricks: string;
   emptyRosterTitle: string;
   emptyRosterDescription: string;
@@ -73,6 +73,6 @@ export type TeacherCheckMessages = {
   tableFootnote: string;
   tableNoTest: string;
   tableVersesMobile: string;
-  tableOpenPupilAria: (name: string) => string;
-  tableProgressHeader: (checked: number, total: number) => string;
+  tableOpenPupilAria: string;
+  tableProgressHeader: string;
 };

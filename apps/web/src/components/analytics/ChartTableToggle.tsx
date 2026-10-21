@@ -23,7 +23,7 @@ import {
 import type { AnalyticsChartSeriesMessages } from "@/lib/messages/analytics-messages";
 import { LineChart } from "@/components/analytics/LineChart";
 
-const MIN_CHART_POINTS = 2;
+const DEFAULT_MIN_CHART_POINTS = 2;
 
 type ChartTableToggleProps = {
   chartId: string;
@@ -39,6 +39,7 @@ type ChartTableToggleProps = {
   yDomain?: [number, number];
   /** When set (e.g. year axis), replaces the date column header in table mode. */
   xLabel?: string;
+  minChartPoints?: number;
 };
 
 export const ChartTableToggle = ({
@@ -54,6 +55,7 @@ export const ChartTableToggle = ({
   emptyLabel,
   yDomain,
   xLabel,
+  minChartPoints = DEFAULT_MIN_CHART_POINTS,
 }: ChartTableToggleProps) => {
   const storageKey = `analytics-chart-view-${chartId}`;
   const [showTable, setShowTable] = useState(
@@ -74,7 +76,7 @@ export const ChartTableToggle = ({
         );
 
   const validPoints = points.filter((point) => point.value !== null);
-  const hasChart = validPoints.length >= MIN_CHART_POINTS;
+  const hasChart = validPoints.length >= minChartPoints;
 
   const handleToggle = (table: boolean) => {
     setShowTable(table);
@@ -82,14 +84,15 @@ export const ChartTableToggle = ({
   };
 
   return (
-    <Card className="flex flex-col gap-3 overflow-visible p-4">
+    <Card className="flex min-w-0 flex-col gap-3 overflow-visible p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <SectionTitle as="h2" className="text-base">{title}</SectionTitle>
         <div className="flex gap-1">
           <Button
             type="button"
             size="sm"
-            variant={showTable ? "outline" : "default"}
+            variant="outline"
+            className={showTable ? undefined : "border-line-strong bg-surface font-medium"}
             aria-pressed={!showTable}
             onClick={() => handleToggle(false)}
           >
@@ -98,7 +101,8 @@ export const ChartTableToggle = ({
           <Button
             type="button"
             size="sm"
-            variant={showTable ? "default" : "outline"}
+            variant="outline"
+            className={showTable ? "border-line-strong bg-surface font-medium" : undefined}
             aria-pressed={showTable}
             onClick={() => handleToggle(true)}
           >

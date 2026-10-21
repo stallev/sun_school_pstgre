@@ -9,6 +9,7 @@ import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickTeacherBricksMessages } from "@/lib/messages/pick-teacher-bricks-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
@@ -65,7 +66,10 @@ const BricksPage = async ({ searchParams }: BricksPageProps) => {
     <div className="space-y-6">
       <PageHeader
         title={messages.pageTitle}
-        description={messages.pageSubtitle(data.gradeName, data.yearName)}
+        description={fillMessage(messages.pageSubtitle, {
+          group: data.gradeName,
+          year: data.yearName,
+        })}
       />
       {data.isAdmin && data.grades.length > 1 ? (
         <LessonsGradeFilter

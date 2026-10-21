@@ -22,6 +22,7 @@ import type { LessonFormPageData } from "@/data/lessons/load-lesson-form-page.se
 import type { LessonFormVerseRow } from "@/data/lessons/load-lesson-form-page.server";
 import { formatVerseRefLabel } from "@/lib/lesson/format-verse-ref";
 import type { TeacherLessonFormMessages } from "@/lib/messages/teacher-lesson-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
 import { VersePicker } from "@/components/teacher/VersePicker";
@@ -269,7 +270,10 @@ export const LessonForm = ({
         <section className="rounded-xl border border-line bg-surface p-4 sm:p-5">
           <SectionTitle>{messages.versesTitle}</SectionTitle>
           <ContentText className="mt-1 text-sm text-ink-2">
-            {messages.versesHint(data.maxVersesPerLesson, translationLabel)}
+            {fillMessage(messages.versesHint, {
+              max: data.maxVersesPerLesson,
+              translation: translationLabel,
+            })}
           </ContentText>
           <div className="mt-4" id={`${formId}-verses`}>
             <VerseRefList
@@ -289,7 +293,7 @@ export const LessonForm = ({
                   .map((row) => {
                     const book = data.books.find((b) => b.id === row.bookId);
                     const ref = book ? formatVerseRefLabel(book, messages.locale, row) : "";
-                    return <li key={ref}>{messages.missingVerseItem(ref)}</li>;
+                    return <li key={ref}>{fillMessage(messages.missingVerseItem, { ref })}</li>;
                   })}
               </ul>
             </Banner>

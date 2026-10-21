@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { LessonFormVerseRow } from "@/data/lessons/load-lesson-form-page.server";
 import { formatVerseRefLabel } from "@/lib/lesson/format-verse-ref";
 import type { TeacherLessonFormMessages } from "@/lib/messages/teacher-lesson-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { BibleBookListItem } from "@/data/bible/list-books";
 
 type VerseRefListProps = {
@@ -38,7 +39,7 @@ export const VerseRefList = ({ verses, books, messages, onRemove, disabled }: Ve
               <p className="font-medium text-ink">{refLabel}</p>
               <p className="line-clamp-3 text-sm text-ink-2">
                 {verse.hasMissing
-                  ? messages.missingVerseItem(refLabel)
+                  ? fillMessage(messages.missingVerseItem, { ref: refLabel })
                   : verse.text ?? messages.pickerHint}
               </p>
             </div>
@@ -48,7 +49,7 @@ export const VerseRefList = ({ verses, books, messages, onRemove, disabled }: Ve
               size="icon"
               className="size-9 shrink-0"
               disabled={disabled}
-              aria-label={messages.versesRemove(refLabel)}
+              aria-label={fillMessage(messages.versesRemove, { ref: refLabel })}
               onClick={() => onRemove(index)}
             >
               <XIcon className="size-4" aria-hidden />

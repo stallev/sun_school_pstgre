@@ -1,7 +1,8 @@
 {
   "page": {
     "title": "Analytics",
-    "subtitle": "{group} · {year}"
+    "subtitle": "{group} · {year}",
+    "subtitle_with_lessons": "{group} · {year} · {lessons}"
   },
   "filters": {
     "grade_label": "Group",
@@ -12,11 +13,13 @@
     "month_label": "Month",
     "range_from": "From",
     "range_to": "To",
-    "period_apply": "Apply"
+    "period_apply": "Apply",
+    "period_chips_label": "Period"
   },
   "kpi": {
-    "attendance_label": "Average attendance",
-    "attendance_hint": "main sample · {count} pupils",
+    "attendance_label": "Main sample average attendance",
+    "attendance_hint": "{count} pupils at or above 50% attendance",
+    "out_of_ten": "out of 10",
     "verses_label": "Verses",
     "test_label": "Test",
     "notebook_label": "Notebook",
@@ -24,7 +27,7 @@
     "empty": "—"
   },
   "sample": {
-    "composition": "main A · under 50% B · inactive C · no lessons D — {a} · {b} · {c} · {d}",
+    "composition": "Sample: main {a} · under 50% {b} · inactive {c} · no checked lessons {d}",
     "included": "Attendance is at least 50% of checked lessons since enrollment.",
     "excluded_b": "Attendance is below 50% of checked lessons since enrollment.",
     "excluded_c": "Inactive pupil — excluded from group averages.",
@@ -36,6 +39,15 @@
   "pupil": {
     "page_subtitle": "School year {year}",
     "back_to_group": "Group analytics",
+    "birth_year": "born {year}",
+    "birth_year_unknown": "personal data removed",
+    "status_active": "active",
+    "status_inactive": "inactive",
+    "kpi_attendance_label": "Attendance",
+    "kpi_verses_label": "Verses per lesson",
+    "kpi_test_label": "Test",
+    "kpi_notebook_label": "Notebook",
+    "lesson_correct": "Correct",
     "personal_suffix": "(personal)",
     "attendance_checked": "{attended} of {checked}",
     "presence_title": "Attendance",
@@ -86,7 +98,8 @@
   },
   "tables": {
     "layer_a_title": "Main sample",
-    "layer_b_title": "Under 50% attendance",
+    "layer_b_title": "Excluded from averages: under 50% attendance",
+    "layer_b_intro": "Rare attendance should not skew group averages. Personal averages for these pupils are on their cards.",
     "layer_c_title": "Inactive",
     "layer_d_title": "No checked lessons",
     "birth_year_title": "By birth year",
@@ -97,6 +110,10 @@
     "column_attendance": "Attendance %",
     "column_attended": "Attended",
     "column_checked": "Checked",
+    "column_checked_lessons": "Checked lessons",
+    "column_attended_checked": "Attended / checked",
+    "attended_checked_value": "{attended} / {checked}",
+    "column_birth_year_kids": "Pupils",
     "column_verses": "Verses",
     "column_test": "Test",
     "column_notebook": "Notebook",
@@ -121,8 +138,13 @@
     "empty": "No data for this period."
   },
   "methodology": {
-    "title": "How we calculated",
+    "title": "How we calculated the numbers",
     "body": "Group averages and charts use the main sample only (≥50% attendance since enrollment). NULL means not graded; 0 counts. Late submission counts as submitted.",
+    "item_1": "Averages and charts include active pupils who attended at least half of checked lessons since joining the group.",
+    "item_2": "Verses for lesson N are recited on lesson N+1; the first lesson of the year has no point.",
+    "item_3": "Test and notebook: scores when present on a checked lesson and “submitted late”.",
+    "item_4": "“Not graded” is not zero: it is excluded from averages. A missing record on a checked lesson is a journal defect and does not count toward attendance.",
+    "item_5": "Scores entered later are attributed to the lesson date.",
     "attendance": "Share of the main sample present on each checked lesson.",
     "verses": "Average verses recited; review and first regular lesson have no point.",
     "test": "Average score 0–10; lessons without a test have no point.",
@@ -130,7 +152,8 @@
   },
   "data_quality": {
     "title": "Data quality",
-    "missing_records": "Missing records on checked lessons: {count}"
+    "missing_records": "Missing records on checked lessons: {count}",
+    "admin_summary": "Data quality: missing records on checked lessons — {missing} · migration duplicates removed — {duplicates}"
   },
   "deleted_data": {
     "title": "Deleted data",
@@ -144,6 +167,8 @@
   },
   "rating": {
     "page_title": "Ranking",
+    "page_title_group": "Group ranking",
+    "page_description": "A working tool: who needs help and who to recognize in class.",
     "page_subtitle_group": "{group} · {year}",
     "page_subtitle_school": "Whole school · {year}",
     "privacy_note": "Visible to teachers and administrators only. Not shown to parents or pupils and not for display mode.",
@@ -158,13 +183,17 @@
   "school": {
     "page_title": "School",
     "page_subtitle": "{year}",
+    "page_subtitle_active": "{year} · {status} · {lessons}",
+    "page_subtitle_closed": "{year} · {status}",
+    "status_active": "active",
+    "status_closed": "closed",
     "groups_table_title": "Group indicators",
     "groups_table_hint": "Pupils: main sample / total. Averages use the main sample.",
     "column_group": "Group",
     "column_teachers": "Teachers",
     "column_pupils": "Pupils",
     "column_attendance": "Attendance",
-    "column_average": "Avg. test",
+    "column_average": "Average score",
     "column_last_lesson": "Last lesson",
     "last_lesson_ok": "Checked {label}",
     "last_lesson_warn": "Incomplete {label}",

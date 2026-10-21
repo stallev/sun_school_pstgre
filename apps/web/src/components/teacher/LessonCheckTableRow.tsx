@@ -8,6 +8,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { LateBadge } from "@/components/teacher/LateBadge";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
 
 const scoreTone = (value: number | null): string => {
@@ -123,7 +124,7 @@ export const LessonCheckTableRow = ({
           <CheckTableScoreSelect
             max={2}
             value={row.verseScores[verse.lessonVerseId] ?? null}
-            ariaLabel={`${messages.verseLabel(verse.position)}: ${row.displayName}`}
+            ariaLabel={`${fillMessage(messages.verseLabel, { position: verse.position })}: ${row.displayName}`}
             disabled={readOnly}
             busy={busyCells.has(`${row.pupilId}:verse:${verse.lessonVerseId}`)}
             onChange={(score) => onVerseScoreChange(verse.lessonVerseId, score)}
@@ -180,7 +181,7 @@ export const LessonCheckTableRow = ({
       <TableCell className="pr-3 text-right">
         <CustomLink
           href={`/lessons/${lessonId}/check?pupil=${row.pupilId}`}
-          aria-label={messages.tableOpenPupilAria(row.displayName)}
+          aria-label={fillMessage(messages.tableOpenPupilAria, { name: row.displayName })}
           className="inline-flex size-8 items-center justify-center rounded-md text-cobalt-ink hover:bg-paper"
         >
           <PencilIcon className="size-4" aria-hidden />

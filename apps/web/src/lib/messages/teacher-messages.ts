@@ -1,9 +1,9 @@
 /** Serializable teacher-route copy passed to client roster UI. */
 export type TeacherRosterMessages = {
   selectAll: string;
-  selectPupil: (name: string) => string;
-  removeSelected: (count: number) => string;
-  enrolledSince: (isoDate: string) => string;
+  selectPupil: string;
+  removeSelected: string;
+  enrolledSince: string;
   consentYes: string;
   consentNo: string;
   consentNoLegacy: string;
@@ -22,5 +22,5 @@ export type TeacherRosterMessages = {
   yearClosedTitle: string;
   yearClosedDescription: string;
   pageTitle: string;
-  pageSubtitle: (groupName: string, count: number) => string;
+  pageSubtitle: string;
 };

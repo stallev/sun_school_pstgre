@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { LateBadge } from "@/components/teacher/LateBadge";
 import { ScoreGroup } from "@/components/teacher/ScoreGroup";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { SequentialCheckPupil } from "@/data/checks/sequential-check-types";
 
 export type CheckFormState = SequentialCheckPupil & {
@@ -96,13 +97,13 @@ export const CheckCard = ({
         <div className="space-y-1 py-3">
           {previousLessonOrdinal !== null ? (
             <ContentText tone="secondary" className="text-sm">
-              {messages.versesIntro(previousLessonOrdinal)}
+              {fillMessage(messages.versesIntro, { lessonOrdinal: previousLessonOrdinal })}
             </ContentText>
           ) : null}
           {versesToRecite.map((verse) => (
             <ScoreGroup
               key={verse.lessonVerseId}
-              label={messages.verseLabel(verse.position)}
+              label={fillMessage(messages.verseLabel, { position: verse.position })}
               max={2}
               value={pupil.verseScores[verse.lessonVerseId] ?? null}
               notRatedLabel={messages.scoreNotRated}

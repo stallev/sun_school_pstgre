@@ -6,7 +6,36 @@ import { ShellNavigation } from "@/components/shell/shell-navigation.client";
 import { UserMenu } from "@/components/shell/user-menu";
 import type { ResolvedNavItem } from "@/lib/shell/nav-resolver";
 import type { ShellMessages } from "@/lib/messages/shell-messages";
+import type { ShellScreenTitles } from "@/lib/shell/shell-screen-title";
 import { MatrixCell } from "./MatrixCell";
+
+const LAB_SCREEN_TITLES: ShellScreenTitles = {
+  today: "Today",
+  lessons: "Lessons",
+  lesson: "Lesson",
+  lessonTable: "Lesson table",
+  lessonForm: "Lesson form",
+  check: "Homework check",
+  analytics: "Analytics",
+  pupil: "Pupil",
+  group: "Group",
+  bricks: "Bricks",
+  rating: "Rating",
+  calendar: "Calendar",
+  verses: "Verses",
+  school: "School",
+  users: "Users",
+  approvals: "Approvals",
+  people: "People",
+  deletions: "Deletions",
+  groups: "Groups",
+  groupEdit: "Edit group",
+  year: "School year",
+  audit: "Audit log",
+  settings: "Settings",
+  profile: "Profile",
+  userProfile: "User profile",
+};
 
 const LAB_SHELL_MESSAGES: ShellMessages = {
   skipToContent: "Skip to content",
@@ -25,6 +54,9 @@ const LAB_SHELL_MESSAGES: ShellMessages = {
   devViewAs: "View as",
   devRoleAdmin: "Administrator",
   devRoleTeacher: "Teacher",
+  roleNameAdmin: "Administrator",
+  roleNameTeacher: "Teacher",
+  screenTitles: LAB_SCREEN_TITLES,
 };
 
 const SAMPLE_NAV: ResolvedNavItem[] = [
@@ -49,6 +81,7 @@ export const ShellMatrix = () => (
             navItems={SAMPLE_NAV}
             badgeCounts={{ approvals: 3, peopleGroup: 5 }}
             showDevSwitcher={false}
+            displayName="Anna Teacher"
           />
         </div>
       </MatrixCell>

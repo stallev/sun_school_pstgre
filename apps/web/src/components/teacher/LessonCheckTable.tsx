@@ -22,6 +22,7 @@ import { useLessonCheckTable } from "@/components/teacher/use-lesson-check-table
 import type { LessonTablePageData } from "@/data/checks/load-lesson-table-page.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
 
 type LessonCheckTableProps = {
@@ -57,13 +58,19 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
     );
   }
 
-  const subtitle = `${messages.lessonSubtitle(data.lessonOrdinal, data.lessonTitle)} · ${data.lessonDateIso}`;
+  const subtitle = `${fillMessage(messages.lessonSubtitle, {
+    ordinal: data.lessonOrdinal,
+    title: data.lessonTitle,
+  })} · ${data.lessonDateIso}`;
 
   return (
     <div className="space-y-4">
       <PageHeader
         title={messages.tablePageTitle}
-        description={`${subtitle} · ${messages.tableProgressHeader(data.checkedCount, data.pupils.length)}`}
+        description={`${subtitle} · ${fillMessage(messages.tableProgressHeader, {
+          checked: data.checkedCount,
+          total: data.pupils.length,
+        })}`}
         actions={
           <Button render={<CustomLink href={`/lessons/${data.lessonId}/check`} />}>
             <CheckIcon className="size-4" aria-hidden />
@@ -122,7 +129,7 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
               <TableHead scope="col" className="text-center">{messages.presentLabel}</TableHead>
               {data.versesToRecite.map((verse) => (
                 <TableHead key={verse.lessonVerseId} scope="col" className="text-center">
-                  {messages.verseLabel(verse.position)}
+                  {fillMessage(messages.verseLabel, { position: verse.position })}
                 </TableHead>
               ))}
               <TableHead scope="col" className="text-center">{messages.testLabel}</TableHead>
@@ -183,7 +190,7 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
               </span>
               <CustomLink
                 href={`/lessons/${data.lessonId}/check?pupil=${row.pupilId}`}
-                aria-label={messages.tableOpenPupilAria(row.displayName)}
+                aria-label={fillMessage(messages.tableOpenPupilAria, { name: row.displayName })}
                 className="inline-flex size-8 items-center justify-center rounded-md text-cobalt-ink"
               >
                 <PencilIcon className="size-4" aria-hidden />
@@ -222,7 +229,7 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
                       key={verse.lessonVerseId}
                       max={2}
                       value={row.verseScores[verse.lessonVerseId] ?? null}
-                      ariaLabel={`${messages.verseLabel(verse.position)}: ${row.displayName}`}
+                      ariaLabel={`${fillMessage(messages.verseLabel, { position: verse.position })}: ${row.displayName}`}
                       disabled={table.readOnly}
                       busy={table.busyCells.has(`${row.pupilId}:verse:${verse.lessonVerseId}`)}
                       onChange={(score) => table.mutateVerseScore(row.pupilId, verse.lessonVerseId, score)}

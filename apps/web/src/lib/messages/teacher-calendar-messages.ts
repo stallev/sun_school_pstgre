@@ -2,7 +2,7 @@ import type { AppLocale } from "@sunschool/domain";
 
 export type TeacherCalendarMessages = {
   pageTitle: string;
-  pageSubtitle: (group: string, year: string) => string;
+  pageSubtitle: string;
   newEvent: string;
   monthEventsTitle: string;
   emptyMonth: string;

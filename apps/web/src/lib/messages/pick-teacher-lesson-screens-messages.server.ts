@@ -1,8 +1,10 @@
 import "server-only";
 
-import type { AppLocale } from "@sunschool/domain";
+import { APP_LOCALE, type AppLocale } from "@sunschool/domain";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { formatPlural } from "@/lib/messages/plural";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
 const fill = (template: string, values: Record<string, string | number>): string =>
@@ -11,26 +13,67 @@ const fill = (template: string, values: Record<string, string | number>): string
     template,
   );
 
+const appLocaleToMessageLocale = (locale: AppLocale): MessageLocale =>
+  locale === APP_LOCALE.EN ? "en" : "ru";
+
 export const pickTeacherLessonScreensMessages = (
   teacher: Dictionary,
   locale: AppLocale,
-): TeacherLessonScreensMessages => ({
+): TeacherLessonScreensMessages => {
+  const messageLocale = appLocaleToMessageLocale(locale);
+
+  return {
   listTitle: getMessage(teacher, "lesson.list.title"),
   listSubtitle: (group, year) =>
     fill(getMessage(teacher, "lesson.list.subtitle"), { group, year }),
   versesPageTitle: getMessage(teacher, "lesson.verses_page.title"),
   versesPageSubtitle: (group, year) =>
     fill(getMessage(teacher, "lesson.verses_page.subtitle"), { group, year }),
+  versesLibraryDescription: getMessage(teacher, "lesson.verses_page.library_description"),
+  versesSearchLabel: getMessage(teacher, "lesson.verses_page.search_label"),
+  versesSearchPlaceholder: getMessage(teacher, "lesson.verses_page.search_placeholder"),
+  versesSearchEmpty: getMessage(teacher, "lesson.verses_page.search_empty"),
+  versesAddButton: getMessage(teacher, "lesson.verses_page.add_verse"),
+  versesAddDialogTitle: getMessage(teacher, "lesson.verses_page.add_dialog_title"),
+  versesAddDialogDescription: getMessage(teacher, "lesson.verses_page.add_dialog_description"),
   newLesson: getMessage(teacher, "lesson.list.new_lesson"),
   gradeFilterLabel: getMessage(teacher, "lesson.list.grade_filter"),
   gradeFilterApply: getMessage(teacher, "lesson.list.grade_apply"),
   emptyLessonsTitle: getMessage(teacher, "lesson.list.empty_title"),
   emptyLessonsDescription: getMessage(teacher, "lesson.list.empty_description"),
   emptyLessonsAction: getMessage(teacher, "lesson.list.empty_action"),
+  listOrdinalShort: (ordinal) =>
+    fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal }),
+  listCheckFraction: (checked, total) =>
+    fill(getMessage(teacher, "lesson.list.check_fraction"), { checked, total }),
+  listReviewBadge: getMessage(teacher, "lesson.list.review_badge"),
+  listReviewSubline: getMessage(teacher, "lesson.list.review_subline"),
   emptyVersesTitle: getMessage(teacher, "lesson.verses_page.empty_title"),
   emptyVersesDescription: getMessage(teacher, "lesson.verses_page.empty_description"),
   lessonCardTitle: (ordinal, title) =>
     fill(getMessage(teacher, "lesson.detail.card_title"), { n: ordinal, title }),
+  lessonMetaLine: (ordinal, dateLabel, leadName) =>
+    fill(getMessage(teacher, "lesson.detail.meta_line"), {
+      n: ordinal,
+      date: dateLabel,
+      lead: leadName,
+    }),
+  checkSectionTitle: getMessage(teacher, "lesson.detail.check_section_title"),
+  actionContinueCheck: getMessage(teacher, "lesson.detail.action_continue_check"),
+  actionStartCheck: getMessage(teacher, "lesson.detail.action_start_check"),
+  actionSummaryTable: getMessage(teacher, "lesson.detail.action_summary_table"),
+  assignedVersesTitle: getMessage(teacher, "lesson.detail.assigned_verses_title"),
+  assignedVersesHintNext: (nextOrdinal) =>
+    fill(getMessage(teacher, "lesson.detail.assigned_verses_hint_next"), { n: nextOrdinal }),
+  assignedVersesHintNextFallback: getMessage(
+    teacher,
+    "lesson.detail.assigned_verses_hint_next_fallback",
+  ),
+  recitingVersesTitle: getMessage(teacher, "lesson.detail.reciting_verses_title"),
+  recitingVersesHintPrev: (previousOrdinal) =>
+    fill(getMessage(teacher, "lesson.detail.reciting_verses_hint_prev"), { n: previousOrdinal }),
+  reviewSectionTitle: getMessage(teacher, "lesson.detail.review_section_title"),
+  reviewSectionDescription: getMessage(teacher, "lesson.detail.review_section_description"),
   dateLabel: getMessage(teacher, "lesson.detail.date"),
   leadLabel: getMessage(teacher, "lesson.detail.lead"),
   kindRegular: getMessage(teacher, "lesson.form.kind_regular"),
@@ -58,16 +101,66 @@ export const pickTeacherLessonScreensMessages = (
   checkStubDescription: getMessage(teacher, "lesson.check_stub.description"),
   checkStubBack: getMessage(teacher, "lesson.form.back_lesson"),
   usedInLessons: getMessage(teacher, "lesson.verses_page.used_in"),
-  lessonUsageLink: (ordinal, title) =>
-    fill(getMessage(teacher, "lesson.verses_page.usage_link"), { n: ordinal, title }),
+  lessonUsageLink: (ordinal, title) => {
+    const trimmed = title.trim();
+    const shortOrdinal = fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal });
+    const normalize = (value: string) => value.trim().toLowerCase();
+    if (
+      normalize(trimmed) === normalize(shortOrdinal) ||
+      normalize(trimmed) === `урок ${ordinal}` ||
+      normalize(trimmed) === `lesson ${ordinal}`
+    ) {
+      return fill(getMessage(teacher, "lesson.verses_page.usage_link_only"), { n: ordinal });
+    }
+    return fill(getMessage(teacher, "lesson.verses_page.usage_link"), { n: ordinal, title: trimmed });
+  },
   unassignedTitle: getMessage(teacher, "group.unassigned_title"),
   unassignedDescription: getMessage(teacher, "group.unassigned_description"),
   yearClosedTitle: getMessage(teacher, "group.year_closed_title"),
   yearClosedDescription: getMessage(teacher, "group.year_closed_description"),
   todayPageSubtitle: (group, year) =>
     fill(getMessage(teacher, "lesson.today.page_subtitle"), { group, year }),
+  todayGreeting: (name, part) => {
+    const key =
+      part === "morning"
+        ? "lesson.today.greeting_morning"
+        : part === "afternoon"
+          ? "lesson.today.greeting_afternoon"
+          : "lesson.today.greeting_evening";
+    return fill(getMessage(teacher, key), { name });
+  },
   todayIncompleteLabel: getMessage(teacher, "lesson.today.incomplete_label"),
   todayContinueCheck: getMessage(teacher, "lesson.today.continue_check"),
+  todayCheckedStudentsLabel: getMessage(teacher, "lesson.today.checked_students_label"),
   todayProgressStub: getMessage(teacher, "lesson.today.progress_stub"),
+  todayWeekTitle: getMessage(teacher, "lesson.today.week_title"),
+  todayWeekNextLesson: getMessage(teacher, "lesson.today.week_next_lesson"),
+  todayWeekNextLessonValue: (date, ordinal, title) =>
+    fill(getMessage(teacher, "lesson.today.week_next_lesson_value"), {
+      date,
+      n: ordinal,
+      title,
+    }),
+  todayWeekLate: getMessage(teacher, "lesson.today.week_late"),
+  todayWeekLateValue: (pupilName, lessonDate) =>
+    fill(getMessage(teacher, "lesson.today.week_late_value"), {
+      pupil: pupilName,
+      date: lessonDate,
+    }),
+  todayWeekBricks: getMessage(teacher, "lesson.today.week_bricks"),
+  todayWeekBricksValue: (count) =>
+    formatPlural(
+      {
+        one: getMessage(teacher, "lesson.today.week_bricks_value_one"),
+        few: getMessage(teacher, "lesson.today.week_bricks_value_few"),
+        many: getMessage(teacher, "lesson.today.week_bricks_value_many"),
+        other: getMessage(teacher, "lesson.today.week_bricks_value_many"),
+      },
+      count,
+      messageLocale,
+    ),
+  todayWeekBricksNegativeHint: getMessage(teacher, "lesson.today.week_bricks_negative_hint"),
+  todayWeekOpen: (label) => fill(getMessage(teacher, "lesson.today.week_open"), { label }),
   locale,
-});
+};
+};

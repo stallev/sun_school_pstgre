@@ -396,7 +396,10 @@
     "category_homework_verse_score": "Verse scores",
     "category_homework_score_event": "Score events",
     "category_brick_ledger": "Bricks",
-    "category_audit_log_child": "Child audit entries"
+    "category_audit_log_child": "Child audit entries",
+    "category_achievement_award": "Achievement awards",
+    "category_penalty": "Penalties",
+    "category_recitation_attempt": "Recitation attempts"
   },
   "form": {
     "last_name": "Last name",

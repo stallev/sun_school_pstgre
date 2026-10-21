@@ -17,14 +17,20 @@ import { loadSessionPolicyContext } from "@/lib/auth/load-session-policy.server"
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
-import { getDictionary } from "@/lib/messages/get-dictionary";
+import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { getPrisma } from "@/lib/db.server";
 
 export const instant = false;
 
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-  title: "Profile",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await getUiLocale();
+  const common = await getDictionary(locale, "common");
+  const pageTitle = getMessage(common, "shell.titles.profile");
+  const suffix = getMessage(common, "shell.document_suffix");
+  return {
+    robots: { index: false, follow: false },
+    title: `${pageTitle} — ${suffix}`,
+  };
 };
 
 const formatProfileSubtitle = (

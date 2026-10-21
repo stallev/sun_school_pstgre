@@ -1,7 +1,8 @@
 {
   "page": {
     "title": "Аналитика",
-    "subtitle": "{group} · {year}"
+    "subtitle": "{group} · {year}",
+    "subtitle_with_lessons": "{group} · {year} · {lessons}"
   },
   "filters": {
     "grade_label": "Группа",
@@ -12,11 +13,13 @@
     "month_label": "Месяц",
     "range_from": "С",
     "range_to": "По",
-    "period_apply": "Применить"
+    "period_apply": "Применить",
+    "period_chips_label": "Период"
   },
   "kpi": {
-    "attendance_label": "Средняя явка",
-    "attendance_hint": "основная выборка · {count} детей",
+    "attendance_label": "Средняя явка основной выборки",
+    "attendance_hint": "{count} детей с явкой от 50%",
+    "out_of_ten": "из 10",
     "verses_label": "Стихи",
     "test_label": "Тест",
     "notebook_label": "Тетрадь",
@@ -24,7 +27,7 @@
     "empty": "—"
   },
   "sample": {
-    "composition": "основная A · реже 50% B · неактивные C · без уроков D — {a} · {b} · {c} · {d}",
+    "composition": "Состав: основная выборка {a} · реже 50% {b} · неактивные {c} · без проверенных уроков {d}",
     "included": "Явка не ниже 50% проверенных уроков после зачисления.",
     "excluded_b": "Явка ниже 50% проверенных уроков после зачисления.",
     "excluded_c": "Неактивный ученик — в групповую статистику не входит.",
@@ -36,6 +39,15 @@
   "pupil": {
     "page_subtitle": "Учебный год {year}",
     "back_to_group": "Аналитика группы",
+    "birth_year": "{year} г. р.",
+    "birth_year_unknown": "личные данные удалены",
+    "status_active": "активен",
+    "status_inactive": "неактивен",
+    "kpi_attendance_label": "Явка",
+    "kpi_verses_label": "Стихов за урок",
+    "kpi_test_label": "Тест",
+    "kpi_notebook_label": "Тетрадь",
+    "lesson_correct": "Исправить",
     "personal_suffix": "(личное)",
     "attendance_checked": "{attended} из {checked}",
     "presence_title": "Присутствие",
@@ -86,7 +98,8 @@
   },
   "tables": {
     "layer_a_title": "Основная выборка",
-    "layer_b_title": "Реже 50% явки",
+    "layer_b_title": "Не входят в средние: явка ниже 50%",
+    "layer_b_intro": "Редкие посещения не должны искажать картину группы. Личные средние этих детей видны в их карточках.",
     "layer_c_title": "Неактивные",
     "layer_d_title": "Без проверенных уроков",
     "birth_year_title": "По году рождения",
@@ -97,6 +110,10 @@
     "column_attendance": "Явка %",
     "column_attended": "Был",
     "column_checked": "Проверено",
+    "column_checked_lessons": "Проверено уроков",
+    "column_attended_checked": "Был / проверено",
+    "attended_checked_value": "{attended} / {checked}",
+    "column_birth_year_kids": "Детей",
     "column_verses": "Стихи",
     "column_test": "Тест",
     "column_notebook": "Тетрадь",
@@ -121,8 +138,13 @@
     "empty": "Нет данных за период."
   },
   "methodology": {
-    "title": "Как мы считали",
+    "title": "Как мы считали цифры",
     "body": "Групповые средние и графики — только для основной выборки (явка от 50% с даты зачисления). NULL в журнале — «не оценивалось», 0 входит в среднее. «Сдано позже» учитывается как сдача.",
+    "item_1": "В средние и графики входят активные ученики, которые были не меньше чем на половине проверенных уроков с момента прихода в группу.",
+    "item_2": "Стихи урока N рассказывают на уроке N+1, и наблюдение относится к нему. Первый урок года не участвует.",
+    "item_3": "Тест и тетрадь: оценки при присутствии на проверенном уроке и «сдано позже».",
+    "item_4": "«Не оценивалось» — это не ноль: в среднее не входит. Если у ученика нет записи на проверенном уроке, это дефект журнала, урок не идёт в его явку.",
+    "item_5": "Оценки, внесённые позже, относятся к дате урока.",
     "attendance": "Доля присутствующих от основной выборки на каждый проверенный урок.",
     "verses": "Среднее число рассказанных стихов; обзорные и первый урок года без точки.",
     "test": "Средний балл 0–10; уроки без теста без точки.",
@@ -130,7 +152,8 @@
   },
   "data_quality": {
     "title": "Качество данных",
-    "missing_records": "Пропущенные записи на проверенных уроках: {count}"
+    "missing_records": "Пропущенные записи на проверенных уроках: {count}",
+    "admin_summary": "Качество данных: пропущенных записей на проверенных уроках — {missing} · удалено дублей при переносе — {duplicates}"
   },
   "deleted_data": {
     "title": "Удалённые данные",
@@ -144,6 +167,8 @@
   },
   "rating": {
     "page_title": "Рейтинг",
+    "page_title_group": "Рейтинг группы",
+    "page_description": "Рабочий инструмент: кому нужна помощь и кого отметить.",
     "page_subtitle_group": "{group} · {year}",
     "page_subtitle_school": "Вся школа · {year}",
     "privacy_note": "Видят только учителя и администратор. Родителям и детям не показывается, на проектор не выводится.",
@@ -158,13 +183,17 @@
   "school": {
     "page_title": "Школа",
     "page_subtitle": "{year}",
+    "page_subtitle_active": "{year} · {status} · {lessons}",
+    "page_subtitle_closed": "{year} · {status}",
+    "status_active": "активен",
+    "status_closed": "завершён",
     "groups_table_title": "Показатели групп",
     "groups_table_hint": "Ученики: основная выборка / всего. Средние — по основной выборке.",
     "column_group": "Группа",
     "column_teachers": "Учителя",
     "column_pupils": "Ученики",
     "column_attendance": "Посещаемость",
-    "column_average": "Ср. тест",
+    "column_average": "Средний балл",
     "column_last_lesson": "Последний урок",
     "last_lesson_ok": "Проверено {label}",
     "last_lesson_warn": "Не всё {label}",

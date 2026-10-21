@@ -19,7 +19,7 @@ export type AnalyticsLineChartProps = {
   ariaLabel: string;
 };
 
-const CHART_HEIGHT_PX = 224;
+const CHART_HEIGHT_PX = 280;
 const CHART_TICK = { fill: "var(--color-muted-foreground)", fontSize: 14 } as const;
 
 type ChartRow = {

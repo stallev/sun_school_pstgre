@@ -6,10 +6,12 @@ import { Banner } from "@/components/patterns/Banner";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
+import { buildLessonListRowViews } from "@/data/lessons/build-lesson-list-row-views.server";
 import { loadLessonsListPage } from "@/data/lessons/load-lessons-list-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
@@ -21,10 +23,13 @@ type LessonsPageProps = {
 const LessonsPage = async ({ searchParams }: LessonsPageProps) => {
   const params = await searchParams;
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
-  const data = await loadLessonsListPage(await getPrisma(), actor.userId, params.gradeId ?? null);
+  const db = await getPrisma();
+  const data = await loadLessonsListPage(db, actor.userId, params.gradeId ?? null);
   const locale = await getUiLocale();
+  const appLocale = messageLocaleToAppLocale(locale);
+  const timeZone = await getSchoolTimezone();
   const teacherDict = await getDictionary(locale, "teacher");
-  const messages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
+  const messages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
 
   if (data.kind === "no_active_year") {
     return (
@@ -47,6 +52,11 @@ const LessonsPage = async ({ searchParams }: LessonsPageProps) => {
     );
   }
 
+  const lessonRows =
+    data.lessons.length > 0
+      ? await buildLessonListRowViews(db, data.lessons, data.gradeId, appLocale, timeZone)
+      : [];
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -68,7 +78,7 @@ const LessonsPage = async ({ searchParams }: LessonsPageProps) => {
       {data.isAdmin && data.grades.length > 1 ? (
         <LessonsGradeFilter grades={data.grades} gradeId={data.gradeId} messages={messages} />
       ) : null}
-      {data.lessons.length === 0 ? (
+      {lessonRows.length === 0 ? (
         <EmptyState
           title={messages.emptyLessonsTitle}
           description={messages.emptyLessonsDescription}
@@ -81,11 +91,13 @@ const LessonsPage = async ({ searchParams }: LessonsPageProps) => {
           }
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
-          {data.lessons.map((row) => (
-            <LessonListRow key={row.lessonId} row={row} messages={messages} />
+        <ol className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
+          {lessonRows.map((row) => (
+            <li key={row.lessonId}>
+              <LessonListRow row={row} messages={messages} />
+            </li>
           ))}
-        </div>
+        </ol>
       )}
     </div>
   );

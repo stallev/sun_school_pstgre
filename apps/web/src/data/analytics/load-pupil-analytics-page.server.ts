@@ -34,6 +34,8 @@ export type PupilAnalyticsPageData =
       kind: "page";
       pupilId: string;
       pupilName: string;
+      birthYear: number | null;
+      isActive: boolean;
       gradeId: string;
       backToGroupGradeId: string | null;
       yearId: string;
@@ -88,9 +90,22 @@ export async function loadPupilAnalyticsPage(
 
   const pupil = await db.pupil.findFirst({
     where: { id: pupilId, organizationId },
-    select: { id: true, firstName: true, lastName: true, middleName: true },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      middleName: true,
+      birthDate: true,
+      isActive: true,
+    },
   });
   if (!pupil) return { kind: "not_found" };
+
+  const birthYear = pupil.birthDate ? pupil.birthDate.getUTCFullYear() : null;
+  const pupilMeta = {
+    birthYear,
+    isActive: pupil.isActive,
+  };
 
   const periodFilter = buildAnalyticsPeriodFilter(year.id, params);
   const enrollments = await db.enrollment.findMany({
@@ -157,6 +172,7 @@ export async function loadPupilAnalyticsPage(
       kind: "page",
       pupilId,
       pupilName: formatDisplayName(pupil),
+      ...pupilMeta,
       gradeId: yearGradeIds[0]!,
       backToGroupGradeId,
       yearId: year.id,
@@ -186,6 +202,7 @@ export async function loadPupilAnalyticsPage(
     kind: "page",
     pupilId,
     pupilName: formatDisplayName(pupil),
+    ...pupilMeta,
     gradeId,
     backToGroupGradeId,
     yearId: year.id,

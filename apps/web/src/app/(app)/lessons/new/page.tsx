@@ -10,6 +10,7 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickTeacherLessonFormMessages } from "@/lib/messages/pick-teacher-lesson-messages.server";
 
 export const instant = false;
@@ -58,7 +59,7 @@ const NewLessonPage = async ({ searchParams }: NewLessonPageProps) => {
     <div className="space-y-6">
       <PageHeader
         title={messages.newTitle}
-        description={messages.pageSubtitle(gradeName, data.yearName)}
+        description={fillMessage(messages.pageSubtitle, { group: gradeName, year: data.yearName })}
         actions={
           <CustomLink href="/lessons" className="text-sm text-cobalt-ink">
             {messages.backToLessons}

@@ -78,6 +78,7 @@ const TopNavGroup = ({
                 isActive={isNavLeafActive(child, activeKey)}
                 badgeCount={child.badgeSlotId ? badgeCounts[child.badgeSlotId] : 0}
                 onNavigate={() => setOpen(false)}
+                showDescription
               />
             </li>
           ))}

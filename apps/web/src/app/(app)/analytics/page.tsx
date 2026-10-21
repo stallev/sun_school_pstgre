@@ -1,10 +1,12 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { ACADEMIC_YEAR_STATUS, USER_ROLE } from "@sunschool/domain";
-import { AnalyticsPeriodFilter } from "@/components/analytics/AnalyticsPeriodFilter";
+import { AnalyticsAdminDataQualityRow } from "@/components/analytics/AnalyticsAdminDataQualityRow";
+import { AnalyticsGradeChips } from "@/components/analytics/AnalyticsGradeChips";
+import { AnalyticsPeriodChips } from "@/components/analytics/AnalyticsPeriodChips";
+import { AnalyticsPeriodKpiSection } from "@/components/analytics/AnalyticsPeriodKpiSection";
 import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
 import { ConductedLessonsTable } from "@/components/analytics/ConductedLessonsTable";
-import { DataQualityNote } from "@/components/analytics/DataQualityNote";
 import { DeletedDataNote } from "@/components/analytics/DeletedDataNote";
 import { GroupAnalyticsTables } from "@/components/analytics/GroupAnalyticsTables";
 import { MethodologyNote } from "@/components/analytics/MethodologyNote";
@@ -18,7 +20,6 @@ import { AnalyticsRetryButton } from "@/components/analytics/AnalyticsRetryButto
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { ErrorState } from "@/components/patterns/ErrorState";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { LessonsGradeFilter } from "@/components/teacher/LessonsGradeFilter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { loadAnalyticsPage } from "@/data/analytics/load-analytics-page.server";
 import { requireRole } from "@/lib/auth/require-user";
@@ -30,6 +31,8 @@ import { formatAnalyticsShortDate } from "@/lib/analytics/format-analytics-displ
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
+import { formatPlural, getPluralForms } from "@/lib/messages/plural";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 
 type AnalyticsPageProps = {
   searchParams: Promise<{
@@ -61,6 +64,7 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
   const appLocale = messageLocaleToAppLocale(locale);
   const analyticsDict = await getDictionary(locale, "analytics");
   const commonDict = await getDictionary(locale, "common");
+  const messageLocale = locale as MessageLocale;
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickAnalyticsMessages(analyticsDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
@@ -95,22 +99,47 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
   const tableRows = buildGroupYearTableRows(data.yearTotals.rows);
   const selectedYearRow = data.yearTotals.rows.find((row) => row.yearId === data.yearId);
   const isActiveYear = selectedYearRow?.status === ACADEMIC_YEAR_STATUS.ACTIVE;
-  const periodHiddenFields = { year: data.yearId };
-  const gradeHiddenFields = { mode: data.periodFilter.mode, year: data.yearId };
+  const periodLessonCount = analytics.charts.attendance.length;
+  const lessonsLabel = formatPlural(
+    getPluralForms(commonDict, "plural.lessons_count"),
+    periodLessonCount,
+    messageLocale,
+  );
+  const pageDescription = fillMessage(messages.pageSubtitleWithLessons, {
+    group: data.gradeName,
+    year: data.yearName,
+    lessons: lessonsLabel,
+  });
+  const periodQuery: Record<string, string> = {};
+  if (data.periodFilter.mode === "month") {
+    periodQuery.mode = "month";
+    periodQuery.month = data.periodFilter.month;
+  } else if (data.periodFilter.mode === "range") {
+    periodQuery.mode = "range";
+    periodQuery.from = data.periodFilter.from;
+    periodQuery.to = data.periodFilter.to;
+  } else {
+    periodQuery.mode = "year";
+  }
+  const monthChipValue =
+    data.periodFilter.mode === "month"
+      ? data.periodFilter.month
+      : new Date().toISOString().slice(0, 7);
+  const monthChipLabel =
+    data.periodFilter.mode === "month"
+      ? data.periodFilter.month
+      : messages.periodMonth;
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title={messages.pageTitle}
-        description={fillMessage(messages.pageSubtitle, { group: data.gradeName, year: data.yearName })}
-      />
+    <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+      <PageHeader title={messages.pageTitle} description={pageDescription} />
       {data.isAdmin && data.grades.length > 1 ? (
-        <LessonsGradeFilter
+        <AnalyticsGradeChips
           grades={data.grades}
           gradeId={data.gradeId}
-          messages={lessonMessages}
-          actionPath="/analytics"
-          hiddenFields={gradeHiddenFields}
+          yearId={data.yearId}
+          periodQuery={periodQuery}
+          ariaLabel={lessonMessages.gradeFilterLabel}
         />
       ) : null}
       <AnalyticsYearScope committedYearId={data.yearId}>
@@ -131,16 +160,22 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
         </AnalyticsYearDetail>
       ) : (
         <>
-          <AnalyticsPeriodFilter
+          <AnalyticsPeriodChips
             gradeId={data.gradeId}
+            yearId={data.yearId}
             periodFilter={data.periodFilter}
             messages={messages}
-            hiddenFields={periodHiddenFields}
+            monthChipValue={monthChipValue}
+            monthChipLabel={monthChipLabel}
           />
           <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
-          {isActiveYear && data.isAdmin && data.dataQuality && data.dataQuality.missingPupilRecordsOnCheckedLessons > 0 ? (
-            <DataQualityNote
-              missingRecords={data.dataQuality.missingPupilRecordsOnCheckedLessons}
+          {analytics.hasCheckedLessonsInPeriod ? (
+            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} />
+          ) : null}
+          {isActiveYear && data.isAdmin ? (
+            <AnalyticsAdminDataQualityRow
+              missingRecords={data.dataQuality?.missingPupilRecordsOnCheckedLessons ?? 0}
+              migrationDuplicates={0}
               messages={messages}
             />
           ) : null}
@@ -170,7 +205,7 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
           ) : (
             <>
               <SampleCompositionRow snapshot={analytics} messages={messages} />
-              <div className="grid gap-4 lg:grid-cols-2">
+              <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
                 <ChartTableToggle
                   chartId="attendance"
                   title={messages.charts.attendanceTitle}
@@ -223,10 +258,10 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
                   yDomain={[0, 10]}
                 />
               </div>
-              <GroupAnalyticsTables snapshot={analytics} messages={messages} />
               {isActiveYear ? (
                 <ConductedLessonsTable snapshot={data.conducted} messages={messages} />
               ) : null}
+              <GroupAnalyticsTables snapshot={analytics} messages={messages} locale={appLocale} />
               <MethodologyNote messages={messages} />
             </>
           )}

@@ -12,6 +12,7 @@ import {
 export type ResolvedNavLeaf = {
   key: string;
   label: string;
+  description?: string;
   href: string;
   badgeSlotId?: NavBadgeSlotId;
 };
@@ -35,9 +36,14 @@ export const resolveShellRole = (roles: readonly UserRole[]): UserRole => {
 
 export const resolveNavDefs = (role: UserRole): NavEntryDef[] => NAV_BY_ROLE[role];
 
-const resolveLeaf = (leaf: NavLeafDef, label: string): ResolvedNavLeaf => ({
+const resolveLeaf = (
+  leaf: NavLeafDef,
+  label: string,
+  description: string | undefined,
+): ResolvedNavLeaf => ({
   key: leaf.key,
   label,
+  description,
   href: leaf.href,
   badgeSlotId: leaf.badgeSlotId,
 });
@@ -56,10 +62,16 @@ export const resolveNavItems = (
 ): ResolvedNavItem[] =>
   resolveNavDefs(role).map((entry) => {
     if (isNavGroup(entry)) {
-      const children = entry.children.map((child) => resolveLeaf(child, getLabel(child.messageKey)));
+      const children = entry.children.map((child) =>
+        resolveLeaf(
+          child,
+          getLabel(child.messageKey),
+          child.descriptionMessageKey ? getLabel(child.descriptionMessageKey) : undefined,
+        ),
+      );
       return resolveGroup(entry, getLabel(entry.messageKey), children);
     }
-    return resolveLeaf(entry, getLabel(entry.messageKey));
+    return resolveLeaf(entry, getLabel(entry.messageKey), undefined);
   });
 
 export const normalizePathname = (pathname: string): string => {

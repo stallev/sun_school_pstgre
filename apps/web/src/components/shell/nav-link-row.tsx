@@ -12,11 +12,18 @@ type NavLinkRowProps = {
   isActive: boolean;
   badgeCount?: number;
   onNavigate?: () => void;
+  showDescription?: boolean;
 };
 
 const badgeLabel = (template: string, count: number) => template.replace("{count}", String(count));
 
-export const NavLinkRow = ({ leaf, isActive, badgeCount = 0, onNavigate }: NavLinkRowProps) => {
+export const NavLinkRow = ({
+  leaf,
+  isActive,
+  badgeCount = 0,
+  onNavigate,
+  showDescription = false,
+}: NavLinkRowProps) => {
   const messages = useShellMessages();
   const slotId: NavBadgeSlotId | undefined = leaf.badgeSlotId;
   const count = slotId ? badgeCount : 0;
@@ -27,11 +34,17 @@ export const NavLinkRow = ({ leaf, isActive, badgeCount = 0, onNavigate }: NavLi
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
       className={cn(
-        "flex min-h-11 items-center rounded-lg px-3 py-2 text-ink no-underline hover:bg-paper",
+        "flex min-h-11 rounded-lg px-3 py-2 text-ink no-underline hover:bg-paper",
+        showDescription ? "items-start gap-2" : "items-center",
         isActive && "bg-cobalt-soft text-cobalt-ink",
       )}
     >
-      <span className="flex-1">{leaf.label}</span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center gap-2 font-medium">{leaf.label}</span>
+        {showDescription && leaf.description ? (
+          <span className="mt-0.5 block text-sm text-muted">{leaf.description}</span>
+        ) : null}
+      </span>
       {count > 0 ? (
         <NavBadge count={count} ariaLabel={badgeLabel(messages.badgeInQueue, count)} />
       ) : null}

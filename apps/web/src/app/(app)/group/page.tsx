@@ -14,6 +14,7 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickTeacherRosterMessages } from "@/lib/messages/pick-teacher-roster-messages.server";
 
 type GroupPageProps = {
@@ -81,7 +82,10 @@ const GroupPage = async ({ searchParams }: GroupPageProps) => {
     <div className="space-y-6">
       <PageHeader
         title={messages.pageTitle}
-        description={messages.pageSubtitle(data.gradeName, data.pupils.length)}
+        description={fillMessage(messages.pageSubtitle, {
+          group: data.gradeName,
+          count: data.pupils.length,
+        })}
       />
       {data.yearClosed ? (
         <Banner tone="warning" title={messages.yearClosedTitle}>

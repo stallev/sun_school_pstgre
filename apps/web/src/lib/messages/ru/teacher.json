@@ -98,10 +98,26 @@
       "grade_apply": "Показать",
       "empty_title": "Уроков пока нет",
       "empty_description": "Создайте первый урок для группы в активном году.",
-      "empty_action": "Новый урок"
+      "empty_action": "Новый урок",
+      "ordinal_short": "урок {n}",
+      "check_fraction": "Проверено {checked}/{total}",
+      "review_badge": "обзорный",
+      "review_subline": "Без стихов и теста — только тетрадь"
     },
     "detail": {
       "card_title": "Урок {n} · {title}",
+      "meta_line": "Урок {n} · {date} · ведёт {lead}",
+      "check_section_title": "Проверка домашнего задания",
+      "action_continue_check": "Продолжить проверку",
+      "action_start_check": "Начать проверку",
+      "action_summary_table": "Сводная таблица",
+      "assigned_verses_title": "Задано на этот урок",
+      "assigned_verses_hint_next": "· расскажут на уроке {n}",
+      "assigned_verses_hint_next_fallback": "· расскажут на следующем обычном уроке",
+      "reciting_verses_title": "Рассказывают на этом уроке",
+      "reciting_verses_hint_prev": "· заданы на уроке {n}",
+      "review_section_title": "Обзорный урок",
+      "review_section_description": "Золотые стихи не задаются и не рассказываются, теста нет — на проверке оцениваются тетрадь и спевка.",
       "date": "Дата",
       "lead": "Ведёт",
       "has_test_yes": "Тест на уроке",
@@ -122,10 +138,18 @@
     "verses_page": {
       "title": "Золотые стихи",
       "subtitle": "{group} · {year}",
+      "library_description": "Общая библиотека школы. Текст — Синодальный перевод, хранится один раз.",
+      "search_label": "Поиск",
+      "search_placeholder": "Поиск по ссылке или словам",
+      "search_empty": "Ничего не найдено",
+      "add_verse": "Добавить стих",
+      "add_dialog_title": "Добавить золотой стих",
+      "add_dialog_description": "Текст подставится из Синодального перевода.",
       "empty_title": "Золотых стихов пока нет",
       "empty_description": "Стихи появятся здесь после добавления в уроки.",
       "used_in": "Использован в уроках",
-      "usage_link": "Урок {n} · {title}"
+      "usage_link": "Урок {n} · {title}",
+      "usage_link_only": "Урок {n}"
     },
     "check_stub": {
       "title": "Проверка ДЗ",
@@ -134,9 +158,24 @@
     "today": {
       "page_title": "Сегодня",
       "page_subtitle": "{group} · {year}",
+      "greeting_morning": "Доброе утро, {name}",
+      "greeting_afternoon": "Добрый день, {name}",
+      "greeting_evening": "Добрый вечер, {name}",
       "incomplete_label": "Незавершённая проверка",
       "continue_check": "Продолжить проверку",
-      "progress_stub": "Прогресс проверки появится в следующем релизе."
+      "checked_students_label": "Проверено учеников",
+      "progress_stub": "Прогресс проверки появится в следующем релизе.",
+      "week_title": "На этой неделе",
+      "week_next_lesson": "Следующий урок",
+      "week_next_lesson_value": "{date} · Урок {n} · {title}",
+      "week_late": "Сдали позже",
+      "week_late_value": "{pupil} принёс тетрадь за {date} — внесите оценку",
+      "week_bricks": "Кирпичики к выдаче",
+      "week_bricks_value_one": "{count} кирпичик к выдаче",
+      "week_bricks_value_few": "{count} кирпичика к выдаче",
+      "week_bricks_value_many": "{count} кирпичиков к выдаче",
+      "week_bricks_negative_hint": "у одного ученика отрицательный остаток",
+      "week_open": "Открыть: {label}"
     }
   },
   "check": {

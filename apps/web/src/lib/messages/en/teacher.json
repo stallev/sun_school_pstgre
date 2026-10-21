@@ -98,10 +98,26 @@
       "grade_apply": "Show",
       "empty_title": "No lessons yet",
       "empty_description": "Create the first lesson for this group in the active year.",
-      "empty_action": "New lesson"
+      "empty_action": "New lesson",
+      "ordinal_short": "lesson {n}",
+      "check_fraction": "Checked {checked}/{total}",
+      "review_badge": "review",
+      "review_subline": "No verses or test — notebook only"
     },
     "detail": {
       "card_title": "Lesson {n} · {title}",
+      "meta_line": "Lesson {n} · {date} · led by {lead}",
+      "check_section_title": "Homework check",
+      "action_continue_check": "Continue check",
+      "action_start_check": "Start check",
+      "action_summary_table": "Summary table",
+      "assigned_verses_title": "Assigned for this lesson",
+      "assigned_verses_hint_next": "· recited in lesson {n}",
+      "assigned_verses_hint_next_fallback": "· recited in the next regular lesson",
+      "reciting_verses_title": "Recited in this lesson",
+      "reciting_verses_hint_prev": "· assigned in lesson {n}",
+      "review_section_title": "Review lesson",
+      "review_section_description": "Golden verses are not assigned or recited; there is no test — notebook and singing are graded in the check.",
       "date": "Date",
       "lead": "Led by",
       "has_test_yes": "In-class test",
@@ -122,10 +138,18 @@
     "verses_page": {
       "title": "Golden verses",
       "subtitle": "{group} · {year}",
+      "library_description": "School-wide verse library. Text is stored once in the Synodal translation.",
+      "search_label": "Search",
+      "search_placeholder": "Search by reference or words",
+      "search_empty": "Nothing found",
+      "add_verse": "Add verse",
+      "add_dialog_title": "Add golden verse",
+      "add_dialog_description": "Text is filled from the Synodal translation.",
       "empty_title": "No golden verses yet",
       "empty_description": "Verses appear here after you add them to lessons.",
       "used_in": "Used in lessons",
-      "usage_link": "Lesson {n} · {title}"
+      "usage_link": "Lesson {n} · {title}",
+      "usage_link_only": "Lesson {n}"
     },
     "check_stub": {
       "title": "Homework check",
@@ -134,9 +158,24 @@
     "today": {
       "page_title": "Today",
       "page_subtitle": "{group} · {year}",
+      "greeting_morning": "Good morning, {name}",
+      "greeting_afternoon": "Good afternoon, {name}",
+      "greeting_evening": "Good evening, {name}",
       "incomplete_label": "Incomplete homework check",
       "continue_check": "Continue check",
-      "progress_stub": "Homework check progress will appear here in the next release."
+      "checked_students_label": "Pupils checked",
+      "progress_stub": "Homework check progress will appear here in the next release.",
+      "week_title": "This week",
+      "week_next_lesson": "Next lesson",
+      "week_next_lesson_value": "{date} · Lesson {n} · {title}",
+      "week_late": "Submitted later",
+      "week_late_value": "{pupil} brought the notebook for {date} — enter the score",
+      "week_bricks": "Bricks to issue",
+      "week_bricks_value_one": "{count} brick to issue",
+      "week_bricks_value_few": "{count} bricks to issue",
+      "week_bricks_value_many": "{count} bricks to issue",
+      "week_bricks_negative_hint": "one pupil has a negative balance",
+      "week_open": "Open: {label}"
     }
   },
   "check": {

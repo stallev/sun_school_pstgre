@@ -33,6 +33,7 @@ export type GroupAnalyticsPupilRow = {
   pupilId: string;
   displayName: string;
   birthYear: number | null;
+  enrolledSinceIso: string;
   layer: SampleLayer;
   attendanceRate: number | null;
   checkedLessonCount: number;
@@ -241,6 +242,7 @@ export async function computeGroupAnalyticsSnapshot(
       birthYear: enrollment.pupil.birthDate
         ? enrollment.pupil.birthDate.getUTCFullYear()
         : null,
+      enrolledSinceIso: isoFromEnrollmentStartsOn(enrollment.startsOn),
       layer,
       attendanceRate: attendance.rate,
       checkedLessonCount: attendance.checkedWithRecordCount,

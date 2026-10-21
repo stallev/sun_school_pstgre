@@ -15,6 +15,7 @@ type ShellNavigationProps = {
   previewNavItems?: ResolvedNavItem[];
   badgeCounts: NavBadgeCounts;
   showDevSwitcher: boolean;
+  displayName: string;
 };
 
 export const ShellNavigation = ({
@@ -23,6 +24,7 @@ export const ShellNavigation = ({
   previewNavItems,
   badgeCounts,
   showDevSwitcher,
+  displayName,
 }: ShellNavigationProps) => {
   const pathname = usePathname();
   const [previewRole, setPreviewRole] = useState<UserRole>(shellRole);
@@ -56,7 +58,7 @@ export const ShellNavigation = ({
 
   return (
     <div className="flex flex-1 items-center justify-center gap-2 lg:justify-start">
-      <NavDrawer {...navProps} />
+      <NavDrawer {...navProps} displayName={displayName} />
       <TopNav {...navProps} />
       {showDevSwitcher && previewNavItems && DevRoleSwitcher ? (
         <DevRoleSwitcher previewRole={previewRole} onPreviewRoleChange={setPreviewRole} />

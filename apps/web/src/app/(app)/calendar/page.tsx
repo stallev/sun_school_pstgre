@@ -14,6 +14,7 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { pickTeacherCalendarMessages } from "@/lib/messages/pick-teacher-calendar-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 
@@ -84,7 +85,10 @@ const CalendarPage = async ({ searchParams }: CalendarPageProps) => {
     <div className="space-y-6">
       <PageHeader
         title={messages.pageTitle}
-        description={messages.pageSubtitle(data.gradeName, data.yearName)}
+        description={fillMessage(messages.pageSubtitle, {
+          group: data.gradeName,
+          year: data.yearName,
+        })}
         actions={
           data.canMutate ? (
             <Button render={<CustomLink href={calendarHref(data.gradeId, data.monthKey, { date: `${data.monthKey}-01` })} />}>
