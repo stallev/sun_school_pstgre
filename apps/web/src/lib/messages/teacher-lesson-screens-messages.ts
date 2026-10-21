@@ -73,6 +73,7 @@ export type TeacherLessonScreensMessages = {
   todayIncompleteLabel: string;
   todayContinueCheck: string;
   todayCheckedStudentsLabel: string;
+  todayCheckedOfWord: string;
   todayProgressStub: string;
   todayWeekTitle: string;
   todayWeekNextLesson: string;

@@ -132,6 +132,7 @@ export const pickTeacherLessonScreensMessages = (
   todayIncompleteLabel: getMessage(teacher, "lesson.today.incomplete_label"),
   todayContinueCheck: getMessage(teacher, "lesson.today.continue_check"),
   todayCheckedStudentsLabel: getMessage(teacher, "lesson.today.checked_students_label"),
+  todayCheckedOfWord: getMessage(teacher, "lesson.today.checked_of_word"),
   todayProgressStub: getMessage(teacher, "lesson.today.progress_stub"),
   todayWeekTitle: getMessage(teacher, "lesson.today.week_title"),
   todayWeekNextLesson: getMessage(teacher, "lesson.today.week_next_lesson"),

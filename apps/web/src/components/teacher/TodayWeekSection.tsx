@@ -7,11 +7,12 @@ import type { TodayWeekRow } from "@/data/lessons/load-today-week-rows.server";
 type TodayWeekSectionProps = {
   title: string;
   rows: TodayWeekRow[];
+  className?: string;
 };
 
-export const TodayWeekSection = ({ title, rows }: TodayWeekSectionProps) => (
-  <section className="space-y-3">
-    <SectionTitle>{title}</SectionTitle>
+export const TodayWeekSection = ({ title, rows, className }: TodayWeekSectionProps) => (
+  <section className={className}>
+    <SectionTitle className="mb-3">{title}</SectionTitle>
     <dl className="divide-y divide-line rounded-xl border border-line bg-surface">
       {rows.map((row) => (
         <div

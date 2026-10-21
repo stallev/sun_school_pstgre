@@ -61,16 +61,18 @@ const TodayPage = async () => {
   const pageSubtitle = messages.todayPageSubtitle(data.gradeName, data.yearName);
 
   return (
-    <div className="space-y-6">
+    <div>
       <PageHeader title={pageTitle} description={pageSubtitle} />
       {data.lesson ? (
-        <TodayLessonCard
-          lesson={data.lesson}
-          gradeId={data.gradeId}
-          yearClosed={data.yearClosed}
-          canMutate={data.canMutate}
-          messages={messages}
-        />
+        <div className="grid grid-cols-1 gap-4 lg:gap-5">
+          <TodayLessonCard
+            lesson={data.lesson}
+            gradeId={data.gradeId}
+            yearClosed={data.yearClosed}
+            canMutate={data.canMutate}
+            messages={messages}
+          />
+        </div>
       ) : (
         <EmptyState
           title={messages.emptyLessonsTitle}
@@ -84,7 +86,13 @@ const TodayPage = async () => {
           }
         />
       )}
-      <TodayWeekSection title={messages.todayWeekTitle} rows={data.weekRows} />
+      {data.weekRows.length > 0 ? (
+        <TodayWeekSection
+          className="mt-6"
+          title={messages.todayWeekTitle}
+          rows={data.weekRows}
+        />
+      ) : null}
     </div>
   );
 };

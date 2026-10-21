@@ -103,7 +103,7 @@
 | `register` | `/register` | регистрация | экран | [x] CU4 |
 | `pending` | `/pending` | заявка/отклонена | экран | [x] CU4 |
 | `profile` | `/profile` | активные | экран | [x] CU5 |
-| `today` | `/today` | teacher | экран | [ ] CU6 |
+| `today` | `/today` | teacher | экран | [x] CU6 |
 | `lessons` | `/lessons` | teacher | экран | [ ] CU7 |
 | `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [ ] CU8 |
 | `lesson` | `/lessons/[lessonId]` | teacher | экран | [ ] CU8 |
@@ -179,7 +179,7 @@
 
 ### P10-CU6 — fix(ui): align teacher today layout · Review: diff-only · Commit: auto
 
-- [ ] P10-T6 · T1 · Spec: P03 today · прототип `vToday`  
+- [x] P10-T6 · T1 · Spec: P03 today · прототип `vToday`  
       Files: `apps/web/src/app/(app)/today/**`  
       Acceptance: матрица `today` × teacher × 4 ширины; все видимые блоки (карточки, типографика, отступы)  
       Paths: H · N n/a · S n/a
