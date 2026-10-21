@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
+import { connection } from "next/server";
 import { LESSON_KIND, type MutationResult } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
@@ -39,12 +40,10 @@ async function loadConductedLessonsFromDb(
   db: PrismaClient,
   gradeId: string,
   period: ResolvedAnalyticsPeriod,
+  todayIso: string,
 ): Promise<ConductedLessonsSnapshot> {
   const { gte, lte } = periodDateRange(period);
-  const todayDate = new Date();
-  const today = isoFromCalendarDate(
-    new Date(Date.UTC(todayDate.getUTCFullYear(), todayDate.getUTCMonth(), todayDate.getUTCDate())),
-  );
+  const today = todayIso;
 
   const assignments = await db.teacherAssignment.findMany({
     where: { gradeId, academicYearId: period.academicYearId },
@@ -138,12 +137,13 @@ async function loadConductedLessonsFromDb(
 async function loadCachedConductedLessons(
   gradeId: string,
   period: ResolvedAnalyticsPeriod,
+  todayIso: string,
 ): Promise<ConductedLessonsSnapshot> {
   "use cache";
   cacheTag(CACHE_TAGS.analyticsConducted(gradeId, period.academicYearId));
   cacheLife("minutes");
   const db = await getPrisma();
-  return loadConductedLessonsFromDb(db, gradeId, period);
+  return loadConductedLessonsFromDb(db, gradeId, period, todayIso);
 }
 
 export async function getConductedLessons(
@@ -176,6 +176,8 @@ export async function getConductedLessons(
   });
   if (isMutationErr(access)) return access;
 
-  const data = await loadCachedConductedLessons(gradeId, access.period);
+  await connection();
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const data = await loadCachedConductedLessons(gradeId, access.period, todayIso);
   return { ok: true, data };
 }

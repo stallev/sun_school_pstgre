@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { connection } from "next/server";
 import { USER_ROLE } from "@sunschool/domain";
 import { homeRouteFor } from "@sunschool/policy-edge";
 
@@ -47,6 +48,9 @@ const fillTemplate = (template: string, values: Record<string, string | number>)
   );
 
 const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
+  // `new Date()` in this shell (legacy-consent “today”, session expiry) is sync IO.
+  // `instant = false` does not allow it during prerender; `connection()` opts the rest into request time.
+  await connection();
   const context = await requireActiveUser();
   const locale = await getUiLocale();
   const { APP_ENV } = getServerEnv();
