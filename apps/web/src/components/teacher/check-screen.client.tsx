@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, LayoutGridIcon } from "lucide-react";
 import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
@@ -69,16 +69,24 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
       ? fillMessage(messages.birthYear, { year: pupil.birthYear })
       : messages.birthYearUnknown;
 
+  const lessonMeta = `${fillMessage(messages.lessonSubtitle, {
+    ordinal: data.lessonOrdinal,
+    title: data.lessonTitle,
+  })} · ${data.lessonDateIso}`;
+
   return (
     <div className="space-y-4 pb-24 lg:pb-6">
+      <header className="space-y-1">
+        <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
+          {messages.linkLesson}
+        </CustomLink>
+      </header>
       <PageHeader
         title={screen.isCorrection ? messages.pageTitleCorrection : messages.pageTitleCheck}
-        description={fillMessage(messages.lessonSubtitle, {
-          ordinal: data.lessonOrdinal,
-          title: data.lessonTitle,
-        })}
+        description={lessonMeta}
         actions={
           <Button variant="outline" render={<CustomLink href={`/lessons/${data.lessonId}/table`} />}>
+            <LayoutGridIcon className="size-4" aria-hidden />
             {messages.linkTable}
           </Button>
         }

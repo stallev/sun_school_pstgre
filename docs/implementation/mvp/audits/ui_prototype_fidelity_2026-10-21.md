@@ -289,3 +289,20 @@
 | `lessonForm` · `new`/`edit` `page.tsx` | заголовок | PageHeader + back link cobalt | `PageHeader` + `CustomLink` | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `lesson` + `lessonForm` × teacher × 4 ширины — новых deviation-строк нет; чекбокс «календарь» и rich-text план — post-MVP / Switch «тест» (продукт), не визуал CU8.
+
+## Проход 7 — CU9 Check and lesson table
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5  
+**Эталоны:** прототип `vCheck` · `vLessonTable` · [`homework_check_flow_spec`](../specs/homework_check_flow_spec.md)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU9) | Ширины | Серьёзность |
+|-------------|------|----------------------------|------------------|--------|-------------|
+| `check` · `check-screen.client.tsx` | шапка | back «К уроку», H1, строка урока с датой, outline «Сводная таблица» + иконка | back link, `PageHeader`, дата в meta, `LayoutGridIcon` | 390–1024 | **нет отклонения** |
+| `check` · `CheckProgress.tsx` | прогресс | полоса + счётчик справа | `mb-4 flex` meter + `checked / total` | 390–1024 | **нет отклонения** |
+| `check` · `CheckCardHeader.tsx` | ФИО ученика | `h2` ~1.5rem, баллы 1.75rem | `Heading` section + `text-[1.5rem]`, `NumberDisplay` 1.75rem | 390–1024 | **нет отклонения** |
+| `check` · layout | сетка | `lg:grid-cols-[16rem_…]`, mobile details, fixed bar | совпадает со spec §5.1 | 390–1024 | **нет отклонения** |
+| `lessonTable` · `LessonCheckTable.tsx` | шапка | back «К уроку», H1 таблица, primary «Последовательная проверка» | back link, `PageHeader`, primary CTA с `CheckIcon` | 390–1024 | **нет отклонения** |
+| `lessonTable` · `LessonCheckTableRow.tsx` | score select | `h-8 rounded-md` | совпадает | 390–1024 | **нет отклонения** |
+| `lessonTable` · mobile cards | карточки `< md` | divide, warn/paper row tone | `ul` + grid полей | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `check` + `lessonTable` × teacher × 4 ширины — новых deviation-строк нет; RSC-сериализация `TeacherCheckMessages` — строки + `fillMessage` на клиенте (не визуал CU9).

@@ -47,7 +47,7 @@ export const CheckTableScoreSelect = ({
       onChange(next === "" ? null : Number(next));
     }}
     className={cn(
-      "h-9 min-w-14 rounded-lg border border-input bg-surface px-1 text-center text-sm tabular-nums",
+      "h-8 min-w-14 rounded-md border border-input bg-surface px-1 text-center text-sm tabular-nums",
       tone,
     )}
   >

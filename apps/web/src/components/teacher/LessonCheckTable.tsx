@@ -65,6 +65,11 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
 
   return (
     <div className="space-y-4">
+      <header className="space-y-1">
+        <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
+          {messages.linkLesson}
+        </CustomLink>
+      </header>
       <PageHeader
         title={messages.tablePageTitle}
         description={`${subtitle} · ${fillMessage(messages.tableProgressHeader, {
@@ -274,7 +279,7 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
         ))}
       </ul>
 
-      <p className="text-sm text-muted-foreground">{messages.tableFootnote}</p>
+      <p className="mt-3 text-sm text-muted-foreground">{messages.tableFootnote}</p>
     </div>
   );
 };

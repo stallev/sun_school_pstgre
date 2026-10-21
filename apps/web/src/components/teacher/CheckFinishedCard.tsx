@@ -22,9 +22,7 @@ export const CheckFinishedCard = ({
 }: CheckFinishedCardProps) => (
   <Card className="max-w-2xl space-y-4 p-4 sm:p-5">
     <div className="space-y-1">
-      <Heading level="page" className="font-display text-[1.75rem] font-medium leading-tight">
-        {title}
-      </Heading>
+      <Heading level="page">{title}</Heading>
       <ContentText tone="secondary">{subtitle}</ContentText>
     </div>
     <ContentText className="text-ink-2">{progressLabel}</ContentText>

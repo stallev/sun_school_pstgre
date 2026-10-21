@@ -107,8 +107,8 @@
 | `lessons` | `/lessons` | teacher | экран | [x] CU7 |
 | `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [x] CU8 |
 | `lesson` | `/lessons/[lessonId]` | teacher | экран | [x] CU8 |
-| `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [ ] CU9 |
-| `check` | `/check`, `/lessons/[lessonId]/check` | teacher | экран | [ ] CU9 |
+| `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [x] CU9 |
+| `check` | `/check`, `/lessons/[lessonId]/check` | teacher | экран | [x] CU9 |
 | `group` | `/group` | teacher | экран | [ ] CU10 |
 | `bricks` | `/bricks` | teacher, admin | экран | [ ] CU11 |
 | `calendar` | `/calendar` | teacher, admin | экран | [ ] CU11 |
@@ -200,7 +200,7 @@
 
 ### P10-CU9 — fix(ui): align check and lesson table · Review: diff-only · Commit: auto
 
-- [ ] P10-T9 · T1 · Spec: [`homework_check_flow_spec`](../specs/homework_check_flow_spec.md)  
+- [x] P10-T9 · T1 · Spec: [`homework_check_flow_spec`](../specs/homework_check_flow_spec.md)  
       Files: check + lesson table routes/components  
       Acceptance: `check` + `lessonTable` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a
