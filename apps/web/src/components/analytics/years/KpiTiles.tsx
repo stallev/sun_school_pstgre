@@ -58,7 +58,7 @@ export const KpiTiles = ({
     <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {(["attendance", "verses", "test", "notebook"] as const).map((key) => (
         <Card key={key} className="flex flex-col gap-1 p-4">
-          <dt className="text-base text-muted-foreground">{metricLabel(key, messages)}</dt>
+          <dt className="text-sm text-muted-foreground">{metricLabel(key, messages)}</dt>
           <dd>
             <NumberDisplay className="text-2xl">{formatValue(key, totals[key], messages)}</NumberDisplay>
           </dd>

@@ -306,3 +306,19 @@
 | `lessonTable` · mobile cards | карточки `< md` | divide, warn/paper row tone | `ul` + grid полей | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `check` + `lessonTable` × teacher × 4 ширины — новых deviation-строк нет; RSC-сериализация `TeacherCheckMessages` — строки + `fillMessage` на клиенте (не визуал CU9).
+
+## Проход 8 — CU10 Teacher group roster
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5  
+**Эталоны:** прототип `vGroup` · `groupYearSummary` · [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §5.6  
+**Ширины:** 390, 768, 820, 1024 · роль: teacher (ACTIVE)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU10) | Ширины | Серьёзность |
+|-------------|------|----------------------------|------------------|--------|-------------|
+| `group` · `page.tsx` | шапка | H1 «Моя группа», подпись группа · возраст · N учеников | `PageHeader` title + `pageSubtitle` fillMessage | 390–1024 | **нет отклонения** |
+| `group` · `GroupYearSummarySection.tsx` | итоги года | `mb-6`, H2 «Итоги года · {год}», outline «Все годы» + chevron, `kpiTiles` | `SectionTitle` h2, `KpiTiles`, `size="sm"` link + `ChevronRightIcon` | 390–1024 | **нет отклонения** |
+| `group` · `KpiTiles.tsx` | KPI | `grid-cols-2 sm:grid-cols-4`, label `text-sm`, display `text-2xl` | совпадает | 390–1024 | **нет отклонения** |
+| `group` · `RosterTable.tsx` | карточка состава | `CARD` rounded-xl, toolbar `px-5 py-3`, строки `flex items-center gap-3` | `bg-surface` border, `px-5`, destructive exclude | 390–1024 | **нет отклонения** |
+| `group` · `RosterTable.tsx` | подсказка | `mt-3 text-sm text-muted` вне карточки | `unenrollHint` под карточкой | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `group` × teacher × 4 ширины — новых deviation-строк нет; CTA «Добавить учеников» в шапке прототипа заменён формой внизу карточки (P09); статус согласия вместо явки/слоя B/D — продукт (СО-4), не визуал CU10.

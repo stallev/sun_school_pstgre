@@ -109,7 +109,7 @@
 | `lesson` | `/lessons/[lessonId]` | teacher | экран | [x] CU8 |
 | `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [x] CU9 |
 | `check` | `/check`, `/lessons/[lessonId]/check` | teacher | экран | [x] CU9 |
-| `group` | `/group` | teacher | экран | [ ] CU10 |
+| `group` | `/group` | teacher | экран | [x] CU10 |
 | `bricks` | `/bricks` | teacher, admin | экран | [ ] CU11 |
 | `calendar` | `/calendar` | teacher, admin | экран | [ ] CU11 |
 | `rating` | `/rating` | teacher, admin | экран | [ ] CU12 |
@@ -207,7 +207,7 @@
 
 ### P10-CU10 — fix(ui): align teacher group roster · Review: diff-only · Commit: auto
 
-- [ ] P10-T10 · T1 · Spec: school_year contract · analytics §5.6 на `/group`  
+- [x] P10-T10 · T1 · Spec: school_year contract · analytics §5.6 на `/group`  
       Files: `apps/web/src/app/(app)/group/**`  
       Acceptance: `group` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a

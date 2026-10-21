@@ -82,9 +82,10 @@ export const RosterTable = ({
   };
 
   return (
+    <>
     <div className="overflow-hidden rounded-xl border border-line bg-surface">
       {canMutate ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
           <label className="inline-flex min-h-11 items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -97,8 +98,9 @@ export const RosterTable = ({
           </label>
           <Button
             type="button"
-            variant="outline"
-            className="min-h-11 border-danger text-danger hover:bg-danger-soft"
+            variant="destructive"
+            size="sm"
+            className="min-h-11"
             disabled={pending || selected.length === 0}
             aria-busy={pending}
             onClick={handleBulkUnenroll}
@@ -109,26 +111,24 @@ export const RosterTable = ({
       ) : null}
       <ul className="divide-y divide-line">
         {pupils.map((row) => (
-          <li key={row.pupilId} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-start gap-3">
+          <li key={row.pupilId} className="flex items-center gap-3 px-5 py-3">
               {canMutate ? (
                 <input
                   type="checkbox"
-                  className="mt-1 size-4 shrink-0 accent-cobalt-ink"
+                  className="size-4 shrink-0 accent-cobalt-ink"
                   checked={selected.includes(row.pupilId)}
                   onChange={() => toggleOne(row.pupilId)}
                   disabled={pending}
                   aria-label={fillMessage(messages.selectPupil, { name: row.displayName })}
                 />
               ) : null}
-              <div className="min-w-0">
-                <ContentText className="font-medium text-ink">{row.displayName}</ContentText>
-                <ContentText tone="secondary" className="text-sm">
-                  {fillMessage(messages.enrolledSince, { date: row.enrolledSinceIso })}
-                </ContentText>
-              </div>
+            <div className="min-w-0 flex-1">
+              <ContentText className="truncate font-medium text-ink">{row.displayName}</ContentText>
+              <ContentText tone="secondary" className="text-sm">
+                {fillMessage(messages.enrolledSince, { date: row.enrolledSinceIso })}
+              </ContentText>
             </div>
-            <StatusText tone={row.isLegacyPending || !row.hasConsent ? "warn" : "ok"}>
+            <StatusText className="shrink-0 text-xs sm:text-sm" tone={row.isLegacyPending || !row.hasConsent ? "warn" : "ok"}>
               {row.isLegacyPending
                 ? messages.consentNoLegacy
                 : row.hasConsent
@@ -139,7 +139,7 @@ export const RosterTable = ({
         ))}
       </ul>
       {canMutate && addCandidates.length > 0 ? (
-        <form action={enrollAction} className="flex flex-wrap items-end gap-3 border-t border-line px-4 py-3">
+        <form action={enrollAction} className="flex flex-wrap items-end gap-3 border-t border-line px-5 py-3">
           <input type="hidden" name="gradeId" value={gradeId} />
           <input type="hidden" name="startsOn" value={defaultDate} />
           <label className="grid min-w-[12rem] flex-1 gap-1 text-sm">
@@ -164,9 +164,10 @@ export const RosterTable = ({
           </Button>
         </form>
       ) : null}
-      <ContentText tone="secondary" className="px-4 py-3 text-sm">
-        {messages.unenrollHint}
-      </ContentText>
     </div>
+    <ContentText tone="secondary" className="mt-3 text-sm">
+      {messages.unenrollHint}
+    </ContentText>
+    </>
   );
 };
