@@ -2,8 +2,7 @@
 
 import { USER_ROLE, type UserRole } from "@sunschool/domain";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState, type ComponentType } from "react";
-import { NavDrawer } from "@/components/shell/nav-drawer";
+import { useMemo } from "react";
 import { TopNav } from "@/components/shell/top-nav";
 import type { NavBadgeCounts } from "@/components/shell/shell-nav-types";
 import type { ResolvedNavItem } from "@/lib/shell/nav-resolver";
@@ -15,30 +14,19 @@ type ShellNavigationProps = {
   previewNavItems?: ResolvedNavItem[];
   badgeCounts: NavBadgeCounts;
   showDevSwitcher: boolean;
-  displayName: string;
+  previewRole: UserRole;
 };
 
+/** Desktop topnav only — drawer trigger lives in `shell-header`. */
 export const ShellNavigation = ({
   shellRole,
   navItems,
   previewNavItems,
   badgeCounts,
   showDevSwitcher,
-  displayName,
+  previewRole,
 }: ShellNavigationProps) => {
   const pathname = usePathname();
-  const [previewRole, setPreviewRole] = useState<UserRole>(shellRole);
-  const [DevRoleSwitcher, setDevRoleSwitcher] = useState<ComponentType<{
-    previewRole: UserRole;
-    onPreviewRoleChange: (role: UserRole) => void;
-  }> | null>(null);
-
-  useEffect(() => {
-    if (!showDevSwitcher) return;
-    void import("@/components/shell/dev-role-switcher").then((mod) => {
-      setDevRoleSwitcher(() => mod.DevRoleSwitcher);
-    });
-  }, [showDevSwitcher]);
 
   const displayItems = useMemo(() => {
     if (!showDevSwitcher || !previewNavItems) return navItems;
@@ -57,12 +45,8 @@ export const ShellNavigation = ({
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center gap-2 lg:justify-start">
-      <NavDrawer {...navProps} displayName={displayName} />
+    <div className="hidden min-w-0 flex-1 lg:flex lg:items-center lg:justify-start">
       <TopNav {...navProps} />
-      {showDevSwitcher && previewNavItems && DevRoleSwitcher ? (
-        <DevRoleSwitcher previewRole={previewRole} onPreviewRoleChange={setPreviewRole} />
-      ) : null}
     </div>
   );
 };

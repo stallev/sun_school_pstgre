@@ -25,7 +25,7 @@ export const CheckCardHeader = ({
         level="section"
         ref={headingRef}
         tabIndex={-1}
-        className="truncate text-[1.5rem] leading-tight"
+        className="truncate"
       >
         {name}
       </Heading>

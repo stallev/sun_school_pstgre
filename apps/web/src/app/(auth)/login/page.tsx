@@ -15,9 +15,13 @@ import { AuthScreen } from "@/components/auth/AuthScreen";
 
 export const instant = false;
 
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-  title: "Login",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await getUiLocale();
+  const auth = await getDictionary(locale, "auth");
+  return {
+    robots: { index: false, follow: false },
+    title: getMessage(auth, "login.title"),
+  };
 };
 
 type LoginPageProps = {

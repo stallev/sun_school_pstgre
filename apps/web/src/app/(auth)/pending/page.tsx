@@ -17,13 +17,17 @@ import { loadSessionPolicyContext } from "@/lib/auth/load-session-policy.server"
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
-import { getDictionary } from "@/lib/messages/get-dictionary";
+import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
 export const instant = false;
 
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-  title: "Pending",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await getUiLocale();
+  const auth = await getDictionary(locale, "auth");
+  return {
+    robots: { index: false, follow: false },
+    title: getMessage(auth, "pending.title_pending"),
+  };
 };
 
 const PendingPage = async () => {

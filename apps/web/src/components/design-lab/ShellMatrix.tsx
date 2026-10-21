@@ -81,7 +81,7 @@ export const ShellMatrix = () => (
             navItems={SAMPLE_NAV}
             badgeCounts={{ approvals: 3, peopleGroup: 5 }}
             showDevSwitcher={false}
-            displayName="Anna Teacher"
+            previewRole={USER_ROLE.TEACHER}
           />
         </div>
       </MatrixCell>

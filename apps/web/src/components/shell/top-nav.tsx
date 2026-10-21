@@ -1,7 +1,7 @@
 "use client";
 
+import { ChevronDownIcon } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { NavBadge } from "@/components/shell/nav-badge";
 import { NavLinkRow } from "@/components/shell/nav-link-row";
 import type { ShellNavProps } from "@/components/shell/shell-nav-types";
@@ -11,7 +11,12 @@ import {
   isNavLeafActive,
   isResolvedNavGroup,
   type ResolvedNavGroup,
+  type ResolvedNavLeaf,
 } from "@/lib/shell/nav-resolver";
+import {
+  SHELL_NAV_DROPDOWN_PANEL,
+  shellTopNavTriggerClass,
+} from "@/lib/shell/nav-chrome-classes";
 import { cn } from "@/lib/utils";
 
 const badgeLabel = (template: string, count: number) => template.replace("{count}", String(count));
@@ -49,12 +54,12 @@ const TopNavGroup = ({
 
   return (
     <li className="relative">
-      <Button
+      <button
         ref={buttonRef}
         type="button"
-        variant="ghost"
-        className={cn("min-h-11", groupActive && "bg-cobalt-soft text-cobalt-ink")}
+        className={shellTopNavTriggerClass({ isActive: groupActive, isOpen: open })}
         aria-expanded={open}
+        aria-haspopup="menu"
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
         onBlur={(event) => {
@@ -65,26 +70,45 @@ const TopNavGroup = ({
         {groupBadge > 0 ? (
           <NavBadge count={groupBadge} ariaLabel={badgeLabel(messages.badgeInQueue, groupBadge)} />
         ) : null}
-      </Button>
+        <ChevronDownIcon
+          className={cn("size-4 transition-transform duration-150", open && "rotate-180")}
+          aria-hidden
+        />
+      </button>
       {open ? (
-        <ul
-          id={panelId}
-          className="absolute left-0 top-full z-50 mt-1 min-w-[14rem] rounded-lg border border-line bg-surface py-1 shadow-float"
-        >
+        <div id={panelId} role="menu" className={cn(SHELL_NAV_DROPDOWN_PANEL, "left-0")}>
           {group.children.map((child) => (
-            <li key={child.key}>
-              <NavLinkRow
-                leaf={child}
-                isActive={isNavLeafActive(child, activeKey)}
-                badgeCount={child.badgeSlotId ? badgeCounts[child.badgeSlotId] : 0}
-                onNavigate={() => setOpen(false)}
-                showDescription
-              />
-            </li>
+            <NavLinkRow
+              key={child.key}
+              leaf={child}
+              isActive={isNavLeafActive(child, activeKey)}
+              badgeCount={child.badgeSlotId ? badgeCounts[child.badgeSlotId] : 0}
+              onNavigate={() => setOpen(false)}
+              showDescription
+              density="topnav"
+            />
           ))}
-        </ul>
+        </div>
       ) : null}
     </li>
+  );
+};
+
+const TopNavLeaf = ({
+  leaf,
+  activeKey,
+}: {
+  leaf: ResolvedNavLeaf;
+  activeKey: string | null;
+}) => {
+  const isActive = isNavLeafActive(leaf, activeKey);
+  return (
+    <NavLinkRow
+      leaf={leaf}
+      isActive={isActive}
+      density="topnav"
+      onNavigate={() => {}}
+    />
   );
 };
 
@@ -108,7 +132,7 @@ export const TopNav = ({ items, activeKey, activeGroupKey, badgeCounts }: ShellN
           }
           return (
             <li key={item.key}>
-              <NavLinkRow leaf={item} isActive={isNavLeafActive(item, activeKey)} onNavigate={() => {}} />
+              <TopNavLeaf leaf={item} activeKey={activeKey} />
             </li>
           );
         })}

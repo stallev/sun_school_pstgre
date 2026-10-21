@@ -7,15 +7,19 @@ import { getPrisma } from "@/lib/db.server";
 import { hasServerEnv } from "@/lib/env.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
-import { getDictionary } from "@/lib/messages/get-dictionary";
+import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { AuthScreen } from "@/components/auth/AuthScreen";
 import { getPrivacyContent } from "@/app/(auth)/privacy/content";
 
 export const instant = false;
 
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-  title: "Privacy",
+export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await getUiLocale();
+  const auth = await getDictionary(locale, "auth");
+  return {
+    robots: { index: false, follow: false },
+    title: getMessage(auth, "privacy.title"),
+  };
 };
 
 const PrivacyPage = async () => {

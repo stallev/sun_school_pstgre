@@ -49,15 +49,19 @@ export const AnalyticsPeriodKpiSection = ({
       <dl className="grid min-w-0 grid-cols-3 gap-4 border-t border-line pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
         <div>
           <dt className="text-sm text-muted">{messages.kpiVersesLabel}</dt>
-          <dd className="mt-1 font-display text-2xl tabular-nums text-ink">
-            {formatMetric(kpi.versesAverage.average, kpi.versesAverage.observationCount, messages)}
+          <dd className="mt-1">
+            <NumberDisplay size="kpi">
+              {formatMetric(kpi.versesAverage.average, kpi.versesAverage.observationCount, messages)}
+            </NumberDisplay>
           </dd>
           <dd className="text-xs text-muted">N={kpi.versesAverage.observationCount}</dd>
         </div>
         <div>
           <dt className="text-sm text-muted">{messages.kpiTestLabel}</dt>
-          <dd className="mt-1 font-display text-2xl tabular-nums text-ink">
-            {formatMetric(kpi.testAverage.average, kpi.testAverage.observationCount, messages)}
+          <dd className="mt-1">
+            <NumberDisplay size="kpi">
+              {formatMetric(kpi.testAverage.average, kpi.testAverage.observationCount, messages)}
+            </NumberDisplay>
           </dd>
           <dd className="text-xs text-muted">
             {messages.kpiOutOfTen} · N={kpi.testAverage.observationCount}
@@ -65,8 +69,14 @@ export const AnalyticsPeriodKpiSection = ({
         </div>
         <div>
           <dt className="text-sm text-muted">{messages.kpiNotebookLabel}</dt>
-          <dd className="mt-1 font-display text-2xl tabular-nums text-ink">
-            {formatMetric(kpi.notebookAverage.average, kpi.notebookAverage.observationCount, messages)}
+          <dd className="mt-1">
+            <NumberDisplay size="kpi">
+              {formatMetric(
+                kpi.notebookAverage.average,
+                kpi.notebookAverage.observationCount,
+                messages,
+              )}
+            </NumberDisplay>
           </dd>
           <dd className="text-xs text-muted">
             {messages.kpiOutOfTen} · N={kpi.notebookAverage.observationCount}
