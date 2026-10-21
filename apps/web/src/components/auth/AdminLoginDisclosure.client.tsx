@@ -92,7 +92,7 @@ export const AdminLoginDisclosure = ({
           ) : null}
 
           <form onSubmit={handleCredentialsSubmit} className="space-y-4" aria-busy={pending}>
-            <h2 id="admin-login-heading" className="text-sm font-medium text-ink-2">
+            <h2 id="admin-login-heading" className="font-body text-sm font-medium text-ink-2">
               {messages.login.adminTitle}
             </h2>
             <FieldGroup>

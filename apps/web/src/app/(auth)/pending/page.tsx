@@ -8,9 +8,8 @@ import { PendingRefreshButton } from "@/components/auth/PendingRefreshButton.cli
 import { PendingSubmittedToast } from "@/components/auth/PendingSubmittedToast.client";
 import { AuthScreen } from "@/components/auth/AuthScreen";
 import { PendingStatusSteps } from "@/components/auth/PendingStatusSteps";
-import { ContentText, Heading } from "@/components/atoms";
 import { CustomLink } from "@/components/ui/custom-link";
-import { Banner } from "@/components/patterns/Banner";
+import { PageHeader } from "@/components/patterns/PageHeader";
 import { loadPendingPageContext } from "@/data/access/load-pending-context.server";
 import { requireSession } from "@/lib/auth/require-user";
 import { loadSessionPolicyContext } from "@/lib/auth/load-session-policy.server";
@@ -18,6 +17,7 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { AlertTriangleIcon } from "lucide-react";
 
 export const instant = false;
 
@@ -57,50 +57,64 @@ const PendingPage = async () => {
       }).format(new Date(pending.submittedAt))
     : null;
 
+  const headerDescription =
+    pending.status === ACCOUNT_STATUS.REJECTED
+      ? pending.displayName
+      : submittedLabel
+        ? `${pending.displayName} · ${submittedLabel}`
+        : pending.displayName;
+
   return (
     <AuthScreen variant="reading">
       <div className="space-y-6">
         <Suspense fallback={null}>
           <PendingSubmittedToast message={authMessages.register.toastSubmitted} />
         </Suspense>
-        <header className="flex items-start justify-between gap-3">
-          <Heading>{title}</Heading>
-          <AuthSignOutLink
-            signOutLabel={shellMessages.signOut}
-            signOutPendingLabel={shellMessages.signOutPending}
-          />
-        </header>
-
-        <ContentText>{pending.displayName}</ContentText>
-        {submittedLabel ? (
-          <ContentText tone="muted" className="text-muted-foreground">{submittedLabel}</ContentText>
-        ) : null}
-
-        {pending.rejectReason ? (
-          <Banner tone="error" title={authMessages.pending.titleRejected}>
-            <ContentText>{pending.rejectReason}</ContentText>
-          </Banner>
-        ) : null}
-
-        <PendingStatusSteps
-          stepSignIn={authMessages.pending.stepSignIn}
-          stepConsent={authMessages.pending.stepConsent}
-          stepConsentVersion={pending.consentVersion}
-          stepReview={authMessages.pending.stepReview}
-          stepAfterApprove={authMessages.pending.stepAfterApprove}
+        <PageHeader
+          title={title}
+          description={headerDescription}
+          actions={
+            <AuthSignOutLink
+              signOutLabel={shellMessages.signOut}
+              signOutPendingLabel={shellMessages.signOutPending}
+            />
+          }
         />
 
-        <div className="flex flex-col gap-3">
-          <PendingRefreshButton />
-          {pending.status === ACCOUNT_STATUS.REJECTED ? (
-            <CustomLink href="/register" className="text-center">
-              {authMessages.pending.fixAndResubmit}
-            </CustomLink>
-          ) : null}
-          <CustomLink href="/profile" className="text-center">
-            {authMessages.pending.profile}
-          </CustomLink>
-        </div>
+        {pending.status === ACCOUNT_STATUS.REJECTED ? (
+          <section className="max-w-2xl rounded-xl border border-line bg-surface p-4 sm:p-5">
+            {pending.rejectReason ? (
+              <p className="flex items-start gap-2 text-sm text-ink">
+                <AlertTriangleIcon className="mt-0.5 size-5 shrink-0 text-danger" aria-hidden />
+                <span>{pending.rejectReason}</span>
+              </p>
+            ) : null}
+            <div className="mt-5 flex flex-col gap-3 border-t border-line pt-4 sm:flex-row sm:flex-wrap">
+              <CustomLink href="/register" className="text-center sm:text-left">
+                {authMessages.pending.fixAndResubmit}
+              </CustomLink>
+              <CustomLink href="/profile" className="text-center sm:text-left">
+                {authMessages.pending.profile}
+              </CustomLink>
+            </div>
+          </section>
+        ) : (
+          <>
+            <PendingStatusSteps
+              stepSignIn={authMessages.pending.stepSignIn}
+              stepConsent={authMessages.pending.stepConsent}
+              stepConsentVersion={pending.consentVersion}
+              stepReview={authMessages.pending.stepReview}
+              stepAfterApprove={authMessages.pending.stepAfterApprove}
+            />
+            <div className="flex max-w-2xl flex-col gap-3 border-t border-line pt-5 sm:flex-row sm:flex-wrap">
+              <PendingRefreshButton />
+              <CustomLink href="/profile" className="text-center sm:text-left">
+                {authMessages.pending.profile}
+              </CustomLink>
+            </div>
+          </>
+        )}
       </div>
     </AuthScreen>
   );

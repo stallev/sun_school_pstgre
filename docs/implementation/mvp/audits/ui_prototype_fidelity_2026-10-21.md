@@ -62,7 +62,7 @@
 
 | Строка |
 |--------|
-| `apps/web/src/components/auth/LoginForm.client.tsx` · hero `h1` прототипа · сырой `h1` `text-[2.25rem]…`, не `Heading` · 390, 768, 1024 · **deviation** |
+| `apps/web/src/components/auth/LoginForm.client.tsx` · hero `h1` · `Heading` `level="hero"` · 390, 768, 1024 · **исправлено (CU4)** |
 | `apps/web/src/components/teacher/CheckCardHeader.tsx` · заголовок проверки ~как page title или крупный display · `Heading` с `text-[1.5rem]` · `/check`, `/lessons/[id]/check` · **deviation** |
 | `apps/web/src/components/analytics/AnalyticsPeriodKpiSection.tsx` · KPI `text-2xl` · дублирует разметку, не `NumberDisplay` size `2xl` · `/analytics` · **deviation** |
 | `apps/web/src/app/layout.tsx` / metadata · заголовок вкладки «Название — Sunday School» (UX-02 §6) · в браузере **document title** `Sunday School` / `Login` (англ.) · все · **deviation** |
@@ -108,7 +108,7 @@
 | P10-CU1 | реализовано в коде (`Heading`, `NumberDisplay`) |
 | P10-CU2 | реализовано (`shell-header`, порядок menu → brand → topnav → hdrRight) |
 | P10-CU3 | реализовано (`nav-link-row`, `top-nav`, `dev-role-switcher` breakpoint) |
-| P10-CU4 | реализовано (`LoginForm`, `CheckCardHeader`, `AnalyticsPeriodKpiSection`) |
+| P10-CU4 | реализовано (auth screens: `PageHeader`, `PendingStatusSteps`, `LoginForm` hero) |
 | P10-CU5 | реализовано (`product-document-title`, root template, app/auth metadata, `x-pathname`) |
 
 ### Проход 2b (меню + hydration, 2026-10-21)
@@ -199,3 +199,24 @@
 | `/login` submit | отдельный паттерн | `h-12` (`FORM_SUBMIT_BUTTON_CLASS`) | без изменений (не `Button` default) | 390 | **сознательно** |
 
 **Re-pass:** topnav и section `h2` на teacher matrix — в пределах прототипа; новых deviation-строк нет.
+
+## Проход 3 — CU4 Auth screens
+
+**Субагент:** implementer / composer-2.5  
+**Эталоны:** прототип `#screen-login`, `vRegister`, `vPending`, `pageHead` · access spec §6–§10 · `PageHeader` / `Heading` hero  
+**Ширины:** 390, 768, 820, 1024 (классы width-agnostic; `/login` без сессии — все ширины; register/pending — layout reading `max-w-2xl`)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU4) | Ширины | Серьёзность |
+|-------------|------|----------------------------|------------------|--------|-------------|
+| `login` · `LoginForm.client.tsx` | hero `h1` | `text-[2.25rem]` display | `Heading` `level="hero"` | 390–1024 | **нет отклонения** |
+| `login` · `LoginForm` | brand row | `font-display text-2xl` | совпадает | 390–1024 | **нет отклонения** |
+| `login` · `ProviderButton` | Telegram CTA | `h-12` submit (не `Button` default) | `FORM_SUBMIT_BUTTON_CLASS` | 390 | **сознательно** |
+| `register` · `register/page.tsx` | заголовок | `pageHead` → `h1` page scale + `mb-5`/`lg:mb-6` | `PageHeader` | 390–1024 | **нет отклонения** |
+| `register` · `RegisterForm` | карточки шагов | `CARD` `rounded-xl` `p-4 sm:p-5` | `border-line bg-surface` | 390–1024 | **нет отклонения** |
+| `register` · footer actions | ghost + primary | `flex-col-reverse` / `sm:ml-auto` | совпадает | 390, 768 | **нет отклонения** |
+| `pending` · `pending/page.tsx` | заголовок | `pageHead` + subtitle ФИО·дата | `PageHeader` + description | 390–1024 | **нет отклонения** |
+| `pending` · `PendingStatusSteps` | список шагов | `ol` `space-y-5`, иконки ok/cobalt/muted | `CheckCircle`/`KeyRound`/`Circle` + `font-medium` | 390–1024 | **нет отклонения** |
+| `pending` · rejected | карточка причины | `CARD` + border-t actions | section `rounded-xl` + `border-t` | 390–1024 | **нет отклонения** |
+| `privacy` · `privacy/page.tsx` | заголовок | `pageHead` + версия | `PageHeader` + version description | 390–1024 | **нет отклонения** |
+
+**Re-pass:** повтор по матрице auth не добавил новых deviation-строк; копирайт P09 и ссылка согласия на `/login` не менялись.

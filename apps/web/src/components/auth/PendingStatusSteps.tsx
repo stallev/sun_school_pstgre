@@ -1,4 +1,4 @@
-import { CheckCircle2Icon, ClockIcon, LogInIcon, ShieldCheckIcon } from "lucide-react";
+import { CheckCircle2Icon, CircleIcon, KeyRoundIcon } from "lucide-react";
 import { ContentText } from "@/components/atoms";
 
 type PendingStatusStepsProps = {
@@ -9,7 +9,7 @@ type PendingStatusStepsProps = {
   stepAfterApprove: string;
 };
 
-const stepRowClass = "flex gap-3 border-b border-line py-3 last:border-b-0";
+const stepIconClass = "mt-0.5 size-5 shrink-0";
 
 export const PendingStatusSteps = ({
   stepSignIn,
@@ -18,26 +18,31 @@ export const PendingStatusSteps = ({
   stepReview,
   stepAfterApprove,
 }: PendingStatusStepsProps) => {
-  const consentText = stepConsentVersion ? `${stepConsent} (${stepConsentVersion})` : stepConsent;
+  const steps = [
+    { icon: CheckCircle2Icon, iconClass: `${stepIconClass} text-ok`, title: stepSignIn, detail: null },
+    {
+      icon: CheckCircle2Icon,
+      iconClass: `${stepIconClass} text-ok`,
+      title: stepConsent,
+      detail: stepConsentVersion ?? null,
+    },
+    { icon: KeyRoundIcon, iconClass: `${stepIconClass} text-cobalt-ink`, title: stepReview, detail: null },
+    { icon: CircleIcon, iconClass: `${stepIconClass} text-muted`, title: stepAfterApprove, detail: null },
+  ];
 
   return (
-    <div className="rounded-xl border border-line bg-surface p-4 sm:p-5">
-      <div className={stepRowClass}>
-        <LogInIcon className="mt-0.5 size-5 shrink-0 text-ink-2" aria-hidden />
-        <ContentText className="text-ink-2">{stepSignIn}</ContentText>
-      </div>
-      <div className={stepRowClass}>
-        <ShieldCheckIcon className="mt-0.5 size-5 shrink-0 text-ink-2" aria-hidden />
-        <ContentText className="text-ink-2">{consentText}</ContentText>
-      </div>
-      <div className={stepRowClass}>
-        <ClockIcon className="mt-0.5 size-5 shrink-0 text-ink-2" aria-hidden />
-        <ContentText className="text-ink-2">{stepReview}</ContentText>
-      </div>
-      <div className={stepRowClass}>
-        <CheckCircle2Icon className="mt-0.5 size-5 shrink-0 text-ink-2" aria-hidden />
-        <ContentText className="text-ink-2">{stepAfterApprove}</ContentText>
-      </div>
-    </div>
+    <section className="rounded-xl border border-line bg-surface p-4 sm:p-5">
+      <ol className="space-y-5">
+        {steps.map((step) => (
+          <li key={step.title} className="flex gap-4">
+            <step.icon className={step.iconClass} aria-hidden />
+            <div className="min-w-0 space-y-0.5">
+              <p className="font-medium text-ink">{step.title}</p>
+              {step.detail ? <ContentText tone="secondary">{step.detail}</ContentText> : null}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 };

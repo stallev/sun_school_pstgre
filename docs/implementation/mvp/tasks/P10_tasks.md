@@ -99,9 +99,9 @@
 | — | (shell) | teacher, admin | оболочка | [x] CU2–CU3 + delta (`96c5d70`, `d5c46b5`, `64ca12d`) |
 | — | (atoms) | — | каталог | [x] CU1 (`2ea4f13`) |
 | — | (Button, Card, PageHeader) | — | примитивы | [x] CU3 (`d5c46b5`, `64ca12d`) |
-| `login` | `/login` | аноним | экран | [ ] CU4 |
-| `register` | `/register` | регистрация | экран | [ ] CU4 |
-| `pending` | `/pending` | заявка/отклонена | экран | [ ] CU4 |
+| `login` | `/login` | аноним | экран | [x] CU4 |
+| `register` | `/register` | регистрация | экран | [x] CU4 |
+| `pending` | `/pending` | заявка/отклонена | экран | [x] CU4 |
 | `profile` | `/profile` | активные | экран | [ ] CU5 |
 | `today` | `/today` | teacher | экран | [ ] CU6 |
 | `lessons` | `/lessons` | teacher | экран | [ ] CU7 |
@@ -127,7 +127,7 @@
 | `settings` | `/settings` | admin | экран | [ ] CU18 |
 | `deletions` | `/deletions` | admin | экран | [ ] CU18 |
 | `audit` | `/audit` | admin | экран | [ ] CU18 — **только визуал**; runtime «Something went wrong» не чинить в P10 |
-| `privacy` | `/privacy` | аноним | экран | [ ] CU4 (статика, без прототип-ключа) |
+| `privacy` | `/privacy` | аноним | экран | [x] CU4 (статика, без прототип-ключа) |
 
 ---
 
@@ -163,7 +163,7 @@
 
 ### P10-CU4 — fix(ui): align auth screens visual chrome · Review: reviewer · Commit: auto
 
-- [ ] P10-T4 · T1 · Spec: [`access_and_registration_spec`](../specs/access_and_registration_spec.md) §6  
+- [x] P10-T4 · T1 · Spec: [`access_and_registration_spec`](../specs/access_and_registration_spec.md) §6  
       Files: `apps/web/src/app/(auth)/**`, `LoginForm.client.tsx`, `privacy` при необходимости  
       Acceptance: матрица `login` / `register` / `pending` / `privacy` × роли × 4 ширины в audit; каждый UI-блок с замером; повтор без новых строк; **не** менять копирайт P09 и ссылку согласия  
       Paths: H · N n/a · S n/a

@@ -24,7 +24,7 @@ const ICONS = {
 } as const;
 
 type BannerProps = VariantProps<typeof bannerVariants> & {
-  title: string;
+  title?: string;
   children?: ReactNode;
   className?: string;
 };
@@ -40,8 +40,8 @@ export const Banner = ({ tone, title, children, className }: BannerProps) => {
     >
       <Icon icon={icon.glyph} className={cn("mt-0.5 size-5 shrink-0", icon.className)} />
       <div className="min-w-0 space-y-1 text-ink">
-        <p className="font-bold">{title}</p>
-        {children ? <div className="text-base">{children}</div> : null}
+        {title ? <p className="font-bold">{title}</p> : null}
+        {children ? <div className={title ? "text-base" : undefined}>{children}</div> : null}
       </div>
     </div>
   );
