@@ -50,13 +50,34 @@ export const useLessonCheckTable = ({
   const router = useRouter();
   const [rows, setRows] = useState(initialPupils);
   const [filterPresent, setFilterPresent] = useState(false);
-  const [filterUnchecked, setFilterUnchecked] = useState(false);
+  const [filterUnchecked, setFilterUnchecked] = useState(
+    () =>
+      lessonStatus !== LESSON_STATUS.CHECK_COMPLETED &&
+      initialPupils.some((row) => !row.homeworkChecked),
+  );
   const [conflictIds, setConflictIds] = useState<ReadonlySet<string>>(() => new Set());
   const [busyCells, setBusyCells] = useState<ReadonlySet<string>>(() => new Set());
   const [pending, startTransition] = useTransition();
 
   const readOnly = !canMutate && !(yearClosed && isAdmin);
   const lessonCorrection = lessonStatus === LESSON_STATUS.CHECK_COMPLETED;
+
+  const stats = useMemo(() => {
+    let present = 0;
+    let unchecked = 0;
+    let checked = 0;
+    for (const row of rows) {
+      if (row.present) present += 1;
+      if (row.homeworkChecked) checked += 1;
+      else unchecked += 1;
+    }
+    return { present, unchecked, checked, total: rows.length };
+  }, [rows]);
+
+  const resetFilters = () => {
+    setFilterPresent(false);
+    setFilterUnchecked(false);
+  };
 
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {
@@ -171,10 +192,12 @@ export const useLessonCheckTable = ({
 
   return {
     rows: filteredRows,
+    stats,
     filterPresent,
     filterUnchecked,
     setFilterPresent,
     setFilterUnchecked,
+    resetFilters,
     conflictIds,
     busyCells,
     readOnly,

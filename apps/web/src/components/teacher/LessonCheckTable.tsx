@@ -15,7 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CheckProgress } from "@/components/teacher/CheckProgress";
 import { LessonCheckTableCards } from "@/components/teacher/LessonCheckTableCards";
+import { LessonCheckTableFilters } from "@/components/teacher/LessonCheckTableFilters";
 import { LessonCheckTableRow } from "@/components/teacher/LessonCheckTableRow";
 import { useLessonCheckTable } from "@/components/teacher/use-lesson-check-table";
 import type { LessonTablePageData } from "@/data/checks/load-lesson-table-page.server";
@@ -27,11 +29,17 @@ import { cn } from "@/lib/utils";
 
 type LessonCheckTableProps = {
   data: Extract<LessonTablePageData, { kind: "page" }>;
+  lessonDateLabel: string;
   messages: TeacherCheckMessages;
   dictionaries: Record<string, Dictionary>;
 };
 
-export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTableProps) => {
+export const LessonCheckTable = ({
+  data,
+  lessonDateLabel,
+  messages,
+  dictionaries,
+}: LessonCheckTableProps) => {
   const table = useLessonCheckTable({
     lessonId: data.lessonId,
     lessonKind: data.lessonKind,
@@ -74,10 +82,12 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
     );
   }
 
-  const subtitle = `${fillMessage(messages.lessonSubtitle, {
+  const subtitle = fillMessage(messages.lessonSubtitle, {
     ordinal: data.lessonOrdinal,
     title: data.lessonTitle,
-  })} · ${data.lessonDateIso}`;
+  });
+  const counts = `${fillMessage(messages.tableCountPresent, { count: table.stats.present })} · ${fillMessage(messages.tableCountUnchecked, { count: table.stats.unchecked })} · ${fillMessage(messages.tableProgressHeader, { checked: table.stats.checked, total: table.stats.total })}`;
+  const workSpan = (data.hasTest ? 1 : 0) + 2;
 
   return (
     <div className="space-y-4">
@@ -88,10 +98,7 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
       </header>
       <PageHeader
         title={messages.tablePageTitle}
-        description={`${subtitle} · ${fillMessage(messages.tableProgressHeader, {
-          checked: data.checkedCount,
-          total: data.pupils.length,
-        })}`}
+        description={`${subtitle} · ${lessonDateLabel}`}
         actions={
           <Button render={<CustomLink href={`/lessons/${data.lessonId}/check`} />}>
             <CheckIcon className="size-4" aria-hidden />
@@ -110,41 +117,23 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
         <Banner tone="warning" title={messages.correctionBanner} />
       ) : null}
 
-      <div
-        className="sticky top-0 z-20 -mx-1 space-y-2 bg-background px-1 pb-2 pt-1"
-        aria-busy={table.pending}
-      >
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-          <label className="inline-flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={table.filterPresent}
-              onChange={(event) => table.setFilterPresent(event.target.checked)}
-              className="size-4 accent-primary"
-            />
-            {messages.tableFilterPresent}
-          </label>
-          <label className="inline-flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={table.filterUnchecked}
-              onChange={(event) => table.setFilterUnchecked(event.target.checked)}
-              className="size-4 accent-primary"
-            />
-            {messages.tableFilterUnchecked}
-          </label>
-          <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground sm:ml-auto">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="size-3 rounded-sm bg-warn-soft ring-1 ring-line" />
-              {messages.tableLegendUnchecked}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="size-3 rounded-sm bg-paper ring-1 ring-line" />
-              {messages.tableLegendAbsent}
-            </span>
-          </span>
-        </div>
-      </div>
+      <CheckProgress
+        checked={table.stats.checked}
+        total={table.stats.total}
+        label={counts}
+      />
+
+      <LessonCheckTableFilters
+        filterPresent={table.filterPresent}
+        filterUnchecked={table.filterUnchecked}
+        allLabel={messages.tableFilterAll}
+        presentLabel={messages.tableFilterPresent}
+        uncheckedLabel={messages.tableFilterUnchecked}
+        pending={table.pending}
+        onAll={table.resetFilters}
+        onPresent={table.setFilterPresent}
+        onUnchecked={table.setFilterUnchecked}
+      />
 
       {mdUp ? (
         <Card>
@@ -154,19 +143,39 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
                 className={cn(stickyTableHead && "[&_tr]:sticky [&_tr]:top-0 [&_tr]:z-[1] [&_tr]:bg-card")}
               >
                 <TableRow>
-                  <TableHead scope="col" className="w-12 pl-4">{messages.tableColumnNumber}</TableHead>
-                  <TableHead scope="col" className="sticky left-0 z-10 bg-card">{messages.tableColumnPupil}</TableHead>
-                  <TableHead scope="col" className="text-center">{messages.presentLabel}</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="w-12 pl-4">{messages.tableColumnNumber}</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky left-0 z-10 bg-card">{messages.tableColumnPupil}</TableHead>
+                  <TableHead scope="col" rowSpan={2} className="text-center">{messages.presentLabel}</TableHead>
+                  {data.versesToRecite.length > 0 ? (
+                    <TableHead scope="colgroup" colSpan={data.versesToRecite.length} className="text-center">
+                      {messages.tableGroupMemory}
+                    </TableHead>
+                  ) : null}
+                  <TableHead scope="colgroup" colSpan={workSpan} className="text-center">
+                    {messages.tableGroupWork}
+                  </TableHead>
+                  <TableHead scope="col" rowSpan={2} className="sticky right-0 z-10 bg-card text-right">
+                    {messages.tableGroupTotal}
+                  </TableHead>
+                </TableRow>
+                <TableRow>
                   {data.versesToRecite.map((verse) => (
                     <TableHead key={verse.lessonVerseId} scope="col" className="text-center">
                       {fillMessage(messages.verseLabel, { position: verse.position })}
+                      <span className="block text-xs font-normal">{messages.tableScaleVerse}</span>
                     </TableHead>
                   ))}
-                  <TableHead scope="col" className="text-center">{messages.testLabel}</TableHead>
-                  <TableHead scope="col" className="text-center">{messages.notebookLabel}</TableHead>
+                  {data.hasTest ? (
+                    <TableHead scope="col" className="text-center">
+                      {messages.testLabel}
+                      <span className="block text-xs font-normal">{messages.tableScaleTen}</span>
+                    </TableHead>
+                  ) : null}
+                  <TableHead scope="col" className="text-center">
+                    {messages.notebookLabel}
+                    <span className="block text-xs font-normal">{messages.tableScaleTen}</span>
+                  </TableHead>
                   <TableHead scope="col" className="text-center">{messages.singingLabel}</TableHead>
-                  <TableHead scope="col" className="text-right">{messages.pointsLabel}</TableHead>
-                  <TableHead scope="col" className="w-16 pr-3 text-right">{messages.tableColumnOpen}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

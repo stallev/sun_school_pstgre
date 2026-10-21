@@ -5,7 +5,9 @@ import { LessonCheckTable } from "@/components/teacher/LessonCheckTable";
 import { loadLessonTablePage } from "@/data/checks/load-lesson-table-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
 import { getDictionary } from "@/lib/messages/get-dictionary";
 import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-messages.server";
 
@@ -19,6 +21,7 @@ export const LessonTableContent = async ({ params }: LessonTableContentProps) =>
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
   const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);
   const locale = await getUiLocale();
+  const timeZone = await getSchoolTimezone();
   const data = await loadLessonTablePage(await getPrisma(), actor.userId, lessonId, isAdmin);
   const [teacherDict, commonDict] = await Promise.all([
     getDictionary(locale, "teacher"),
@@ -31,5 +34,14 @@ export const LessonTableContent = async ({ params }: LessonTableContentProps) =>
     notFound();
   }
 
-  return <LessonCheckTable data={data} messages={messages} dictionaries={dictionaries} />;
+  const lessonDateLabel = formatLessonDisplayDate(data.lessonDateIso, { locale, timeZone });
+
+  return (
+    <LessonCheckTable
+      data={data}
+      lessonDateLabel={lessonDateLabel}
+      messages={messages}
+      dictionaries={dictionaries}
+    />
+  );
 };

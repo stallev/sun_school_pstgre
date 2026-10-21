@@ -14,6 +14,8 @@ import teacherRu from "@/lib/messages/ru/teacher.json";
 import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-messages.server";
 
 const harness = vi.hoisted(() => ({
+  mdUp: false,
+  conflictIds: new Set<string>(),
   mutateTestScore: vi.fn<(pupilId: string, score: number | null) => void>(),
   pupilRow: {
     pupilId: "pupil-1",
@@ -37,9 +39,11 @@ vi.mock("@/components/teacher/use-lesson-check-table", () => ({
     setFilterPresent: vi.fn(),
     filterUnchecked: false,
     setFilterUnchecked: vi.fn(),
+    stats: { present: 1, unchecked: 1, checked: 0, total: 1 },
+    resetFilters: vi.fn(),
     readOnly: false,
     busyCells: new Set<string>(),
-    conflictIds: new Set<string>(),
+    conflictIds: harness.conflictIds,
     pending: false,
     lessonCorrection: false,
     mutatePresent: vi.fn(),
@@ -82,11 +86,13 @@ describe("LessonCheckTable mobile score pad", () => {
   let root: Root;
 
   beforeEach(() => {
+    harness.mdUp = false;
+    harness.conflictIds = new Set<string>();
     harness.mutateTestScore.mockClear();
     vi.stubGlobal(
       "matchMedia",
       vi.fn((query: string) => ({
-        matches: query.includes("min-width: 768px") ? false : false,
+        matches: query.includes("min-width: 768px") ? harness.mdUp : false,
         media: query,
         onchange: null,
         addEventListener: vi.fn(),
@@ -115,7 +121,7 @@ describe("LessonCheckTable mobile score pad", () => {
   it("choosing a digit on the cards test pad calls mutateTestScore (not closed before click)", async () => {
     await act(async () => {
       root.render(
-        <LessonCheckTable data={pageData} messages={messages} dictionaries={{}} />,
+        <LessonCheckTable data={pageData} lessonDateLabel="1 January" messages={messages} dictionaries={{}} />,
       );
     });
 
@@ -140,5 +146,18 @@ describe("LessonCheckTable mobile score pad", () => {
 
     expect(harness.mutateTestScore).toHaveBeenCalledTimes(1);
     expect(harness.mutateTestScore).toHaveBeenCalledWith("pupil-1", 7);
+  });
+
+  it("shows the conflict sentence on the desktop row", async () => {
+    harness.mdUp = true;
+    harness.conflictIds = new Set(["pupil-1"]);
+    await act(async () => {
+      root.render(
+        <LessonCheckTable data={pageData} lessonDateLabel="1 January" messages={messages} dictionaries={{}} />,
+      );
+    });
+
+    expect(document.querySelector("table")).not.toBeNull();
+    expect(container.textContent).toContain(messages.conflictTitle);
   });
 });

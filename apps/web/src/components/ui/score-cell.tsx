@@ -73,32 +73,17 @@ export const ScoreCell = ({
     return () => document.removeEventListener("pointerdown", onPointerDown, true);
   }, [isOpen, mdUp, onOpenCellKeyChange]);
 
-  if (mode === "verse") {
-    return (
-      <ScorePad
-        layout="inline"
-        max={max}
-        value={value}
-        onValueChange={onValueChange}
-        notRatedLabel={notRatedLabel}
-        aria-label={aria["aria-label"]}
-        disabled={disabled}
-        aria-busy={ariaBusy}
-        className={className}
-      />
-    );
-  }
-
+  const layout = mode === "verse" ? "inline" : "keypad";
   const triggerLabel = `${aria["aria-label"]}: ${displayValue(value)}`;
   const triggerClass = cn(
     "inline-flex h-8 min-w-[2.5rem] items-center justify-center rounded-md border border-line bg-surface px-2 text-sm tabular-nums hover:border-ink-2",
-    scoreTone(value),
+    mode === "pad" && scoreTone(value),
     disabled && "pointer-events-none opacity-45",
   );
 
   const padPanel = (
     <ScorePad
-      layout="keypad"
+      layout={layout}
       max={max}
       value={value}
       onValueChange={handleSelect}

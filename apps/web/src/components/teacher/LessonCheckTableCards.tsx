@@ -2,9 +2,12 @@
 
 import type { LessonVerseToRecite } from "@sunschool/domain";
 import { NumberDisplay } from "@/components/atoms";
+import { ContentText } from "@/components/atoms";
 import { ScoreCell } from "@/components/ui/score-cell";
-import { ScorePad } from "@/components/ui/score-pad";
+import { StatusText } from "@/components/ui/status-text";
 import { CustomLink } from "@/components/ui/custom-link";
+import { LateBadge } from "@/components/teacher/LateBadge";
+import { LessonCheckPressToggle } from "@/components/teacher/LessonCheckPressToggle";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
@@ -29,14 +32,6 @@ type LessonCheckTableCardsProps = {
   onVerseScoreChange: (pupilId: string, lessonVerseId: string, score: number | null) => void;
 };
 
-const toggleClass = (pressed: boolean) =>
-  cn(
-    "inline-flex min-h-11 flex-1 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-[color,background-color,border-color] duration-100 ease-out-soft",
-    pressed
-      ? "border-cobalt-ink bg-cobalt-soft text-cobalt-ink"
-      : "border-input bg-surface text-ink hover:bg-paper",
-  );
-
 export const LessonCheckTableCards = ({
   rows,
   lessonId,
@@ -58,62 +53,77 @@ export const LessonCheckTableCards = ({
   <ul className="space-y-2" aria-busy={pending}>
     {rows.map((row, index) => {
       const hasConflict = conflictIds.has(row.pupilId);
+      const statusLabel = !row.homeworkChecked
+        ? messages.tableLegendUnchecked
+        : !row.present
+          ? messages.tableLegendAbsent
+          : null;
       return (
         <li
           key={row.pupilId}
           className={cn(
             "rounded-xl border border-line bg-card p-3",
-            !row.homeworkChecked ? "bg-warn-soft/70" : !row.present ? "bg-paper" : "",
-            hasConflict ? "ring-2 ring-danger" : "",
+            hasConflict && "ring-2 ring-danger",
           )}
         >
-          <div className="flex items-center gap-2">
-            <span className="w-6 text-sm tabular-nums text-muted-foreground">{index + 1}</span>
-            <CustomLink
-              href={`/lessons/${lessonId}/check?pupil=${row.pupilId}`}
-              className="min-w-0 flex-1 truncate font-medium text-cobalt-ink"
-            >
-              {row.displayName}
-            </CustomLink>
+          <div className="flex items-start gap-2">
+            <span className="w-6 pt-0.5 text-sm tabular-nums text-muted-foreground">{index + 1}</span>
+            <div className="min-w-0 flex-1">
+              <CustomLink
+                href={`/lessons/${lessonId}/check?pupil=${row.pupilId}`}
+                className="block truncate font-medium text-cobalt-ink"
+              >
+                {row.displayName}
+              </CustomLink>
+              <span className="mt-0.5 flex flex-wrap items-center gap-2">
+                {statusLabel ? (
+                  <StatusText tone={!row.homeworkChecked ? "warn" : "neutral"}>{statusLabel}</StatusText>
+                ) : null}
+                {row.late ? <LateBadge label={messages.lateSubmitted} /> : null}
+              </span>
+            </div>
             <NumberDisplay className="font-display text-lg tabular-nums">
               {row.homeworkChecked && row.pointsTotal !== null ? row.pointsTotal : "—"}
             </NumberDisplay>
           </div>
           <div className="mt-3 flex gap-2">
-            <button
-              type="button"
-              aria-pressed={row.present}
-              aria-busy={busyCells.has(`${row.pupilId}:present`) || undefined}
-              disabled={readOnly || busyCells.has(`${row.pupilId}:present`)}
-              aria-label={`${messages.presentLabel}: ${row.displayName}`}
-              className={toggleClass(row.present)}
-              onClick={() => onPresentChange(row.pupilId, !row.present)}
-            >
-              {messages.presentLabel}
-            </button>
-            <button
-              type="button"
-              aria-pressed={row.singing}
-              aria-busy={busyCells.has(`${row.pupilId}:singing`) || undefined}
-              disabled={readOnly || busyCells.has(`${row.pupilId}:singing`)}
-              aria-label={`${messages.singingLabel}: ${row.displayName}`}
-              className={toggleClass(row.singing)}
-              onClick={() => onSingingChange(row.pupilId, !row.singing)}
-            >
-              {messages.singingLabel}
-            </button>
+            <div className="flex flex-1 items-center gap-2">
+              <ContentText tone="secondary" className="text-sm">{messages.presentLabel}</ContentText>
+              <LessonCheckPressToggle
+                pressed={row.present}
+                label={`${messages.presentLabel}: ${row.displayName}`}
+                disabled={readOnly}
+                busy={busyCells.has(`${row.pupilId}:present`)}
+                onPressedChange={(present) => onPresentChange(row.pupilId, present)}
+              />
+            </div>
+            <div className="flex flex-1 items-center gap-2">
+              <ContentText tone="secondary" className="text-sm">{messages.singingLabel}</ContentText>
+              <LessonCheckPressToggle
+                pressed={row.singing}
+                label={`${messages.singingLabel}: ${row.displayName}`}
+                disabled={readOnly}
+                busy={busyCells.has(`${row.pupilId}:singing`)}
+                onPressedChange={(singing) => onSingingChange(row.pupilId, singing)}
+              />
+            </div>
           </div>
           <div className="mt-3 space-y-3">
             {versesToRecite.map((verse) => (
               <div key={verse.lessonVerseId} className="space-y-1">
-                <p className="text-sm text-muted-foreground">
+                <ContentText tone="secondary" className="text-sm">
                   {fillMessage(messages.verseLabel, { position: verse.position })}
-                </p>
-                <ScorePad
-                  layout="inline"
+                  {" · "}
+                  {messages.tableScaleVerse}
+                </ContentText>
+                <ScoreCell
+                  mode="verse"
                   max={2}
                   value={row.verseScores[verse.lessonVerseId] ?? null}
                   notRatedLabel={messages.scoreNotRated}
+                  cellKey={`${row.pupilId}:verse:${verse.lessonVerseId}`}
+                  openCellKey={openCellKey}
+                  onOpenCellKeyChange={onOpenCellKeyChange}
                   aria-label={`${fillMessage(messages.verseLabel, { position: verse.position })}: ${row.displayName}`}
                   disabled={readOnly}
                   aria-busy={busyCells.has(`${row.pupilId}:verse:${verse.lessonVerseId}`)}
@@ -121,9 +131,11 @@ export const LessonCheckTableCards = ({
                 />
               </div>
             ))}
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">{messages.testLabel}</p>
-              {hasTest ? (
+            {hasTest ? (
+              <div className="space-y-1">
+                <ContentText tone="secondary" className="text-sm">
+                  {messages.testLabel} · {messages.tableScaleTen}
+                </ContentText>
                 <ScoreCell
                   mode="pad"
                   max={10}
@@ -137,12 +149,12 @@ export const LessonCheckTableCards = ({
                   aria-busy={busyCells.has(`${row.pupilId}:test`)}
                   onValueChange={(score) => onTestScoreChange(row.pupilId, score)}
                 />
-              ) : (
-                <span className="text-sm text-muted-foreground">{messages.tableNoTest}</span>
-              )}
-            </div>
+              </div>
+            ) : null}
             <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">{messages.notebookLabel}</p>
+              <ContentText tone="secondary" className="text-sm">
+                {messages.notebookLabel} · {messages.tableScaleTen}
+              </ContentText>
               <ScoreCell
                 mode="pad"
                 max={10}
@@ -158,9 +170,6 @@ export const LessonCheckTableCards = ({
               />
             </div>
           </div>
-          {row.late && row.homeworkChecked ? (
-            <p className="mt-2 text-sm text-warn">{messages.lateSubmitted}</p>
-          ) : null}
           {hasConflict ? (
             <p className="mt-2 text-sm text-danger">{messages.conflictTitle}</p>
           ) : null}
