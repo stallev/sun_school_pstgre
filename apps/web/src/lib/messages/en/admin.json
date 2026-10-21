@@ -318,7 +318,8 @@
       "grade_event": "Calendar event",
       "homework_check": "Homework check",
       "brick_ledger": "Bricks",
-      "deletion_request": "Deletion request"
+      "deletion_request": "Deletion request",
+      "analytics_snapshot": "Analytics snapshot"
     },
     "actions": {
       "access.request_approved": "Request approved",

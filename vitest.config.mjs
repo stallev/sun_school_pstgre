@@ -9,41 +9,44 @@ const resolveAlias = {
   "server-only": path.resolve(import.meta.dirname, "apps/web/src/test/server-only-stub.ts"),
 };
 
-const DB_INTEGRATION = [
-  "packages/db/src/seed/**/*.integration.test.ts",
-  "packages/db/src/deletion/**/*.integration.test.ts",
-];
+const INTEGRATION_GLOB = "**/*.integration.test.ts";
+const runDbIntegration = process.env.RUN_DB_INTEGRATION === "1";
+
+const unitProject = defineProject({
+  resolve: { alias: resolveAlias },
+  test: {
+    name: "unit",
+    include: [
+      "packages/*/src/**/*.test.ts",
+      "packages/policy/*/src/**/*.test.ts",
+      "apps/web/src/**/*.test.{ts,tsx}",
+      "scripts/**/*.test.mjs",
+    ],
+    exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**", INTEGRATION_GLOB],
+    environment: "node",
+    server: { deps: { inline: [/next-auth/, /@auth\/core/] } },
+  },
+});
+
+const projects = [unitProject];
+
+if (runDbIntegration) {
+  projects.push(
+    defineProject({
+      resolve: { alias: resolveAlias },
+      test: {
+        name: "db-seed-integration",
+        include: [INTEGRATION_GLOB],
+        exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**"],
+        environment: "node",
+        fileParallelism: false,
+        maxWorkers: 1,
+        sequence: { concurrent: false },
+      },
+    }),
+  );
+}
 
 export default defineConfig({
-  test: {
-    projects: [
-      defineProject({
-        resolve: { alias: resolveAlias },
-        test: {
-          name: "unit",
-          include: [
-            "packages/*/src/**/*.test.ts",
-            "packages/policy/*/src/**/*.test.ts",
-            "apps/web/src/**/*.test.{ts,tsx}",
-            "scripts/**/*.test.mjs",
-          ],
-          exclude: ["**/node_modules/**", "**/generated/**", "**/.next/**", ...DB_INTEGRATION],
-          environment: "node",
-          server: { deps: { inline: [/next-auth/, /@auth\/core/] } },
-        },
-      }),
-      defineProject({
-        resolve: { alias: resolveAlias },
-        test: {
-          name: "db-seed-integration",
-          include: DB_INTEGRATION,
-          exclude: ["**/node_modules/**", "**/generated/**"],
-          environment: "node",
-          fileParallelism: false,
-          maxWorkers: 1,
-          sequence: { concurrent: false },
-        },
-      }),
-    ],
-  },
+  test: { projects },
 });

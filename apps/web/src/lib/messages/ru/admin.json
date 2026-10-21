@@ -318,7 +318,8 @@
       "grade_event": "Событие календаря",
       "homework_check": "Проверка ДЗ",
       "brick_ledger": "Кирпичики",
-      "deletion_request": "Запрос на удаление"
+      "deletion_request": "Запрос на удаление",
+      "analytics_snapshot": "Снимок аналитики"
     },
     "actions": {
       "access.request_approved": "Заявка одобрена",
