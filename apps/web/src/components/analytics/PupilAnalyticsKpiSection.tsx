@@ -60,15 +60,15 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
   ];
 
   return (
-    <dl className="grid min-w-0 grid-cols-2 gap-4 sm:grid-cols-4">
+    <dl className="grid min-w-0 grid-cols-2 items-stretch gap-4 sm:grid-cols-4">
       {metrics.map((metric) => (
-        <Card key={metric.label} className="flex min-w-0 flex-col gap-1 p-4">
-          <dt className="text-sm text-muted-foreground">{metric.label}</dt>
+        <Card key={metric.label} className="flex h-full min-w-0 flex-col gap-1 p-4">
+          <dt className="text-sm text-muted">{metric.label}</dt>
           <dd>
-            <NumberDisplay className="text-2xl">{metric.value}</NumberDisplay>
+            <NumberDisplay size="kpi">{metric.value}</NumberDisplay>
           </dd>
           {metric.hint ? (
-            <ContentText className="text-xs text-muted-foreground">{metric.hint}</ContentText>
+            <ContentText className="text-sm text-muted">{metric.hint}</ContentText>
           ) : null}
         </Card>
       ))}

@@ -115,7 +115,7 @@
 | `rating` | `/rating` | teacher, admin | экран | [x] CU12 |
 | `verses` | `/verses` | teacher, admin | экран | [x] CU12 |
 | `analytics` | `/analytics` | teacher, admin | экран | [x] CU13 |
-| `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [ ] CU14 |
+| `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [x] CU14 |
 | `school` | `/school` | admin | экран | [ ] CU15 |
 | `approvals` | `/approvals` | admin | экран | [ ] CU16 |
 | `users` | `/users` | admin | экран | [ ] CU16 |
@@ -235,7 +235,7 @@
 
 ### P10-CU14 — fix(ui): align pupil analytics card · Review: diff-only · Commit: auto
 
-- [ ] P10-T14 · T1 · Spec: analytics spec §6  
+- [x] P10-T14 · T1 · Spec: analytics spec §6  
       Files: `analytics/pupils/**`  
       Acceptance: `pupil` × teacher + admin × 4 ширины  
       Paths: H · N n/a · S n/a

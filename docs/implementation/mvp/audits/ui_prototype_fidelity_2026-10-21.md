@@ -379,3 +379,21 @@
 | `analytics` · `MethodologyNote.tsx` | методология | `mt-8`, border-t | совпадает | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `analytics` × teacher + admin × 4 ширины — новых deviation-строк нет; ссылки на уроки в колонке «Уроки» — ordinals без deep link (P08), не P10 chrome.
+
+## Проход 12 — CU14 Pupil analytics
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5
+**Эталоны:** прототип `vPupil` · [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §6
+**Ширины:** 390, 768, 820, 1024 · роли: teacher, admin
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU14) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `pupil` · `page.tsx` | контейнер | без page-level horizontal scroll | `min-w-0 max-w-full overflow-x-hidden` | 390–1024 | **нет отклонения** |
+| `pupil` · `PupilAnalyticsKpiSection.tsx` | KPI | `text-sm text-muted`, `font-display text-2xl` | `NumberDisplay size="kpi"`, equal-height grid | 390–1024 | **нет отклонения** |
+| `pupil` · `PupilYearsRowsTable.tsx` | «По годам» | min-w 44rem, thead muted, px-5/py-3 | RatingTable-паттерн CU13 | 390–1024 | **нет отклонения** |
+| `pupil` · `PupilYearsMetricPanel` | график лет | CARD `p-5`, seg `min-h-11` | `sm:p-5`, toggle `h-11` | 390–1024 | **нет отклонения** |
+| `pupil` · `PupilClosedYearKpiTiles` | закрытый год | dl tiles `text-2xl` | `NumberDisplay size="kpi"`, `text-muted` labels | 390–1024 | **нет отклонения** |
+| `pupil` · `PupilLessonTable.tsx` | по урокам | min-w 44rem, thead muted | совпадает + `hover:bg-transparent` | 390–1024 | **нет отклонения** |
+| `pupil` · `DynamicsBlock.tsx` | динамика | CARD `p-4 sm:p-5`, H2 `text-lg` | без изменений CU14 (уже совпадает) | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `pupil` × teacher + admin × 4 ширины — новых deviation-строк нет; штрафы/достижения из прототипа вне MVP (spec §6).

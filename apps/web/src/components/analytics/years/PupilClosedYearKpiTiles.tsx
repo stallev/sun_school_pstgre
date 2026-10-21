@@ -1,6 +1,5 @@
 import type { PupilYearTotals } from "@sunschool/domain";
 import { NumberDisplay } from "@/components/atoms/NumberDisplay";
-import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { Card } from "@/components/ui/card";
 import {
   formatAnalyticsAverage,
@@ -44,28 +43,28 @@ export const PupilClosedYearKpiTiles = ({
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+    <dl className="grid min-w-0 grid-cols-2 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-5">
       {metricCards.map(([label, value]) => (
-        <Card key={label} className="flex flex-col gap-2 p-4">
-          <SectionTitle as="h2" className="text-base">
-            {label}
-          </SectionTitle>
-          <NumberDisplay className="text-2xl">
-            {insufficientLessons ? messages.kpiEmpty : value}
-          </NumberDisplay>
+        <Card key={label} className="flex h-full flex-col gap-1 p-4">
+          <dt className="text-sm text-muted">{label}</dt>
+          <dd>
+            <NumberDisplay size="kpi">
+              {insufficientLessons ? messages.kpiEmpty : value}
+            </NumberDisplay>
+          </dd>
         </Card>
       ))}
-      <Card className="flex flex-col gap-2 p-4">
-        <SectionTitle as="h2" className="text-base">
-          {pupilYearMessages.columnBricks}
-        </SectionTitle>
-        <NumberDisplay className="text-2xl">
-          {fillMessage(pupilYearMessages.bricksRatio, {
-            earned: totals.bricksEarned,
-            issued: bricksIssued,
-          })}
-        </NumberDisplay>
+      <Card className="flex h-full flex-col gap-1 p-4">
+        <dt className="text-sm text-muted">{pupilYearMessages.columnBricks}</dt>
+        <dd>
+          <NumberDisplay size="kpi">
+            {fillMessage(pupilYearMessages.bricksRatio, {
+              earned: totals.bricksEarned,
+              issued: bricksIssued,
+            })}
+          </NumberDisplay>
+        </dd>
       </Card>
-    </div>
+    </dl>
   );
 };

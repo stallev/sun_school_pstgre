@@ -62,7 +62,7 @@ export const PupilYearsSection = ({
   }));
 
   return (
-    <section className="mb-6">
+    <section className="mb-6 min-w-0">
       <SectionTitle as="h2" className="mb-2">
         {pupilYearMessages.title}
       </SectionTitle>
