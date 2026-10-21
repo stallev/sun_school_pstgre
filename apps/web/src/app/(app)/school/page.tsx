@@ -114,7 +114,7 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
       });
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 max-w-full space-y-8 overflow-x-hidden">
       <PageHeader title={schoolMessages.pageTitle} description={pageDescription} />
       <AnalyticsYearScope committedYearId={data.yearId}>
         <Suspense fallback={<YearNavFallback />}>
@@ -157,14 +157,14 @@ const SchoolPage = async ({ searchParams }: SchoolPageProps) => {
                 percentTemplate={messages.formatPercent}
                 averageTemplate={messages.formatAverage}
               />
-              <section className="space-y-2">
+              <section className="mt-8 space-y-2">
                 <SectionTitle as="h2" className="text-lg">
                   {schoolMessages.attendanceChartTitle}
                 </SectionTitle>
-                <ContentText className="text-sm text-muted-foreground">
+                <ContentText className="mt-1 text-sm text-ink-2">
                   {schoolMessages.attendanceChartHint}
                 </ContentText>
-                <Card className="overflow-visible p-4">
+                <Card className="mt-4 overflow-visible p-4 sm:p-5">
                   {data.chartLabels.length > 0 ? (
                     <SchoolAttendanceChart
                       labels={data.chartLabels}

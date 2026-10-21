@@ -116,7 +116,7 @@
 | `verses` | `/verses` | teacher, admin | экран | [x] CU12 |
 | `analytics` | `/analytics` | teacher, admin | экран | [x] CU13 |
 | `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [x] CU14 |
-| `school` | `/school` | admin | экран | [ ] CU15 |
+| `school` | `/school` | admin | экран | [x] CU15 |
 | `approvals` | `/approvals` | admin | экран | [ ] CU16 |
 | `users` | `/users` | admin | экран | [ ] CU16 |
 | `userProfile` | `/users/[userId]` | admin | экран | [ ] CU16 |
@@ -242,7 +242,7 @@
 
 ### P10-CU15 — fix(ui): align school summary · Review: diff-only · Commit: auto
 
-- [ ] P10-T15 · T1 · Spec: analytics spec §7  
+- [x] P10-T15 · T1 · Spec: analytics spec §7  
       Files: `school/**`  
       Acceptance: `school` × admin × 4 ширины  
       Paths: H · N n/a · S n/a

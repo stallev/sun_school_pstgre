@@ -55,7 +55,7 @@ export const SchoolClosedGroupsTable = ({
 
   return (
     <section className="space-y-3">
-      <Card className="overflow-x-auto">
+      <Card className="max-w-full overflow-x-auto p-0">
         <Table className="min-w-[46rem] text-left text-base">
           <caption className="sr-only">{fillMessage(schoolMessages.closedTableCaption, { year: yearName })}</caption>
           <TableHeader className="border-b border-line text-base text-muted-foreground">

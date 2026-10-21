@@ -397,3 +397,18 @@
 | `pupil` · `DynamicsBlock.tsx` | динамика | CARD `p-4 sm:p-5`, H2 `text-lg` | без изменений CU14 (уже совпадает) | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `pupil` × teacher + admin × 4 ширины — новых deviation-строк нет; штрафы/достижения из прототипа вне MVP (spec §6).
+
+## Проход 13 — CU15 School summary
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5
+**Эталоны:** прототип `vSchool` · [`analytics_screens_spec`](../specs/analytics_screens_spec.md) §7
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU15) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `school` · `page.tsx` | контейнер | без page-level horizontal scroll | `min-w-0 max-w-full overflow-x-hidden` | 390–1024 | **нет отклонения** |
+| `school` · `SchoolGroupsTable.tsx` | таблица групп | CARD, `min-w-[46rem]`, meter + %, hint снизу | sr-only caption, thead muted, progressbar, hint под таблицей | 390–1024 | **нет отклонения** |
+| `school` · `page.tsx` | график | CARD `p-4 sm:p-5`, H2 `text-lg`, `mt-8` | `mt-4` внутри card, `sm:p-5`, hint `text-ink-2` | 390–1024 | **нет отклонения** |
+| `school` · `SchoolAttentionList.tsx` | внимание | CARD rows, status + chevron, `hover:bg-paper/70` | `StatusText`, `ChevronRight`, `mt-8` | 390–1024 | **нет отклонения** |
+| `school` · `SchoolClosedGroupsTable.tsx` | закрытый год | таблица как `schoolClosedBlock` | `p-0` card, `min-w-[46rem]` (без изменений логики) | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `school` × admin × 390, 768, 820, 1024 — новых deviation-строк нет.
