@@ -87,7 +87,8 @@ const VersesPage = async ({ searchParams }: VersesPageProps) => {
           searchPlaceholder: messages.versesSearchPlaceholder,
           searchEmpty: messages.versesSearchEmpty,
           verseMissing: messages.verseMissing,
-          usedInLessons: messages.usedInLessons,
+          lessonsPrefix: messages.versesLessonsPrefix,
+          notUsed: messages.versesNotUsed,
           emptyTitle: messages.emptyVersesTitle,
           emptyDescription: messages.emptyVersesDescription,
         }}

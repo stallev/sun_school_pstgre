@@ -162,6 +162,7 @@ export type AnalyticsMessages = {
     columnPlace: string;
     columnPupil: string;
     columnMetric: string;
+    tableCaption: string;
     empty: string;
     scopeGroup: string;
     scopeSchool: string;

@@ -63,6 +63,8 @@ export type TeacherLessonScreensMessages = {
   checkStubDescription: string;
   checkStubBack: string;
   usedInLessons: string;
+  versesLessonsPrefix: string;
+  versesNotUsed: string;
   lessonUsageLink: (ordinal: number, title: string) => string;
   unassignedTitle: string;
   unassignedDescription: string;

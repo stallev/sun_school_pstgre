@@ -5,6 +5,7 @@ import { CustomLink } from "@/components/ui/custom-link";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -20,33 +21,45 @@ type RatingTableProps = {
 
 export const RatingTable = ({ rows, messages }: RatingTableProps) => {
   if (rows.length === 0) {
-    return <ContentText className="text-sm text-muted-foreground">{messages.empty}</ContentText>;
+    return <ContentText className="text-sm text-muted">{messages.empty}</ContentText>;
   }
 
   return (
     <Card className="overflow-x-auto p-0">
-      <Table className="text-base">
-        <TableHeader>
-          <TableRow>
-            <TableHead scope="col" className="w-14">{messages.columnPlace}</TableHead>
-            <TableHead scope="col">{messages.columnPupil}</TableHead>
-            <TableHead scope="col" className="text-right">{messages.columnMetric}</TableHead>
+      <Table className="min-w-[34rem] text-base">
+        <TableCaption className="sr-only">{messages.tableCaption}</TableCaption>
+        <TableHeader className="border-line text-sm text-muted">
+          <TableRow className="hover:bg-transparent">
+            <TableHead scope="col" className="w-14 px-5 py-3 font-normal">
+              {messages.columnPlace}
+            </TableHead>
+            <TableHead scope="col" className="px-3 py-3 font-normal">
+              {messages.columnPupil}
+            </TableHead>
+            <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+              {messages.columnMetric}
+            </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="divide-y divide-line">
           {rows.map((row) => (
-            <TableRow key={row.pupilId}>
-              <TableCell>
-                <NumberDisplay className={row.place <= 3 ? "text-lg" : "text-muted-foreground"}>
+            <TableRow key={row.pupilId} className="hover:bg-transparent">
+              <TableCell className="px-5 py-3">
+                <NumberDisplay
+                  className={row.place <= 3 ? "text-lg tabular-nums" : "text-muted tabular-nums"}
+                >
                   {row.place}
                 </NumberDisplay>
               </TableCell>
-              <TableCell>
-                <CustomLink href={`/analytics/pupils/${row.pupilId}`} className="font-medium">
+              <TableCell className="px-3 py-3">
+                <CustomLink
+                  href={`/analytics/pupils/${row.pupilId}`}
+                  className="font-medium hover:text-cobalt-ink"
+                >
                   {row.displayName}
                 </CustomLink>
               </TableCell>
-              <TableCell className="text-right tabular-nums">{row.metric}</TableCell>
+              <TableCell className="px-3 py-3 text-right tabular-nums">{row.metric}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -341,3 +341,22 @@
 | `calendar` · `page.tsx` | заголовок | H1 = месяц · год | H1 «Календарь», группа в subtitle | 390–1024 | **продукт**, не визуал CU11 |
 
 **Re-pass:** матрица `bricks` + `calendar` × teacher + admin × 4 ширины — новых deviation-строк нет; карточки кирпичиков vs таблица и Sheet формы — P05 UX, не P10 chrome.
+
+## Проход 10 — CU12 Rating and verses
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5  
+**Эталоны:** прототип `vRating` · `vVerses` · P05  
+**Ширины:** 390, 768, 820, 1024 · роли: teacher, admin
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU12) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `rating` · `page.tsx` | шапка | H1 «Рейтинг группы» / «Рейтинг», описание инструмента | `PageHeader` title + `pageDescription` | 390–1024 | **нет отклонения** |
+| `rating` · `page.tsx` | приватность | lock + `text-sm text-ink-2` | `LockIcon` + `ContentText` | 390–1024 | **нет отклонения** |
+| `rating` · `page.tsx` | scope admin | чипы группа/школа + классы | `CustomLink` chips `h-11`, `border-line-strong` active | 390–1024 | **нет отклонения** (touch ≥44px) |
+| `rating` · `RatingTable.tsx` | таблица | `min-w-[34rem]`, thead muted, px-5/py-3, top-3 place | совпадает + `tableCaption` sr-only | 390–1024 | **нет отклонения** |
+| `rating` · `RatingTable.tsx` | колонки | бонус / достижения / штрафы | три колонки MVP | 390–1024 | **продукт (P05)**, не визуал CU12 |
+| `verses` · `page.tsx` | шапка | H1, описание библиотеки, outline «Добавить стих» | `PageHeader` + `VersesAddVerseDialog` outline | 390–1024 | **нет отклонения** |
+| `verses` · `VersesCatalog.client.tsx` | поиск | `max-w-xl`, icon left, `pl-10` | совпадает | 390–1024 | **нет отклонения** |
+| `verses` · `VersesCatalog.client.tsx` | строка | grid ref / italic text / «Уроки:» или «Не использован» | `px-5`, `font-display` italic, inline links | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `rating` + `verses` × teacher + admin × 4 ширины — новых deviation-строк нет; упрощённая таблица рейтинга и ссылки «Урок N» при заголовке-заглушке — P05 данные/копирайт, не P10 chrome.

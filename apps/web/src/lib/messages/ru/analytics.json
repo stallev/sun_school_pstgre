@@ -176,6 +176,7 @@
     "column_place": "Место",
     "column_pupil": "Ученик",
     "column_metric": "Баллы уроков",
+    "table_caption": "Рейтинг по баллам за уроки",
     "empty": "Проверенных баллов пока нет.",
     "scope_group": "Группа",
     "scope_school": "Школа"

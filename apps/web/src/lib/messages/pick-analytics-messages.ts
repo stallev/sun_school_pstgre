@@ -167,6 +167,7 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnPlace: getMessage(analytics, "rating.column_place"),
     columnPupil: getMessage(analytics, "rating.column_pupil"),
     columnMetric: getMessage(analytics, "rating.column_metric"),
+    tableCaption: getMessage(analytics, "rating.table_caption"),
     empty: getMessage(analytics, "rating.empty"),
     scopeGroup: getMessage(analytics, "rating.scope_group"),
     scopeSchool: getMessage(analytics, "rating.scope_school"),

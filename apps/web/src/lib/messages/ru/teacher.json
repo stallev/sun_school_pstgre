@@ -148,6 +148,8 @@
       "empty_title": "Золотых стихов пока нет",
       "empty_description": "Стихи появятся здесь после добавления в уроки.",
       "used_in": "Использован в уроках",
+      "lessons_prefix": "Уроки:",
+      "not_used": "Не использован",
       "usage_link": "Урок {n} · {title}",
       "usage_link_only": "Урок {n}"
     },

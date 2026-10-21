@@ -112,8 +112,8 @@
 | `group` | `/group` | teacher | экран | [x] CU10 |
 | `bricks` | `/bricks` | teacher, admin | экран | [x] CU11 |
 | `calendar` | `/calendar` | teacher, admin | экран | [x] CU11 |
-| `rating` | `/rating` | teacher, admin | экран | [ ] CU12 |
-| `verses` | `/verses` | teacher, admin | экран | [ ] CU12 |
+| `rating` | `/rating` | teacher, admin | экран | [x] CU12 |
+| `verses` | `/verses` | teacher, admin | экран | [x] CU12 |
 | `analytics` | `/analytics` | teacher, admin | экран | [ ] CU13 |
 | `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [ ] CU14 |
 | `school` | `/school` | admin | экран | [ ] CU15 |
@@ -221,9 +221,9 @@
 
 ### P10-CU12 — fix(ui): align rating and verses · Review: diff-only · Commit: auto
 
-- [ ] P10-T12 · T1 · Spec: P05  
-      Files: `rating/**`, `verses/**`  
-      Acceptance: оба ключа × teacher + admin × 4 ширины  
+- [x] P10-T12 · T1 · Spec: P05
+      Files: `rating/**`, `verses/**`
+      Acceptance: оба ключа × teacher + admin × 4 ширины
       Paths: H · N n/a · S n/a
 
 ### P10-CU13 — fix(ui): align group analytics · Review: diff-only · Commit: auto

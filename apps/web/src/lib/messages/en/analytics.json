@@ -176,6 +176,7 @@
     "column_place": "Place",
     "column_pupil": "Pupil",
     "column_metric": "Lesson points",
+    "table_caption": "Ranking by lesson points",
     "empty": "No checked lesson points yet.",
     "scope_group": "Group",
     "scope_school": "School"

@@ -101,6 +101,8 @@ export const pickTeacherLessonScreensMessages = (
   checkStubDescription: getMessage(teacher, "lesson.check_stub.description"),
   checkStubBack: getMessage(teacher, "lesson.form.back_lesson"),
   usedInLessons: getMessage(teacher, "lesson.verses_page.used_in"),
+  versesLessonsPrefix: getMessage(teacher, "lesson.verses_page.lessons_prefix"),
+  versesNotUsed: getMessage(teacher, "lesson.verses_page.not_used"),
   lessonUsageLink: (ordinal, title) => {
     const trimmed = title.trim();
     const shortOrdinal = fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal });

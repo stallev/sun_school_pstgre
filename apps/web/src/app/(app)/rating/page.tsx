@@ -4,7 +4,7 @@ import { USER_ROLE } from "@sunschool/domain";
 import { RatingTable } from "@/components/analytics/RatingTable";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { ContentText } from "@/components/atoms/ContentText";
+import { ContentText } from "@/components/atoms";
 import { loadRatingPage } from "@/data/analytics/load-rating-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
@@ -65,10 +65,10 @@ const RatingPage = async ({ searchParams }: RatingPageProps) => {
   return (
     <div className="space-y-6">
       <PageHeader title={ratingPageTitle} description={messages.rating.pageDescription} />
-      <p className="flex max-w-3xl items-start gap-2 text-sm text-ink-2">
+      <div className="flex max-w-3xl items-start gap-2">
         <LockIcon className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden />
-        {messages.rating.privacyNote}
-      </p>
+        <ContentText className="text-sm text-ink-2">{messages.rating.privacyNote}</ContentText>
+      </div>
       {data.isAdmin ? (
         <div className="flex flex-wrap gap-2">
           <CustomLink
@@ -116,7 +116,7 @@ const RatingPage = async ({ searchParams }: RatingPageProps) => {
         </div>
       ) : null}
       <RatingTable rows={data.rows} messages={messages.rating} />
-      <ContentText className="text-sm text-muted-foreground">{messages.rating.footnote}</ContentText>
+      <ContentText className="text-sm text-muted">{messages.rating.footnote}</ContentText>
     </div>
   );
 };

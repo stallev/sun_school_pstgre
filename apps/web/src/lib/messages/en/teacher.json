@@ -148,6 +148,8 @@
       "empty_title": "No golden verses yet",
       "empty_description": "Verses appear here after you add them to lessons.",
       "used_in": "Used in lessons",
+      "lessons_prefix": "Lessons:",
+      "not_used": "Not used",
       "usage_link": "Lesson {n} · {title}",
       "usage_link_only": "Lesson {n}"
     },
