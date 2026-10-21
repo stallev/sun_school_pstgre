@@ -30,7 +30,11 @@ type AuditFilterBarProps = {
 };
 
 export const AuditFilterBar = ({ values, actorOptions, labels }: AuditFilterBarProps) => (
-  <form method="get" action="/audit" className="grid gap-4 rounded-xl border border-line bg-surface p-4 md:grid-cols-2 lg:grid-cols-3">
+  <form
+    method="get"
+    action="/audit"
+    className="grid gap-4 rounded-xl border border-line bg-surface p-4 sm:p-5 md:grid-cols-2 lg:grid-cols-3"
+  >
     <div className="space-y-2">
       <Label htmlFor="audit-from">{labels.from}</Label>
       <Input id="audit-from" name="from" type="date" value={values.from} className="min-h-11" />

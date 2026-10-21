@@ -278,6 +278,7 @@
   },
   "audit": {
     "page_title": "Change log",
+    "page_subtitle": "Entries cannot be edited or deleted.",
     "system_actor": "System",
     "entity_pupil_erased": "child (data erased)",
     "filter_from": "From",

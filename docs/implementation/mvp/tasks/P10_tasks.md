@@ -123,10 +123,10 @@
 | `people` | `/people` | admin | экран | [x] CU17 |
 | `groups` | `/groups` | admin | экран | [x] CU17 |
 | `groupEdit` | `/groups/[groupId]` | admin | экран | [x] CU17 |
-| `year` | `/year` | admin | экран | [ ] CU18 |
-| `settings` | `/settings` | admin | экран | [ ] CU18 |
-| `deletions` | `/deletions` | admin | экран | [ ] CU18 |
-| `audit` | `/audit` | admin | экран | [ ] CU18 — **только визуал**; runtime «Something went wrong» не чинить в P10 |
+| `year` | `/year` | admin | экран | [x] CU18 |
+| `settings` | `/settings` | admin | экран | [x] CU18 |
+| `deletions` | `/deletions` | admin | экран | [x] CU18 |
+| `audit` | `/audit` | admin | экран | [x] CU18 — **только визуал**; runtime «Something went wrong» не чинить в P10 |
 | `privacy` | `/privacy` | аноним | экран | [x] CU4 (статика, без прототип-ключа) |
 
 ---
@@ -263,7 +263,7 @@
 
 ### P10-CU18 — fix(ui): align year settings deletions audit · Review: diff-only · Commit: auto
 
-- [ ] P10-T18 · T1 · Spec: contracts P02/P06 · shell settings  
+- [x] P10-T18 · T1 · Spec: contracts P02/P06 · shell settings  
       Files: `year/**`, `settings/**`, `deletions/**`, `audit/**`  
       Acceptance: четыре ключа × admin × 4 ширины; `/audit` — только визуал до загрузки ошибки  
       Paths: H · N n/a · S n/a

@@ -33,11 +33,21 @@ export const AuditTable = ({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead scope="col">{columnOccurred}</TableHead>
-          <TableHead scope="col">{columnActor}</TableHead>
-          <TableHead scope="col">{columnAction}</TableHead>
-          <TableHead scope="col">{columnEntity}</TableHead>
-          <TableHead scope="col">{columnDetails}</TableHead>
+          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            {columnOccurred}
+          </TableHead>
+          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            {columnActor}
+          </TableHead>
+          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            {columnAction}
+          </TableHead>
+          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            {columnEntity}
+          </TableHead>
+          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            {columnDetails}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

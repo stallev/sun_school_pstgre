@@ -28,7 +28,7 @@ const YearPage = async () => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-6">
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
         <PageHeader title={adminMessages.page.yearTitle} />
         <CreateYearForm dictionaries={dictionaries} formError={formError} />
         {years.length === 0 ? (
@@ -37,7 +37,7 @@ const YearPage = async () => {
             description={adminMessages.year.emptyDescription}
           />
         ) : (
-          <ul className="grid gap-4 lg:grid-cols-2">
+          <ul className="grid items-stretch gap-4 lg:grid-cols-2">
             {years.map((row) => (
               <li key={row.yearId} className="h-full">
                 <YearCard row={row} dictionaries={dictionaries} formError={formError} />

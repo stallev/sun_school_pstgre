@@ -278,6 +278,7 @@
   },
   "audit": {
     "page_title": "Журнал изменений",
+    "page_subtitle": "Записи не редактируются и не удаляются.",
     "system_actor": "Система",
     "entity_pupil_erased": "ребёнок (данные удалены)",
     "filter_from": "С",

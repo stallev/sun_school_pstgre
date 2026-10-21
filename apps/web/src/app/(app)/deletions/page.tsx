@@ -50,16 +50,21 @@ const DeletionsPage = async ({ searchParams }: DeletionsPageProps) => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-6">
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
         <PageHeader title={adminMessages.page.deletionsTitle} description={d.pageSubtitle} />
-        <nav className="-mb-px flex gap-1 overflow-x-auto border-b border-line" aria-label={d.tabNav}>
+        <nav
+          className="-mb-px flex gap-1 overflow-x-auto border-b border-line"
+          aria-label={d.tabNav}
+          role="tablist"
+        >
           {tabs.map((item) => (
             <CustomLink
               key={item.key}
               href={item.href}
-              aria-current={tab === item.key ? "page" : undefined}
+              role="tab"
+              aria-selected={tab === item.key}
               className={cn(
-                "-mb-px inline-flex h-11 shrink-0 items-center border-b-2 px-3 text-[0.9375rem]",
+                "-mb-px inline-flex h-11 shrink-0 items-center border-b-2 px-3 text-[0.9375rem] transition-[color,border-color] duration-100",
                 tab === item.key
                   ? "border-ink font-bold text-ink"
                   : "border-transparent text-ink-2 hover:text-ink",

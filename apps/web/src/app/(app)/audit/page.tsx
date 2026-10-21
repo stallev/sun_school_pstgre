@@ -85,8 +85,11 @@ const AuditPage = async ({ searchParams }: AuditPageProps) => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-6">
-        <PageHeader title={getMessage(adminDict, "audit.page_title")} />
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+        <PageHeader
+          title={getMessage(adminDict, "audit.page_title")}
+          description={getMessage(adminDict, "audit.page_subtitle")}
+        />
         <AuditFilterBar
           values={{
             from: params.from ?? "",

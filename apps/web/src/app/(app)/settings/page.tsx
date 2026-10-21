@@ -27,12 +27,12 @@ const SettingsPage = async () => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-6">
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
         <PageHeader
           title={adminMessages.page.settingsTitle}
           description={adminMessages.settings.pageSubtitle}
         />
-        <div className="grid max-w-5xl grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
+        <div className="grid max-w-5xl grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start">
           <SettingsLanguageForm
             currentLocale={currentLocale}
             dictionaries={dictionaries}
@@ -45,7 +45,7 @@ const SettingsPage = async () => {
             formError={formError}
           />
         </div>
-        <ContentText tone="secondary" className="max-w-3xl text-sm">
+        <ContentText tone="muted" className="max-w-3xl text-sm">
           {adminMessages.settings.footerNote}
         </ContentText>
       </div>

@@ -443,3 +443,21 @@
 | `groupEdit` · `TeacherAssignmentList.tsx` | учителя | `py-3`, ghost «Снять» | ghost `h-9`, divide-y без nested border | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `people`, `groups`, `groupEdit` × admin × 390, 768, 820, 1024 — новых deviation-строк нет; вкладки «Семьи» и имена учителей в списке групп вне MVP.
+
+## Проход 16 — CU18 Year settings deletions audit
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5
+**Эталоны:** прототип `vYear` / `vSettings` / `vDeletions` / `vAudit` · P02/P06 admin shell
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU18) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `year` · `page.tsx` | контейнер + grid | CARD `sm:p-5`, без horizontal scroll | `overflow-x-hidden`, `items-stretch` | 390–1024 | **нет отклонения** |
+| `year` · `YearCard` / `CreateYearForm` | карточки | `p-4 sm:p-5`, equal height в grid | `h-full flex-col`, `sm:p-5` | 390–1024 | **нет отклонения** |
+| `settings` · `page.tsx` | сетка + footer | `lg:grid-cols-[1fr_1.2fr]`, footer `text-muted` | prototype grid, `tone="muted"` note | 390–1024 | **нет отклонения** |
+| `settings` · forms | CARD padding | `sm:p-5` | language + timezone forms | 390–1024 | **нет отклонения** |
+| `deletions` · `page.tsx` | вкладки | `border-b`, `h-11`, transition | `role="tablist"`, как `/users` | 390–1024 | **нет отклонения** |
+| `deletions` · `DeletionRequestCard` | карточка | CARD `sm:p-5`, H2 subject | без изменений CU18 (уже ок) | 390–1024 | **нет отклонения** |
+| `audit` · `page.tsx` | шапка + фильтр | subtitle + CARD `sm:p-5` | `page_subtitle`, filter `sm:p-5` | 390–1024 | **нет отклонения** |
+| `audit` · `AuditTable` | строки | `px-5 py-4`, muted time | thead muted, cells padded | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `year`, `settings`, `deletions`, `audit` × admin × 390, 768, 820, 1024 — новых deviation-строк нет; runtime-ошибка `/audit` после загрузки данных вне P10 (см. §3).
