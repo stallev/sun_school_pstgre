@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
 import { SignOutButton } from "@/components/shell/sign-out-button.client";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
+import { SHELL_NAV_DROPDOWN_PANEL } from "@/lib/shell/nav-chrome-classes";
+import { cn } from "@/lib/utils";
 
 type UserMenuProps = {
   displayName: string;
@@ -46,7 +48,7 @@ export const UserMenu = ({ displayName }: UserMenuProps) => {
         ref={buttonRef}
         type="button"
         variant="ghost"
-        className="max-w-[12rem] truncate min-h-11"
+        className="h-9 max-w-[12rem] truncate px-1.5 text-[0.9375rem] hover:bg-paper"
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls={panelId}
@@ -58,7 +60,7 @@ export const UserMenu = ({ displayName }: UserMenuProps) => {
       {open ? (
         <div
           id={panelId}
-          className="absolute right-0 top-full z-50 mt-1 min-w-[12rem] rounded-lg border border-line bg-surface py-1 shadow-float"
+          className={cn(SHELL_NAV_DROPDOWN_PANEL, "right-0 min-w-56")}
           role="group"
         >
           <CustomLink

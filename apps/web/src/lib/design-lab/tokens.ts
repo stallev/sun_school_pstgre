@@ -87,8 +87,10 @@ export function contrastRatio(fgHex: string, bgHex: string): number {
 
 export const TYPE_SCALE = [
   { role: "Page title (h1)", classes: "font-display text-[1.75rem] sm:text-[2.125rem] font-medium leading-[1.1]", spec: "28 → 34 px", sample: "Домашнее задание" },
-  { role: "Section title (h2)", classes: "font-display text-xl font-medium leading-snug", spec: "20 px", sample: "Проверка работ" },
-  { role: "Large number", classes: "font-display text-3xl tabular-nums", spec: "30 px", sample: "128" },
+  { role: "Section title (h2)", classes: "font-display text-[1.25rem] font-medium leading-snug", spec: "20 px", sample: "Проверка работ" },
+  { role: "Login hero (h1)", classes: "font-display text-[2.25rem] font-medium leading-[1.05] tracking-[-0.015em]", spec: "36 px", sample: "Вход" },
+  { role: "Large number (score)", classes: "font-display text-3xl tabular-nums", spec: "30 px", sample: "128" },
+  { role: "KPI tile number", classes: "font-display text-2xl tabular-nums", spec: "24 px", sample: "7.4" },
   { role: "Body", classes: "text-base", spec: "17 px", sample: "Ученик сдал работу вовремя." },
   { role: "Caption", classes: "text-sm text-muted", spec: "~15 px", sample: "Группа «Ковчег», 12 ноября" },
   { role: "Button", classes: "text-[0.9375rem] font-medium", spec: "16 px", sample: "Сохранить" },

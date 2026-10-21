@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NavLinkRow } from "@/components/shell/nav-link-row";
@@ -8,7 +8,7 @@ import type { ShellNavProps } from "@/components/shell/shell-nav-types";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
 import { CustomLink } from "@/components/ui/custom-link";
 import { SignOutButton } from "@/components/shell/sign-out-button.client";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   isNavLeafActive,
   isResolvedNavGroup,
@@ -16,6 +16,12 @@ import {
 
 type NavDrawerProps = ShellNavProps & {
   displayName: string;
+  roleName: string;
+};
+
+const profileInitial = (displayName: string): string => {
+  const trimmed = displayName.trim();
+  return trimmed ? trimmed.charAt(0).toUpperCase() : "?";
 };
 
 export const NavDrawer = ({
@@ -23,6 +29,7 @@ export const NavDrawer = ({
   activeKey,
   badgeCounts,
   displayName,
+  roleName,
 }: NavDrawerProps) => {
   const messages = useShellMessages();
   const [open, setOpen] = useState(false);
@@ -42,7 +49,7 @@ export const NavDrawer = ({
             type="button"
             variant="ghost"
             size="icon"
-            className="min-h-11 min-w-11 lg:hidden"
+            className="shrink-0 min-h-11 min-w-11 lg:hidden"
             aria-expanded={open}
             aria-controls="nav-drawer"
             aria-label={messages.openMenu}
@@ -54,17 +61,34 @@ export const NavDrawer = ({
       <SheetContent
         id="nav-drawer"
         side="left"
-        closeLabel={messages.close}
-        className="w-[min(20rem,86vw)] bg-surface"
+        className="flex w-[min(20rem,86vw)] gap-0 bg-surface p-0 shadow-none"
         aria-modal="true"
         aria-label={messages.menu}
       >
-        <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-2 pt-2" aria-label={messages.mainNav}>
+        <div className="flex h-14 shrink-0 items-center justify-end border-b border-line px-2">
+          <SheetClose
+            render={
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="size-11"
+                aria-label={messages.close}
+              />
+            }
+          >
+            <XIcon className="size-6" aria-hidden />
+          </SheetClose>
+        </div>
+        <nav
+          className="flex min-h-0 flex-1 flex-col space-y-3 overflow-y-auto px-3 pt-4"
+          aria-label={messages.mainNav}
+        >
           {items.map((item) => {
             if (isResolvedNavGroup(item)) {
               return (
-                <div key={item.key} className="space-y-1">
-                  <p className="px-3 text-sm font-medium text-muted">{item.label}</p>
+                <div key={item.key}>
+                  <p className="px-3 pb-1 text-xs font-bold text-muted">{item.label}</p>
                   <ul className="space-y-0.5">
                     {item.children.map((child) => (
                       <li key={child.key}>
@@ -90,15 +114,26 @@ export const NavDrawer = ({
             );
           })}
         </nav>
-        <footer className="mt-auto flex items-center gap-2 border-t border-line px-2 py-3">
+        <footer className="mt-4 shrink-0 border-t border-line px-3 py-3">
           <CustomLink
             href="/profile"
-            className="min-h-11 min-w-0 flex-1 truncate rounded-lg px-3 py-2.5 text-ink no-underline hover:bg-paper"
+            className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left no-underline hover:bg-paper"
             onClick={() => setOpen(false)}
           >
-            {displayName}
+            <span
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-paper font-display text-ink-2 ring-1 ring-line"
+              aria-hidden
+            >
+              {profileInitial(displayName)}
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-medium text-ink">{displayName}</span>
+              <span className="block truncate text-xs text-muted">{roleName}</span>
+            </span>
           </CustomLink>
-          <SignOutButton className="w-auto shrink-0 px-3" />
+          <SignOutButton
+            className="mt-1 flex h-10 w-full items-center gap-3 px-3 text-ink-2"
+          />
         </footer>
       </SheetContent>
     </Sheet>

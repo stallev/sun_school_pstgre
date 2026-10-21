@@ -19,7 +19,7 @@ paths:
 
 | Параметр | Источник | Реализация |
 |----------|----------|------------|
-| **Гарнитуры** | Source Serif 4, Manrope, JetBrains Mono | `next/font` + `font-heading` / `font-sans` / `font-mono` |
+| **Гарнитуры** | Alegreya, Alegreya Sans, `ui-monospace` (UX-03 D-2) | `next/font` + `font-display` / `font-body` (`font-sans`) / `font-mono` |
 | **Кегль** | Type scale §typography, responsive table | Atoms (`Heading`, `ContentText`) или точные `text-[Npx]` из DS |
 | **Начертание / вес** | `font-normal`, `font-medium`, `font-semibold`, `font-bold` | Как в прототипе для каждого контекста |
 | **Цвета** | Slate Cobalt CSS variables | Semantic tokens: `text-foreground`, `bg-primary`, `text-muted-foreground` — **не** ad-hoc hex |

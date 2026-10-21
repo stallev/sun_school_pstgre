@@ -1,6 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { PRODUCT_PATHNAME_HEADER } from "../metadata/product-pathname-header";
+
 const NONCE_HEADER = "x-nonce";
 
 export function createCspNonce(): string {
@@ -91,6 +93,7 @@ export function applyRequestSecurity(request: NextRequest, response: NextRespons
           headers: (() => {
             const requestHeaders = new Headers(request.headers);
             requestHeaders.set(NONCE_HEADER, nonce);
+            requestHeaders.set(PRODUCT_PATHNAME_HEADER, request.nextUrl.pathname);
             return requestHeaders;
           })(),
         },

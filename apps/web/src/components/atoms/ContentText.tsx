@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 const contentTextVariants = cva("", {
   variants: {
     tone: {
-      body: "text-base text-ink",
-      secondary: "text-base text-ink-2",
-      muted: "text-sm text-muted",
+      body: "font-body text-base text-ink",
+      secondary: "font-body text-base text-ink-2",
+      muted: "font-body text-sm text-muted",
     },
   },
   defaultVariants: { tone: "body" },

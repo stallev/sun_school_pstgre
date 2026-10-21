@@ -56,6 +56,7 @@
     "forbidden_home": "На главную",
     "badge_in_queue": "В очереди: {count}",
     "document_suffix": "Воскресная школа",
+    "document_description": "Приложение воскресной школы",
     "dev_view_as": "Смотреть как",
     "dev_role_admin": "Администратор",
     "dev_role_teacher": "Учитель",

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { USER_ROLE } from "@sunschool/domain";
 import { homeRouteFor } from "@sunschool/policy-edge";
@@ -18,6 +19,22 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { getPrisma } from "@/lib/db.server";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
+import {
+  readRequestPathname,
+  resolveShellRouteDocumentTitle,
+} from "@/lib/metadata/product-document-title.server";
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await getUiLocale();
+  const pathname = await readRequestPathname();
+  if (!pathname) return {};
+
+  const common = await getDictionary(locale, "common");
+  const pageTitle = resolveShellRouteDocumentTitle(pathname, common);
+  if (!pageTitle) return {};
+
+  return { title: pageTitle };
+};
 
 type AppGroupLayoutProps = {
   children: ReactNode;

@@ -26,10 +26,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const locale = await getUiLocale();
   const common = await getDictionary(locale, "common");
   const pageTitle = getMessage(common, "shell.titles.profile");
-  const suffix = getMessage(common, "shell.document_suffix");
   return {
     robots: { index: false, follow: false },
-    title: `${pageTitle} — ${suffix}`,
+    title: pageTitle,
   };
 };
 

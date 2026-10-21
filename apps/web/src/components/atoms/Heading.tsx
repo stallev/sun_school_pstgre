@@ -6,7 +6,8 @@ const headingVariants = cva("font-display font-medium text-ink", {
   variants: {
     level: {
       page: "text-[1.75rem] leading-[1.1] tracking-[-0.01em] sm:text-[2.125rem]",
-      section: "text-xl leading-snug",
+      section: "text-[1.25rem] leading-snug",
+      hero: "text-[2.25rem] leading-[1.05] tracking-[-0.015em]",
     },
   },
   defaultVariants: { level: "page" },
@@ -22,6 +23,6 @@ export const Heading = ({
   className,
   ...props
 }: HeadingProps) => {
-  const Tag = as ?? (level === "page" ? "h1" : "h2");
+  const Tag = as ?? (level === "page" || level === "hero" ? "h1" : "h2");
   return <Tag className={cn(headingVariants({ level }), className)} {...props} />;
 };

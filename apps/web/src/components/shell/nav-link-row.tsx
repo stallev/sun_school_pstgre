@@ -5,6 +5,7 @@ import { NavBadge } from "@/components/shell/nav-badge";
 import type { NavBadgeSlotId } from "@/components/shell/nav-config";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
 import type { ResolvedNavLeaf } from "@/lib/shell/nav-resolver";
+import { shellTopNavTriggerClass } from "@/lib/shell/nav-chrome-classes";
 import { cn } from "@/lib/utils";
 
 type NavLinkRowProps = {
@@ -13,6 +14,8 @@ type NavLinkRowProps = {
   badgeCount?: number;
   onNavigate?: () => void;
   showDescription?: boolean;
+  /** Topnav uses `h-9` per UX-03 §6; drawer keeps 44px touch target. */
+  density?: "drawer" | "topnav";
 };
 
 const badgeLabel = (template: string, count: number) => template.replace("{count}", String(count));
@@ -23,10 +26,27 @@ export const NavLinkRow = ({
   badgeCount = 0,
   onNavigate,
   showDescription = false,
+  density = "drawer",
 }: NavLinkRowProps) => {
   const messages = useShellMessages();
   const slotId: NavBadgeSlotId | undefined = leaf.badgeSlotId;
   const count = slotId ? badgeCount : 0;
+
+  if (density === "topnav" && !showDescription) {
+    return (
+      <CustomLink
+        href={leaf.href}
+        aria-current={isActive ? "page" : undefined}
+        onClick={onNavigate}
+        className={cn(
+          shellTopNavTriggerClass({ isActive, isOpen: false }),
+          "no-underline",
+        )}
+      >
+        {leaf.label}
+      </CustomLink>
+    );
+  }
 
   return (
     <CustomLink
@@ -34,13 +54,17 @@ export const NavLinkRow = ({
       aria-current={isActive ? "page" : undefined}
       onClick={onNavigate}
       className={cn(
-        "flex min-h-11 rounded-lg px-3 py-2 text-ink no-underline hover:bg-paper",
-        showDescription ? "items-start gap-2" : "items-center",
-        isActive && "bg-cobalt-soft text-cobalt-ink",
+        "flex w-full rounded-lg text-left text-[0.9375rem] no-underline hover:bg-paper",
+        density === "topnav" ? "items-start gap-3 px-2.5 py-2" : "h-11 min-h-11 items-center gap-3 px-3",
+        isActive
+          ? "bg-cobalt-soft font-bold text-cobalt-ink"
+          : "text-ink-2 hover:text-ink",
       )}
     >
       <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-2 font-medium">{leaf.label}</span>
+        <span className={cn("flex items-center gap-2", !isActive && density === "topnav" && "font-medium")}>
+          {leaf.label}
+        </span>
         {showDescription && leaf.description ? (
           <span className="mt-0.5 block text-sm text-muted">{leaf.description}</span>
         ) : null}

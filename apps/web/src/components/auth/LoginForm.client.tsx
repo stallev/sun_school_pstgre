@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertText, ContentText } from "@/components/atoms";
+import { AlertText, ContentText, Heading } from "@/components/atoms";
 import { AdminLoginDisclosure } from "@/components/auth/AdminLoginDisclosure.client";
 import { ProviderButton } from "@/components/auth/ProviderButton.client";
 import { useAuthMessages } from "@/components/auth/auth-messages-provider.client";
@@ -33,9 +33,9 @@ export const LoginForm = ({
         <p className="font-display text-2xl font-medium text-ink">{brandLabel}</p>
       </div>
 
-      <h1 className="mt-10 font-display text-[2.25rem] font-medium leading-[1.05] tracking-[-0.015em] text-ink">
+      <Heading as="h1" level="hero" className="mt-10">
         {messages.login.title}
-      </h1>
+      </Heading>
       <ContentText className="mt-3 text-ink-2">{messages.login.intro}</ContentText>
       {showDevBanner ? <ContentText className="mt-3 text-warn">{messages.login.devBanner}</ContentText> : null}
 
