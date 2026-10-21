@@ -253,3 +253,20 @@
 | `today` · `page.tsx` | «Кого отметить» | второй столбец `vToday` | нет (P09 scope) | 390–1024 | **сознательно** (P09) |
 
 **Re-pass:** матрица `today` × teacher × 4 ширины — новых deviation-строк нет; секция достижений и «Голосовая практика» не добавлялись (P09).
+
+## Проход 5 — CU7 Lessons list
+
+**Субагент:** implementer / composer-2.5  
+**Эталоны:** прототип `vLessons` · P03 `/lessons`  
+**Ширины:** 390, 768, 820, 1024 · роль: teacher (ACTIVE)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU7) | Ширины | Серьёзность |
+|-------------|------|----------------------------|------------------|--------|-------------|
+| `lessons` · `page.tsx` | список `ol` | `CARD` divide-y, `rounded-xl` border | `ol` `rounded-xl border-line bg-surface divide-y` | 390–1024 | **нет отклонения** |
+| `lessons` · `LessonListRow.tsx` | сетка строки | `px-5 py-4`, `sm:grid-cols-[4.5rem_…]`, hover `bg-paper/70` | совпадает | 390–1024 | **нет отклонения** |
+| `lessons` · `LessonListRow.tsx` | дата / номер | `font-display text-2xl` + «урок N» muted | `NumberDisplay` `size="kpi"` + `listOrdinalShort` | 390–1024 | **нет отклонения** |
+| `lessons` · `LessonListRow.tsx` | тема / стихи | title + стихи или subline обзорного | title, badge обзорного, `verseRefsLabel` / review subline | 390–1024 | **нет отклонения** |
+| `lessons` · `LessonListRow.tsx` | статус проверки | `Проверено n/n` + chevron | `StatusText` + `listCheckFraction` + `ChevronRightIcon` | 390–1024 | **нет отклонения** |
+| `lessons` · `format-lesson-display-date.ts` | краткая дата | `l.d` как `dd.MM` | `2-digit` day/month | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `lessons` × teacher × 4 ширины — новых deviation-строк нет; подсветка drawer «Все уроки» — shell (CU2), не строка списка.

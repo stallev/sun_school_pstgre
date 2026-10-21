@@ -104,7 +104,7 @@
 | `pending` | `/pending` | заявка/отклонена | экран | [x] CU4 |
 | `profile` | `/profile` | активные | экран | [x] CU5 |
 | `today` | `/today` | teacher | экран | [x] CU6 |
-| `lessons` | `/lessons` | teacher | экран | [ ] CU7 |
+| `lessons` | `/lessons` | teacher | экран | [x] CU7 |
 | `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [ ] CU8 |
 | `lesson` | `/lessons/[lessonId]` | teacher | экран | [ ] CU8 |
 | `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [ ] CU9 |
@@ -186,7 +186,7 @@
 
 ### P10-CU7 — fix(ui): align lessons list row · Review: diff-only · Commit: auto
 
-- [ ] P10-T7 · T1 · Spec: P03 `/lessons` · `vLessons`  
+- [x] P10-T7 · T1 · Spec: P03 `/lessons` · `vLessons`  
       Files: `apps/web/src/app/(app)/lessons/page.tsx`, строка списка  
       Acceptance: матрица `lessons` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a

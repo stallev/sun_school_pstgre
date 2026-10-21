@@ -30,10 +30,12 @@ export const LessonListRow = ({ row, messages }: LessonListRowProps) => {
   return (
     <CustomLink
       href={`/lessons/${row.lessonId}`}
-      className="grid w-full grid-cols-1 gap-3 px-4 py-4 transition-colors hover:bg-paper/70 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6"
+      className="grid w-full grid-cols-1 gap-3 px-5 py-4 text-left transition-colors hover:bg-paper/70 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6"
     >
       <span className="flex items-baseline gap-3 sm:block">
-        <NumberDisplay className="text-2xl leading-none">{row.lessonDateShortLabel}</NumberDisplay>
+        <NumberDisplay size="kpi" className="leading-none">
+          {row.lessonDateShortLabel}
+        </NumberDisplay>
         <ContentText tone="secondary" className="text-sm sm:mt-1">
           {messages.listOrdinalShort(row.ordinal)}
         </ContentText>
