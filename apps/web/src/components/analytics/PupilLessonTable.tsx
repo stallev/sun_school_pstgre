@@ -39,13 +39,13 @@ export const PupilLessonTable = ({
   locale,
   showCorrectActions = false,
 }: PupilLessonTableProps) => (
-  <section className="min-w-0 space-y-2">
-    <SectionTitle as="h2" className="text-lg">{messages.lessonsTitle}</SectionTitle>
+  <section className="mt-8 min-w-0">
+    <SectionTitle as="h2" className="mb-3">{messages.lessonsTitle}</SectionTitle>
     {lessons.length === 0 ? (
       <ContentText className="text-sm text-muted">{messages.lessonsEmpty}</ContentText>
     ) : (
       <Card className="max-w-full overflow-x-auto p-0">
-        <Table className="min-w-[44rem] text-base">
+        <Table className="min-w-[44rem] text-left">
           <TableHeader className="border-b border-line text-sm text-muted">
             <TableRow className="hover:bg-transparent">
               <TableHead scope="col" className="px-5 py-3 font-normal">

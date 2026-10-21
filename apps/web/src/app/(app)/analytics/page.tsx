@@ -131,53 +131,58 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
       : messages.periodMonth;
 
   return (
-    <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
-      <PageHeader title={messages.pageTitle} description={pageDescription} />
-      {data.isAdmin && data.grades.length > 1 ? (
-        <AnalyticsGradeChips
-          grades={data.grades}
-          gradeId={data.gradeId}
-          yearId={data.yearId}
-          periodQuery={periodQuery}
-          ariaLabel={lessonMessages.gradeFilterLabel}
-        />
-      ) : null}
+    <div className="min-w-0 max-w-full overflow-x-hidden">
       <AnalyticsYearScope committedYearId={data.yearId}>
-      <Suspense fallback={<YearNavFallback />}>
-        <GroupAnalyticsYearNav
-          groupLabel={data.gradeName}
-          tableRows={tableRows}
-          messages={messages}
-        />
-      </Suspense>
-      <GroupYearSelection rows={tableRows} messages={messages} />
-      {selectedSnapshotMissing ? (
-        <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
-          <ErrorState
-            title={yearMessages.snapshotMissing}
-            action={<AnalyticsRetryButton retryLabel={retryLabel} />}
-          />
-        </AnalyticsYearDetail>
-      ) : (
-        <>
-          <AnalyticsPeriodChips
-            gradeId={data.gradeId}
-            yearId={data.yearId}
-            periodFilter={data.periodFilter}
-            messages={messages}
-            monthChipValue={monthChipValue}
-            monthChipLabel={monthChipLabel}
-          />
-          <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
-          {analytics.hasCheckedLessonsInPeriod ? (
-            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} />
+        <div className="space-y-6">
+          <PageHeader title={messages.pageTitle} description={pageDescription} />
+          {data.isAdmin && data.grades.length > 1 ? (
+            <AnalyticsGradeChips
+              grades={data.grades}
+              gradeId={data.gradeId}
+              yearId={data.yearId}
+              periodQuery={periodQuery}
+              ariaLabel={lessonMessages.gradeFilterLabel}
+            />
           ) : null}
-          {isActiveYear && data.isAdmin ? (
-            <AnalyticsAdminDataQualityRow
-              missingRecords={data.dataQuality?.missingPupilRecordsOnCheckedLessons ?? 0}
-              migrationDuplicates={0}
+          <Suspense fallback={<YearNavFallback />}>
+            <GroupAnalyticsYearNav
+              groupLabel={data.gradeName}
+              tableRows={tableRows}
               messages={messages}
             />
+          </Suspense>
+          <GroupYearSelection rows={tableRows} messages={messages} />
+          {!selectedSnapshotMissing ? (
+            <AnalyticsPeriodChips
+              gradeId={data.gradeId}
+              yearId={data.yearId}
+              periodFilter={data.periodFilter}
+              messages={messages}
+              monthChipValue={monthChipValue}
+              monthChipLabel={monthChipLabel}
+            />
+          ) : null}
+          {!selectedSnapshotMissing && analytics.hasCheckedLessonsInPeriod ? (
+            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} />
+          ) : null}
+        </div>
+        {selectedSnapshotMissing ? (
+          <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
+            <ErrorState
+              title={yearMessages.snapshotMissing}
+              action={<AnalyticsRetryButton retryLabel={retryLabel} />}
+            />
+          </AnalyticsYearDetail>
+        ) : (
+          <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
+          {isActiveYear && data.isAdmin ? (
+            <div className="mt-3">
+              <AnalyticsAdminDataQualityRow
+                missingRecords={data.dataQuality?.missingPupilRecordsOnCheckedLessons ?? 0}
+                migrationDuplicates={0}
+                messages={messages}
+              />
+            </div>
           ) : null}
           {isActiveYear &&
           data.isAdmin &&
@@ -205,7 +210,7 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
           ) : (
             <>
               <SampleCompositionRow snapshot={analytics} messages={messages} />
-              <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
+              <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 lg:grid-cols-2 lg:gap-6">
                 <ChartTableToggle
                   chartId="attendance"
                   title={messages.charts.attendanceTitle}
@@ -266,8 +271,7 @@ const AnalyticsPage = async ({ searchParams }: AnalyticsPageProps) => {
             </>
           )}
           </AnalyticsYearDetail>
-        </>
-      )}
+        )}
       </AnalyticsYearScope>
     </div>
   );

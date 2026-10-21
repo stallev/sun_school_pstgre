@@ -19,9 +19,11 @@ type ConductedLessonsTableProps = {
 };
 
 export const ConductedLessonsTable = ({ snapshot, messages }: ConductedLessonsTableProps) => (
-  <section className="mt-8 min-w-0 space-y-2">
-    <SectionTitle as="h2" className="text-lg">{messages.conducted.title}</SectionTitle>
-    <ContentText className="text-sm text-ink-2">{messages.conducted.subtitle}</ContentText>
+  <section className="min-w-0">
+    <SectionTitle as="h2" className="mt-8 mb-1 text-[1.25rem] font-medium leading-snug">
+      {messages.conducted.title}
+    </SectionTitle>
+    <ContentText className="mb-3 text-sm text-ink-2">{messages.conducted.subtitle}</ContentText>
     {snapshot.teachers.length === 0 ? (
       <ContentText className="text-sm text-muted">{messages.conducted.empty}</ContentText>
     ) : (

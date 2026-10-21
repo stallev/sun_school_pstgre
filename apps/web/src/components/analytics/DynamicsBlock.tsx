@@ -1,6 +1,7 @@
 "use client";
 
 import { TREND_LABEL } from "@sunschool/domain";
+import { Check, Circle, TrendingDown, TrendingUp } from "lucide-react";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
 import { EmptyState } from "@/components/patterns/EmptyState";
@@ -24,6 +25,20 @@ type DynamicsBlockProps = {
   locale: string;
 };
 
+const renderTrendIcon = (label: PupilAnalyticsView["dynamics"]["trendLabel"]) => {
+  const iconClass = "size-4";
+  switch (label) {
+    case TREND_LABEL.GROWING:
+      return <TrendingUp className={iconClass} aria-hidden />;
+    case TREND_LABEL.DECLINING:
+      return <TrendingDown className={iconClass} aria-hidden />;
+    case TREND_LABEL.STABLE:
+      return <Check className={iconClass} aria-hidden />;
+    default:
+      return <Circle className={iconClass} aria-hidden />;
+  }
+};
+
 export const DynamicsBlock = ({
   dynamics,
   messages,
@@ -37,16 +52,21 @@ export const DynamicsBlock = ({
   const trendStyle = messages.dynamicsTrendLabels[dynamics.trendLabel];
   const deltaValues = dynamics.deltaValues.filter((value): value is number => value !== null);
   const deltaLimit = Math.max(4, Math.ceil(Math.max(...deltaValues.map(Math.abs), 0)));
+  const growingLabel = messages.dynamicsTrendLabels[TREND_LABEL.GROWING].label;
+  const decliningLabel = messages.dynamicsTrendLabels[TREND_LABEL.DECLINING].label;
 
   return (
     <Card className="flex flex-col gap-4 overflow-visible p-4 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <SectionTitle as="h2" className="text-lg">{messages.dynamicsTitle}</SectionTitle>
+          <SectionTitle as="h2">{messages.dynamicsTitle}</SectionTitle>
           <ContentText className="mt-1 max-w-prose text-sm text-ink-2">{messages.dynamicsHint}</ContentText>
         </div>
         <div className="text-right">
-          <ContentText className={`font-semibold ${trendStyle.toneClass}`}>{trendStyle.label}</ContentText>
+          <p className={`inline-flex items-center gap-1.5 font-bold ${trendStyle.toneClass}`}>
+            {renderTrendIcon(dynamics.trendLabel)}
+            {trendStyle.label}
+          </p>
           {dynamics.trendSlope !== null && dynamics.trendLabel !== TREND_LABEL.INSUFFICIENT_DATA ? (
             <ContentText className="text-sm tabular-nums text-ink-2">
               {fillMessage(messages.dynamicsSlope, { delta: formatAnalyticsDelta(dynamics.trendSlope) })}
@@ -78,14 +98,26 @@ export const DynamicsBlock = ({
           <div className="min-w-0 space-y-2">
             <ContentText className="text-sm font-medium">{messages.dynamicsDeltaTitle}</ContentText>
             {deltaValues.length >= 1 ? (
-              <BarChart
-                labels={dynamics.deltaLabels}
-                values={dynamics.deltaValues}
-                formatLabel={formatDate}
-                formatValue={formatAnalyticsDelta}
-                yDomain={[-deltaLimit, deltaLimit]}
-                ariaLabel={messages.dynamicsDeltaAria}
-              />
+              <>
+                <BarChart
+                  labels={dynamics.deltaLabels}
+                  values={dynamics.deltaValues}
+                  formatLabel={formatDate}
+                  formatValue={formatAnalyticsDelta}
+                  yDomain={[-deltaLimit, deltaLimit]}
+                  ariaLabel={messages.dynamicsDeltaAria}
+                />
+                <p className="mt-1 flex gap-4 text-xs text-ink-2">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="size-2.5 rounded-sm bg-series-1" aria-hidden />
+                    {growingLabel}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="size-2.5 rounded-sm bg-series-2" aria-hidden />
+                    {decliningLabel}
+                  </span>
+                </p>
+              </>
             ) : (
               <EmptyState
                 title={messages.charts.insufficientDataTitle}

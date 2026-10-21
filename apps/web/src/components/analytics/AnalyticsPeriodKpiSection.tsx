@@ -34,7 +34,7 @@ export const AnalyticsPeriodKpiSection = ({
     <Card className="grid min-w-0 grid-cols-1 gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:items-center">
       <div className="min-w-0">
         <ContentText className="text-sm text-muted">{messages.kpiAttendanceLabel}</ContentText>
-        <NumberDisplay className="mt-1 text-[3.5rem] font-medium leading-none tracking-tight">
+        <NumberDisplay className="mt-1 text-[3.5rem] font-medium leading-none tabular-nums tracking-[-0.02em]">
           {kpi.attendancePercent === null
             ? messages.kpiEmpty
             : formatAnalyticsPercent(

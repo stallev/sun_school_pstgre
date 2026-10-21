@@ -51,10 +51,20 @@ const PupilLayerTable = ({
   messages: AnalyticsMessages;
   variant: TableVariant;
   locale: string;
-}) => (
-  <section className="min-w-0 space-y-2">
-    <SectionTitle as="h2" className="text-lg">{title}</SectionTitle>
-    {intro ? <ContentText className="text-sm text-ink-2">{intro}</ContentText> : null}
+}) => {
+  const titleClassName =
+    variant === "layer-b"
+      ? "mt-8 mb-1 text-[1.25rem] font-medium leading-snug"
+      : variant === "layer-c" || variant === "layer-d"
+        ? "mb-3 text-[1.25rem] font-medium leading-snug"
+        : "mt-8 mb-3 text-[1.25rem] font-medium leading-snug";
+
+  return (
+  <section className="min-w-0">
+    <SectionTitle as="h2" className={titleClassName}>
+      {title}
+    </SectionTitle>
+    {intro ? <ContentText className="mb-3 text-sm text-ink-2">{intro}</ContentText> : null}
     {rows.length === 0 ? (
       <ContentText className="text-sm text-muted">{messages.tables.emptySection}</ContentText>
     ) : (
@@ -121,7 +131,12 @@ const PupilLayerTable = ({
             {rows.map((row) => (
               <TableRow key={row.pupilId} className="hover:bg-transparent">
                 <TableCell className="px-5 py-3">
-                  <CustomLink href={`/analytics/pupils/${row.pupilId}`}>{row.displayName}</CustomLink>
+                  <CustomLink
+                    href={`/analytics/pupils/${row.pupilId}`}
+                    className="hover:text-cobalt-ink"
+                  >
+                    {row.displayName}
+                  </CustomLink>
                 </TableCell>
                 {variant !== "layer-d" ? (
                   <TableCell className="px-3 py-3">{row.birthYear ?? messages.kpiEmpty}</TableCell>
@@ -179,7 +194,8 @@ const PupilLayerTable = ({
       </Card>
     )}
   </section>
-);
+  );
+};
 
 export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyticsTablesProps) => {
   const layerA = snapshot.pupilsByLayer[SAMPLE_LAYER.A];
@@ -189,7 +205,7 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
   const birthYearRows = buildBirthYearCohortRows(layerA);
 
   return (
-    <div className="min-w-0 space-y-6">
+    <div className="min-w-0">
       <PupilLayerTable
         title={messages.tables.layerATitle}
         rows={layerA}
@@ -205,7 +221,7 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
         variant="layer-b"
         locale={locale}
       />
-      <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-2">
         <PupilLayerTable
           title={messages.tables.layerCTitle}
           rows={layerC}
@@ -221,9 +237,11 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
           locale={locale}
         />
       </div>
-      <section className="min-w-0 space-y-2">
-        <SectionTitle as="h2" className="text-lg">{messages.tables.layerBirthYearTitle}</SectionTitle>
-        <ContentText className="text-sm text-ink-2">{messages.tables.layerBirthYearNote}</ContentText>
+      <section className="min-w-0">
+        <SectionTitle as="h2" className="mt-8 mb-3 text-[1.25rem] font-medium leading-snug">
+          {messages.tables.layerBirthYearTitle}
+        </SectionTitle>
+        <ContentText className="mb-3 text-sm text-ink-2">{messages.tables.layerBirthYearNote}</ContentText>
         {birthYearRows.length === 0 ? (
           <ContentText className="text-sm text-muted">{messages.tables.emptySection}</ContentText>
         ) : (

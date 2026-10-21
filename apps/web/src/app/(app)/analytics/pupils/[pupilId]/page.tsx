@@ -13,6 +13,7 @@ import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
 import { DynamicsBlock } from "@/components/analytics/DynamicsBlock";
 import { PupilAnalyticsKpiSection } from "@/components/analytics/PupilAnalyticsKpiSection";
 import { PupilLessonTable } from "@/components/analytics/PupilLessonTable";
+import { PupilPresenceStrip } from "@/components/analytics/PupilPresenceStrip";
 import { AnalyticsYearDetail } from "@/components/analytics/years/AnalyticsYearDetail.client";
 import { AnalyticsYearScope } from "@/components/analytics/years/AnalyticsYearScope.client";
 import { PupilAnalyticsYearNav } from "@/components/analytics/years/PupilAnalyticsYearNav.client";
@@ -33,7 +34,6 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
-import { formatAnalyticsShortDate } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickPupilAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
@@ -148,50 +148,48 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
   const headerDescription = `${birthYearPart} · ${gradeLabels} · ${statusPart}`;
   const showLessonCorrect = isActiveYear && !isForeignGroupYearSnapshot;
 
+  const chartToggleProps = {
+    messages: messages.charts,
+    locale: appLocale,
+    valueKind: "chart" as const,
+    percentTemplate: messages.formatPercent,
+    chartValueTemplate: messages.formatChartValue,
+    emptyLabel: messages.kpiEmpty,
+    minChartPoints: 1,
+  };
+
   const lessonCharts = view === null ? null : (
-    <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
-      <ChartTableToggle
-        chartId="pupil-verses"
-        title={messages.charts.versesTitle}
-        methodology={messages.charts.methodologyVerses}
-        points={view.charts.verses}
-        messages={messages.charts}
-        locale={appLocale}
-        valueKind="chart"
-        percentTemplate={messages.formatPercent}
-        chartValueTemplate={messages.formatChartValue}
-        emptyLabel={messages.kpiEmpty}
-        yDomain={[0, 3]}
-        minChartPoints={1}
-      />
-      <ChartTableToggle
-        chartId="pupil-test"
-        title={messages.charts.testTitle}
-        methodology={messages.charts.methodologyTest}
-        points={view.charts.test}
-        messages={messages.charts}
-        locale={appLocale}
-        valueKind="chart"
-        percentTemplate={messages.formatPercent}
-        chartValueTemplate={messages.formatChartValue}
-        emptyLabel={messages.kpiEmpty}
-        yDomain={[0, 10]}
-        minChartPoints={1}
-      />
-      <ChartTableToggle
-        chartId="pupil-notebook"
-        title={messages.charts.notebookTitle}
-        methodology={messages.charts.methodologyNotebook}
-        points={view.charts.notebook}
-        messages={messages.charts}
-        locale={appLocale}
-        valueKind="chart"
-        percentTemplate={messages.formatPercent}
-        chartValueTemplate={messages.formatChartValue}
-        emptyLabel={messages.kpiEmpty}
-        yDomain={[0, 10]}
-        minChartPoints={1}
-      />
+    <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 lg:grid-cols-3">
+      <div className="h-full">
+        <ChartTableToggle
+          chartId="pupil-verses"
+          title={messages.charts.versesTitle}
+          methodology={messages.charts.methodologyVerses}
+          points={view.charts.verses}
+          yDomain={[0, 3]}
+          {...chartToggleProps}
+        />
+      </div>
+      <div className="h-full">
+        <ChartTableToggle
+          chartId="pupil-test"
+          title={messages.charts.testTitle}
+          methodology={messages.charts.methodologyTest}
+          points={view.charts.test}
+          yDomain={[0, 10]}
+          {...chartToggleProps}
+        />
+      </div>
+      <div className="h-full">
+        <ChartTableToggle
+          chartId="pupil-notebook"
+          title={messages.charts.notebookTitle}
+          methodology={messages.charts.methodologyNotebook}
+          points={view.charts.notebook}
+          yDomain={[0, 10]}
+          {...chartToggleProps}
+        />
+      </div>
     </div>
   );
 
@@ -240,6 +238,7 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
       ) : null}
       {view ? (
         <Banner
+          className="mb-6 max-w-3xl items-start px-4 py-3"
           tone={view.isInMainSample ? "success" : "warning"}
           title={fillMessage(messages.sampleInGroupAverages, {
             included: view.isInMainSample ? messages.sampleIncludedYes : messages.sampleIncludedNo,
@@ -262,32 +261,21 @@ const PupilAnalyticsPage = async ({ params, searchParams }: PupilAnalyticsPagePr
       ) : null}
       {isActiveYear && view ? (
         <>
-          <PupilAnalyticsKpiSection view={view} messages={messages} />
-          <DynamicsBlock dynamics={view.dynamics} messages={messages} locale={appLocale} />
-          <section className="min-w-0 space-y-2">
-            <SectionTitle as="h2" className="text-lg">{messages.presenceTitle}</SectionTitle>
-            <div className="flex flex-wrap gap-1" role="list" aria-label={messages.presenceTitle}>
-              {view.presence.map((segment) => (
-                <span
-                  key={segment.lessonId}
-                  role="listitem"
-                  title={`${formatAnalyticsShortDate(segment.lessonDate, appLocale)} — ${
-                    segment.state === "present"
-                      ? messages.presencePresent
-                      : segment.state === "absent"
-                        ? messages.presenceAbsent
-                        : messages.presenceMissing
-                  }`}
-                  className={`h-6 w-3 rounded-sm ${
-                    segment.state === "present"
-                      ? "bg-ok"
-                      : segment.state === "absent"
-                        ? "bg-line-strong"
-                        : "bg-paper border border-line"
-                  }`}
-                />
-              ))}
-            </div>
+          <div className="mb-6">
+            <PupilAnalyticsKpiSection view={view} messages={messages} />
+          </div>
+          <div className="mb-4">
+            <DynamicsBlock dynamics={view.dynamics} messages={messages} locale={appLocale} />
+          </div>
+          <section className="mb-4 min-w-0">
+            <SectionTitle as="h2" className="mb-2">
+              {messages.presenceTitle}
+            </SectionTitle>
+            <PupilPresenceStrip
+              segments={view.presence}
+              messages={messages}
+              locale={appLocale}
+            />
           </section>
           {lessonCharts}
         </>

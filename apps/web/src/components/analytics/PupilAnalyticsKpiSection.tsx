@@ -1,9 +1,7 @@
 import { NumberDisplay } from "@/components/atoms/NumberDisplay";
-import { ContentText } from "@/components/atoms/ContentText";
 import { Card } from "@/components/ui/card";
 import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
 import { formatAnalyticsAverage } from "@/lib/analytics/format-analytics-display";
-import { fillMessage } from "@/lib/messages/fill-message";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type PupilAnalyticsKpiSectionProps = {
@@ -11,67 +9,82 @@ type PupilAnalyticsKpiSectionProps = {
   messages: PupilAnalyticsMessages;
 };
 
-const formatPersonalMetric = (
+const formatAverageValue = (
   average: number | null,
   n: number,
   messages: PupilAnalyticsMessages,
-  isMain: boolean,
-): string => {
-  if (average === null || n === 0) return messages.kpiEmpty;
-  const value = formatAnalyticsAverage(messages.formatAverage, Number(average.toFixed(1)));
-  const core = fillMessage(messages.kpiWithN, { value, n });
-  return isMain ? core : `${core} ${messages.personalMetricSuffix}`;
+): string | null => {
+  if (average === null || n === 0) return null;
+  return formatAnalyticsAverage(messages.formatAverage, Number(average.toFixed(1)));
 };
 
 export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSectionProps) => {
   const personalSuffix = view.isInMainSample ? "" : ` ${messages.personalMetricSuffix}`;
   const attendanceValue = view.attendanceCheckedLabel ?? messages.kpiEmpty;
-  const metrics: { label: string; value: string; hint?: string }[] = [
-    { label: `${messages.kpiAttendanceLabel}${personalSuffix}`, value: attendanceValue },
-    {
-      label: `${messages.kpiVersesLabel}${personalSuffix}`,
-      value: formatPersonalMetric(
-        view.versesAverage.average,
-        view.versesAverage.observationCount,
-        messages,
-        true,
-      ),
-    },
-    {
-      label: `${messages.kpiTestLabel}${personalSuffix}`,
-      value: formatPersonalMetric(
-        view.testAverage.average,
-        view.testAverage.observationCount,
-        messages,
-        true,
-      ),
-      hint: `${messages.kpiOutOfTen} · N=${view.testAverage.observationCount}`,
-    },
-    {
-      label: `${messages.kpiNotebookLabel}${personalSuffix}`,
-      value: formatPersonalMetric(
-        view.notebookAverage.average,
-        view.notebookAverage.observationCount,
-        messages,
-        true,
-      ),
-      hint: `${messages.kpiOutOfTen} · N=${view.notebookAverage.observationCount}`,
-    },
-  ];
+
+  const versesValue = formatAverageValue(
+    view.versesAverage.average,
+    view.versesAverage.observationCount,
+    messages,
+  );
+  const testValue = formatAverageValue(
+    view.testAverage.average,
+    view.testAverage.observationCount,
+    messages,
+  );
+  const notebookValue = formatAverageValue(
+    view.notebookAverage.average,
+    view.notebookAverage.observationCount,
+    messages,
+  );
 
   return (
-    <dl className="grid min-w-0 grid-cols-2 items-stretch gap-4 sm:grid-cols-4">
-      {metrics.map((metric) => (
-        <Card key={metric.label} className="flex h-full min-w-0 flex-col gap-1 p-4">
-          <dt className="text-sm text-muted">{metric.label}</dt>
-          <dd>
-            <NumberDisplay size="kpi">{metric.value}</NumberDisplay>
-          </dd>
-          {metric.hint ? (
-            <ContentText className="text-sm text-muted">{metric.hint}</ContentText>
+    <dl className="mb-0 grid grid-cols-2 items-stretch gap-4 sm:grid-cols-4">
+      <Card className="h-full p-4">
+        <dt className="text-sm text-muted">
+          {messages.kpiAttendanceLabel}
+          {personalSuffix}
+        </dt>
+        <dd className="mt-1">
+          <NumberDisplay size="kpi">{attendanceValue}</NumberDisplay>
+        </dd>
+      </Card>
+      <Card className="h-full p-4">
+        <dt className="text-sm text-muted">
+          {messages.kpiVersesLabel}
+          {personalSuffix}
+        </dt>
+        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2">
+          <NumberDisplay size="kpi">{versesValue ?? messages.kpiEmpty}</NumberDisplay>
+          {versesValue !== null ? (
+            <span className="text-sm text-muted">N={view.versesAverage.observationCount}</span>
           ) : null}
-        </Card>
-      ))}
+        </dd>
+      </Card>
+      <Card className="h-full p-4">
+        <dt className="text-sm text-muted">
+          {messages.kpiTestLabel}
+          {personalSuffix}
+        </dt>
+        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2">
+          <NumberDisplay size="kpi">{testValue ?? messages.kpiEmpty}</NumberDisplay>
+          {testValue !== null ? (
+            <span className="text-sm text-muted">N={view.testAverage.observationCount}</span>
+          ) : null}
+        </dd>
+      </Card>
+      <Card className="h-full p-4">
+        <dt className="text-sm text-muted">
+          {messages.kpiNotebookLabel}
+          {personalSuffix}
+        </dt>
+        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2">
+          <NumberDisplay size="kpi">{notebookValue ?? messages.kpiEmpty}</NumberDisplay>
+          {notebookValue !== null ? (
+            <span className="text-sm text-muted">N={view.notebookAverage.observationCount}</span>
+          ) : null}
+        </dd>
+      </Card>
     </dl>
   );
 };
