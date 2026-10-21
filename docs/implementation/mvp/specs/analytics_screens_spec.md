@@ -2,13 +2,13 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.2  
-**Дата:** 2026-10-19  
+**Версия:** 1.4  
+**Дата:** 2026-10-21  
 **Волна:** W9-07  
 **Migrated from:** [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) §5, §9.1–§9.6; [`multi_year_analytics.md`](../../../prds/01_product_scope/multi_year_analytics.md) (v1.2: годы)  
 **Зависит от:** [`homework_check_contract.md`](../contracts/homework_check_contract.md) §6–§7, [`school_year_and_groups_contract.md`](../contracts/school_year_and_groups_contract.md), [`analytics_year_snapshots_contract.md`](../contracts/analytics_year_snapshots_contract.md), [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (D3, D12, D19–D21), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-44…AZ-46, AZ-48…AZ-50, AZ-D4), [`canonical_routes.md`](../../../design/canonical_routes.md), [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §5 (`use cache`)  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`vAnalytics`, `vPupil`, `vSchool`, `vGroup`, блок «ГОДЫ»), [`P08_phase_description.md`](../phases_tasks_descriptions/P08_phase_description.md), [`teacher_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md), [`P05_phase_description.md`](../phases_tasks_descriptions/P05_phase_description.md)  
-**Проверено по:** формулы и экраны — спецификация владельца §5, §9 (2026-10-17). Рендер графиков — **recharts** `3.10.1` (`LineChart`, `ResponsiveContainer`, a11y: табличная альтернатива `ChartTableToggle`). Next.js 16.4 `loading` / `error` — [`ui_states_contract.md`](../../../design/ui_states_contract.md).
+**Проверено по:** формулы и экраны — спецификация владельца §5, §9 (2026-10-17). Рендер графиков — **recharts** `3.10.1` (`LineChart`, `ResponsiveContainer`, a11y: табличная альтернатива `ChartTableToggle`). Next.js 16.4 `loading` / `error` — [`ui_states_contract.md`](../../../design/ui_states_contract.md). Тип карточки аналитики (P11, §4.1) — [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md); глобальный `Card` Lab и константа `CARD` прототипа **не** меняются.
 
 ---
 
@@ -58,6 +58,26 @@
 `canonical_routes.md` фиксирует эти параметры без новых путей. Фильтр периода (§4 ниже) действует **внутри выбранного года**.
 
 **Фильтр периода** (общий для `/analytics` и таблиц ученика): учебный год (по умолчанию — активный или выбранный в фильтре года), календарный месяц, произвольный диапазон дат внутри года. **Фильтр группы:** teacher — группы из `teacher_assignment`; admin — любая группа (`Select` / chips как в прототипе).
+
+### 4.1 Тип карточки аналитики (P11)
+
+Плотность **1.5×, не 2×**. Это исключение шкалы только для карточек аналитики; тело приложения остаётся `text-base`. KPI и заголовок страницы не трогать.
+
+| Слой | Было | Стало |
+|------|------|-------|
+| Текст тела карточки | `text-sm` | `text-[1.3125rem] leading-snug` (~22 px) |
+| Мета (`N=`, «из 10») | `text-xs` | `text-base` (17 px) |
+| KPI / hero | `NumberDisplay size="kpi"`, `text-[3.5rem]` | без изменений |
+| Padding карточки | `p-4` / `sm:p-5` | `p-3` |
+| Вертикальный зазор блока | `gap-6` | `gap-3` |
+| Внутренний зазор | `gap-4` | `gap-2` |
+| Разделитель | `pt-5` / `lg:pl-6` | `pt-3` / `lg:pl-3` |
+| Зазор карточек на странице | `gap-4 lg:gap-6` | `gap-2 lg:gap-3` |
+| Отступ под цифрой | `mt-2` | `mt-1` |
+
+**Scope:** карточки экранов аналитики — `Card`, `RecordCard`, мобильные карточки в `apps/web/src/components/analytics/**` и прототип `vAnalytics`, `vPupil`, `vRating`, `vSchool`. Тот же тип на `/rating` — канон плотности, не расширение метрик этого spec.
+
+**Вне scope типа:** таблицы `lg+`, подписи осей графиков, оболочка, уроки, глобальная константа `CARD` прототипа и рецепт `Card` в Lab (`p-4 sm:p-5`). Не менять атом `ContentText`, `NumberDisplay`, `BarChart`.
 
 ## 5. Экран «Аналитика группы» (`/analytics`)
 
@@ -281,6 +301,7 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 | R-13 | MUST (v1.2): история ученика — все годы доступного ученика; чужая группа — только название в строке, без перехода |
 | R-14 | SHOULD (v1.2): полоса лет и переключатель показателя — `radiogroup`, фокус и `aria-checked`; таблица к графику по годам |
 | R-15 | MUST: смена года отвечает в том же клике по §5.7: итоги, которые уже на экране, меняются сразу; остальные блоки выбранного года сразу показывают скелет и `aria-busy`, а не числа предыдущего года |
+| R-16 | MUST (P11): тип карточки §4.1 — тело `text-[1.3125rem] leading-snug`, мета `text-base`, padding `p-3`, зазоры `gap-3` / `gap-2`; KPI и `lg+` таблицы не менять |
 
 ## 16. Acceptance criteria
 
@@ -299,6 +320,7 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 - [ ] (v1.2) Teacher: `?year=` вне назначения → 404; чужая группа не открывается из строки года ученика; admin видит все годы — тест policy/DAL + ручной smoke.
 - [ ] (v1.2) Разница не показывается при `kids < N` или `lessons < M` — unit domain + ручной smoke на dev-наборе (`seed:dev`: у группы 2024–2025 меньше N).
 - [ ] Документ проходит checklist §2.3.6 реестра (якоря, пути §10–§12, Acceptance с исходом).
+- [ ] (P11) Карточки аналитики: тело `text-[1.3125rem]`, padding `p-3`, зазор блоков `gap-3`; KPI и таблицы `lg+` без изменений — исход: сверка с §4.1 и прототипом после P11-CU3.
 
 ## 17. Open questions
 
@@ -329,6 +351,7 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 - (v1.2) Не читать итоги закрытого года пересчётом — только снимок; детали по урокам — по записям года.
 - (v1.2) Не показывать учителю годы вне назначения и аналитику чужой группы; в строке ученика — только название группы.
 - (v1.2) Не придумывать числа при отсутствии снимка: состояние `error`, не нули.
+- (P11) Не увеличивать KPI и заголовок страницы; не менять `ContentText`, `NumberDisplay`, `BarChart`, `lg+` таблицы и глобальный `CARD`.
 
 ## Change log
 
@@ -338,3 +361,4 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 | 2026-10-18 | v1.1 — §2: рейтинг и библиотека графиков (Q-01 §17 закрыт в CU6) — P05-CU9 |
 | 2026-10-19 | v1.2 — аналитика по учебным годам (P08): §4 параметры года, §5.5–§5.6, §6.5, §7.1, состояния D19–D21 (и D3), пути и требования R-8…R-14, сверка с прототипом |
 | 2026-10-20 | v1.3 — §5.7 и R-15: отклик смены года в том же клике; скелет вместо чисел предыдущего года |
+| 2026-10-21 | v1.4 — P11: §4.1 тип карточки аналитики (`1.3125rem`, `p-3` / `gap-3`); R-16 |
