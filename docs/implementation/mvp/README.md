@@ -11,7 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**Статус (2026-10-20):** фазы P01…P08 реализованы; P08 smoke и docs sync — [`P08_tasks.md`](./tasks/P08_tasks.md) CU11; P07 prod smoke — [`P07_tasks.md`](./tasks/P07_tasks.md) CU9. P09 (фиксы соответствия прототипу) — документы готовы, код не начат. Импорт данных из старого приложения — вне проекта (владелец).
+**Статус (2026-10-21):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 
@@ -33,8 +33,9 @@
 | P07 | Переходный период согласий и prod-готовность | [P07](./phases_tasks_descriptions/P07_phase_description.md) | [P07](./tasks/P07_tasks.md) |
 | P08 | Аналитика по учебным годам | [P08](./phases_tasks_descriptions/P08_phase_description.md) | [P08](./tasks/P08_tasks.md) |
 | P09 | Фиксы соответствия UI прототипу | [P09](./phases_tasks_descriptions/P09_phase_description.md) | [P09](./tasks/P09_tasks.md) |
+| P10 | Визуальный дрейф UI (замеры по матрице) | — (см. [P10_tasks](./tasks/P10_tasks.md) Purpose) | [P10](./tasks/P10_tasks.md) |
 
-Нумерация фаз реализации (P01…P09) не совпадает с промптами bootstrap (P0…P6).
+Нумерация фаз реализации (P01…P10) не совпадает с промптами bootstrap (P0…P6).
 
 ## Контракты
 
