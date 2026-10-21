@@ -39,7 +39,7 @@
 
 ### P11-CU2 — docs(prototype): lesson table score pad · Review: diff-only · Smoke: none · Commit: auto
 
-- [ ] P11-T5 · T1 · Spec: [homework_check_flow_spec §7.1–§7.3](../specs/homework_check_flow_spec.md)
+- [x] P11-T5 · T1 · Spec: [homework_check_flow_spec §7.1–§7.3](../specs/homework_check_flow_spec.md)
       Files: `docs/prototypes/sunday_school_prototype.html` (`vLessonTable`, `data-tbl` ~3688)
       Acceptance: стихи — сразу `— 0 1 2`; тест/тетрадь — тихая ячейка + панель; 390 — карточка-стек без карандаша; md+ — колонка «Открыть»; одна панель → сверка прототипа
       Paths: n/a — docs-only (прототип)

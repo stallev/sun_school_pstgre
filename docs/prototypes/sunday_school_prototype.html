@@ -469,7 +469,7 @@ const S = {
   consent:{ 1:{ voice:true, photo:true }, 2:{ voice:false, photo:true } },
   bricksOpen:null, fixOpen:null, peopleTab:'pupils', usersTab:'pending', userOpen:null,
   yearClosed:false, year:null, pupilYear:null, pupilMetric:'att', period:'year', anaGroup:'Средняя', month:11, verseQ:'', groupSel:[], groupEdit:'Средняя',
-  lf:null, lang:'ru', loginAdminOpen:false
+  lf:null, lang:'ru', loginAdminOpen:false, tblPad:null
 };
 
 /* Записи проверок: уроки 1–7 проверены у всех, урок 8 — у первых 9 */
@@ -1422,31 +1422,60 @@ function vLesson(){
   </div>`}`;
 }
 
-const SEL = 'h-8 rounded-md border border-muted bg-surface px-1 text-sm tabular-nums focus:border-cobalt focus:outline-none';
-function selOpts(max, val){ return `<option value="" ${val==null?'selected':''}>—</option>` + Array.from({length:max+1},(_,i)=>`<option ${val===i?'selected':''}>${i}</option>`).join(''); }
+function applyTblCell(lid, pid, k, val){
+  const r = S.hc[lid][pid];
+  const old = k.startsWith('v') ? r.v[+k.slice(1)] : r[k];
+  if (k.startsWith('v')){ r.v[+k.slice(1)] = val; r.vs[+k.slice(1)] = 'manual'; } else r[k] = val;
+  if (isCorrection(lid)){
+    if (old==null && val!=null && k!=='present' && k!=='sing') r.late[k] = TODAY;
+    audit(`Исправление в таблице · ${pupil(pid).name} · ${lessonById(lid).d}`, `${k}: ${old==null?'—':old} → ${val==null?'—':val}`);
+  }
+  if (!r.done){ r.done = true; }
+  const fresh = isCorrection(lid) ? recalc([pid]) : [];
+  S.tblPad = null;
+  render();
+  toast(fresh.length ? `Исправлено. Новое достижение: ${fresh.map(a=>ach(a.code).name+' · '+TIER[a.tier]).join(', ')}` : isCorrection(lid) ? 'Исправлено и записано в журнал' : `Сохранено: ${pupil(pid).name}`);
+}
+function tblPadPanel(id, k, stack){
+  const pick = (v,l,wide) => `<button type="button" data-act="tbl-score" data-pid="${id}" data-k="${k}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-sm tabular-nums ${SEG_OFF} hover:border-ink-2">${l}</button>`;
+  const n = v => pick(v, v, false);
+  return `<div data-tbl-pad class="${stack ? 'mt-2' : 'absolute left-1/2 z-30 mt-1 min-w-[12rem] -translate-x-1/2'} rounded-lg border border-line bg-surface p-2 shadow-float">
+    ${pick(null,'Не оценивалось',true)}
+    <div class="mt-1 grid grid-cols-6 gap-1">${[0,1,2,3,4,5].map(n).join('')}</div>
+    <div class="mt-1 grid grid-cols-5 gap-1">${[6,7,8,9,10].map(n).join('')}</div></div>`;
+}
 function vLessonTable(){
   const L = lessonById(S.lessonId), recs = S.hc[L.id] || {}, rv = recVerses(L.id), corr = isCorrection(L.id);
   const ids = Object.keys(recs).map(Number).filter(id=> (!S.lsFilter.present || recs[id].present) && (!S.lsFilter.unchecked || !recs[id].done));
+  const checked = Object.keys(recs).length ? Object.values(recs).filter(r=>r.done).length : 0;
   const rowCls = r => !r.done ? 'bg-warn-soft/70' : !r.present ? 'bg-paper' : '';
   const scoreCls = v => v==null ? '' : v>=8 ? 'text-ok' : v<=4 ? 'text-danger' : '';
-  const ctl = (id, r) => ({
+  const padOpen = (id,k) => S.tblPad && S.tblPad.pid===id && S.tblPad.k===k;
+  const verseCell = (id,k,val,aria) => `<div class="inline-flex flex-wrap justify-center gap-0.5">${[null,0,1,2].map(v=>{
+    const on = val===v; return `<button type="button" data-act="tbl-score" data-pid="${id}" data-k="v${k}" data-val="${v===null?'null':v}" aria-label="${aria}" class="h-8 min-w-[1.75rem] rounded-md border px-1 text-sm tabular-nums ${on?SEG_ON+' font-bold':SEG_OFF}">${v===null?'—':v}</button>`; }).join('')}</div>`;
+  const padCell = (id,k,val,label,stack) => { const open = padOpen(id,k), disp = val==null?'—':val;
+    return `<div data-tbl-pad-root class="${stack?'':'relative inline-block'}"><button type="button" data-act="tbl-pad-open" data-pid="${id}" data-k="${k}" aria-expanded="${open}" aria-label="${label}: ${pupil(id).name}" class="inline-flex h-8 min-w-[2.5rem] items-center justify-center rounded-md border border-line bg-surface px-2 text-sm tabular-nums hover:border-ink-2 ${scoreCls(val)}">${disp}</button>${open ? tblPadPanel(id,k,stack) : ''}</div>`; };
+  const ctlDesk = (id,r) => ({
     present: `<input type="checkbox" data-tbl="present" data-pid="${id}" ${r.present?'checked':''} aria-label="Присутствие: ${pupil(id).name}" class="size-5 accent-cobalt">`,
-    v: k => `<select data-tbl="v${k}" data-pid="${id}" aria-label="${rv[k]}: ${pupil(id).name}" class="${SEL} w-14">${selOpts(2, r.v[k])}</select>`,
-    test: L.test ? `<select data-tbl="test" data-pid="${id}" aria-label="Тест: ${pupil(id).name}" class="${SEL} w-16 ${scoreCls(r.test)}">${selOpts(10, r.test)}</select>` : '<span class="text-xs text-muted">нет</span>',
-    nb: `<select data-tbl="nb" data-pid="${id}" aria-label="Тетрадь: ${pupil(id).name}" class="${SEL} w-16 ${scoreCls(r.nb)}">${selOpts(10, r.nb)}</select>`,
+    v: k => verseCell(id,k,r.v[k],`${rv[k]}: ${pupil(id).name}`),
+    test: L.test ? padCell(id,'test',r.test,'Тест',false) : '<span class="text-xs text-muted">нет</span>',
+    nb: padCell(id,'nb',r.nb,'Тетрадь',false),
     sing: `<input type="checkbox" data-tbl="sing" data-pid="${id}" ${r.sing?'checked':''} aria-label="Спевка: ${pupil(id).name}" class="size-5 accent-cobalt">`
   });
+  const pressBtn = (id,k,on,label) => `<button type="button" data-act="tbl-toggle" data-k="${k}" data-pid="${id}" aria-pressed="${on}" aria-label="${label}: ${pupil(id).name}" class="inline-flex h-11 min-w-11 items-center justify-center rounded-lg border px-3 text-sm ${on?'border-cobalt-ink bg-cobalt-soft font-medium':'border-line-strong bg-surface'}">${on?ic('i-ok','size-5'):ic('i-circle','size-5 text-muted')}</button>`;
   const late = (r,k) => r.late[k] ? `<span class="block text-[0.6875rem] leading-none text-amber-ink">позже</span>` : '';
   return `${backLink('lesson','К уроку')}
   <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-    <div><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1><p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t} · ${L.d}</p></div>
+    <div><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1><p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t} · ${L.d} · проверено ${checked} из ${Object.keys(recs).length}</p></div>
     <button type="button" data-act="check-open" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-check','size-4')} Последовательная проверка</button>
   </div>
   ${corr ? `<p class="mb-3 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок проверен. Правки пересчитают баллы и попадут в журнал, новые оценки получат отметку «сдано ${TODAY}».</p>` : ''}
-  <div class="mb-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-    <label class="inline-flex items-center gap-2"><input type="checkbox" data-act="lsf" data-k="present" ${S.lsFilter.present?'checked':''} class="size-4 accent-cobalt"> Только присутствовавшие</label>
-    <label class="inline-flex items-center gap-2"><input type="checkbox" data-act="lsf" data-k="unchecked" ${S.lsFilter.unchecked?'checked':''} class="size-4 accent-cobalt"> Только непроверенные</label>
-    <span class="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted sm:ml-auto"><span class="inline-flex items-center gap-1.5"><span class="size-3 rounded-sm bg-warn-soft ring-1 ring-line"></span>не проверен</span><span class="inline-flex items-center gap-1.5"><span class="size-3 rounded-sm bg-paper ring-1 ring-line"></span>не был</span></span>
+  <div class="sticky top-14 z-20 -mx-4 mb-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur-md reduce-transparency:bg-surface sm:mx-0 sm:rounded-lg sm:border sm:backdrop-blur-none">
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+      <label class="inline-flex items-center gap-2"><input type="checkbox" data-act="lsf" data-k="present" ${S.lsFilter.present?'checked':''} class="size-4 accent-cobalt"> Только присутствовавшие</label>
+      <label class="inline-flex items-center gap-2"><input type="checkbox" data-act="lsf" data-k="unchecked" ${S.lsFilter.unchecked?'checked':''} class="size-4 accent-cobalt"> Только непроверенные</label>
+      <span class="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted sm:ml-auto"><span class="inline-flex items-center gap-1.5"><span class="size-3 rounded-sm bg-warn-soft ring-1 ring-line"></span>не проверен</span><span class="inline-flex items-center gap-1.5"><span class="size-3 rounded-sm bg-paper ring-1 ring-line"></span>не был</span></span>
+    </div>
   </div>
 
   <div class="${CARD} hidden overflow-x-auto md:block">
@@ -1457,9 +1486,9 @@ function vLessonTable(){
         <th scope="col" class="px-1 py-2 text-center font-normal">Тест</th><th scope="col" class="px-1 py-2 text-center font-normal">Тетрадь</th><th scope="col" class="px-2 py-2 text-center font-normal">Спевка</th>
         <th scope="col" class="px-2 py-2 text-right font-normal">Итого</th><th scope="col" class="w-10 py-2 pr-3"><span class="sr-only">Открыть</span></th></tr></thead>
       <tbody class="divide-y divide-line">
-        ${ids.map((id,i)=>{ const r=recs[id], c=ctl(id,r); return `<tr class="${rowCls(r)}">
+        ${ids.map((id,i)=>{ const r=recs[id], c=ctlDesk(id,r); return `<tr class="${rowCls(r)}">
           <td class="py-1.5 pl-4 pr-2 tabular-nums text-muted">${i+1}</td>
-          <td class="py-1.5 pr-2"><button type="button" data-act="pupil-open" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button></td>
+          <td class="sticky left-0 z-10 bg-inherit py-1.5 pr-2"><button type="button" data-act="pupil-open" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button></td>
           <td class="px-2 py-1.5 text-center">${c.present}</td>
           ${rv.map((_,k)=>`<td class="px-1 py-1.5 text-center">${c.v(k)}${late(r,'v'+k)}</td>`).join('')}
           <td class="px-1 py-1.5 text-center">${c.test}${late(r,'test')}</td>
@@ -1471,17 +1500,19 @@ function vLessonTable(){
   </div>
 
   <ul class="space-y-2 md:hidden">
-    ${ids.map((id,i)=>{ const r=recs[id], c=ctl(id,r); return `<li class="${CARD} ${rowCls(r)} p-3">
+    ${ids.map((id,i)=>{ const r=recs[id];
+      const testCell = L.test ? padCell(id,'test',r.test,'Тест',true) : '<span class="text-xs text-muted">нет</span>';
+      const nbCell = padCell(id,'nb',r.nb,'Тетрадь',true);
+      return `<li class="${CARD} ${rowCls(r)} p-3">
       <div class="flex items-center gap-2"><span class="w-6 text-sm tabular-nums text-muted">${i+1}</span>
         <button type="button" data-act="pupil-open" data-pid="${id}" class="min-w-0 flex-1 truncate text-left font-medium text-cobalt-ink">${pupil(id).name}</button>
-        <span class="font-display text-lg tabular-nums">${r.done ? pts(r) : '—'}</span>
-        <button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" aria-label="Открыть в последовательной проверке" class="inline-flex size-8 items-center justify-center rounded-md text-edit">${ic('i-edit','size-4')}</button></div>
-      <div class="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-        <label class="flex items-center gap-2">${c.present}<span>Был</span></label>
-        <label class="flex items-center gap-2">${c.sing}<span>Спевка</span></label>
-        ${rv.length ? `<div class="col-span-2 flex flex-wrap items-center gap-1.5"><span class="w-14 text-muted">Стихи</span>${rv.map((_,k)=>c.v(k)).join('')}</div>` : ''}
-        <div class="flex items-center gap-2"><span class="w-14 text-muted">Тест</span>${c.test}${r.late.test?'<span class="text-xs text-amber-ink">позже</span>':''}</div>
-        <div class="flex items-center gap-2"><span class="text-muted">Тетрадь</span>${c.nb}${r.late.nb?'<span class="text-xs text-amber-ink">позже</span>':''}</div>
+        <span class="font-display text-lg tabular-nums">${r.done ? pts(r) : '—'}</span></div>
+      <div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
+        <div class="flex items-center gap-2"><span class="text-muted">Был</span>${pressBtn(id,'present',r.present,'Присутствие')}</div>
+        <div class="flex items-center gap-2"><span class="text-muted">Спевка</span>${pressBtn(id,'sing',r.sing,'Спевка')}</div>
+        ${rv.map((ref,k)=>`<div class="col-span-2"><p class="mb-1 text-muted">Стих ${k+1}</p>${verseCell(id,k,r.v[k],`${ref}: ${pupil(id).name}`)}${late(r,'v'+k)}</div>`).join('')}
+        <div class="col-span-2"><p class="mb-1 text-muted">Тест</p>${testCell}${late(r,'test')}</div>
+        <div class="col-span-2"><p class="mb-1 text-muted">Тетрадь</p>${nbCell}${late(r,'nb')}</div>
       </div></li>`; }).join('')}
   </ul>
   <p class="mt-3 text-sm text-muted">Стихи — заданные на прошлом уроке. Итого = стихи + тест + тетрадь + спевка. Зелёным — от 8, красным — до 4 баллов.</p>`;
@@ -3520,6 +3551,7 @@ function savePupil(){
    СОБЫТИЯ
    ========================================================= */
 document.addEventListener('click', e=>{
+  if (S.tblPad && !e.target.closest('[data-tbl-pad-root]')){ S.tblPad = null; render(); }
   const el = e.target.closest('[data-act]');
   if (!el && S.dd && !e.target.closest('[role=menu]')){ S.dd = null; renderChrome(); }
   if (!el || el.disabled) return;
@@ -3552,8 +3584,12 @@ document.addEventListener('click', e=>{
       const r = `${pk.book} ${pk.ch}:${pk.from}${pk.to && pk.to!==pk.from ? '–'+pk.to : ''}`;
       if (S.lf.v.includes(r)){ toast('Этот стих уже добавлен'); break; }
       S.lf.v.push(r); S.lf.picker = { book:pk.book, ch:'', from:'', to:'' }; delete S.lf.err.v; render(); break; }
-    case 'lsf': S.lsFilter[el.dataset.k] = el.checked; render(); break;
-    case 'lesson-table': closeDialog(); S.lessonId = +el.dataset.lid; S.lsFilter = { present:false, unchecked:false }; go('lessonTable'); break;
+    case 'lsf': S.lsFilter[el.dataset.k] = el.checked; S.tblPad = null; render(); break;
+    case 'lesson-table': closeDialog(); S.lessonId = +el.dataset.lid; S.lsFilter = { present:false, unchecked:false }; S.tblPad = null; go('lessonTable'); break;
+    case 'tbl-score': applyTblCell(S.lessonId, +el.dataset.pid, el.dataset.k, el.dataset.val==='null' ? null : +el.dataset.val); break;
+    case 'tbl-toggle': applyTblCell(S.lessonId, +el.dataset.pid, el.dataset.k, el.dataset.k==='present' ? !S.hc[S.lessonId][+el.dataset.pid].present : !S.hc[S.lessonId][+el.dataset.pid].sing); break;
+    case 'tbl-pad-open': { const pid = +el.dataset.pid, k = el.dataset.k;
+      S.tblPad = S.tblPad && S.tblPad.pid===pid && S.tblPad.k===k ? null : { pid, k }; render(); break; }
     case 'lesson-del': confirmDialog('Удалить урок?', 'Урок ещё не проверялся, поэтому удаление безопасно. Событие в календаре останется — удалите его отдельно, если нужно.', 'lesson-del-do', 'Удалить урок'); S.delLid = +el.dataset.lid; break;
     case 'lesson-del-do': { const i = LESSONS.findIndex(l=>l.id===S.delLid); const L = LESSONS.splice(i,1)[0]; audit('Урок '+L.n, 'Удалён: '+L.t); closeDialog(); go('lessons'); toast('Урок удалён'); break; }
     case 'bricks-hist': S.bricksOpen = el.parentElement.open ? null : +el.dataset.pid; break;
@@ -3686,17 +3722,9 @@ document.addEventListener('input', e=>{
 document.addEventListener('change', e=>{
   const t = e.target;
   if (t.dataset.tbl){
-    const lid = S.lessonId, pid = +t.dataset.pid, r = S.hc[lid][pid], k = t.dataset.tbl;
+    const lid = S.lessonId, pid = +t.dataset.pid, k = t.dataset.tbl;
     const val = t.type==='checkbox' ? t.checked : (t.value==='' ? null : +t.value);
-    const old = k.startsWith('v') ? r.v[+k.slice(1)] : r[k];
-    if (k.startsWith('v')){ r.v[+k.slice(1)] = val; r.vs[+k.slice(1)] = 'manual'; } else r[k] = val;
-    if (isCorrection(lid)){
-      if (old==null && val!=null && k!=='present' && k!=='sing') r.late[k] = TODAY;
-      audit(`Исправление в таблице · ${pupil(pid).name} · ${lessonById(lid).d}`, `${k}: ${old==null?'—':old} → ${val==null?'—':val}`);
-    }
-    if (!r.done){ r.done = true; }
-    const fresh = isCorrection(lid) ? recalc([pid]) : [];
-    render(); toast(fresh.length ? `Исправлено. Новое достижение: ${fresh.map(a=>ach(a.code).name+' · '+TIER[a.tier]).join(', ')}` : isCorrection(lid) ? 'Исправлено и записано в журнал' : `Сохранено: ${pupil(pid).name}`); return;
+    applyTblCell(lid, pid, k, val); return;
   }
   if (t.dataset.input==='pen-type'){ const p = t.selectedOptions[0].dataset.pts; document.getElementById('pn-q').value = p; document.getElementById('pn-hint').textContent = `По каталогу: ${p}. Меньше — можно, больше — нельзя.`; }
   if (t.dataset.input==='award-re'){ const f = t.form, [code,tier] = f.ach.value.split('|'), pts = f.ach.selectedOptions[0].dataset.pts;
@@ -3826,7 +3854,7 @@ document.addEventListener('submit', e=>{
 });
 
 document.addEventListener('keydown', e=>{
-  if (e.key==='Escape'){ if (S.dd){ const id=S.dd; S.dd=null; renderChrome(); document.querySelector(`[data-act=dd][data-id="${id}"]`)?.focus(); return; } closeMenu(); closeDialog(); }
+  if (e.key==='Escape'){ if (S.tblPad){ S.tblPad=null; render(); return; } if (S.dd){ const id=S.dd; S.dd=null; renderChrome(); document.querySelector(`[data-act=dd][data-id="${id}"]`)?.focus(); return; } closeMenu(); closeDialog(); }
   if (S.view==='check' && !S.finished && !['TEXTAREA','INPUT','SELECT'].includes(document.activeElement?.tagName) && document.getElementById('dialog').classList.contains('hidden')){
     const R = roster(S.checkLesson);
     if (e.key==='Enter'){ e.preventDefault(); savePupil(); }
