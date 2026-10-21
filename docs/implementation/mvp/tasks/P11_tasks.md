@@ -66,7 +66,7 @@
 
 ### P11-CU5 — feat(web): use score pad on the lesson table · Review: reviewer · Smoke: deferred · Commit: auto
 
-- [ ] P11-T8 · T3 · Spec: [homework_check_flow_spec §7](../specs/homework_check_flow_spec.md) · Contract: [homework_check_contract §5.4 / §5.6](../contracts/homework_check_contract.md) · AZ: AZ-33, AZ-34, AZ-P5
+- [x] P11-T8 · T3 · Spec: [homework_check_flow_spec §7](../specs/homework_check_flow_spec.md) · Contract: [homework_check_contract §5.4 / §5.6](../contracts/homework_check_contract.md) · AZ: AZ-33, AZ-34, AZ-P5
       Files: `apps/web/src/components/teacher/LessonCheckTable.tsx`, `apps/web/src/components/teacher/LessonCheckTableRow.tsx`, `apps/web/src/components/teacher/LessonCheckTableCards.tsx` (новый)
       Acceptance: нет `select` оценок; стихи inline; тест/тетрадь — панель; 390 — стек без карандаша, имя на экране; md+ — «Открыть»; оптимизм + `aria-busy`; ошибка — toast + откат; success toast нет; те же `savePartialCheck` / `correctCheck` → ручной шаг + существующие тесты таблицы
       Paths: H [§7] · N [§10: пусто / 0 / вне диапазона не отправляется, Escape без сохранения] · S [§11 S-7, AZ-33 / AZ-34: аноним → login, чужой урок → 404, закрытый год teacher → без записи]

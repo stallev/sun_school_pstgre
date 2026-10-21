@@ -1,8 +1,9 @@
 "use client";
 
 import { Popover } from "@base-ui/react/popover";
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, type KeyboardEvent } from "react";
 import { ScorePad } from "@/components/ui/score-pad";
+import { useMdUp } from "@/lib/ui/use-md-up";
 import { cn } from "@/lib/utils";
 
 export type ScoreCellMode = "verse" | "pad";
@@ -20,18 +21,6 @@ type ScoreCellProps = {
   disabled?: boolean;
   "aria-busy"?: boolean;
   className?: string;
-};
-
-const useMdUp = () => {
-  const [mdUp, setMdUp] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const sync = () => setMdUp(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-  return mdUp;
 };
 
 const scoreTone = (value: number | null) => {

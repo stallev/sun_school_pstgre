@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckIcon, PencilIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
@@ -14,15 +15,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  CheckTableScoreSelect,
-  LessonCheckTableRow,
-} from "@/components/teacher/LessonCheckTableRow";
+import { LessonCheckTableCards } from "@/components/teacher/LessonCheckTableCards";
+import { LessonCheckTableRow } from "@/components/teacher/LessonCheckTableRow";
 import { useLessonCheckTable } from "@/components/teacher/use-lesson-check-table";
 import type { LessonTablePageData } from "@/data/checks/load-lesson-table-page.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
+import { useMdUp } from "@/lib/ui/use-md-up";
 import { cn } from "@/lib/utils";
 
 type LessonCheckTableProps = {
@@ -45,6 +45,22 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
     messages,
     dictionaries,
   });
+
+  const mdUp = useMdUp();
+  const [openCellKey, setOpenCellKey] = useState<string | null>(null);
+  const tableScrollRef = useRef<HTMLDivElement>(null);
+  const [stickyTableHead, setStickyTableHead] = useState(true);
+
+  useEffect(() => {
+    if (!mdUp) return;
+    const node = tableScrollRef.current;
+    if (!node) return;
+    const sync = () => setStickyTableHead(node.scrollWidth <= node.clientWidth);
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [mdUp, data.pupils.length, data.versesToRecite.length]);
 
   if (data.pupils.length === 0) {
     return (
@@ -94,192 +110,115 @@ export const LessonCheckTable = ({ data, messages, dictionaries }: LessonCheckTa
         <Banner tone="warning" title={messages.correctionBanner} />
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-        <label className="inline-flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={table.filterPresent}
-            onChange={(event) => table.setFilterPresent(event.target.checked)}
-            className="size-4 accent-primary"
-          />
-          {messages.tableFilterPresent}
-        </label>
-        <label className="inline-flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={table.filterUnchecked}
-            onChange={(event) => table.setFilterUnchecked(event.target.checked)}
-            className="size-4 accent-primary"
-          />
-          {messages.tableFilterUnchecked}
-        </label>
-        <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground sm:ml-auto">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="size-3 rounded-sm bg-warn-soft ring-1 ring-line" />
-            {messages.tableLegendUnchecked}
+      <div
+        className="sticky top-0 z-20 -mx-1 space-y-2 bg-background px-1 pb-2 pt-1"
+        aria-busy={table.pending}
+      >
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          <label className="inline-flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={table.filterPresent}
+              onChange={(event) => table.setFilterPresent(event.target.checked)}
+              className="size-4 accent-primary"
+            />
+            {messages.tableFilterPresent}
+          </label>
+          <label className="inline-flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={table.filterUnchecked}
+              onChange={(event) => table.setFilterUnchecked(event.target.checked)}
+              className="size-4 accent-primary"
+            />
+            {messages.tableFilterUnchecked}
+          </label>
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground sm:ml-auto">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="size-3 rounded-sm bg-warn-soft ring-1 ring-line" />
+              {messages.tableLegendUnchecked}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="size-3 rounded-sm bg-paper ring-1 ring-line" />
+              {messages.tableLegendAbsent}
+            </span>
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="size-3 rounded-sm bg-paper ring-1 ring-line" />
-            {messages.tableLegendAbsent}
-          </span>
-        </span>
+        </div>
       </div>
 
-      <Card className="hidden overflow-x-auto md:block">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead scope="col" className="w-12 pl-4">{messages.tableColumnNumber}</TableHead>
-              <TableHead scope="col" className="sticky left-0 z-10 bg-card">{messages.tableColumnPupil}</TableHead>
-              <TableHead scope="col" className="text-center">{messages.presentLabel}</TableHead>
-              {data.versesToRecite.map((verse) => (
-                <TableHead key={verse.lessonVerseId} scope="col" className="text-center">
-                  {fillMessage(messages.verseLabel, { position: verse.position })}
-                </TableHead>
-              ))}
-              <TableHead scope="col" className="text-center">{messages.testLabel}</TableHead>
-              <TableHead scope="col" className="text-center">{messages.notebookLabel}</TableHead>
-              <TableHead scope="col" className="text-center">{messages.singingLabel}</TableHead>
-              <TableHead scope="col" className="text-right">{messages.pointsLabel}</TableHead>
-              <TableHead scope="col" className="w-10 pr-3">
-                <span className="sr-only">{messages.tableColumnOpen}</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {table.rows.map((row, index) => (
-              <LessonCheckTableRow
-                key={row.pupilId}
-                index={index}
-                row={row}
-                lessonId={data.lessonId}
-                hasTest={data.hasTest}
-                versesToRecite={data.versesToRecite}
-                readOnly={table.readOnly}
-                busyCells={table.busyCells}
-                hasConflict={table.conflictIds.has(row.pupilId)}
-                messages={messages}
-                onPresentChange={(present) => table.mutatePresent(row.pupilId, present)}
-                onSingingChange={(singing) => table.mutateSinging(row.pupilId, singing)}
-                onTestScoreChange={(score) => table.mutateTestScore(row.pupilId, score)}
-                onNotebookScoreChange={(score) => table.mutateNotebookScore(row.pupilId, score)}
-                onVerseScoreChange={(lessonVerseId, score) =>
-                  table.mutateVerseScore(row.pupilId, lessonVerseId, score)
-                }
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
-
-      <ul className="space-y-2 md:hidden" aria-busy={table.pending}>
-        {table.rows.map((row, index) => (
-          <li
-            key={row.pupilId}
-            className={cn(
-              "rounded-xl border border-line bg-card p-3",
-              !row.homeworkChecked ? "bg-warn-soft/70" : !row.present ? "bg-paper" : "",
-              table.conflictIds.has(row.pupilId) ? "ring-2 ring-danger" : "",
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <span className="w-6 text-sm tabular-nums text-muted-foreground">{index + 1}</span>
-              <CustomLink
-                href={`/lessons/${data.lessonId}/check?pupil=${row.pupilId}`}
-                className="min-w-0 flex-1 truncate font-medium text-cobalt-ink"
+      {mdUp ? (
+        <Card>
+          <div ref={tableScrollRef} className="overflow-x-auto">
+            <Table>
+              <TableHeader
+                className={cn(stickyTableHead && "[&_tr]:sticky [&_tr]:top-0 [&_tr]:z-[1] [&_tr]:bg-card")}
               >
-                {row.displayName}
-              </CustomLink>
-              <span className="font-display text-lg tabular-nums">
-                {row.homeworkChecked && row.pointsTotal !== null ? row.pointsTotal : "—"}
-              </span>
-              <CustomLink
-                href={`/lessons/${data.lessonId}/check?pupil=${row.pupilId}`}
-                aria-label={fillMessage(messages.tableOpenPupilAria, { name: row.displayName })}
-                className="inline-flex size-8 items-center justify-center rounded-md text-cobalt-ink"
-              >
-                <PencilIcon className="size-4" aria-hidden />
-              </CustomLink>
-            </div>
-            <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={row.present}
-                  disabled={table.readOnly || table.busyCells.has(`${row.pupilId}:present`)}
-                  aria-busy={table.busyCells.has(`${row.pupilId}:present`)}
-                  aria-label={`${messages.presentLabel}: ${row.displayName}`}
-                  className="size-5 accent-primary"
-                  onChange={(event) => table.mutatePresent(row.pupilId, event.target.checked)}
-                />
-                <span>{messages.presentLabel}</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={row.singing}
-                  disabled={table.readOnly || table.busyCells.has(`${row.pupilId}:singing`)}
-                  aria-busy={table.busyCells.has(`${row.pupilId}:singing`)}
-                  aria-label={`${messages.singingLabel}: ${row.displayName}`}
-                  className="size-5 accent-primary"
-                  onChange={(event) => table.mutateSinging(row.pupilId, event.target.checked)}
-                />
-                <span>{messages.singingLabel}</span>
-              </label>
-              {data.versesToRecite.length > 0 ? (
-                <div className="col-span-2 flex flex-wrap items-center gap-1.5">
-                  <span className="w-14 text-muted-foreground">{messages.tableVersesMobile}</span>
+                <TableRow>
+                  <TableHead scope="col" className="w-12 pl-4">{messages.tableColumnNumber}</TableHead>
+                  <TableHead scope="col" className="sticky left-0 z-10 bg-card">{messages.tableColumnPupil}</TableHead>
+                  <TableHead scope="col" className="text-center">{messages.presentLabel}</TableHead>
                   {data.versesToRecite.map((verse) => (
-                    <CheckTableScoreSelect
-                      key={verse.lessonVerseId}
-                      max={2}
-                      value={row.verseScores[verse.lessonVerseId] ?? null}
-                      ariaLabel={`${fillMessage(messages.verseLabel, { position: verse.position })}: ${row.displayName}`}
-                      disabled={table.readOnly}
-                      busy={table.busyCells.has(`${row.pupilId}:verse:${verse.lessonVerseId}`)}
-                      onChange={(score) => table.mutateVerseScore(row.pupilId, verse.lessonVerseId, score)}
-                    />
+                    <TableHead key={verse.lessonVerseId} scope="col" className="text-center">
+                      {fillMessage(messages.verseLabel, { position: verse.position })}
+                    </TableHead>
                   ))}
-                </div>
-              ) : null}
-              <div className="flex items-center gap-2">
-                <span className="w-14 text-muted-foreground">{messages.testLabel}</span>
-                {data.hasTest ? (
-                  <CheckTableScoreSelect
-                    max={10}
-                    value={row.testScore}
-                    ariaLabel={`${messages.testLabel}: ${row.displayName}`}
-                    disabled={table.readOnly}
-                    busy={table.busyCells.has(`${row.pupilId}:test`)}
-                    onChange={(score) => table.mutateTestScore(row.pupilId, score)}
+                  <TableHead scope="col" className="text-center">{messages.testLabel}</TableHead>
+                  <TableHead scope="col" className="text-center">{messages.notebookLabel}</TableHead>
+                  <TableHead scope="col" className="text-center">{messages.singingLabel}</TableHead>
+                  <TableHead scope="col" className="text-right">{messages.pointsLabel}</TableHead>
+                  <TableHead scope="col" className="w-16 pr-3 text-right">{messages.tableColumnOpen}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {table.rows.map((row, index) => (
+                  <LessonCheckTableRow
+                    key={row.pupilId}
+                    index={index}
+                    row={row}
+                    lessonId={data.lessonId}
+                    hasTest={data.hasTest}
+                    versesToRecite={data.versesToRecite}
+                    readOnly={table.readOnly}
+                    busyCells={table.busyCells}
+                    hasConflict={table.conflictIds.has(row.pupilId)}
+                    messages={messages}
+                    openCellKey={openCellKey}
+                    onOpenCellKeyChange={setOpenCellKey}
+                    onPresentChange={(present) => table.mutatePresent(row.pupilId, present)}
+                    onSingingChange={(singing) => table.mutateSinging(row.pupilId, singing)}
+                    onTestScoreChange={(score) => table.mutateTestScore(row.pupilId, score)}
+                    onNotebookScoreChange={(score) => table.mutateNotebookScore(row.pupilId, score)}
+                    onVerseScoreChange={(lessonVerseId, score) =>
+                      table.mutateVerseScore(row.pupilId, lessonVerseId, score)
+                    }
                   />
-                ) : (
-                  <span className="text-xs text-muted-foreground">{messages.tableNoTest}</span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">{messages.notebookLabel}</span>
-                <CheckTableScoreSelect
-                  max={10}
-                  value={row.notebookScore}
-                  ariaLabel={`${messages.notebookLabel}: ${row.displayName}`}
-                  disabled={table.readOnly}
-                  busy={table.busyCells.has(`${row.pupilId}:notebook`)}
-                  onChange={(score) => table.mutateNotebookScore(row.pupilId, score)}
-                />
-              </div>
-            </div>
-            {row.late && row.homeworkChecked ? (
-              <p className="mt-1 text-sm text-warn">{messages.lateSubmitted}</p>
-            ) : null}
-            {table.conflictIds.has(row.pupilId) ? (
-              <p className="mt-1 text-sm text-danger">{messages.conflictTitle}</p>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+      ) : (
+        <LessonCheckTableCards
+          rows={table.rows}
+          lessonId={data.lessonId}
+          hasTest={data.hasTest}
+          versesToRecite={data.versesToRecite}
+          readOnly={table.readOnly}
+          busyCells={table.busyCells}
+          conflictIds={table.conflictIds}
+          pending={table.pending}
+          messages={messages}
+          openCellKey={openCellKey}
+          onOpenCellKeyChange={setOpenCellKey}
+          onPresentChange={table.mutatePresent}
+          onSingingChange={table.mutateSinging}
+          onTestScoreChange={table.mutateTestScore}
+          onNotebookScoreChange={table.mutateNotebookScore}
+          onVerseScoreChange={table.mutateVerseScore}
+        />
+      )}
 
-      <p className="mt-3 text-sm text-muted-foreground">{messages.tableFootnote}</p>
+      <p className="text-sm text-muted-foreground">{messages.tableFootnote}</p>
     </div>
   );
 };

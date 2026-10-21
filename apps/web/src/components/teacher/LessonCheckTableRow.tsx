@@ -1,8 +1,9 @@
 "use client";
 
 import type { LessonVerseToRecite } from "@sunschool/domain";
-import { PencilIcon } from "lucide-react";
 import { NumberDisplay } from "@/components/atoms";
+import { ScoreCell } from "@/components/ui/score-cell";
+import { ScorePad } from "@/components/ui/score-pad";
 import { CustomLink } from "@/components/ui/custom-link";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { LateBadge } from "@/components/teacher/LateBadge";
@@ -10,53 +11,6 @@ import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.s
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
-
-const scoreTone = (value: number | null): string => {
-  if (value === null) return "";
-  if (value >= 8) return "text-ok";
-  if (value <= 4) return "text-danger";
-  return "";
-};
-
-type ScoreSelectProps = {
-  max: number;
-  value: number | null;
-  ariaLabel: string;
-  disabled: boolean;
-  busy: boolean;
-  tone?: string;
-  onChange: (value: number | null) => void;
-};
-
-export const CheckTableScoreSelect = ({
-  max,
-  value,
-  ariaLabel,
-  disabled,
-  busy,
-  tone,
-  onChange,
-}: ScoreSelectProps) => (
-  <select
-    aria-label={ariaLabel}
-    aria-busy={busy}
-    disabled={disabled || busy}
-    value={value === null ? "" : String(value)}
-    onChange={(event) => {
-      const next = event.target.value;
-      onChange(next === "" ? null : Number(next));
-    }}
-    className={cn(
-      "h-8 min-w-14 rounded-md border border-input bg-surface px-1 text-center text-sm tabular-nums",
-      tone,
-    )}
-  >
-    <option value="">—</option>
-    {Array.from({ length: max + 1 }, (_, index) => (
-      <option key={index} value={index}>{index}</option>
-    ))}
-  </select>
-);
 
 export type LessonCheckTableRowProps = {
   index: number;
@@ -68,6 +22,8 @@ export type LessonCheckTableRowProps = {
   busyCells: ReadonlySet<string>;
   hasConflict: boolean;
   messages: TeacherCheckMessages;
+  openCellKey: string | null;
+  onOpenCellKeyChange: (key: string | null) => void;
   onPresentChange: (present: boolean) => void;
   onSingingChange: (singing: boolean) => void;
   onTestScoreChange: (score: number | null) => void;
@@ -85,6 +41,8 @@ export const LessonCheckTableRow = ({
   busyCells,
   hasConflict,
   messages,
+  openCellKey,
+  onOpenCellKeyChange,
   onPresentChange,
   onSingingChange,
   onTestScoreChange,
@@ -121,13 +79,15 @@ export const LessonCheckTableRow = ({
       </TableCell>
       {versesToRecite.map((verse) => (
         <TableCell key={verse.lessonVerseId} className="text-center">
-          <CheckTableScoreSelect
+          <ScorePad
+            layout="inline"
             max={2}
             value={row.verseScores[verse.lessonVerseId] ?? null}
-            ariaLabel={`${fillMessage(messages.verseLabel, { position: verse.position })}: ${row.displayName}`}
+            notRatedLabel={messages.scoreNotRated}
+            aria-label={`${fillMessage(messages.verseLabel, { position: verse.position })}: ${row.displayName}`}
             disabled={readOnly}
-            busy={busyCells.has(`${row.pupilId}:verse:${verse.lessonVerseId}`)}
-            onChange={(score) => onVerseScoreChange(verse.lessonVerseId, score)}
+            aria-busy={busyCells.has(`${row.pupilId}:verse:${verse.lessonVerseId}`)}
+            onValueChange={(score) => onVerseScoreChange(verse.lessonVerseId, score)}
           />
           {showLate ? <LateBadge label={messages.lateSubmitted} /> : null}
         </TableCell>
@@ -135,14 +95,18 @@ export const LessonCheckTableRow = ({
       <TableCell className="text-center">
         {hasTest ? (
           <>
-            <CheckTableScoreSelect
+            <ScoreCell
+              mode="pad"
               max={10}
               value={row.testScore}
-              ariaLabel={`${messages.testLabel}: ${row.displayName}`}
+              notRatedLabel={messages.scoreNotRated}
+              cellKey={`${row.pupilId}:test`}
+              openCellKey={openCellKey}
+              onOpenCellKeyChange={onOpenCellKeyChange}
+              aria-label={`${messages.testLabel}: ${row.displayName}`}
               disabled={readOnly}
-              busy={busyCells.has(`${row.pupilId}:test`)}
-              tone={scoreTone(row.testScore)}
-              onChange={onTestScoreChange}
+              aria-busy={busyCells.has(`${row.pupilId}:test`)}
+              onValueChange={onTestScoreChange}
             />
             {showLate ? <LateBadge label={messages.lateSubmitted} /> : null}
           </>
@@ -151,14 +115,18 @@ export const LessonCheckTableRow = ({
         )}
       </TableCell>
       <TableCell className="text-center">
-        <CheckTableScoreSelect
+        <ScoreCell
+          mode="pad"
           max={10}
           value={row.notebookScore}
-          ariaLabel={`${messages.notebookLabel}: ${row.displayName}`}
+          notRatedLabel={messages.scoreNotRated}
+          cellKey={`${row.pupilId}:notebook`}
+          openCellKey={openCellKey}
+          onOpenCellKeyChange={onOpenCellKeyChange}
+          aria-label={`${messages.notebookLabel}: ${row.displayName}`}
           disabled={readOnly}
-          busy={busyCells.has(`${row.pupilId}:notebook`)}
-          tone={scoreTone(row.notebookScore)}
-          onChange={onNotebookScoreChange}
+          aria-busy={busyCells.has(`${row.pupilId}:notebook`)}
+          onValueChange={onNotebookScoreChange}
         />
         {showLate ? <LateBadge label={messages.lateSubmitted} /> : null}
       </TableCell>
@@ -181,11 +149,9 @@ export const LessonCheckTableRow = ({
       <TableCell className="pr-3 text-right">
         <CustomLink
           href={`/lessons/${lessonId}/check?pupil=${row.pupilId}`}
-          aria-label={fillMessage(messages.tableOpenPupilAria, { name: row.displayName })}
-          className="inline-flex size-8 items-center justify-center rounded-md text-cobalt-ink hover:bg-paper"
+          className="text-sm font-medium text-cobalt-ink hover:underline"
         >
-          <PencilIcon className="size-4" aria-hidden />
-          <span className="sr-only">{messages.tableColumnOpen}</span>
+          {messages.tableColumnOpen}
         </CustomLink>
       </TableCell>
     </TableRow>
