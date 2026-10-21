@@ -40,11 +40,13 @@ const LessonDetailPage = async ({ params }: LessonDetailPageProps) => {
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <ContentText tone="secondary">{messages.listSubtitle(data.gradeName, data.yearName)}</ContentText>
+      <header className="space-y-1">
         <CustomLink href="/lessons" className="text-sm text-cobalt-ink">
           {formMessages.backToLessons}
         </CustomLink>
+        <ContentText tone="secondary" className="text-sm">
+          {messages.listSubtitle(data.gradeName, data.yearName)}
+        </ContentText>
       </header>
       <LessonCard
         data={data}

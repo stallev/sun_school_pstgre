@@ -270,3 +270,22 @@
 | `lessons` · `format-lesson-display-date.ts` | краткая дата | `l.d` как `dd.MM` | `2-digit` day/month | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `lessons` × teacher × 4 ширины — новых deviation-строк нет; подсветка drawer «Все уроки» — shell (CU2), не строка списка.
+
+## Проход 6 — CU8 Lesson card and form
+
+**Субагент:** implementer / composer-2.5  
+**Эталоны:** прототип `vLesson` · `vLessonForm` · P03 lesson / lessonForm  
+**Ширины:** 390, 768, 820, 1024 · роль: teacher (ACTIVE)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU8) | Ширины | Серьёзность |
+|-------------|------|----------------------------|------------------|--------|-------------|
+| `lesson` · `page.tsx` | шапка | back «Все уроки», подпись группы · год | back link, затем subtitle | 390–1024 | **нет отклонения** |
+| `lesson` · `LessonCard.tsx` | hero-карточка | meta muted, H1 тема, icon edit/delete | flex header, `Heading` page, `PencilIcon` / `XIcon` | 390–1024 | **нет отклонения** |
+| `lesson` · `LessonCard.tsx` | проверка ДЗ | progress, primary/outline CTA, «Сводная таблица» | `Progress`, variant по завершению, outline table | 390–1024 | **нет отклонения** |
+| `lesson` · `LessonDetailVersePanel.tsx` | стихи | `ol` space-y-2.5, italic `font-display` текст | совпадает | 390–1024 | **нет отклонения** |
+| `lessonForm` · `LessonForm.tsx` | сетка | `max-w-5xl`, `lg:grid-cols-[1fr_22rem]`, `p-4 sm:p-5` | совпадает | 390–1024 | **нет отклонения** |
+| `lessonForm` · `LessonForm.tsx` | номер / тип | `h-11` номер, locked kind в `bg-paper` | совпадает | 390–1024 | **нет отклонения** |
+| `lessonForm` · `LessonForm.tsx` | обзорный блок | bullets с «—», `SectionTitle` | совпадает | 390–1024 | **нет отклонения** |
+| `lessonForm` · `new`/`edit` `page.tsx` | заголовок | PageHeader + back link cobalt | `PageHeader` + `CustomLink` | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `lesson` + `lessonForm` × teacher × 4 ширины — новых deviation-строк нет; чекбокс «календарь» и rich-text план — post-MVP / Switch «тест» (продукт), не визуал CU8.

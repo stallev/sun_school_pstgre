@@ -170,14 +170,16 @@ export const LessonForm = ({
           {data.ordinal ? (
             <div>
               <p className="text-sm font-medium">{messages.ordinalLabel}</p>
-              <p className="flex h-10 items-center rounded-lg bg-paper px-3 tabular-nums text-ink-2">{data.ordinal}</p>
+              <p className="flex h-11 items-center rounded-lg bg-paper px-3 tabular-nums text-ink-2">{data.ordinal}</p>
             </div>
           ) : null}
         </div>
         <div>
           <p className="mb-2 text-sm font-medium">{messages.kindLabel}</p>
           {data.kindLocked ? (
-            <p className="text-sm text-ink-2">{messages.kindLockedHint}</p>
+            <p className="flex h-10 items-center rounded-lg bg-paper px-3 text-sm text-ink-2">
+              {messages.kindLockedHint}
+            </p>
           ) : (
             <SegmentedControl
               aria-label={messages.kindLabel}
@@ -260,9 +262,9 @@ export const LessonForm = ({
       {isReview ? (
         <section className="rounded-xl border border-line bg-surface p-4 sm:p-5">
           <SectionTitle>{messages.reviewPanelTitle}</SectionTitle>
-          <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-ink-2">
+          <ul className="mt-3 space-y-1.5 text-sm text-ink-2">
             {messages.reviewPanelBullets.map((line) => (
-              <li key={line}>{line}</li>
+              <li key={line}>— {line}</li>
             ))}
           </ul>
         </section>

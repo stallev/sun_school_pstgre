@@ -105,8 +105,8 @@
 | `profile` | `/profile` | активные | экран | [x] CU5 |
 | `today` | `/today` | teacher | экран | [x] CU6 |
 | `lessons` | `/lessons` | teacher | экран | [x] CU7 |
-| `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [ ] CU8 |
-| `lesson` | `/lessons/[lessonId]` | teacher | экран | [ ] CU8 |
+| `lessonForm` | `/lessons/new`, `/lessons/[lessonId]/edit` | teacher | экран | [x] CU8 |
+| `lesson` | `/lessons/[lessonId]` | teacher | экран | [x] CU8 |
 | `lessonTable` | `/lessons/[lessonId]/table` | teacher | экран | [ ] CU9 |
 | `check` | `/check`, `/lessons/[lessonId]/check` | teacher | экран | [ ] CU9 |
 | `group` | `/group` | teacher | экран | [ ] CU10 |
@@ -193,7 +193,7 @@
 
 ### P10-CU8 — fix(ui): align lesson card and form · Review: diff-only · Commit: auto
 
-- [ ] P10-T8 · T1 · Spec: P03 lesson / lessonForm  
+- [x] P10-T8 · T1 · Spec: P03 lesson / lessonForm  
       Files: `apps/web/src/app/(app)/lessons/[lessonId]/**`, `lessons/new/**`, `edit/**`  
       Acceptance: `lesson` + `lessonForm` × teacher × 4 ширины  
       Paths: H · N n/a · S n/a
