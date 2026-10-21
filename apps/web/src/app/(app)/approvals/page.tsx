@@ -1,6 +1,7 @@
 import { USER_ROLE } from "@sunschool/domain";
 import { ApprovalRow } from "@/components/admin/ApprovalRow";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
+import { ContentText } from "@/components/atoms";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { runAdminLazyPurge } from "@/data/access/admin-lazy-purge.server";
@@ -37,15 +38,18 @@ const ApprovalsPage = async () => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-6">
-        <PageHeader title={adminMessages.page.approvalsTitle} />
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+        <PageHeader
+          title={adminMessages.page.approvalsTitle}
+          description={adminMessages.approvals.pageSubtitle}
+        />
         {rows.length === 0 ? (
           <EmptyState
             title={adminMessages.approvals.emptyTitle}
             description={adminMessages.approvals.emptyDescription}
           />
         ) : (
-          <ul className="space-y-4">
+          <ul className="space-y-3">
             {rows.map((row) => (
               <li key={row.requestId}>
                 <ApprovalRow
@@ -60,6 +64,9 @@ const ApprovalsPage = async () => {
             ))}
           </ul>
         )}
+        <ContentText tone="muted" className="text-sm">
+          {adminMessages.approvals.footerNote}
+        </ContentText>
       </div>
     </AdminMessagesProvider>
   );

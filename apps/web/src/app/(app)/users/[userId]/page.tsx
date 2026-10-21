@@ -42,69 +42,77 @@ const UserProfilePage = async ({ params }: UserProfilePageProps) => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="space-y-8">
+      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
         <PageHeader title={profile.displayName} description={adminMessages.page.profileTitle} />
-        <FormSection title={adminMessages.users.profileStatus}>
-          <ContentText>{formatAccountStatusLabel(profile.status, adminMessages)}</ContentText>
-        </FormSection>
-        <FormSection title={adminMessages.users.profileLoginMethods}>
-          <ul className="space-y-2">
-            {profile.identities.map((identity) => (
-              <li key={`${identity.provider}-${identity.label}`}>
-                <ContentText>{identity.label}</ContentText>
-              </li>
-            ))}
-          </ul>
-        </FormSection>
-        <FormSection title={adminMessages.users.profileRoles}>
-          <UserProfileRoles
-            userId={profile.userId}
-            initialRoles={profile.roles}
-            initialGradeIds={profile.teacherGradeIds}
-            grades={profile.activeGrades}
-            dictionaries={dictionaries}
-            formError={formError}
-          />
-        </FormSection>
-        <FormSection title={adminMessages.users.updateName}>
-          <UpdateUserNameForm
-            userId={profile.userId}
-            initialNames={{
-              lastName: profile.lastName,
-              firstName: profile.firstName,
-              middleName: profile.middleName,
-            }}
-            dictionaries={dictionaries}
-            formError={formError}
-          />
-        </FormSection>
-        <FormSection title={adminMessages.users.profileAuditLink}>
-          <UserEntityHistoryList userId={profile.userId} />
-        </FormSection>
-        <section className="flex flex-wrap gap-2">
-          {profile.status === ACCOUNT_STATUS.ACTIVE ? (
-            <DisableAccessConfirm
-              userId={profile.userId}
-              dictionaries={dictionaries}
-              formError={formError}
-              cancelLabel={closeLabel}
-            />
-          ) : null}
-          {profile.status === ACCOUNT_STATUS.DISABLED ? (
-            <EnableAccessConfirm
-              userId={profile.userId}
-              dictionaries={dictionaries}
-              formError={formError}
-              cancelLabel={closeLabel}
-            />
-          ) : null}
-          <MergeUsersDialog
-            keepUserId={profile.userId}
-            dictionaries={dictionaries}
-            formError={formError}
-            closeLabel={closeLabel}
-          />
-        </section>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
+          <div className="space-y-4">
+            <FormSection title={adminMessages.users.updateName}>
+              <UpdateUserNameForm
+                userId={profile.userId}
+                initialNames={{
+                  lastName: profile.lastName,
+                  firstName: profile.firstName,
+                  middleName: profile.middleName,
+                }}
+                dictionaries={dictionaries}
+                formError={formError}
+              />
+            </FormSection>
+            <FormSection title={adminMessages.users.profileLoginMethods}>
+              <ul className="space-y-2">
+                {profile.identities.map((identity) => (
+                  <li key={`${identity.provider}-${identity.label}`}>
+                    <ContentText>{identity.label}</ContentText>
+                  </li>
+                ))}
+              </ul>
+            </FormSection>
+            <FormSection title={adminMessages.users.profileStatus}>
+              <ContentText>{formatAccountStatusLabel(profile.status, adminMessages)}</ContentText>
+            </FormSection>
+            <section className="flex flex-wrap gap-2">
+              {profile.status === ACCOUNT_STATUS.ACTIVE ? (
+                <DisableAccessConfirm
+                  userId={profile.userId}
+                  dictionaries={dictionaries}
+                  formError={formError}
+                  cancelLabel={closeLabel}
+                />
+              ) : null}
+              {profile.status === ACCOUNT_STATUS.DISABLED ? (
+                <EnableAccessConfirm
+                  userId={profile.userId}
+                  dictionaries={dictionaries}
+                  formError={formError}
+                  cancelLabel={closeLabel}
+                />
+              ) : null}
+            </section>
+          </div>
+          <div className="space-y-4">
+            <FormSection title={adminMessages.users.profileRoles}>
+              <UserProfileRoles
+                userId={profile.userId}
+                initialRoles={profile.roles}
+                initialGradeIds={profile.teacherGradeIds}
+                grades={profile.activeGrades}
+                dictionaries={dictionaries}
+                formError={formError}
+              />
+            </FormSection>
+            <FormSection title={adminMessages.users.profileAuditLink}>
+              <UserEntityHistoryList userId={profile.userId} />
+            </FormSection>
+            <section className="flex flex-wrap gap-2">
+              <MergeUsersDialog
+                keepUserId={profile.userId}
+                dictionaries={dictionaries}
+                formError={formError}
+                closeLabel={closeLabel}
+              />
+            </section>
+          </div>
+        </div>
       </div>
     </AdminMessagesProvider>
   );

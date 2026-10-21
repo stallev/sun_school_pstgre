@@ -23,6 +23,28 @@ export const parseUsersStatusFilter = (raw: string | undefined): AccountStatus |
   return LISTABLE_STATUSES.includes(raw as AccountStatus) ? (raw as AccountStatus) : null;
 };
 
+export type UsersStatusCounts = Record<AccountStatus, number> & { total: number };
+
+export async function loadUsersStatusCounts(db: PrismaClient): Promise<UsersStatusCounts> {
+  const groups = await db.appUser.groupBy({
+    by: ["status"],
+    where: { status: { in: [...LISTABLE_STATUSES] } },
+    _count: { _all: true },
+  });
+
+  const counts = Object.fromEntries(
+    LISTABLE_STATUSES.map((status) => [status, 0]),
+  ) as Record<AccountStatus, number>;
+
+  let total = 0;
+  for (const group of groups) {
+    counts[group.status] = group._count._all;
+    total += group._count._all;
+  }
+
+  return { ...counts, total };
+}
+
 export async function loadUsersList(
   db: PrismaClient,
   statusFilter: AccountStatus | null,

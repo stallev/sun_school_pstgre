@@ -117,9 +117,9 @@
 | `analytics` | `/analytics` | teacher, admin | экран | [x] CU13 |
 | `pupil` | `/analytics/pupils/[pupilId]` | teacher, admin | экран | [x] CU14 |
 | `school` | `/school` | admin | экран | [x] CU15 |
-| `approvals` | `/approvals` | admin | экран | [ ] CU16 |
-| `users` | `/users` | admin | экран | [ ] CU16 |
-| `userProfile` | `/users/[userId]` | admin | экран | [ ] CU16 |
+| `approvals` | `/approvals` | admin | экран | [x] CU16 |
+| `users` | `/users` | admin | экран | [x] CU16 |
+| `userProfile` | `/users/[userId]` | admin | экран | [x] CU16 |
 | `people` | `/people` | admin | экран | [ ] CU17 |
 | `groups` | `/groups` | admin | экран | [ ] CU17 |
 | `groupEdit` | `/groups/[groupId]` | admin | экран | [ ] CU17 |
@@ -249,7 +249,7 @@
 
 ### P10-CU16 — fix(ui): align admin access screens · Review: diff-only · Commit: auto
 
-- [ ] P10-T16 · T1 · Spec: access_requests contract  
+- [x] P10-T16 · T1 · Spec: access_requests contract  
       Files: `approvals/**`, `users/**`  
       Acceptance: `approvals`, `users`, `userProfile` × admin × 4 ширины  
       Paths: H · N n/a · S n/a

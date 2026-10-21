@@ -37,6 +37,8 @@ export type AdminMessages = {
     scaffoldNote: string;
   };
   approvals: {
+    pageSubtitle: string;
+    footerNote: string;
     emptyTitle: string;
     emptyDescription: string;
     submitted: string;
@@ -62,9 +64,15 @@ export type AdminMessages = {
     toastRejected: string;
   };
   users: {
+    pageSubtitle: string;
+    tabNav: string;
+    listEmpty: string;
+    registrationFooterNote: string;
     filterAll: string;
     filterActive: string;
     filterPending: string;
+    filterRegistration: string;
+    filterRejected: string;
     filterDisabled: string;
     statusActive: string;
     statusRequestPending: string;

@@ -412,3 +412,18 @@
 | `school` · `SchoolClosedGroupsTable.tsx` | закрытый год | таблица как `schoolClosedBlock` | `p-0` card, `min-w-[46rem]` (без изменений логики) | 390–1024 | **нет отклонения** |
 
 **Re-pass:** матрица `school` × admin × 390, 768, 820, 1024 — новых deviation-строк нет.
+
+## Проход 14 — CU16 Admin access screens
+
+**Дата:** 2026-10-21 · **Субагент:** implementer · **Модель:** composer-2.5
+**Эталоны:** прототип `vApprovals` / `vUsers` / `vUserProfile` · [`access_requests_and_roles_contract.md`](../contracts/access_requests_and_roles_contract.md)
+
+| Ключ / файл | Узел | Ожидание (прототип / UX-03) | Факт (после CU16) | Ширины | Серьёзность |
+|-------------|------|----------------------------|-------------------|--------|-------------|
+| `approvals` · `page.tsx` | контейнер | subtitle + footer note, `space-y-3` | `PageHeader` + `overflow-x-hidden`, footer `text-sm text-muted` | 390–1024 | **нет отклонения** |
+| `approvals` · `ApprovalRow.tsx` | карточка заявки | CARD grid `sm:p-5`, cobalt name, meta `text-ink-2` | grid `1.3fr/1fr/auto`, `text-cobalt-ink` title | 390–1024 | **нет отклонения** |
+| `users` · `UsersStatusFilter.tsx` | вкладки | `border-b`, `h-11`, counts | tablist как `/deletions`, registration/rejected | 390–1024 | **нет отклонения** |
+| `users` · `UserRow.tsx` | строка | `px-5 py-4`, chevron, `hover:bg-paper/70` | grid + `ChevronRight`, `StatusText` | 390–1024 | **нет отклонения** |
+| `userProfile` · `page.tsx` | сетка | `lg:grid-cols-2`, CARD sections | двухколоночный layout `FormSection` | 390–1024 | **нет отклонения** |
+
+**Re-pass:** матрица `approvals`, `users`, `userProfile` × admin × 390, 768, 820, 1024 — новых deviation-строк нет; expand-in-row на `/approvals` вне MVP (диалоги одобрения/отклонения).

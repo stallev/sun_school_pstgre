@@ -39,6 +39,8 @@
     "scaffold_note": "Group tables and “Needs attention” lists arrive in later phases."
   },
   "approvals": {
+    "page_subtitle": "New users completed registration and gave consent. Approve the request and assign roles.",
+    "footer_note": "Incomplete registrations (no consent) are not listed here and are removed after 30 days — see Users.",
     "empty_title": "No new requests",
     "empty_description": "When someone submits a request, it will appear here.",
     "submitted": "Submitted",
@@ -69,9 +71,15 @@
     "roles_required": "Select at least one role."
   },
   "users": {
+    "page_subtitle": "All accounts. Each row opens the user profile.",
+    "tab_nav": "Filter users by status",
+    "list_empty": "Empty.",
+    "registration_footer_note": "Signed in but did not give consent or submit a request. Removed automatically 30 days after first sign-in.",
     "filter_all": "All",
     "filter_active": "Active",
     "filter_pending": "Pending",
+    "filter_registration": "Registration",
+    "filter_rejected": "Rejected",
     "filter_disabled": "Disabled",
     "status_active": "Active",
     "status_request_pending": "Awaiting decision",

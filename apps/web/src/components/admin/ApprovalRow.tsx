@@ -1,7 +1,7 @@
 "use client";
 
 import { LOGIN_PROVIDER, type LoginProvider } from "@sunschool/domain";
-import { ContentText, SectionTitle } from "@/components/atoms";
+import { SectionTitle } from "@/components/atoms";
 import { ApproveRequestDialog } from "@/components/admin/ApproveRequestDialog.client";
 import { RejectRequestDialog } from "@/components/admin/RejectRequestDialog.client";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
@@ -41,15 +41,15 @@ export const ApprovalRow = ({
   const metaLine = `${submittedLabel}: ${new Date(row.submittedAtIso).toLocaleDateString()} · ${messages.approvals.consentVersion}: ${row.consentVersion} · ${formatWaitingDays(messages.approvals.waitingDays, row.waitingDays)}`;
 
   return (
-    <article className="rounded-xl border border-line bg-surface p-4">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto] md:items-center">
+    <article className="rounded-xl border border-line bg-surface">
+      <div className="grid grid-cols-1 gap-3 p-4 sm:p-5 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_auto] md:items-center md:gap-6">
         <div className="min-w-0 space-y-1">
-          <SectionTitle>{row.displayName}</SectionTitle>
-          <ContentText tone="secondary" className="text-sm">{loginMethods}</ContentText>
+          <SectionTitle className="font-medium text-cobalt-ink">{row.displayName}</SectionTitle>
         </div>
-        <ContentText tone="secondary" className="text-sm md:text-end">
-          {metaLine}
-        </ContentText>
+        <div className="text-sm text-ink-2">
+          <p className="flex flex-wrap gap-x-1">{loginMethods}</p>
+          <p>{metaLine}</p>
+        </div>
         <div className="flex flex-wrap gap-2 md:justify-end">
           <ApproveRequestDialog
             requestId={row.requestId}
