@@ -85,13 +85,28 @@ export async function setGroupAchievementMode(
     }
 
     if (targetEnabled) {
+      const closedOpenPeriods = await tx.gradeAchievementPeriod.updateMany({
+        where: { gradeSettingsId: settings.id, endsAt: null },
+        data: { endsAt: now },
+      });
+
+      if (closedOpenPeriods.count === 0) {
+        const year = await tx.academicYear.findUnique({
+          where: { id: parsed.data.academicYearId },
+          select: { startsOn: true },
+        });
+        await tx.gradeAchievementPeriod.create({
+          data: {
+            gradeSettingsId: settings.id,
+            startsAt: year?.startsOn ?? new Date(0),
+            endsAt: now,
+          },
+        });
+      }
+
       await tx.gradeSettings.update({
         where: { id: settings.id },
         data: { achievementsEnabled: true },
-      });
-      await tx.gradeAchievementPeriod.updateMany({
-        where: { gradeSettingsId: settings.id, endsAt: null },
-        data: { endsAt: now },
       });
 
       const enrollments = await tx.enrollment.findMany({
