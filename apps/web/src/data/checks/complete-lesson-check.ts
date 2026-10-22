@@ -13,6 +13,7 @@ import { writeAudit, type Prisma } from "@sunschool/db";
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
+import { maybeEvaluatePupilAchievements } from "../achievements/evaluate-pupil";
 import {
   assertLessonActorForExisting,
   lessonDateToIso,
@@ -79,6 +80,20 @@ export async function completeLessonCheckInTransaction(
     action: AUDIT_ACTION.LESSON_CHECK_COMPLETED,
     newValue: { gradeId: lesson.gradeId, academicYearId: lesson.academicYearId },
   });
+
+  const checkedPupils = await tx.homeworkCheck.findMany({
+    where: { lessonId, homeworkChecked: true },
+    select: { pupilId: true },
+  });
+  for (const row of checkedPupils) {
+    await maybeEvaluatePupilAchievements(
+      tx,
+      actorUserId,
+      row.pupilId,
+      lesson.academicYearId,
+      lesson.gradeId,
+    );
+  }
 
   return { ok: true, data: { lessonId, status: LESSON_STATUS.CHECK_COMPLETED } };
 }

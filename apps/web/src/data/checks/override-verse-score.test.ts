@@ -82,7 +82,10 @@ function mockTx(overrides: Record<string, unknown> = {}) {
     enrollment: {
       findFirst: vi.fn().mockResolvedValue({ id: "enroll-1" }),
     },
-    appSetting: { findFirst: vi.fn().mockResolvedValue({ value: "Europe/Moscow" }) },
+    appSetting: {
+      findFirst: vi.fn().mockResolvedValue({ value: "Europe/Moscow" }),
+      findUnique: vi.fn().mockResolvedValue({ value: false }),
+    },
     gradeSettings: {
       findUnique: vi.fn().mockResolvedValue({
         useVerses: true,

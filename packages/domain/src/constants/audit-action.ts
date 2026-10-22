@@ -100,5 +100,8 @@ export const AUDIT_ENTITY_TYPE = {
   BRICK_LEDGER: "brick_ledger",
   DELETION_REQUEST: "deletion_request",
   ANALYTICS_SNAPSHOT: "analytics_snapshot",
+  ACHIEVEMENT_AWARD: "achievement_award",
+  ACHIEVEMENT: "achievement",
+  PENALTY: "penalty",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];

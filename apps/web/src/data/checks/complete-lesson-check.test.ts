@@ -63,8 +63,12 @@ function mockTx(overrides: Record<string, unknown> = {}) {
     teacherAssignment: {
       findUnique: vi.fn().mockResolvedValue({ id: "assign-1" }),
     },
+    appSetting: {
+      findUnique: vi.fn().mockResolvedValue({ value: false }),
+    },
     homeworkCheck: {
       count: vi.fn().mockResolvedValue(1),
+      findMany: vi.fn().mockResolvedValue([]),
     },
     auditLog: { create: vi.fn() },
     ...overrides,

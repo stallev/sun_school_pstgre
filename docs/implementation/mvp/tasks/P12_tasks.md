@@ -49,7 +49,7 @@
 
 ### P12-CU2 — feat(achievements): persist awards and run evaluate on check events · Review: reviewer · Commit: auto
 
-- [ ] P12-T2 · T3 · Contract: [achievements §6.2–§6.3, §9](../contracts/achievements_and_penalties_contract.md) · ADR: [ADR-012 §4 п. 1–3](../../../prds/07_governance/adr_012_achievements_and_penalties.md) · AZ: AZ-56
+- [x] P12-T2 · T3 · Contract: [achievements §6.2–§6.3, §9](../contracts/achievements_and_penalties_contract.md) · ADR: [ADR-012 §4 п. 1–3](../../../prds/07_governance/adr_012_achievements_and_penalties.md) · AZ: AZ-56
       Files: `apps/web/src/data/achievements/evaluate-pupil.ts`, `recalculate-achievements.ts`, вызовы из `completeLessonCheck`, `correctCheck`, `overrideVerseScore`, `closeYear`; чтение флага `features.achievements`
       Acceptance: запись в интерактивной транзакции с блокировкой ученика; уникальность доказательств и `award_key` не даёт дубль; при выключенном флаге вызовов нет и мутация `recalculateAchievements` возвращает `ACHIEVEMENT_FLAG_OFF`; журнал `achievement.evaluated` без ФИО; кнопка пересчёта admin идемпотентна
       Paths: H [завершение проверки создаёт выдачи] · N [флаг выключен; повтор; конфликт уникальности] · S [AZ-56: нет публичного Action в обход use-case; AZ-52 на ручной пересчёт; audit без имён, INV-23]
