@@ -60,5 +60,8 @@ export * from "./deletion/constants";
 export * from "./deletion/compute-due-on";
 export * from "./deletion/build-plan";
 export * from "./deletion/can-execute";
+export * from "./achievements/constants";
+export * from "./achievements/award-key";
+export * from "./achievements/evaluate";
 export type { MutationOk, MutationErr, MutationResult } from "./types/mutation-result";
 export type { Clock, IdGenerator } from "./types/ports";

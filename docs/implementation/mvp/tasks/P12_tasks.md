@@ -40,7 +40,7 @@
 
 ### P12-CU1 — feat(domain): add achievement evaluate · Review: diff-only · Commit: auto
 
-- [ ] P12-T1 · T1 · Contract: [achievements §6.2](../contracts/achievements_and_penalties_contract.md) · Spec rules: [achievements_spec §7.3](../../../my_specs/achievements_spec.md)
+- [x] P12-T1 · T1 · Contract: [achievements §6.2](../contracts/achievements_and_penalties_contract.md) · Spec rules: [achievements_spec §7.3](../../../my_specs/achievements_spec.md)
       Files: `packages/domain/src/achievements/evaluate.ts` + `evaluate.test.ts`, `packages/domain/src/constants/mutation-error-codes.ts` (префиксы `ACHIEVEMENT_`, `PENALTY_` и коды контракта §7), `packages/domain/src/constants/audit-action.ts` (коды журнала §4), экспорт из `index.ts`
       Acceptance: чистая `evaluate` проходит случаи §7.3 (идемпотентность, порядок событий, правка задним числом, отзыв, ручная выдача, обзорный урок, период выключения, `hundred` без бонуса в метрике); неактивный `practice` не даёт выдач; коды и action — константы domain, без строковых литералов на будущем call site
       Paths: H [серия выдаёт уровни один раз] · N [повтор, отзыв, занятые факты, обзорный урок, режим выключен] · S n/a — чистая функция на фикстурах
