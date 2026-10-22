@@ -2,8 +2,8 @@
 
 **Тип:** Index  
 **Статус:** Canonical  
-**Версия:** 1.4  
-**Дата:** 2026-10-21  
+**Версия:** 1.5  
+**Дата:** 2026-10-22  
 **Волна:** W14-06  
 **Зависит от:** [`architecture_master_index.md`](../../prds/architecture_master_index.md), [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md)
 
@@ -11,7 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**Статус (2026-10-21):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). Импорт данных из старого приложения — вне проекта (владелец).
+**Статус (2026-10-22):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). **P12** — волна 1, достижения и штрафы: документы готовы, код не начат ([`P12_tasks.md`](./tasks/P12_tasks.md)). Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 
@@ -35,6 +35,7 @@
 | P09 | Фиксы соответствия UI прототипу | [P09](./phases_tasks_descriptions/P09_phase_description.md) | [P09](./tasks/P09_tasks.md) |
 | P10 | Визуальный дрейф UI (замеры по матрице) | — (см. [P10_tasks](./tasks/P10_tasks.md) Purpose) | [P10](./tasks/P10_tasks.md) |
 | P11 | Панель оценок сводной таблицы и тип карточки аналитики | [P11](./phases_tasks_descriptions/P11_phase_description.md) | [P11](./tasks/P11_tasks.md) |
+| P12 | Достижения и штрафы (волна 1, флаг `features.achievements`) | [P12](./phases_tasks_descriptions/P12_phase_description.md) | [P12](./tasks/P12_tasks.md) |
 
 Нумерация фаз реализации (P01…P11) не совпадает с промптами bootstrap (P0…P6).
 
@@ -51,6 +52,7 @@
 | [`deletion_requests_contract.md`](./contracts/deletion_requests_contract.md) | Запросы на удаление |
 | [`bible_seed_contract.md`](./contracts/bible_seed_contract.md) | Загрузка Библии, нумерация |
 | [`analytics_year_snapshots_contract.md`](./contracts/analytics_year_snapshots_contract.md) | Снимки итогов учебного года, пороги, год по умолчанию (P08) |
+| [`achievements_and_penalties_contract.md`](./contracts/achievements_and_penalties_contract.md) | Достижения и штрафы, пересчёт, флаг (P12) |
 
 ## Specs
 
@@ -61,6 +63,7 @@
 | [`homework_check_flow_spec.md`](./specs/homework_check_flow_spec.md) | Экраны проверки и сводной таблицы |
 | [`analytics_screens_spec.md`](./specs/analytics_screens_spec.md) | Аналитика группы, ученика, школа (W9-07); v1.2 — по учебным годам (P08) |
 | [`design_system_lab_spec.md`](./specs/design_system_lab_spec.md) | Каталог компонентов `/design-system` |
+| [`achievements_screens_spec.md`](./specs/achievements_screens_spec.md) | Экраны достижений и штрафов; сверка с прототипом (P12) |
 
 Остальные specs W9 на lean **не создаются**, кроме [`analytics_screens_spec.md`](./specs/analytics_screens_spec.md): требования — в контрактах, UX-контрактах и разделе «Экранные требования» описаний фаз P03/P05.
 

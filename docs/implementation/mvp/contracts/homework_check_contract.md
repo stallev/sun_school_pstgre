@@ -2,8 +2,8 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.3  
+**Дата:** 2026-10-22  
 **Волна:** W8-05  
 **Зависит от:** [`monorepo_boundaries_contract.md`](./monorepo_boundaries_contract.md), [`school_year_and_groups_contract.md`](./school_year_and_groups_contract.md), [`lifecycle_models.md`](../../../prds/02_domain_model/lifecycle_models.md) §5.6–§5.7, [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) INV-02, INV-11…INV-15, INV-19…INV-21, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-30…AZ-36, AZ-P5, AZ-P6), [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.4–§5.5, §7, [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [`adr_009_bible_translations_and_verse_numbering.md`](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md), [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) (§3.11, §3.12, БП-1…БП-5, БП-10, БП-12, УЧ-1…УЧ-4, ПБ-5)  
 **Связанные документы:** [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) §5, §7.2, [`ui_states_contract.md`](../../../design/ui_states_contract.md) D3…D7, D10, D14, [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -96,7 +96,7 @@
 - **Предусловия:** отмечено присутствие; запись `Partial` или новая; год `ACTIVE`.
 - **Транзакция:** блокировка записи; зафиксировать `homework_checked = true`; вычислить `points_total` и `scoring_snapshot` (§6); вычислить `late` (§7); записать `checked_by`, `checked_at`.
 - **Журнал:** `check.saved` (урок, ученик — ссылки).
-- **Постусловие:** баллы вошли в остаток кирпичиков ([`bricks_ledger_contract.md`](./bricks_ledger_contract.md)).
+- **Постусловие:** баллы вошли в остаток кирпичиков ([`bricks_ledger_contract.md`](./bricks_ledger_contract.md)). Пересчёт достижений здесь не запускается: его точка — `completeLessonCheck` (§5.8).
 
 ### 5.6 `correctCheck` (БП-12)
 
@@ -105,16 +105,17 @@
 - **Журнал:** `check.corrected` (старое → новое значение по полям; причина).
 - **Постусловие:** кирпичики «набрано» меняются сразу; статус урока не меняется.
 - **Закрытый год (P08):** правка admin записи в `CLOSED` году в той же транзакции вызывает `recomputeYearSnapshots` — новая версия снимка группы и ученика, если итоги изменились ([`analytics_year_snapshots_contract.md`](./analytics_year_snapshots_contract.md) §6.2, INV-26). То же для `overrideVerseScore` в `CLOSED` году.
+- **Достижения (P12):** при `features.achievements = true` та же транзакция после фиксации баллов вызывает `evaluatePupil` для ученика записи ([`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) §6.3). При выключенном флаге вызова нет.
 
 ### 5.7 `overrideVerseScore`
 
-- Ручная оценка стиха (`source = MANUAL`) с `scored_at`, `scored_by`; пересчёт баллов записи по §6. Журнал `check.verse_overridden`.
+- Ручная оценка стиха (`source = MANUAL`) с `scored_at`, `scored_by`; пересчёт баллов записи по §6. Журнал `check.verse_overridden`. При включённом флаге достижений — `evaluatePupil` в той же транзакции (§5.6).
 
 ### 5.8 `completeLessonCheck`
 
 - **Предусловия:** у урока есть хотя бы одна запись с `homework_checked = true` (БП-1); год `ACTIVE`.
 - **Транзакция:** `HELD → CHECK_COMPLETED`. Журнал `lesson.check_completed`. Повтор идемпотентен.
-- **Постусловие:** урок попадает в аналитику как «проверенный» (БП-1); повторная проверка записей возможна через `correctCheck`.
+- **Постусловие:** урок попадает в аналитику как «проверенный» (БП-1); повторная проверка записей возможна через `correctCheck`. При включённом флаге достижений — пересчёт учеников урока с `homework_checked = true` и список новых выдач для «кого отметить» ([`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) §6.3). При выключенном флаге пересчёта нет.
 
 ## 6. Баллы (БП-5 вариант А, БП-10)
 
@@ -263,3 +264,4 @@ points_total = Σ(verseScore_i) × w_verses
 | 2026-10-11 | v1.0 — Canonical (W8-05) |
 | 2026-10-17 | v1.1 — Docs sync P04: §12 пути реализации, Q-05 закрыт |
 | 2026-10-19 | v1.2 — §5.6: правка закрытого года версионирует снимок итогов (P08) |
+| 2026-10-22 | v1.3 — §5.6 и §5.8: пересчёт достижений при включённом флаге (P12) |

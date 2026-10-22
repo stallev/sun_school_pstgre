@@ -92,7 +92,7 @@
 
 | Маршрут | Экран | Волна | Назначение |
 |---------|-------|-------|------------|
-| `/achievements` | `achievements` | 1 | Достижения и штрафы (admin) |
+| `/achievements` | `achievements` | 1 | Достижения и штрафы (admin). Реализует фаза P12 при `features.achievements = true`; до страницы строка остаётся здесь. Перенос в §4 — задача P12 |
 | `/child` | `child` | 2 | Успехи ребёнка (parent) |
 | `/child/data` | `childData` | 2 | Данные и согласия (parent) |
 | `/child/consent` | `childConsent` | 2 | Согласие по ребёнку (parent) |
@@ -145,3 +145,4 @@
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W1-F5) |
 | 2026-10-19 | §4.2: query-параметры года для `/analytics`, `/analytics/pupils/[pupilId]` (P08); `/school` — `?year=`; новых путей нет |
+| 2026-10-22 | §5: `/achievements` помечен фазой P12; в §4 переносится, когда страница появится |

@@ -2,8 +2,8 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.2  
+**Дата:** 2026-10-22  
 **Волна:** W8-06  
 **Зависит от:** [`monorepo_boundaries_contract.md`](./monorepo_boundaries_contract.md), [`homework_check_contract.md`](./homework_check_contract.md) §6, [`lifecycle_models.md`](../../../prds/02_domain_model/lifecycle_models.md) §5.8, [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) INV-10, INV-17, INV-18, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-40, AZ-41), [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.5 (`brick_ledger`), R-6, R-7, [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) (БП-6, БП-11, §3.19)  
 **Связанные документы:** [`school_year_and_groups_contract.md`](./school_year_and_groups_contract.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) D8, [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -17,19 +17,22 @@
 
 ## 2. Scope / Out of scope
 
-**В scope:** `brick_ledger`, баланс «ученик + учебный год», выдача и компенсация.  
-**Вне scope:** баллы за достижения и штрафы (post-MVP: в MVP слагаемые равны 0); рейтинг ([`P05_phase_description.md`](../phases_tasks_descriptions/P05_phase_description.md) §`/rating`, `computeRatingMetric` в domain); расчёт `points_total` ([`homework_check_contract.md`](./homework_check_contract.md) §6).
+**В scope:** `brick_ledger`, баланс «ученик + учебный год», выдача и компенсация, формула «набрано» с учётом флага достижений.  
+**Вне scope:** запись бонуса и штрафа строкой журнала (их считает [`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md)); рейтинг ([`P05_phase_description.md`](../phases_tasks_descriptions/P05_phase_description.md) §`/rating`, `computeRatingMetric` в domain); расчёт `points_total` ([`homework_check_contract.md`](./homework_check_contract.md) §6).
 
 ## 3. Определения
 
 | Термин | Значение |
 |--------|----------|
-| Набрано | Σ `points_total` записей проверки с `homework_checked = true` ученика за **учебный год** (по всем группам, БП-11, INV-10) |
+| Набрано | очки проверок + бонус − штрафы (формула ниже) |
+| Очки проверок | Σ `points_total` записей проверки с `homework_checked = true` ученика за **учебный год** (по всем группам, БП-11, INV-10) |
+| Бонус | сумма `points` неотзванных `achievement_award` за год; при `features.achievements = false` равна 0 |
+| Штрафы | сумма модулей `points` записей `penalty` со статусом `ACTIVE` за год; при выключенном флаге равна 0 |
 | Выдано | Σ `quantity` записей `brick_ledger` ученика за год (отрицательные компенсации уменьшают) |
 | Остаток | `набрано − выдано` |
 | Журнал | таблица только добавления; запись не редактируется и не удаляется (INV-17, R-6) |
 
-В MVP бонус за достижения и штрафы равен 0; формула расширяема без изменения контракта: `набрано = очки_проверок + очки_достижений − штрафы`.
+`набрано = очки_проверок + бонус − штрафы` ([ADR-012](../../../prds/07_governance/adr_012_achievements_and_penalties.md) §4 п. 4). Выдача достижения и штраф не создают строку `brick_ledger`. Бонус не входит в метрику рейтинга.
 
 ## 4. Операции
 
@@ -61,8 +64,8 @@
 
 ### 6.1 `getBalance`
 
-- Вычисляется из `homework_check` и `brick_ledger` одним запросом (индексы `(pupil_id, academic_year_id)`); результат — `{ earned, issued, balance, needsAttention }` (`needsAttention = balance < 0`).
-- Кэш: тег по ученику и году; сбрасывается `updateTag` из `saveChecked`, `correctCheck`, `issueBricks`, `compensateBricks`.
+- Вычисляется из `homework_check`, при включённом флаге — ещё из неотзванных выдач и действующих штрафов (§3), и из `brick_ledger` одним запросом (индексы `(pupil_id, academic_year_id)`); результат — `{ earned, issued, balance, needsAttention }` (`needsAttention = balance < 0`). При включённом флаге в ответе есть бонус и сумма штрафов для строки «в том числе».
+- Кэш: тег по ученику и году; сбрасывается `updateTag` из `saveChecked`, `correctCheck`, `issueBricks`, `compensateBricks` и, при включённом флаге, из операций выдачи, отзыва, штрафа и пересчёта ([`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) §6.6).
 
 ### 6.2 `issueBricks`
 
@@ -145,6 +148,7 @@
 - [ ] Нулевое количество и компенсация без примечания отклоняются — исход: тест.
 - [ ] Выдача за закрытый год допустима — исход: тест (БП-6).
 - [ ] Каждая запись пишет журнал изменений — исход: тест.
+- [ ] При выключенном флаге бонус и штрафы равны 0; при включённом «набрано» включает их и число строк `brick_ledger` от выдачи достижения не растёт — исход: тест (ADR-012).
 
 ## 14. Open questions
 
@@ -158,7 +162,8 @@
 
 | Document | Relationship |
 |----------|--------------|
-| [`homework_check_contract.md`](./homework_check_contract.md) | Источник «набрано» |
+| [`homework_check_contract.md`](./homework_check_contract.md) | Очки проверок |
+| [`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) | Бонус и штрафы в «набрано» |
 | [`lifecycle_models.md`](../../../prds/02_domain_model/lifecycle_models.md) §5.8 | Операции |
 | [`change_log_contract.md`](./change_log_contract.md) | Action-коды |
 
@@ -178,3 +183,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-06) |
 | 2026-10-18 | v1.1 — Purpose P05; ссылка на рейтинг вместо индекса (P05-CU9) |
+| 2026-10-22 | v1.2 — §3: бонус и штрафы в «набрано» при `features.achievements` (ADR-012, P12) |
