@@ -94,7 +94,7 @@
 
 ### P12-CU7 — feat(web): add achievements catalogue screen · Review: reviewer · Commit: auto
 
-- [ ] P12-T7 · T3 · Spec: [achievements_screens §4, §5.1, §6](../specs/achievements_screens_spec.md) · Contract: [achievements §6.1](../contracts/achievements_and_penalties_contract.md) · AZ: AZ-52, AZ-D3
+- [x] P12-T7 · T3 · Spec: [achievements_screens §4, §5.1, §6](../specs/achievements_screens_spec.md) · Contract: [achievements §6.1](../contracts/achievements_and_penalties_contract.md) · AZ: AZ-52, AZ-D3
       Files: секция Lab до маршрута, `apps/web/src/app/(app)/achievements/`, пункт меню admin, словарь `admin.achievements`, server actions каталога и пересчёта
       Acceptance: экран совпадает с `vAchievements`, `achDialog`, `penCatDialog`; `practice` подписан «Ждёт голосовой проверки» и не включается действием учителя; при выключенном флаге пункта нет и маршрут 404; teacher получает «Нет доступа»; toast и pending по правилам мутаций
       Paths: H [admin правит каталог и пересчитывает] · N [вид после выдачи не меняется; пустая секция; ошибка валидации сохраняет форму] · S [AZ-52, AZ-D3, флаг]

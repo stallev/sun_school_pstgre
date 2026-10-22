@@ -31,6 +31,7 @@ const LAB_SCREEN_TITLES: ShellScreenTitles = {
   groups: "Groups",
   groupEdit: "Edit group",
   year: "School year",
+  achievements: "Achievements",
   audit: "Audit log",
   settings: "Settings",
   profile: "Profile",

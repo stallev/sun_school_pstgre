@@ -58,6 +58,7 @@ describe("resolveNavDefs", () => {
       "/groups",
       "/year",
       "/calendar",
+      "/achievements",
       "/verses",
       "/settings",
     ]);
