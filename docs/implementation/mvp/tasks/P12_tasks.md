@@ -76,7 +76,7 @@
 
 ### P12-CU5 — feat(achievements): add group achievement mode · Review: reviewer · Commit: auto
 
-- [ ] P12-T5 · T3 · Contract: [achievements §5, §6.3](../contracts/achievements_and_penalties_contract.md) · ADR: [ADR-012 §4 п. 6](../../../prds/07_governance/adr_012_achievements_and_penalties.md) · AZ: AZ-55
+- [x] P12-T5 · T3 · Contract: [achievements §5, §6.3](../contracts/achievements_and_penalties_contract.md) · ADR: [ADR-012 §4 п. 6](../../../prds/07_governance/adr_012_achievements_and_penalties.md) · AZ: AZ-55
       Files: `apps/web/src/data/achievements/set-group-achievement-mode.ts`, период `grade_achievement_period`
       Acceptance: выключение открывает период и запрещает ручную выдачу и штраф; включение закрывает период и пересчитывает учеников группы; группа с `achievements_enabled = false` без периодов после включения флага не получает автовыдач; новая группа при включённом флаге создаётся с режимом включённым; журнал `achievement.mode_changed`
       Paths: H [включение и выключение] · N [выдача при выключенном режиме] · S [AZ-55: чужая группа — 404]

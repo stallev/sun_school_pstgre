@@ -7,7 +7,7 @@ import {
   type UserRole,
 } from "@sunschool/domain";
 import type { Prisma } from "@sunschool/db";
-import { canAwardManually, canRevokeAward } from "@sunschool/policy-server";
+import { canAwardManually, canRevokeAward, canSetGroupAchievementMode } from "@sunschool/policy-server";
 import { teacherCanAccessPupilForAnalytics } from "../analytics/years/year-analytics-access.server";
 
 type Tx = Prisma.TransactionClient;
@@ -80,6 +80,33 @@ export async function assertRevokeAwardAccess(
   actorUserId: string,
 ): Promise<MutationErr | null> {
   const decision = canRevokeAward(await loadPolicySessionContext(tx, actorUserId));
+  if (!decision.allowed) return policyToMutation(decision);
+  return null;
+}
+
+export async function assertSetGroupAchievementModeAccess(
+  tx: Tx,
+  actorUserId: string,
+  organizationId: string,
+  gradeId: string,
+  academicYearId: string,
+): Promise<MutationErr | null> {
+  const grade = await tx.grade.findFirst({
+    where: { id: gradeId, organizationId },
+    select: { id: true },
+  });
+  const teacherAssigned =
+    grade &&
+    (await tx.teacherAssignment.findFirst({
+      where: { userId: actorUserId, gradeId, academicYearId },
+      select: { id: true },
+    })) !== null;
+
+  const decision = canSetGroupAchievementMode(await loadPolicySessionContext(tx, actorUserId), {
+    gradeExistsInOrganization: Boolean(grade),
+    teacherAssignedToGradeInYear: Boolean(teacherAssigned),
+  });
+
   if (!decision.allowed) return policyToMutation(decision);
   return null;
 }

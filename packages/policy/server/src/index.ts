@@ -1,7 +1,9 @@
 export {
   canAwardManually,
   canRevokeAward,
+  canSetGroupAchievementMode,
   type CanAwardManuallyFacts,
+  type CanSetGroupAchievementModeFacts,
 } from "./achievements-mutate";
 export {
   canViewGroupYear,
