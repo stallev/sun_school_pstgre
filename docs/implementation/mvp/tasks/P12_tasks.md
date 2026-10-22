@@ -67,7 +67,7 @@
 
 ### P12-CU4 — feat(achievements): add penalties · Review: reviewer · Commit: auto
 
-- [ ] P12-T4 · T3 · Contract: [achievements §6.5](../contracts/achievements_and_penalties_contract.md) · AZ: AZ-53
+- [x] P12-T4 · T3 · Contract: [achievements §6.5](../contracts/achievements_and_penalties_contract.md) · AZ: AZ-53
       Files: `apps/web/src/data/achievements/issue-penalty.ts`, `cancel-penalty.ts`
       Acceptance: один `ACTIVE` на ученика и урок; модуль баллов не выше каталога; оценки и выдачи не меняются; снятие в закрытом году teacher отклоняется `PENALTY_YEAR_CLOSED`; журнал `penalty.issued` / `penalty.cancelled`
       Paths: H [выдача и снятие] · N [второй штраф, баллы выше каталога, уже снят, нет причины] · S [AZ-53, AZ-D4, ШТ-10]
