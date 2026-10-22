@@ -11,6 +11,7 @@ import {
 import { writeAudit, type PrismaClient } from "@sunschool/db";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActorOrganizationId } from "../school/school-pupil-shared.server";
+import { revalidateBricksCaches } from "../bricks/revalidate-bricks-cache";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { assertRevokeAwardAccess } from "./achievement-mutate-access.server";
 
@@ -31,7 +32,9 @@ export async function revokeAward(
   const parsed = revokeAwardInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  return db.$transaction(async (tx) => {
+  const bricksInvalidation = { pupilId: null as string | null, yearId: null as string | null };
+
+  const result: MutationResult<RevokeAwardSuccess> = await db.$transaction(async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -54,7 +57,7 @@ export async function revokeAward(
         id: parsed.data.awardId,
         pupil: { organizationId },
       },
-      select: { id: true, revokedAt: true, pupilId: true },
+      select: { id: true, revokedAt: true, pupilId: true, academicYearId: true },
     });
     if (!award) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -87,6 +90,13 @@ export async function revokeAward(
       newValue: { awardId: award.id, pupilId: award.pupilId },
     });
 
+    bricksInvalidation.pupilId = award.pupilId;
+    bricksInvalidation.yearId = award.academicYearId;
     return { ok: true, data: { awardId: award.id } };
   });
+
+  if (result.ok && bricksInvalidation.pupilId && bricksInvalidation.yearId) {
+    revalidateBricksCaches(bricksInvalidation.pupilId, bricksInvalidation.yearId);
+  }
+  return result;
 }

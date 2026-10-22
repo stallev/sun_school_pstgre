@@ -1,13 +1,13 @@
 import "server-only";
 
-import { ACADEMIC_YEAR_STATUS, computeBalance } from "@sunschool/domain";
+import { ACADEMIC_YEAR_STATUS } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
 import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
 import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-page.server";
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { formatDisplayName } from "@/lib/person/format-display-name";
-import { loadBricksEarnedAndIssued } from "./bricks-shared.server";
+import { loadBricksBalanceInTransaction } from "./bricks-shared.server";
 import { listLedger } from "./list-ledger";
 import type { BrickLedgerEntryDto } from "./bricks-shared.server";
 
@@ -100,10 +100,9 @@ export async function loadBricksPage(
 
   const rows: BricksBalanceRow[] = [];
   for (const row of enrollments) {
-    const totals = await db.$transaction((tx) =>
-      loadBricksEarnedAndIssued(tx, row.pupil.id, year.id),
+    const snapshot = await db.$transaction((tx) =>
+      loadBricksBalanceInTransaction(tx, row.pupil.id, year.id),
     );
-    const snapshot = computeBalance(totals.earned, totals.issued);
     rows.push({
       pupilId: row.pupil.id,
       displayName: formatDisplayName(row.pupil),

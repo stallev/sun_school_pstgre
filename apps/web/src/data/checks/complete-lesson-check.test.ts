@@ -7,7 +7,15 @@ import {
   MUTATION_ERROR_CODES,
   USER_ROLE,
 } from "@sunschool/domain";
-import { completeLessonCheckInTransaction } from "./complete-lesson-check";
+import { completeLessonCheck, completeLessonCheckInTransaction } from "./complete-lesson-check";
+
+vi.mock("../bricks/revalidate-bricks-cache", () => ({
+  revalidateBricksCachesForPupils: vi.fn(),
+}));
+
+vi.mock("../achievements/evaluate-pupil", () => ({
+  maybeEvaluatePupilAchievements: vi.fn(),
+}));
 
 vi.mock("@sunschool/db", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@sunschool/db")>();
@@ -19,6 +27,7 @@ const actorUserId = "33333333-3333-4333-8333-333333333333";
 const gradeId = "44444444-4444-4444-8444-444444444444";
 const yearId = "55555555-5555-4555-8555-555555555555";
 const lessonId = "77777777-7777-4777-8777-777777777777";
+const pupilId = "88888888-8888-4888-8888-888888888888";
 
 const lessonRow = {
   id: lessonId,
@@ -127,5 +136,47 @@ describe("completeLessonCheckInTransaction", () => {
     const result = await completeLessonCheckInTransaction(tx as never, actorUserId, orgId, lessonId);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.code).toBe(MUTATION_ERROR_CODES.NOT_FOUND);
+  });
+});
+
+describe("completeLessonCheck", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("revalidates bricks caches for checked pupils after HELD → CHECK_COMPLETED", async () => {
+    const { revalidateBricksCachesForPupils } = await import("../bricks/revalidate-bricks-cache");
+    const tx = mockTx({
+      homeworkCheck: {
+        count: vi.fn().mockResolvedValue(1),
+        findMany: vi.fn().mockResolvedValue([{ pupilId }]),
+      },
+    });
+    const db = {
+      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+    };
+
+    const result = await completeLessonCheck(db as never, actorUserId, { lessonId });
+
+    expect(result.ok).toBe(true);
+    expect(revalidateBricksCachesForPupils).toHaveBeenCalledWith([pupilId], yearId);
+  });
+
+  it("does not revalidate bricks caches on idempotent CHECK_COMPLETED", async () => {
+    const { revalidateBricksCachesForPupils } = await import("../bricks/revalidate-bricks-cache");
+    const tx = mockTx({
+      $queryRaw: vi
+        .fn()
+        .mockResolvedValueOnce([{ id: yearId }])
+        .mockResolvedValueOnce([{ status: LESSON_STATUS.CHECK_COMPLETED }]),
+    });
+    const db = {
+      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
+    };
+
+    const result = await completeLessonCheck(db as never, actorUserId, { lessonId });
+
+    expect(result.ok).toBe(true);
+    expect(revalidateBricksCachesForPupils).not.toHaveBeenCalled();
   });
 });

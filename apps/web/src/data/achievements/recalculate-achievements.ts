@@ -10,6 +10,7 @@ import type { Prisma, PrismaClient } from "@sunschool/db";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { assertAdminActor } from "../school/school-enrollment-shared.server";
 import { loadActorOrganizationId } from "../school/school-pupil-shared.server";
+import { revalidateBricksCachesForPupils } from "../bricks/revalidate-bricks-cache";
 import { evaluatePupilInTransaction } from "./evaluate-pupil";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 
@@ -21,7 +22,12 @@ const recalculateAchievementsInputSchema = z
   })
   .strict();
 
-export type RecalculateAchievementsSuccess = { awardIds: string[]; pupilsEvaluated: number };
+export type RecalculateAchievementsSuccess = {
+  awardIds: string[];
+  pupilsEvaluated: number;
+  yearId: string;
+  pupilIds: string[];
+};
 
 export async function recalculateAchievementsInTransaction(
   tx: Tx,
@@ -90,11 +96,13 @@ export async function recalculateAchievementsInTransaction(
   const enabledGradeIds = new Set(enabledGrades.map((row) => row.gradeId));
 
   const awardIds: string[] = [];
+  const pupilIds: string[] = [];
   let pupilsEvaluated = 0;
 
   for (const [pupilId, scope] of pupilsById) {
     if (!enabledGradeIds.has(scope.gradeId)) continue;
     pupilsEvaluated += 1;
+    pupilIds.push(pupilId);
     const result = await evaluatePupilInTransaction(
       tx,
       actorUserId,
@@ -105,7 +113,7 @@ export async function recalculateAchievementsInTransaction(
     awardIds.push(...result.awardIds);
   }
 
-  return { ok: true, data: { awardIds, pupilsEvaluated } };
+  return { ok: true, data: { awardIds, pupilsEvaluated, yearId: year.id, pupilIds } };
 }
 
 export async function recalculateAchievements(
@@ -116,11 +124,16 @@ export async function recalculateAchievements(
   const parsed = recalculateAchievementsInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  return db.$transaction(async (tx) => {
+  const result: MutationResult<RecalculateAchievementsSuccess> = await db.$transaction(async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
     }
     return recalculateAchievementsInTransaction(tx, actorUserId, organizationId, parsed.data);
   });
+
+  if (result.ok) {
+    revalidateBricksCachesForPupils(result.data.pupilIds, result.data.yearId);
+  }
+  return result;
 }

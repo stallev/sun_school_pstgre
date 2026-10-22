@@ -39,6 +39,15 @@ function mockTotals(earned: number, issued: number) {
       aggregate: vi.fn().mockResolvedValue({ _sum: { quantity: issued } }),
       create: vi.fn().mockResolvedValue({ id: "ledger-1" }),
     },
+    achievementAward: {
+      aggregate: vi.fn().mockResolvedValue({ _sum: { points: 0 } }),
+    },
+    penalty: {
+      findMany: vi.fn().mockResolvedValue([]),
+    },
+    appSetting: {
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
   };
 }
 

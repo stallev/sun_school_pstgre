@@ -1,8 +1,7 @@
 import "server-only";
 
-import { computeBalance } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
-import { loadBricksEarnedAndIssued } from "@/data/bricks/bricks-shared.server";
+import { loadBricksBalanceInTransaction } from "@/data/bricks/bricks-shared.server";
 import type { LessonsListRow } from "@/data/lessons/load-lessons-list-page.server";
 import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
@@ -96,10 +95,9 @@ export async function buildTodayWeekRows({
   let bricksToIssue = 0;
   let hasNegativeBalance = false;
   for (const row of enrollments) {
-    const totals = await db.$transaction((tx) =>
-      loadBricksEarnedAndIssued(tx, row.pupil.id, yearId),
+    const snapshot = await db.$transaction((tx) =>
+      loadBricksBalanceInTransaction(tx, row.pupil.id, yearId),
     );
-    const snapshot = computeBalance(totals.earned, totals.issued);
     const unissued = Math.max(0, snapshot.earned - snapshot.issued);
     bricksToIssue += unissued;
     if (snapshot.balance < 0) {

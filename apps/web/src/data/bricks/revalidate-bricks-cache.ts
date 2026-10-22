@@ -10,6 +10,15 @@ export function revalidateBricksCaches(pupilId: string, yearId: string): void {
   updateTag(CACHE_TAGS.analyticsPupilYears(pupilId));
 }
 
+export function revalidateBricksCachesForPupils(
+  pupilIds: readonly string[],
+  yearId: string,
+): void {
+  for (const pupilId of pupilIds) {
+    revalidateBricksCaches(pupilId, yearId);
+  }
+}
+
 export async function revalidateBricksCachesForLessonCheck(
   db: PrismaClient,
   pupilId: string,

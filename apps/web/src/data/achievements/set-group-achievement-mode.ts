@@ -11,6 +11,7 @@ import {
 import { writeAudit, type PrismaClient } from "@sunschool/db";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActorOrganizationId } from "../school/school-pupil-shared.server";
+import { revalidateBricksCachesForPupils } from "../bricks/revalidate-bricks-cache";
 import { assertSetGroupAchievementModeAccess } from "./achievement-mutate-access.server";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { evaluatePupilInTransaction } from "./evaluate-pupil";
@@ -37,7 +38,9 @@ export async function setGroupAchievementMode(
   const parsed = setGroupAchievementModeInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  return db.$transaction(async (tx) => {
+  const bricksInvalidation = { pupilIds: null as string[] | null, yearId: null as string | null };
+
+  const result: MutationResult<SetGroupAchievementModeSuccess> = await db.$transaction(async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -140,6 +143,8 @@ export async function setGroupAchievementMode(
         newValue: { gradeId: parsed.data.gradeId, academicYearId: parsed.data.academicYearId, enabled: true },
       });
 
+      bricksInvalidation.pupilIds = enrollments.map((row) => row.pupilId);
+      bricksInvalidation.yearId = parsed.data.academicYearId;
       return {
         ok: true,
         data: {
@@ -176,4 +181,9 @@ export async function setGroupAchievementMode(
       data: { achievementsEnabled: false, pupilsEvaluated: 0, awardIds: [] },
     };
   });
+
+  if (result.ok && bricksInvalidation.pupilIds && bricksInvalidation.yearId) {
+    revalidateBricksCachesForPupils(bricksInvalidation.pupilIds, bricksInvalidation.yearId);
+  }
+  return result;
 }

@@ -14,6 +14,7 @@ import { writeAudit, type PrismaClient } from "@sunschool/db";
 import { userHasAdminRole } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActorOrganizationId } from "../school/school-pupil-shared.server";
+import { revalidateBricksCaches } from "../bricks/revalidate-bricks-cache";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { assertAwardManuallyAccess } from "./achievement-mutate-access.server";
 
@@ -34,7 +35,9 @@ export async function cancelPenalty(
   const parsed = cancelPenaltyInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  return db.$transaction(async (tx) => {
+  const bricksInvalidation = { pupilId: null as string | null, yearId: null as string | null };
+
+  const result: MutationResult<CancelPenaltySuccess> = await db.$transaction(async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -61,6 +64,7 @@ export async function cancelPenalty(
         status: true,
         lesson: {
           select: {
+            academicYearId: true,
             academicYear: { select: { status: true } },
           },
         },
@@ -122,6 +126,13 @@ export async function cancelPenalty(
       },
     });
 
+    bricksInvalidation.pupilId = penalty.pupilId;
+    bricksInvalidation.yearId = penalty.lesson.academicYearId;
     return { ok: true, data: { penaltyId: penalty.id } };
   });
+
+  if (result.ok && bricksInvalidation.pupilId && bricksInvalidation.yearId) {
+    revalidateBricksCaches(bricksInvalidation.pupilId, bricksInvalidation.yearId);
+  }
+  return result;
 }

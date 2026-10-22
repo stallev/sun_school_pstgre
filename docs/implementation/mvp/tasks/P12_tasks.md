@@ -85,7 +85,7 @@
 
 ### P12-CU6 — feat(bricks): include awards and penalties in earned total · Review: reviewer · Commit: auto
 
-- [ ] P12-T6 · T3 · Contract: [bricks §3, §6.1](../contracts/bricks_ledger_contract.md) · Contract: [achievements §6.6](../contracts/achievements_and_penalties_contract.md)
+- [x] P12-T6 · T3 · Contract: [bricks §3, §6.1](../contracts/bricks_ledger_contract.md) · Contract: [achievements §6.6](../contracts/achievements_and_penalties_contract.md)
       Files: расчёт баланса в `apps/web/src/data/bricks/**`, сброс кэша из операций CU2–CU5
       Acceptance: при флаге «набрано» = проверки + неотзванные выдачи − действующие штрафы; число строк `brick_ledger` не растёт; при выключенном флаге бонус и штрафы 0; отзыв может сделать остаток отрицательным
       Paths: H [бонус виден в балансе] · N [флаг выключен; отзыв; снятие штрафа] · S [AZ-41, AZ-57: чужой ученик — 404; в ответе нет лишних ПД]

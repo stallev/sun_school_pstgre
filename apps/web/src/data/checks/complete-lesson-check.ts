@@ -14,6 +14,7 @@ import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { maybeEvaluatePupilAchievements } from "../achievements/evaluate-pupil";
+import { revalidateBricksCachesForPupils } from "../bricks/revalidate-bricks-cache";
 import {
   assertLessonActorForExisting,
   lessonDateToIso,
@@ -24,12 +25,18 @@ import {
 
 type Tx = Prisma.TransactionClient;
 
+export type CompleteLessonCheckSuccess = {
+  lessonId: string;
+  status: LessonStatus;
+  bricksInvalidation?: { pupilIds: string[]; yearId: string };
+};
+
 export async function completeLessonCheckInTransaction(
   tx: Tx,
   actorUserId: string,
   organizationId: string,
   lessonId: string,
-): Promise<MutationResult<{ lessonId: string; status: LessonStatus }>> {
+): Promise<MutationResult<CompleteLessonCheckSuccess>> {
   const lesson = await loadLessonInOrganization(tx, lessonId, organizationId);
   if (isMutationErr(lesson)) return lesson;
 
@@ -95,22 +102,44 @@ export async function completeLessonCheckInTransaction(
     );
   }
 
-  return { ok: true, data: { lessonId, status: LESSON_STATUS.CHECK_COMPLETED } };
+  const checkedPupilIds = checkedPupils.map((row) => row.pupilId);
+
+  return {
+    ok: true,
+    data: {
+      lessonId,
+      status: LESSON_STATUS.CHECK_COMPLETED,
+      bricksInvalidation: { pupilIds: checkedPupilIds, yearId: lesson.academicYearId },
+    },
+  };
 }
 
 export async function completeLessonCheck(
   db: PrismaClient,
   actorUserId: string,
   raw: unknown,
-): Promise<MutationResult<{ lessonId: string; status: LessonStatus }>> {
+): Promise<MutationResult<CompleteLessonCheckSuccess>> {
   const parsed = completeLessonCheckInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  return db.$transaction(async (tx) => {
+  const result: MutationResult<CompleteLessonCheckSuccess> = await db.$transaction(async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
-      return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+      return {
+        ok: false as const,
+        code: MUTATION_ERROR_CODES.NOT_FOUND,
+        message: "common.errors.not_found",
+      };
     }
     return completeLessonCheckInTransaction(tx, actorUserId, organizationId, parsed.data.lessonId);
   });
+
+  if (result.ok && result.data.bricksInvalidation) {
+    revalidateBricksCachesForPupils(
+      result.data.bricksInvalidation.pupilIds,
+      result.data.bricksInvalidation.yearId,
+    );
+  }
+
+  return result;
 }

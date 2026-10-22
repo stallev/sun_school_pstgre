@@ -4,7 +4,6 @@ import {
   ACADEMIC_YEAR_STATUS,
   MUTATION_ERROR_CODES,
   SAMPLE_LAYER,
-  computeBalance,
   type AcademicYearStatus,
 } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
@@ -20,7 +19,7 @@ import { buildAnalyticsPeriodFilter, type AnalyticsPageSearchParams } from "./lo
 import { resolveAnalyticsPeriodForOrganization } from "./analytics-shared.server";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { loadSchoolDashboardCounts } from "../school/load-school-dashboard.server";
-import { loadBricksEarnedAndIssued } from "../bricks/bricks-shared.server";
+import { loadBricksBalanceInTransaction } from "../bricks/bricks-shared.server";
 import {
   listSchoolYearTotals,
   type ListSchoolYearTotalsData,
@@ -92,10 +91,10 @@ async function countNegativeBrickBalances(
   });
   let count = 0;
   for (const row of enrollments) {
-    const totals = await db.$transaction((tx) =>
-      loadBricksEarnedAndIssued(tx, row.pupilId, yearId),
+    const snapshot = await db.$transaction((tx) =>
+      loadBricksBalanceInTransaction(tx, row.pupilId, yearId),
     );
-    if (computeBalance(totals.earned, totals.issued).balance < 0) count += 1;
+    if (snapshot.balance < 0) count += 1;
   }
   return count;
 }

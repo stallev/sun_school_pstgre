@@ -16,6 +16,7 @@ import { Prisma, writeAudit, type PrismaClient } from "@sunschool/db";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActiveEnrollment } from "../school/school-enrollment-shared.server";
 import { loadActorOrganizationId, lockPupilRow } from "../school/school-pupil-shared.server";
+import { revalidateBricksCaches } from "../bricks/revalidate-bricks-cache";
 import { buildAchievementRuleSnapshot } from "./achievement-award-snapshot.server";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { assertAwardManuallyAccess } from "./achievement-mutate-access.server";
@@ -43,7 +44,9 @@ export async function awardManually(
   const parsed = awardManuallyInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  return db.$transaction(async (tx) => {
+  const bricksInvalidation = { pupilId: null as string | null, yearId: null as string | null };
+
+  const result: MutationResult<AwardManuallySuccess> = await db.$transaction(async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -230,6 +233,8 @@ export async function awardManually(
         },
       });
 
+      bricksInvalidation.pupilId = parsed.data.pupilId;
+      bricksInvalidation.yearId = academicYearId;
       return { ok: true, data: { awardId: award.id } };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
@@ -242,4 +247,9 @@ export async function awardManually(
       throw error;
     }
   });
+
+  if (result.ok && bricksInvalidation.pupilId && bricksInvalidation.yearId) {
+    revalidateBricksCaches(bricksInvalidation.pupilId, bricksInvalidation.yearId);
+  }
+  return result;
 }

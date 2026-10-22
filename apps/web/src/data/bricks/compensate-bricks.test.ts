@@ -57,6 +57,12 @@ function baseTx(issued: number, overrides: Record<string, unknown> = {}) {
       aggregate: vi.fn().mockResolvedValue({ _sum: { quantity: issued } }),
       create: vi.fn().mockResolvedValue({ id: "ledger-comp" }),
     },
+    achievementAward: {
+      aggregate: vi.fn().mockResolvedValue({ _sum: { points: 0 } }),
+    },
+    penalty: {
+      findMany: vi.fn().mockResolvedValue([]),
+    },
     ...overrides,
   };
 }
