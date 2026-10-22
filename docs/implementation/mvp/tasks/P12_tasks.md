@@ -58,7 +58,7 @@
 
 ### P12-CU3 — feat(achievements): add manual award and revoke · Review: reviewer · Commit: auto
 
-- [ ] P12-T3 · T3 · Contract: [achievements §6.4, §7](../contracts/achievements_and_penalties_contract.md) · AZ: AZ-53, AZ-54
+- [x] P12-T3 · T3 · Contract: [achievements §6.4, §7](../contracts/achievements_and_penalties_contract.md) · AZ: AZ-53, AZ-54
       Files: `apps/web/src/data/achievements/award-manually.ts`, `revoke-award.ts`, `packages/policy/server` проверка своей группы
       Acceptance: ручная выдача занимает отмеченные проверки и пишет `rule_snapshot` с сервера; баллы выше каталога и короткий набор — отказ; отзыв только admin, баллы выходят из бонуса, доказательства остаются; teacher на отзыв — `FORBIDDEN`; чужой ученик — `NOT_FOUND`
       Paths: H [выдача и отзыв] · N [баллы, число уроков, занятый факт, повторный отзыв, режим выключен] · S [AZ-53, AZ-54, AZ-D4]

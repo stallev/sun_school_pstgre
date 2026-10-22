@@ -11,6 +11,7 @@ import {
 } from "@sunschool/domain";
 import { Prisma, writeAudit, type Prisma as PrismaTypes } from "@sunschool/db";
 import { lockPupilRow } from "../school/school-pupil-shared.server";
+import { buildAchievementRuleSnapshot } from "./achievement-award-snapshot.server";
 import { loadAchievementEvaluateContext } from "./achievement-evaluate-context.server";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { loadGradeAchievementMode } from "./achievement-mode.server";
@@ -32,21 +33,6 @@ function mergeAwards(
       evidenceFactIds: award.evidenceFactIds,
     })),
   ];
-}
-
-function buildRuleSnapshot(
-  achievement: { code: string; ruleType: string; metric: string | null; threshold: number | null },
-  tier: { tier: number; length: number; points: number },
-): Prisma.InputJsonValue {
-  return {
-    code: achievement.code,
-    ruleType: achievement.ruleType,
-    metric: achievement.metric,
-    threshold: achievement.threshold,
-    tier: tier.tier,
-    length: tier.length,
-    points: tier.points,
-  };
 }
 
 async function persistProposedAwards(
@@ -80,7 +66,7 @@ async function persistProposedAwards(
           tier: award.tier,
           academicYearId,
           points: award.points,
-          ruleSnapshot: buildRuleSnapshot(achievement, tierRow),
+          ruleSnapshot: buildAchievementRuleSnapshot(achievement, tierRow),
           source: AWARD_SOURCE.AUTO,
           awardedAt,
           awardKey: award.awardKey,

@@ -1,4 +1,9 @@
 export {
+  canAwardManually,
+  canRevokeAward,
+  type CanAwardManuallyFacts,
+} from "./achievements-mutate";
+export {
   canViewGroupYear,
   canViewPupilYears,
 } from "./analytics-year";
