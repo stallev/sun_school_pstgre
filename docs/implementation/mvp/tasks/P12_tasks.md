@@ -2,7 +2,7 @@
 
 **Тип:** Tasks  
 **Статус:** Canonical  
-**Версия:** 1.1  
+**Версия:** 1.2  
 **Дата:** 2026-10-22  
 **Волна:** W11-18  
 **Зависит от:** [`P12_phase_description.md`](../phases_tasks_descriptions/P12_phase_description.md), [`achievements_and_penalties_contract.md`](../contracts/achievements_and_penalties_contract.md), [`achievements_screens_spec.md`](../specs/achievements_screens_spec.md), [`adr_012_achievements_and_penalties.md`](../../../prds/07_governance/adr_012_achievements_and_penalties.md)  
@@ -14,7 +14,7 @@
 
 Реализовать волну 1 за флагом `features.achievements`: пересчёт, ручные действия, штрафы, формулу кирпичиков и экраны по прототипу. DoD — [`P12_phase_description.md`](../phases_tasks_descriptions/P12_phase_description.md).
 
-**UI-CU (CU7, CU8): UX/UI verification loop** — описание фазы, раздел «UX/UI verification loop». CU не коммитится без строки `UI-verify: …, расхождений 0`.
+**UI-CU (CU7, CU8): UX/UI verification loop** — описание фазы, раздел «UX/UI verification loop». CU не коммитится без строки `UI-verify: …, расхождений 0, консоль чистая`.
 
 ## Минимизация визуального дрифта (UI-CU: CU7, CU8)
 
@@ -23,9 +23,10 @@
 **В конце каждого UI-CU** (перед review и коммитом) — обязательная сверка:
 
 1. Запустить приложение (`next dev`), открыть в браузере **каждую затронутую CU страницу** и параллельно — соответствующую функцию в HTML-прототипе (якоря — [`achievements_screens_spec.md`](../specs/achievements_screens_spec.md) §3).
-2. Сверить на основных ширинах: **390 px** (mobile), **`md`**, **`lg`** — типографика, отступы, радиусы, цвета, порядок блоков, состояния empty/loading/error, консоль без ошибок.
-3. Если стили или плотность вёрстки **расходятся с прототипом**, исправлять **не только** новый блок/диалог CU, но и **остальной UI на той же странице** (шапка, карточки, таблицы, кнопки, отступы между секциями), пока страница в целом не совпадает с эталоном по визуальным параметрам.
-4. Повторять цикл «сверка → правка» до нулевых расхождений; зафиксировать в trace CU: `UI-verify: <экраны>, <роли>, <viewport>, расхождений 0`.
+2. Сверить на основных ширинах: **390 px** (mobile), **`md`**, **`lg`** — типографика, отступы, радиусы, цвета, порядок блоков, состояния empty/loading/error.
+3. **Консоль браузера (DevTools):** на каждом маршруте, viewport и сценарии (включая открытие диалогов и успешные/ошибочные мутации) — **нет** `error` и необработанных `unhandledrejection`; предупреждения, указывающие на поломку UI (hydration, CSP, 404 ресурсов, React), устраняются до коммита. Допустимы только шумные info/debug сторонних скриптов, если они не связаны с затронутыми экранами.
+4. Если стили или плотность вёрстки **расходятся с прототипом**, исправлять **не только** новый блок/диалог CU, но и **остальной UI на той же странице** (шапка, карточки, таблицы, кнопки, отступы между секциями), пока страница в целом не совпадает с эталоном по визуальным параметрам.
+5. Повторять цикл «сверка → правка» до нулевых расхождений и чистой консоли; зафиксировать в trace CU: `UI-verify: <экраны>, <роли>, <viewport>, расхождений 0, консоль чистая`.
 
 Для CU1–CU6 UI-verify не требуется (нет product UI). Если при проверке CU7/CU8 обнаружен дрифт на странице, не входящей в scope задачи, его всё равно устраняют в рамках того же UI-CU.
 
@@ -97,9 +98,9 @@
       Files: секция Lab до маршрута, `apps/web/src/app/(app)/achievements/`, пункт меню admin, словарь `admin.achievements`, server actions каталога и пересчёта
       Acceptance: экран совпадает с `vAchievements`, `achDialog`, `penCatDialog`; `practice` подписан «Ждёт голосовой проверки» и не включается действием учителя; при выключенном флаге пункта нет и маршрут 404; teacher получает «Нет доступа»; toast и pending по правилам мутаций
       Paths: H [admin правит каталог и пересчитывает] · N [вид после выдачи не меняется; пустая секция; ошибка валидации сохраняет форму] · S [AZ-52, AZ-D3, флаг]
-      UI-verify: браузер — `/achievements` и диалоги; прототип — `vAchievements`, `achDialog`, `penCatDialog`; роли **admin** / **teacher** / флаг выкл.; viewport 390 px / `md` / `lg`; при расхождении править **всю страницу каталога**, не только новые компоненты; `расхождений 0`
+      UI-verify: браузер — `/achievements` и диалоги; прототип — `vAchievements`, `achDialog`, `penCatDialog`; роли **admin** / **teacher** / флаг выкл.; viewport 390 px / `md` / `lg`; при расхождении править **всю страницу каталога**, не только новые компоненты; DevTools без error/unhandledrejection; `расхождений 0, консоль чистая`
 
-**CU DoD:** `typecheck` · `lint` · `test` · UI-verify (браузер + прототип, page-wide)
+**CU DoD:** `typecheck` · `lint` · `test` · UI-verify (браузер + прототип + консоль, page-wide)
 
 ### P12-CU8 — feat(web): add teacher achievement and penalty surfaces · Review: reviewer · Commit: auto
 
@@ -107,9 +108,9 @@
       Files: блоки на `/today`, `/group`, карточке ученика, `/bricks`, `/rating`; диалоги выдачи, отзыва, штрафа и снятия; словарь `teacher.achievements`
       Acceptance: совпадение с `achModeCard`, блоком «Кого отметить» в `vToday`, `awardDialog`, `awardList` в `vPupil`, `revokeDialog` (кнопка только у admin), `penaltyDialog`, `penOffDialog`, строкой «в том числе» в `vBricks`, колонкой штрафов в `vRating`; фраз про родителя нет; штраф — токен `penalty` и слово «Штраф»
       Paths: H [режим, список, выдача, штраф, бонус] · N [режим выключен; нет выдач; баллы выше каталога] · S [AZ-53…AZ-55, AZ-57, AZ-D4]
-      UI-verify: браузер — `/today`, `/group`, карточка ученика, `/bricks`, `/rating` и диалоги; прототип — функции §3 спеки; роли **teacher** (своя группа) и **admin**; viewport 390 px / `md` / `lg`; при расхождении на странице править **весь экран**, не только блок достижений/штрафов; консоль чистая; `расхождений 0`
+      UI-verify: браузер — `/today`, `/group`, карточка ученика, `/bricks`, `/rating` и диалоги; прототип — функции §3 спеки; роли **teacher** (своя группа) и **admin**; viewport 390 px / `md` / `lg`; при расхождении на странице править **весь экран**, не только блок достижений/штрафов; DevTools без error/unhandledrejection на всех сценариях; `расхождений 0, консоль чистая`
 
-**CU DoD:** `typecheck` · `lint` · `test` · UI-verify (браузер + прототип, page-wide)
+**CU DoD:** `typecheck` · `lint` · `test` · UI-verify (браузер + прототип + консоль, page-wide)
 
 ### P12-CU9 — docs(docs): sync P12 routes and record smoke · Review: diff-only · Commit: auto
 
@@ -122,7 +123,7 @@
 
 ## Verification (phase)
 
-- [ ] Все CU закоммичены; у CU2–CU8 trace `Review: …`; у CU7 и CU8 trace `UI-verify: …, расхождений 0`
+- [ ] Все CU закоммичены; у CU2–CU8 trace `Review: …`; у CU7 и CU8 trace `UI-verify: …, расхождений 0, консоль чистая`
 - [ ] Phase DoD из [`P12_phase_description.md`](../phases_tasks_descriptions/P12_phase_description.md)
 - [ ] Docs sync — в CU9
 
@@ -143,3 +144,4 @@
 |------|--------|
 | 2026-10-22 | v1.0 — Canonical (W11-18): CU1–CU9; UI-verify для CU7 и CU8 |
 | 2026-10-22 | v1.1 — Минимизация визуального дрифта; page-wide сверка в браузере на 390/`md`/`lg` в конце UI-CU |
+| 2026-10-22 | v1.2 — Обязательная проверка консоли браузера (error/unhandledrejection) в UI-verify |
