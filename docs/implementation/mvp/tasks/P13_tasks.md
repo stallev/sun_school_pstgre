@@ -143,12 +143,12 @@
 
 ### P13-CU11 — docs(docs): sync P13 routes and record smoke · Review: diff-only · Commit: auto
 
-- [ ] P13-T11 · T0 · Spec: [canonical_routes §5](../../../design/canonical_routes.md) · Phase: [P13 DoD](../phases_tasks_descriptions/P13_phase_description.md)
+- [x] P13-T11 · T0 · Spec: [canonical_routes §5](../../../design/canonical_routes.md) · Phase: [P13 DoD](../phases_tasks_descriptions/P13_phase_description.md)
       Files: `docs/design/canonical_routes.md` (перенос `/family`, `/child`, `/child/data`, `/child/consent` в §4; `/verse*` остаются в §5), `docs/implementation/mvp/README.md`, этот файл (отчёт smoke). `AGENTS.md` и `project-context.mdc` — только если меняется строка текущей фазы, без расширения scope за пределы P13
       Acceptance: маршруты волны 2 описаны в §4 с ролями и флагом; `/verse*` остаются волной 3; smoke H/N/S записан ниже
       Paths: n/a — docs-only
 
-**Smoke report:** заполняется при закрытии CU11.
+**Smoke report (2026-10-23):** **H** — dev с `features.parents=true` после `db:seed:dev --replace`: admin `/family` (`vFamily`); parent `/child`, `/child/data`, `/child/consent`, `/calendar` (чтение); блок контактов на карточке ученика; UI-verify CU8–CU10 (390/`md`/`lg`), расхождений 0, консоль без error/unhandledrejection (только Next dev upgrade nudge). **N** — флаг выкл: нет пунктов меню parent, маршруты 404, блок teacher отсутствует; пустые семьи/дайджест, валидация форм, `FAMILY_FLAG_OFF`, отсутствие согласия, последнее согласие без подтверждения (тесты domain/DAL CU1–CU7 + Paths N CU8–CU10). **S** — AZ-58…AZ-64, AZ-D3/D4, INV-23/INV-25: teacher на `/family`/`/child` — forbidden; чужой ребёнок parent — 404; учитель без адреса/email; родительский запрос на удаление; `PARENT_EMAIL`/`PARENT_PASSWORD` не в git; prod-seed без семей.
 
 **CU DoD:** `encoding:check` · `docs:links` · `typecheck` · `lint`
 
@@ -157,7 +157,7 @@
 - [ ] Все CU закоммичены; у CU2–CU10 trace `Review: …`; у CU8–CU10 trace `UI-verify: …, расхождений 0, консоль чистая`
 - [ ] CU7 раньше CU8–CU10
 - [ ] Phase DoD из [`P13_phase_description.md`](../phases_tasks_descriptions/P13_phase_description.md)
-- [ ] Docs sync — в CU11
+- [x] Docs sync — в CU11
 
 ---
 
