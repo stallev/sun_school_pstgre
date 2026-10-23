@@ -96,6 +96,17 @@ const TEACHER_NAV: NavEntryDef[] = [
   { key: "analytics", messageKey: "shell.nav.analytics", href: "/analytics" },
 ];
 
+const PARENT_NAV: NavEntryDef[] = [
+  { key: "child", messageKey: "shell.nav.child", href: "/child" },
+  { key: "calendar", messageKey: "shell.nav.calendar", href: "/calendar" },
+  {
+    key: "child-data",
+    messageKey: "shell.nav.child_data",
+    descriptionMessageKey: "shell.nav.desc.child_data",
+    href: "/child/data",
+  },
+];
+
 const ADMIN_NAV: NavEntryDef[] = [
   { key: "school", messageKey: "shell.nav.school", href: "/school" },
   {
@@ -145,6 +156,12 @@ const ADMIN_NAV: NavEntryDef[] = [
         messageKey: "shell.nav.people",
         descriptionMessageKey: "shell.nav.desc.people",
         href: "/people",
+      },
+      {
+        key: "family",
+        messageKey: "shell.nav.family",
+        descriptionMessageKey: "shell.nav.desc.family",
+        href: "/family",
       },
       {
         key: "deletions",
@@ -207,7 +224,7 @@ const ADMIN_NAV: NavEntryDef[] = [
 export const NAV_BY_ROLE: Record<UserRole, NavEntryDef[]> = {
   [USER_ROLE.TEACHER]: TEACHER_NAV,
   [USER_ROLE.ADMIN]: ADMIN_NAV,
-  [USER_ROLE.PARENT]: [],
+  [USER_ROLE.PARENT]: PARENT_NAV,
 };
 
 /** Path patterns → nav item key for active state (UX-02 §5.4). */
@@ -227,6 +244,10 @@ export const NAV_PATH_PATTERNS: ReadonlyArray<{ pattern: RegExp; navKey: string 
   { pattern: /^\/approvals$/, navKey: "approvals" },
   { pattern: /^\/users(\/|$)/, navKey: "users" },
   { pattern: /^\/people$/, navKey: "people" },
+  { pattern: /^\/family$/, navKey: "family" },
+  { pattern: /^\/child\/data$/, navKey: "child-data" },
+  { pattern: /^\/child\/consent$/, navKey: "child" },
+  { pattern: /^\/child$/, navKey: "child" },
   { pattern: /^\/deletions$/, navKey: "deletions" },
   { pattern: /^\/audit$/, navKey: "audit" },
   { pattern: /^\/achievements$/, navKey: "achievements" },

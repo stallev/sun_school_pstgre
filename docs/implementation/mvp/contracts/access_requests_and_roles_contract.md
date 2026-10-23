@@ -18,7 +18,7 @@
 ## 2. Scope / Out of scope
 
 **В scope:** use-case переходов `ACCOUNT_STATUS` и `ACCESS_REQUEST_STATUS`, роли, назначения при одобрении, правка ФИО, объединение дубликатов.  
-**Вне scope:** сам вход и привязка способа входа ([`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §5, §7); выполнение удаления ([`deletion_requests_contract.md`](./deletion_requests_contract.md)); роль `PARENT` и семьи (post-MVP).
+**Вне scope:** сам вход и привязка способа входа ([`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §5, §7); выполнение удаления ([`deletion_requests_contract.md`](./deletion_requests_contract.md)). Роль `PARENT` и семьи при выключенном `features.parents` недоступны. При включённом флаге связь с семьёй — [`families_and_parents_contract.md`](./families_and_parents_contract.md) §6.2.
 
 ## 3. Операции
 
@@ -81,7 +81,7 @@
 
 ### 5.4 `approveRequest`
 
-- **Предусловия:** заявка `PENDING`; `roles` непусто; роль `PARENT` недоступна (AZ-P3). Для `TEACHER` группы **не обязательны**: без групп заявка одобряется с предупреждением `NO_GROUPS` (решено 2026-10-11, как в [`admin_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.2); переданные `gradeIds` должны быть группами активного года.
+- **Предусловия:** заявка `PENDING`; `roles` непусто. Пока `features.parents = false`, роль `PARENT` недоступна (AZ-P3, `ACCESS_ROLE_UNAVAILABLE`). При включённом флаге роль `PARENT` выдаётся только через [`families_and_parents_contract.md`](./families_and_parents_contract.md) §6.2 (AZ-59), вместе со связью с семьёй. Для `TEACHER` группы **не обязательны**: без групп заявка одобряется с предупреждением `NO_GROUPS` (решено 2026-10-11, как в [`admin_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/admin_flow.md) §4.2); переданные `gradeIds` должны быть группами активного года.
 - **Транзакция (порядок блокировок):** `access_request` → `app_user` пользователя заявки; записать `user_role`, `teacher_assignment` (UNIQUE `(user, grade, year)`); заявка → `APPROVED`, `decided_by`, `decided_at`; пользователь → `ACTIVE`.
 - **Журнал:** `access.request_approved` (роли, группы — идентификаторы).
 
@@ -93,7 +93,7 @@
 
 ### 5.6 `changeRoles`
 
-- **Предусловия:** пользователь `ACTIVE`; не `PARENT`; не снимает `ADMIN` у себя (AZ-P2) и у последнего admin (AZ-P1).
+- **Предусловия:** пользователь `ACTIVE`; не снимает `ADMIN` у себя (AZ-P2) и у последнего admin (AZ-P1). Роль `PARENT` этот use-case не выдаёт: при выключенном флаге она недоступна (AZ-P3), при включённом её добавляет только контракт семей (AZ-59).
 - **Транзакция:** блокировка строк `user_role` с ролью `ADMIN`; сравнить с целевым составом; добавить / удалить `user_role`; синхронизировать `teacher_assignment` активного года (добавить новые; снять назначения при снятии роли `TEACHER` — `ends` не требуется, строки года удаляются, уроки сохраняют ссылку на ведущего).
 - **Журнал:** `access.roles_changed` (было → стало).
 - **Постусловие:** новые права действуют при следующей серверной проверке (ADR-003 §4.3).
@@ -130,7 +130,7 @@
 | Статус не подходит | `submitRegistration` не из `REGISTRATION` | `ACCESS_STATUS_INVALID` | `auth.errors.status_invalid` | без изменений |
 | Уже есть заявка | у пользователя `PENDING` | `ACCESS_ALREADY_PENDING` | `auth.register.already_pending` | возвращается текущая |
 | Заявка решена | `approve`/`reject` не `PENDING` | `ACCESS_REQUEST_DECIDED` | `admin.approvals.already_decided` | список обновляется |
-| Роль недоступна | в `roles` есть `PARENT` | `ACCESS_ROLE_UNAVAILABLE` | `admin.approvals.parent_unavailable` | отказ с причиной «доступ родителей откроется позже» |
+| Роль недоступна | флаг выключен и в `roles` есть `PARENT` | `ACCESS_ROLE_UNAVAILABLE` | `admin.approvals.parent_unavailable` | отказ с причиной «доступ родителей откроется позже» |
 | Нет групп у `TEACHER` | `gradeIds` пусто | — (не отказ) | `admin.approvals.no_groups_warning` | одобрено; результат содержит `warnings: ["NO_GROUPS"]`, admin видит предупреждение и назначает группу позже в `/groups/[groupId]` |
 | Группа не активного года | в `gradeIds` есть чужая/прошлая группа | `VALIDATION` (`fields.gradeIds`) | `admin.approvals.groups_invalid` | не одобрено |
 | Нет причины | `rejectRequest` без `reason` | `VALIDATION` (`fields.reason`) | `common.errors.reason_required` | без изменений |
@@ -217,7 +217,7 @@
 
 - Не менять `status` напрямую, только через use-case этого контракта.
 - Не принимать роль, статус и `userId` «над собой» с клиента.
-- Не выдавать `PARENT` и не создавать семейные записи.
+- Не выдавать `PARENT` и не создавать семейные записи, пока `features.parents` выключен. При включённом флаге — только use-case контракта семей.
 - Не писать ФИО в журнал текстом — ссылки (INV-23).
 - Не запускать фоновую очистку; только ленивая (INV-25).
 
@@ -226,3 +226,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-03) |
+| 2026-10-23 | v1.1 — при `features.parents` одобрение `PARENT` делегируется контракту семей (P13) |

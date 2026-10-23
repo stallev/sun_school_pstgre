@@ -31,6 +31,8 @@ export const isResolvedNavGroup = (item: ResolvedNavItem): item is ResolvedNavGr
 /** Admin wins when both roles are held (global_shell_spec §5, Q-05). */
 export const resolveShellRole = (roles: readonly UserRole[]): UserRole => {
   if (roles.includes(USER_ROLE.ADMIN)) return USER_ROLE.ADMIN;
+  if (roles.includes(USER_ROLE.TEACHER)) return USER_ROLE.TEACHER;
+  if (roles.includes(USER_ROLE.PARENT)) return USER_ROLE.PARENT;
   return USER_ROLE.TEACHER;
 };
 

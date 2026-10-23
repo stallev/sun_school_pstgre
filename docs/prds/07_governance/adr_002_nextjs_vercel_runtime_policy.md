@@ -2,12 +2,12 @@
 
 **Тип:** ADR
 **Статус:** ACCEPTED
-**Версия:** 1.0
+**Версия:** 1.1
 **Дата:** 2026-10-10
 **Волна:** W1-F2
 **Зависит от:** [`adr_001_stack_and_runtime.md`](./adr_001_stack_and_runtime.md), [`adr_002_nextjs_vercel_runtime_policy.template.md`](./adr_002_nextjs_vercel_runtime_policy.template.md)
 **Связанные документы:** [`architecture_master_index.md`](../architecture_master_index.md), [`ai_loading_patterns.md`](../../guidelines/nextjs/ai_loading_patterns.md), [`nextjs-vercel-app-router.mdc`](../../../.cursor/rules/tiers/t1-implementation/nextjs-vercel-app-router.mdc)
-**Проверено по:** next@16.4.0 — официальная документация nextjs.org через WebFetch, 2026-10-10: `proxy.ts` (Middleware переименован в Proxy с Next.js 16; экспорт `proxy` или default), `cacheComponents` (стабилен с 16.0.0; включать вместе с `partialPrefetching`; требует Node.js runtime). Context7 в сессии недоступен; остальные пункты (§4–§5.2) перенесены из шаблона и подлежат сверке при P5.
+**Проверено по:** next@16.4.2 (пин с 2026-10-23: `next upgrade --agent=security`, цель — последний безопасный патч 16.4; CVE закрыты в 16.4.1). API сверены по next@16.4.0, nextjs.org через WebFetch, 2026-10-10: `proxy.ts` (Middleware переименован в Proxy с Next.js 16; экспорт `proxy` или default), `cacheComponents` (стабилен с 16.0.0; включать вместе с `partialPrefetching`; требует Node.js runtime). `experimental.agentUpgrade` в 16.4.2 нет (строка отсутствует в пакете) — опция не ставится. Context7 `/websites/nextjs` (agent upgrade), 2026-10-23.
 **Owner:** Architecture + Runtime
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)
@@ -30,7 +30,7 @@ Agents must not treat Next.js 15 `middleware.ts` as the canonical interception f
 
 | Policy | Value |
 |--------|-------|
-| **Next.js version** | **16.4, exact patch pin** — boilerplate baseline **`16.4`** (minor). In `apps/web` `package.json`: `"next": "16.4.<patch>"` (no caret). Align `@next/third-parties` and `eslint-config-next` to the **same** patch. At **P5 scaffold:** `npm view next version` + Context7 `/vercel/next.js`; if latest is still 16.4.x, pin **that** exact patch. Bump 16.4 security/patch pins in the **same task**. **16.5+** requires an ADR amend. This row is the amend that moves the boilerplate off 16.4. |
+| **Next.js version** | **16.4, exact patch pin** — current pin **`16.4.2`** (`next`, `@next/env`, `eslint-config-next`). In `apps/web` `package.json`: `"next": "16.4.<patch>"` (no caret). Align `@next/third-parties` and `eslint-config-next` to the **same** patch. Bump 16.4 security/patch pins in the **same task**. **16.5+** requires an ADR amend. |
 | **React** | 19.x (peer of Next 16.4) |
 | **Hosting** | Vercel |
 | **Bundler** | Turbopack default (`next dev`, `next build`) |
@@ -168,3 +168,4 @@ Detail: [`docs/guidelines/nextjs/ai_loading_patterns.md`](../../guidelines/nextj
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — ACCEPTED (W1-F2), создан из шаблона |
+| 2026-10-23 | v1.1 — security-пин `next@16.4.2` (фиксы 16.4.1: RCE в `use cache` / Image Optimization, DoS Server Actions). `experimental.agentUpgrade` в 16.4.2 нет |

@@ -88,6 +88,12 @@
 | `achievement.evaluated` | автопересчёт записал новые выдачи (id выдач, без ФИО) | `achievement_award` | achievements_and_penalties_contract §6.2 |
 | `achievement.awarded` / `achievement.revoked` | ручная выдача / отзыв | `achievement_award` | achievements_and_penalties_contract §6.4 |
 | `penalty.issued` / `penalty.cancelled` | штраф выдан / снят | `penalty` | achievements_and_penalties_contract §6.5 |
+| `family.upserted` | семья создана или изменена (без адреса в тексте журнала, если в нём есть ПД) | `family` | families_and_parents_contract §6.1 |
+| `family.adult_changed` | взрослый добавлен, изменён или исключён (ссылки, без ФИО и телефонов) | `family_adult` | families_and_parents_contract §6.1 |
+| `family.pupil_transferred` | ребёнок включён, исключён или перенесён | `pupil` | families_and_parents_contract §6.1 |
+| `family.merged` | семьи объединены | `family` | families_and_parents_contract §6.1 |
+| `consent.given` / `consent.revoked` | электронное согласие дано или отозвано | `child_data_consent` | families_and_parents_contract §6.3 |
+| `digest.recorded` | строка дайджеста создана (`sent_at` пуст) | `weekly_digest` | families_and_parents_contract §6.6 |
 
 ## 5. Правила записи
 
@@ -180,6 +186,7 @@
 | [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) | `audit_log`, R-6 |
 | [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) | INV-16, INV-23 |
 | [`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) | Action-коды волны 1 |
+| [`families_and_parents_contract.md`](./families_and_parents_contract.md) | Action-коды волны 2 |
 
 **Registry:** [`documentation_creation_registry.md`](../../../meta/documentation_creation_registry.md) — wave W8-07
 
@@ -199,3 +206,4 @@
 | 2026-10-18 | v1.2 — §11: привилегированное изменение `audit_log` / `brick_ledger` через `packages/db/src/deletion` (P06) |
 | 2026-10-19 | v1.3 — §4: `analytics.snapshot_created`, `analytics.snapshot_versioned`, сущность `analytics_snapshot` (P08) |
 | 2026-10-22 | v1.4 — §4: action-коды достижений и штрафов (P12) |
+| 2026-10-23 | v1.5 — §4: action-коды семьи, согласия и дайджеста (P13) |

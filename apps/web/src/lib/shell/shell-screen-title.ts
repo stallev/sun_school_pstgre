@@ -23,6 +23,10 @@ export type ShellScreenTitleKey =
   | "year"
   | "audit"
   | "achievements"
+  | "family"
+  | "child"
+  | "childData"
+  | "childConsent"
   | "settings"
   | "profile"
   | "userProfile";
@@ -51,6 +55,10 @@ const SHELL_TITLE_PATTERNS: ReadonlyArray<{ pattern: RegExp; titleKey: ShellScre
   { pattern: /^\/deletions$/, titleKey: "deletions" },
   { pattern: /^\/audit$/, titleKey: "audit" },
   { pattern: /^\/achievements$/, titleKey: "achievements" },
+  { pattern: /^\/family$/, titleKey: "family" },
+  { pattern: /^\/child\/data$/, titleKey: "childData" },
+  { pattern: /^\/child\/consent$/, titleKey: "childConsent" },
+  { pattern: /^\/child$/, titleKey: "child" },
   { pattern: /^\/groups\/[^/]+$/, titleKey: "groupEdit" },
   { pattern: /^\/groups$/, titleKey: "groups" },
   { pattern: /^\/year$/, titleKey: "year" },

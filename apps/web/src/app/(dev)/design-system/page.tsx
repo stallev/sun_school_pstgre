@@ -14,6 +14,7 @@ import { TableMatrix } from "@/components/design-lab/TableMatrix";
 import { TypeScale } from "@/components/design-lab/TypeScale";
 import { WidthFrame } from "@/components/design-lab/WidthFrame";
 import { AchievementsCatalogLab } from "@/components/design-lab/AchievementsCatalogLab";
+import { FamilyAdminLab } from "@/components/design-lab/FamilyAdminLab";
 import { AnalyticsYearsLab } from "@/components/design-lab/AnalyticsYearsLab";
 import { Heading } from "@/components/atoms/Heading";
 import { ContentText } from "@/components/atoms/ContentText";
@@ -33,6 +34,7 @@ const ANCHORS = [
   { id: "shell", label: "Shell" },
   { id: "analytics-years", label: "Analytics years" },
   { id: "achievements-catalog", label: "Achievements catalog" },
+  { id: "family-admin", label: "Family admin" },
 ] as const;
 
 const DesignSystemPage = () => (
@@ -105,6 +107,16 @@ const DesignSystemPage = () => (
       >
         <WidthFrame>
           <AchievementsCatalogLab />
+        </WidthFrame>
+      </LabSection>
+
+      <LabSection
+        id="family-admin"
+        title="L3 · Family admin"
+        hint="vFamily — families_and_parents_screens §5.1"
+      >
+        <WidthFrame>
+          <FamilyAdminLab />
         </WidthFrame>
       </LabSection>
     </main>

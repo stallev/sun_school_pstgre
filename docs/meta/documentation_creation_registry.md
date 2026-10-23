@@ -383,7 +383,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W1-F1 | `docs/prds/07_governance/adr_001_stack_and_runtime.md` | project-context, quality profile (модули) | architecture_master_index |
 | W1-F2 | `docs/prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md` | шаблон `adr_002_nextjs_vercel_runtime_policy.template.md`, ADR-001 | adr_index |
 | W1-F3 | `docs/prds/architecture_master_index.md` | ADR-001, ADR-002 | AGENTS.md |
-| W1-F4 | `docs/prds/01_product_scope/user_flows/users_mvp/{role}_flow.md` — по одному на роль MVP (`admin`, `teacher`); `parent_flow.md` — post-MVP, по желанию | interim brief (`docs/my_specs/`), prototype | architecture_master_index |
+| W1-F4 | `docs/prds/01_product_scope/user_flows/users_mvp/{role}_flow.md` — по одному на роль MVP (`admin`, `teacher`); [`parent_flow.md`](../prds/01_product_scope/user_flows/users_mvp/parent_flow.md) — волна 2 (P13) | interim brief (`docs/my_specs/`), prototype | architecture_master_index |
 | W1-F5 | `docs/design/canonical_routes.md` — единственный инвентарь маршрутов | user flows, prototype | AGENTS.md, architecture_master_index |
 | W1-F6 | `docs/prds/03_data_model/database_schema_v1.md` — **DB-first**, до W3 / W8; схема **целиком**, включая таблицы post-MVP (спец. С-1…С-7), Библия — по [`Bible/README.md`](../my_specs/Bible/README.md) | user flows, interim brief | architecture_master_index |
 | W1-01 | `docs/prds/07_governance/adr_index.md` | ADR-001, ADR-002, registry | `07_governance/README.md`, `architecture_master_index.md` |
@@ -511,8 +511,9 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W8-09 | `docs/implementation/mvp/contracts/bible_seed_contract.md` — скрипты загрузки переводов (ПБ-1…ПБ-5) | adr_009, seed_data_spec, `Bible/README.md` | seed_data_spec |
 | W8-10 | `docs/implementation/mvp/contracts/analytics_year_snapshots_contract.md` — снимки итогов учебного года, пороги достоверности, год по умолчанию (БП-6, БП-7, БП-11; `multi_year_analytics`) | school_year_and_groups_contract, homework_check_contract, bricks_ledger_contract, deletion_requests_contract | lifecycle_models, authorization_matrix |
 | W8-11 | `docs/implementation/mvp/contracts/achievements_and_penalties_contract.md` — достижения и штрафы, пересчёт, флаг (волна 1, P12) | adr_012, achievements_spec, bricks_ledger_contract, homework_check_contract | authorization_matrix, change_log_contract, bricks_ledger_contract, post_mvp_deferrals |
+| W8-12 | `docs/implementation/mvp/contracts/families_and_parents_contract.md` — семьи, роль parent, согласие, дайджест без почты (волна 2, P13) | adr_013, deletion_requests_contract, access_requests_and_roles_contract | authorization_matrix, change_log_contract, seed_data_spec, post_mvp_deferrals |
 
-**Lean:** W8-01 + контракты мутаций с признаком S / N: W8-03…W8-08, W8-10, W8-11; W8-09 — перед написанием скриптов загрузки. W8-02 — при необходимости (модуль `auth`). `file_upload_contract` и `email_notifications_contract` не требуются (модули `s3_uploads`, `email_jobs` выключены).
+**Lean:** W8-01 + контракты мутаций с признаком S / N: W8-03…W8-08, W8-10, W8-11, W8-12; W8-09 — перед написанием скриптов загрузки. W8-02 — при необходимости (модуль `auth`). `file_upload_contract` и `email_notifications_contract` не требуются (модули `s3_uploads`, `email_jobs` выключены).
 
 ---
 
@@ -529,8 +530,9 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W9-07 | `docs/implementation/mvp/specs/analytics_screens_spec.md` — группа, ученик, школа (9.1…9.1.4, 9.5, 9.6) | homework_check_contract, bricks_ledger_contract | teacher_flow, admin_flow |
 | W9-08 | `docs/implementation/mvp/specs/admin_users_and_deletions_spec.md` | access_requests_and_roles_contract, deletion_requests_contract, change_log_contract | admin_flow, canonical_routes |
 | W9-09 | `docs/implementation/mvp/specs/achievements_screens_spec.md` — каталог, режим группы, выдача, штраф; обязательная сверка с прототипом (P12) | achievements_and_penalties_contract, adr_012, canonical_routes | P12_tasks, canonical_routes, design_system_lab_spec |
+| W9-10 | `docs/implementation/mvp/specs/families_and_parents_screens_spec.md` — семья, экраны родителя, контакты учителя; сверка с прототипом (P13) | families_and_parents_contract, adr_013, canonical_routes | P13_tasks, canonical_routes, design_system_lab_spec |
 
-**Lean:** global_shell (W9-01) + многошаговые flows: W9-04 (проверка ДЗ), W9-02 (вход / регистрация), W9-09 (достижения и штрафы, P12). Остальное — не требуется на lean.
+**Lean:** global_shell (W9-01) + многошаговые flows: W9-04 (проверка ДЗ), W9-02 (вход / регистрация), W9-09 (достижения и штрафы, P12), W9-10 (семьи и родители, P13). Остальное — не требуется на lean.
 
 ---
 
@@ -584,6 +586,8 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W11-16 | `P08_tasks.md` | P08_phase | — |
 | W11-17 | `P12_phase_description.md` — достижения и штрафы (волна 1, флаг, UI-verify против прототипа) | achievements_and_penalties_contract, achievements_screens_spec, adr_012 | methodology |
 | W11-18 | `P12_tasks.md` | P12_phase | — |
+| W11-19 | `P13_phase_description.md` — семьи и родители (волна 2, флаг, сид до UI, UI-verify) | families_and_parents_contract, families_and_parents_screens_spec, adr_013 | methodology |
+| W11-20 | `P13_tasks.md` | P13_phase | — |
 
 Деление на фазы **предварительное**, фиксируется при написании W11; нумерация фаз реализации (P01…) не путается с промптами bootstrap P0…P6.
 
@@ -719,10 +723,10 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 | W5 | 2 | authorization_matrix, auth_runtime_spec |
 | W6 | 1 | seed_data_spec |
 | W7 | 2 | UX-05, UX-06 |
-| W8 | 9–11 | monorepo_boundaries, W8-03…W8-11 |
-| W9 | 3 | global_shell, homework_check_flow, achievements_screens |
+| W8 | 10–12 | monorepo_boundaries, W8-03…W8-12 |
+| W9 | 4 | global_shell, homework_check_flow, achievements_screens, families_and_parents_screens |
 | W15 | 1 | design_system_lab_spec |
-| W11 | 18 | фазы P01…P08 и P12 × (description + tasks); P09…P11 вне этой строки реестра |
+| W11 | 20 | фазы P01…P08, P12 и P13 × (description + tasks); P09…P11 вне этой строки реестра |
 | W12 | 4 | migration_runbook, local_dev_setup, vercel_deploy, neon_prisma_migrations |
 | W14 | — | облегчённый проход |
 
@@ -743,6 +747,7 @@ READ registry → READ dependencies → DRAFT file → ADD backlinks → UPDATE 
 
 | Date | Change |
 |------|--------|
+| 2026-10-23 | W8-12, W9-10, W11-19 / W11-20: семьи и родители (ADR-013, P13); дайджест без почты |
 | 2026-10-22 | W8-11, W9-09, W11-17 / W11-18: достижения и штрафы (ADR-012, P12) |
 | 2026-10-19 | W8-10 `analytics_year_snapshots_contract`; W11-15 / W11-16 `P08_phase_description` и `P08_tasks` (аналитика по учебным годам); статистика W8 / W11 |
 | 2026-10-10 | v1.2 — P2: Canonical для Sunday School (lean); Pulse-строки W4 / W8 / W9 / W11 / W13 заменены доменными; `default_docs` → `my_specs`; добавлены ADR-008 (i18n), ADR-009 (Bible); ADR-003 → `adr_003_auth_oidc_jwt_rbac.md` |

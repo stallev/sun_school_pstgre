@@ -460,5 +460,14 @@
     "evidence_taken": "Уроки уже заняты другой выдачей",
     "already_revoked": "Достижение уже отозвано",
     "reason_required": "Укажите причину"
+  },
+  "family": {
+    "section_title_prefix": "Семья",
+    "section_title": "Семья {name}",
+    "no_family": "Ребёнок без семьи — контактов нет.",
+    "admin_family_link": "Открыть страницу семьи",
+    "relation_mother": "Мать",
+    "relation_father": "Отец",
+    "relation_guardian": "Опекун"
   }
 }

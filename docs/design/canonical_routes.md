@@ -83,20 +83,29 @@
 | `/settings` | `settings` | Настройки приложения (язык интерфейса) |
 | `/achievements` | `achievements` | Каталог достижений и штрафов (admin). Только при `features.achievements = true`: пункт меню и страница; при выключенном флаге — 404 ([`achievements_screens_spec`](../implementation/mvp/specs/achievements_screens_spec.md), P12) |
 
-### 4.5 Dev-only
+### 4.5 Семьи и родители (волна 2)
+
+Только при `features.parents = true`: пункты меню и страницы; при выключенном флаге — 404, поведение MVP без изменений ([`families_and_parents_screens_spec.md`](../implementation/mvp/specs/families_and_parents_screens_spec.md), P13).
+
+| Маршрут | Экран | Роли | Назначение |
+|---------|-------|------|------------|
+| `/family` | `family` | admin | Семья: взрослые, дети, согласия, журнал; teacher — forbidden |
+| `/child` | `child` | parent | Успехи своего ребёнка, дайджест недели (без блока голоса) |
+| `/child/data` | `childData` | parent | Данные и согласия, правка своих контактов, запрос на удаление |
+| `/child/consent` | `childConsent` | parent | Электронное согласие по ребёнку (не пункт меню) |
+
+Родитель на существующем `/calendar` (§4.2) видит события групп своих детей, только чтение.
+
+### 4.6 Dev-only
 
 | Маршрут | Экран | Назначение |
 |---------|-------|------------|
 | `/design-system` | — | Каталог компонентов (Design System Lab); только `APP_ENV=dev`, в prod — 404; без оболочки; [`design_system_lab_spec.md`](../implementation/mvp/specs/design_system_lab_spec.md) |
 
-## 5. Инвентарь post-MVP (референс волны 2–3, без реализации в MVP)
+## 5. Инвентарь post-MVP (референс волны 3, без реализации в MVP)
 
 | Маршрут | Экран | Волна | Назначение |
 |---------|-------|-------|------------|
-| `/child` | `child` | 2 | Успехи ребёнка (parent) |
-| `/child/data` | `childData` | 2 | Данные и согласия (parent) |
-| `/child/consent` | `childConsent` | 2 | Согласие по ребёнку (parent) |
-| `/family` | `family` | 2 | Семья (admin, parent) |
 | `/verse` | `verse` | 3 | Стих недели, голосовая проверка (parent) |
 | `/verse/debts` | `verseDebts` | 3 | Невыученные стихи (parent) |
 | `/verse/debts/[lessonId]` | `verseLesson` | 3 | Стихи урока (parent) |
@@ -147,3 +156,4 @@
 | 2026-10-19 | §4.2: query-параметры года для `/analytics`, `/analytics/pupils/[pupilId]` (P08); `/school` — `?year=`; новых путей нет |
 | 2026-10-22 | §5: `/achievements` помечен фазой P12; в §4 переносится, когда страница появится |
 | 2026-10-23 | §4.4: `/achievements` (admin, флаг `features.achievements`); удалён из §5 (P12-CU9) |
+| 2026-10-23 | §4.5: `/family`, `/child`, `/child/data`, `/child/consent` (флаг `features.parents`); §5 — только `/verse*` (P13-CU11) |

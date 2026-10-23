@@ -20,6 +20,7 @@ const loaders: Record<MessageLocale, Record<MessageNamespace, () => Promise<{ de
     teacher: () => import("./ru/teacher.json"),
     admin: () => import("./ru/admin.json"),
     analytics: () => import("./ru/analytics.json"),
+    parent: () => import("./ru/parent.json"),
   },
   en: {
     common: () => import("./en/common.json"),
@@ -27,6 +28,7 @@ const loaders: Record<MessageLocale, Record<MessageNamespace, () => Promise<{ de
     teacher: () => import("./en/teacher.json"),
     admin: () => import("./en/admin.json"),
     analytics: () => import("./en/analytics.json"),
+    parent: () => import("./en/parent.json"),
   },
 };
 

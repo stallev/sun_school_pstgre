@@ -25,6 +25,7 @@ export const homeRouteFor = (status: AccountStatus | null | undefined, roles: re
     case ACCOUNT_STATUS.ACTIVE:
       if (roles.includes(USER_ROLE.ADMIN)) return "/school";
       if (roles.includes(USER_ROLE.TEACHER)) return "/today";
+      if (roles.includes(USER_ROLE.PARENT)) return "/child";
       return "/profile";
     default:
       return LOGIN_ROUTE;

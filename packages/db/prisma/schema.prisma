@@ -1027,6 +1027,7 @@ model WeeklyDigest {
 
   user AppUser @relation(fields: [userId], references: [id])
 
+  @@unique([userId, periodStart], map: "weekly_digest_user_id_period_start_key")
   @@map("weekly_digest")
 }
 

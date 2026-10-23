@@ -31,3 +31,32 @@ export const extendLegacyDeadlineInputSchema = z
   .strict();
 
 export type ExtendLegacyDeadlineInput = z.infer<typeof extendLegacyDeadlineInputSchema>;
+
+export const giveElectronicConsentInputSchema = z
+  .object({
+    pupilId: z.uuid(),
+    accepted: z.literal(true, { error: "parent.consent.required" }),
+  })
+  .strict();
+
+export type GiveElectronicConsentInput = z.infer<typeof giveElectronicConsentInputSchema>;
+
+export const revokeElectronicConsentInputSchema = z
+  .object({
+    pupilId: z.uuid(),
+    confirmDeletion: z.boolean(),
+  })
+  .strict();
+
+export type RevokeElectronicConsentInput = z.infer<typeof revokeElectronicConsentInputSchema>;
+
+export const createOwnChildDeletionRequestInputSchema = z
+  .object({
+    pupilId: z.uuid(),
+    reason: z.string().trim().max(500).optional(),
+  })
+  .strict();
+
+export type CreateOwnChildDeletionRequestInput = z.infer<
+  typeof createOwnChildDeletionRequestInputSchema
+>;

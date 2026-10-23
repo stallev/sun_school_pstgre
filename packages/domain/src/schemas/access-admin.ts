@@ -2,12 +2,17 @@ import { z } from "zod";
 import { MUTATION_ERROR_CODES } from "../constants/mutation-error-codes";
 import { USER_ROLE, type UserRole } from "../constants/user-role";
 import type { MutationErr } from "../types/mutation-result";
+import { approveParentLinkInputSchema } from "./parent-approval";
 import { personNameSchema } from "./person-name";
 
-/** Roles the client may submit; `PARENT` is rejected in use-cases (access_requests §6). */
+/** Roles the client may submit; `PARENT` is rejected when `features.parents` is off (access_requests §5.4). */
 const requestedRoleSchema = z.enum([USER_ROLE.ADMIN, USER_ROLE.TEACHER, USER_ROLE.PARENT]);
 
-export const parentRoleUnavailableIfRequested = (roles: readonly UserRole[]): MutationErr | null => {
+export const parentRoleUnavailableIfRequested = (
+  roles: readonly UserRole[],
+  parentsFeatureEnabled = false,
+): MutationErr | null => {
+  if (parentsFeatureEnabled) return null;
   if (roles.includes(USER_ROLE.PARENT)) {
     return {
       ok: false,
@@ -33,6 +38,7 @@ export const approveRequestInputSchema = z
     requestId: z.uuid(),
     roles: assignableRolesSchema,
     gradeIds: gradeIdsSchema,
+    parentLink: approveParentLinkInputSchema.optional(),
   })
   .strict();
 

@@ -22,9 +22,20 @@ export async function approveRequestInTransaction(
   actorUserId: string,
   input: ApproveRequestInput,
   now: Date,
+  parentsFeatureEnabled = false,
 ): Promise<MutationResult> {
-  const parentUnavailable = parentRoleUnavailableIfRequested(input.roles);
+  const parentUnavailable = parentRoleUnavailableIfRequested(input.roles, parentsFeatureEnabled);
   if (parentUnavailable) return parentUnavailable;
+
+  if (input.roles.includes(USER_ROLE.PARENT)) {
+    if (!input.parentLink) {
+      return {
+        ok: false,
+        code: MUTATION_ERROR_CODES.VALIDATION,
+        message: "admin.approvals.parent_link_required",
+      };
+    }
+  }
 
   const locked = await lockAccessRequest(tx, input.requestId);
   if (!locked) {
@@ -57,6 +68,17 @@ export async function approveRequestInTransaction(
 
   const gradeError = await validateGradeIdsForActiveYear(tx, user.organizationId, input.gradeIds);
   if (gradeError) return gradeError;
+
+  if (input.roles.includes(USER_ROLE.PARENT) && input.parentLink) {
+    const familyLink = await approveParentRequestInTransaction(
+      tx,
+      actorUserId,
+      user.organizationId,
+      locked.userId,
+      input.parentLink,
+    );
+    if (!familyLink.ok) return familyLink;
+  }
 
   await replaceUserRoles(tx, locked.userId, input.roles);
   await syncTeacherAssignmentsForActiveYear(
@@ -98,6 +120,8 @@ export async function approveRequestInTransaction(
   return warnings ? { ok: true, warnings } : { ok: true };
 }
 
+import { readFeaturesParentsEnabled } from "../families/family-feature.server";
+import { approveParentRequestInTransaction } from "./approve-parent-request";
 import { validateGradeIdsForActiveYear } from "./active-academic-year.server";
 import { lockAccessRequest } from "./lock-access-request.server";
 import { lockAppUserRow } from "./access-admin-guards.server";
@@ -114,8 +138,14 @@ export async function approveRequest(
   const parsed = approveRequestInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  const parentUnavailable = parentRoleUnavailableIfRequested(parsed.data.roles);
-  if (parentUnavailable) return parentUnavailable;
+  return db.$transaction(async (tx) => {
+    const parentsFeatureEnabled = await readFeaturesParentsEnabled(tx);
+    const parentUnavailable = parentRoleUnavailableIfRequested(
+      parsed.data.roles,
+      parentsFeatureEnabled,
+    );
+    if (parentUnavailable) return parentUnavailable;
 
-  return db.$transaction((tx) => approveRequestInTransaction(tx, actorUserId, parsed.data, now));
+    return approveRequestInTransaction(tx, actorUserId, parsed.data, now, parentsFeatureEnabled);
+  });
 }

@@ -2,12 +2,12 @@
 
 **Тип:** ADR  
 **Статус:** ACCEPTED  
-**Версия:** 1.0  
+**Версия:** 1.1  
 **Дата:** 2026-10-10  
 **Волна:** W1-F1  
 **Зависит от:** [`project-context.mdc`](../../../.cursor/rules/project-context.mdc), [`project_quality_profile.md`](../../meta/project_quality_profile.md), [`mvp_scope.md`](../../my_specs/mvp_scope.md), [`sunday_school_data_analytics_spec.md`](../../my_specs/sunday_school_data_analytics_spec.md) §11, §15  
 **Связанные документы:** [`adr_002_nextjs_vercel_runtime_policy.md`](./adr_002_nextjs_vercel_runtime_policy.md), [`architecture_master_index.md`](../architecture_master_index.md), [`ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)  
-**Проверено по:** next@16.4.0 (docs `proxy`, `cacheComponents`, `partialPrefetching`) — официальная документация nextjs.org через WebFetch, 2026-10-10; next-auth@beta (Auth.js v5, `NextAuth()` → `handlers, auth, signIn, signOut`) — authjs.dev, 2026-10-10; Prisma ORM v7 (`datasource.url` в `prisma.config.ts`, адаптер обязателен) — prisma.io, 2026-10-10; Neon pooled / direct URL — prisma.io (страница v6, правило сохраняется, см. Q-01). Context7 в сессии недоступен.
+**Проверено по:** next@16.4.2 (security-пин 2026-10-23, ADR-002 v1.1; сверка API `proxy`, `cacheComponents`, `partialPrefetching` — next@16.4.0, nextjs.org через WebFetch, 2026-10-10); next-auth@beta (Auth.js v5, `NextAuth()` → `handlers, auth, signIn, signOut`) — authjs.dev, 2026-10-10; Prisma ORM v7 (`datasource.url` в `prisma.config.ts`, адаптер обязателен) — prisma.io, 2026-10-10; Neon pooled / direct URL — prisma.io (страница v6, правило сохраняется, см. Q-01). Context7 в сессии 2026-10-10 недоступен.
 
 ---
 
@@ -121,7 +121,7 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 | ID | Вопрос | Владелец | Блокирует |
 |----|--------|----------|-----------|
 | Q-01 | ~~Какой driver adapter для Neon в Prisma 7~~ — **решено 2026-10-11 (P5):** `@prisma/adapter-pg` с pooled `DATABASE_URL`; по документации Prisma (PostgreSQL, Neon: CLI — `DIRECT_URL`, runtime — pooled URL); `migrate dev`, shadow database и приложение проверены на dev-ветке Neon | architect | — |
-| Q-02 | ~~Точный patch-пин Next.js 16.4.x~~ — **решено 2026-10-11 (P5): `next@16.4.0`** (`npm view next version` = 16.4.0) | исполнитель P5 | — |
+| Q-02 | ~~Точный patch-пин Next.js 16.4.x~~ — **решено 2026-10-11 (P5): `next@16.4.0`**; **security-пин 2026-10-23: `next@16.4.2`** (`next upgrade --agent=security`; фиксы 16.4.1) | исполнитель P5 | — |
 | Q-05 | Версия PostgreSQL: документ фиксирует PG 17, а dev-проект Neon создан на **PG 18.6** (`show server_version`, 2026-10-11). Схема и миграции совместимы; оставить PG 18 для dev и prod (одна версия на оба проекта) или создать проекты на 17 | владелец | P07 (prod-проект) |
 | Q-03 | ~~Один или два Neon-проекта~~ — **решено 2026-10-10: два** (отдельные проекты dev и prod; спец. 12.2 п. 34) | владелец | — |
 | Q-04 | ~~Первый admin по email из env~~ — **решено 2026-10-10**: email в переменной `FIRST_ADMIN_EMAIL` (значение — только в локальном, не коммитимом конфиге и в env Vercel); первый вход с этим email создаёт активного admin один раз (спец. 12.2 п. 32, ОК-3) | владелец | — |
@@ -150,3 +150,4 @@ Concurrency: нет (решение на уровне стека). Drift: вер
 | Date | Change |
 |------|--------|
 | 2026-10-10 | v1.0 — ACCEPTED (W1-F1) |
+| 2026-10-23 | v1.1 — Q-02: security-пин Next.js `16.4.2` (ADR-002 v1.1) |

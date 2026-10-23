@@ -73,6 +73,13 @@ export const AUDIT_ACTION = {
   ACHIEVEMENT_REVOKED: "achievement.revoked",
   PENALTY_ISSUED: "penalty.issued",
   PENALTY_CANCELLED: "penalty.cancelled",
+  FAMILY_UPSERTED: "family.upserted",
+  FAMILY_ADULT_CHANGED: "family.adult_changed",
+  FAMILY_PUPIL_TRANSFERRED: "family.pupil_transferred",
+  FAMILY_MERGED: "family.merged",
+  CONSENT_GIVEN: "consent.given",
+  CONSENT_REVOKED: "consent.revoked",
+  DIGEST_RECORDED: "digest.recorded",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 
@@ -103,5 +110,8 @@ export const AUDIT_ENTITY_TYPE = {
   ACHIEVEMENT_AWARD: "achievement_award",
   ACHIEVEMENT: "achievement",
   PENALTY: "penalty",
+  FAMILY: "family",
+  FAMILY_ADULT: "family_adult",
+  WEEKLY_DIGEST: "weekly_digest",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];

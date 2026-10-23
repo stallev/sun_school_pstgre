@@ -41,7 +41,7 @@ describe("AUDIT_ACTION registry", () => {
   it("uses dotted lower-case audit families", () => {
     for (const code of Object.values(AUDIT_ACTION)) {
       expect(code).toMatch(
-        /^(access|auth|settings|school|seed|bible|lesson|check|calendar|bricks|deletion|analytics|achievement|penalty)\.[a-z_]+$/,
+        /^(access|auth|settings|school|seed|bible|lesson|check|calendar|bricks|deletion|analytics|achievement|penalty|family|consent|digest)\.[a-z_]+$/,
       );
     }
   });

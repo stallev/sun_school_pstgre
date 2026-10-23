@@ -460,5 +460,14 @@
     "evidence_taken": "Lessons already used for another award",
     "already_revoked": "Achievement already revoked",
     "reason_required": "Enter a reason"
+  },
+  "family": {
+    "section_title_prefix": "Family",
+    "section_title": "Family {name}",
+    "no_family": "This pupil has no family — no contacts to show.",
+    "admin_family_link": "Open family page",
+    "relation_mother": "Mother",
+    "relation_father": "Father",
+    "relation_guardian": "Guardian"
   }
 }
