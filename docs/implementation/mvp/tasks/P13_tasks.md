@@ -98,7 +98,7 @@
 
 Предусловие UI-CU. CU8–CU10 не начинаются, пока этот CU не закоммичен и `db:seed:dev --replace` не выполнен на dev-БД.
 
-- [ ] P13-T7 · T3 · Spec: [seed §8.4](../../../prds/03_data_model/seed_data_spec.md) · ADR: [ADR-013 §4 п. 8](../../../prds/07_governance/adr_013_families_and_parents.md)
+- [x] P13-T7 · T3 · Spec: [seed §8.4](../../../prds/03_data_model/seed_data_spec.md) · ADR: [ADR-013 §4 п. 8](../../../prds/07_governance/adr_013_families_and_parents.md)
       Files: `packages/db/src/seed/dev/**`
       Acceptance: при маркере `dev` появляются не меньше двух семей на детях фикстуры, взрослый с учёткой родителя и взрослый без учётки, бумажное и электронное согласие, одна строка `weekly_digest` с пустым `sent_at`; учётка родителя входит по `PARENT_EMAIL` / `PARENT_PASSWORD` из env или `.local/dev-secrets.json` (пароль в репозиторий не попадает); `features.parents` становится `true` только здесь. `db:seed:reference` семей не создаёт и флаг не включает. Нет секретов — отказ до записи. `--replace` снимает семьи фикстуры и заливает набор заново
       Paths: H [после сида родитель и admin видят данные] · N [нет секретов; маркер не dev] · S [секреты не в git; prod-сид без семей]

@@ -10,6 +10,7 @@ import { scrubAuditLogForPupilPrivileged } from "../../deletion/scrub-audit-log-
 import { scrubAuditLogForUserPrivileged } from "../../deletion/scrub-audit-log-for-user";
 import type { SeedTx } from "../reference/types";
 import { GRADE_KEY, YEAR_KEY, deterministicUuid, type Fixture, type YearKey } from "./fixture";
+import { replaceDevFamilies } from "./families";
 import type { PeopleFixture } from "./people";
 
 const DEV_TEACHER_EMAIL = "teacher@example.com";
@@ -137,6 +138,7 @@ async function deleteEmptyRaceYears(tx: SeedTx): Promise<number> {
 }
 
 export async function replaceDevFixture(tx: SeedTx, fixture: Fixture, people: PeopleFixture): Promise<void> {
+  await replaceDevFamilies(tx);
   const fixtureYearIds = yearIds();
   const fixtureGradeIds = gradeIds(fixture);
   const pupilIdSet = new Set<string>([

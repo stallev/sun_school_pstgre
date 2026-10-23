@@ -32,6 +32,7 @@ import {
   type GradeKey,
 } from "./fixture";
 import { FIXTURE_USER_KEY, buildPeopleFixture } from "./people";
+import { seedDevFamiliesInTx, type ParentSeedInput } from "./families";
 import { replaceDevFixture } from "./replace-fixture";
 import { writeFixtureDeletions, writeFixtureEvents, writeFixtureUsers } from "./write-people";
 
@@ -68,6 +69,7 @@ export const DEV_SEED_ERROR = {
   NO_CONSENT_TEXT_VERSION: "NO_CONSENT_TEXT_VERSION",
   NO_BIBLE_BOOK: "NO_BIBLE_BOOK",
   ACTIVE_YEAR_EXISTS: "ACTIVE_YEAR_EXISTS",
+  NO_PARENT_CREDENTIALS: "NO_PARENT_CREDENTIALS",
 } as const;
 export type DevSeedError = (typeof DEV_SEED_ERROR)[keyof typeof DEV_SEED_ERROR];
 
@@ -90,6 +92,7 @@ export type DevSeedReport = {
   accessRequests: number;
   deletions: number;
   events: number;
+  families: number;
 };
 
 const id = (name: string): string => deterministicUuid(name);
@@ -104,6 +107,7 @@ const EMPTY_REPORT: DevSeedReport = {
   accessRequests: 0,
   deletions: 0,
   events: 0,
+  families: 0,
 };
 
 async function insertInChunks<T>(rows: readonly T[], insert: (chunk: T[]) => Promise<unknown>): Promise<void> {
@@ -148,14 +152,17 @@ async function resolveGoldenVerseIds(tx: SeedTx, organizationId: string): Promis
 export async function seedDevInTx(
   tx: SeedTx,
   fixture: Fixture = buildFixture(),
-  options?: { replace?: boolean },
+  options?: { replace?: boolean; parent?: ParentSeedInput },
 ): Promise<DevSeedReport> {
   const people = buildPeopleFixture(fixture);
   if (options?.replace) await replaceDevFixture(tx, fixture, people);
 
   const firstYear = fixture.years[0]!;
-  if (!options?.replace && (await tx.academicYear.findUnique({ where: { id: id(`year:${firstYear.key}`) } }))) {
-    return EMPTY_REPORT;
+  const fixturePresent =
+    !options?.replace && Boolean(await tx.academicYear.findUnique({ where: { id: id(`year:${firstYear.key}`) } }));
+  if (fixturePresent) {
+    const familiesReport = options?.parent ? await seedDevFamiliesInTx(tx, options.parent) : { skipped: true, families: 0 };
+    return { ...EMPTY_REPORT, families: familiesReport.skipped ? 0 : familiesReport.families };
   }
 
   const organization = await tx.organization.findFirst({ orderBy: { createdAt: "asc" } });
@@ -354,6 +361,8 @@ export async function seedDevInTx(
   await writeFixtureEvents(tx, people);
   await writeFixtureDeletions(tx, people, actorUserId);
 
+  const familiesReport = options?.parent ? await seedDevFamiliesInTx(tx, options.parent) : { skipped: true, families: 0 };
+
   const report: DevSeedReport = {
     skipped: false,
     pupils: fixture.pupils.length,
@@ -363,6 +372,7 @@ export async function seedDevInTx(
     accessRequests: people.accessRequests.length,
     deletions: people.deletions.length,
     events: people.events.length,
+    families: familiesReport.skipped ? 0 : familiesReport.families,
   };
   await writeAudit(tx, {
     actorUserId: null,
@@ -375,13 +385,13 @@ export async function seedDevInTx(
   return report;
 }
 
-export type SeedDevOptions = { replace?: boolean };
+export type SeedDevOptions = { replace?: boolean; parent: ParentSeedInput };
 
 /** Refuses unless `APP_ENV` is dev, then lock + marker guard + core. */
 export async function seedDev(
   prisma: PrismaClient,
   appEnv: string | undefined,
-  options?: SeedDevOptions,
+  options: SeedDevOptions,
 ): Promise<DevSeedReport> {
   if (appEnv !== "dev") {
     throw new DevSeedFailure(DEV_SEED_ERROR.NOT_DEV, "db:seed:dev runs only when APP_ENV=dev");
