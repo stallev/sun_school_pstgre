@@ -27,6 +27,7 @@ const LAB_SCREEN_TITLES: ShellScreenTitles = {
   users: "Users",
   approvals: "Approvals",
   people: "People",
+  family: "Families",
   deletions: "Deletions",
   groups: "Groups",
   groupEdit: "Edit group",

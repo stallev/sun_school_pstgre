@@ -26,6 +26,7 @@ const SHELL_SCREEN_TITLE_KEYS: ShellScreenTitleKey[] = [
   "year",
   "audit",
   "achievements",
+  "family",
   "settings",
   "profile",
   "userProfile",

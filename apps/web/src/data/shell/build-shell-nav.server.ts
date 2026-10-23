@@ -1,6 +1,7 @@
 import "server-only";
 import { USER_ROLE, type UserRole } from "@sunschool/domain";
 import { readFeaturesAchievementsEnabled } from "@/data/achievements/achievement-feature.server";
+import { readFeaturesParentsEnabled } from "@/data/families/family-feature.server";
 import { getPrisma } from "@/lib/db.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/get-dictionary";
@@ -12,12 +13,15 @@ import {
 } from "@/lib/shell/nav-resolver";
 import type { PolicySessionContext } from "@sunschool/policy-server";
 
-const stripAchievementsResolved = (items: ResolvedNavItem[]): ResolvedNavItem[] =>
+const stripFeatureNavItems = (
+  items: ResolvedNavItem[],
+  keys: readonly string[],
+): ResolvedNavItem[] =>
   items.map((entry) => {
     if (!isResolvedNavGroup(entry)) return entry;
     return {
       ...entry,
-      children: entry.children.filter((child) => child.key !== "achievements"),
+      children: entry.children.filter((child) => !keys.includes(child.key)),
     };
   });
 
@@ -38,10 +42,15 @@ export const buildShellNav = async (
 
   const shellRole = resolveShellRole(context.roles);
   const prisma = await getPrisma();
-  const achievementsEnabled = await prisma.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
-  const navItems = achievementsEnabled
-    ? resolveNavItems(shellRole, getLabel)
-    : stripAchievementsResolved(resolveNavItems(shellRole, getLabel));
+  const [achievementsEnabled, parentsEnabled] = await prisma.$transaction(async (tx) => [
+    await readFeaturesAchievementsEnabled(tx),
+    await readFeaturesParentsEnabled(tx),
+  ]);
+  const stripKeys: string[] = [];
+  if (!achievementsEnabled) stripKeys.push("achievements");
+  if (!parentsEnabled) stripKeys.push("family");
+  const resolved = resolveNavItems(shellRole, getLabel);
+  const navItems = stripKeys.length > 0 ? stripFeatureNavItems(resolved, stripKeys) : resolved;
 
   const isAdmin = context.roles.includes(USER_ROLE.ADMIN);
   const showDevSwitcher = options.appEnv === "dev" && isAdmin;

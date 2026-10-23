@@ -109,7 +109,7 @@
 
 Начинается после CU7.
 
-- [ ] P13-T8 · T3 · Spec: [screens §5.1, §6](../specs/families_and_parents_screens_spec.md) · AZ: AZ-58
+- [x] P13-T8 · T3 · Spec: [screens §5.1, §6](../specs/families_and_parents_screens_spec.md) · AZ: AZ-58
       Files: секция Lab до маршрута, `apps/web/src/app/(app)/family/`, пункт меню admin, словарь `admin.family`, server actions семьи
       Acceptance: экран совпадает с `vFamily`; при выключенном флаге пункта нет и маршрут 404; teacher получает «Нет доступа»; toast и pending по правилам мутаций
       Paths: H [admin правит семью фикстуры] · N [пустой список; ошибка валидации сохраняет форму] · S [AZ-58, AZ-D3, флаг]

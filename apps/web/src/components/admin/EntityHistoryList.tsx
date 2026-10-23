@@ -11,9 +11,14 @@ import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 type EntityHistoryListProps = {
   entityType: AuditEntityType;
   entityId: string;
+  sectionTitle?: string;
 };
 
-export const EntityHistoryList = async ({ entityType, entityId }: EntityHistoryListProps) => {
+export const EntityHistoryList = async ({
+  entityType,
+  entityId,
+  sectionTitle,
+}: EntityHistoryListProps) => {
   await requireRole(USER_ROLE.ADMIN);
   const actor = await requireActiveUser();
   const prisma = await getPrisma();
@@ -42,7 +47,7 @@ export const EntityHistoryList = async ({ entityType, entityId }: EntityHistoryL
       minute: "2-digit",
     }).format(new Date(iso));
 
-  const title = getMessage(adminDict, "audit.history_title");
+  const title = sectionTitle ?? getMessage(adminDict, "audit.history_title");
   const emptyTitle = getMessage(adminDict, "audit.history_empty_title");
   const emptyDescription = getMessage(adminDict, "audit.history_empty_description");
 
@@ -73,4 +78,18 @@ export const UserEntityHistoryList = ({ userId }: { userId: string }) => (
 
 export const PupilEntityHistoryList = ({ pupilId }: { pupilId: string }) => (
   <EntityHistoryList entityType={AUDIT_ENTITY_TYPE.PUPIL} entityId={pupilId} />
+);
+
+export const FamilyEntityHistoryList = ({
+  familyId,
+  sectionTitle,
+}: {
+  familyId: string;
+  sectionTitle?: string;
+}) => (
+  <EntityHistoryList
+    entityType={AUDIT_ENTITY_TYPE.FAMILY}
+    entityId={familyId}
+    sectionTitle={sectionTitle}
+  />
 );

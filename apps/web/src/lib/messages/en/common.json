@@ -88,6 +88,7 @@
       "year": "School year",
       "audit": "Change log",
       "achievements": "Achievements and penalties",
+      "family": "Families",
       "settings": "App settings",
       "profile": "Profile",
       "userProfile": "User profile"
@@ -112,6 +113,7 @@
       "groups_admin": "Groups",
       "year": "School year",
       "achievements": "Achievements and penalties",
+      "family": "Families",
       "settings": "Settings",
       "desc": {
         "lessons_all": "List, create and edit",
@@ -131,6 +133,7 @@
         "groups_admin": "Grading settings",
         "year": "Start and close",
         "achievements": "Catalogue and points",
+        "family": "Families and contacts",
         "settings": "Interface language"
       },
       "groups": {

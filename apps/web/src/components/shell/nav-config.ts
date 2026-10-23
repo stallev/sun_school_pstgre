@@ -147,6 +147,12 @@ const ADMIN_NAV: NavEntryDef[] = [
         href: "/people",
       },
       {
+        key: "family",
+        messageKey: "shell.nav.family",
+        descriptionMessageKey: "shell.nav.desc.family",
+        href: "/family",
+      },
+      {
         key: "deletions",
         messageKey: "shell.nav.deletions",
         descriptionMessageKey: "shell.nav.desc.deletions",
@@ -227,6 +233,7 @@ export const NAV_PATH_PATTERNS: ReadonlyArray<{ pattern: RegExp; navKey: string 
   { pattern: /^\/approvals$/, navKey: "approvals" },
   { pattern: /^\/users(\/|$)/, navKey: "users" },
   { pattern: /^\/people$/, navKey: "people" },
+  { pattern: /^\/family$/, navKey: "family" },
   { pattern: /^\/deletions$/, navKey: "deletions" },
   { pattern: /^\/audit$/, navKey: "audit" },
   { pattern: /^\/achievements$/, navKey: "achievements" },

@@ -53,6 +53,7 @@ describe("resolveNavDefs", () => {
       "/approvals",
       "/users",
       "/people",
+      "/family",
       "/deletions",
       "/bricks",
       "/groups",
