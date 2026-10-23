@@ -67,6 +67,13 @@ export const MUTATION_ERROR_CODES = {
   PENALTY_ONE_ACTIVE: "PENALTY_ONE_ACTIVE",
   PENALTY_YEAR_CLOSED: "PENALTY_YEAR_CLOSED",
   PENALTY_ALREADY_CANCELLED: "PENALTY_ALREADY_CANCELLED",
+  // FAMILY_ — families_and_parents_contract.md §7
+  FAMILY_FLAG_OFF: "FAMILY_FLAG_OFF",
+  FAMILY_EMPTY: "FAMILY_EMPTY",
+  FAMILY_CHILD_HAS_FAMILY: "FAMILY_CHILD_HAS_FAMILY",
+  FAMILY_RELATION_LIMIT: "FAMILY_RELATION_LIMIT",
+  // CONSENT_ — families_and_parents_contract.md §7
+  CONSENT_LAST_REQUIRES_DELETION: "CONSENT_LAST_REQUIRES_DELETION",
 } as const;
 
 export type MutationErrorCode = (typeof MUTATION_ERROR_CODES)[keyof typeof MUTATION_ERROR_CODES];
@@ -78,6 +85,8 @@ export type MutationErrorCode = (typeof MUTATION_ERROR_CODES)[keyof typeof MUTAT
 export const MUTATION_WARNING_CODES = {
   /** Approved TEACHER has no groups yet (access_requests §5.4, decision 2026-10-11). */
   NO_GROUPS: "NO_GROUPS",
+  /** Last adult removed from family (families §6.1, СМ-7). */
+  FAMILY_NO_ADULTS: "FAMILY_NO_ADULTS",
 } as const;
 
 export type MutationWarningCode = (typeof MUTATION_WARNING_CODES)[keyof typeof MUTATION_WARNING_CODES];
@@ -94,4 +103,6 @@ export const MUTATION_ERROR_CODE_PREFIXES = [
   "ANALYTICS_",
   "ACHIEVEMENT_",
   "PENALTY_",
+  "FAMILY_",
+  "CONSENT_",
 ] as const;

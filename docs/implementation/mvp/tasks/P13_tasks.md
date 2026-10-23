@@ -42,7 +42,7 @@
 
 ### P13-CU1 — feat(domain): add family rules · Review: diff-only · Commit: auto
 
-- [ ] P13-T1 · T1 · Contract: [families §3, §7](../contracts/families_and_parents_contract.md) · ADR: [ADR-013 §4 п. 3](../../../prds/07_governance/adr_013_families_and_parents.md)
+- [x] P13-T1 · T1 · Contract: [families §3, §7](../contracts/families_and_parents_contract.md) · ADR: [ADR-013 §4 п. 3](../../../prds/07_governance/adr_013_families_and_parents.md)
       Files: `packages/domain/src/families/` (правила СМ-1, СМ-3, СМ-5, СМ-7, СМ-10) + тесты, `packages/domain/src/constants/mutation-error-codes.ts` (префиксы `FAMILY_`, `CONSENT_` и коды контракта §7), экспорт из `index.ts`
       Acceptance: чистые проверки отклоняют вторую семью ребёнка, вторую мать или отца и пустую семью; исключение последнего взрослого не запрещено; коды — константы domain
       Paths: H [ребёнок в одной семье] · N [вторая мать, пустая семья, ребёнок уже в семье] · S n/a — чистая функция на фикстурах
