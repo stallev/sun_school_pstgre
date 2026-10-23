@@ -13,6 +13,7 @@ import { AnalyticsRetryButton } from "@/components/analytics/AnalyticsRetryButto
 import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
 import { DynamicsBlock } from "@/components/analytics/DynamicsBlock";
 import { PupilAchievementPanel } from "@/components/achievements/PupilAchievementPanel.server";
+import { TeacherPupilFamilyContactsCard } from "@/components/teacher/TeacherPupilFamilyContactsCard.server";
 import { PupilAnalyticsKpiSection } from "@/components/analytics/PupilAnalyticsKpiSection";
 import { PupilLessonTable } from "@/components/analytics/PupilLessonTable";
 import { PupilPresenceStrip } from "@/components/analytics/PupilPresenceStrip";
@@ -208,6 +209,11 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
             </CustomLink>
           ) : undefined
         }
+      />
+      <TeacherPupilFamilyContactsCard
+        actorUserId={actor.userId}
+        actorRoles={actor.roles}
+        pupilId={pupilId}
       />
       <AnalyticsYearScope committedYearId={data.yearId}>
       <Suspense fallback={<PupilYearsFallback />}>

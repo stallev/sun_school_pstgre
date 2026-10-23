@@ -29,7 +29,22 @@ export const mapAdultToTeacherFamilyContact = (row: FamilyAdultContactRow): Teac
   phones: normalizePhones(row.phones),
 });
 
+const phoneFromEntry = (entry: unknown): string | null => {
+  if (typeof entry === "string") {
+    const trimmed = entry.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }
+  if (entry && typeof entry === "object" && "number" in entry) {
+    const number = (entry as { number?: unknown }).number;
+    if (typeof number === "string") {
+      const trimmed = number.trim();
+      return trimmed.length > 0 ? trimmed : null;
+    }
+  }
+  return null;
+};
+
 const normalizePhones = (phones: unknown): string[] => {
   if (!Array.isArray(phones)) return [];
-  return phones.filter((entry): entry is string => typeof entry === "string" && entry.trim() !== "");
+  return phones.map(phoneFromEntry).filter((entry): entry is string => entry !== null);
 };

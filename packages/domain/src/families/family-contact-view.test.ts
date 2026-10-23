@@ -26,4 +26,17 @@ describe("mapAdultToTeacherFamilyContact (AZ-63, СМ-8)", () => {
     expect(contact).not.toHaveProperty("address");
     expect(contact).not.toHaveProperty("note");
   });
+
+  it("reads phone numbers from label/number json rows", () => {
+    const contact = mapAdultToTeacherFamilyContact({
+      id: "adult-2",
+      lastName: "Иванов",
+      firstName: "Пётр",
+      middleName: null,
+      relation: ADULT_RELATION.FATHER,
+      phones: [{ label: "моб.", number: "+7-900-000-00-02" }],
+      email: null,
+    });
+    expect(contact.phones).toEqual(["+7-900-000-00-02"]);
+  });
 });
