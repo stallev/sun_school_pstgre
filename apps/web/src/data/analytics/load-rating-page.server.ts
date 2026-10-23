@@ -12,6 +12,8 @@ import { getDefaultOrganizationId } from "@/data/access/get-organization-id.serv
 import { isMutationErr, userHasAdminRole } from "@/data/access/access-admin-guards.server";
 import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-page.server";
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
+import { enrichRatingRowsWithAchievements } from "@/data/achievements/enrich-rating-rows-achievements.server";
+import { readFeaturesAchievementsEnabled } from "@/data/achievements/achievement-feature.server";
 import { getGroupRating, type RatingTableRow } from "./get-group-rating";
 
 export type RatingPageScope = "group" | "school";
@@ -30,6 +32,7 @@ export type RatingPageData =
       isAdmin: boolean;
       scope: RatingPageScope;
       rows: RatingTableRow[];
+      achievementsUiEnabled: boolean;
     };
 
 async function loadGradeOptions(
@@ -158,6 +161,11 @@ export async function loadRatingPage(
       ? ""
       : grades.find((g) => g.gradeId === gradeId)?.name ?? "";
 
+  const achievementsUiEnabled = await db.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
+  if (achievementsUiEnabled && rows.length > 0) {
+    rows = await enrichRatingRowsWithAchievements(db, year.id, rows);
+  }
+
   return {
     kind: "page",
     yearId: year.id,
@@ -168,5 +176,6 @@ export async function loadRatingPage(
     isAdmin,
     scope,
     rows,
+    achievementsUiEnabled,
   };
 }

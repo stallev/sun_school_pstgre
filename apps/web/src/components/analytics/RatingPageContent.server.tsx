@@ -12,6 +12,7 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { CustomLink } from "@/components/ui/custom-link";
@@ -31,6 +32,7 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickAnalyticsMessages(analyticsDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
+  const achievementMessages = pickTeacherAchievementsMessages(teacherDict);
   const ratingPageTitle =
     actor.roles.includes(USER_ROLE.ADMIN)
       ? messages.rating.pageTitle
@@ -117,8 +119,17 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
           ))}
         </div>
       ) : null}
-      <RatingTable rows={data.rows} messages={messages.rating} />
-      <ContentText className="text-sm text-muted">{messages.rating.footnote}</ContentText>
+      <RatingTable
+        rows={data.rows}
+        messages={messages.rating}
+        achievementsUiEnabled={data.achievementsUiEnabled}
+        achievementMessages={achievementMessages}
+      />
+      <ContentText className="text-sm text-muted">
+        {data.achievementsUiEnabled
+          ? achievementMessages.ratingFootnoteAchievements
+          : messages.rating.footnote}
+      </ContentText>
     </div>
   );
 };

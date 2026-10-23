@@ -7,7 +7,8 @@ import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
 import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-page.server";
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { formatDisplayName } from "@/lib/person/format-display-name";
-import { loadBricksBalanceInTransaction } from "./bricks-shared.server";
+import { readFeaturesAchievementsEnabled } from "../achievements/achievement-feature.server";
+import { loadBricksBalanceComponents, loadBricksBalanceInTransaction } from "./bricks-shared.server";
 import { listLedger } from "./list-ledger";
 import type { BrickLedgerEntryDto } from "./bricks-shared.server";
 
@@ -18,6 +19,9 @@ export type BricksBalanceRow = {
   issued: number;
   balance: number;
   needsAttention: boolean;
+  achievementBonus: number;
+  penaltiesTotal: number;
+  achievementsUiEnabled: boolean;
 };
 
 export type BricksPageData =
@@ -98,11 +102,16 @@ export async function loadBricksPage(
     },
   });
 
+  const achievementsUiEnabled = await db.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
+
   const rows: BricksBalanceRow[] = [];
   for (const row of enrollments) {
     const snapshot = await db.$transaction((tx) =>
       loadBricksBalanceInTransaction(tx, row.pupil.id, year.id),
     );
+    const components = achievementsUiEnabled
+      ? await db.$transaction((tx) => loadBricksBalanceComponents(tx, row.pupil.id, year.id))
+      : null;
     rows.push({
       pupilId: row.pupil.id,
       displayName: formatDisplayName(row.pupil),
@@ -110,6 +119,9 @@ export async function loadBricksPage(
       issued: snapshot.issued,
       balance: snapshot.balance,
       needsAttention: snapshot.balance < 0,
+      achievementBonus: achievementsUiEnabled ? (components?.achievementBonus ?? 0) : 0,
+      penaltiesTotal: achievementsUiEnabled ? (components?.penaltiesTotal ?? 0) : 0,
+      achievementsUiEnabled,
     });
   }
 

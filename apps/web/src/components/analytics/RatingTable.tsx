@@ -14,13 +14,24 @@ import {
 } from "@/components/ui/table";
 import type { RatingTableRow } from "@/data/analytics/get-group-rating";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
+import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
+import { cn } from "@/lib/utils";
 
 type RatingTableProps = {
   rows: RatingTableRow[];
   messages: AnalyticsMessages["rating"];
+  achievementsUiEnabled?: boolean;
+  achievementMessages?: TeacherAchievementsMessages;
 };
 
-export const RatingTable = ({ rows, messages }: RatingTableProps) => {
+const dash = "—";
+
+export const RatingTable = ({
+  rows,
+  messages,
+  achievementsUiEnabled = false,
+  achievementMessages,
+}: RatingTableProps) => {
   if (rows.length === 0) {
     return <ContentText className="text-sm text-muted">{messages.empty}</ContentText>;
   }
@@ -47,7 +58,25 @@ export const RatingTable = ({ rows, messages }: RatingTableProps) => {
                 </CustomLink>
               </span>
             }
-            fields={[{ label: messages.columnMetric, value: row.metric }]}
+            fields={[
+              { label: messages.columnMetric, value: row.metric },
+              ...(achievementsUiEnabled && achievementMessages
+                ? [
+                    {
+                      label: achievementMessages.ratingColumnBonus,
+                      value: row.achievementBonus ? `+${row.achievementBonus}` : dash,
+                    },
+                    {
+                      label: achievementMessages.ratingColumnAwards,
+                      value: row.awardsCount ? row.awardsCount : dash,
+                    },
+                    {
+                      label: achievementMessages.ratingColumnPenalties,
+                      value: row.penaltiesCount ? row.penaltiesCount : dash,
+                    },
+                  ]
+                : []),
+            ]}
           />
         ))}
       </ul>
@@ -65,6 +94,19 @@ export const RatingTable = ({ rows, messages }: RatingTableProps) => {
             <TableHead scope="col" className="px-3 py-3 text-right font-normal">
               {messages.columnMetric}
             </TableHead>
+            {achievementsUiEnabled && achievementMessages ? (
+              <>
+                <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                  {achievementMessages.ratingColumnBonus}
+                </TableHead>
+                <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                  {achievementMessages.ratingColumnAwards}
+                </TableHead>
+                <TableHead scope="col" className="px-5 py-3 text-right font-normal">
+                  {achievementMessages.ratingColumnPenalties}
+                </TableHead>
+              </>
+            ) : null}
           </TableRow>
         </TableHeader>
         <TableBody className="divide-y divide-line">
@@ -86,6 +128,24 @@ export const RatingTable = ({ rows, messages }: RatingTableProps) => {
                 </CustomLink>
               </TableCell>
               <TableCell className="px-3 py-3 text-right tabular-nums">{row.metric}</TableCell>
+              {achievementsUiEnabled && achievementMessages ? (
+                <>
+                  <TableCell className="px-3 py-3 text-right tabular-nums text-muted">
+                    {row.achievementBonus ? `+${row.achievementBonus}` : dash}
+                  </TableCell>
+                  <TableCell className="px-3 py-3 text-right tabular-nums">
+                    {row.awardsCount ? row.awardsCount : dash}
+                  </TableCell>
+                  <TableCell
+                    className={cn(
+                      "px-5 py-3 text-right tabular-nums",
+                      row.penaltiesCount ? "font-bold text-penalty" : "text-muted",
+                    )}
+                  >
+                    {row.penaltiesCount ? row.penaltiesCount : dash}
+                  </TableCell>
+                </>
+              ) : null}
             </TableRow>
           ))}
         </TableBody>

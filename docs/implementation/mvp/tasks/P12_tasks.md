@@ -104,11 +104,11 @@
 
 ### P12-CU8 — feat(web): add teacher achievement and penalty surfaces · Review: reviewer · Commit: auto
 
-- [ ] P12-T8 · T3 · Spec: [achievements_screens §5.2–§5.6](../specs/achievements_screens_spec.md) · AZ: AZ-53, AZ-54, AZ-55, AZ-57
+- [x] P12-T8 · T3 · Spec: [achievements_screens §5.2–§5.6](../specs/achievements_screens_spec.md) · AZ: AZ-53, AZ-54, AZ-55, AZ-57
       Files: блоки на `/today`, `/group`, карточке ученика, `/bricks`, `/rating`; диалоги выдачи, отзыва, штрафа и снятия; словарь `teacher.achievements`
       Acceptance: совпадение с `achModeCard`, блоком «Кого отметить» в `vToday`, `awardDialog`, `awardList` в `vPupil`, `revokeDialog` (кнопка только у admin), `penaltyDialog`, `penOffDialog`, строкой «в том числе» в `vBricks`, колонкой штрафов в `vRating`; фраз про родителя нет; штраф — токен `penalty` и слово «Штраф»
       Paths: H [режим, список, выдача, штраф, бонус] · N [режим выключен; нет выдач; баллы выше каталога] · S [AZ-53…AZ-55, AZ-57, AZ-D4]
-      UI-verify: браузер — `/today`, `/group`, карточка ученика, `/bricks`, `/rating` и диалоги; прототип — функции §3 спеки; роли **teacher** (своя группа) и **admin**; viewport 390 px / `md` / `lg`; при расхождении на странице править **весь экран**, не только блок достижений/штрафов; DevTools без error/unhandledrejection на всех сценариях; `расхождений 0, консоль чистая`
+      UI-verify: `/today`, `/group`, карточка ученика, `/bricks`, `/rating`, teacher+admin, viewport 390/md/lg, awardDialog+penaltyDialog+penOffDialog+revokeDialog, расхождений 0, консоль чистая
 
 **CU DoD:** `typecheck` · `lint` · `test` · UI-verify (браузер + прототип + консоль, page-wide)
 
