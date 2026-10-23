@@ -52,6 +52,8 @@
 
 **Условие старта:** собраны бумажные согласия на данные детей; внесены семьи (в старом приложении семей нет — вносятся с нуля).
 
+**Проектирование (2026-10-23):** [ADR-013](../07_governance/adr_013_families_and_parents.md), [`families_and_parents_contract.md`](../../implementation/mvp/contracts/families_and_parents_contract.md), экранная спецификация и фаза P13. Код за флагом условию старта не противоречит; в prod флаг включает владелец. Дайджест пишется в `weekly_digest` и показывается родителю; письма нет, пока модуль `email_jobs` выключен.
+
 ### 3.3 Волна 3 — голосовая проверка стихов (AI)
 
 | Что | Источник |
@@ -102,13 +104,15 @@
 | [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) | Таблицы post-MVP |
 | [`adr_012_achievements_and_penalties.md`](../07_governance/adr_012_achievements_and_penalties.md) | Решение о старте волны 1 |
 | [`P12_phase_description.md`](../../implementation/mvp/phases_tasks_descriptions/P12_phase_description.md) | Фаза реализации волны 1 |
+| [`adr_013_families_and_parents.md`](../07_governance/adr_013_families_and_parents.md) | Решение о старте волны 2 |
+| [`P13_phase_description.md`](../../implementation/mvp/phases_tasks_descriptions/P13_phase_description.md) | Фаза реализации волны 2 |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W1-04
 
 ## 9. Agent notes
 
-- Не реализовывать экран «Достижения» в фазах MVP (P01…P11) и экран «Семья» до волны 2, даже если они есть в прототипе. Волна 1 — фаза P12, за флагом.
-- Не добавлять зависимости кода MVP от таблиц семей и голоса (PKG-03). Таблицы достижений и штрафов читает только P12.
+- Не реализовывать экран «Достижения» в фазах MVP (P01…P11). Волна 1 — фаза P12, за флагом `features.achievements`. Экран «Семья» и роль `parent` — фаза P13, за флагом `features.parents`; до неё не реализовывать. Голос — волна 3.
+- Не добавлять зависимости кода MVP от таблиц семей и голоса (PKG-03). Таблицы достижений и штрафов читает только P12. Таблицы семей читает только P13 за флагом.
 
 ## Change log
 
@@ -116,4 +120,5 @@
 |------|--------|
 | 2026-10-19 | Аналитика по учебным годам перенесена из «после MVP» в фазу P08 (`PRD-ANA-02`); остальные отложенные пункты без изменений |
 | 2026-10-22 | Волна 1 спроектирована (ADR-012, P12). Условие включения `features.achievements` в prod сохранено |
+| 2026-10-23 | Волна 2 спроектирована (ADR-013, P13). Дайджест без почты. Условие включения `features.parents` в prod сохранено |
 | 2026-10-10 | v1.0 — Canonical (W1-04) |

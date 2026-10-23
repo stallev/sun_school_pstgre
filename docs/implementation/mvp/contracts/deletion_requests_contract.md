@@ -18,16 +18,16 @@
 ## 2. Scope / Out of scope
 
 **В scope:** запросы на удаление учётной записи и данных ребёнка, план и выполнение, обезличивание, сроки.  
-**Вне scope:** электронный запрос опекуна и страница «Данные и согласия» (post-MVP); семьи, достижения, голос (post-MVP; процедура удаления дополняется при их включении).
+**Вне scope:** электронный запрос опекуна при выключенном флаге остаётся за MVP (запрос создаёт admin). При `features.parents = true` родитель создаёт и отменяет запрос сам — [`families_and_parents_contract.md`](./families_and_parents_contract.md) §6.4. Выполнение запроса в обеих режимах — admin этого контракта. Семьи и голос вне процедур, пока соответствующий флаг выключен.
 
 ## 3. Операции
 
 | Операция | Актор | Переход | AZ |
 |----------|-------|---------|----|
 | `createDeletionRequest` (учётная запись) | пользователь (кроме `DELETED`) | `∅ → NEW` | AZ-06 |
-| `createChildDeletionRequest` | `ADMIN` по обращению опекуна | `∅ → NEW` | AZ-07 |
+| `createChildDeletionRequest` | `ADMIN` по обращению опекуна; при `features.parents` — также `PARENT` своего ребёнка ([families §6.4](./families_and_parents_contract.md)) | `∅ → NEW` | AZ-07, AZ-62 |
 | `takeRequest` | `ADMIN` | `NEW → IN_PROGRESS` | AZ-07 |
-| `cancelRequest` | автор запроса | `NEW\|IN_PROGRESS → CANCELLED` | AZ-06 |
+| `cancelRequest` | автор запроса (при флаге родителей автор детского запроса может быть `PARENT`) | `NEW\|IN_PROGRESS → CANCELLED` | AZ-06, AZ-62 |
 | `rejectRequest` | `ADMIN` | `NEW\|IN_PROGRESS → REJECTED` | AZ-07 |
 | `previewDeletionPlan` | `ADMIN` | чтение плана | AZ-07 |
 | `executeDeletion` | `ADMIN` | `IN_PROGRESS → DONE` | AZ-07 |
@@ -224,3 +224,4 @@
 | 2026-10-11 | v1.0 — Canonical (W8-08) |
 | 2026-10-18 | v1.1 — §6.4 категории плана; Q-03/Q-05 закрыты; confirm word en; реализация БД (P06) |
 | 2026-10-19 | v1.2 — §6.2: снимки итогов года ребёнка и их вклад в групповые версии (P08) |
+| 2026-10-23 | v1.3 — при `features.parents` запрос ребёнка создаёт и отменяет родитель (P13); выполнение остаётся у admin |

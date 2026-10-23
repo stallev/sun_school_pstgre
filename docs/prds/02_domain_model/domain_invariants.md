@@ -106,7 +106,7 @@
 |----|------|-------------|-------------|
 | **PKG-01** | `@sunschool/domain` — чистые правила: без Next, Prisma, `process.env` | ESLint boundaries | `npm run lint` |
 | **PKG-02** | `@sunschool/policy-server` не импортируется в `proxy.ts`; `proxy.ts` использует только `policy-edge` и `auth.config.ts` | ESLint boundaries | review + lint |
-| **PKG-03** | Семьи, голосовые попытки и роль `parent` не являются зависимостью MVP и волны 1. Код P12 может читать и писать таблицы достижений и штрафов только за флагом `features.achievements` ([ADR-012](../07_governance/adr_012_achievements_and_penalties.md)). MVP-таблицы ссылаются на post-MVP только `NULL`-able (С-1, С-2) | схема, review | сверка FK; grep волны 1 на `family` и `recitation_attempt` |
+| **PKG-03** | Семьи, голосовые попытки и роль `parent` не являются зависимостью MVP и волны 1. Код P12 может читать и писать таблицы достижений и штрафов только за флагом `features.achievements` ([ADR-012](../07_governance/adr_012_achievements_and_penalties.md)). Код P13 может читать и писать `family` и `family_adult` только за флагом `features.parents` ([ADR-013](../07_governance/adr_013_families_and_parents.md)) и не делает их зависимостью MVP. Голос остаётся закрытым до волны 3. MVP-таблицы ссылаются на post-MVP только `NULL`-able (С-1, С-2) | схема, review | сверка FK; grep MVP и P12 на `family` и `recitation_attempt` |
 
 ### 4.10 Аналитика по учебным годам
 
@@ -164,3 +164,4 @@
 | 2026-10-10 | v1.0 — Canonical (W3-04) |
 | 2026-10-19 | §4.10: INV-26 (снимок итогов закрытого года), INV-27 (пороги достоверности сравнения) — P08 |
 | 2026-10-22 | PKG-03: код P12 допущен к таблицам достижений и штрафов; семьи и голос по-прежнему запрещены |
+| 2026-10-23 | PKG-03: код P13 допущен к `family` / `family_adult` за флагом `features.parents`; голос по-прежнему запрещён |

@@ -6,7 +6,7 @@
 **Дата:** 2026-10-11  
 **Волна:** W5-02  
 **Зависит от:** [`sunday_school_data_analytics_spec.md`](../../my_specs/sunday_school_data_analytics_spec.md) §2.2, §2.4, §2.5, БП-6, БП-12; [`canonical_routes.md`](../../design/canonical_routes.md); [`adr_003_auth_oidc_jwt_rbac.md`](../07_governance/adr_003_auth_oidc_jwt_rbac.md); [`domain_invariants.md`](../02_domain_model/domain_invariants.md) INV-04…INV-06; [`lifecycle_models.md`](../02_domain_model/lifecycle_models.md); [`database_schema_v1.md`](../03_data_model/database_schema_v1.md) §4, §5.1  
-**Связанные документы:** [`responsive_navigation_contract.md`](../../design/responsive_navigation_contract.md) §7, [`admin_flow.md`](../01_product_scope/user_flows/users_mvp/admin_flow.md), [`teacher_flow.md`](../01_product_scope/user_flows/users_mvp/teacher_flow.md), [`architecture_master_index.md`](../architecture_master_index.md)  
+**Связанные документы:** [`responsive_navigation_contract.md`](../../design/responsive_navigation_contract.md) §7, [`admin_flow.md`](../01_product_scope/user_flows/users_mvp/admin_flow.md), [`teacher_flow.md`](../01_product_scope/user_flows/users_mvp/teacher_flow.md), [`parent_flow.md`](../01_product_scope/user_flows/users_mvp/parent_flow.md), [`architecture_master_index.md`](../architecture_master_index.md)  
 **Проверено по:** не применимо (бизнес-правила доступа; библиотеки — в ADR-003 и `auth_runtime_spec`)
 
 ---
@@ -152,9 +152,9 @@
 | **AZ-P6** | Teacher без назначения в году не видит данных групп; видит пустые состояния | DAL-фильтр по `teacher_assignment` | INV-04 |
 | **AZ-P7** | Журнал изменений пишется в той же транзакции, что и мутация из §7 с пометкой «журнал» | `DAL` | БП-8 |
 
-### 7.7 Справка: post-MVP (не реализуется)
+### 7.7 Справка: голос (не реализуется)
 
-Роль `PARENT`, семьи, голосовые попытки и согласия родителя не имеют маршрутов и API (ADR-005). Права `PARENT` вводятся волной 2 с флагом `features.parents`. Достижения и штрафы — §7.8.
+Голосовые попытки не имеют маршрутов и API (ADR-005, волна 3). Права родителя и семьи — §7.9, флаг `features.parents`. Достижения и штрафы — §7.8.
 
 ### 7.8 Достижения и штрафы (P12, флаг `features.achievements`)
 
@@ -169,6 +169,20 @@
 | **AZ-56** | Автопересчёт после проверки, правки, закрытия года | система | система | нет отдельного Action; только use-case §6.3 контракта; флаг и режим | ДС-6 |
 | **AZ-57** | Просмотр выдач и штрафов ученика | ✔ (все) | ✔ (свои) | как AZ-41; чужой ученик → 404 (AZ-D4) | ДС-4, ШТ-8 без роли parent |
 
+### 7.9 Семьи и родители (P13, флаг `features.parents`)
+
+Пока флаг выключен, маршрутов волны нет (404) и use-case отвечает `FAMILY_FLAG_OFF`. Роль `PARENT` при одобрении недоступна (AZ-P3, `ACCESS_ROLE_UNAVAILABLE`). Источник: [`families_and_parents_contract.md`](../../implementation/mvp/contracts/families_and_parents_contract.md), [ADR-013](../07_governance/adr_013_families_and_parents.md).
+
+| ID | Действие | ADMIN | TEACHER | PARENT | Условие / защита | Источник |
+|----|----------|:-----:|:-------:|:------:|------------------|----------|
+| **AZ-58** | Семья: создать и править, взрослые, дети, объединение, перенос | ✔ | — | — | флаг; пустая семья не сохраняется; журнал | СМ-5…СМ-10 |
+| **AZ-59** | Одобрить заявку с ролью `PARENT` и связью с семьёй | ✔ | — | — | флаг; три способа §2.4; журнал | СМ-1, СМ-3, СМ-5 |
+| **AZ-60** | Свои дети: успехи, кирпичики, календарь; свои телефон и email | — | — | ✔ | только семьи, где пользователь — взрослый; чужой ребёнок → 404 | БП-9, §9.2 |
+| **AZ-61** | Электронное согласие и отзыв по своему ребёнку | — | — | ✔ | отзыв последнего согласия создаёт запрос на удаление | СО-2, СО-6 |
+| **AZ-62** | Запрос на удаление данных своего ребёнка и отмена | — | — | ✔ | выполнение по-прежнему admin (AZ-07) | УД-1, УД-3 |
+| **AZ-63** | Контакты семьи ученика | ✔ | ✔ (свои) | — | ФИО, тип, телефоны; адрес и примечание только admin на `/family` | СМ-8 |
+| **AZ-64** | Строка еженедельного дайджеста | система | — | чтение своей | `sent_at` пуст; почты нет; одна строка на неделю | ДС-8, ШТ-8, ADR-013 |
+
 ## 8. Маршрут × роль
 
 Роль-кандидаты по маршрутам — в [`canonical_routes.md`](../../design/canonical_routes.md) §4; эта матрица их **подтверждает**, а не копирует. Контроль при несоответствии — AZ-D3 (403). Дополнительные правила:
@@ -177,6 +191,7 @@
 2. Группа Admin (`/school`, `/approvals`, `/users*`, `/people`, `/groups*`, `/year`, `/deletions`, `/audit`, `/settings`, `/achievements`) — только `ADMIN`. `/achievements` существует при включённом `features.achievements`; при выключенном флаге маршрут отвечает 404. Teacher на `/achievements` — AZ-D3.
 3. Общие (`/calendar`, `/rating`, `/verses`, `/analytics*`, `/bricks`, `/profile`) — `TEACHER` и `ADMIN`; объём данных определяют §7.
 4. Параметр маршрута (`[lessonId]`, `[pupilId]`, `[groupId]`, `[userId]`) проверяется как ресурс (AZ-D4), не только как путь.
+5. Волна 2 при `features.parents = true` (после переноса в §4, P13 CU11): `/family` — только `ADMIN`; `/child`, `/child/data`, `/child/consent` — только `PARENT`. `/calendar` для `PARENT` — чтение событий групп своих детей. При выключенном флаге эти маршруты отвечают 404. `/verse*` остаются волной 3.
 
 ## 9. Paths (H / N / S)
 
@@ -200,7 +215,7 @@
 - [ ] Каждая мутация MVP из контрактов W8 ссылается на строку `AZ-NN` — исход: нет ссылок на несуществующие ID.
 - [ ] Тест policy для TEACHER: чужая группа → 404, чужая роль → 403, закрытый год → отказ — исход: unit-тесты `policy-server`.
 - [ ] Teacher после снятия роли теряет доступ без повторного входа — исход: тест AZ-D5.
-- [ ] Строки `PARENT` / post-MVP не создают маршрутов — исход: сверка с `canonical_routes.md` §5.
+- [ ] Строки голоса не создают маршрутов — исход: `/verse*` остаются в `canonical_routes.md` §5. Маршруты волны 2 появляются в §4 только задачей P13 CU11 и только при флаге.
 
 ## 11. Open questions
 
@@ -218,7 +233,7 @@
 | [`adr_003_auth_oidc_jwt_rbac.md`](../07_governance/adr_003_auth_oidc_jwt_rbac.md) | Роли, статусы, JWT |
 | [`canonical_routes.md`](../../design/canonical_routes.md) | Маршруты |
 | [`domain_invariants.md`](../02_domain_model/domain_invariants.md) | INV-04…INV-06 |
-| Контракты W8: [`access_requests_and_roles`](../../implementation/mvp/contracts/access_requests_and_roles_contract.md), [`school_year_and_groups`](../../implementation/mvp/contracts/school_year_and_groups_contract.md), [`homework_check`](../../implementation/mvp/contracts/homework_check_contract.md), [`bricks_ledger`](../../implementation/mvp/contracts/bricks_ledger_contract.md), [`change_log`](../../implementation/mvp/contracts/change_log_contract.md), [`deletion_requests`](../../implementation/mvp/contracts/deletion_requests_contract.md) | Реализация проверок и отказов (AZ-NN) |
+| Контракты W8: [`access_requests_and_roles`](../../implementation/mvp/contracts/access_requests_and_roles_contract.md), [`school_year_and_groups`](../../implementation/mvp/contracts/school_year_and_groups_contract.md), [`homework_check`](../../implementation/mvp/contracts/homework_check_contract.md), [`bricks_ledger`](../../implementation/mvp/contracts/bricks_ledger_contract.md), [`change_log`](../../implementation/mvp/contracts/change_log_contract.md), [`deletion_requests`](../../implementation/mvp/contracts/deletion_requests_contract.md), [`families_and_parents`](../../implementation/mvp/contracts/families_and_parents_contract.md) | Реализация проверок и отказов (AZ-NN) |
 
 **Registry:** [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md) — wave W5-02
 
@@ -236,3 +251,4 @@
 | 2026-10-11 | v1.0 — Canonical (W5-02) |
 | 2026-10-19 | §7.5: AZ-48…AZ-51 — аналитика по учебным годам (P08) |
 | 2026-10-22 | §7.8: AZ-52…AZ-57 — достижения и штрафы (P12, ADR-012); §8: `/achievements` |
+| 2026-10-23 | §7.9: AZ-58…AZ-64 — семьи и родители (P13, ADR-013); §8 п. 5 |
