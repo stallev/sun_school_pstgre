@@ -2,7 +2,8 @@ import "server-only";
 
 import { MUTATION_ERROR_CODES, type MutationErr } from "@sunschool/domain";
 import type { Prisma } from "@sunschool/db";
-import { isMutationErr, userHasAdminRole } from "../access/access-admin-guards.server";
+import { isMutationErr, userHasAdminRole, userHasParentRole } from "../access/access-admin-guards.server";
+import { assertParentCanViewChildData } from "../families/parent-child-access.server";
 import { loadActorOrganizationId } from "../lessons/lesson-shared.server";
 import {
   assertAdminActor,
@@ -79,6 +80,12 @@ export async function assertAnalyticsPupilAccess(
   const gradeIds = enrollments.map((row) => row.gradeId);
 
   if (await userHasAdminRole(tx, actorUserId)) {
+    return { gradeIds };
+  }
+
+  if (await userHasParentRole(tx, actorUserId)) {
+    const parentAccess = await assertParentCanViewChildData(tx, actorUserId, pupilId);
+    if (isMutationErr(parentAccess)) return parentAccess;
     return { gradeIds };
   }
 

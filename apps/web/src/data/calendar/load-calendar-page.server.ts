@@ -3,7 +3,8 @@ import "server-only";
 import { ACADEMIC_YEAR_STATUS, type GradeEventType } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
-import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
+import { userHasAdminRole, userHasParentRole } from "@/data/access/access-admin-guards.server";
+import { readFeaturesParentsEnabled } from "@/data/families/family-feature.server";
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { lessonDateToIso } from "@/data/lessons/lesson-shared.server";
 
@@ -36,13 +37,54 @@ export type CalendarPageData =
       lessonsForLink: { lessonId: string; label: string }[];
     };
 
+async function loadParentGradeOptions(
+  db: PrismaClient,
+  actorUserId: string,
+  yearId: string,
+  organizationId: string,
+): Promise<CalendarGradeOption[]> {
+  const adults = await db.familyAdult.findMany({
+    where: { userId: actorUserId },
+    select: { familyId: true },
+  });
+  if (adults.length === 0) return [];
+
+  const pupils = await db.pupil.findMany({
+    where: {
+      organizationId,
+      familyId: { in: adults.map((row) => row.familyId) },
+    },
+    select: { id: true },
+  });
+  if (pupils.length === 0) return [];
+
+  const enrollments = await db.enrollment.findMany({
+    where: {
+      pupilId: { in: pupils.map((row) => row.id) },
+      academicYearId: yearId,
+    },
+    select: { grade: { select: { id: true, name: true } } },
+  });
+  const byId = new Map<string, string>();
+  for (const row of enrollments) {
+    byId.set(row.grade.id, row.grade.name);
+  }
+  return [...byId.entries()]
+    .map(([gradeId, name]) => ({ gradeId, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 async function loadGradeOptions(
   db: PrismaClient,
   actorUserId: string,
   yearId: string,
   organizationId: string,
   isAdmin: boolean,
+  isParent: boolean,
 ): Promise<CalendarGradeOption[]> {
+  if (isParent) {
+    return loadParentGradeOptions(db, actorUserId, yearId, organizationId);
+  }
   if (isAdmin) {
     const rows = await db.grade.findMany({
       where: { organizationId, isActive: true },
@@ -76,13 +118,18 @@ export async function loadCalendarPage(
 ): Promise<CalendarPageData> {
   const organizationId = await getDefaultOrganizationId(db);
   const isAdmin = await userHasAdminRole(db, actorUserId);
+  const isParent = await userHasParentRole(db, actorUserId);
+  if (isParent) {
+    const parentsOn = await db.$transaction((tx) => readFeaturesParentsEnabled(tx));
+    if (!parentsOn) return { kind: "unassigned" };
+  }
   const year = await db.academicYear.findFirst({
     where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
     select: { id: true, name: true, status: true, startsOn: true, endsOn: true },
   });
   if (!year) return { kind: "no_active_year" };
 
-  const grades = await loadGradeOptions(db, actorUserId, year.id, organizationId, isAdmin);
+  const grades = await loadGradeOptions(db, actorUserId, year.id, organizationId, isAdmin, isParent);
   const defaultGrade = grades[0];
   if (!defaultGrade) return { kind: "unassigned" };
 
@@ -92,13 +139,13 @@ export async function loadCalendarPage(
       : defaultGrade.gradeId;
   const gradeName = grades.find((g) => g.gradeId === gradeId)?.name ?? "";
 
-  if (!isAdmin) {
+  if (!isAdmin && !isParent) {
     const scope = await assertTeacherAssignedToGradeInYear(db, actorUserId, gradeId, year.id);
     if (scope) return { kind: "unassigned" };
   }
 
   const yearClosed = year.status !== ACADEMIC_YEAR_STATUS.ACTIVE;
-  const canMutate = !yearClosed;
+  const canMutate = !yearClosed && !isParent;
   const resolvedMonth =
     monthKey && /^\d{4}-\d{2}$/.test(monthKey) ? monthKey : new Date().toISOString().slice(0, 7);
   const { start, end } = monthBounds(resolvedMonth);

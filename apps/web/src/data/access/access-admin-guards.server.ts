@@ -26,6 +26,14 @@ export async function userHasAdminRole(tx: Tx, userId: string): Promise<boolean>
   return row !== null;
 }
 
+export async function userHasParentRole(tx: Tx, userId: string): Promise<boolean> {
+  const row = await tx.userRoleAssignment.findFirst({
+    where: { userId, role: USER_ROLE.PARENT },
+    select: { id: true },
+  });
+  return row !== null;
+}
+
 export function assertNotSelfAdmin(actorUserId: string, targetUserId: string): MutationErr | null {
   if (actorUserId === targetUserId) {
     return {

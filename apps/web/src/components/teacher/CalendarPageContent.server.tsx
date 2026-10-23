@@ -40,7 +40,7 @@ export const CalendarPageContent = async ({
   searchParams }: CalendarPageProps) => {
   await connection();
   const params = await searchParams;
-  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN, USER_ROLE.PARENT);
   const data = await loadCalendarPage(
     await getPrisma(),
     actor.userId,
@@ -50,6 +50,7 @@ export const CalendarPageContent = async ({
   const locale = await getUiLocale();
   const appLocale = messageLocaleToAppLocale(locale);
   const teacherDict = await getDictionary(locale, "teacher");
+  const parentDict = actor.roles.includes(USER_ROLE.PARENT) ? await getDictionary(locale, "parent") : null;
   const commonDict = await getDictionary(locale, "common");
   const messages = pickTeacherCalendarMessages(teacherDict, appLocale);
   const listMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
@@ -84,14 +85,22 @@ export const CalendarPageContent = async ({
   const prevMonth = shiftMonth(data.monthKey, -1);
   const nextMonth = shiftMonth(data.monthKey, 1);
 
+  const isParentViewer =
+    actor.roles.includes(USER_ROLE.PARENT) &&
+    !actor.roles.includes(USER_ROLE.TEACHER) &&
+    !actor.roles.includes(USER_ROLE.ADMIN);
+  const pageDescription = isParentViewer && parentDict
+    ? getMessage(parentDict, "calendar.page_subtitle")
+    : fillMessage(messages.pageSubtitle, {
+        group: data.gradeName,
+        year: data.yearName,
+      });
+
   return (
     <div className="space-y-6">
       <PageHeader
         title={messages.pageTitle}
-        description={fillMessage(messages.pageSubtitle, {
-          group: data.gradeName,
-          year: data.yearName,
-        })}
+        description={pageDescription}
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex gap-1">

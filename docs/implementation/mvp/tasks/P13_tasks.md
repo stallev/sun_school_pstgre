@@ -121,11 +121,11 @@
 
 Начинается после CU7.
 
-- [ ] P13-T9 · T3 · Spec: [screens §5.2–§5.4](../specs/families_and_parents_screens_spec.md) · AZ: AZ-60, AZ-61, AZ-62, AZ-64
+- [x] P13-T9 · T3 · Spec: [screens §5.2–§5.4](../specs/families_and_parents_screens_spec.md) · AZ: AZ-60, AZ-61, AZ-62, AZ-64
       Files: `/child`, `/child/data`, `/child/consent`, секция дайджеста, календарь для parent, словарь `parent`, оболочка пунктов меню
       Acceptance: совпадение с `vChild` (без блока голоса), `vChildData`, `vChildConsent`; без согласия данные ребёнка скрыты; дайджест на странице; календарь только чтение по группам своих детей; фраз про письмо нет
       Paths: H [успехи, согласие, дайджест, календарь] · N [нет согласия; пустой дайджест] · S [AZ-60…AZ-62, AZ-64, чужой ребёнок — 404]
-      UI-verify: `/child`, `/child/data`, `/child/consent`, `/calendar`; прототип — `vChild`, `vChildData`, `vChildConsent`; роль **parent**; viewport 390/`md`/`lg`; данные сида; расхождений 0, консоль чистая
+      UI-verify: браузер localhost — `/child`, `/child/data`, `/child/consent`, `/calendar`; прототип — `vChild`, `vChildData`, `vChildConsent`; роль **parent** (seed CU7 `--replace`, credentials env); viewport 390 / `md`768 / `lg`1024; foreign `?pupilId` (чужой ученик фикстуры) → notFound на `/child`, `/child/data`, `/child/consent`; расхождений 0, консоль чистая (только Next dev upgrade nudge)
 
 **CU DoD:** `typecheck` · `lint` · `test` · UI-verify
 
@@ -133,11 +133,11 @@
 
 Начинается после CU7.
 
-- [ ] P13-T10 · T3 · Spec: [screens §5.4](../specs/families_and_parents_screens_spec.md) · AZ: AZ-63
+- [x] P13-T10 · T3 · Spec: [screens §5.4](../specs/families_and_parents_screens_spec.md) · AZ: AZ-63
       Files: блок на карточке ученика, словарь `teacher.family`
       Acceptance: ФИО, тип и телефоны взрослых своего ученика; адреса и примечания нет; чужой ученик — 404; при выключенном флаге блока нет
       Paths: H [контакты своей группы] · N [ученик без семьи] · S [AZ-63, AZ-D4]
-      UI-verify: карточка ученика; роли **teacher** / **admin**; viewport 390/`md`/`lg`; данные сида; расхождений 0, консоль чистая
+      UI-verify: localhost `/analytics/pupils/[pupilId]` vs прототип `famContacts`; **teacher** — `c1` (18213d65…) N «Ребёнок без семьи…», `a2` seed (b5b55e28…) → 404 (нет карточки); **admin** — `a2` Card «Семья» + ссылка `/family?id=…`, взрослые ФИО·тип·телефоны; viewport 390 / `md`768 / `lg`1024; расхождений 0, консоль чистая (только Next dev upgrade nudge)
 
 **CU DoD:** `typecheck` · `lint` · `test` · UI-verify
 

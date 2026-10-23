@@ -17,6 +17,7 @@ export * from "./schemas/school-group";
 export * from "./schemas/grade-settings";
 export * from "./schemas/pupil";
 export * from "./schemas/consent";
+export * from "./schemas/update-own-adult-contacts";
 export * from "./schemas/enrollment";
 export * from "./schemas/app-settings";
 export * from "./schemas/deletion-requests";

@@ -89,6 +89,9 @@
       "audit": "Change log",
       "achievements": "Achievements and penalties",
       "family": "Families",
+      "child": "Child progress",
+      "childData": "Data and consents",
+      "childConsent": "Consent",
       "settings": "App settings",
       "profile": "Profile",
       "userProfile": "User profile"
@@ -114,6 +117,8 @@
       "year": "School year",
       "achievements": "Achievements and penalties",
       "family": "Families",
+      "child": "Child progress",
+      "child_data": "Data and consents",
       "settings": "Settings",
       "desc": {
         "lessons_all": "List, create and edit",
@@ -134,6 +139,7 @@
         "year": "Start and close",
         "achievements": "Catalogue and points",
         "family": "Families and contacts",
+        "child_data": "Contacts, consents, and deletion",
         "settings": "Interface language"
       },
       "groups": {

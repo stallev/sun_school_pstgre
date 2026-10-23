@@ -48,9 +48,10 @@ export const buildShellNav = async (
   ]);
   const stripKeys: string[] = [];
   if (!achievementsEnabled) stripKeys.push("achievements");
-  if (!parentsEnabled) stripKeys.push("family");
-  const resolved = resolveNavItems(shellRole, getLabel);
-  const navItems = stripKeys.length > 0 ? stripFeatureNavItems(resolved, stripKeys) : resolved;
+  if (!parentsEnabled) stripKeys.push("family", "child", "child-data");
+  let navItems = resolveNavItems(shellRole, getLabel);
+  if (stripKeys.length > 0) navItems = stripFeatureNavItems(navItems, stripKeys);
+  if (!parentsEnabled && shellRole === USER_ROLE.PARENT) navItems = [];
 
   const isAdmin = context.roles.includes(USER_ROLE.ADMIN);
   const showDevSwitcher = options.appEnv === "dev" && isAdmin;
