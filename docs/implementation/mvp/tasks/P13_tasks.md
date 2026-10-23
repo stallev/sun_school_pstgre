@@ -60,7 +60,7 @@
 
 ### P13-CU3 — feat(access): approve parent request · Review: reviewer · Commit: auto
 
-- [ ] P13-T3 · T3 · Contract: [families §6.2](../contracts/families_and_parents_contract.md) · Contract: [access §5.4](../contracts/access_requests_and_roles_contract.md) · AZ: AZ-59, AZ-P3
+- [x] P13-T3 · T3 · Contract: [families §6.2](../contracts/families_and_parents_contract.md) · Contract: [access §5.4](../contracts/access_requests_and_roles_contract.md) · AZ: AZ-59, AZ-P3
       Files: `approveParentRequest` рядом с `approveRequest`
       Acceptance: при флаге три способа связи (существующий взрослый, добавить в семью, создать семью); учётка `ACTIVE` с ролью `PARENT`; при выключенном флаге по-прежнему `ACCESS_ROLE_UNAVAILABLE` и семья не создаётся; «создать» для ребёнка, который уже в семье, недоступно
       Paths: H [одобрение создаёт семью] · N [ребёнок уже в семье; флаг выключен] · S [AZ-59, AZ-P3]

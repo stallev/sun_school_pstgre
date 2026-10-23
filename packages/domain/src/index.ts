@@ -1,4 +1,5 @@
 export * from "./constants/enums";
+export * from "./constants/parent-approval-link-mode";
 export * from "./constants/audit-action";
 export * from "./constants/mutation-error-codes";
 export * from "./account/can-transition-account";
@@ -10,6 +11,7 @@ export * from "./schemas/person-name";
 export * from "./schemas/registration";
 export * from "./schemas/update-own-name";
 export * from "./schemas/access-admin";
+export * from "./schemas/parent-approval";
 export * from "./schemas/school-year";
 export * from "./schemas/school-group";
 export * from "./schemas/grade-settings";

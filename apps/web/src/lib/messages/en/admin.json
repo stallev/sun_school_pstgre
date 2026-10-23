@@ -117,6 +117,8 @@
     "toast_rejected": "Request rejected",
     "already_decided": "This request has already been decided. Refresh the list.",
     "parent_unavailable": "Parent access is not available yet.",
+    "parent_link_required": "Choose how to link the parent to children.",
+    "parent_name_required": "Enter the applicant's name before approving as a parent.",
     "no_groups_warning": "Teacher approved without groups. Assign a group later.",
     "groups_invalid": "One or more groups are not part of the active school year.",
     "roles_required": "Select at least one role."

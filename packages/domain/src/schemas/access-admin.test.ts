@@ -15,12 +15,16 @@ const otherId = "33333333-3333-4333-8333-333333333333";
 const gradeId = "44444444-4444-4444-8444-444444444444";
 
 describe("parentRoleUnavailableIfRequested", () => {
-  it("returns ACCESS_ROLE_UNAVAILABLE when PARENT is requested", () => {
+  it("returns ACCESS_ROLE_UNAVAILABLE when PARENT is requested and flag is off", () => {
     expect(parentRoleUnavailableIfRequested([USER_ROLE.PARENT])).toEqual({
       ok: false,
       code: MUTATION_ERROR_CODES.ACCESS_ROLE_UNAVAILABLE,
       message: "admin.approvals.parent_unavailable",
     });
+  });
+
+  it("allows PARENT when features.parents is enabled", () => {
+    expect(parentRoleUnavailableIfRequested([USER_ROLE.PARENT], true)).toBeNull();
   });
 });
 
