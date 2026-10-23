@@ -81,6 +81,7 @@
 | `/deletions` | `deletions` | Запросы на удаление |
 | `/audit` | `audit` | Журнал изменений |
 | `/settings` | `settings` | Настройки приложения (язык интерфейса) |
+| `/achievements` | `achievements` | Каталог достижений и штрафов (admin). Только при `features.achievements = true`: пункт меню и страница; при выключенном флаге — 404 ([`achievements_screens_spec`](../implementation/mvp/specs/achievements_screens_spec.md), P12) |
 
 ### 4.5 Dev-only
 
@@ -92,7 +93,6 @@
 
 | Маршрут | Экран | Волна | Назначение |
 |---------|-------|-------|------------|
-| `/achievements` | `achievements` | 1 | Достижения и штрафы (admin). Реализует фаза P12 при `features.achievements = true`; до страницы строка остаётся здесь. Перенос в §4 — задача P12 |
 | `/child` | `child` | 2 | Успехи ребёнка (parent) |
 | `/child/data` | `childData` | 2 | Данные и согласия (parent) |
 | `/child/consent` | `childConsent` | 2 | Согласие по ребёнку (parent) |
@@ -146,3 +146,4 @@
 | 2026-10-10 | v1.0 — Canonical (W1-F5) |
 | 2026-10-19 | §4.2: query-параметры года для `/analytics`, `/analytics/pupils/[pupilId]` (P08); `/school` — `?year=`; новых путей нет |
 | 2026-10-22 | §5: `/achievements` помечен фазой P12; в §4 переносится, когда страница появится |
+| 2026-10-23 | §4.4: `/achievements` (admin, флаг `features.achievements`); удалён из §5 (P12-CU9) |

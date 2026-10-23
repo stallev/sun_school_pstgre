@@ -114,10 +114,12 @@
 
 ### P12-CU9 — docs(docs): sync P12 routes and record smoke · Review: diff-only · Commit: auto
 
-- [ ] P12-T9 · T0 · Spec: [canonical_routes §5](../../../design/canonical_routes.md) · Phase: [P12 DoD](../phases_tasks_descriptions/P12_phase_description.md)
+- [x] P12-T9 · T0 · Spec: [canonical_routes §5](../../../design/canonical_routes.md) · Phase: [P12 DoD](../phases_tasks_descriptions/P12_phase_description.md)
       Files: `docs/design/canonical_routes.md` (перенос `/achievements` в §4), `docs/implementation/mvp/README.md`, `AGENTS.md` и `.cursor/rules/project-context.mdc` (строка текущей фазы — только статус P12, без расширения scope), этот файл (отчёт smoke)
       Acceptance: маршрут `/achievements` описан в §4 с ролью admin и флагом; smoke H/N/S записан ниже; каталог сида не переписан; выдачи в prod-seed не появились
       Paths: n/a — docs-only
+
+**Smoke report (2026-10-23):** **H** — dev с `features.achievements=true`: admin `/achievements` (каталог, диалоги, пересчёт); teacher `/today`, `/group`, карточка ученика, `/bricks`, `/rating` — UI-verify CU7–CU8 (прототип, 390/`md`/`lg`), расхождений 0, консоль без error/unhandledrejection. **N** — флаг выкл: нет пункта меню, `/achievements` 404, блоков teacher нет; пустые секции, ошибки валидации и отказ use-case при выключенном режиме группы (тесты domain/DAL + Paths N CU7–CU8). **S** — AZ-52…AZ-57, AZ-D3/D4: teacher на `/achievements` — forbidden; чужой ученик — 404; мутации за policy своей группы; каталог — только `achievement-catalog.ts`, prod-seed без выдач/штрафов.
 
 **CU DoD:** `encoding:check` · `docs:links` · `typecheck` · `lint`
 
@@ -125,7 +127,7 @@
 
 - [ ] Все CU закоммичены; у CU2–CU8 trace `Review: …`; у CU7 и CU8 trace `UI-verify: …, расхождений 0, консоль чистая`
 - [ ] Phase DoD из [`P12_phase_description.md`](../phases_tasks_descriptions/P12_phase_description.md)
-- [ ] Docs sync — в CU9
+- [x] Docs sync — в CU9
 
 ---
 
