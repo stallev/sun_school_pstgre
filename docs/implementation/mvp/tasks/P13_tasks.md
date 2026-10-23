@@ -51,7 +51,7 @@
 
 ### P13-CU2 — feat(families): persist family edits · Review: reviewer · Commit: auto
 
-- [ ] P13-T2 · T3 · Contract: [families §6.1, §8, §9](../contracts/families_and_parents_contract.md) · AZ: AZ-58
+- [x] P13-T2 · T3 · Contract: [families §6.1, §8, §9](../contracts/families_and_parents_contract.md) · AZ: AZ-58
       Files: `apps/web/src/data/families/` (`upsertFamily`, взрослые, `attachPupil`, `transferPupil`, `mergeFamilies`), `packages/policy/server`
       Acceptance: запись в транзакции; журнал `family.upserted`, `family.adult_changed`, `family.pupil_transferred`, `family.merged` без ФИО и телефонов; чужой вызов не от admin — `FORBIDDEN`; при выключенном флаге `FAMILY_FLAG_OFF`
       Paths: H [создание, взрослый, ребёнок, перенос, объединение] · N [пустая семья, занятый тип, ребёнок уже в семье] · S [AZ-58, AZ-D4, INV-23]

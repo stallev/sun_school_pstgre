@@ -6,6 +6,11 @@ export {
   type CanSetGroupAchievementModeFacts,
 } from "./achievements-mutate";
 export {
+  canCreateFamily,
+  canMutateFamily,
+  type CanMutateFamilyFacts,
+} from "./family-mutate";
+export {
   canViewGroupYear,
   canViewPupilYears,
 } from "./analytics-year";
