@@ -49,3 +49,14 @@ export const revokeElectronicConsentInputSchema = z
   .strict();
 
 export type RevokeElectronicConsentInput = z.infer<typeof revokeElectronicConsentInputSchema>;
+
+export const createOwnChildDeletionRequestInputSchema = z
+  .object({
+    pupilId: z.uuid(),
+    reason: z.string().trim().max(500).optional(),
+  })
+  .strict();
+
+export type CreateOwnChildDeletionRequestInput = z.infer<
+  typeof createOwnChildDeletionRequestInputSchema
+>;

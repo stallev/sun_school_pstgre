@@ -78,7 +78,7 @@
 
 ### P13-CU5 — feat(deletion): let parent request child erasure · Review: reviewer · Commit: auto
 
-- [ ] P13-T5 · T3 · Contract: [families §6.4](../contracts/families_and_parents_contract.md) · Contract: [deletion §3](../contracts/deletion_requests_contract.md) · AZ: AZ-62
+- [x] P13-T5 · T3 · Contract: [families §6.4](../contracts/families_and_parents_contract.md) · Contract: [deletion §3](../contracts/deletion_requests_contract.md) · AZ: AZ-62
       Files: `createOwnChildDeletionRequest`, `cancelOwnChildDeletionRequest`
       Acceptance: родитель создаёт и отменяет открытый запрос своего ребёнка; второй открытый — `CONFLICT`; выполнение по-прежнему только admin; при выключенном флаге родительский путь закрыт, admin-путь MVP сохранён; другие взрослые семьи видят открытый запрос в данных экрана
       Paths: H [создание и отмена] · N [повтор, уже выполнен] · S [AZ-62, AZ-D4]

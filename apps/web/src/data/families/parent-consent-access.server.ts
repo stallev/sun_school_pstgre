@@ -88,3 +88,44 @@ export async function loadParentGuardianForPupil(
 
   return { ok: true, data: { organizationId, guardianAdultId: adult!.id } };
 }
+
+export type FamilyAdultPupilReadAccess = {
+  organizationId: string;
+  familyId: string;
+};
+
+/** families §6.4 — any family adult with an account may read pupil family screen data (AZ-62). */
+export async function loadFamilyAdultForPupilRead(
+  tx: Tx,
+  actorUserId: string,
+  pupilId: string,
+): Promise<MutationResult<FamilyAdultPupilReadAccess>> {
+  const flagError = await assertParentsFeatureOn(tx);
+  if (flagError) return flagError;
+
+  const user = await tx.appUser.findUnique({
+    where: { id: actorUserId },
+    select: { organizationId: true },
+  });
+  if (!user?.organizationId) {
+    return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+  }
+
+  const pupil = await tx.pupil.findFirst({
+    where: { id: pupilId, organizationId: user.organizationId },
+    select: { familyId: true },
+  });
+  if (!pupil?.familyId) {
+    return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+  }
+
+  const adult = await tx.familyAdult.findFirst({
+    where: { userId: actorUserId, familyId: pupil.familyId },
+    select: { id: true },
+  });
+  if (!adult) {
+    return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+  }
+
+  return { ok: true, data: { organizationId: user.organizationId, familyId: pupil.familyId } };
+}
