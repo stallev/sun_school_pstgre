@@ -77,6 +77,8 @@ export const AUDIT_ACTION = {
   FAMILY_ADULT_CHANGED: "family.adult_changed",
   FAMILY_PUPIL_TRANSFERRED: "family.pupil_transferred",
   FAMILY_MERGED: "family.merged",
+  CONSENT_GIVEN: "consent.given",
+  CONSENT_REVOKED: "consent.revoked",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 

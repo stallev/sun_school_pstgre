@@ -69,7 +69,7 @@
 
 ### P13-CU4 — feat(consent): add electronic child consent · Review: reviewer · Commit: auto
 
-- [ ] P13-T4 · T3 · Contract: [families §6.3](../contracts/families_and_parents_contract.md) · AZ: AZ-61
+- [x] P13-T4 · T3 · Contract: [families §6.3](../contracts/families_and_parents_contract.md) · AZ: AZ-61
       Files: `apps/web/src/data/families/give-electronic-consent.ts`, `revoke-electronic-consent.ts`
       Acceptance: согласие `ELECTRONIC` с `guardian_adult_id` и версией с сервера; пока его нет, данные ребёнка родителю не отдаются; отзыв непоследнего снимает доступ и оставляет данные; отзыв последнего при `confirmDeletion` создаёт запрос и не вызывает стирание; без подтверждения — `CONSENT_LAST_REQUIRES_DELETION`
       Paths: H [дать и отозвать] · N [флажок не отмечен; последнее согласие без подтверждения] · S [AZ-61, чужой ребёнок — `NOT_FOUND`]

@@ -11,6 +11,10 @@ export {
   type CanMutateFamilyFacts,
 } from "./family-mutate";
 export {
+  canMutateOwnChildConsent,
+  type CanMutateOwnChildConsentFacts,
+} from "./parent-consent";
+export {
   canViewGroupYear,
   canViewPupilYears,
 } from "./analytics-year";
