@@ -21,6 +21,7 @@ import {
   type VerseScoreInput,
 } from "@sunschool/domain";
 import { Prisma, writeAudit } from "@sunschool/db";
+import { maybeEvaluatePupilAchievements } from "../achievements/evaluate-pupil";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import {
   assertLessonActorForExisting,
@@ -1019,6 +1020,14 @@ export async function correctCheckInTransaction(
     actorUserId,
   );
 
+  await maybeEvaluatePupilAchievements(
+    tx,
+    actorUserId,
+    input.pupilId,
+    lesson.academicYearId,
+    lesson.gradeId,
+  );
+
   return {
     ok: true,
     data: {
@@ -1103,6 +1112,14 @@ export async function overrideVerseScoreInTransaction(
     lesson,
     input.pupilId,
     actorUserId,
+  );
+
+  await maybeEvaluatePupilAchievements(
+    tx,
+    actorUserId,
+    input.pupilId,
+    lesson.academicYearId,
+    lesson.gradeId,
   );
 
   return {

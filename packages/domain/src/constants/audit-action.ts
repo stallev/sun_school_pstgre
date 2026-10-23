@@ -65,6 +65,14 @@ export const AUDIT_ACTION = {
   DELETION_USER_ANONYMIZED: "deletion.user_anonymized",
   ANALYTICS_SNAPSHOT_CREATED: "analytics.snapshot_created",
   ANALYTICS_SNAPSHOT_VERSIONED: "analytics.snapshot_versioned",
+  ACHIEVEMENT_CATALOG_UPSERTED: "achievement.catalog_upserted",
+  ACHIEVEMENT_CATALOG_TOGGLED: "achievement.catalog_toggled",
+  ACHIEVEMENT_MODE_CHANGED: "achievement.mode_changed",
+  ACHIEVEMENT_EVALUATED: "achievement.evaluated",
+  ACHIEVEMENT_AWARDED: "achievement.awarded",
+  ACHIEVEMENT_REVOKED: "achievement.revoked",
+  PENALTY_ISSUED: "penalty.issued",
+  PENALTY_CANCELLED: "penalty.cancelled",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 
@@ -92,5 +100,8 @@ export const AUDIT_ENTITY_TYPE = {
   BRICK_LEDGER: "brick_ledger",
   DELETION_REQUEST: "deletion_request",
   ANALYTICS_SNAPSHOT: "analytics_snapshot",
+  ACHIEVEMENT_AWARD: "achievement_award",
+  ACHIEVEMENT: "achievement",
+  PENALTY: "penalty",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];

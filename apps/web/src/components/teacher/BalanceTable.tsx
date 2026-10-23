@@ -19,6 +19,8 @@ import { BalanceCards } from "@/components/teacher/BalanceCards";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
 import type { BrickLedgerEntryDto } from "@/data/bricks/bricks-shared.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import { BricksEarnedBonusLine } from "@/lib/achievements/format-bricks-bonus-line";
+import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +32,7 @@ type BalanceTableProps = {
   ledger: readonly BrickLedgerEntryDto[];
   defaultDate: string;
   messages: TeacherBricksMessages;
+  achievementMessages?: TeacherAchievementsMessages;
   dictionaries: Record<string, Dictionary>;
   formError: string;
 };
@@ -48,6 +51,7 @@ export const BalanceTable = ({
   ledger,
   defaultDate,
   messages,
+  achievementMessages,
   dictionaries,
   formError,
 }: BalanceTableProps) => {
@@ -71,6 +75,7 @@ export const BalanceTable = ({
         rows={rows}
         selectedPupilId={selectedPupilId}
         messages={messages}
+        achievementMessages={achievementMessages}
         onSelectPupil={selectPupil}
         onIssue={(pupilId) => openDialog("issue", pupilId)}
         onCompensate={(pupilId) => openDialog("compensate", pupilId)}
@@ -112,7 +117,16 @@ export const BalanceTable = ({
                       </StatusText>
                     ) : null}
                   </TableCell>
-                  <TableCell className="text-right font-bold tabular-nums">{row.earned}</TableCell>
+                  <TableCell className="text-right font-bold tabular-nums">
+                    <div>{row.earned}</div>
+                    {row.achievementsUiEnabled && achievementMessages ? (
+                      <BricksEarnedBonusLine
+                        bonus={row.achievementBonus}
+                        penalties={row.penaltiesTotal}
+                        messages={achievementMessages}
+                      />
+                    ) : null}
+                  </TableCell>
                   <TableCell className="text-right font-bold tabular-nums">{row.issued}</TableCell>
                   <TableCell
                     className={cn("text-right font-bold tabular-nums", row.balance < 0 && "text-danger")}

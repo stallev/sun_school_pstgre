@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { USER_ROLE } from "@sunschool/domain";
+import { TodayAchievementMarkSection } from "@/components/achievements/TodayAchievementMarkSection.server";
 import { TodayLessonCard } from "@/components/teacher/TodayLessonCard";
 import { TodayWeekSection } from "@/components/teacher/TodayWeekSection";
 import { EmptyState } from "@/components/patterns/EmptyState";
@@ -74,6 +75,7 @@ export const TodayPageContent = async () => {
             canMutate={data.canMutate}
             messages={messages}
           />
+          <TodayAchievementMarkSection gradeId={data.gradeId} academicYearId={data.yearId} />
         </div>
       ) : (
         <EmptyState

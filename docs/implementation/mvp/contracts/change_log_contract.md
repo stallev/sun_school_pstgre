@@ -6,7 +6,7 @@
 **Дата:** 2026-10-11  
 **Волна:** W8-07  
 **Зависит от:** [`monorepo_boundaries_contract.md`](./monorepo_boundaries_contract.md) §6, §9, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-08, AZ-P7), [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) INV-16, INV-22, INV-23, [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.6 (`audit_log`), R-6, §9, [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) (§3.16, БП-8, УД-10)  
-**Связанные документы:** [`access_requests_and_roles_contract.md`](./access_requests_and_roles_contract.md), [`school_year_and_groups_contract.md`](./school_year_and_groups_contract.md), [`homework_check_contract.md`](./homework_check_contract.md), [`bricks_ledger_contract.md`](./bricks_ledger_contract.md), [`deletion_requests_contract.md`](./deletion_requests_contract.md), [`bible_seed_contract.md`](./bible_seed_contract.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
+**Связанные документы:** [`access_requests_and_roles_contract.md`](./access_requests_and_roles_contract.md), [`school_year_and_groups_contract.md`](./school_year_and_groups_contract.md), [`homework_check_contract.md`](./homework_check_contract.md), [`bricks_ledger_contract.md`](./bricks_ledger_contract.md), [`deletion_requests_contract.md`](./deletion_requests_contract.md), [`bible_seed_contract.md`](./bible_seed_contract.md), [`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
 **Проверено по:** бизнес-правила — спецификация (БП-8, §3.16, УД-10); библиотеки не затрагиваются. Context7 недоступен.
 
 ---
@@ -83,6 +83,11 @@
 | `migration.run` | запуск импорта владельца (необязательно: пишет скрипт владельца, если подключён к `writeAudit`); счётчики в `new_value` | `seed` | P07, ADR-011 |
 | `school.legacy_deadline_extended` | продлён общий срок переходного периода согласий | `app_setting` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
 | `school.legacy_pupil_imported` | ребёнок перенесён с `LEGACY_PENDING` (необязательно: запись импорта владельца, `SYSTEM`) | `child_data_consent` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
+| `achievement.catalog_upserted` / `achievement.catalog_toggled` | каталог создан, изменён или включён | `achievement` | achievements_and_penalties_contract §6.1 |
+| `achievement.mode_changed` | режим группы включён или выключен | `grade_settings` | achievements_and_penalties_contract §6.3 |
+| `achievement.evaluated` | автопересчёт записал новые выдачи (id выдач, без ФИО) | `achievement_award` | achievements_and_penalties_contract §6.2 |
+| `achievement.awarded` / `achievement.revoked` | ручная выдача / отзыв | `achievement_award` | achievements_and_penalties_contract §6.4 |
+| `penalty.issued` / `penalty.cancelled` | штраф выдан / снят | `penalty` | achievements_and_penalties_contract §6.5 |
 
 ## 5. Правила записи
 
@@ -174,6 +179,7 @@
 | [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) | AZ-08, AZ-P7 |
 | [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) | `audit_log`, R-6 |
 | [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) | INV-16, INV-23 |
+| [`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) | Action-коды волны 1 |
 
 **Registry:** [`documentation_creation_registry.md`](../../../meta/documentation_creation_registry.md) — wave W8-07
 
@@ -192,3 +198,4 @@
 | 2026-10-17 | v1.1 — P03: реестр §4 сверен с `AUDIT_ACTION` (`lesson.*`, `calendar.*`, `bible.*`) |
 | 2026-10-18 | v1.2 — §11: привилегированное изменение `audit_log` / `brick_ledger` через `packages/db/src/deletion` (P06) |
 | 2026-10-19 | v1.3 — §4: `analytics.snapshot_created`, `analytics.snapshot_versioned`, сущность `analytics_snapshot` (P08) |
+| 2026-10-22 | v1.4 — §4: action-коды достижений и штрафов (P12) |

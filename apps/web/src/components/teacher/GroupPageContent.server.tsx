@@ -7,6 +7,7 @@ import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { ErrorState } from "@/components/patterns/ErrorState";
 import { PageHeader } from "@/components/patterns/PageHeader";
+import { GroupAchievementModeSection } from "@/components/achievements/GroupAchievementModeSection.server";
 import { RosterTable } from "@/components/teacher/RosterTable";
 import { loadGroupYearSummaryPage } from "@/data/school/load-group-year-summary.server";
 import { isoTodayUtc } from "@/data/school/school-pupil-shared.server";
@@ -89,6 +90,13 @@ export const GroupPageContent = async ({ searchParams }: GroupPageProps) => {
           count: data.pupils.length,
         })}
       />
+      {yearTotals ? (
+        <GroupAchievementModeSection
+          gradeId={data.gradeId}
+          academicYearId={yearTotals.selectedYearId}
+          canMutate={canMutate}
+        />
+      ) : null}
       {data.yearClosed ? (
         <Banner tone="warning" title={messages.yearClosedTitle}>
           <p>{messages.yearClosedDescription}</p>

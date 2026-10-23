@@ -25,6 +25,7 @@ const SHELL_SCREEN_TITLE_KEYS: ShellScreenTitleKey[] = [
   "groupEdit",
   "year",
   "audit",
+  "achievements",
   "settings",
   "profile",
   "userProfile",

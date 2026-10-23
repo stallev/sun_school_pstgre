@@ -2,11 +2,13 @@ import "server-only";
 
 import {
   AUDIT_ACTION,
-  computeBalance,
+  buildBricksBalanceSnapshot,
   MUTATION_ERROR_CODES,
+  PENALTY_STATUS,
   type BricksBalanceSnapshot,
   type MutationErr,
 } from "@sunschool/domain";
+import { readFeaturesAchievementsEnabled } from "../achievements/achievement-feature.server";
 import type { Prisma } from "@sunschool/db";
 import { isMutationErr, userHasAdminRole } from "../access/access-admin-guards.server";
 import { calendarDateFromIso, isoFromCalendarDate } from "../school/calendar-date";
@@ -34,7 +36,21 @@ export async function loadBricksEarnedAndIssued(
   pupilId: string,
   yearId: string,
 ): Promise<{ earned: number; issued: number }> {
-  const [earnedRow, issuedRow] = await Promise.all([
+  const components = await loadBricksBalanceComponents(tx, pupilId, yearId);
+  return { earned: components.checkPoints, issued: components.issued };
+}
+
+export async function loadBricksBalanceComponents(
+  tx: Tx,
+  pupilId: string,
+  yearId: string,
+): Promise<{
+  checkPoints: number;
+  achievementBonus: number;
+  penaltiesTotal: number;
+  issued: number;
+}> {
+  const [checkRow, issuedRow, bonusRow, penaltyRows] = await Promise.all([
     tx.homeworkCheck.aggregate({
       where: {
         pupilId,
@@ -48,9 +64,26 @@ export async function loadBricksEarnedAndIssued(
       where: { pupilId, academicYearId: yearId },
       _sum: { quantity: true },
     }),
+    tx.achievementAward.aggregate({
+      where: { pupilId, academicYearId: yearId, revokedAt: null },
+      _sum: { points: true },
+    }),
+    tx.penalty.findMany({
+      where: {
+        pupilId,
+        status: PENALTY_STATUS.ACTIVE,
+        lesson: { academicYearId: yearId },
+      },
+      select: { points: true },
+    }),
   ]);
+
+  const penaltiesTotal = penaltyRows.reduce((sum, row) => sum + Math.abs(row.points), 0);
+
   return {
-    earned: earnedRow._sum.pointsTotal ?? 0,
+    checkPoints: checkRow._sum.pointsTotal ?? 0,
+    achievementBonus: bonusRow._sum.points ?? 0,
+    penaltiesTotal,
     issued: issuedRow._sum.quantity ?? 0,
   };
 }
@@ -60,8 +93,9 @@ export async function loadBricksBalanceInTransaction(
   pupilId: string,
   yearId: string,
 ): Promise<BricksBalanceSnapshot> {
-  const totals = await loadBricksEarnedAndIssued(tx, pupilId, yearId);
-  return computeBalance(totals.earned, totals.issued);
+  const achievementsEnabled = await readFeaturesAchievementsEnabled(tx);
+  const components = await loadBricksBalanceComponents(tx, pupilId, yearId);
+  return buildBricksBalanceSnapshot(components, achievementsEnabled);
 }
 
 export async function assertBricksReadAccess(

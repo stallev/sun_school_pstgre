@@ -13,6 +13,7 @@ import {
   type MutationResult,
 } from "@sunschool/domain";
 import { writeAudit, type Prisma, type PrismaClient } from "@sunschool/db";
+import { readFeaturesAchievementsEnabled } from "../achievements/achievement-feature.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import {
   assertActiveGroupNameAvailable,
@@ -70,6 +71,7 @@ export async function createGroupInTransaction(
 
   const year = await resolveAcademicYearForNewGroupSettings(tx, organizationId);
   if (year) {
+    const achievementsEnabled = await readFeaturesAchievementsEnabled(tx);
     await tx.gradeSettings.create({
       data: {
         gradeId: grade.id,
@@ -78,6 +80,7 @@ export async function createGroupInTransaction(
         labels: {},
         weights: defaultGradeScoreWeights(),
         recitationDaysN: DEFAULT_RECITATION_DAYS_N,
+        achievementsEnabled,
       },
     });
   }

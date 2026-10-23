@@ -12,6 +12,7 @@ import { AnalyticsPeriodFilter } from "@/components/analytics/AnalyticsPeriodFil
 import { AnalyticsRetryButton } from "@/components/analytics/AnalyticsRetryButton.client";
 import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
 import { DynamicsBlock } from "@/components/analytics/DynamicsBlock";
+import { PupilAchievementPanel } from "@/components/achievements/PupilAchievementPanel.server";
 import { PupilAnalyticsKpiSection } from "@/components/analytics/PupilAnalyticsKpiSection";
 import { PupilLessonTable } from "@/components/analytics/PupilLessonTable";
 import { PupilPresenceStrip } from "@/components/analytics/PupilPresenceStrip";
@@ -266,6 +267,13 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
           <div className="mb-6">
             <PupilAnalyticsKpiSection view={view} messages={messages} />
           </div>
+          <PupilAchievementPanel
+            actorUserId={actor.userId}
+            pupilId={pupilId}
+            gradeId={data.gradeId}
+            academicYearId={data.yearId}
+            yearClosed={selectedYearRow?.status === ACADEMIC_YEAR_STATUS.CLOSED}
+          />
           <div className="mb-4">
             <DynamicsBlock dynamics={view.dynamics} messages={messages} locale={appLocale} />
           </div>

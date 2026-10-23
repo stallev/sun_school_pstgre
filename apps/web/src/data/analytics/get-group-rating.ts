@@ -21,6 +21,9 @@ export type RatingTableRow = {
   displayName: string;
   metric: number;
   place: number;
+  achievementBonus?: number;
+  awardsCount?: number;
+  penaltiesCount?: number;
 };
 
 export type GroupRatingSnapshot = {

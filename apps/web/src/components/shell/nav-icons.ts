@@ -13,6 +13,7 @@ import {
   SchoolIcon,
   ScrollTextIcon,
   ShieldIcon,
+  TrophyIcon,
   UserIcon,
   UsersIcon,
   type LucideIcon,
@@ -40,6 +41,7 @@ const NAV_ICON_BY_KEY: Record<string, LucideIcon> = {
   study: LayoutGridIcon,
   groups: LayoutGridIcon,
   year: CalendarIcon,
+  achievements: TrophyIcon,
   settings: GlobeIcon,
 };
 

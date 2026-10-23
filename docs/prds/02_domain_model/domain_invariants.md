@@ -106,7 +106,7 @@
 |----|------|-------------|-------------|
 | **PKG-01** | `@sunschool/domain` — чистые правила: без Next, Prisma, `process.env` | ESLint boundaries | `npm run lint` |
 | **PKG-02** | `@sunschool/policy-server` не импортируется в `proxy.ts`; `proxy.ts` использует только `policy-edge` и `auth.config.ts` | ESLint boundaries | review + lint |
-| **PKG-03** | Таблицы и код post-MVP не являются зависимостью MVP; MVP-таблицы ссылаются на post-MVP только `NULL`-able (С-1, С-2) | схема | сверка FK при изменении схемы |
+| **PKG-03** | Семьи, голосовые попытки и роль `parent` не являются зависимостью MVP и волны 1. Код P12 может читать и писать таблицы достижений и штрафов только за флагом `features.achievements` ([ADR-012](../07_governance/adr_012_achievements_and_penalties.md)). MVP-таблицы ссылаются на post-MVP только `NULL`-able (С-1, С-2) | схема, review | сверка FK; grep волны 1 на `family` и `recitation_attempt` |
 
 ### 4.10 Аналитика по учебным годам
 
@@ -163,3 +163,4 @@
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W3-04) |
 | 2026-10-19 | §4.10: INV-26 (снимок итогов закрытого года), INV-27 (пороги достоверности сравнения) — P08 |
+| 2026-10-22 | PKG-03: код P12 допущен к таблицам достижений и штрафов; семьи и голос по-прежнему запрещены |

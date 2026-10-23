@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { StatusText } from "@/components/ui/status-text";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
+import { BricksEarnedBonusLine } from "@/lib/achievements/format-bricks-bonus-line";
+import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +11,7 @@ type BalanceCardsProps = {
   rows: readonly BricksBalanceRow[];
   selectedPupilId: string | null;
   messages: TeacherBricksMessages;
+  achievementMessages?: TeacherAchievementsMessages;
   onSelectPupil: (pupilId: string) => void;
   onIssue: (pupilId: string) => void;
   onCompensate: (pupilId: string) => void;
@@ -18,6 +21,7 @@ export const BalanceCards = ({
   rows,
   selectedPupilId,
   messages,
+  achievementMessages,
   onSelectPupil,
   onIssue,
   onCompensate,
@@ -40,7 +44,6 @@ export const BalanceCards = ({
               {row.displayName}
             </button>
           }
-          note={row.needsAttention ? <StatusText tone="warn">{messages.needsAttention}</StatusText> : undefined}
           fields={[
             { label: messages.columnEarned, value: <span className="font-bold tabular-nums">{row.earned}</span> },
             { label: messages.columnIssued, value: <span className="font-bold tabular-nums">{row.issued}</span> },
@@ -53,6 +56,20 @@ export const BalanceCards = ({
               ),
             },
           ]}
+          note={
+            <>
+              {row.needsAttention ? (
+                <StatusText tone="warn">{messages.needsAttention}</StatusText>
+              ) : null}
+              {row.achievementsUiEnabled && achievementMessages ? (
+                <BricksEarnedBonusLine
+                  bonus={row.achievementBonus}
+                  penalties={row.penaltiesTotal}
+                  messages={achievementMessages}
+                />
+              ) : null}
+            </>
+          }
           actions={
             <>
               <Button type="button" size="sm" className="min-h-11" onClick={() => onIssue(row.pupilId)}>

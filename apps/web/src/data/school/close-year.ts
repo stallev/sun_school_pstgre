@@ -16,6 +16,7 @@ import {
   type CreateYearSnapshotsResult,
 } from "../analytics/years/create-year-snapshots";
 import { revalidateYearSnapshotCaches } from "../analytics/years/revalidate-year-snapshot-cache";
+import { evaluateAchievementsForYearClose } from "../achievements/evaluate-pupil";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadAcademicYearForOrganization, lockAcademicYearRow } from "./school-year-guards.server";
@@ -55,6 +56,8 @@ export async function closeYearInTransaction(
   });
 
   const snapshotCache = await createYearSnapshotsOnClose(tx, loaded.id, actorUserId);
+
+  await evaluateAchievementsForYearClose(tx, actorUserId, organizationId, loaded.id);
 
   await writeAudit(tx, {
     actorUserId,

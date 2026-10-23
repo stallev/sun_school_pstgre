@@ -13,6 +13,7 @@ import { ShapeMotion } from "@/components/design-lab/ShapeMotion";
 import { TableMatrix } from "@/components/design-lab/TableMatrix";
 import { TypeScale } from "@/components/design-lab/TypeScale";
 import { WidthFrame } from "@/components/design-lab/WidthFrame";
+import { AchievementsCatalogLab } from "@/components/design-lab/AchievementsCatalogLab";
 import { AnalyticsYearsLab } from "@/components/design-lab/AnalyticsYearsLab";
 import { Heading } from "@/components/atoms/Heading";
 import { ContentText } from "@/components/atoms/ContentText";
@@ -31,6 +32,7 @@ const ANCHORS = [
   { id: "patterns", label: "Patterns" },
   { id: "shell", label: "Shell" },
   { id: "analytics-years", label: "Analytics years" },
+  { id: "achievements-catalog", label: "Achievements catalog" },
 ] as const;
 
 const DesignSystemPage = () => (
@@ -93,6 +95,16 @@ const DesignSystemPage = () => (
       >
         <WidthFrame>
           <AnalyticsYearsLab />
+        </WidthFrame>
+      </LabSection>
+
+      <LabSection
+        id="achievements-catalog"
+        title="L3 · Achievements catalog"
+        hint="vAchievements, achDialog, penCatDialog — achievements_screens §4"
+      >
+        <WidthFrame>
+          <AchievementsCatalogLab />
         </WidthFrame>
       </LabSection>
     </main>

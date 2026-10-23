@@ -183,6 +183,12 @@ const ADMIN_NAV: NavEntryDef[] = [
         href: "/calendar",
       },
       {
+        key: "achievements",
+        messageKey: "shell.nav.achievements",
+        descriptionMessageKey: "shell.nav.desc.achievements",
+        href: "/achievements",
+      },
+      {
         key: "verses",
         messageKey: "shell.nav.verses",
         descriptionMessageKey: "shell.nav.desc.verses",
@@ -223,6 +229,7 @@ export const NAV_PATH_PATTERNS: ReadonlyArray<{ pattern: RegExp; navKey: string 
   { pattern: /^\/people$/, navKey: "people" },
   { pattern: /^\/deletions$/, navKey: "deletions" },
   { pattern: /^\/audit$/, navKey: "audit" },
+  { pattern: /^\/achievements$/, navKey: "achievements" },
   { pattern: /^\/groups(\/|$)/, navKey: "groups" },
   { pattern: /^\/year$/, navKey: "year" },
   { pattern: /^\/settings$/, navKey: "settings" },
