@@ -79,6 +79,7 @@ export const AUDIT_ACTION = {
   FAMILY_MERGED: "family.merged",
   CONSENT_GIVEN: "consent.given",
   CONSENT_REVOKED: "consent.revoked",
+  DIGEST_RECORDED: "digest.recorded",
 } as const;
 export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
 
@@ -111,5 +112,6 @@ export const AUDIT_ENTITY_TYPE = {
   PENALTY: "penalty",
   FAMILY: "family",
   FAMILY_ADULT: "family_adult",
+  WEEKLY_DIGEST: "weekly_digest",
 } as const;
 export type AuditEntityType = (typeof AUDIT_ENTITY_TYPE)[keyof typeof AUDIT_ENTITY_TYPE];

@@ -11,6 +11,10 @@ export {
   type CanMutateFamilyFacts,
 } from "./family-mutate";
 export {
+  canListFamilyContacts,
+  type CanListFamilyContactsFacts,
+} from "./family-contacts";
+export {
   canMutateOwnChildConsent,
   type CanMutateOwnChildConsentFacts,
 } from "./parent-consent";

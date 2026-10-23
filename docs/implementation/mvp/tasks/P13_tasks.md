@@ -87,7 +87,7 @@
 
 ### P13-CU6 — feat(families): show contacts and record digest · Review: reviewer · Commit: auto
 
-- [ ] P13-T6 · T3 · Contract: [families §6.5–§6.6](../contracts/families_and_parents_contract.md) · ADR: [ADR-013 §4 п. 6](../../../prds/07_governance/adr_013_families_and_parents.md) · AZ: AZ-63, AZ-64
+- [x] P13-T6 · T3 · Contract: [families §6.5–§6.6](../contracts/families_and_parents_contract.md) · ADR: [ADR-013 §4 п. 6](../../../prds/07_governance/adr_013_families_and_parents.md) · AZ: AZ-63, AZ-64
       Files: `listFamilyContacts`, `ensureWeeklyDigest`; уникальность `(user_id, period_start)`, если её нет в схеме
       Acceptance: учитель получает ФИО, тип и телефоны учеников своей группы и не получает адрес, примечание и email; admin на странице семьи адрес видит; дайджест один на неделю, `sent_at` пуст, почта не вызывается; повтор — чтение той же строки
       Paths: H [контакты и первая строка недели] · N [повтор недели; чужая группа] · S [AZ-63, AZ-64, INV-23, INV-25]

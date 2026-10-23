@@ -67,5 +67,8 @@ export * from "./achievements/award-key";
 export * from "./achievements/evaluate";
 export * from "./families/family-rules";
 export * from "./families/consent-revoke";
+export * from "./families/calendar-week-period";
+export * from "./families/weekly-digest-payload";
+export * from "./families/family-contact-view";
 export type { MutationOk, MutationErr, MutationResult } from "./types/mutation-result";
 export type { Clock, IdGenerator } from "./types/ports";
