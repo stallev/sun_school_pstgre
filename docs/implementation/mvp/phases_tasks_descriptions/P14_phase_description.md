@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** документы готовы (ADR-014, UX-03 v2.0, UX-02 v2.0, `redesign_v2_ui_spec`, `prototype_class_parity_spec`, аудит); прототип обновлён; код не начат (2026-10-24).  
+**Прогресс фазы:** реализована (CU1…CU10, 2026-10-24); повторный замер §5.1 — [`ui_redesign_audit_2026-10-24.md`](../audits/ui_redesign_audit_2026-10-24.md) §5; smoke — [`P14_tasks.md`](../tasks/P14_tasks.md) CU10.  
 **Версия:** 1.0  
 **Дата:** 2026-10-24  
 **Волна:** W12-04  
@@ -187,11 +187,11 @@ flowchart TD
 ## Definition of done
 
 - [ ] Все CU закоммичены; у CU1…CU9 trace `Review: …`; у UI-CU (CU2…CU8) trace `UI-verify: …, расхождений 0, консоль чистая` и `Parity: …, расхождений 0`
-- [ ] CU1 выполнен раньше CU2…CU10; CU3 раньше CU5, CU6, CU7, CU8
-- [ ] `typecheck` · `lint` · `test` · `rules:check` · `deps:check` зелёные
-- [ ] Замер §5.1 по 13 экранам: `html: "18px"`, `smallText: []`, `mainOutline: "none"`, `nativeControls: 0`
-- [ ] Повторный замер записан в [`ui_redesign_audit_2026-10-24.md`](../audits/ui_redesign_audit_2026-10-24.md) §5
-- [ ] Docs sync (CU10): индексы, `prototype_route_mapping.md`, строки статуса
+- [x] CU1 выполнен раньше CU2…CU10; CU3 раньше CU5, CU6, CU7, CU8
+- [x] `typecheck` · `lint` · `test` · `rules:check` · `deps:check` зелёные
+- [x] Замер §5.1 по 13 экранам: `html: "18px"`, `smallText: []`, `mainOutline: "none"`, `nativeControls: 0`
+- [x] Повторный замер записан в [`ui_redesign_audit_2026-10-24.md`](../audits/ui_redesign_audit_2026-10-24.md) §5
+- [x] Docs sync (CU10): индексы, `prototype_route_mapping.md`, строки статуса
 
 ---
 
@@ -222,3 +222,4 @@ flowchart TD
 | Date | Change |
 |------|--------|
 | 2026-10-24 | v1.0 — Canonical (W12-04): документы и прототип готовы; код не начат |
+| 2026-10-24 | v1.1 — фаза реализована; аудит §5, docs sync CU10 |

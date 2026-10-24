@@ -80,16 +80,36 @@
 
 ## 5. Повторный замер (после P14)
 
-Скрипт — [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md) §5.1. Результат записывается в P14-CU10 в таблицу ниже.
+Скрипт — [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md) §5.1. Замер на localhost после CU1…CU9 (admin и teacher, выборочно 390 / 768 / 1024 / 1280), 2026-10-24.
 
 | Показатель | До (2026-10-24) | После |
 |------------|-----------------|-------|
-| `html` font-size | 17 px | _заполняется в P14-CU10_ |
-| Доля узлов в `main` < 15.7 px | ~70% (ниже 17 px) | _—_ |
-| Нативные контролы | 19 select / 8 checkbox / 15 date | _—_ |
-| Число ширин контента | 4 | _—_ |
-| Высоты контролов | 38, 43, 47 | _—_ |
-| Рамка `main` | есть | _—_ |
+| `html` font-size | 17 px | 18 px |
+| Доля узлов в `main` < 15.7 px | ~70% (ниже 17 px) | 0% (`smallText: []` на всех 13 экранах) |
+| Нативные контролы | 19 select / 8 checkbox / 15 date | 0 (`nativeControls: 0`) |
+| Число ширин контента | 4 | 3 (`PageSection`: `full`, `wide`, `form`) |
+| Высоты контролов | 38, 43, 47 | 41, 45, 50 (D-9, `controlHeights ⊂ {41,45,50}`) |
+| Рамка `main` | есть | нет (`mainOutline: none`) |
+
+### 5.1 По экранам (§5.1 redesign spec)
+
+Экраны — [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md) §5. На каждом: `html: "18px"`, `body` → `"Source Sans 3"`, `mainOutline: "none"`, `nativeControls: 0`, `smallText: []`, `controlHeights` из множества {41, 45, 50}.
+
+| Экран | Роль | Ширина (px) | `controlHeights` (уник.) |
+|-------|------|-------------|-------------------------|
+| `/groups` | admin | 1280 | 41, 45, 50 |
+| `/groups/[id]` | admin | 1280 | 41, 45, 50 |
+| `/analytics` | admin | 1280 | 41, 45, 50 |
+| `/analytics/pupils/[id]` | admin | 1280 | 41, 45 |
+| `/rating` | admin, teacher | 1280 | 41, 45, 50 |
+| `/school` | admin | 1280 | 41, 45 |
+| `/users` | admin | 1280 | 41, 45, 50 |
+| `/year` | admin | 1280 | 41, 45, 50 |
+| `/calendar` | teacher | 1280 | 41, 45, 50 |
+| `/achievements` | admin | 1280 | 41, 45, 50 |
+| `/verses` | teacher | 1280 | 41, 45 |
+| `/settings` | admin, teacher | 1280 | 41, 45, 50 |
+| `/profile` | admin, teacher | 1280 | 41, 45 |
 
 ## 6. Related documents
 
@@ -103,3 +123,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-24 | v1.0 — Canonical (W12-03): замеры и находки F-01…F-17 |
+| 2026-10-24 | v1.1 — §5–§5.1: повторный замер после P14-CU10 |

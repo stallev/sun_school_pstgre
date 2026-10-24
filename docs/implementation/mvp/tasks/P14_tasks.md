@@ -150,21 +150,21 @@ Tier T3 по триггеру S: переключатель роли (ОК-5) п
 
 ### P14-CU10 — docs(docs): sync p14 contracts and record measurements · Review: diff-only · Commit: auto
 
-- [ ] P14-T11 · T0 · Spec: [redesign §5](../../../design/redesign_v2_ui_spec.md) · Audit: [ui_redesign_audit §5](../audits/ui_redesign_audit_2026-10-24.md) · Registry: [wave W12](../../../meta/documentation_creation_registry.md)
+- [x] P14-T11 · T0 · Spec: [redesign §5](../../../design/redesign_v2_ui_spec.md) · Audit: [ui_redesign_audit §5](../audits/ui_redesign_audit_2026-10-24.md) · Registry: [wave W12](../../../meta/documentation_creation_registry.md)
       Files: `docs/implementation/mvp/audits/ui_redesign_audit_2026-10-24.md`, `docs/implementation/mvp/README.md`, `docs/implementation/mvp/tasks/P14_tasks.md`, `docs/implementation/mvp/phases_tasks_descriptions/P14_phase_description.md`, `docs/design/prototype_route_mapping.md`, `docs/prds/architecture_master_index.md`, `AGENTS.md`, `.cursor/rules/project-context.mdc`, `.claude/rules/project-context.md`
       Acceptance: повторный замер §5.1 по 13 экранам записан в таблицу аудита §5 (`html: 18px`, `smallText: []`, `mainOutline: none`, `nativeControls: 0`, высоты контролов из D-9, число ширин контента 3: `full`, `wide`, `form`); `grep -rnE "top-nav|shellTopNavTriggerClass|<select|type=\"(checkbox|date)\"|Alegreya_Sans" apps/web/src` пуст; строки статуса фазы обновлены (P14 завершена); smoke H/N/S записан ниже; `.claude/rules/project-context.md` получен через `npm run rules:sync`, не вручную
       Paths: n/a — docs-only
 
-**Smoke report:** заполняется при закрытии фазы (H — admin на 1280, teacher на 390; N — неверная дата, пустой список, JS отключён; S — prod-бандл без `dev-role-switcher`, пункт, недоступный роли, не в DOM).
+**Smoke report (2026-10-24):** **H** — localhost: admin 1280 px — сайдбар `w-64`, контент ≤1400 px влево; teacher 390 px — drawer, без горизонтальной прокрутки; `/groups/[id]` — `Select` и чекбоксы каталога; `/year` — `DateField`, «Закрыть год» контурная `destructive`; `/rating` — места одним кеглем; `/analytics` — чипы `cobalt-soft`; UI-verify CU2…CU8, §5.1 на 13 экранах (аудит §5.1), расхождений 0, консоль без error/unhandledrejection (dev pg SSL warning). **N** — `DateField` `31.02.2027` — `aria-invalid`, значение сохранено; пустые списки — disabled `Select` + подсказка; `grep` нативных контролов пуст; фокус `main` без рамки, Tab — `:focus-visible` на кнопках. **S** — prod-сборка: строка `dev-role-switcher` отсутствует (CU4); «Смотреть как» только `APP_ENV=dev`; пункт недоступной роли не в DOM (UX-02 §8); серверные права без изменений.
 
 **CU DoD:** `encoding:check` · `docs:links` · `typecheck` · `lint` · `rules:check`
 
 ## Verification (phase)
 
 - [ ] Все CU закоммичены; у CU1…CU9 trace `Review: …`; у CU2…CU8 trace `UI-verify: …, расхождений 0, консоль чистая` и `Parity: …, расхождений 0`
-- [ ] CU1 раньше остальных; CU3 раньше CU5…CU8
+- [x] CU1 раньше остальных; CU3 раньше CU5…CU8
 - [ ] Phase DoD из [`P14_phase_description.md`](../phases_tasks_descriptions/P14_phase_description.md)
-- [ ] Docs sync — в CU10
+- [x] Docs sync — в CU10
 
 ---
 
@@ -182,3 +182,4 @@ Tier T3 по триггеру S: переключатель роли (ОК-5) п
 | Date | Change |
 |------|--------|
 | 2026-10-24 | v1.0 — Canonical (W12-05): CU1–CU10; CU3 (примитивы) раньше экранных CU; UI-verify и Parity для CU2…CU8 |
+| 2026-10-24 | v1.1 — P14-T11 (CU10): docs sync, аудит §5, smoke H/N/S |
