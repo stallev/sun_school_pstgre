@@ -91,13 +91,15 @@ export const TYPE_SCALE = [
   { role: "Login hero (h1)", classes: "font-display text-[2.25rem] font-medium leading-[1.05] tracking-[-0.015em]", spec: "36 px", sample: "Вход" },
   { role: "Large number (score)", classes: "font-display text-3xl tabular-nums", spec: "30 px", sample: "128" },
   { role: "KPI tile number", classes: "font-display text-2xl tabular-nums", spec: "24 px", sample: "7.4" },
-  { role: "Body", classes: "text-base", spec: "17 px", sample: "Ученик сдал работу вовремя." },
-  { role: "Caption", classes: "text-sm text-muted", spec: "~15 px", sample: "Группа «Ковчег», 12 ноября" },
-  { role: "Button", classes: "text-[0.9375rem] font-medium", spec: "16 px", sample: "Сохранить" },
+  { role: "Body", classes: "text-base", spec: "18 px", sample: "Ученик сдал работу вовремя." },
+  { role: "Caption", classes: "text-sm text-muted", spec: "15.75 px", sample: "Группа «Ковчег», 12 ноября" },
+  { role: "Button", classes: "text-base font-medium", spec: "18 px", sample: "Сохранить" },
 ] as const;
 
 export const SHAPES = [
-  { name: "Field / button", classes: "rounded-lg h-10", spec: "rounded-lg · h-10" },
+  { name: "Field / button (default)", classes: "rounded-lg h-10", spec: "rounded-lg · h-10 (45 px)" },
+  { name: "Compact control (tables)", classes: "rounded-lg h-9", spec: "rounded-lg · h-9 (40.5 px)" },
+  { name: "Touch primary", classes: "rounded-lg h-11", spec: "rounded-lg · h-11 (49.5 px)" },
   { name: "Card", classes: "rounded-xl border border-line bg-surface", spec: "rounded-xl · border line · no shadow" },
   { name: "Bottom sheet", classes: "rounded-t-2xl", spec: "rounded-t-2xl · max-h-[92dvh]" },
   { name: "Floating panel", classes: "rounded-xl border border-line bg-surface shadow-float", spec: "border + single shadow" },

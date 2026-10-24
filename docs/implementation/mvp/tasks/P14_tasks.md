@@ -43,12 +43,12 @@
 
 ### P14-CU1 — chore(config): add source sans 3 and 18px base tokens · Review: reviewer · Commit: auto
 
-- [ ] P14-T1 · T1 · Spec: [redesign §3.1](../../../design/redesign_v2_ui_spec.md) · ADR: [ADR-014 R-1, R-2, R-6, R-9](../../../prds/07_governance/adr_014_app_redesign_v2.md)
+- [x] P14-T1 · T1 · Spec: [redesign §3.1](../../../design/redesign_v2_ui_spec.md) · ADR: [ADR-014 R-1, R-2, R-6, R-9](../../../prds/07_governance/adr_014_app_redesign_v2.md)
       Files: `apps/web/src/app/layout.tsx`, `apps/web/src/app/globals.css`, `apps/web/src/lib/design-lab/tokens.ts`
       Acceptance: в `layout.tsx` нет `Alegreya_Sans`, есть `Source_Sans_3` (400/500/600/700, `latin` + `cyrillic`, `display: "swap"`, переменная `--font-source-sans`); `--font-body`/`--font-sans` указывают на неё; `html { font-size: 112.5% }`; в `:root` заданы `--control-h`, `--control-h-compact`, `--control-h-touch`; `main:focus:not(:focus-visible) { outline: none }`; `TYPE_SCALE` и `SHAPES` в `tokens.ts` совпадают с UX-03 §6–§7
       Paths: n/a — токены и шрифты без поведения; HTML/CSS-эталон — parity-spec P-37…P-40
 
-- [ ] P14-T2 · T1 · Spec: [parity §6](../specs/prototype_class_parity_spec.md)
+- [x] P14-T2 · T1 · Spec: [parity §6](../specs/prototype_class_parity_spec.md)
       Files: `scripts/check-prototype-parity.mjs`, `scripts/prototype-parity.test.mjs`, `package.json` (скрипт `parity:check`; без новых зависимостей)
       Acceptance: скрипт читает блок ` ```json parity ` из parity-spec §7.2, значения констант прототипа и классы компонентов, применяет нормализацию N-1…N-8, печатает `ok | drift | skip` по строкам и итог `Parity: N строк, расхождений M`, exit-код 1 при M > 0; флаги `--component <id>`, `--all`, `--json`; тесты покрывают алиасы N-2, единицы N-3, `cva` N-8 и два реальных случая (BTN, SEG_ON); не пишет файлов
       Paths: H [`--all` на текущем коде выдаёт список расхождений P-01…P-40, до CU2–CU3 расхождения ожидаемы] · N [нет блока JSON; файл компонента не найден; неизвестный `--component`] · S n/a — читает только пути из parity-spec §7.2

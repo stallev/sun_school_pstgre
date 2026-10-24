@@ -54,7 +54,7 @@ const DesignSystemPage = () => (
       <LabSection id="contrast" title="L1 · Contrast" hint="UX-03 §5 — recomputed from token values">
         <ContrastTable />
       </LabSection>
-      <LabSection id="type" title="L1 · Typography" hint="Alegreya (display) · Alegreya Sans (body), 17 px base">
+      <LabSection id="type" title="L1 · Typography" hint="Alegreya (display) · Source Sans 3 (body), 18 px base">
         <TypeScale />
       </LabSection>
       <LabSection id="shape" title="L1 · Shape, depth, motion">
