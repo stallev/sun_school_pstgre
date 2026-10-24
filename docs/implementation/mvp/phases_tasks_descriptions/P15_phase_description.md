@@ -2,7 +2,7 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** не начата (документы готовы, код не начат)  
+**Прогресс фазы:** реализована (2026-10-24)  
 **Версия:** 1.0  
 **Дата:** 2026-10-24  
 **Волна:** W12-06  
@@ -99,9 +99,9 @@ Teacher не открывает `/achievements` (403); чужая `groupId` в U
 ## Definition of done
 
 - [ ] Все CU закоммичены; у CU2…CU6 trace `Review: …`; у CU6 `UI-verify: …`
-- [ ] `typecheck` · `lint` · `test` · `rules:check` зелёные; `encoding:check` · `docs:links` для docs-CU
-- [ ] Acceptance контракта §12 и ADR-015 §9 закрыты тестами
-- [ ] Docs sync (CU7): индексы, маршруты, матрица прав, схема БД
+- [x] `typecheck` · `lint` · `test` · `rules:check` зелёные; `encoding:check` · `docs:links` для docs-CU
+- [x] Acceptance контракта §12 и ADR-015 §9 закрыты тестами
+- [x] Docs sync (CU7): индексы, маршруты, матрица прав, схема БД
 
 ## Open questions фазы
 
@@ -134,3 +134,4 @@ Teacher не открывает `/achievements` (403); чужая `groupId` в U
 | Date | Change |
 |------|--------|
 | 2026-10-24 | v1.0 — Canonical (W12-06): документы готовы; код не начат |
+| 2026-10-24 | v1.1 — P15 реализована; smoke в `P15_tasks.md` (CU7) |
