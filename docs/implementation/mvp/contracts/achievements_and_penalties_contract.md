@@ -2,7 +2,7 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.0  
+**Версия:** 1.1  
 **Дата:** 2026-10-22  
 **Волна:** W8-11  
 **Зависит от:** [`adr_012_achievements_and_penalties.md`](../../../prds/07_governance/adr_012_achievements_and_penalties.md), [`achievements_spec.md`](../../../my_specs/achievements_spec.md) (ДС-1…ДС-15, ШТ-1…ШТ-10, §7, §9), [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §4, §6, [`bricks_ledger_contract.md`](./bricks_ledger_contract.md) §3, [`homework_check_contract.md`](./homework_check_contract.md) §5.5–§5.8, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-52…AZ-57), [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) PKG-03, INV-17, INV-23  
@@ -42,6 +42,7 @@
 |----------|-------|--------|----|
 | `upsertAchievement` | `ADMIN` | каталог награды или штрафа | AZ-52 |
 | `setAchievementActive` | `ADMIN` | вкл/выкл строки каталога | AZ-52 |
+| `setGroupAchievementPoints` / `copyGroupAchievementPoints` | `TEACHER` (своя, активный год), `ADMIN` | баллы группы в году, [контракт](./achievement_group_points_contract.md) | AZ-65 |
 | `setGroupAchievementMode` | `TEACHER` (своя), `ADMIN` | режим группы, период выключения | AZ-55 |
 | `evaluatePupil` | система | новые выдачи одного ученика | AZ-56 |
 | `recalculateAchievements` | `ADMIN` | пересчёт учеников года | AZ-52 |
@@ -75,6 +76,7 @@
 ### 6.1 Каталог
 
 - Admin создаёт или правит строку. Вид после первой выдачи или первого штрафа не меняется. Смена баллов и порогов действует только на будущие выдачи; у уже выданного остаётся `rule_snapshot` (ДС-10).
+- Баллы в каталоге — **значения по умолчанию**. Группа может переопределить баллы уровня и размер штрафа на год ([`achievement_group_points_contract.md`](./achievement_group_points_contract.md), ADR-015); решает `resolveEffectivePoints`. Пороги и условия глобальны. Seed не затирает баллы существующих строк.
 - `practice` остаётся `is_active = false` до волны 3. Неактивная строка не участвует в `evaluate`.
 - Журнал: `achievement.catalog_upserted`, `achievement.catalog_toggled`.
 
@@ -224,3 +226,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-22 | v1.0 — Canonical (W8-11, P12) |
+| 2026-10-24 | v1.1 — баллы группы: §4, §6.1, ссылка на `achievement_group_points_contract` (ADR-015) |

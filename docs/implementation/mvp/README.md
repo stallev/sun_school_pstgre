@@ -38,6 +38,7 @@
 | P12 | Достижения и штрафы (волна 1, флаг `features.achievements`) | [P12](./phases_tasks_descriptions/P12_phase_description.md) | [P12](./tasks/P12_tasks.md) |
 | P13 | Семьи и родители (волна 2, флаг `features.parents`) | [P13](./phases_tasks_descriptions/P13_phase_description.md) | [P13](./tasks/P13_tasks.md) |
 | P14 | Редизайн v2: шрифт, шкала, оболочка, контролы | [P14](./phases_tasks_descriptions/P14_phase_description.md) | [P14](./tasks/P14_tasks.md) |
+| P15 | Баллы достижений и штрафов по группам ([ADR-015](../../prds/07_governance/adr_015_group_achievement_points.md)) | [P15](./phases_tasks_descriptions/P15_phase_description.md) | [P15](./tasks/P15_tasks.md) |
 
 Нумерация фаз реализации (P01…P14) не совпадает с промптами bootstrap (P0…P6).
 
@@ -55,6 +56,7 @@
 | [`bible_seed_contract.md`](./contracts/bible_seed_contract.md) | Загрузка Библии, нумерация |
 | [`analytics_year_snapshots_contract.md`](./contracts/analytics_year_snapshots_contract.md) | Снимки итогов учебного года, пороги, год по умолчанию (P08) |
 | [`achievements_and_penalties_contract.md`](./contracts/achievements_and_penalties_contract.md) | Достижения и штрафы, пересчёт, флаг (P12) |
+| [`achievement_group_points_contract.md`](./contracts/achievement_group_points_contract.md) | Баллы достижений и штрафов по группам (P15) |
 | [`families_and_parents_contract.md`](./contracts/families_and_parents_contract.md) | Семьи, роль родителя, согласие, дайджест без почты (P13) |
 
 ## Specs
