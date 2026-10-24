@@ -5,6 +5,7 @@ import { YearCard } from "@/components/admin/YearCard";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
+import { PageSection } from "@/components/ui/page-section";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
 import { loadAcademicYearsList } from "@/data/school/load-academic-years-list.server";
 import { requireRole } from "@/lib/auth/require-user";
@@ -27,7 +28,7 @@ export const YearPageContent = async ({ messages, dictionaries, formError }: Yea
 
   return (
     <AdminMessagesProvider messages={messages}>
-      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+      <PageSection width="full" className="min-w-0 space-y-6 overflow-x-hidden">
         <PageHeader title={messages.page.yearTitle} />
         <CreateYearForm dictionaries={dictionaries} formError={formError} />
         {years.length === 0 ? (
@@ -41,7 +42,7 @@ export const YearPageContent = async ({ messages, dictionaries, formError }: Yea
             ))}
           </ul>
         )}
-      </div>
+      </PageSection>
     </AdminMessagesProvider>
   );
 };

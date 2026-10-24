@@ -89,10 +89,12 @@ Tier T3 по триггеру S: переключатель роли (ОК-5) п
 
 Начинается после CU3 и CU4.
 
-- [ ] P14-T6 · T2 · Spec: [redesign §3.4](../../../design/redesign_v2_ui_spec.md) · UX-03: §7 · UX-06: F14 · ADR: R-4, R-11
+- [x] P14-T6 · T2 · Spec: [redesign §3.4](../../../design/redesign_v2_ui_spec.md) · UX-03: §7 · UX-06: F14 · ADR: R-4, R-11
       Files: `apps/web/src/app/(app)/groups/page.tsx`, `apps/web/src/app/(app)/groups/[groupId]/page.tsx`, `apps/web/src/app/(app)/year/page.tsx`, `apps/web/src/app/(app)/settings/page.tsx`, `apps/web/src/app/(app)/achievements/page.tsx`, `apps/web/src/app/(app)/users/page.tsx`, `apps/web/src/app/(app)/school/page.tsx`, `apps/web/src/app/profile/page.tsx`, `apps/web/src/components/admin/**`, `apps/web/src/components/analytics/SchoolPageContent.server.tsx`, `apps/web/src/components/analytics/SchoolGroupsTable.tsx`, `apps/web/src/components/analytics/SchoolGroupCards.tsx`, `apps/web/src/components/achievements/**`, `apps/web/src/components/**/profile/**`
       Acceptance: страницы используют `PageSection` (ширины по таблице §3.4); нет `max-w-*` и `mx-auto` на уровне страницы; кнопки отправки в карточках `w-auto` (на 390 px допустим `w-full`); `/groups/[groupId]` без вложенной карточки в карточке; «Добавить учителя»: поле и «Назначить» одной высоты в одну строку; `/year` — «Закрыть год» `variant="destructive"`; `/groups` — колонки ряда выровнены (`grid-cols-[minmax(0,1fr)_auto_auto]`), язык-бейдж в колонке названия; `/users` — полоса вкладок без вертикального скролла; `/school` — структура видна сразу, тяжёлые секции за `<Suspense>`, таблица групп по §3.4
       Paths: H [каждая страница открывается в своей ширине; кнопка «Сохранить» по размеру содержимого] · N [пустой список групп; нет активного года (D1) — баннер и страница на тех же ширинах; ошибка запроса секции `/school` — `error.tsx` секции, страница стоит] · S n/a — presentational; серверные проверки и guard-ы страниц не меняются
+      UI-verify: localhost — `/groups`, `/groups/[id]`, `/year`, `/settings`, `/users`, `/school`, `/achievements`, `/profile`; роли **admin** и **teacher**; 390 / 768 / 1024 / 1280; §5.1: `html` 18px, `smallText` [], `mainOutline` none, без page scroll; `/users` вкладки без vertical overflow; расхождений 0, консоль чистая (dev pg SSL warning)
+      Parity: `PageSection` §3.4 (manual) + `PageHeader` P-30 на 8 экранах — 9 строк сверено, расхождений 0
 
 **CU DoD:** `typecheck` · `lint` · `test` · UI-verify · Parity
 

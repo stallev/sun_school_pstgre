@@ -21,8 +21,8 @@ export const AuthSignOutLink = ({ signOutLabel, signOutPendingLabel }: AuthSignO
   return (
     <Button
       type="button"
-      variant="ghost"
-      className="min-h-11"
+      variant="outline"
+      className="w-full sm:w-auto"
       disabled={pending}
       aria-busy={pending}
       onClick={handleSignOut}

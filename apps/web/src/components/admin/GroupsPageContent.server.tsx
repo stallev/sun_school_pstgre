@@ -5,6 +5,7 @@ import { GroupCard } from "@/components/admin/GroupCard";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
+import { PageSection } from "@/components/ui/page-section";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
 import { loadGroupsAdminList } from "@/data/school/load-groups-admin-list.server";
@@ -32,7 +33,7 @@ export const GroupsPageContent = async () => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+      <PageSection width="full" className="min-w-0 space-y-6 overflow-x-hidden">
         <PageHeader
           title={adminMessages.page.groupsTitle}
           description={
@@ -60,7 +61,7 @@ export const GroupsPageContent = async () => {
             ))}
           </div>
         )}
-      </div>
+      </PageSection>
     </AdminMessagesProvider>
   );
 };

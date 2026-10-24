@@ -23,7 +23,7 @@ const countForTab = (counts: UsersStatusCounts, status: AccountStatus | null): n
 
 export const UsersStatusFilter = ({ activeStatus, counts, messages }: UsersStatusFilterProps) => (
   <nav
-    className="-mb-px flex gap-1 overflow-x-auto border-b border-line"
+    className="-mb-px flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line"
     aria-label={messages.users.tabNav}
     role="tablist"
   >
@@ -32,7 +32,7 @@ export const UsersStatusFilter = ({ activeStatus, counts, messages }: UsersStatu
       role="tab"
       aria-selected={activeStatus === null}
       className={cn(
-        "-mb-px inline-flex h-11 shrink-0 items-center gap-1.5 border-b-2 px-3 text-[0.9375rem] transition-[color,border-color] duration-100",
+        "-mb-px inline-flex h-11 shrink-0 items-center gap-1.5 border-b-2 px-3 text-base transition-[color,border-color] duration-100",
         activeStatus === null
           ? "border-ink font-bold text-ink"
           : "border-transparent text-ink-2 hover:text-ink",
@@ -52,7 +52,7 @@ export const UsersStatusFilter = ({ activeStatus, counts, messages }: UsersStatu
           role="tab"
           aria-selected={isActive}
           className={cn(
-            "-mb-px inline-flex h-11 shrink-0 items-center gap-1.5 border-b-2 px-3 text-[0.9375rem] transition-[color,border-color] duration-100",
+            "-mb-px inline-flex h-11 shrink-0 items-center gap-1.5 border-b-2 px-3 text-base transition-[color,border-color] duration-100",
             isActive
               ? "border-ink font-bold text-ink"
               : "border-transparent text-ink-2 hover:text-ink",

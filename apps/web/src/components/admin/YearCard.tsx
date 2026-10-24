@@ -5,6 +5,7 @@ import { ACADEMIC_YEAR_STATUS, type MutationResult } from "@sunschool/domain";
 import { activateYearAction, closeYearAction } from "@/actions/school-year";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { ContentText, SectionTitle } from "@/components/atoms";
+import { StatusText } from "@/components/ui/status-text";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,11 +50,13 @@ export const YearCard = ({ row, dictionaries, formError }: YearCardProps) => {
 
   return (
     <article className="flex h-full flex-col space-y-3 rounded-xl border border-line bg-surface p-4 sm:p-5">
-      <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
+      <div className="flex items-start justify-between gap-3">
         <SectionTitle>{row.name}</SectionTitle>
-        <ContentText tone="secondary" className="text-sm">{statusLabel}</ContentText>
+        <StatusText tone="neutral" className="shrink-0 text-sm">
+          {statusLabel}
+        </StatusText>
       </div>
-      <ContentText tone="secondary" className="text-sm">
+      <ContentText tone="muted" className="text-sm">
         {row.startsOn} — {row.endsOn}
       </ContentText>
       <div className="flex flex-wrap gap-2">

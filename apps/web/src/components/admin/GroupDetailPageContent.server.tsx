@@ -6,6 +6,7 @@ import { GroupSettingsForm } from "@/components/admin/GroupSettingsForm";
 import { TeacherAssignmentList } from "@/components/admin/TeacherAssignmentList";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
 import { PageHeader } from "@/components/patterns/PageHeader";
+import { PageSection } from "@/components/ui/page-section";
 import { loadGroupAdminDetail } from "@/data/school/load-group-admin-detail.server";
 import { loadTeacherCandidates } from "@/data/school/load-teacher-candidates.server";
 import { requireRole } from "@/lib/auth/require-user";
@@ -41,7 +42,7 @@ export const GroupDetailPageContent = async ({ params }: GroupDetailPageProps) =
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden lg:max-w-6xl">
+      <PageSection width="wide" className="min-w-0 space-y-6 overflow-x-hidden">
         <PageHeader
           title={detail.name}
           description={formatYearContext(adminMessages.group.editSubtitle, detail.yearName)}
@@ -65,7 +66,7 @@ export const GroupDetailPageContent = async ({ params }: GroupDetailPageProps) =
             formError={formError}
           />
         </div>
-      </div>
+      </PageSection>
     </AdminMessagesProvider>
   );
 };

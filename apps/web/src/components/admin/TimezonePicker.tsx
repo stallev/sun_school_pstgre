@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/dictionary-types";
-import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 import { cn } from "@/lib/utils";
 
 type TimezonePickerProps = {
@@ -88,7 +87,7 @@ export const TimezonePicker = ({
       </ul>
       <Button
         type="submit"
-        className={FORM_SUBMIT_BUTTON_CLASS}
+        className="w-full sm:w-auto"
         disabled={pending || selected === currentTimeZone}
         aria-busy={pending}
       >

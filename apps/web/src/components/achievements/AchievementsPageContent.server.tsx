@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { USER_ROLE } from "@sunschool/domain";
 import { AchievementsCatalogBoard } from "@/components/achievements/AchievementsCatalogBoard.client";
 import { ForbiddenState } from "@/components/patterns/ForbiddenState";
+import { PageSection } from "@/components/ui/page-section";
 import { CustomLink } from "@/components/ui/custom-link";
 import { readFeaturesAchievementsEnabled } from "@/data/achievements/achievement-feature.server";
 import { loadAchievementsCatalogPage } from "@/data/achievements/load-achievements-catalog-page.server";
@@ -42,13 +43,13 @@ export const AchievementsPageContent = async () => {
   const catalog = await loadAchievementsCatalogPage(prisma);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:py-8">
+    <PageSection width="wide" className="space-y-6">
       <AchievementsCatalogBoard
         rewards={catalog.rewards}
         penalties={catalog.penalties}
         messages={messages}
         dictionaries={dictionaries}
       />
-    </div>
+    </PageSection>
   );
 };

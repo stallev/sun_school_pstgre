@@ -39,11 +39,11 @@ export const CreateGroupForm = ({ dictionaries, formError, disabled }: CreateGro
       aria-busy={isBusy}
     >
       <SectionTitle>{messages.group.createTitle}</SectionTitle>
-      <label className="grid gap-1 text-sm">
+      <label className="grid max-w-sm gap-1 text-base font-medium">
         <span>{messages.group.nameLabel}</span>
-        <Input name="name" required disabled={isBusy} />
+        <Input name="name" required disabled={isBusy} className="w-full" />
       </label>
-      <Button type="submit" disabled={isBusy} aria-busy={isBusy}>
+      <Button type="submit" className="w-full sm:w-auto" disabled={isBusy} aria-busy={isBusy}>
         {pending ? messages.group.submitPending : messages.group.createSubmit}
       </Button>
     </form>
