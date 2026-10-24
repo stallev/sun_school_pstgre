@@ -6,6 +6,7 @@ import {
   AWARD_SOURCE,
   LESSON_STATUS,
   evaluateAchievements,
+  type AchievementEvaluateRule,
   type AchievementExistingAward,
   type AchievementProposedAward,
 } from "@sunschool/domain";
@@ -13,6 +14,11 @@ import { Prisma, writeAudit, type Prisma as PrismaTypes } from "@sunschool/db";
 import { lockPupilRow } from "../school/school-pupil-shared.server";
 import { buildAchievementRuleSnapshot } from "./achievement-award-snapshot.server";
 import { loadAchievementEvaluateContext } from "./achievement-evaluate-context.server";
+import {
+  loadGroupAchievementPointsOverridesForGrades,
+  resolveRewardTierPoints,
+  type GroupAchievementPointsOverrideMap,
+} from "./group-achievement-points.server";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { loadGradeAchievementMode } from "./achievement-mode.server";
 
@@ -35,11 +41,57 @@ function mergeAwards(
   ];
 }
 
+function completingCheckId(award: AchievementProposedAward): string | null {
+  const ids = award.evidenceFactIds;
+  if (ids.length === 0) return null;
+  return ids[ids.length - 1] ?? null;
+}
+
+function globalTierPoints(
+  rules: readonly AchievementEvaluateRule[],
+  achievementId: string,
+  tier: number,
+): number | null {
+  const rule = rules.find((row) => row.achievementId === achievementId);
+  const tierRow = rule?.tiers.find((row) => row.tier === tier);
+  return tierRow?.points ?? null;
+}
+
+function applyEffectivePointsToProposed(
+  proposed: readonly AchievementProposedAward[],
+  rules: readonly AchievementEvaluateRule[],
+  checkGradeByCheckId: Map<string, string>,
+  overridesByGrade: Map<string, GroupAchievementPointsOverrideMap>,
+  fallbackGradeId: string,
+): AchievementProposedAward[] {
+  return proposed.map((award) => {
+    const checkId = completingCheckId(award);
+    const gradeId =
+      (checkId ? checkGradeByCheckId.get(checkId) : undefined) ?? fallbackGradeId;
+    const globalPoints = globalTierPoints(rules, award.achievementId, award.tier);
+    if (globalPoints === null) return award;
+    const overrides = overridesByGrade.get(gradeId) ?? new Map();
+    const { points } = resolveRewardTierPoints(
+      globalPoints,
+      overrides,
+      award.achievementId,
+      award.tier,
+    );
+    return { ...award, points };
+  });
+}
+
+type PersistProposedAward = AchievementProposedAward & {
+  gradeId: string;
+  pointsSource: "global" | "grade";
+};
+
 async function persistProposedAwards(
   tx: Tx,
   pupilId: string,
   academicYearId: string,
-  proposed: readonly AchievementProposedAward[],
+  proposed: readonly PersistProposedAward[],
+  rules: readonly AchievementEvaluateRule[],
   awardedAt: Date,
 ): Promise<string[]> {
   const createdIds: string[] = [];
@@ -58,6 +110,8 @@ async function persistProposedAwards(
     const tierRow = achievement.tiers[0];
     if (!tierRow) continue;
 
+    const snapshotTier = { tier: tierRow.tier, length: tierRow.length, points: award.points };
+
     try {
       const row = await tx.achievementAward.create({
         data: {
@@ -66,7 +120,10 @@ async function persistProposedAwards(
           tier: award.tier,
           academicYearId,
           points: award.points,
-          ruleSnapshot: buildAchievementRuleSnapshot(achievement, tierRow),
+          ruleSnapshot: buildAchievementRuleSnapshot(achievement, snapshotTier, {
+            pointsSource: award.pointsSource,
+            gradeId: award.gradeId,
+          }),
           source: AWARD_SOURCE.AUTO,
           awardedAt,
           awardKey: award.awardKey,
@@ -110,11 +167,14 @@ export async function evaluatePupilInTransaction(
   const locked = await lockPupilRow(tx, pupilId);
   if (!locked) return { awardIds: [] };
 
-  const { rules, awards, factsByMetric } = await loadAchievementEvaluateContext(
+  const { rules, awards, factsByMetric, checkGradeByCheckId } =
+    await loadAchievementEvaluateContext(tx, pupilId, academicYearId, gradeId);
+
+  const gradeIdsForOverrides = [...checkGradeByCheckId.values(), gradeId];
+  const overridesByGrade = await loadGroupAchievementPointsOverridesForGrades(
     tx,
-    pupilId,
+    gradeIdsForOverrides,
     academicYearId,
-    gradeId,
   );
 
   const context = { pupilId, academicYearId };
@@ -132,8 +192,38 @@ export async function evaluatePupilInTransaction(
 
   if (proposed.length === 0) return { awardIds: [] };
 
+  const withEffectivePoints = applyEffectivePointsToProposed(
+    proposed,
+    rules,
+    checkGradeByCheckId,
+    overridesByGrade,
+    gradeId,
+  );
+
+  const persistRows: PersistProposedAward[] = withEffectivePoints.map((award) => {
+    const checkId = completingCheckId(award);
+    const awardGradeId =
+      (checkId ? checkGradeByCheckId.get(checkId) : undefined) ?? gradeId;
+    const globalPoints = globalTierPoints(rules, award.achievementId, award.tier) ?? 0;
+    const overrides = overridesByGrade.get(awardGradeId) ?? new Map();
+    const { pointsSource } = resolveRewardTierPoints(
+      globalPoints,
+      overrides,
+      award.achievementId,
+      award.tier,
+    );
+    return { ...award, gradeId: awardGradeId, pointsSource };
+  });
+
   const awardedAt = new Date();
-  const awardIds = await persistProposedAwards(tx, pupilId, academicYearId, proposed, awardedAt);
+  const awardIds = await persistProposedAwards(
+    tx,
+    pupilId,
+    academicYearId,
+    persistRows,
+    rules,
+    awardedAt,
+  );
   const primaryAwardId = awardIds[0];
   if (!primaryAwardId) return { awardIds: [] };
 

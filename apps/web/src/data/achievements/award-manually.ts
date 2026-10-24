@@ -21,6 +21,10 @@ import { buildAchievementRuleSnapshot } from "./achievement-award-snapshot.serve
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { assertAwardManuallyAccess } from "./achievement-mutate-access.server";
 import { loadGradeAchievementMode } from "./achievement-mode.server";
+import {
+  loadGroupAchievementPointsOverrides,
+  resolveRewardTierPoints,
+} from "./group-achievement-points.server";
 
 const awardManuallyInputSchema = z
   .object({
@@ -117,7 +121,21 @@ export async function awardManually(
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
     }
 
-    if (parsed.data.points > tierRow.points) {
+    const { tier: catalogTier, length: catalogLength, points: catalogTierPoints } = tierRow;
+
+    const pointOverrides = await loadGroupAchievementPointsOverrides(
+      tx,
+      enrollment.gradeId,
+      academicYearId,
+    );
+    const effectiveTier = resolveRewardTierPoints(
+      catalogTierPoints,
+      pointOverrides,
+      achievement.id,
+      parsed.data.tier,
+    );
+
+    if (parsed.data.points > effectiveTier.points) {
       return {
         ok: false,
         code: MUTATION_ERROR_CODES.ACHIEVEMENT_POINTS_EXCEED,
@@ -127,7 +145,7 @@ export async function awardManually(
 
     const needsEvidence = achievement.ruleType !== ACHIEVEMENT_RULE_TYPE.MANUAL;
     const checkIds = parsed.data.checkIds;
-    if (needsEvidence && checkIds.length < tierRow.length) {
+    if (needsEvidence && checkIds.length < catalogLength) {
       return {
         ok: false,
         code: MUTATION_ERROR_CODES.ACHIEVEMENT_EVIDENCE_SHORT,
@@ -199,7 +217,11 @@ export async function awardManually(
           tier: parsed.data.tier,
           academicYearId,
           points: parsed.data.points,
-          ruleSnapshot: buildAchievementRuleSnapshot(achievement, tierRow),
+          ruleSnapshot: buildAchievementRuleSnapshot(
+            achievement,
+            { tier: catalogTier, length: catalogLength, points: effectiveTier.points },
+            { pointsSource: effectiveTier.pointsSource, gradeId: enrollment.gradeId },
+          ),
           source: AWARD_SOURCE.MANUAL,
           awardedById: actorUserId,
           reason: parsed.data.reason,

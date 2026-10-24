@@ -10,6 +10,10 @@ import type {
   PenaltyTypeOption,
   PupilPenaltyFormData,
 } from "@/lib/achievements/pupil-penalty-form-types";
+import {
+  loadGroupAchievementPointsOverrides,
+  resolvePenaltyCatalogPoints,
+} from "./group-achievement-points.server";
 
 export type { PupilPenaltyFormData } from "@/lib/achievements/pupil-penalty-form-types";
 
@@ -20,6 +24,8 @@ export async function loadPupilPenaltyForm(
   locale: MessageLocale,
   timeZone: string,
 ): Promise<PupilPenaltyFormData> {
+  const overrides = await loadGroupAchievementPointsOverrides(db, gradeId, academicYearId);
+
   const [penalties, lessons] = await Promise.all([
     db.achievement.findMany({
       where: { kind: ACHIEVEMENT_KIND.PENALTY, isActive: true },
@@ -44,14 +50,22 @@ export async function loadPupilPenaltyForm(
     }),
   ]);
 
-  const penaltyTypes: PenaltyTypeOption[] = penalties.map((row) => {
-    const cap = row.tiers[0]?.points ?? row.threshold ?? 0;
+  const penaltyTypes: PenaltyTypeOption[] = penalties.flatMap((row) => {
+    const effective = resolvePenaltyCatalogPoints(
+      row.threshold,
+      row.tiers[0]?.points,
+      overrides,
+      row.id,
+    );
+    if (effective === null) return [];
     const name = locale === "en" ? row.nameEn : row.nameRu;
-    return {
-      achievementId: row.id,
-      label: name,
-      catalogPoints: Math.abs(cap),
-    };
+    return [
+      {
+        achievementId: row.id,
+        label: name,
+        catalogPoints: Math.abs(effective.points),
+      },
+    ];
   });
 
   const lessonOptions: PenaltyLessonOption[] = lessons.map((row) => {

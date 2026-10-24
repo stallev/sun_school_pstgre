@@ -18,6 +18,10 @@ import { revalidateBricksCaches } from "../bricks/revalidate-bricks-cache";
 import { readFeaturesAchievementsEnabled } from "./achievement-feature.server";
 import { assertAwardManuallyAccess } from "./achievement-mutate-access.server";
 import { loadGradeAchievementMode } from "./achievement-mode.server";
+import {
+  loadGroupAchievementPointsOverrides,
+  resolvePenaltyCatalogPoints,
+} from "./group-achievement-points.server";
 
 const issuePenaltyInputSchema = z
   .object({
@@ -30,16 +34,6 @@ const issuePenaltyInputSchema = z
   .strict();
 
 export type IssuePenaltySuccess = { penaltyId: string };
-
-function catalogPenaltyPointsCap(
-  threshold: number | null,
-  tiers: { points: number }[],
-): number | null {
-  const tierRow = tiers[0];
-  if (tierRow) return tierRow.points;
-  if (threshold !== null && threshold < 0) return threshold;
-  return null;
-}
 
 export async function issuePenalty(
   db: PrismaClient,
@@ -100,7 +94,7 @@ export async function issuePenalty(
         gradeId: enrollment.gradeId,
         grade: { organizationId },
       },
-      select: { id: true },
+      select: { id: true, gradeId: true },
     });
     if (!lesson) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -127,12 +121,22 @@ export async function issuePenalty(
       };
     }
 
-    const catalogCap = catalogPenaltyPointsCap(achievement.threshold, achievement.tiers);
-    if (catalogCap === null) {
+    const penaltyOverrides = await loadGroupAchievementPointsOverrides(
+      tx,
+      lesson.gradeId,
+      enrollment.academicYearId,
+    );
+    const effectivePenalty = resolvePenaltyCatalogPoints(
+      achievement.threshold,
+      achievement.tiers[0]?.points,
+      penaltyOverrides,
+      achievement.id,
+    );
+    if (effectivePenalty === null) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
     }
 
-    if (Math.abs(parsed.data.points) > Math.abs(catalogCap)) {
+    if (Math.abs(parsed.data.points) > Math.abs(effectivePenalty.points)) {
       return {
         ok: false,
         code: MUTATION_ERROR_CODES.PENALTY_POINTS_EXCEED,

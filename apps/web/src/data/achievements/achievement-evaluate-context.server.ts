@@ -24,6 +24,7 @@ export async function loadAchievementEvaluateContext(
   rules: AchievementEvaluateRule[];
   awards: AchievementExistingAward[];
   factsByMetric: Map<string, AchievementEvaluateFact[]>;
+  checkGradeByCheckId: Map<string, string>;
 }> {
   const mode = await loadGradeAchievementMode(tx, gradeId, academicYearId);
 
@@ -41,12 +42,15 @@ export async function loadAchievementEvaluateContext(
       singing: true,
       pointsTotal: true,
       homeworkChecked: true,
-      lesson: { select: { kind: true, lessonDate: true, hasTest: true } },
+      lesson: { select: { kind: true, lessonDate: true, hasTest: true, gradeId: true } },
       verseScores: { select: { score: true } },
     },
   });
 
-  const factRows: AchievementCheckFactRow[] = checks.map((check) => ({
+  const checkGradeByCheckId = new Map<string, string>();
+  const factRows: AchievementCheckFactRow[] = checks.map((check) => {
+    checkGradeByCheckId.set(check.id, check.lesson.gradeId);
+    return {
     checkId: check.id,
     lessonKind: check.lesson.kind,
     lessonHasTest: check.lesson.hasTest,
@@ -57,7 +61,8 @@ export async function loadAchievementEvaluateContext(
     singing: check.singing,
     verseScores: check.verseScores.map((row) => row.score),
     lessonPoints: check.pointsTotal,
-  }));
+    };
+  });
 
   const catalog = await tx.achievement.findMany({
     where: { kind: ACHIEVEMENT_KIND.REWARD },
@@ -100,5 +105,5 @@ export async function loadAchievementEvaluateContext(
   const metrics = rules.map((rule) => rule.metric ?? "");
   const factsByMetric = buildAchievementEvaluateFacts(factRows, metrics);
 
-  return { rules, awards, factsByMetric };
+  return { rules, awards, factsByMetric, checkGradeByCheckId };
 }

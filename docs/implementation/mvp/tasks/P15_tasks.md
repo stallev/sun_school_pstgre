@@ -62,7 +62,7 @@ Tier T3: миграция (sensitive zone).
 
 ### P15-CU4 — feat(web): apply group points in award, penalty and snapshot · Review: reviewer · Commit: auto
 
-- [ ] P15-T5 · T2 · Spec: [контракт §6.2, §6.3](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 3
+- [x] P15-T5 · T2 · Spec: [контракт §6.2, §6.3](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 3
       Files: `apps/web/src/data/achievements/achievement-evaluate-context.server.ts`, `apps/web/src/data/achievements/achievement-award-snapshot.server.ts`, `apps/web/src/data/achievements/evaluate-pupil.ts`, `apps/web/src/data/achievements/award-manually.ts`, `apps/web/src/data/achievements/issue-penalty.ts`, `apps/web/src/data/achievements/load-pupil-penalty-form.server.ts`, `apps/web/src/data/achievements/group-achievement-points.server.ts`, `apps/web/src/data/achievements/*.test.ts`, `packages/domain/src/achievements/evaluate.ts` (если нужен вход эффективных баллов)
       Acceptance: загрузчик `group-achievement-points.server.ts` читает переопределения группы-года одним запросом; `evaluatePupil` применяет эффективные баллы по группе урока завершающей проверки; потолок `awardManually` и `issuePenalty` и значение формы штрафа — эффективные; `rule_snapshot` содержит `pointsSource` и `gradeId`; прошлые выдачи не пересчитываются; grep-гейт: вне `resolveEffectivePoints` и загрузчика нет решений о баллах из `tier.points` / `threshold`
       Paths: H [override группы применяется, чужой группы — нет] · N [нет `grade_settings` для года — глобальное; серия, завершённая уроком другой группы после перевода — группа этого урока; уровень без override — глобальное] · S [ученик и группа из БД, не из клиента; баллы и снимок формирует сервер]
