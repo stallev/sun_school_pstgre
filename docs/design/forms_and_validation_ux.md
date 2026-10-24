@@ -2,9 +2,9 @@
 
 **Тип:** UX-контракт (UX-06)  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
-**Волна:** W7-03  
+**Версия:** 1.1  
+**Дата:** 2026-10-24  
+**Волна:** W7-03 (v1.1 — W12, P14)  
 **Зависит от:** [`ui_states_contract.md`](./ui_states_contract.md), [`visual_identity_contract.md`](./visual_identity_contract.md) (D-6…D-8), [`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md), [`domain_invariants.md`](../prds/02_domain_model/domain_invariants.md), [`lifecycle_models.md`](../prds/02_domain_model/lifecycle_models.md), [`database_schema_v1.md`](../prds/03_data_model/database_schema_v1.md), [`ai_form_handling_pattern.md`](../guidelines/react/ai_form_handling_pattern.md), [`sunday_school_data_analytics_spec.md`](../my_specs/sunday_school_data_analytics_spec.md) (РГ-2, РГ-3, БП-4, БП-12, ПБ-5, УД-2)  
 **Связанные документы:** [`adr_004_timezone_scheduling_model.md`](../prds/07_governance/adr_004_timezone_scheduling_model.md), [`adr_008_i18n_ru_en_dictionary_slices.md`](../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md), [`canonical_routes.md`](./canonical_routes.md), [`architecture_master_index.md`](../prds/architecture_master_index.md)  
 **Проверено по:** React 19 — react.dev, `useActionState` через WebFetch, 2026-10-11: возвращает `[state, formAction, isPending]`; форма с `action` **автоматически сбрасывается** после выполнения, поэтому неуправляемые поля не сохраняют значения — введённое при ошибке возвращают в `state` и подставляют в `defaultValue` (либо поля управляемые); `permalink` — прогрессивное улучшение для Server Functions. Next.js 16.4 `error.js` — по [`ui_states_contract.md`](./ui_states_contract.md). Правила `ui-mutation-pending`, `ui-toast-mutations` — репозиторий (`.cursor/rules/tiers/t2-ui`). Context7 недоступен.
@@ -42,7 +42,9 @@
 | **F6** | Введённые значения при ошибке **не теряются**. React 19 сбрасывает неуправляемые поля после action — сервер возвращает введённое в `state`, поля читают `defaultValue` (или поле управляемое) |
 | **F7** | Отправка: `disabled={pending}`, `aria-busy={pending}`, подпись-герундий («Сохраняем…»), повторная отправка заблокирована; результат — toast 2000 ms (`ui-toast-mutations`), ошибка — на месте **и** toast |
 | **F8** | Кнопка отправки есть всегда и не скрыта в sticky-панели мимо клавиатуры; основное действие одно (`cobalt-ink`), второстепенные — контурные; в мобильной форме кнопки внизу в зоне большого пальца, цель ≥ 44 px |
-| **F9** | Поля: `border-muted` (D-7, контраст ≥ 3:1), высота ≥ 40 px, `font-size ≥ 16 px` на мобильных (без автозума iOS), подходящие `inputmode`, `autocomplete`, `enterkeyhint` |
+| **F9** | Поля: `border-muted` (D-7, контраст ≥ 3:1), высота по шкале D-9 (`h-10` = 45 px, ≥ 44 px), `font-size` 18 px (`text-base`; без автозума iOS), подходящие `inputmode`, `autocomplete`, `enterkeyhint`. Подпись поля — `text-base font-medium` |
+| **F13** | Нативные `<select>`, `<input type="checkbox">`, `<input type="date">` запрещены (UX-03 D-13, ADR-014 R-7): выбор из списка — `Select`, флажок — `Checkbox`, дата — `DateField` (ввод в формате локали, значение отправляется ISO `YYYY-MM-DD`; формат — `lib/i18n/format.ts`, не локаль браузера). Для form-submit компонент рендерит скрытый `<input name>`; ошибка и `aria-*` — как у F3 |
+| **F14** | Соседние контролы в одной строке формы (поле + кнопка, фильтры) — одной высоты (D-9); кнопка основного действия в карточке не растягивается на всю ширину, если поля короче контейнера (`w-auto`, прижата влево); на 390 px допустима `w-full` |
 | **F10** | Формы Class B (отправка с iOS Safari, критичные мутации: проверка ДЗ, кирпичики, регистрация) используют транспорт по `ios-safari-mutation-transport`; отдельные тесты не обязательны на lean, но путь отмечается в спецификации экрана |
 | **F11** | ПД не попадают в URL, `localStorage` и логи; черновики хранятся только в состоянии формы (исключение — черновик проверки ДЗ, §7.2) |
 | **F12** | Серверный отказ по правам (`FORBIDDEN`) не раскрывает причину; `NOT_FOUND` одинаков для чужого и отсутствующего (AZ-D4) |
@@ -187,3 +189,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W7-03, UX-06) |
+| 2026-10-24 | v1.1 — ADR-014 (P14): F9 по шкале D-9 и базе 18 px; F13 запрет нативных select / checkbox / date; F14 одинаковая высота соседних контролов и ширина кнопки отправки |

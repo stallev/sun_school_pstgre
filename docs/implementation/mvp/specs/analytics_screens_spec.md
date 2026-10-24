@@ -2,8 +2,8 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.4  
-**Дата:** 2026-10-21  
+**Версия:** 1.5  
+**Дата:** 2026-10-24  
 **Волна:** W9-07  
 **Migrated from:** [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) §5, §9.1–§9.6; [`multi_year_analytics.md`](../../../prds/01_product_scope/multi_year_analytics.md) (v1.2: годы)  
 **Зависит от:** [`homework_check_contract.md`](../contracts/homework_check_contract.md) §6–§7, [`school_year_and_groups_contract.md`](../contracts/school_year_and_groups_contract.md), [`analytics_year_snapshots_contract.md`](../contracts/analytics_year_snapshots_contract.md), [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (D3, D12, D19–D21), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-44…AZ-46, AZ-48…AZ-50, AZ-D4), [`canonical_routes.md`](../../../design/canonical_routes.md), [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §5 (`use cache`)  
@@ -57,7 +57,7 @@
 
 `canonical_routes.md` фиксирует эти параметры без новых путей. Фильтр периода (§4 ниже) действует **внутри выбранного года**.
 
-**Фильтр периода** (общий для `/analytics` и таблиц ученика): учебный год (по умолчанию — активный или выбранный в фильтре года), календарный месяц, произвольный диапазон дат внутри года. **Фильтр группы:** teacher — группы из `teacher_assignment`; admin — любая группа (`Select` / chips как в прототипе).
+**Фильтр периода** (общий для `/analytics` и таблиц ученика): учебный год (по умолчанию — активный или выбранный в фильтре года), календарный месяц, произвольный диапазон дат внутри года. **Фильтр группы:** teacher — группы из `teacher_assignment`; admin — любая группа (`Select` / `SegmentedControl` как в прототипе). Фильтры группы, периода и года — **один** компонент `SegmentedControl` (v1.5, ADR-014 R-5): выбранное везде `cobalt-soft`, не `ink`. Поля дат диапазона — `DateField`, не нативный `type=date` (R-7).
 
 ### 4.1 Тип карточки аналитики (P11)
 
@@ -65,8 +65,8 @@
 
 | Слой | Было | Стало |
 |------|------|-------|
-| Текст тела карточки | `text-sm` | `text-[1.3125rem] leading-snug` (~22 px) |
-| Мета (`N=`, «из 10») | `text-xs` | `text-base` (17 px) |
+| Текст тела карточки | `text-sm` | `text-[1.25rem] leading-snug` (22.5 px при базе 18; в v1.4 было `1.3125rem` при базе 17 — тот же ~22 px) |
+| Мета (`N=`, «из 10») | `text-xs` | `text-base` (18 px) |
 | KPI / hero | `NumberDisplay size="kpi"`, `text-[3.5rem]` | без изменений |
 | Padding карточки | `p-4` / `sm:p-5` | `p-3` |
 | Вертикальный зазор блока | `gap-6` | `gap-3` |
@@ -124,7 +124,7 @@
 
 | Блок | Содержание | Правило |
 |------|------------|---------|
-| Полоса лет (`YearStrip`) | кнопки доступных лет, активный помечен «идёт»; выбранная кнопка как чип периода: заливка `ink`, текст `surface`; `role="radiogroup"`, `aria-checked` | годы по видимости (контракт §7): teacher — годы назначения, admin — все со снимком; выбор пишет `?year=`; отклик — §5.7 |
+| Полоса лет (`YearStrip`) | кнопки доступных лет, активный помечен «идёт»; построена на `SegmentedControl` (v1.5, UX-03 D-10): выбранный чип `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`, высота `h-10` (в v1.4 — заливка `ink`, текст `surface`); `role="radiogroup"`, `aria-checked` | годы по видимости (контракт §7): teacher — годы назначения, admin — все со снимком; выбор пишет `?year=`; отклик — §5.7 |
 | Таблица итогов (`YearTotalsTable`) | год · детей в основной выборке · уроков проверено · явка · стихи · тест · тетрадь; под каждой цифрой — разница (`DiffBadge`); строка открывает год; метка «закрыт / идёт» и «методология vX», если ≠ текущей | закрытые годы — из снимков, активный — вживую; `<caption class="sr-only">`; ось «годы», не уроки |
 | Пояснение | «В разные годы в группе могли быть разные дети: это сравнение составов, а не одних и тех же учеников» | `analytics.years.composition_note` |
 | Закрытый год | `ReadOnlyYearNote` («Закрытый год — только чтение. Итоги зафиксированы при закрытии года»); при `methodology_version` ≠ текущей — `MethodologyVersionNote` | KPI и таблица итогов — из снимка; **графики по урокам и поимённые таблицы (A / B) считаются по записям выбранного года** теми же функциями, что для активного; «качество данных» и «кто какие уроки провёл» — только активный год |
@@ -362,3 +362,4 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 | 2026-10-19 | v1.2 — аналитика по учебным годам (P08): §4 параметры года, §5.5–§5.6, §6.5, §7.1, состояния D19–D21 (и D3), пути и требования R-8…R-14, сверка с прототипом |
 | 2026-10-20 | v1.3 — §5.7 и R-15: отклик смены года в том же клике; скелет вместо чисел предыдущего года |
 | 2026-10-21 | v1.4 — P11: §4.1 тип карточки аналитики (`1.3125rem`, `p-3` / `gap-3`); R-16 |
+| 2026-10-24 | v1.5 — ADR-014 (P14): §4.1 тело карточки `1.25rem` под базу 18 px, мета `text-base` 18 px; `YearStrip` и фильтры — `SegmentedControl` с выбранным `cobalt-soft`; поля диапазона — `DateField`; рейтинг (§R-12, цвет имён R-10) — см. [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md) §3.5 |

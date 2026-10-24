@@ -107,6 +107,7 @@
 | [`canonical_routes.md`](./canonical_routes.md) | Список маршрутов |
 | [`responsive_navigation_contract.md`](./responsive_navigation_contract.md) | Меню и алиасы |
 | [`visual_identity_contract.md`](./visual_identity_contract.md) | Визуальный канон |
+| [`prototype_class_parity_spec.md`](../implementation/mvp/specs/prototype_class_parity_spec.md) | Сверка классов прототипа и компонентов (§4 шаг 5 использует эту таблицу) |
 
 **Registry:** [`documentation_creation_registry.md`](../meta/documentation_creation_registry.md) — wave W2-05
 
@@ -122,3 +123,4 @@
 |------|--------|
 | 2026-10-10 | v1.0 — Canonical (W2-05) |
 | 2026-10-19 | v1.1 — аналитика по годам: функции прототипа блока «ГОДЫ» сопоставлены с экранами (P08) |
+| 2026-10-24 | v1.2 — P14: ссылка на parity-spec; функции `v*` без изменений, оболочка прототипа теперь `sidebarHTML` вместо `topNavHTML` |

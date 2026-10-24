@@ -19,6 +19,7 @@ This is the only review gate (`agent-code-review-subagent.mdc`). It is not Bugbo
 
 1. **2a** — restate the problem in 3–5 lines from the input above.
 2. **2b** — before reading hunks (`git status --short` only), build the expected shape: ≤ 5 rows from the protocol table + every path H / N / S listed in the tasks (triggers — registry §2.3.2a).
+   For a diff touching `components/{ui,shell,patterns,atoms,analytics}`, `app/globals.css` or `app/layout.tsx`, add one row: **parity** — each changed component maps to a row of [`docs/implementation/mvp/specs/prototype_class_parity_spec.md`](docs/implementation/mvp/specs/prototype_class_parity_spec.md) §7; resolve classes (cva base + variant + size), normalize per §3, compare with the prototype symbol (`docs/prototypes/sunday_school_prototype.html`, find by name — do not read the whole file); a difference outside `allowed_diff` is a blocker `drift: <row id>`. If a script exists, run `node scripts/check-prototype-parity.mjs --component <id>` (read-only) and include its output in Verified.
 3. **2c** — read the diff; a finding only per the verdict table: a concrete defect (input/state → wrong result) or a canon reference. «I would do it differently» is not a finding.
 
 ## T3 checklist (when any task in the CU is T3 / has `Paths: S`)

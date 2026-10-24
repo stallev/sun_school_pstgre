@@ -21,8 +21,8 @@ alwaysApply: false
 
 | Параметр | Источник | Реализация |
 |----------|----------|------------|
-| **Гарнитуры** | Alegreya, Alegreya Sans, `ui-monospace` (UX-03 D-2) | `next/font` + `font-display` / `font-body` (`font-sans`) / `font-mono` |
-| **Кегль** | Type scale §typography, responsive table | Atoms (`Heading`, `ContentText`) или точные `text-[Npx]` из DS |
+| **Гарнитуры** | Alegreya, Source Sans 3, `ui-monospace` (UX-03 v2.0 D-2) | `next/font` + `font-display` / `font-body` (`font-sans`) / `font-mono` |
+| **Кегль** | Type scale UX-03 §6 (база 18 px; пол 15.75 px; `text-xs` только бейдж) | Atoms (`Heading`, `ContentText`) или утилиты `text-base` / `text-sm`; `text-[0.9375rem]` запрещён |
 | **Начертание / вес** | `font-normal`, `font-medium`, `font-semibold`, `font-bold` | Как в прототипе для каждого контекста |
 | **Цвета** | Slate Cobalt CSS variables | Semantic tokens: `text-foreground`, `bg-primary`, `text-muted-foreground` — **не** ad-hoc hex |
 | **Spacing / radius** | M3 elevation, padding, `rounded-*` | Из design system §components |
@@ -35,6 +35,7 @@ alwaysApply: false
 3. Сверить **структуру DOM**, class names / token mapping, порядок секций.
 4. Реализовать через **shared components** (`components/ui/`, `components/atoms/`, feature folders) — не one-off стили на route.
 5. Responsive: mobile значения из прототипа = base; desktop — через `md:` / `lg:` per design system §2.
+6. **Parity (P14, UX-03 v2.0):** для каждого изменённого файла в `components/{ui,shell,patterns,atoms,analytics}`, `app/globals.css`, `app/layout.tsx` выполнить протокол [`prototype_class_parity_spec.md`](docs/implementation/mvp/specs/prototype_class_parity_spec.md) §4 (строка таблицы §7 → символ прототипа → итоговые классы компонента → нормализация §3 → `node scripts/check-prototype-parity.mjs --component <id>`). Расхождение вне `allowed_diff` — blocker. Trace: `Parity: <N> строк сверено, расхождений 0`.
 
 ## Исключения
 

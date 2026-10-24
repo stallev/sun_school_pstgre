@@ -12,7 +12,9 @@ description: Design system tokens, shadcn primitives and the Design Lab catalog 
 ## Principles
 
 - **Character:** Slate Cobalt palette, border-first depth (shadow only on floating panels), `rounded-lg` controls / `rounded-xl` cards — from UX-03, not shadcn defaults or generic SaaS gray.
-- **Typography:** Alegreya (`font-display`: titles, big numbers) and Alegreya Sans (`font-sans`/`font-body`) via `next/font` (latin + cyrillic) in the root layout; base 17 px (`html { font-size: 106.25% }`), sizes in `rem`. No third font.
+- **Typography (UX-03 v2.0, ADR-014):** Alegreya (`font-display`: titles, big numbers, verse text) and **Source Sans 3** (`font-sans`/`font-body`) via `next/font` (latin + cyrillic) in the root layout; base **18 px** (`html { font-size: 112.5% }`), sizes in `rem`. No third font. Body content in `<main>` is `text-base` (18 px); `text-sm` (15.75 px) is the floor for metadata only; `text-xs` only in `Badge` / `CountBadge`; no `text-[0.9375rem]`.
+- **Controls (UX-03 D-9, D-10, D-13):** heights from the scale `h-10` default / `h-9` compact (tables only) / `h-11` touch; one selected-chip style (`border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`, `SegmentedControl`); **no native `<select>`, `type="checkbox"`, `type="date"`** — use `Select`, `Checkbox`, `DateField`.
+- **Layout (UX-02 v2.0):** left sidebar on `lg+`, drawer below; page container `max-w-[1400px]`, left-aligned, narrow pages only via `PageSection` (`form` / `wide`); no `max-w-*` / `mx-auto` on a page.
 - **Mobile-first:** contract in **ui-mobile-first**; touch targets ≥ 44 px where the control is a primary action.
 - **Prototype fidelity:** fonts, sizes, weights, colors from prototype + UX-03 — **ui-prototype-fidelity**.
 

@@ -2,11 +2,11 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.1  
-**Дата:** 2026-10-21  
-**Волна:** W15-01  
+**Версия:** 2.0  
+**Дата:** 2026-10-24  
+**Волна:** W15-01 (v2.0 — W12, P14)  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) (UX-06), [`global_shell_spec.md`](./global_shell_spec.md), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md), [`canonical_routes.md`](../../../design/canonical_routes.md), [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D10), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8  
-**Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`<head>`: token dump, gap-список; хелперы и константы), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
+**Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`<head>`: token dump, gap-список; хелперы и константы), [`prototype_class_parity_spec.md`](./prototype_class_parity_spec.md) (сопоставление классов прототипа и компонентов), [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md), [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
 **Проверено по:** shadcn/ui — ui.shadcn.com через WebFetch, 2026-10-11: `components.json` — `style` и `tailwind.cssVariables` **не меняются после init**; документация перечисляет только стиль `new-york`; страница установки для Next.js упоминает выбор «base» в мастере и команду `shadcn@latest init`, но **не документирует** флаг `-b base` и стиль `base-vega`, которые указаны в правиле `ui-design-system-shadcn.mdc`. Эти значения не были в документации — **подтверждены на preflight P6 (2026-10-11)** через CLI `shadcn@4.21.4`: `init -b base -p vega` → `"style": "base-vega"` (Q-01 закрыт). Токены, `@theme inline`, контраст — по [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (Tailwind v4, WebFetch 2026-10-10). Route groups и `notFound()` — Next.js App Router (nextjs.org; по [`ui_states_contract.md`](../../../design/ui_states_contract.md)). Context7 недоступен.
 
 ---
@@ -70,7 +70,7 @@
 | Компонент | Назначение | Варианты | Источник (прототип) |
 |-----------|------------|----------|---------------------|
 | `Heading` | `h1`/`h2`/`h3` с визуальным уровнем отдельно от семантики | `level`, `as` | `font-display` классы, `H2` |
-| `BodyText`, `MutedText` | основной и вспомогательный текст | `ink`, `ink-2`, `muted` | `text-base`, `text-sm text-muted` |
+| `BodyText`, `MutedText` | основной (`text-base`, 18 px) и вспомогательный (`text-sm text-muted`, 15.75 px — пол кегля) текст; реализация — `ContentText` (`tone`: `body`, `secondary`, `muted`) | `ink`, `ink-2`, `muted` | `text-base`, `text-sm text-muted` |
 | `NumberDisplay` | крупное число, `tabular-nums` | размеры | счётчики, баллы |
 | `FieldError` / `AlertText` | текст ошибки: иконка + текст, `role="alert"` по контексту | — | `data-err`, `err_*` |
 | `Icon` | lucide, `aria-hidden`, `size-4`/`size-5`, `stroke 1.75` | — | `ic()` |
@@ -79,12 +79,16 @@
 
 | Компонент | Варианты / состояния | Рецепт | Прототип |
 |-----------|----------------------|--------|----------|
-| `Button` | `default` (cobalt-ink, hover cobalt-deep, D-6), `outline`, `ghost`, `destructive` (контур), `destructive-fill`; размеры `default` (h-10), `icon`; `pending` (spinner + `aria-busy`), `disabled` | UX-03 §8 | `BTN`, `B_PRIMARY`, `B_OUTLINE`, `B_GHOST`, `B_DANGER` |
+| `Button` | `default` (cobalt-ink, hover cobalt-deep, D-6), `outline`, `ghost`, `destructive` (контур), `destructive-solid` (только `ConfirmDialog`); размеры `default` (`h-10`, D-9), `compact` (`h-9`, таблицы), `touch` (`h-11`), `icon` (`size-10`); текст `text-base font-medium`; `pending` (spinner + `aria-busy`), `disabled` | UX-03 §8 | `BTN`, `B_PRIMARY`, `B_OUTLINE`, `B_GHOST`, `B_DANGER` |
 | `Card` | `p-4 sm:p-5`; без тени | UX-03 §7–§8 | `CARD` |
-| `Input`, `Textarea`, `Select` | границы `muted` (D-7), `h-10`; состояния `invalid`, `disabled` | UX-03 §8; UX-06 F3, F9 | `FIELD`, `SEL` |
-| `Field`/`Label` | подпись над полем, ошибка, подсказка | UX-06 F1, F3 | `LABEL` |
-| `Checkbox`, `Switch` | размер ≥ 44 px зоны касания | — | `toggle`, чекбокс согласия |
-| `SegmentedControl` | `role="radiogroup"`; 2–4 опции | UX-06 §5 | `seg()` |
+| `Input`, `Textarea` | границы `muted` (D-7), `h-10`, `text-base`; состояния `invalid`, `disabled` | UX-03 §8; UX-06 F3, F9 | `FIELD` |
+| `Select` (Base UI; уже в `components/ui/select.tsx`) | триггер как `Input` (`w-full`, `h-10`, `text-base`), шеврон справа, панель `DD_PANEL`, пункт `min-h-10 text-base`; **нативный `<select>` запрещён** (UX-03 D-13). Для form-submit — проп `name` на `Select.Root` (Base UI рендерит скрытый input); размеры `default` и `compact` (`h-9`) | UX-03 §8; UX-06 F3, F9 | `FIELD`, `SEL` |
+| `DateField` (v2.0) | поле + кнопка-календарь (`Popover`), ввод в формате локали из `lib/i18n/format.ts`, значение — ISO `YYYY-MM-DD` в `name`-input; **нативный `type=date` запрещён** | UX-03 §8 | `FIELD`, `type=date` |
+| `Field`/`Label` | подпись над полем (`text-base font-medium`), ошибка, подсказка (`text-sm`) | UX-06 F1, F3 | `LABEL` |
+| `Checkbox`, `Switch` | `Checkbox` `size-5`, подпись `text-base`, зона касания ≥ 44 px; `Switch` как есть | — | `toggle`, чекбокс согласия |
+| Чип выбора (v2.0) = `SegmentedControl` | единый чип (UX-03 D-10): невыбранный `border-input`, выбранный `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`; высота `h-10` (`size="compact"` — `h-9`); режим `radio` (по умолчанию, `role="radiogroup"`) и `toggle` (`aria-pressed`, независимые чипы-фильтры); заменяет ручные кнопки в `AnalyticsGradeChips`, `AnalyticsPeriodChips`, `YearStrip` | UX-03 §8 | `CHIP`, `yearChips`, `groupChips`, `periodChips` |
+| `PageSection` (v2.0) | ширина страницы: `full` (по умолчанию, контейнер 1400), `form` (`max-w-3xl`, 48rem), `wide` (`max-w-5xl`, 64rem); всегда влево; `(auth)` — `AuthScreen` | UX-03 §7 | `#view` |
+| `SegmentedControl` | `role="radiogroup"`; 2–4 опции; выбранный по D-10 | UX-06 §5 | `seg()` |
 | `ScoreSelector` | «— / 0…N», `radiogroup`, 4 или 12 кнопок, сетка 6 колонок на мобильном | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §5.3 | `scoreRow()` |
 | `ScorePad` | тихая ячейка сводной таблицы: стихи — сразу `— 0 1 2`; тест/тетрадь — цифра/`—` + панель «Не оценивалось» и сетка `0…5`/`6…10`; md+ — `Popover` (`@base-ui/react` 1.9.0, flip вверх); <md — разворот под полем; одна открытая панель. Состав: `score-pad`, `score-cell`, `ChoiceMatrix`. **Не** заменяет `ScoreSelector` / `ScoreGroup` | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §7.1–§7.3 | `vLessonTable` (`data-tbl`) |
 | `Badge` | ссылка на стих (`RefBadge`), статус | — | `ref()` |
@@ -95,7 +99,7 @@
 | `Table` | `th scope="col"`, горизонтальная прокрутка, фикс. первый столбец | — | `vLessonTable` |
 | `Dialog` | bottom-sheet; фокус по APG; `confirm` с danger | [`global_shell_spec.md`](./global_shell_spec.md) §6.5 | `openDialog`, `confirmDialog` |
 | `Sheet` | drawer слева | UX-03 §8 | `#drawer` |
-| `Disclosure` | кнопка `aria-expanded` + панель ссылок | [`global_shell_spec.md`](./global_shell_spec.md) §6.1 | `topnav` |
+| `Disclosure` | кнопка `aria-expanded` + панель (меню пользователя); навигацию не строит (v2.0) | [`global_shell_spec.md`](./global_shell_spec.md) §6.3 | `DD_PANEL` |
 | `Toast` | Sonner, 2000 ms, позиции | [`global_shell_spec.md`](./global_shell_spec.md) §6.5 | `toast()` |
 
 Подсистема shadcn/Base UI подтверждается на preflight (Q-01); при расхождении имён — `components.json` и этот список корректируются вместе.
@@ -114,7 +118,7 @@
 | `ScoreGroup` | подпись + `ScoreSelector` + метка «сдано позже» + раскрытие текста стиха | `vCheck` |
 | `CheckCardHeader` | ФИО, «N из M», итог баллов | `vCheck` |
 | `TableRowStates` | «не проверен» / «не был» / «позже» (текст + фон) | `vLessonTable` |
-| `NavDrawer`, `TopNav`, `UserMenu` | см. global_shell_spec | `#shell` |
+| `NavDrawer`, `SidebarNav`, `UserMenu` | см. global_shell_spec (v2.0: `SidebarNav` вместо `TopNav`) | `#shell`, `sidebarHTML` |
 
 ### 5.5 Иконки (lucide)
 
@@ -148,8 +152,10 @@
 | Структура | `:root` — семантические переменные (shadcn); `@theme inline` — маппинг на Tailwind v4; **без** `.dark` (D-4) |
 | Основные соответствия | `background`=`paper`; `card`/`popover`=`surface`; `foreground`=`ink`; `primary`=`cobalt-ink`, hover=`cobalt-deep`; `ring`=`cobalt`; `input`/граница поля=`muted` (D-7); `border`=`line`; `destructive`=`danger`; `success`=`ok`; `warning`=`warn`/`amber`; `accent`=`cobalt-soft` |
 | Зарезервировано (post-MVP) | `penalty`, `penalty-soft`, `tier-1..3` — объявлены, в компонентах MVP не используются |
-| Шрифты | `next/font`: Alegreya (display), Alegreya Sans (body), subsets `latin` + `cyrillic`; переменные `--font-display`, `--font-body` |
-| Размер | `html { font-size: 106.25% }`, размеры в `rem` (D-5) |
+| Шрифты | `next/font`: Alegreya (display), Source Sans 3 (body; v2.0, D-2), subsets `latin` + `cyrillic`; переменные `--font-display`, `--font-body` |
+| Размер | `html { font-size: 112.5% }` (18 px), размеры в `rem` (D-5 v2.0) |
+| Высоты контролов | `--control-h` (2.5rem), `--control-h-compact` (2.25rem), `--control-h-touch` (2.75rem) (D-9) |
+| Фокус `main` | `main:focus:not(:focus-visible) { outline: none }` (D-12) |
 | Кривая | `ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1)` |
 | Кастомный вариант | `reduce-transparency` (`prefers-reduced-transparency`) |
 | Запрещено | hex/`rgb()` и `style=""` в компонентах; `cobalt` как цвет текста; `line-strong` как граница поля |
@@ -170,7 +176,7 @@
 
 | Контрол | Поведение |
 |---------|-----------|
-| Ширина | контейнеры 390 / 768 / 1280 px (CSS container, не `window`) |
+| Ширина | контейнеры 390 / 768 / 1024 / 1280 px (CSS container, не `window`; 1024 — граница сайдбара) |
 | Навигация | липкая панель якорей L1 / L2 / L3 |
 | Тема | **переключателя нет** (D-4) |
 | Состояния | переключатели «disabled», «pending», «invalid» применяются к матрице |
@@ -198,6 +204,7 @@ apps/web/src/
 | 3 | Реализовать компонент по рецепту §8 UX-03; различия (disclosure вместо `menu`, `Link`, lucide) — по specs |
 | 4 | Добавить секцию в Lab с якорем и проверить на 390 px и `md` |
 | 5 | Если рецепт отсутствует — сначала правка UX-03, затем код |
+| 6 (v2.0) | Сверить классы компонента со строкой таблицы [`prototype_class_parity_spec.md`](./prototype_class_parity_spec.md) §2 по протоколу §4 этого документа; результат — трасса `Parity: …` |
 
 ## 9. Правила наращивания каталога
 
@@ -245,6 +252,8 @@ apps/web/src/
 - [ ] Основные кнопки: `cobalt-ink`, hover `cobalt-deep`; границы полей `muted` — исход: визуальная сверка и токены.
 - [ ] `ScoreSelector` и `SegmentedControl` управляются клавиатурой (стрелки) — исход: ручной шаг.
 - [ ] Продуктовые маршруты не импортируют `design-lab` — исход: lint.
+- [ ] v2.0: в Lab есть секции `Select`, `DateField`, `SegmentedControl` (режимы `radio` / `toggle`, размеры), `PageSection`, `SidebarNav` с матрицей «вариант × состояние» на 390 / 1024 / 1280 — исход: сверка списка.
+- [ ] v2.0: `grep` по `apps/web/src` на `<select`, `type="checkbox"`, `type="date"` пуст — исход: проверка.
 
 ## 13. Open questions
 
@@ -282,3 +291,4 @@ apps/web/src/
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W15-01) |
 | 2026-10-21 | v1.1 — P11: строка `ScorePad` (§5.3); `ScoreSelector` без изменений |
+| 2026-10-24 | v2.0 — ADR-014 (P14): Source Sans 3, 18 px, высоты контролов; `Select` (Base UI) приведён к шкале v2; новые примитивы `DateField`, `PageSection`; `SegmentedControl` получил режим `toggle` и размер `compact` (вместо отдельного `Chip`); `SidebarNav` вместо `TopNav`; ширина Lab 1024; шаг 6 fidelity (parity-spec) |

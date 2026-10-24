@@ -26,6 +26,7 @@
 | Typography | [`typography_text_guidelines.md`](typography_text_guidelines.md) |
 | Visual identity (canon) | [`../design/visual_identity_contract.md`](../design/visual_identity_contract.md) |
 | **UI component catalog (Design Lab)** | [`../implementation/mvp/specs/design_system_lab_spec.md`](../implementation/mvp/specs/design_system_lab_spec.md) — `/design-system` |
+| **Prototype ↔ component class parity** | [`../implementation/mvp/specs/prototype_class_parity_spec.md`](../implementation/mvp/specs/prototype_class_parity_spec.md) — протокол сверки для `reviewer` (P14) |
 | UX states, forms, navigation (canon) | [`../design/ui_states_contract.md`](../design/ui_states_contract.md), [`../design/forms_and_validation_ux.md`](../design/forms_and_validation_ux.md), [`../design/responsive_navigation_contract.md`](../design/responsive_navigation_contract.md) |
 | Accessibility | rule `ui-semantics-a11y` (T2, P6) + [`react/ai_semantics_a11y_guidelines.md`](react/ai_semantics_a11y_guidelines.md); профиль D8 |
 | Security (XSS/CSRF/CSP) | [`security/README.md`](security/README.md) |

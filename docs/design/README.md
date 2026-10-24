@@ -13,7 +13,8 @@
 |----------|------------|
 | [`canonical_routes.md`](./canonical_routes.md) | Единственный инвентарь маршрутов |
 | [`responsive_navigation_contract.md`](./responsive_navigation_contract.md) | Оболочка и навигация (UX-02) |
-| [`visual_identity_contract.md`](./visual_identity_contract.md) | Токены, типографика, рецепты (UX-03) |
+| [`visual_identity_contract.md`](./visual_identity_contract.md) | Токены, типографика, рецепты (UX-03 v2.0) |
+| [`redesign_v2_ui_spec.md`](./redesign_v2_ui_spec.md) | Редизайн v2: что и в каком компоненте менять (P14) |
 | [`ui_states_contract.md`](./ui_states_contract.md) | Loading / empty / error / forbidden (UX-05) |
 | [`forms_and_validation_ux.md`](./forms_and_validation_ux.md) | Формы и валидация (UX-06) |
 | [`prototype_route_mapping.md`](./prototype_route_mapping.md) | Экран прототипа → маршрут → источник требований (UX-08) |

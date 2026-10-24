@@ -6,7 +6,7 @@
 <title>Воскресная школа — прототип</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <!--
   PROTOTYPE TOKEN DUMP (P1 ingest) — вход для W2 visual_identity_contract.md (UX-03) и P6 globals.css.
@@ -29,12 +29,15 @@
     penalty #1E3A8A · penalty-soft #E0E7FF
     bronze #EA580C · silver #94A3B8 · gold #EAB308
     series-1 #3370FF · series-2 #EA580C · series-3 #0D9488
-  ТИПОГРАФИКА
-    --font-display "Alegreya", Georgia, serif (500 / 700 / 400 italic) · --font-body "Alegreya Sans", system-ui, sans-serif (400 / 500 / 700)
-    html { font-size: 106.25% } (базовый кегль 17px)
+  ТИПОГРАФИКА (v2.0, ADR-014 R-1, R-2)
+    --font-display "Alegreya", Georgia, serif (500 / 700 / 400 italic) · --font-body "Source Sans 3", system-ui, sans-serif (400 / 500 / 600 / 700)
+    html { font-size: 112.5% } (базовый кегль 18px); text-base 18 · text-sm 15.75 (пол метаданных) · text-xs 13.5 (только бейджи/счётчики)
+  КОНТРОЛЫ (v2.0, UX-03 D-9, D-10)
+    --control-h 2.5rem (h-10, 45px) · --control-h-compact 2.25rem (h-9, только в таблицах) · --control-h-touch 2.75rem (h-11)
+    выбранный чип/сегмент: border-cobalt-ink bg-cobalt-soft text-cobalt-ink font-bold (константы CHIP / CHIP_ON / CHIP_OFF)
   ДВИЖЕНИЕ  --ease-out-soft cubic-bezier(0.22, 1, 0.36, 1) · transition 100–300 ms · motion-reduce / reduce-transparency учтены
-  ОБОЛОЧКА  max-w-[1400px] · header h-14 sticky · drawer w-[min(20rem,86vw)] (< lg) · bottom-sheet диалог max-h-[92dvh] · toast
-  БРЕЙКПОИНТЫ  mobile-first 390 px; sm / md / lg (навигация переходит из drawer в topnav на lg)
+  ОБОЛОЧКА (v2.0, ADR-014 R-4, R-8)  header h-14 sticky · на lg+ левый сайдбар w-64 (sidebarHTML) + main · контент max-w-[1400px], прижат влево · drawer w-[min(20rem,86vw)] (< lg) · bottom-sheet диалог max-h-[92dvh] · toast
+  БРЕЙКПОИНТЫ  mobile-first 390 px; sm / md / lg (навигация переходит из drawer в сайдбар на lg)
 
   СООТВЕТСТВИЕ ПРОТОТИПНЫЙ ТОКЕН → СЕМАНТИЧЕСКАЯ РОЛЬ (предложение для W2)
     paper → background · surface → card / popover · ink → foreground · ink-2 → secondary-foreground · muted → muted-foreground
@@ -104,14 +107,22 @@
     --color-series-3: #0D9488;
 
     --font-display: "Alegreya", Georgia, serif;
-    --font-body: "Alegreya Sans", system-ui, sans-serif;
+    --font-body: "Source Sans 3", system-ui, sans-serif;
+
+    --control-h: 2.5rem;
+    --control-h-compact: 2.25rem;
+    --control-h-touch: 2.75rem;
 
     --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   @layer base {
-    html { font-size: 106.25%; -webkit-text-size-adjust: 100%; }
-    input[type="date"] { min-height: 2.75rem; }
+    html { font-size: 112.5%; -webkit-text-size-adjust: 100%; }
+    /* ADR-014 R-9: программный фокус main без рамки; :focus-visible на интерактиве остаётся */
+    main:focus:not(:focus-visible) { outline: none; }
+    /* ADR-014 R-7: select и date в прототипе рисуются как поле каталога (SEL / DATE), не как системный контрол */
+    select.sel { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem; padding-right: 2.5rem; }
+    input[type="date"] { min-height: var(--control-h); }
   }
 </style>
 </head>
@@ -170,19 +181,23 @@
 
 <div id="shell" class="flex min-h-dvh flex-col">
   <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md reduce-transparency:bg-surface reduce-transparency:backdrop-blur-none">
-    <div class="mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-2 sm:px-4 lg:gap-4 lg:px-8">
+    <div class="flex h-14 items-center gap-2 px-2 sm:px-4 lg:gap-0 lg:px-0">
       <button id="menuBtn" type="button" data-act="menu-open" aria-label="Открыть меню" aria-expanded="false" aria-controls="drawer"
         class="inline-flex size-10 items-center justify-center rounded-lg text-ink transition-[background-color,transform] duration-100 hover:bg-paper active:scale-[0.96] lg:hidden">
         <svg class="size-6 fill-none stroke-current" stroke-width="1.75" stroke-linecap="round"><use href="#i-menu"/></svg>
       </button>
-      <div id="brand" class="flex min-w-0 items-center gap-2.5"></div>
-      <nav id="topnav" class="hidden lg:flex lg:items-center lg:gap-1" aria-label="Разделы"></nav>
-      <div id="hdrRight" class="ml-auto flex items-center gap-1.5"></div>
+      <div id="brand" class="flex min-w-0 items-center gap-2.5 lg:h-full lg:w-64 lg:shrink-0 lg:border-r lg:border-line lg:px-5"></div>
+      <div id="hdrRight" class="ml-auto flex items-center gap-1.5 lg:px-8"></div>
     </div>
   </header>
-  <main id="main" tabindex="-1" class="flex-1 px-4 pt-4 pb-28 sm:px-6 lg:px-8 lg:pt-7 lg:pb-16 outline-none">
-    <div id="view" class="mx-auto max-w-[1400px]"></div>
-  </main>
+  <div id="shellGrid" class="flex-1 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
+    <aside id="sidebar" class="sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface px-3 py-4 lg:block">
+      <nav id="sidenav" aria-label="Разделы"></nav>
+    </aside>
+    <main id="main" tabindex="-1" class="min-w-0 px-4 pt-4 pb-28 sm:px-6 lg:px-8 lg:pt-7 lg:pb-16 outline-none">
+      <div id="view" class="max-w-[1400px]"></div>
+    </main>
+  </div>
 </div>
 
 <div id="drawer" class="fixed inset-0 z-50 hidden lg:hidden" role="dialog" aria-modal="true" aria-label="Меню">
@@ -673,7 +688,7 @@ const SCHOOL_ATT = {
    UI-ХЕЛПЕРЫ
    ========================================================= */
 const ic = (id, cls='size-5') => `<svg class="${cls} shrink-0 fill-none stroke-current" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#${id}"/></svg>`;
-const BTN = 'inline-flex h-10 whitespace-nowrap items-center justify-center gap-2 rounded-lg px-3.5 text-[0.9375rem] font-medium select-none transition-[background-color,border-color,color,transform] duration-100 active:scale-[0.97] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt disabled:opacity-45 disabled:active:scale-100';
+const BTN = 'inline-flex h-10 whitespace-nowrap items-center justify-center gap-2 rounded-lg px-3.5 text-base font-medium select-none transition-[background-color,border-color,color,transform] duration-100 active:scale-[0.97] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt disabled:opacity-45 disabled:active:scale-100';
 const B_PRIMARY = BTN + ' bg-cobalt-ink text-surface hover:bg-cobalt-deep';
 const B_OUTLINE = BTN + ' border border-line-strong bg-surface text-ink hover:bg-paper';
 const B_GHOST   = BTN + ' text-ink hover:bg-line/60';
@@ -683,11 +698,14 @@ const B_PENALTY = BTN + ' bg-penalty text-surface hover:opacity-90';
 const B_PENALTY_OUTLINE = BTN + ' border border-penalty text-penalty hover:bg-penalty-soft';
 const CARD = 'rounded-xl border border-line bg-surface';
 const H2 = 'font-display text-[1.25rem] font-medium leading-snug';
-const FIELD = 'h-10 w-full max-w-sm rounded-lg border border-muted bg-surface px-3 text-base focus:border-cobalt focus:outline-none';
-const SUBMIT = BTN + ' mx-auto flex h-12 w-full max-w-xs justify-center';
-const LABEL = 'mb-1.5 block text-sm font-medium';
-const SEG_ON = 'border-ink bg-ink text-surface';
-const SEG_OFF = 'border-line-strong bg-surface text-ink hover:border-ink-2';
+const FIELD = 'h-10 w-full max-w-sm rounded-lg border border-muted bg-surface px-3 text-base focus:border-cobalt-ink focus:outline-none';
+const SEL = FIELD + ' sel';   /* Select каталога (ADR-014 R-7): шеврон справа, без системного вида */
+const SUBMIT = BTN + ' h-11 w-full justify-center';   /* touch-высота D-9; только узкий экран входа. Остальные формы — обычная кнопка по размеру содержимого (UX-06 F14) */
+const LABEL = 'mb-1.5 block text-base font-medium';
+/* Чип и сегмент (UX-03 D-10, ADR-014 R-5): выбранный — cobalt-soft; solid ink как «выбрано» запрещён */
+const SEG_ON = 'border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink';
+const SEG_OFF = 'border-muted bg-surface text-ink hover:border-ink-2';
+const CHIP = 'h-10 rounded-lg border px-3 text-base transition-[background-color,border-color,color] duration-100';
 
 const REMOVED = [], GONE = [];
 const pupil = id => PUPILS.concat(INACTIVE, REMOVED, GONE).find(p=>p.id===id);
@@ -721,7 +739,7 @@ const tierDot = t => `<span class="inline-block size-2.5 shrink-0 rounded-full $
 function seg(name, opts, val, act, extra=''){
   return `<div class="grid gap-1.5 grid-cols-${opts.length}" role="radiogroup" aria-label="${name}">
     ${opts.map(([v,l])=>`<button type="button" role="radio" aria-checked="${val===v}" data-act="${act}" data-val="${v}" ${extra}
-      class="h-10 rounded-lg border px-2 text-[0.9375rem] transition-[background-color,border-color,color] duration-100 ${val===v ? SEG_ON : SEG_OFF}">${l}</button>`).join('')}</div>`;
+      class="${CHIP} ${val===v ? SEG_ON : SEG_OFF}">${l}</button>`).join('')}</div>`;
 }
 function toggle(on, act, label, extra=''){
   return `<button type="button" role="switch" aria-checked="${on}" data-act="${act}" aria-label="${label}" ${extra}
@@ -924,15 +942,15 @@ function snapDiff(group, yid, k){
 }
 function yearChips(group, act, sel){
   return `<div class="mb-5 flex flex-wrap items-center gap-2" role="radiogroup" aria-label="Учебный год">${visibleYears(group).map(y=>`<button type="button" role="radio" aria-checked="${sel===y.id}" data-act="${act}" data-val="${y.id}"
-    class="h-9 rounded-lg border px-3 text-sm ${sel===y.id ? SEG_ON : SEG_OFF}">${y.name}${yearState(y)==='active' ? ' · идёт' : ''}</button>`).join('')}</div>`;
+    class="${CHIP} ${sel===y.id ? SEG_ON : SEG_OFF}">${y.name}${yearState(y)==='active' ? ' · идёт' : ''}</button>`).join('')}</div>`;
 }
 const methodNote = m => m!==METHOD_NOW ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-alert','size-4 mt-0.5 text-warn')} Год посчитан по методологии ${m}, сейчас действует ${METHOD_NOW}. Итоги закрытого года не пересчитываются.</p>` : '';
 const readOnlyNote = `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-lock','size-4 mt-0.5')} Закрытый год — только чтение. Итоги зафиксированы при закрытии года.</p>`;
 function kpiTiles(group, yid){
   const s = groupSnap(group, yid); if (!s) return '';
   return `<dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">${SNAP_KEYS.map(([k,l])=>`<div class="${CARD} p-4"><dt class="text-sm text-muted">${l}</dt>
-      <dd class="mt-1 font-display text-2xl tabular-nums">${fmtSnap(k, s[k])}</dd>${k==='test'||k==='nb' ? '<dd class="text-xs text-muted">из 10</dd>' : ''}
-      <dd class="mt-1 text-xs text-ink-2">${snapDiff(group, yid, k)}</dd></div>`).join('')}</dl>
+      <dd class="mt-1 font-display text-2xl tabular-nums">${fmtSnap(k, s[k])}</dd>${k==='test'||k==='nb' ? '<dd class="text-sm text-muted">из 10</dd>' : ''}
+      <dd class="mt-1 text-sm text-ink-2">${snapDiff(group, yid, k)}</dd></div>`).join('')}</dl>
     <p class="mt-2 text-sm text-muted">Детей в основной выборке: <b class="font-bold">${s.kids}</b> · проверено уроков: <b class="font-bold">${s.lessons}</b></p>`;
 }
 function yearsTable(group, sel){
@@ -943,9 +961,9 @@ function yearsTable(group, sel){
       <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Год</th><th scope="col" class="px-3 py-3 text-right font-normal">Детей в основной выборке</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
       <tbody class="divide-y divide-line">${ys.map(y=>{ const s = groupSnap(group, y.id);
         return `<tr class="${sel===y.id ? 'bg-paper' : ''}"><th scope="row" class="px-5 py-3 font-medium"><button type="button" data-act="ana-year" data-val="${y.id}" ${sel===y.id?'aria-current="true"':''} class="text-left hover:text-cobalt">${y.name}</button>
-          <span class="block text-xs font-normal text-muted">${yearState(y)==='active' ? 'идёт' : 'закрыт'}${s.method!==METHOD_NOW ? ' · методология '+s.method : ''}</span></th>
+          <span class="block text-sm font-normal text-muted">${yearState(y)==='active' ? 'идёт' : 'закрыт'}${s.method!==METHOD_NOW ? ' · методология '+s.method : ''}</span></th>
           <td class="px-3 py-3 text-right tabular-nums">${s.kids}</td><td class="px-3 py-3 text-right tabular-nums">${s.lessons}</td>
-          ${SNAP_KEYS.map(([k],i)=>`<td class="${i===3?'px-5':'px-3'} py-3 text-right tabular-nums">${fmtSnap(k, s[k])}<span class="block text-xs font-normal text-ink-2">${snapDiff(group, y.id, k)}</span></td>`).join('')}</tr>`; }).join('')}</tbody></table></div></section>`;
+          ${SNAP_KEYS.map(([k],i)=>`<td class="${i===3?'px-5':'px-3'} py-3 text-right tabular-nums">${fmtSnap(k, s[k])}<span class="block text-sm font-normal text-ink-2">${snapDiff(group, y.id, k)}</span></td>`).join('')}</tr>`; }).join('')}</tbody></table></div></section>`;
 }
 const histDate = (yid, i) => { const d = new Date(Date.UTC(Number(yid), 8, 8+14*i)); return String(d.getUTCDate()).padStart(2,'0')+'.'+String(d.getUTCMonth()+1).padStart(2,'0'); };
 /* Закрытый год в прототипе: значения по урокам смоделированы вокруг зафиксированных итогов */
@@ -989,12 +1007,12 @@ function pupilYearsSection(p, rows, sel){
   const few = r => r.lessons < SNAP_M;
   const foreign = S.role==='teacher' && rows.some(r=>r.groups.some(g=>g!=='Средняя'));
   const chips = `<div class="mb-4 flex flex-wrap gap-2" role="radiogroup" aria-label="Учебный год ученика">${rows.map(r=>`<button type="button" role="radio" aria-checked="${sel===r.yid}" data-act="pupil-year" data-val="${r.yid}"
-    class="h-9 rounded-lg border px-3 text-sm ${sel===r.yid ? SEG_ON : SEG_OFF}">${yearOf(r.yid).name}</button>`).join('')}</div>`;
+    class="${CHIP} ${sel===r.yid ? SEG_ON : SEG_OFF}">${yearOf(r.yid).name}</button>`).join('')}</div>`;
   return `<section class="mb-6"><h2 class="${H2} mb-2">По годам</h2>${chips}
     <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[44rem] text-left"><caption class="sr-only">Итоги ученика по учебным годам</caption>
       <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Год</th><th scope="col" class="px-3 py-3 font-normal">Группа</th><th scope="col" class="px-3 py-3 text-right font-normal">Явка</th><th scope="col" class="px-3 py-3 text-right font-normal">Стихи</th><th scope="col" class="px-3 py-3 text-right font-normal">Тест</th><th scope="col" class="px-3 py-3 text-right font-normal">Тетрадь</th><th scope="col" class="px-5 py-3 text-right font-normal">Кирпичики: набрано / выдано</th></tr></thead>
       <tbody class="divide-y divide-line">${rows.map(r=>`<tr class="${sel===r.yid ? 'bg-paper' : ''}">
-        <th scope="row" class="px-5 py-3 font-medium"><button type="button" data-act="pupil-year" data-val="${r.yid}" ${sel===r.yid?'aria-current="true"':''} class="text-left hover:text-cobalt">${yearOf(r.yid).name}</button>${few(r) ? '<span class="block text-xs font-normal text-muted">мало уроков: '+r.lessons+'</span>' : ''}</th>
+        <th scope="row" class="px-5 py-3 font-medium"><button type="button" data-act="pupil-year" data-val="${r.yid}" ${sel===r.yid?'aria-current="true"':''} class="text-left hover:text-cobalt">${yearOf(r.yid).name}</button>${few(r) ? '<span class="block text-sm font-normal text-muted">мало уроков: '+r.lessons+'</span>' : ''}</th>
         <td class="px-3 py-3 text-sm">${r.groups.join(' → ')}</td>
         <td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : pct(r.att)}</td><td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : f1(r.verses)}</td>
         <td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : f1(r.test)}</td><td class="px-3 py-3 text-right tabular-nums">${few(r) ? '—' : f1(r.nb)}</td>
@@ -1026,7 +1044,7 @@ function chart(spec){
   return `<div class="relative h-[${spec.h||210}px]" data-chart="${key}"></div>
     ${spec.series.length>1 ? `<div class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-2">${spec.series.map(s=>`<span class="inline-flex items-center gap-2"><span class="inline-block h-0.5 w-5 rounded-full ${s.color.replace(/var\(--color-(.+)\)/,'bg-$1')}"></span>${s.name}</span>`).join('')}</div>` : ''}
     <details class="group mt-2"><summary class="inline-flex h-9 cursor-pointer list-none items-center gap-1 rounded-md text-sm text-ink-2 hover:text-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} Показать таблицей</summary>
-      <table class="mt-1 w-full text-sm"><thead><tr class="text-left text-muted"><th class="py-1 pr-4 font-normal">${spec.xLabel||'Урок'}</th>${spec.series.map(s=>`<th class="py-1 pr-4 text-right font-normal">${s.name}</th>`).join('')}${spec.extra?'<th class="py-1 text-right font-normal">N</th>':''}</tr></thead><tbody>${rows}</tbody></table></details>`;
+      <table class="mt-1 w-full text-base"><thead><tr class="text-left text-muted"><th class="py-1 pr-4 font-normal">${spec.xLabel||'Урок'}</th>${spec.series.map(s=>`<th class="py-1 pr-4 text-right font-normal">${s.name}</th>`).join('')}${spec.extra?'<th class="py-1 text-right font-normal">N</th>':''}</tr></thead><tbody>${rows}</tbody></table></details>`;
 }
 function svgChart(spec, W){
   const H = spec.h || 210, multi = spec.series.length > 1, endLbl = multi && W >= 480 && !spec.noEnd;
@@ -1105,7 +1123,7 @@ function penRow(pid, lid){
     ${!S.achMode.on && !x ? '<span class="text-sm text-muted">Штрафы недоступны: режим достижений в группе выключен</span>' : x ? `<span class="inline-flex min-w-0 items-center gap-1.5 text-sm font-medium text-penalty">${ic('i-flag','size-4')}<span>Штраф: ${pen(x.code).name} · ${sgnInt(x.pts)}</span></span>
       <button type="button" data-act="pen-off" data-id="${x.id}" class="inline-flex h-8 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-undo','size-4')} Снять</button>`
     : `<button type="button" data-act="pen-open" data-pid="${pid}" data-lid="${lid}" class="${B_PENALTY_OUTLINE} h-9 px-3 text-sm">${ic('i-flag','size-4')} Штраф за поведение</button>
-      <span class="text-xs text-muted">Баллы урока не меняет — уменьшает кирпичики</span>`}
+      <span class="text-sm text-muted">Баллы урока не меняет — уменьшает кирпичики</span>`}
   </div>`;
 }
 /* Список штрафов ученика: учитель и админ — со снятием, родитель — только чтение */
@@ -1156,62 +1174,54 @@ function awardList(pid, canRevoke){
    ========================================================= */
 const activeView = () => NAV_ALIAS[S.view] || S.view;
 const pendingCount = () => USERS.filter(u=>u.status==='pending').length;
-const badge = n => n ? `<span class="ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-cobalt px-1.5 text-xs font-bold tabular-nums text-surface">${n}</span>` : '';
+const badge = n => n ? `<span class="ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-cobalt-ink px-1.5 text-xs font-bold tabular-nums text-surface">${n}</span>` : '';
 const DD_PANEL = 'absolute top-full z-50 mt-1.5 min-w-64 origin-top rounded-xl border border-line bg-surface p-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)]';
 
 function brandHTML(){
   return `${LOGO}<span class="min-w-0"><span class="block truncate font-display text-lg font-medium leading-tight">${window.innerWidth >= 1024 ? t('common.brand') : TITLES[S.view]}</span>
-    <span class="block truncate text-xs text-muted lg:hidden">${ME[S.role].name} · ${t('common.role_names.'+S.role)}</span></span>`;
+    <span class="block truncate text-sm text-muted lg:hidden">${ME[S.role].name} · ${t('common.role_names.'+S.role)}</span></span>`;
 }
-function topNavHTML(){
+/* Сайдбар lg+ (ADR-014 R-8): плоские группы, все пункты видны, без раскрытия; пункты как в NAV, описание (desc) не выводится */
+const SIDE_ROW = 'flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight transition-[background-color,color] duration-100';
+const SIDE_ROW_ON = 'bg-cobalt-soft font-bold text-cobalt-ink';
+const SIDE_ROW_OFF = 'text-ink hover:bg-line/60';
+function sidebarHTML(){
   const av = activeView();
-  return NAV[S.role].map(it=>{
-    if (Array.isArray(it)){ const [k,l,i] = it; const on = av===k;
-      return `<button type="button" data-act="go" data-view="${k}" ${on?'aria-current="page"':''} class="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-[0.9375rem] transition-[background-color,color] duration-100 ${on ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'text-ink-2 hover:bg-paper hover:text-ink'}">${ic(i,'size-4')}${t(l)}</button>`; }
-    const on = it.items.some(([k])=>k===av), open = S.dd===it.id;
-    const n = it.id==='a-people' ? pendingCount() + openDel() : 0;
-    return `<div class="relative">
-      <button type="button" data-act="dd" data-id="${it.id}" aria-haspopup="menu" aria-expanded="${open}" class="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-[0.9375rem] transition-[background-color,color] duration-100 ${on ? 'bg-cobalt-soft font-bold text-cobalt-ink' : open ? 'bg-paper text-ink' : 'text-ink-2 hover:bg-paper hover:text-ink'}">
-        ${ic(it.icon,'size-4')}${t(it.label)}${n ? `<span class="inline-flex min-w-5 items-center justify-center rounded-full bg-cobalt px-1.5 text-xs font-bold text-surface">${n}</span>` : ''}${ic('i-down','size-4 transition-transform duration-150 '+(open?'rotate-180':''))}</button>
-      ${open ? `<div role="menu" class="${DD_PANEL} left-0">
-        ${it.items.map(([k,l,i,d])=>`<button type="button" role="menuitem" data-act="go" data-view="${k}" class="flex w-full items-start gap-3 rounded-lg px-2.5 py-2 text-left ${av===k ? 'bg-cobalt-soft text-cobalt-ink' : 'hover:bg-paper'}">
-          <span class="mt-0.5 ${av===k?'':'text-ink-2'}">${ic(i,'size-4')}</span><span class="min-w-0 flex-1"><span class="flex items-center gap-2 font-medium">${t(l)}${navBadge(k)}</span>${d?`<span class="block text-sm text-muted">${t(d)}</span>`:''}</span></button>`).join('')}
-      </div>` : ''}
-    </div>`;
-  }).join('');
+  const row = ([k,l,i]) => `<li><button type="button" data-act="go" data-view="${k}" ${av===k?'aria-current="page"':''} class="${SIDE_ROW} ${av===k ? SIDE_ROW_ON : SIDE_ROW_OFF}">${ic(i)}<span class="min-w-0 flex-1">${t(l)}</span>${navBadge(k)}</button></li>`;
+  return NAV[S.role].map(it=> Array.isArray(it)
+    ? `<ul class="mt-1 first:mt-0">${row(it)}</ul>`
+    : `<div class="mt-5 first:mt-0"><p id="sg-${it.id}" class="flex items-center px-3 pb-1 text-sm font-medium text-muted">${t(it.label)}${it.id==='a-people' ? badge(pendingCount() + openDel()) : ''}</p><ul aria-labelledby="sg-${it.id}" class="space-y-0.5">${it.items.map(row).join('')}</ul></div>`).join('');
 }
 function rightHTML(){
   const u = ME[S.role], roleLabel = t('common.roles.'+S.role);
-  return `<div class="relative hidden sm:block">
-      <button type="button" data-act="dd" data-id="role" aria-haspopup="menu" aria-expanded="${S.dd==='role'}" class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-dashed border-line-strong px-2.5 text-sm text-ink-2 hover:bg-paper">${t('common.role')}: <b class="font-bold text-ink">${roleLabel}</b>${ic('i-down','size-4')}</button>
-      ${S.dd==='role' ? `<div role="menu" class="${DD_PANEL} right-0 min-w-52"><p class="px-2.5 pt-1 pb-1.5 text-xs text-muted">${t('common.view_as')}</p>
-        ${ROLES.map(([k,l])=>`<button type="button" role="menuitemradio" aria-checked="${S.role===k}" data-act="role" data-role="${k}" class="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left ${S.role===k?'bg-cobalt-soft font-bold text-cobalt-ink':'hover:bg-paper'}">${S.role===k?ic('i-ok','size-4'):'<span class="size-4"></span>'}${t('common.roles.'+k)}</button>`).join('')}</div>` : ''}
-    </div>
-    <div class="relative">
-      <button type="button" data-act="dd" data-id="user" aria-haspopup="menu" aria-expanded="${S.dd==='user'}" aria-label="${t('common.user_menu')}" class="inline-flex h-9 items-center gap-2 rounded-lg px-1.5 hover:bg-paper">
-        <span class="inline-flex size-8 items-center justify-center rounded-full bg-paper font-display text-ink-2 ring-1 ring-line">${u.name[0]}</span><span class="hidden text-sm font-medium xl:inline">${u.name}</span>${ic('i-down','size-4 text-ink-2 hidden sm:block')}</button>
-      ${S.dd==='user' ? `<div role="menu" class="${DD_PANEL} right-0 min-w-56">
+  /* v2.0 (ADR-014 R-8): «Смотреть как» — группа в меню пользователя; отдельной кнопки роли в шапке нет */
+  return `<div class="relative">
+      <button type="button" data-act="dd" data-id="user" aria-haspopup="menu" aria-expanded="${S.dd==='user'}" aria-label="${t('common.user_menu')}" class="inline-flex h-10 items-center gap-2 rounded-lg px-1.5 hover:bg-paper">
+        <span class="inline-flex size-8 items-center justify-center rounded-full bg-paper font-display text-ink-2 ring-1 ring-line">${u.name[0]}</span><span class="hidden text-base font-medium xl:inline">${u.name}</span>${ic('i-down','size-4 text-ink-2 hidden sm:block')}</button>
+      ${S.dd==='user' ? `<div role="menu" class="${DD_PANEL} right-0 min-w-64">
         <div class="border-b border-line px-2.5 pt-1 pb-2"><p class="font-medium">${u.name}</p><p class="text-sm text-muted">${u.sub}</p></div>
-        <button type="button" role="menuitem" data-act="go" data-view="profile" class="mt-1 flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left hover:bg-paper">${ic('i-person','size-4')} ${t('common.profile')}</button>
-        <button type="button" role="menuitem" data-act="logout" class="flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left hover:bg-paper">${ic('i-logout','size-4')} ${t('common.logout')}</button></div>` : ''}
+        <button type="button" role="menuitem" data-act="go" data-view="profile" class="mt-1 flex h-10 w-full items-center gap-3 rounded-lg px-2.5 text-left text-base hover:bg-paper">${ic('i-person','size-4')} ${t('common.profile')}</button>
+        <div class="my-1 border-t border-line pt-1.5" role="group" aria-label="${t('common.view_as')}"><p class="px-2.5 pb-1 text-sm text-muted">${t('common.view_as')}: ${roleLabel}</p>
+        ${ROLES.map(([k,l])=>`<button type="button" role="menuitemradio" aria-checked="${S.role===k}" data-act="role" data-role="${k}" class="flex h-10 w-full items-center gap-2 rounded-lg px-2.5 text-left text-base ${S.role===k?'bg-cobalt-soft font-bold text-cobalt-ink':'hover:bg-paper'}">${S.role===k?ic('i-ok','size-4'):'<span class="size-4"></span>'}${t('common.roles.'+k)}</button>`).join('')}</div>
+        <button type="button" role="menuitem" data-act="logout" class="flex h-10 w-full items-center gap-3 rounded-lg px-2.5 text-left text-base hover:bg-paper">${ic('i-logout','size-4')} ${t('common.logout')}</button></div>` : ''}
     </div>`;
 }
 /* Мобильное меню: те же группы, раскрытые списком */
 function navHTML(){
   const av = activeView();
-  const item = ([k,l,i]) => `<li><button type="button" data-act="go" data-view="${k}" ${av===k?'aria-current="page"':''} class="flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-[0.9375rem] ${av===k ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'text-ink-2 hover:bg-paper hover:text-ink'}">${ic(i)}<span class="flex-1">${t(l)}</span>${navBadge(k)}</button></li>`;
+  const item = ([k,l,i]) => `<li><button type="button" data-act="go" data-view="${k}" ${av===k?'aria-current="page"':''} class="flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-base ${av===k ? SIDE_ROW_ON : SIDE_ROW_OFF}">${ic(i)}<span class="flex-1">${t(l)}</span>${navBadge(k)}</button></li>`;
   return `
   <div class="px-4 pt-4">
-    <p id="roleLbl" class="mb-2 px-1 text-xs text-muted">${t('common.view_as_short')}</p>
+    <p id="roleLbl" class="mb-2 px-1 text-sm text-muted">${t('common.view_as_short')}</p>
     <div role="radiogroup" aria-labelledby="roleLbl" class="grid grid-cols-2 gap-1 rounded-lg border border-line bg-paper p-1">
       ${ROLES.map(([k,l])=>`<button type="button" role="radio" aria-checked="${S.role===k}" data-act="role" data-role="${k}" class="h-9 rounded-md text-sm ${S.role===k ? 'bg-surface font-bold text-ink ring-1 ring-line-strong' : 'text-ink-2'}">${t('common.roles.'+k)}</button>`).join('')}
     </div>
   </div>
   <nav class="mt-4 flex-1 space-y-3 px-3" aria-label="Разделы">
-    ${NAV[S.role].map(it=> Array.isArray(it) ? `<ul>${item(it)}</ul>` : `<div><p class="px-3 pb-1 text-xs font-bold text-muted">${t(it.label)}</p><ul class="space-y-0.5">${it.items.map(item).join('')}</ul></div>`).join('')}
+    ${NAV[S.role].map(it=> Array.isArray(it) ? `<ul>${item(it)}</ul>` : `<div><p class="px-3 pb-1 text-sm font-bold text-muted">${t(it.label)}</p><ul class="space-y-0.5">${it.items.map(item).join('')}</ul></div>`).join('')}
   </nav>
   <div class="mt-4 border-t border-line px-3 py-3">
-    <button type="button" data-act="go" data-view="profile" class="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-paper"><span class="inline-flex size-9 items-center justify-center rounded-full bg-paper font-display text-ink-2 ring-1 ring-line">${ME[S.role].name[0]}</span><span class="min-w-0"><span class="block truncate text-sm font-medium">${ME[S.role].name}</span><span class="block truncate text-xs text-muted">${ME[S.role].sub}</span></span></button>
+    <button type="button" data-act="go" data-view="profile" class="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-paper"><span class="inline-flex size-9 items-center justify-center rounded-full bg-paper font-display text-ink-2 ring-1 ring-line">${ME[S.role].name[0]}</span><span class="min-w-0"><span class="block truncate text-sm font-medium">${ME[S.role].name}</span><span class="block truncate text-sm text-muted">${ME[S.role].sub}</span></span></button>
     <button type="button" data-act="logout" class="mt-1 flex h-10 w-full items-center gap-3 rounded-lg px-3 text-left text-ink-2 hover:bg-paper">${ic('i-logout','size-4')} ${t('common.logout')}</button>
   </div>`;
 }
@@ -1239,7 +1249,7 @@ function loginHTML(){
       </div>
       <p class="mt-6 text-sm text-ink-2">${t('auth.login_note')}</p>
       <div class="mt-6">${adminToggle}${adminBlock}</div>
-      <p class="mt-10 text-xs text-muted">${t('auth.login_proto')}</p>
+      <p class="mt-10 text-sm text-muted">${t('auth.login_proto')}</p>
     </div></div>`;
 }
 
@@ -1278,7 +1288,7 @@ function vToday(){
         ${S.awarded.filter(a=>a.date===CURD() && !a.revoked).map(a=>`<li class="flex items-center gap-3 py-3">
           ${tierDot(a.tier)}<div class="min-w-0 flex-1"><p class="truncate font-medium">${pupil(a.pid).name}</p>
           <p class="truncate text-sm text-ink-2">${ach(a.code).name} · ${TIER[a.tier]} · +${a.pts}</p></div>
-          ${a.src==='manual' ? '<span class="text-xs text-muted">вручную</span>' : ''}</li>`).join('')}
+          ${a.src==='manual' ? '<span class="text-sm text-muted">вручную</span>' : ''}</li>`).join('')}
       </ul>
       <button type="button" data-act="award-open" class="${B_OUTLINE} mt-3 w-full sm:w-auto">${ic('i-award','size-4')} Выдать вручную</button>`}
     </section>
@@ -1313,7 +1323,7 @@ function vLessons(){
           <span class="block font-display text-2xl tabular-nums leading-none">${l.d}</span>
           <span class="block text-sm text-muted sm:mt-1">урок ${l.n}</span>
         </span>
-        <span class="min-w-0"><span class="block font-medium">${l.t}${isReview(l) ? '<span class="ml-2 rounded-md bg-paper px-1.5 py-px align-middle text-xs font-medium text-ink-2 ring-1 ring-line">обзорный</span>' : ''}</span><span class="mt-0.5 block text-sm">${isReview(l) ? '<span class="text-muted">Без стихов и теста — только тетрадь</span>' : l.v.map(ref).join(' · ')}</span></span>
+        <span class="min-w-0"><span class="block font-medium">${l.t}${isReview(l) ? '<span class="ml-2 rounded-md bg-paper px-1.5 py-px align-middle text-sm font-medium text-ink-2 ring-1 ring-line">обзорный</span>' : ''}</span><span class="mt-0.5 block text-sm">${isReview(l) ? '<span class="text-muted">Без стихов и теста — только тетрадь</span>' : l.v.map(ref).join(' · ')}</span></span>
         <span class="flex items-center justify-between gap-4 sm:justify-end">${st}${ic('i-right','size-5 text-muted')}</span>
       </button></li>`;}).join('')}
   </ol>`;
@@ -1338,12 +1348,12 @@ function vLessonForm(){
         <p class="mt-1.5 text-sm text-muted">${f.kind==='review' ? 'Обзорный: золотые стихи не задаются и не рассказываются, теста нет — оцениваются тетрадь и спевка. Стихи прошлого урока расскажут на следующем обычном уроке.' : 'Обычный: золотые стихи, тест, тетрадь, спевка.'}</p></div>
       <div><label for="lf-t" class="${LABEL}">Тема</label><input id="lf-t" data-lf="t" value="${f.t}" placeholder="Например: Рождение Моисея" class="${FIELD}">${err('t')}</div>
       <div><label for="lf-teacher" class="${LABEL}">Ведёт</label>
-        <select id="lf-teacher" data-lf="teacher" class="${FIELD}"><option value="" ${f.teacher?'':'selected'} disabled>Выберите учителя</option>${groupTeachers('Средняя').map(t=>`<option value="${t}" ${f.teacher===t?'selected':''}>${t}${t===ME[S.role].name?' (вы)':''}</option>`).join('')}</select>
+        <select id="lf-teacher" data-lf="teacher" class="${SEL}"><option value="" ${f.teacher?'':'selected'} disabled>Выберите учителя</option>${groupTeachers('Средняя').map(t=>`<option value="${t}" ${f.teacher===t?'selected':''}>${t}${t===ME[S.role].name?' (вы)':''}</option>`).join('')}</select>
         <p class="mt-1.5 text-sm text-muted">Только учителя группы на ${YEAR}. По умолчанию — вы${groupTeachers('Средняя').includes(ME[S.role].name)?'':'; вы не назначены на эту группу, выберите учителя'}. Проверять ДЗ может любой учитель группы.</p>${err('teacher')}</div>
       <div><label for="lf-c" class="${LABEL}">План урока <span class="font-normal text-muted">— необязательно</span></label>
         <textarea id="lf-c" data-lf="content" rows="5" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Вопросы для обсуждения, задание в тетрадь">${f.content}</textarea>
         <p class="mt-1.5 text-sm text-muted">В приложении здесь будет редактор с заголовками и списками.</p></div>
-      <label class="flex items-start gap-3"><input type="checkbox" data-lf="cal" ${f.cal?'checked':''} class="mt-1 size-5 accent-cobalt"><span>Добавить урок в календарь группы</span></label>
+      <label class="flex items-start gap-3"><input type="checkbox" data-lf="cal" ${f.cal?'checked':''} class="mt-1 size-5 accent-cobalt-ink"><span>Добавить урок в календарь группы</span></label>
     </section>
 
     ${f.kind==='review' ? `<section class="${CARD} p-4 sm:p-5"><h2 class="${H2}">Обзорный урок</h2>
@@ -1359,7 +1369,7 @@ function vLessonForm(){
       <div class="mt-5 border-t border-line pt-4">
         <p class="${LABEL}">Добавить стих</p>
         <div class="grid grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-2">
-          <select data-pk="book" aria-label="Книга" class="${FIELD}">${BOOKS.map(b=>`<option ${pk.book===b?'selected':''}>${b}</option>`).join('')}</select>
+          <select data-pk="book" aria-label="Книга" class="${SEL}">${BOOKS.map(b=>`<option ${pk.book===b?'selected':''}>${b}</option>`).join('')}</select>
           <input data-pk="ch" inputmode="numeric" placeholder="Глава" aria-label="Глава" value="${pk.ch}" class="${FIELD}">
           <input data-pk="from" inputmode="numeric" placeholder="Стих с" aria-label="Стих с" value="${pk.from}" class="${FIELD}">
           <input data-pk="to" inputmode="numeric" placeholder="по (необяз.)" aria-label="Стих по" value="${pk.to}" class="${FIELD}">
@@ -1378,7 +1388,7 @@ function vLessonForm(){
 
 const MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const longDate = d => { const [dd,mm] = d.split('.').map(Number); return `${dd} ${MONTHS[mm-1]} ${mm>=9?2026:2027}`; };
-function cell(v, late){ return v==null ? '<span class="text-muted">—</span>' : `${v}${late ? `<span class="ml-1 text-xs text-amber-ink">позже</span>` : ''}`; }
+function cell(v, late){ return v==null ? '<span class="text-muted">—</span>' : `${v}${late ? `<span class="ml-1 text-sm text-amber-ink">позже</span>` : ''}`; }
 function lessonProgress(lid){ const recs = S.hc[lid] ? Object.values(S.hc[lid]) : []; return [recs.filter(r=>r.done).length, recs.length]; }
 const verseList = refs => refs.length ? `<ol class="space-y-2.5">${refs.map(r=>`<li>${ref(r)}<p class="mt-1 font-display text-[1.0625rem] italic leading-snug text-ink-2">${VERSES[r] || 'Текст подставится из Синодального перевода.'}</p></li>`).join('')}</ol>` : '<p class="text-sm text-muted">На первом уроке года стихов не рассказывают.</p>';
 
@@ -1389,7 +1399,7 @@ function vLesson(){
   <section class="${CARD} p-4 sm:p-5">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
-        <p class="text-sm text-muted">Урок ${L.n} · ${longDate(L.d)} · ведёт ${L.teacher}${isReview(L) ? '<span class="ml-2 rounded-md bg-paper px-1.5 py-px align-middle text-xs font-medium text-ink-2 ring-1 ring-line">обзорный</span>' : ''}</p>
+        <p class="text-sm text-muted">Урок ${L.n} · ${longDate(L.d)} · ведёт ${L.teacher}${isReview(L) ? '<span class="ml-2 rounded-md bg-paper px-1.5 py-px align-middle text-sm font-medium text-ink-2 ring-1 ring-line">обзорный</span>' : ''}</p>
         <h1 class="mt-1 font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">${L.t}</h1>
       </div>
       <div class="flex shrink-0 gap-1.5">
@@ -1436,7 +1446,7 @@ function applyTblCell(lid, pid, k, val){
   if (isCorrection(lid)) toast(fresh.length ? `Исправлено. Новое достижение: ${fresh.map(a=>ach(a.code).name+' · '+TIER[a.tier]).join(', ')}` : 'Исправлено и записано в журнал');
 }
 function tblPadPanel(id, k, stack, max){
-  const pick = (v,l,wide) => `<button type="button" data-act="tbl-score" data-pid="${id}" data-k="${k}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-sm tabular-nums ${SEG_OFF} hover:border-ink-2">${l}</button>`;
+  const pick = (v,l,wide) => `<button type="button" data-act="tbl-score" data-pid="${id}" data-k="${k}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-base tabular-nums ${SEG_OFF} hover:border-ink-2">${l}</button>`;
   const n = v => pick(v, v, false);
   const body = max===2
     ? `<div class="grid grid-cols-4 gap-1">${[null,0,1,2].map(v=>pick(v, v===null?'—':v, false)).join('')}</div>`
@@ -1455,9 +1465,9 @@ function vLessonTable(){
   const padCell = (id,k,val,label,stack,max) => { const open = padOpen(id,k), disp = val==null?'—':val;
     return `<div data-tbl-pad-root class="${stack?'':'relative inline-block'}"><button type="button" data-act="tbl-pad-open" data-pid="${id}" data-k="${k}" aria-expanded="${open}" aria-label="${label}: ${pupil(id).name}" class="inline-flex h-8 min-w-[2.5rem] items-center justify-center rounded-md border border-line bg-surface px-2 text-sm tabular-nums hover:border-ink-2 ${max>2?scoreCls(val):''}">${disp}</button>${open ? tblPadPanel(id,k,stack,max) : ''}</div>`; };
   const pressBtn = (id,k,on,label) => `<button type="button" data-act="tbl-toggle" data-k="${k}" data-pid="${id}" aria-pressed="${on}" aria-label="${label}: ${pupil(id).name}" class="inline-flex h-11 min-w-11 items-center justify-center rounded-lg border px-3 text-sm ${on?'border-cobalt-ink bg-cobalt-soft font-medium':'border-line-strong bg-surface'}">${on?ic('i-ok','size-5'):ic('i-circle','size-5 text-muted')}</button>`;
-  const chip = (k,on,label) => `<button type="button" data-act="lsf" data-k="${k}" aria-pressed="${on}" class="h-9 rounded-full border px-3 text-sm ${on?SEG_ON:SEG_OFF}">${label}</button>`;
+  const chip = (k,on,label) => `<button type="button" data-act="lsf" data-k="${k}" aria-pressed="${on}" class="${CHIP} rounded-full ${on?SEG_ON:SEG_OFF}">${label}</button>`;
   const rowStatus = r => !r.done ? status('warn','не проверен') : !r.present ? status('idle','не был') : '';
-  const lateOnce = r => Object.keys(r.late).some(k=>r.late[k]) ? '<span class="text-xs text-amber-ink">позже</span>' : '';
+  const lateOnce = r => Object.keys(r.late).some(k=>r.late[k]) ? '<span class="text-sm text-amber-ink">позже</span>' : '';
   const workSpan = (L.test ? 1 : 0) + 2;
   return `${backLink('lesson','К уроку')}
   <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -1476,7 +1486,7 @@ function vLessonTable(){
   </div>
 
   <div class="${CARD} hidden overflow-x-auto md:block">
-    <table class="w-full text-left text-sm">
+    <table class="w-full text-left text-base">
       <thead class="border-b border-line text-muted">
         <tr>
           <th scope="col" rowspan="2" class="w-12 py-2 pl-4 font-normal">№</th>
@@ -1487,9 +1497,9 @@ function vLessonTable(){
           <th scope="col" rowspan="2" class="sticky right-0 z-10 bg-card px-2 py-2 text-right font-medium text-ink-2">Итог</th>
         </tr>
         <tr>
-          ${rv.map((r,k)=>`<th scope="col" class="px-1 py-2 text-center font-normal">Стих ${k+1}<span class="block text-xs">0–2</span></th>`).join('')}
-          ${L.test ? '<th scope="col" class="px-1 py-2 text-center font-normal">Тест<span class="block text-xs">0–10</span></th>' : ''}
-          <th scope="col" class="px-1 py-2 text-center font-normal">Тетрадь<span class="block text-xs">0–10</span></th>
+          ${rv.map((r,k)=>`<th scope="col" class="px-1 py-2 text-center font-normal">Стих ${k+1}<span class="block text-sm">0–2</span></th>`).join('')}
+          ${L.test ? '<th scope="col" class="px-1 py-2 text-center font-normal">Тест<span class="block text-sm">0–10</span></th>' : ''}
+          <th scope="col" class="px-1 py-2 text-center font-normal">Тетрадь<span class="block text-sm">0–10</span></th>
           <th scope="col" class="px-2 py-2 text-center font-normal">Спевка</th>
         </tr>
       </thead>
@@ -1531,7 +1541,7 @@ function scoreRow(key, val, max, opts={}){
   const wide = max > 2;
   const grid = wide ? 'grid-cols-6 sm:grid-cols-12' : 'grid-cols-4 sm:grid-cols-[repeat(4,2.75rem)]';
   const btn = (v, label, aria) => `<button type="button" role="radio" aria-checked="${val===v}" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" ${aria?`aria-label="${aria}" title="${aria}"`:''}
-      class="h-10 rounded-lg border text-[0.9375rem] tabular-nums transition-[background-color,border-color,color,transform] duration-100 active:scale-[0.95] motion-reduce:active:scale-100 ${val===v ? SEG_ON+' font-bold' : SEG_OFF}">${label}</button>`;
+      class="h-10 rounded-lg border text-base tabular-nums transition-[background-color,border-color,color,transform] duration-100 active:scale-[0.95] motion-reduce:active:scale-100 ${val===v ? SEG_ON : SEG_OFF}">${label}</button>`;
   return `<div class="py-3 ${wide ? '' : 'sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-4'}">
     <div class="mb-2 min-w-0 ${wide ? '' : 'sm:mb-0 sm:pt-2'}"><div class="flex flex-wrap items-center gap-2">${opts.label}${opts.right || ''}</div>${opts.below || ''}</div>
     <div class="grid ${grid} gap-1" role="radiogroup" aria-label="${opts.aria}">${btn(null,'—','Не оценивалось')}${vals.map(v=>btn(v,v)).join('')}</div>
@@ -1563,22 +1573,22 @@ function vCheck(){
     const partial = !cq.done && (cq.v.some(v=>v!=null) || cq.test!=null || cq.nb!=null);
     const word = cq.done ? 'проверен' : partial ? 'частично' : 'не проверен';
     return `<li><button type="button" data-act="pick" data-i="${i}" ${i===S.cur?'aria-current="true"':''}
-      class="flex min-h-11 w-full items-center gap-2.5 rounded-md px-2.5 text-left text-[0.9375rem] transition-[background-color] duration-100 ${i===S.cur ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'hover:bg-paper'}">
+      class="flex min-h-11 w-full items-center gap-2.5 rounded-md px-2.5 text-left text-base transition-[background-color] duration-100 ${i===S.cur ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'hover:bg-paper'}">
       <span class="${cq.done ? 'text-ok' : 'text-line-strong'}">${ic(cq.done?'i-ok':'i-circle','size-4')}</span>
-      <span class="text-xs ${cq.done ? 'text-ok' : 'text-muted'}">${word}</span>
+      <span class="text-sm ${cq.done ? 'text-ok' : 'text-muted'}">${word}</span>
       <span class="flex-1 truncate">${q.name}</span>
-      ${Object.keys(cq.late).length ? '<span class="text-xs text-amber-ink">позже</span>' : ''}
+      ${Object.keys(cq.late).length ? '<span class="text-sm text-amber-ink">позже</span>' : ''}
       ${cq.done ? `<span class="text-sm tabular-nums text-muted">${pts(cq)}</span>` : ''}</button></li>`; }).join('');
   const lateTag = k => c.late[k] ? `<span class="text-sm text-amber-ink">сдано ${c.late[k]}</span>` : '';
   const verseRadio = (key, val) => {
     const btn = (v, label, quiet) => `<button type="button" role="radio" aria-checked="${val===v}" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" ${v===null?'aria-label="Не оценивалось"':''}
-      class="h-11 min-w-11 rounded-lg border px-2 text-[0.9375rem] tabular-nums ${val===v ? SEG_ON+' font-bold' : SEG_OFF} ${quiet?'text-muted':''}">${label}</button>`;
+      class="h-11 min-w-11 rounded-lg border px-2 text-base tabular-nums ${val===v ? SEG_ON : SEG_OFF} ${quiet?'text-muted':''}">${label}</button>`;
     return `<div role="radiogroup" aria-label="Стих" class="flex flex-wrap items-center gap-1">${[0,1,2].map(v=>btn(v,v,false)).join('')}${btn(null,'не ставил',true)}</div>`;
   };
   const band = v => v==null ? '' : v<=4 ? 'до 4' : v>=8 ? 'от 8' : 'средний';
   const bandCls = v => v==null ? '' : v<=4 ? 'text-danger' : v>=8 ? 'text-ok' : 'text-ink-2';
   const checkPad = (key) => {
-    const pick = (v,l,wide) => `<button type="button" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-sm tabular-nums ${SEG_OFF}">${l}</button>`;
+    const pick = (v,l,wide) => `<button type="button" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-base tabular-nums ${SEG_OFF}">${l}</button>`;
     return `<div data-check-pad class="mt-2 max-w-xs rounded-lg border border-line bg-surface p-2 shadow-float">${pick(null,'Не оценивалось',true)}
       <div class="mt-1 grid grid-cols-6 gap-1">${[0,1,2,3,4,5].map(v=>pick(v,v,false)).join('')}</div>
       <div class="mt-1 grid grid-cols-5 gap-1">${[6,7,8,9,10].map(v=>pick(v,v,false)).join('')}</div></div>`;
@@ -1618,13 +1628,13 @@ function vCheck(){
       <div class="flex items-center justify-between gap-3 border-b border-line py-3">
         <div class="min-w-0"><h2 id="pupilName" class="truncate font-display text-[1.5rem] font-medium leading-tight">${p.name}</h2>
           <p class="text-sm text-muted">${S.cur+1} из ${R.length} · ${p.born ? p.born+' г. р.' : 'данные удалены'}</p></div>
-        <div class="text-right"><p class="font-display text-[1.75rem] leading-none tabular-nums">${pts({...c, done:true})}</p><p class="text-xs text-muted">баллов</p>
-          <p class="text-xs tabular-nums text-ink-2">заполнено ${filled} из ${need}</p></div>
+        <div class="text-right"><p class="font-display text-[1.75rem] leading-none tabular-nums">${pts({...c, done:true})}</p><p class="text-sm text-muted">баллов</p>
+          <p class="text-sm tabular-nums text-ink-2">заполнено ${filled} из ${need}</p></div>
       </div>
       <div class="border-b border-line py-3">
         <span class="font-medium">Был на уроке</span>
         <div class="mt-2">${seg('Присутствие', [[true,'Да'],[false,'Нет']], c.present, 'present')}</div>
-        <p class="mt-2 text-xs text-muted">Присутствие на баллы не влияет: задания можно сдать позже.</p>
+        <p class="mt-2 text-sm text-muted">Присутствие на баллы не влияет: задания можно сдать позже.</p>
       </div>
       <div class="flex flex-wrap items-center gap-3 border-b border-line py-3"><span class="font-medium">Спевка</span>${toggle(c.sing,'sing','Был на спевке')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и спевка</span>' : ''}</div>
       ${rubricOpen ? `${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${prevRegular(lid).n} — рассказывают сегодня</p><div class="divide-y divide-line border-b border-line">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не рассказывают, теста нет.' : 'На первом уроке года стихов не рассказывают.'}</p>`}
@@ -1635,7 +1645,7 @@ function vCheck(){
       <div class="py-3"><label for="cmt" class="mb-1 block text-sm font-medium text-ink">Комментарий</label>
         <input id="cmt" data-input="comment" value="${c.comment}" class="${FIELD}" placeholder="Необязательно"></div>
       ${penRow(p.id, lid)}
-      ${corr ? `<div class="flex flex-wrap items-center gap-2 border-t border-line py-3"><span class="text-sm font-medium">Причина:</span>${['Сдал позже','Ошибка ввода','Другое'].map(r=>`<button type="button" data-act="reason" data-val="${r}" aria-pressed="${S.reason===r}" class="h-8 rounded-md border px-2.5 text-sm ${S.reason===r ? SEG_ON : SEG_OFF}">${r}</button>`).join('')}</div>` : ''}
+      ${corr ? `<div class="flex flex-wrap items-center gap-2 border-t border-line py-3"><span class="text-sm font-medium">Причина:</span>${['Сдал позже','Ошибка ввода','Другое'].map(r=>`<button type="button" data-act="reason" data-val="${r}" aria-pressed="${S.reason===r}" class="${CHIP} ${S.reason===r ? SEG_ON : SEG_OFF}">${r}</button>`).join('')}</div>` : ''}
       <div class="hidden items-center justify-between gap-2 border-t border-line py-3 lg:flex">
         <button type="button" data-act="prev" class="${B_GHOST}" ${S.cur===0?'disabled':''}>${ic('i-left','size-4')} Предыдущий</button>
         <span class="hidden text-sm text-muted xl:inline">Enter — сохранить · ← → — ученики</span>
@@ -1667,12 +1677,12 @@ function vGroup(){
     `<button type="button" data-act="add-pupils" class="${B_OUTLINE}">${ic('i-plus','size-4')} Добавить учеников</button>`) + achModeCard() + groupYearSummary() + `
   <div class="${CARD}">
     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
-      <label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" data-act="sel-all" ${S.groupSel.length===list.length?'checked':''} class="size-4 accent-cobalt"> Выбрать всех</label>
+      <label class="inline-flex items-center gap-2 text-sm"><input type="checkbox" data-act="sel-all" ${S.groupSel.length===list.length?'checked':''} class="size-5 accent-cobalt-ink"> Выбрать всех</label>
       <button type="button" data-act="remove-pupils" class="${B_DANGER} h-9 px-3 text-sm" ${S.groupSel.length?'':'disabled'}>Исключить выбранных${S.groupSel.length?' ('+S.groupSel.length+')':''}</button>
     </div>
     <ul class="divide-y divide-line">${list.map(p=>{ const st=pupilStats(p); const lay=layerOf(p);
       return `<li class="flex items-center gap-3 px-5 py-3">
-        <input type="checkbox" data-act="sel" data-pid="${p.id}" ${S.groupSel.includes(p.id)?'checked':''} aria-label="Выбрать ${p.name}" class="size-4 shrink-0 accent-cobalt">
+        <input type="checkbox" data-act="sel" data-pid="${p.id}" ${S.groupSel.includes(p.id)?'checked':''} aria-label="Выбрать ${p.name}" class="size-5 shrink-0 accent-cobalt-ink">
         <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 flex-1 text-left"><span class="block truncate font-medium hover:text-cobalt">${p.name}</span>
           <span class="block text-sm text-muted">${p.born ? p.born+' г. р.' : 'данные удалены'} · в группе с ${p.from}</span></button>
         <span class="hidden text-sm tabular-nums text-ink-2 sm:block">${st.nE ? `явка ${pct(st.rate)}` : 'нет проверенных уроков'}</span>
@@ -1703,9 +1713,9 @@ function vBricks(){
       ${bp || pp ? `<p class="mt-1 text-sm text-muted">в том числе${bp ? ` бонус +${bp}` : ''}${bp && pp ? ',' : ''}${pp ? ` <span class="text-penalty">штрафы ${sgnInt(pp)}</span>` : ''}</p>` : ''}
       ${bal<0 ? `<p class="mt-2 text-sm text-danger">Остаток ушёл в минус после выдачи: исправили оценку или выдали штраф. Разница погасится будущими баллами — у ребёнка ничего не забираем.</p>` : ''}
       <form data-form="issue" data-pid="${p.id}" class="mt-2.5 grid grid-cols-2 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end" novalidate>
-        <div><label for="q${p.id}" class="mb-1 block text-xs font-medium text-ink-2">Количество</label>
+        <div><label for="q${p.id}" class="mb-1 block text-sm font-medium text-ink-2">Количество</label>
           <input id="q${p.id}" name="qty" inputmode="numeric" value="${bal>0?bal:''}" ${bal<=0?'disabled':''} class="${FIELD} tabular-nums disabled:opacity-45"></div>
-        <div><label for="d${p.id}" class="mb-1 block text-xs font-medium text-ink-2">Дата</label>
+        <div><label for="d${p.id}" class="mb-1 block text-sm font-medium text-ink-2">Дата</label>
           <input id="d${p.id}" name="date" type="date" value="2026-10-31" max="2026-10-31" ${bal<=0?'disabled':''} class="${FIELD} disabled:opacity-45"></div>
         <button class="${B_PRIMARY} col-span-2 sm:col-span-1" ${bal<=0?'disabled':''}>Выдать</button>
         <p class="col-span-2 hidden text-sm text-danger sm:col-span-3" data-err></p>
@@ -1753,7 +1763,7 @@ function vRating(){
       <tbody class="divide-y divide-line">
         ${list.map((r,i)=>`<tr>
           <td class="px-5 py-3 font-display text-lg tabular-nums ${i<3?'':'text-muted'}">${i+1}</td>
-          <td class="px-3 py-3"><button type="button" data-act="pupil-open" data-pid="${r.p.id}" class="font-medium hover:text-cobalt">${r.p.name}</button></td>
+          <td class="px-3 py-3"><button type="button" data-act="pupil-open" data-pid="${r.p.id}" class="font-medium text-ink hover:text-cobalt-ink focus-visible:text-cobalt-ink">${r.p.name}</button></td>
           <td class="px-3 py-3 text-right tabular-nums">${r.lp}</td>
           <td class="px-3 py-3 text-right tabular-nums text-muted">${r.b ? '+'+r.b : '—'}</td>
           <td class="px-3 py-3 text-right tabular-nums">${r.a || '—'}</td>
@@ -1764,7 +1774,7 @@ function vRating(){
 }
 function groupChips(){
   return `<div class="mb-5 flex flex-wrap gap-2" role="radiogroup" aria-label="Группа">${GROUPS.map(g=>`<button type="button" role="radio" aria-checked="${S.anaGroup===g.name}" data-act="ana-group" data-val="${g.name}"
-    class="h-9 rounded-lg border px-3 text-sm ${S.anaGroup===g.name ? SEG_ON : SEG_OFF}">${g.name}</button>`).join('')}</div>`;
+    class="${CHIP} ${S.anaGroup===g.name ? SEG_ON : SEG_OFF}">${g.name}</button>`).join('')}</div>`;
 }
 
 /* ---------- Календарь ---------- */
@@ -1782,11 +1792,11 @@ function vCalendar(){
      ${canEdit ? `<button type="button" data-act="event-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Событие</button>` : ''}`) + `
   <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
     <div class="${CARD} min-w-0 p-2 sm:p-4">
-      <div class="grid grid-cols-7 text-center text-xs text-muted sm:text-sm">${['пн','вт','ср','чт','пт','сб','вс'].map(d=>`<div class="py-2">${d}</div>`).join('')}</div>
+      <div class="grid grid-cols-7 text-center text-sm text-muted sm:text-sm">${['пн','вт','ср','чт','пт','сб','вс'].map(d=>`<div class="py-2">${d}</div>`).join('')}</div>
       <div class="grid grid-cols-7 gap-px overflow-hidden rounded-lg bg-line">
         ${cells.map(d=>{ const ev = d && EVENTS.find(e=>e.d===ds(d)); const m = ev && TYPE_META[ev.type]; const today = month===10 && d===31;
-          const inner = d ? `<span class="inline-flex size-7 items-center justify-center rounded-full text-sm tabular-nums ${today ? 'bg-ink text-surface' : ''}">${d}</span>
-            ${ev ? `<span class="mt-0.5 flex items-center gap-1 ${m[2]}">${ic(m[0],'size-4')}<span class="hidden truncate text-xs sm:inline">${m[1]}</span></span>` : ''}` : '';
+          const inner = d ? `<span class="inline-flex size-7 items-center justify-center rounded-full text-base tabular-nums ${today ? 'bg-ink text-surface' : 'text-ink'}">${d}</span>
+            ${ev ? `<span class="mt-0.5 flex items-center gap-1 ${m[2]}">${ic(m[0],'size-4')}<span class="hidden truncate text-sm sm:inline">${m[1]}</span></span>` : ''}` : '';
           return d && (canEdit || ev) ? `<button type="button" data-act="${ev ? 'event-edit' : 'event-new'}" ${ev ? `data-id="${ev.id}"` : `data-date="${ds(d)}"`} class="flex min-h-14 flex-col items-start justify-start bg-surface p-1 text-left hover:bg-paper sm:min-h-24 sm:p-2" aria-label="${d} ${mName.toLowerCase()}${ev?': '+ev.t:''}">${inner}</button>`
             : `<div class="min-h-14 p-1 sm:min-h-24 sm:p-2 ${d?'bg-surface':'bg-paper'}">${inner}</div>`; }).join('')}
       </div>
@@ -1825,7 +1835,7 @@ function vVerses(){
    ========================================================= */
 function periodChips(){
   return `<div class="flex flex-wrap gap-2" role="radiogroup" aria-label="Период">${[['year','Учебный год'],['oct','Октябрь'],['sep','Сентябрь']].map(([v,l])=>`<button type="button" role="radio" aria-checked="${S.period===v}" data-act="period" data-val="${v}"
-    class="h-9 rounded-lg border px-3 text-sm ${S.period===v ? SEG_ON : SEG_OFF}">${l}</button>`).join('')}</div>`;
+    class="${CHIP} ${S.period===v ? SEG_ON : SEG_OFF}">${l}</button>`).join('')}</div>`;
 }
 function pupilTable(list, cols){
   return `<div class="${CARD} overflow-x-auto"><table class="w-full min-w-[40rem] text-left">
@@ -1945,14 +1955,14 @@ function teacherLessonsBlock(){
   <p class="mb-3 text-sm text-ink-2">По полю «Ведёт» в уроке. Это не то же самое, что проверка ДЗ: проверять может любой учитель группы. Считаются проведённые уроки периода; запланированные — отдельной колонкой.</p>
   <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[40rem] text-left"><caption class="sr-only">Уроки по учителям</caption><thead class="border-b border-line text-sm text-muted"><tr>
     <th scope="col" class="px-5 py-3 font-normal">Учитель</th><th scope="col" class="px-3 py-3 text-right font-normal">Провёл</th><th scope="col" class="px-3 py-3 text-right font-normal">Обычных</th><th scope="col" class="px-3 py-3 text-right font-normal">Обзорных</th><th scope="col" class="px-3 py-3 text-right font-normal">Запланировано</th><th scope="col" class="px-5 py-3 font-normal">Уроки</th></tr></thead>
-    <tbody class="divide-y divide-line">${rows.map(r=>`<tr><th scope="row" class="px-5 py-3 font-medium">${r.n}${r.inGroup?'':' <span class="text-xs font-normal text-muted">(уже не в группе)</span>'}</th><td class="px-3 py-3 text-right tabular-nums">${r.all.length}</td><td class="px-3 py-3 text-right tabular-nums">${r.reg}</td><td class="px-3 py-3 text-right tabular-nums">${r.rev}</td><td class="px-3 py-3 text-right tabular-nums">${r.plan}</td>
+    <tbody class="divide-y divide-line">${rows.map(r=>`<tr><th scope="row" class="px-5 py-3 font-medium">${r.n}${r.inGroup?'':' <span class="text-sm font-normal text-muted">(уже не в группе)</span>'}</th><td class="px-3 py-3 text-right tabular-nums">${r.all.length}</td><td class="px-3 py-3 text-right tabular-nums">${r.reg}</td><td class="px-3 py-3 text-right tabular-nums">${r.rev}</td><td class="px-3 py-3 text-right tabular-nums">${r.plan}</td>
       <td class="px-5 py-3 text-sm text-ink-2">${r.all.length ? r.all.map(l=>`<button type="button" data-act="lesson-open" data-lid="${l.id}" class="mr-2 inline-flex h-8 items-center text-cobalt hover:text-cobalt-ink" title="${l.t}">№${l.n}</button>`).join('') : '<span class="text-muted">—</span>'}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 function presenceStrip(pid){
   const rows = personal(pid);
   return `<ol class="flex flex-wrap gap-1.5" aria-label="Присутствие по урокам">${rows.map(x=>{ const st = !x.has ? ['bg-paper text-muted border-line','нет записи','—'] : x.r.present ? ['bg-ink text-surface border-ink','был',ic('i-ok','size-4')] : ['bg-surface text-ink-2 border-line-strong','не был',ic('i-x','size-4')];
-    return `<li class="flex w-14 flex-col items-center gap-1 rounded-lg border px-1 py-2 ${st[0]}" title="${x.d}: ${st[1]}"><span class="text-xs tabular-nums">${x.d}</span><span class="text-sm" aria-label="${st[1]}">${st[2]}</span></li>`;}).join('')}</ol>`;
+    return `<li class="flex w-14 flex-col items-center gap-1 rounded-lg border px-1 py-2 ${st[0]}" title="${x.d}: ${st[1]}"><span class="text-sm tabular-nums">${x.d}</span><span class="text-sm" aria-label="${st[1]}">${st[2]}</span></li>`;}).join('')}</ol>`;
 }
 function personalCharts(pid, cols='lg:grid-cols-3', rowsIn){
   const rows = rowsIn || personal(pid), labels = rows.map(x=>x.d);
@@ -2004,7 +2014,7 @@ function vPupil(){
       return `<tr><td class="px-5 py-3 tabular-nums">${x.d}</td><td class="px-3 py-3">${x.t}</td>
         <td class="px-3 py-3">${!x.has ? '<span class="text-muted">нет записи</span>' : r.present ? 'был' : '<span class="text-ink-2">не был</span>'}</td>
         <td class="px-3 py-3 text-right tabular-nums">${x.vo ? `${x.vo.recited} из ${x.vo.slots}` : '<span class="text-muted">—</span>'}</td>
-        <td class="px-3 py-3 text-right tabular-nums">${!L.test ? '<span class="text-xs text-muted">не проводился</span>' : x.has ? cell(r.test, r.late.test) : '—'}</td>
+        <td class="px-3 py-3 text-right tabular-nums">${!L.test ? '<span class="text-sm text-muted">не проводился</span>' : x.has ? cell(r.test, r.late.test) : '—'}</td>
         <td class="px-3 py-3 text-right tabular-nums">${x.has ? cell(r.nb, r.late.nb) : '—'}</td>
         ${canFix ? `<td class="px-5 py-2 text-right">${x.has && x.lid < CUR ? `<button type="button" data-act="fix-pupil" data-lid="${x.lid}" data-pid="${p.id}" class="inline-flex h-9 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-edit','size-4')} Исправить</button>` : ''}</td>` : ''}</tr>`; }).join('')}</tbody></table></div>`;
   return head + pupilYearsSection(p, rows, sel) + (sel==='2026' ? (yearState(yearOf('2026'))==='closed' ? readOnlyNote : '') + body() : pupilClosedYear(p, selRow));
@@ -2053,7 +2063,7 @@ function progressBlock(pid, parent=false){
       <div class="min-w-0"><h3 class="text-sm font-medium">Изменение за урок, п.п. <span class="font-normal text-muted">(производная среднего)</span></h3>
         ${chart({ h:190, type:'bar', labels, series:[{ name:'Изменение', color:'var(--color-series-1)', neg:'var(--color-series-2)', values:bars.map(v=>v==null?null:Math.round(v*10)/10) }],
           min:-lim, max:lim, ticks:[-lim,0,lim], tickFmt:t=>(t>0?'+':'')+t, fmt:v=>sgn(v)+' п.п.', aria:'Изменение скользящего среднего от урока к уроку' })}
-        <p class="mt-1 flex gap-4 text-xs text-ink-2"><span class="inline-flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-series-1"></span>рост</span><span class="inline-flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-series-2"></span>снижение</span></p></div>
+        <p class="mt-1 flex gap-4 text-sm text-ink-2"><span class="inline-flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-series-1"></span>рост</span><span class="inline-flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-series-2"></span>снижение</span></p></div>
     </div>
   </section>`;
 }
@@ -2067,7 +2077,7 @@ function childSwitch(){
     ${kids.map(([id,n,g])=>`<button type="button" role="radio" aria-checked="${S.child===id}" data-act="child" data-id="${id}"
       class="flex h-12 shrink-0 items-center gap-2.5 rounded-xl border pr-4 pl-1.5 text-left transition-[background-color,border-color] duration-100 ${S.child===id ? 'border-ink bg-surface' : 'border-line bg-paper hover:border-line-strong'}">
       <span class="inline-flex size-9 items-center justify-center rounded-full ${S.child===id ? 'bg-ink text-surface' : 'bg-line text-ink-2'} font-display">${n[0]}</span>
-      <span><span class="block font-medium leading-tight">${n}</span><span class="block text-xs text-muted">${g} группа</span></span></button>`).join('')}
+      <span><span class="block font-medium leading-tight">${n}</span><span class="block text-sm text-muted">${g} группа</span></span></button>`).join('')}
   </div>`;
 }
 const NEED = () => SETTINGS.verses.days;
@@ -2138,7 +2148,7 @@ function consentForm(id, name){
         <li>— Аудио хранится 200 дней и удаляется автоматически. Оценка и расшифровка остаются.</li>
         <li>— Удалить записи или отозвать согласие можно в разделе «Данные и согласия».</li>
       </ul>
-      <label class="mt-4 flex cursor-pointer items-start gap-3"><input id="consentBox" type="checkbox" class="mt-1 size-5 accent-cobalt"><span>Я родитель и разрешаю записывать и проверять голос ребёнка</span></label>
+      <label class="mt-4 flex cursor-pointer items-start gap-3"><input id="consentBox" type="checkbox" class="mt-1 size-5 accent-cobalt-ink"><span>Я родитель и разрешаю записывать и проверять голос ребёнка</span></label>
       <button type="button" data-act="consent" data-id="${id}" class="${B_PRIMARY} mt-4 w-full sm:w-auto">Разрешить запись</button>
     </section>`;
 }
@@ -2191,9 +2201,9 @@ function vVerse(){
     <aside class="${CARD} p-4">
       <h2 class="font-medium">Невыученные стихи прошлых уроков</h2>
       <p class="mt-0.5 text-sm text-ink-2">Их можно рассказать в любой день до конца учебного года — баллы добавятся.</p>
-      <ul class="mt-2 divide-y divide-line">${D.slice(0,3).map(x=>`<li><button type="button" data-act="debt-open" data-lid="${x.L.id}" class="flex w-full items-center gap-2 py-2 text-left hover:text-cobalt-ink"><span class="min-w-0 flex-1"><span class="block truncate text-sm font-medium">Урок ${x.L.n} · ${x.L.t}</span><span class="block text-xs text-muted">${x.L.d} · выучено ${x.learned} из ${x.items.length}</span></span>${ic('i-right','size-4 text-muted')}</button></li>`).join('') || '<li class="py-2 text-sm text-ok">Все стихи выучены</li>'}</ul>
+      <ul class="mt-2 divide-y divide-line">${D.slice(0,3).map(x=>`<li><button type="button" data-act="debt-open" data-lid="${x.L.id}" class="flex w-full items-center gap-2 py-2 text-left hover:text-cobalt-ink"><span class="min-w-0 flex-1"><span class="block truncate text-sm font-medium">Урок ${x.L.n} · ${x.L.t}</span><span class="block text-sm text-muted">${x.L.d} · выучено ${x.learned} из ${x.items.length}</span></span>${ic('i-right','size-4 text-muted')}</button></li>`).join('') || '<li class="py-2 text-sm text-ok">Все стихи выучены</li>'}</ul>
       ${D.length > 3 ? `<button type="button" data-act="go" data-view="verseDebts" class="mt-1 text-sm font-medium text-cobalt-ink hover:underline">Все уроки (${D.length})</button>` : ''}
-      <p class="mt-3 border-t border-line pt-2 text-xs text-muted">В день по каждому стиху засчитывается лучшая попытка. Для оценки «2» нужно ${NEED()} разных дня.</p>
+      <p class="mt-3 border-t border-line pt-2 text-sm text-muted">В день по каждому стиху засчитывается лучшая попытка. Для оценки «2» нужно ${NEED()} разных дня.</p>
     </aside>
   </div>`;
 }
@@ -2203,7 +2213,7 @@ function vVerseDebts(){
   return pageHead('Невыученные стихи', `Прошедшие уроки, где у ребёнка меньше «2» за стих. Осталось: ${open}.`) + childSwitch() + `
   <ul class="${CARD} divide-y divide-line">${D.map(x=>`<li><button type="button" data-act="debt-open" data-lid="${x.L.id}" class="grid w-full grid-cols-[3.5rem_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 text-left hover:bg-paper">
       <span class="font-display text-xl tabular-nums">${x.L.d}</span>
-      <span class="min-w-0"><span class="block truncate font-medium">Урок ${x.L.n} · ${x.L.t}</span><span class="mt-0.5 flex flex-wrap gap-1">${x.items.map(it=>`<span class="rounded-md px-1.5 text-xs ring-1 ${it.score===2 ? 'bg-ok-soft text-ok ring-ok/20' : 'bg-paper text-ink-2 ring-line'}">${it.r}</span>`).join('')}</span></span>
+      <span class="min-w-0"><span class="block truncate font-medium">Урок ${x.L.n} · ${x.L.t}</span><span class="mt-0.5 flex flex-wrap gap-1">${x.items.map(it=>`<span class="rounded-md px-1.5 text-sm ring-1 ${it.score===2 ? 'bg-ok-soft text-ok ring-ok/20' : 'bg-paper text-ink-2 ring-line'}">${it.r}</span>`).join('')}</span></span>
       <span class="text-right text-sm"><span class="block font-bold tabular-nums text-ok">${x.learned} выучено</span><span class="block tabular-nums text-ink-2">${x.open} осталось</span></span></button></li>`).join('') || '<li class="px-4 py-4 text-ok">Все стихи прошлых уроков выучены.</li>'}</ul>
   <p class="mt-3 max-w-3xl text-sm text-muted">Оценка за стих растёт до «2», когда ребёнок расскажет его хорошо в ${NEED()} разных дня. Начисляется только прибавка: было «1» — добавится 1 балл и 1 кирпичик.</p>`;
 }
@@ -2217,7 +2227,7 @@ function vVerseLesson(){
     <ul class="${CARD} divide-y divide-line" role="radiogroup" aria-label="Стих">${items.map(it=>{ const done = it.score===2, on = S.rec.verse===it.r, n = practiceDays(L.id,it.r).length;
       return `<li><button type="button" role="radio" aria-checked="${on}" data-act="verse-pick" data-ref="${it.r}" data-lid="${L.id}" ${done||S.rec.state==='rec'||S.rec.state==='proc'?'disabled':''} class="w-full px-4 py-3 text-left ${on ? 'bg-cobalt-soft' : 'hover:bg-paper'} disabled:cursor-default">
         <span class="flex items-center justify-between gap-2"><span class="font-medium ${on?'text-cobalt-ink':''}">${it.r}</span><span class="text-sm ${done?'text-ok':'text-ink-2'}">${scoreTxt(it.score)}${it.late?' · позже':''}</span></span>
-        ${done ? '' : `<span class="mt-1.5 flex items-center gap-2 text-xs text-ink-2">${dayBar(n)}${n} из ${NEED()} дн.</span>`}</button></li>`; }).join('')}</ul>
+        ${done ? '' : `<span class="mt-1.5 flex items-center gap-2 text-sm text-ink-2">${dayBar(n)}${n} из ${NEED()} дн.</span>`}</button></li>`; }).join('')}</ul>
     ${recorderHTML()}
   </div>`;
 }
@@ -2264,7 +2274,7 @@ function schoolClosedBlock(yid){
     <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Группа</th><th scope="col" class="px-3 py-3 text-right font-normal">Детей в основной выборке</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
     <tbody class="divide-y divide-line">${rows.map(({g,s})=> s ? `<tr><th scope="row" class="px-5 py-4 text-left font-medium">${g.name}<span class="block text-sm font-normal text-muted">${g.age}</span></th>
       <td class="px-3 py-4 text-right tabular-nums">${s.kids}</td><td class="px-3 py-4 text-right tabular-nums">${s.lessons}</td>
-      ${SNAP_KEYS.map(([k],i)=>`<td class="${i===3?'px-5':'px-3'} py-4 text-right tabular-nums">${fmtSnap(k, s[k])}<span class="block text-xs font-normal text-ink-2">${snapDiff(g.name, yid, k)}</span></td>`).join('')}</tr>`
+      ${SNAP_KEYS.map(([k],i)=>`<td class="${i===3?'px-5':'px-3'} py-4 text-right tabular-nums">${fmtSnap(k, s[k])}<span class="block text-sm font-normal text-ink-2">${snapDiff(g.name, yid, k)}</span></td>`).join('')}</tr>`
       : `<tr><th scope="row" class="px-5 py-4 text-left font-medium">${g.name}</th><td colspan="6" class="px-3 py-4 text-sm text-muted">В этом году группы не было</td></tr>`).join('')}</tbody></table></div>
   <p class="mt-3 text-sm text-muted">Группы сравниваются только внутри выбранного года. Состав групп в разные годы разный.</p>`;
 }
@@ -2355,7 +2365,7 @@ function vGroupEdit(){
           <div><label for="ge-n" class="${LABEL}">Название</label><input id="ge-n" class="${FIELD}" value="${g.name}"></div>
           <div class="grid grid-cols-2 gap-3"><div><label for="ge-a" class="${LABEL}">Возраст от</label><input id="ge-a" class="${FIELD} tabular-nums" value="${g.min}"></div><div><label for="ge-b" class="${LABEL}">до</label><input id="ge-b" class="${FIELD} tabular-nums" value="${g.max}"></div></div>
           <div><label for="ge-lang" class="${LABEL}">Язык группы и перевод Библии</label>
-            <select id="ge-lang" data-input="group-lang" class="${FIELD}"><option value="ru" ${g.lang==='ru'?'selected':''}>Русский — ${BIBLE.ru}</option><option value="en" ${g.lang==='en'?'selected':''}>English — ${BIBLE.en}</option></select>
+            <select id="ge-lang" data-input="group-lang" class="${SEL}"><option value="ru" ${g.lang==='ru'?'selected':''}>Русский — ${BIBLE.ru}</option><option value="en" ${g.lang==='en'?'selected':''}>English — ${BIBLE.en}</option></select>
             <p class="mt-1.5 text-sm text-muted">По этому переводу показываются и проверяются золотые стихи группы. Язык интерфейса задаётся отдельно — в настройках приложения (админ).</p></div>
           <button type="button" data-act="toast" data-msg="Группа сохранена" class="${B_OUTLINE}">Сохранить</button>
         </div>
@@ -2385,7 +2395,7 @@ function vPeople(){
   return pageHead(t('common.titles.people'), '', action) + `
   <div class="mb-4 flex gap-1 overflow-x-auto border-b border-line" role="tablist">
     ${tabs.map(([k,l])=>`<button type="button" role="tab" aria-selected="${S.peopleTab===k}" data-act="ptab" data-tab="${k}"
-      class="-mb-px h-11 shrink-0 border-b-2 px-3 text-[0.9375rem] transition-[color,border-color] duration-100 ${S.peopleTab===k ? 'border-ink font-bold text-ink' : 'border-transparent text-ink-2 hover:text-ink'}">${l}</button>`).join('')}
+      class="-mb-px h-11 shrink-0 border-b-2 px-3 text-base transition-[color,border-color] duration-100 ${S.peopleTab===k ? 'border-ink font-bold text-ink' : 'border-transparent text-ink-2 hover:text-ink'}">${l}</button>`).join('')}
   </div>${body}`;
 }
 
@@ -2591,7 +2601,7 @@ function executeDel(r){
 function vRegister(){
   const u = meU(), f = u.fio || { l:'', f:'', m:'' }, re = u.status==='rejected', g = u.prov[0]==='password';
   const li = (k) => `<li>— <b class="font-medium text-ink">${t('auth.c_'+k)}</b> ${t('auth.c_'+k+'_t')}</li>`;
-  return `<div class="mx-auto max-w-2xl">
+  return `<div class="max-w-3xl">
     ${pageHead(t(re ? 'auth.reg_fix_title' : 'auth.reg_title'), re ? t('auth.reg_fix_sub') : t('auth.reg_sub', { prov: g ? 'email и пароль' : 'Telegram' }))}
     ${re ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-danger-soft px-3 py-2.5 text-sm">${ic('i-alert','size-4 mt-0.5 text-danger')}<span><b class="font-bold">${t('auth.reg_reject')}</b> ${u.reject.reason}</span></p>` : ''}
     <form data-form="register" class="space-y-4" novalidate>
@@ -2610,9 +2620,9 @@ function vRegister(){
         <details class="group mt-3"><summary class="inline-flex h-9 cursor-pointer list-none items-center gap-1 text-sm font-medium text-cobalt-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} ${t('auth.c_full', { v:CONSENT_V })}</summary>
           <p class="mt-1 max-w-[70ch] text-sm text-ink-2">${t('auth.c_full_t')}</p></details>
         <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-lg border border-muted p-3 has-[:checked]:border-ink">
-          <input id="rg-ok" type="checkbox" name="ok" data-input="rg-ok" class="mt-0.5 size-5 shrink-0 accent-cobalt">
+          <input id="rg-ok" type="checkbox" name="ok" data-input="rg-ok" class="mt-0.5 size-5 shrink-0 accent-cobalt-ink">
           <span>${t('auth.c_check')}</span></label>
-        <p class="mt-2 text-xs text-muted">${t('auth.c_not_kids')}</p>
+        <p class="mt-2 text-sm text-muted">${t('auth.c_not_kids')}</p>
       </section>
       <p data-err class="hidden text-sm text-danger"></p>
       <div class="flex flex-col-reverse gap-2 sm:flex-row sm:items-center">
@@ -2724,7 +2734,7 @@ function vChildConsent(){
     <details class="group mt-3"><summary class="inline-flex h-9 cursor-pointer list-none items-center gap-1 text-sm font-medium text-cobalt-ink">${ic('i-down','size-4 transition-transform duration-150 group-open:rotate-180')} Полный текст согласия · версия 1.0</summary>
       <p class="mt-1 text-sm text-ink-2">В приложении здесь будет полный текст, утверждённый церковью.</p></details>
     <label class="mt-4 flex cursor-pointer items-start gap-3 rounded-lg border border-muted p-3 has-[:checked]:border-ink">
-      <input type="checkbox" name="ok" class="mt-0.5 size-5 shrink-0 accent-cobalt"><span>Я опекун ребёнка и даю согласие на обработку и хранение его персональных данных на условиях выше</span></label>
+      <input type="checkbox" name="ok" class="mt-0.5 size-5 shrink-0 accent-cobalt-ink"><span>Я опекун ребёнка и даю согласие на обработку и хранение его персональных данных на условиях выше</span></label>
     <p data-err class="hidden mt-2 text-sm text-danger"></p>
     <div class="mt-4 flex flex-col-reverse gap-2 sm:flex-row">
       <button type="button" data-act="kid-decline" data-id="${id}" class="${B_GHOST}">Не соглашаюсь</button>
@@ -2748,16 +2758,16 @@ function vSettings(){
     <form data-form="settings" class="${CARD} p-4 sm:p-5" novalidate>
       <h2 class="${H2}">${t('admin.st_lang')}</h2>
       <p class="mt-1 text-sm text-ink-2">${t('admin.st_lang_t')}</p>
-      <div class="mt-4 grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="${t('admin.st_lang')}">${Object.entries(LANG_NAME).map(([k,l])=>`<label class="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-muted text-[0.9375rem] has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="lang" value="${k}" ${APP.lang===k?'checked':''} class="sr-only">${l}</label>`).join('')}</div>
+      <div class="mt-4 grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="${t('admin.st_lang')}">${Object.entries(LANG_NAME).map(([k,l])=>`<label class="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-muted text-base has-[:checked]:border-cobalt-ink has-[:checked]:bg-cobalt-soft has-[:checked]:font-bold has-[:checked]:text-cobalt-ink"><input type="radio" name="lang" value="${k}" ${APP.lang===k?'checked':''} class="sr-only">${l}</label>`).join('')}</div>
       <button class="${B_PRIMARY} mt-4">${t('admin.st_save')}</button>
     </form>
     <section class="${CARD} p-4 sm:p-5">
       <h2 class="${H2}">${t('admin.st_ns')}</h2>
       <p class="mt-1 text-sm text-ink-2">${t('admin.st_ns_t')}</p>
-      <div class="mt-3 overflow-x-auto"><table class="w-full min-w-[26rem] text-left text-sm">
+      <div class="mt-3 overflow-x-auto"><table class="w-full min-w-[26rem] text-left text-base">
         <thead class="text-muted"><tr><th class="py-2 pr-3 font-normal">${t('admin.st_area')}</th><th class="py-2 pr-3 font-normal">${t('admin.st_loads')}</th><th class="py-2 text-right font-normal">${t('admin.st_size', { lang:APP.lang })}</th></tr></thead>
-        <tbody class="divide-y divide-line">${rows.map(([a,list])=>`<tr><td class="py-2 pr-3">${a}</td><td class="py-2 pr-3"><span class="flex flex-wrap gap-1">${list.map(n=>`<code class="rounded bg-paper px-1.5 text-xs ring-1 ring-line">${n}</code>`).join('')}</span></td><td class="py-2 text-right tabular-nums">${list.reduce((s,n)=>s+JSON.stringify(I18N[APP.lang][n]).length,0)/1024|0} KB</td></tr>`).join('')}</tbody></table></div>
-      <ul class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-ink-2 sm:grid-cols-3">${ns.map(n=>`<li><code class="text-xs">${n}</code> · ${countKeys(I18N[APP.lang][n])} ${t('admin.keys')}</li>`).join('')}</ul>
+        <tbody class="divide-y divide-line">${rows.map(([a,list])=>`<tr><td class="py-2 pr-3">${a}</td><td class="py-2 pr-3"><span class="flex flex-wrap gap-1">${list.map(n=>`<code class="rounded bg-paper px-1.5 text-sm ring-1 ring-line">${n}</code>`).join('')}</span></td><td class="py-2 text-right tabular-nums">${list.reduce((s,n)=>s+JSON.stringify(I18N[APP.lang][n]).length,0)/1024|0} KB</td></tr>`).join('')}</tbody></table></div>
+      <ul class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-ink-2 sm:grid-cols-3">${ns.map(n=>`<li><code class="text-sm">${n}</code> · ${countKeys(I18N[APP.lang][n])} ${t('admin.keys')}</li>`).join('')}</ul>
     </section>
   </div>`;
 }
@@ -2776,13 +2786,13 @@ function rolesForm(u, approve, compact){
         ${[['admin','Администратор','Всё, включая заявки, роли и учебный год'],['teacher','Учитель','Свои группы: уроки, проверка, кирпичики'],['parent','Родитель','Только свои дети']].map(([r,l,d])=>{
           const locked = r==='admin' && u.roles.includes('admin') && (u.me || admins<=1);
           return `<li class="flex items-center justify-between gap-4 px-3 py-3"><div><p class="font-medium">${l}</p><p class="text-sm text-ink-2">${locked ? (u.me ? 'Нельзя снять роль администратора с себя' : 'Последний администратор') : d}</p></div>
-            <input type="checkbox" name="role" value="${r}" ${u.roles.includes(r)?'checked':''} ${locked?'disabled':''} aria-label="${l}" class="size-5 accent-cobalt"></li>`; }).join('')}
+            <input type="checkbox" name="role" value="${r}" ${u.roles.includes(r)?'checked':''} ${locked?'disabled':''} aria-label="${l}" class="size-5 accent-cobalt-ink"></li>`; }).join('')}
       </ul>
     </div>
     <div class="space-y-4">
       ${parentLinkBlock(u)}
       <div><p class="${LABEL}">Группы на ${YEAR} (для роли «учитель»)</p>
-        <div class="flex flex-wrap gap-3">${GROUPS.map(g=>`<label class="inline-flex items-center gap-2"><input type="checkbox" name="group" value="${g.name}" ${(u.groups||[]).includes(g.name)?'checked':''} class="size-4 accent-cobalt">${g.name}</label>`).join('')}</div></div>
+        <div class="flex flex-wrap gap-3">${GROUPS.map(g=>`<label class="inline-flex items-center gap-2"><input type="checkbox" name="group" value="${g.name}" ${(u.groups||[]).includes(g.name)?'checked':''} class="size-5 accent-cobalt-ink">${g.name}</label>`).join('')}</div></div>
       <p data-err class="hidden text-sm text-danger"></p>
       <div class="flex flex-wrap gap-2 pt-1">
         <button class="${B_PRIMARY}">${approve ? ic('i-ok','size-4')+' Одобрить и назначить роли' : 'Сохранить роли'}</button>
@@ -2817,7 +2827,7 @@ function vUsers(){
   return pageHead('Пользователи', 'Все учётные записи. Строка ведёт в профиль пользователя.') + `
   <div class="mb-4 flex gap-1 overflow-x-auto border-b border-line" role="tablist">
     ${tabs.map(([k,l])=>`<button type="button" role="tab" aria-selected="${S.usersTab===k}" data-act="utab" data-val="${k}"
-      class="-mb-px h-11 shrink-0 border-b-2 px-3 text-[0.9375rem] transition-[color,border-color] duration-100 ${S.usersTab===k ? 'border-ink font-bold text-ink' : 'border-transparent text-ink-2 hover:text-ink'}">${l} <span class="tabular-nums text-muted">${USERS.filter(u=>u.status===k).length}</span></button>`).join('')}
+      class="-mb-px h-11 shrink-0 border-b-2 px-3 text-base transition-[color,border-color] duration-100 ${S.usersTab===k ? 'border-ink font-bold text-ink' : 'border-transparent text-ink-2 hover:text-ink'}">${l} <span class="tabular-nums text-muted">${USERS.filter(u=>u.status===k).length}</span></button>`).join('')}
   </div>
   <ul class="${CARD} divide-y divide-line">
     ${list.map(u=>`<li><button type="button" data-act="user-open" data-id="${u.id}" class="grid grid-cols-1 w-full gap-2 px-5 py-4 text-left hover:bg-paper/70 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_1.5rem] md:items-center md:gap-6">
@@ -2847,7 +2857,7 @@ function vUserProfile(){
         </div>
         <p data-err class="hidden text-sm text-danger"></p>
         <button class="${B_OUTLINE} mt-3">Сохранить ФИО</button>
-        <p class="mt-2 text-xs text-muted">Правка ФИО администратором попадает в журнал.</p>
+        <p class="mt-2 text-sm text-muted">Правка ФИО администратором попадает в журнал.</p>
       </form>`}
       <section class="${CARD} px-4 py-2 sm:px-5"><dl class="divide-y divide-line">
         ${dl('Способы входа', u.prov.length ? `<span class="flex flex-wrap gap-x-1">${provLabel(u)}</span>` : '—')}
@@ -2863,12 +2873,12 @@ function vUserProfile(){
       ${u.status==='active' || u.status==='pending' ? `<section class="${CARD} p-4 sm:p-5"><h2 class="${H2} mb-3">${u.status==='pending' ? 'Рассмотреть заявку' : 'Роли'}</h2>${rolesForm(u, u.status==='pending', true)}</section>` : ''}
       <section class="${CARD} p-4 sm:p-5">
         <h2 class="${H2}">Запросы на удаление</h2>
-        <ul class="mt-2 divide-y divide-line">${reqs.map(r=>`<li class="flex flex-wrap items-center justify-between gap-2 py-2.5"><span class="min-w-0"><span class="block text-sm font-medium">${r.type==='account' ? 'Учётная запись' : 'Данные ребёнка: '+subjName(r)}</span><span class="block text-xs text-muted">${r.date}${r.done?' · выполнен '+r.done:''}</span></span>
+        <ul class="mt-2 divide-y divide-line">${reqs.map(r=>`<li class="flex flex-wrap items-center justify-between gap-2 py-2.5"><span class="min-w-0"><span class="block text-sm font-medium">${r.type==='account' ? 'Учётная запись' : 'Данные ребёнка: '+subjName(r)}</span><span class="block text-sm text-muted">${r.date}${r.done?' · выполнен '+r.done:''}</span></span>
           <span class="flex items-center gap-2">${status(...DEL_ST[r.status])}<button type="button" data-act="go" data-view="deletions" class="inline-flex size-9 items-center justify-center rounded-md text-ink-2 hover:bg-paper" aria-label="Открыть запросы на удаление">${ic('i-right','size-4')}</button></span></li>`).join('') || '<li class="py-2.5 text-sm text-muted">Нет запросов</li>'}</ul>
       </section>
       <section class="${CARD} p-4 sm:p-5">
         <h2 class="${H2}">Журнал</h2>
-        <ul class="mt-2 divide-y divide-line">${log.map(a=>`<li class="py-2.5"><p class="text-sm">${a[2]}</p><p class="text-xs text-muted">${a[0]} · ${a[1]} · ${a[3]}</p></li>`).join('') || '<li class="py-2.5 text-sm text-muted">Записей нет</li>'}</ul>
+        <ul class="mt-2 divide-y divide-line">${log.map(a=>`<li class="py-2.5"><p class="text-sm">${a[2]}</p><p class="text-sm text-muted">${a[0]} · ${a[1]} · ${a[3]}</p></li>`).join('') || '<li class="py-2.5 text-sm text-muted">Записей нет</li>'}</ul>
       </section>
     </div>
   </div>`;
@@ -2881,7 +2891,7 @@ function vDeletions(){
   const list = DEL_REQS.filter(t[2]).sort((a,b)=>dayOf(a.date)-dayOf(b.date));
   return pageHead('Запросы на удаление', 'Срок — 15 дней с даты запроса. Несвязанные данные удаляются, связанные — обезличиваются, чтобы не ломать историю школы.') + `
   <div class="mb-4 flex gap-1 overflow-x-auto border-b border-line" role="tablist">
-    ${tabs.map(([k,l,fn])=>`<button type="button" role="tab" aria-selected="${t[0]===k}" data-act="deltab" data-val="${k}" class="-mb-px h-11 shrink-0 border-b-2 px-3 text-[0.9375rem] ${t[0]===k ? 'border-ink font-bold text-ink' : 'border-transparent text-ink-2 hover:text-ink'}">${l} <span class="tabular-nums text-muted">${DEL_REQS.filter(fn).length}</span></button>`).join('')}
+    ${tabs.map(([k,l,fn])=>`<button type="button" role="tab" aria-selected="${t[0]===k}" data-act="deltab" data-val="${k}" class="-mb-px h-11 shrink-0 border-b-2 px-3 text-base ${t[0]===k ? 'border-ink font-bold text-ink' : 'border-transparent text-ink-2 hover:text-ink'}">${l} <span class="tabular-nums text-muted">${DEL_REQS.filter(fn).length}</span></button>`).join('')}
   </div>
   <ul class="space-y-3">${list.map(r=>{ const open = r.status==='new'||r.status==='work', pl = open ? delPlan(r) : null, left = daysLeft(r), by = userBy(r.by);
     return `<li class="${CARD} p-4 sm:p-5">
@@ -2893,7 +2903,7 @@ function vDeletions(){
         </div>
         <div class="text-right">${status(...DEL_ST[r.status])}
           ${open ? `<p class="mt-1 text-sm tabular-nums ${left<=3 ? 'font-bold text-danger' : 'text-ink-2'}">${left>=0 ? 'осталось '+left+' '+plural(left,'день','дня','дней') : 'просрочен на '+(-left)+' '+plural(-left,'день','дня','дней')}</p>` : ''}
-          ${r.taken && open ? `<p class="text-xs text-muted">в работе: ${r.taken}</p>` : ''}</div>
+          ${r.taken && open ? `<p class="text-sm text-muted">в работе: ${r.taken}</p>` : ''}</div>
       </div>
       ${open ? `<div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
         <div class="rounded-lg border border-line p-3"><p class="font-medium">Удалим</p><ul class="mt-1.5 space-y-1 text-sm">${pl.del.map(([k,n])=>`<li class="flex justify-between gap-3"><span class="text-ink-2">${k}</span><span class="tabular-nums">${n}</span></li>`).join('')}</ul></div>
@@ -3054,7 +3064,7 @@ function parentLinkBlock(u){
   const mine = famsOfUser(u.id), m = matchAdult(u);
   const free = FAMILIES.flatMap(f=>f.adults.filter(a=>!a.user).map(a=>({ f, a })));
   const def = mine.length ? 'none' : m ? 'link' : 'new';
-  const typeSel = (name) => `<select name="${name}" class="${FIELD}">${FTYPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
+  const typeSel = (name) => `<select name="${name}" class="${SEL}">${FTYPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>`;
   const famKids = FAMILIES.filter(f=>f.kids.length);
   const noFam = kidsWithoutFamily();
   const modes = [...(mine.length ? [['none','Без изменений']] : []), ['link','Это взрослый из семьи'], ['join','Добавить в семью ребёнка'], ['new','Новая семья']];
@@ -3062,18 +3072,18 @@ function parentLinkBlock(u){
     <p class="font-medium">Семья и дети <span class="font-normal text-muted">— для роли «родитель»</span></p>
     ${mine.length ? `<p class="mt-1 text-sm text-ink-2">Сейчас: ${mine.map(f=>`${famLink(f)} (${adultOf(f,u.id).type}; ${kidsTxt(f)})`).join(', ')}</p>` : ''}
     ${m ? `<p class="mt-1 text-sm text-cobalt">Совпало ${m.by}: похоже, это ${m.a.fio} — ${m.a.type} в семье ${m.f.name} (${kidsTxt(m.f)}).</p>` : !u.phone ? '<p class="mt-1 text-sm text-muted">Telegram не передал телефон — сопоставили только по ФИО.</p>' : ''}
-    <div class="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-${modes.length}" role="radiogroup" aria-label="Как связать с детьми">${modes.map(([v,l])=>`<label class="flex min-h-10 cursor-pointer items-center justify-center rounded-lg border border-muted bg-surface px-2 py-1.5 text-center text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="fmode" value="${v}" ${v===def?'checked':''} data-input="fmode" class="sr-only">${l}</label>`).join('')}</div>
+    <div class="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-${modes.length}" role="radiogroup" aria-label="Как связать с детьми">${modes.map(([v,l])=>`<label class="flex min-h-10 cursor-pointer items-center justify-center rounded-lg border border-muted bg-surface px-2 py-1.5 text-center text-sm has-[:checked]:border-cobalt-ink has-[:checked]:bg-cobalt-soft has-[:checked]:font-bold has-[:checked]:text-cobalt-ink"><input type="radio" name="fmode" value="${v}" ${v===def?'checked':''} data-input="fmode" class="sr-only">${l}</label>`).join('')}</div>
     <div data-mode="link" class="${def==='link'?'':'hidden'} mt-3">
       <label class="${LABEL}" for="fl-${u.id}">Взрослый без учётной записи</label>
-      <select id="fl-${u.id}" name="adult" class="${FIELD}">${free.map(({f,a})=>`<option value="${f.id}|${a.id}" ${m && m.a.id===a.id?'selected':''}>${a.fio} — ${a.type} · ${f.name} (${kidsTxt(f)})</option>`).join('')}</select>
+      <select id="fl-${u.id}" name="adult" class="${SEL}">${free.map(({f,a})=>`<option value="${f.id}|${a.id}" ${m && m.a.id===a.id?'selected':''}>${a.fio} — ${a.type} · ${f.name} (${kidsTxt(f)})</option>`).join('')}</select>
       <p class="mt-1.5 text-sm text-muted">Учётная запись получит его место в семье; контакты останутся.</p></div>
     <div data-mode="join" class="${def==='join'?'':'hidden'} mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_9rem]">
-      <div><label class="${LABEL}" for="fj-${u.id}">Ребёнок</label><select id="fj-${u.id}" name="kid" class="${FIELD}">${famKids.map(f=>`<optgroup label="${f.name}">${f.kids.map(k=>`<option value="${f.id}">${kidName(k)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+      <div><label class="${LABEL}" for="fj-${u.id}">Ребёнок</label><select id="fj-${u.id}" name="kid" class="${SEL}">${famKids.map(f=>`<optgroup label="${f.name}">${f.kids.map(k=>`<option value="${f.id}">${kidName(k)}</option>`).join('')}</optgroup>`).join('')}</select></div>
       <div><label class="${LABEL}">Кем приходится</label>${typeSel('jtype')}</div>
       <p class="text-sm text-muted sm:col-span-2">Пользователь станет взрослым всей семьи этого ребёнка и увидит всех её детей.</p></div>
     <div data-mode="new" class="${def==='new'?'':'hidden'} mt-3 space-y-3">
       <div><p class="${LABEL}">Дети без семьи</p>
-        ${noFam.length ? `<div class="max-h-40 space-y-1 overflow-y-auto rounded-lg border border-line bg-surface p-2">${noFam.map(k=>`<label class="flex items-center gap-2 text-sm"><input type="checkbox" name="newkid" value="${k}" class="size-4 accent-cobalt">${kidName(k)} <span class="text-muted">· ${kidGroup(k)}</span></label>`).join('')}</div>` : '<p class="text-sm text-muted">Все дети уже в семьях — выберите «Добавить в семью ребёнка».</p>'}</div>
+        ${noFam.length ? `<div class="max-h-40 space-y-1 overflow-y-auto rounded-lg border border-line bg-surface p-2">${noFam.map(k=>`<label class="flex items-center gap-2 text-sm"><input type="checkbox" name="newkid" value="${k}" class="size-5 accent-cobalt-ink">${kidName(k)} <span class="text-muted">· ${kidGroup(k)}</span></label>`).join('')}</div>` : '<p class="text-sm text-muted">Все дети уже в семьях — выберите «Добавить в семью ребёнка».</p>'}</div>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_9rem]">
         <div><label class="${LABEL}" for="fn-${u.id}">Название семьи</label><input id="fn-${u.id}" name="fname" value="${u.fio ? u.fio.l : ''}" class="${FIELD}"></div>
         <div><label class="${LABEL}">Кем приходится</label>${typeSel('ntype')}</div></div>
@@ -3142,7 +3152,7 @@ function vFamily(){
         ${[['Адрес', f.address || '—'], ['Примечание', f.note || '—'], ['Видят учителя', 'ФИО, тип связи и телефоны взрослых (СМ-8); адрес и примечание — только админ']].map(([k,v])=>`<div class="flex flex-col gap-0.5 py-2.5 sm:flex-row sm:gap-4"><dt class="w-32 shrink-0 text-sm text-muted">${k}</dt><dd class="min-w-0 text-sm">${v}</dd></div>`).join('')}
       </dl></section>
       <section class="${CARD} p-4 sm:p-5"><h2 class="${H2}">Журнал</h2>
-        <ul class="mt-2 divide-y divide-line">${log.map(a=>`<li class="py-2.5"><p class="text-sm">${a[2]}</p><p class="text-xs text-muted">${a[0]} · ${a[1]} · ${a[3]}</p></li>`).join('') || '<li class="py-2.5 text-sm text-muted">Записей нет</li>'}</ul></section>
+        <ul class="mt-2 divide-y divide-line">${log.map(a=>`<li class="py-2.5"><p class="text-sm">${a[2]}</p><p class="text-sm text-muted">${a[0]} · ${a[1]} · ${a[3]}</p></li>`).join('') || '<li class="py-2.5 text-sm text-muted">Записей нет</li>'}</ul></section>
       ${!f.kids.length && !f.adults.some(a=>a.user) ? `<button type="button" data-act="family-del" data-id="${f.id}" class="${B_DANGER}">Удалить семью</button>` : ''}
     </div>
   </div>`;
@@ -3175,7 +3185,7 @@ function adultDialog(f, a){
   openDialog(dlgHead(a ? a.fio : 'Взрослый в семье '+f.name, 'Учётная запись не обязательна: контакты нужны учителю уже сейчас.') + `
   <form data-form="adult" data-id="${f.id}" data-aid="${a?a.id:''}" class="mt-5 space-y-4" novalidate>
     <div><label for="ad-n" class="${LABEL}">ФИО</label><input id="ad-n" name="fio" value="${a?a.fio:''}" class="${FIELD}"></div>
-    <div><p class="${LABEL}">Кем приходится детям семьи</p><div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип связи">${FTYPES.map(([v,l])=>`<label class="flex h-10 cursor-pointer items-center justify-center rounded-lg border border-muted text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface"><input type="radio" name="type" value="${v}" ${(a?a.type:'мать')===v?'checked':''} class="sr-only">${l}</label>`).join('')}</div></div>
+    <div><p class="${LABEL}">Кем приходится детям семьи</p><div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип связи">${FTYPES.map(([v,l])=>`<label class="flex h-10 cursor-pointer items-center justify-center rounded-lg border border-muted text-sm has-[:checked]:border-cobalt-ink has-[:checked]:bg-cobalt-soft has-[:checked]:font-bold has-[:checked]:text-cobalt-ink"><input type="radio" name="type" value="${v}" ${(a?a.type:'мать')===v?'checked':''} class="sr-only">${l}</label>`).join('')}</div></div>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="ad-p" class="${LABEL}">Телефон</label><input id="ad-p" name="phone" value="${a?a.phone:''}" inputmode="tel" class="${FIELD}"></div>
       <div><label for="ad-e" class="${LABEL}">Email</label><input id="ad-e" name="email" value="${a?a.email:''}" inputmode="email" class="${FIELD}"></div></div>
     ${dlgFoot(a ? 'Сохранить' : 'Добавить')}
@@ -3197,9 +3207,9 @@ function paperConsentDialog(pid){
     <div class="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" data-act="dlg-close" class="${B_GHOST}">Отмена</button><button type="button" data-act="family-new" data-kid="${pid}" class="${B_PRIMARY}">Создать семью</button></div>`);
   openDialog(dlgHead('Бумажное согласие на данные ребёнка', nm+' · семья '+f.name) + `
   <form data-form="paperconsent" data-id="${pid}" class="mt-5 space-y-4" novalidate>
-    <div><label for="pc-g" class="${LABEL}">Кто подписал</label><select id="pc-g" name="g" class="${FIELD}">${f.adults.map(a=>`<option value="${a.fio} (${a.type})">${a.fio} — ${a.type}</option>`).join('')}</select></div>
+    <div><label for="pc-g" class="${LABEL}">Кто подписал</label><select id="pc-g" name="g" class="${SEL}">${f.adults.map(a=>`<option value="${a.fio} (${a.type})">${a.fio} — ${a.type}</option>`).join('')}</select></div>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="pc-d" class="${LABEL}">Дата подписания</label><input id="pc-d" name="d" type="date" value="2026-10-31" class="${FIELD}"></div>
-      <div><label for="pc-v" class="${LABEL}">Версия текста</label><select id="pc-v" class="${FIELD}"><option>1.0</option></select></div></div>
+      <div><label for="pc-v" class="${LABEL}">Версия текста</label><select id="pc-v" class="${SEL}"><option>1.0</option></select></div></div>
     <div><label for="pc-w" class="${LABEL}">Где хранится оригинал</label><input id="pc-w" name="w" class="${FIELD}" placeholder="Например: папка «Согласия 2026»"></div>
     ${dlgFoot('Отметить согласие')}
   </form>`);
@@ -3274,11 +3284,11 @@ function penaltyDialog(pid, lid){
   openDialog(dlgHead('Штраф за поведение','Уменьшит кирпичики. Оценки урока и аналитика не меняются. Родитель увидит причину.') + `
   <form data-form="penalty" class="mt-5 space-y-4" novalidate>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <div><label for="pn-p" class="${LABEL}">Ученик</label><select id="pn-p" name="pid" class="${FIELD}">${PUPILS.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${p.name}</option>`).join('')}</select></div>
-      <div><label for="pn-l" class="${LABEL}">Урок</label><select id="pn-l" name="lid" class="${FIELD}">${held.slice().reverse().map(l=>`<option value="${l}" ${l===def?'selected':''}>${lessonById(l).d} · урок ${lessonById(l).n}</option>`).join('')}</select></div>
+      <div><label for="pn-p" class="${LABEL}">Ученик</label><select id="pn-p" name="pid" class="${SEL}">${PUPILS.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${p.name}</option>`).join('')}</select></div>
+      <div><label for="pn-l" class="${LABEL}">Урок</label><select id="pn-l" name="lid" class="${SEL}">${held.slice().reverse().map(l=>`<option value="${l}" ${l===def?'selected':''}>${lessonById(l).d} · урок ${lessonById(l).n}</option>`).join('')}</select></div>
     </div>
     <div><label for="pn-t" class="${LABEL}">За что</label>
-      <select id="pn-t" name="code" data-input="pen-type" class="${FIELD}">${PEN.filter(x=>x.active).map(x=>`<option value="${x.code}" data-pts="${-x.pts}">${x.name} · ${sgnInt(x.pts)}</option>`).join('')}</select></div>
+      <select id="pn-t" name="code" data-input="pen-type" class="${SEL}">${PEN.filter(x=>x.active).map(x=>`<option value="${x.code}" data-pts="${-x.pts}">${x.name} · ${sgnInt(x.pts)}</option>`).join('')}</select></div>
     <div><label for="pn-q" class="${LABEL}">Сколько кирпичиков снять</label><input id="pn-q" name="qty" inputmode="numeric" value="${-first.pts}" class="${FIELD} tabular-nums sm:w-32">
       <p id="pn-hint" class="mt-1.5 text-sm text-muted">По каталогу: ${-first.pts}. Меньше — можно, больше — нельзя.</p></div>
     <div><label for="pn-r" class="${LABEL}">Что произошло</label><textarea id="pn-r" name="reason" rows="3" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="О поступке, а не о ребёнке: «перебивал, на замечания не реагировал»"></textarea>
@@ -3291,7 +3301,7 @@ function penOffDialog(x){
   <form data-form="penoff" data-id="${x.id}" class="mt-5 space-y-4" novalidate>
     <p class="text-ink-2">Кирпичики вернутся. Запись останется в истории с отметкой «снят» — её увидит родитель.</p>
     <div><p class="${LABEL}">Причина</p>
-      <div class="flex flex-wrap gap-1.5">${['Ребёнок исправился','Извинился','Ошибка: не тот ученик'].map(r=>`<button type="button" data-act="penoff-reason" data-val="${r}" class="h-8 rounded-md border px-2.5 text-sm ${SEG_OFF}">${r}</button>`).join('')}</div>
+      <div class="flex flex-wrap gap-1.5">${['Ребёнок исправился','Извинился','Ошибка: не тот ученик'].map(r=>`<button type="button" data-act="penoff-reason" data-val="${r}" class="${CHIP} ${SEG_OFF}">${r}</button>`).join('')}</div>
       <label for="po-r" class="sr-only">Причина</label><input id="po-r" name="reason" class="${FIELD} mt-2" placeholder="Или своими словами"></div>
     ${dlgFoot('Снять штраф')}
   </form>`);
@@ -3319,7 +3329,7 @@ function evRows(pid, code, tier){
   const by = l => { const x = S.awarded.find(y=>y.pid===pid && y.code===code && y.tier===tier && y.ev.includes(l)); return x ? `${TIER[x.tier]}${x.src==='manual'?' вручную':''} от ${x.date}` : ''; };
   return `<ul class="divide-y divide-line rounded-lg border border-line">${rows.slice().reverse().map(r=>{ const L = lessonById(r.l), [c,t] = STATE_TXT[r.st];
     return `<li><label class="flex items-center gap-3 px-3 py-2 ${r.used ? 'text-muted' : 'cursor-pointer'}">
-      <input type="checkbox" name="ev" value="${r.l}" data-w="${hundred ? r.w : 1}" ${pick.includes(r.l)?'checked':''} ${r.used?'disabled':''} class="size-4 shrink-0 accent-cobalt">
+      <input type="checkbox" name="ev" value="${r.l}" data-w="${hundred ? r.w : 1}" ${pick.includes(r.l)?'checked':''} ${r.used?'disabled':''} class="size-5 shrink-0 accent-cobalt-ink">
       <span class="w-12 tabular-nums">${L.d}</span><span class="min-w-0 flex-1 truncate text-sm text-ink-2">урок ${L.n}${isReview(L)?' · обзорный':''}</span>
       <span class="shrink-0 text-right text-sm ${r.used ? 'text-muted' : c}">${r.used ? 'занят: '+by(r.l) : t + (hundred && r.w ? ' · '+r.w : '')}</span></label></li>`; }).join('')}</ul>
     <p id="aw-cnt" class="mt-1.5 text-sm text-ink-2"></p>`;
@@ -3338,12 +3348,12 @@ function awardDialog(pid){
   openDialog(dlgHead('Выдать достижение вручную','Когда автоматика не сработала или есть другая причина. Отмеченные уроки будут заняты — автоматика не выдаст то же самое второй раз.') + `
   <form data-form="award" class="mt-5 space-y-4" novalidate>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <div><label for="aw-p" class="${LABEL}">Ученик</label><select id="aw-p" name="pid" data-input="award-re" class="${FIELD}">${PUPILS.map(p=>`<option value="${p.id}" ${p.id===p0?'selected':''}>${p.name}</option>`).join('')}</select></div>
+      <div><label for="aw-p" class="${LABEL}">Ученик</label><select id="aw-p" name="pid" data-input="award-re" class="${SEL}">${PUPILS.map(p=>`<option value="${p.id}" ${p.id===p0?'selected':''}>${p.name}</option>`).join('')}</select></div>
       <div><label for="aw-pts" class="${LABEL}">Баллы (кирпичики)</label><input id="aw-pts" name="pts" inputmode="numeric" value="${first.tiers[0][1]}" class="${FIELD} tabular-nums">
         <p id="aw-hint" class="mt-1.5 text-sm text-muted">По каталогу: ${first.tiers[0][1]}. Больше — нельзя.</p></div>
     </div>
     <div><label for="aw-a" class="${LABEL}">Достижение и уровень</label>
-      <select id="aw-a" name="ach" data-input="award-re" class="${FIELD}">${opts}</select></div>
+      <select id="aw-a" name="ach" data-input="award-re" class="${SEL}">${opts}</select></div>
     <div><p class="${LABEL}">За какие уроки <span class="font-normal text-muted">— система отметила последние подходящие</span></p>
       <div id="aw-ev">${evRows(p0, first.code, 0)}</div></div>
     <div><label for="aw-r" class="${LABEL}">Причина</label><textarea id="aw-r" name="reason" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Обязательно: попадёт в журнал"></textarea></div>
@@ -3390,9 +3400,9 @@ function yearNewDialog(){
     <div><label for="y-n" class="${LABEL}">Название</label><input id="y-n" name="name" class="${FIELD}" value="2027–2028"></div>
     <div class="grid grid-cols-2 gap-3"><div><label for="y-s" class="${LABEL}">Начало</label><input id="y-s" name="start" type="date" class="${FIELD}" value="2027-09-05"></div>
       <div><label for="y-e" class="${LABEL}">Окончание</label><input id="y-e" name="end" type="date" class="${FIELD}" value="2028-05-28"></div></div>
-    <label class="flex items-start gap-3"><input type="checkbox" checked class="mt-1 size-5 accent-cobalt"><span>Скопировать настройки оценивания групп</span></label>
-    <label class="flex items-start gap-3"><input type="checkbox" checked class="mt-1 size-5 accent-cobalt"><span>Скопировать назначения учителей</span></label>
-    <label class="flex items-start gap-3"><input type="checkbox" class="mt-1 size-5 accent-cobalt"><span>Сразу сделать активным</span></label>
+    <label class="flex items-start gap-3"><input type="checkbox" checked class="mt-1 size-5 accent-cobalt-ink"><span>Скопировать настройки оценивания групп</span></label>
+    <label class="flex items-start gap-3"><input type="checkbox" checked class="mt-1 size-5 accent-cobalt-ink"><span>Скопировать назначения учителей</span></label>
+    <label class="flex items-start gap-3"><input type="checkbox" class="mt-1 size-5 accent-cobalt-ink"><span>Сразу сделать активным</span></label>
     ${dlgFoot('Создать год')}
   </form>`);
 }
@@ -3407,7 +3417,7 @@ function eventDialog(ev, date){
   <form data-form="event" data-id="${ev?ev.id:''}" class="mt-5 space-y-4" novalidate>
     <div><label for="ev-d" class="${LABEL}">Дата</label><input id="ev-d" name="d" type="date" value="${isoOf(e.d)}" class="${FIELD}"></div>
     <div><p class="${LABEL}">Тип</p>
-      <div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип события">${Object.entries(TYPE_META).map(([k,[i,l,c]])=>`<label class="flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-muted text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-surface">
+      <div class="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Тип события">${Object.entries(TYPE_META).map(([k,[i,l,c]])=>`<label class="flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-muted text-sm has-[:checked]:border-cobalt-ink has-[:checked]:bg-cobalt-soft has-[:checked]:font-bold has-[:checked]:text-cobalt-ink">
         <input type="radio" name="type" value="${k}" ${e.type===k?'checked':''} class="sr-only">${ic(i,'size-4')}${l}</label>`).join('')}</div></div>
     <div><label for="ev-t" class="${LABEL}">Название</label><input id="ev-t" name="t" value="${e.t}" placeholder="Например: Осенний выезд в лесопарк" class="${FIELD}"></div>
     <div><label for="ev-ds" class="${LABEL}">Описание <span class="font-normal text-muted">— необязательно</span></label><textarea id="ev-ds" name="desc" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none">${e.desc||''}</textarea></div>
@@ -3422,7 +3432,7 @@ function eventDialog(ev, date){
 function addPupilsDialog(){
   openDialog(dlgHead('Добавить в группу','Ученики без группы. Новых учеников создаёт администратор.') + `
   <form data-form="addpupils" class="mt-5" novalidate>
-    <ul class="divide-y divide-line rounded-lg border border-line">${UNASSIGNED.map(u=>`<li><label class="flex items-center gap-3 px-3 py-3 ${hasKidConsent(u.id)?'cursor-pointer':'text-muted'}"><input type="checkbox" name="u" value="${u.id}" ${hasKidConsent(u.id)?'':'disabled'} class="size-5 accent-cobalt">
+    <ul class="divide-y divide-line rounded-lg border border-line">${UNASSIGNED.map(u=>`<li><label class="flex items-center gap-3 px-3 py-3 ${hasKidConsent(u.id)?'cursor-pointer':'text-muted'}"><input type="checkbox" name="u" value="${u.id}" ${hasKidConsent(u.id)?'':'disabled'} class="size-5 accent-cobalt-ink">
       <span><span class="block font-medium">${u.name}</span><span class="block text-sm text-muted">${u.born} г. р. · ${hasKidConsent(u.id) ? u.note : 'нет согласия опекуна — зачислить нельзя, обратитесь к администратору'}</span></span></label></li>`).join('') || '<li class="px-3 py-3 text-ink-2">Все ученики уже в группах.</li>'}</ul>
     <div class="mt-4"><label for="ap-d" class="${LABEL}">В группе с</label><input id="ap-d" type="date" value="2026-11-01" class="${FIELD} sm:w-48"></div>
     <div class="mt-4">${dlgFoot('Добавить')}</div>
@@ -3442,16 +3452,16 @@ function pupilDialog(p){
       <div><label for="pp-f" class="${LABEL}">Имя</label><input id="pp-f" name="first" value="${p?p.name.split(' ')[0]:''}" class="${FIELD}"></div></div>
     <div><label for="pp-m" class="${LABEL}">Отчество <span class="font-normal text-muted">— необязательно</span></label><input id="pp-m" class="${FIELD}"></div>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="pp-b" class="${LABEL}">Дата рождения</label><input id="pp-b" name="born" type="date" value="${p?p.born+'-05-14':''}" class="${FIELD}"></div>
-      <div><label for="pp-g" class="${LABEL}">Группа</label><select id="pp-g" class="${FIELD}"><option value="">Без группы</option>${GROUPS.map(g=>`<option ${p&&p.group===g.name?'selected':''}>${g.name}</option>`).join('')}</select></div></div>
-    <div><label for="pp-gu" class="${LABEL}">Семья</label><select id="pp-gu" class="${FIELD}"><option value="">Без семьи</option>${FAMILIES.map(f=>`<option ${p && famOfKid(p.id)===f ? 'selected' : ''}>${f.name} (${f.adults.map(a=>a.fio).join(', ') || 'нет взрослых'})</option>`).join('')}</select><p class="mt-1.5 text-sm text-muted">У ребёнка одна семья. Состав семьи меняется на странице семьи.</p></div>
-    <label class="flex items-start gap-3"><input type="checkbox" ${!p||p.active?'checked':''} class="mt-1 size-5 accent-cobalt"><span>Активен</span></label>
+      <div><label for="pp-g" class="${LABEL}">Группа</label><select id="pp-g" class="${SEL}"><option value="">Без группы</option>${GROUPS.map(g=>`<option ${p&&p.group===g.name?'selected':''}>${g.name}</option>`).join('')}</select></div></div>
+    <div><label for="pp-gu" class="${LABEL}">Семья</label><select id="pp-gu" class="${SEL}"><option value="">Без семьи</option>${FAMILIES.map(f=>`<option ${p && famOfKid(p.id)===f ? 'selected' : ''}>${f.name} (${f.adults.map(a=>a.fio).join(', ') || 'нет взрослых'})</option>`).join('')}</select><p class="mt-1.5 text-sm text-muted">У ребёнка одна семья. Состав семьи меняется на странице семьи.</p></div>
+    <label class="flex items-start gap-3"><input type="checkbox" ${!p||p.active?'checked':''} class="mt-1 size-5 accent-cobalt-ink"><span>Активен</span></label>
     ${dlgFoot(p ? 'Сохранить' : 'Создать')}
   </form>`);
 }
 function enrollDialog(u){
   openDialog(dlgHead(`Зачислить: ${u.name}`, `${u.born} г. р.`) + `
   <form data-form="enroll" data-id="${u.id}" class="mt-5 space-y-4" novalidate>
-    <div><label for="en-g" class="${LABEL}">Группа</label><select id="en-g" name="g" class="${FIELD}">${GROUPS.map(g=>`<option>${g.name} · ${g.age}</option>`).join('')}</select></div>
+    <div><label for="en-g" class="${LABEL}">Группа</label><select id="en-g" name="g" class="${SEL}">${GROUPS.map(g=>`<option>${g.name} · ${g.age}</option>`).join('')}</select></div>
     <div><label for="en-d" class="${LABEL}">С даты</label><input id="en-d" type="date" value="2026-11-01" class="${FIELD} sm:w-48"></div>
     ${dlgFoot('Зачислить')}
   </form>`);
@@ -3471,9 +3481,9 @@ function achDialog(a){
   <form data-form="ach" class="mt-5 space-y-4" novalidate>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="ac-n" class="${LABEL}">Название</label><input id="ac-n" name="name" value="${a?a.name:''}" class="${FIELD}"></div>
       <div><label for="ac-e" class="${LABEL}">По-английски</label><input id="ac-e" value="${a?a.en:''}" class="${FIELD}"></div></div>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="ac-c" class="${LABEL}">Категория</label><select id="ac-c" class="${FIELD}">${['Постоянство','Старание','Память'].map(c=>`<option ${a&&a.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
-      <div><label for="ac-t" class="${LABEL}">Тип правила</label><select id="ac-t" class="${FIELD}">${['Серия','Накопление','Разовое'].map(c=>`<option ${a&&a.type===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
-    <div><label for="ac-r" class="${LABEL}">Условие</label><select id="ac-r" class="${FIELD}">${['Все стихи урока на «2»','Тетрадь от 9 баллов','Тест от 8 баллов','Урок с выполненным ДЗ','Спевка','Баллы за уроки'].map(c=>`<option>${c}</option>`).join('')}</select></div>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="ac-c" class="${LABEL}">Категория</label><select id="ac-c" class="${SEL}">${['Постоянство','Старание','Память'].map(c=>`<option ${a&&a.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div><label for="ac-t" class="${LABEL}">Тип правила</label><select id="ac-t" class="${SEL}">${['Серия','Накопление','Разовое'].map(c=>`<option ${a&&a.type===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
+    <div><label for="ac-r" class="${LABEL}">Условие</label><select id="ac-r" class="${SEL}">${['Все стихи урока на «2»','Тетрадь от 9 баллов','Тест от 8 баллов','Урок с выполненным ДЗ','Спевка','Баллы за уроки'].map(c=>`<option>${c}</option>`).join('')}</select></div>
     <div><p class="${LABEL}">Уровни: сколько раз → баллы</p>
       <div class="space-y-2">${[0,1,2].map(i=>`<div class="grid grid-cols-[6rem_minmax(0,1fr)_minmax(0,1fr)] items-center gap-2"><span class="inline-flex items-center gap-2 text-sm">${tierDot(i)}${TIER[i]}</span>
         <input aria-label="${TIER[i]}: сколько раз" value="${t[i]?t[i][0]:''}" inputmode="numeric" class="${FIELD} tabular-nums"><input aria-label="${TIER[i]}: баллы" value="${t[i]?t[i][1]:''}" inputmode="numeric" placeholder="баллы" class="${FIELD} tabular-nums"></div>`).join('')}</div>
@@ -3484,7 +3494,7 @@ function achDialog(a){
 function verseNewDialog(){
   openDialog(dlgHead('Добавить золотой стих','Текст подставится из Синодального перевода.') + `
   <form data-form="verse" class="mt-5 space-y-4" novalidate>
-    <div class="grid grid-cols-2 gap-2"><select name="book" aria-label="Книга" class="${FIELD}">${BOOKS.map(b=>`<option>${b}</option>`).join('')}</select>
+    <div class="grid grid-cols-2 gap-2"><select name="book" aria-label="Книга" class="${SEL}">${BOOKS.map(b=>`<option>${b}</option>`).join('')}</select>
       <input name="ch" inputmode="numeric" placeholder="Глава" aria-label="Глава" class="${FIELD}">
       <input name="from" inputmode="numeric" placeholder="Стих с" aria-label="Стих с" class="${FIELD}">
       <input name="to" inputmode="numeric" placeholder="по (необяз.)" aria-label="Стих по" class="${FIELD}"></div>
@@ -3517,7 +3527,7 @@ function render(){
 }
 function renderChrome(){
   document.getElementById('brand').innerHTML = brandHTML();
-  document.getElementById('topnav').innerHTML = topNavHTML();
+  document.getElementById('sidenav').innerHTML = sidebarHTML();
   document.getElementById('hdrRight').innerHTML = rightHTML();
   document.getElementById('drawerBody').innerHTML = navHTML();
 }

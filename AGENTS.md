@@ -112,4 +112,4 @@ Next.js 16.4 · Vercel · Neon PG 17 · Prisma v7 · Auth.js v5 (Telegram + emai
 
 ## Repository status
 
-**Текущая фаза:** MVP реализации P01…P12 завершена (2026-10-23): P12 «Достижения и штрафы» (волна 1, флаг `features.achievements`); P08 аналитика по годам; P07 prod и LEGACY_PENDING; bootstrap P6 (Design Lab, T2-правила). Дальнейшие изменения — post-MVP или явная фаза/контракт. См. [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).
+**Текущая фаза:** MVP реализации P01…P13 завершена (2026-10-23): P13 «Семьи и родители» (волна 2, флаг `features.parents`); P12 «Достижения и штрафы» (волна 1, флаг `features.achievements`); P08 аналитика по годам; P07 prod и LEGACY_PENDING; bootstrap P6 (Design Lab, T2-правила). **P14 «Редизайн v2»** (ADR-014): документы и прототип готовы (2026-10-24), код не начат — шрифт Source Sans 3, база 18 px, левый сайдбар, `Select` / `Checkbox` / `DateField`; верификация UI — по [`prototype_class_parity_spec.md`](docs/implementation/mvp/specs/prototype_class_parity_spec.md). Дальнейшие изменения — post-MVP или явная фаза/контракт. См. [`docs/implementation/mvp/README.md`](docs/implementation/mvp/README.md).
