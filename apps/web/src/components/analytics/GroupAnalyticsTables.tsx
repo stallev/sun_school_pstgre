@@ -121,7 +121,7 @@ const PupilLayerTable = ({
                 <TableCell className="px-5 py-3">
                   <CustomLink
                     href={`/analytics/pupils/${row.pupilId}`}
-                    className="hover:text-cobalt-ink"
+                    className="text-ink font-medium hover:text-cobalt-ink focus-visible:text-cobalt-ink"
                   >
                     {row.displayName}
                   </CustomLink>

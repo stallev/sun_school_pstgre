@@ -169,7 +169,10 @@ function extractExportConst(source, name) {
 }
 
 function extractChipClassBlock(source) {
-  const start = source.indexOf("const chipClass");
+  const start =
+    source.indexOf("const chipClass") >= 0
+      ? source.indexOf("const chipClass")
+      : source.indexOf("segmentedChipClassName");
   if (start < 0) return "";
   const slice = source.slice(start);
   const cnIdx = slice.indexOf("cn(");

@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef, type KeyboardEvent } from "react";
+import { segmentedChipClassName } from "@/lib/ui/segmented-chip-classes";
 import { cn } from "@/lib/utils";
 
 export type SegmentedOption<T extends string> = {
@@ -75,15 +76,7 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
   };
 
   const chipClass = (checked: boolean) =>
-    cn(
-      "inline-flex min-h-11 min-w-11 h-10 items-center justify-center rounded-lg border px-3 text-base font-medium transition-[background-color,border-color,color] duration-100 ease-out-soft active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
-      size === "compact" && "h-9",
-      checked
-        ? "border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink hover:bg-cobalt-soft"
-        : invalid
-          ? "border-danger"
-          : "border-muted bg-surface text-ink hover:border-ink-2",
-    );
+    segmentedChipClassName(checked, { size, invalid });
 
   const handleSelect = (optionValue: T, checked: boolean) => {
     if (resolvedMode === "toggle" && checked) {

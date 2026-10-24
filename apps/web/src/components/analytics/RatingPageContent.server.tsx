@@ -15,8 +15,7 @@ import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.se
 import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
-import { CustomLink } from "@/components/ui/custom-link";
-import { cn } from "@/lib/utils";
+import { SegmentedControlLinks } from "@/components/ui/segmented-control-links";
 
 export type RatingPageProps = {
   searchParams: Promise<{ gradeId?: string; scope?: string }>;
@@ -74,50 +73,33 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
         <ContentText className="text-sm text-ink-2">{messages.rating.privacyNote}</ContentText>
       </div>
       {data.isAdmin ? (
-        <div className="flex flex-wrap gap-2">
-          <CustomLink
-            href={`${scopeBase}scope=group`}
-            className={cn(
-              "inline-flex h-11 items-center rounded-lg border px-3 text-sm",
-              data.scope === "group" ? "border-line-strong bg-surface font-medium" : "border-line",
-            )}
-          >
-            {messages.rating.scopeGroup}
-          </CustomLink>
-          <CustomLink
-            href={`${scopeBase}scope=school`}
-            className={cn(
-              "inline-flex h-11 items-center rounded-lg border px-3 text-sm",
-              data.scope === "school" ? "border-line-strong bg-surface font-medium" : "border-line",
-            )}
-          >
-            {messages.rating.scopeSchool}
-          </CustomLink>
-        </div>
+        <SegmentedControlLinks
+          aria-label={messages.rating.pageTitle}
+          value={data.scope}
+          options={[
+            {
+              value: "group",
+              label: messages.rating.scopeGroup,
+              href: `${scopeBase}scope=group`,
+            },
+            {
+              value: "school",
+              label: messages.rating.scopeSchool,
+              href: `${scopeBase}scope=school`,
+            },
+          ]}
+        />
       ) : null}
       {data.isAdmin && data.scope === "group" && data.grades.length > 1 ? (
-        <div
-          className="flex flex-wrap gap-2"
-          role="radiogroup"
+        <SegmentedControlLinks
           aria-label={lessonMessages.gradeFilterLabel}
-        >
-          {data.grades.map((grade) => (
-            <CustomLink
-              key={grade.gradeId}
-              href={`/rating?gradeId=${grade.gradeId}&scope=group`}
-              role="radio"
-              aria-checked={grade.gradeId === data.gradeId}
-              className={cn(
-                "inline-flex h-11 items-center rounded-lg border px-3 text-sm",
-                grade.gradeId === data.gradeId
-                  ? "border-line-strong bg-surface font-medium"
-                  : "border-line",
-              )}
-            >
-              {grade.name}
-            </CustomLink>
-          ))}
-        </div>
+          value={data.gradeId ?? ""}
+          options={data.grades.map((grade) => ({
+            value: grade.gradeId,
+            label: grade.name,
+            href: `/rating?gradeId=${grade.gradeId}&scope=group`,
+          }))}
+        />
       ) : null}
       <RatingTable
         rows={data.rows}

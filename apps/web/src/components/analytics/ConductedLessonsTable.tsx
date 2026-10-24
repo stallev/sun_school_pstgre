@@ -61,7 +61,7 @@ export const ConductedLessonsTable = ({ snapshot, messages }: ConductedLessonsTa
                 <TableCell className="px-5 py-3 font-medium">
                   {row.displayName}
                   {row.noLongerAssigned ? (
-                    <ContentText className="text-xs font-normal text-muted">
+                    <ContentText className="text-sm font-normal text-muted">
                       {messages.conducted.noLongerAssigned}
                     </ContentText>
                   ) : null}

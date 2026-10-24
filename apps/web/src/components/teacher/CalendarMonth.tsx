@@ -53,6 +53,14 @@ const monthCells = (monthKey: string): (number | null)[] => {
 const isoForDay = (monthKey: string, day: number): string =>
   `${monthKey}-${String(day).padStart(2, "0")}`;
 
+const todayIsoLocal = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export const CalendarMonth = ({
   monthKey,
   gradeId,
@@ -64,6 +72,7 @@ export const CalendarMonth = ({
 }: CalendarMonthProps) => {
   const cells = monthCells(monthKey);
   const eventByDay = new Map(events.map((event) => [event.dayOfMonth, event]));
+  const todayIso = todayIsoLocal();
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
@@ -82,9 +91,15 @@ export const CalendarMonth = ({
             const meta = event ? typeMeta(event.type, messages) : null;
             const dateIso = isoForDay(monthKey, day);
             const isOpen = openDate === dateIso || (event && openEventId === event.eventId);
+            const isToday = dateIso === todayIso;
             const cellInner = (
               <>
-                <span className="inline-flex size-7 items-center justify-center rounded-full text-sm tabular-nums">
+                <span
+                  className={cn(
+                    "inline-flex size-7 items-center justify-center rounded-full text-base tabular-nums text-ink",
+                    isToday && "bg-ink text-surface",
+                  )}
+                >
                   {day}
                 </span>
                 {meta && event ? (

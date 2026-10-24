@@ -1,7 +1,6 @@
-import { CustomLink } from "@/components/ui/custom-link";
+import { SegmentedControlLinks } from "@/components/ui/segmented-control-links";
 import type { AnalyticsPeriodFilter as PeriodFilter } from "@/data/analytics/analytics-period";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
-import { cn } from "@/lib/utils";
 
 type AnalyticsPeriodChipsProps = {
   gradeId: string;
@@ -29,37 +28,22 @@ export const AnalyticsPeriodChips = ({
   monthChipValue,
   monthChipLabel,
 }: AnalyticsPeriodChipsProps) => {
-  const yearActive = periodFilter.mode === "year";
-  const monthActive = periodFilter.mode === "month";
-
   return (
-    <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={messages.periodChipsLabel}>
-      <CustomLink
-        href={buildHref(gradeId, yearId, { mode: "year" })}
-        role="radio"
-        aria-checked={yearActive}
-        className={cn(
-          "inline-flex h-11 min-w-11 items-center rounded-lg border px-3 text-sm",
-          yearActive
-            ? "border-ink bg-ink font-medium text-surface"
-            : "border-line-strong bg-surface text-ink",
-        )}
-      >
-        {messages.periodYear}
-      </CustomLink>
-      <CustomLink
-        href={buildHref(gradeId, yearId, { mode: "month", month: monthChipValue })}
-        role="radio"
-        aria-checked={monthActive}
-        className={cn(
-          "inline-flex h-11 min-w-11 items-center rounded-lg border px-3 text-sm",
-          monthActive
-            ? "border-ink bg-ink font-medium text-surface"
-            : "border-line-strong bg-surface text-ink",
-        )}
-      >
-        {monthChipLabel}
-      </CustomLink>
-    </div>
+    <SegmentedControlLinks
+      aria-label={messages.periodChipsLabel}
+      value={periodFilter.mode === "year" ? "year" : "month"}
+      options={[
+        {
+          value: "year",
+          label: messages.periodYear,
+          href: buildHref(gradeId, yearId, { mode: "year" }),
+        },
+        {
+          value: "month",
+          label: monthChipLabel,
+          href: buildHref(gradeId, yearId, { mode: "month", month: monthChipValue }),
+        },
+      ]}
+    />
   );
 };

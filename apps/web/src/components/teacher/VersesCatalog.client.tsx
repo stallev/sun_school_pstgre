@@ -91,7 +91,7 @@ export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
                         {index > 0 ? ", " : null}
                         <CustomLink
                           href={`/lessons/${usage.lessonId}`}
-                          className="text-cobalt-ink hover:underline"
+                          className="text-ink underline-offset-2 hover:text-cobalt-ink focus-visible:text-cobalt-ink"
                         >
                           {usage.linkLabel}
                         </CustomLink>

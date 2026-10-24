@@ -87,7 +87,7 @@ export const PupilYearsRowsTable = ({
                     {row.yearName}
                   </button>
                   {dash && (
-                    <span className="block text-xs font-normal text-muted">
+                    <span className="block text-sm font-normal text-muted">
                       {fillMessage(pupilYearMessages.fewLessons, { count: row.lessons })}
                     </span>
                   )}
