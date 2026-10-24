@@ -141,7 +141,7 @@ Tier T3 по триггеру S: переключатель роли (ОК-5) п
 
 ### P14-CU9 — fix(i18n): correct audit copy and plural forms · Review: diff-only · Commit: auto
 
-- [ ] P14-T10 · T1 · Spec: [redesign §3.8](../../../design/redesign_v2_ui_spec.md) · UX-06: F3 · ADR: [ADR-008](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md)
+- [x] P14-T10 · T1 · Spec: [redesign §3.8](../../../design/redesign_v2_ui_spec.md) · UX-06: F3 · ADR: [ADR-008](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md)
       Files: `apps/web/src/lib/messages/ru.ts`, `apps/web/src/lib/messages/en.ts`, `apps/web/src/lib/i18n/format.ts`, `apps/web/src/lib/i18n/format.test.ts`, `apps/web/src/components/analytics/SchoolAttentionList.tsx`, `apps/web/src/components/admin/**`, `apps/web/src/components/analytics/PupilAnalyticsPageContent.server.tsx`
       Acceptance: «Выключено с …» не выводит литеральное многоточие (дата или формулировка без неё); «N пользователей ждут роль» склоняется (`plural`); «Не всё 10/30» → «Проверено 10 из 30»; пустое имя в `/users` → «Без имени»; предупреждение «Ребёнок без семьи» — `StatusText kind="warn"` (иконка + текст); новые ключи есть в `ru.ts` и `en.ts`; клиентский бандл не получает полный словарь (ADR-008)
       Paths: n/a — copy и форматирование; регрессия plural — тест `format.test.ts` на 1, 2, 5, 11, 21

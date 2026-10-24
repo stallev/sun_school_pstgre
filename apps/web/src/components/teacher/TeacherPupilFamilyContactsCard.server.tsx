@@ -1,7 +1,7 @@
 import { MUTATION_ERROR_CODES, USER_ROLE, type TeacherFamilyAdultContact } from "@sunschool/domain";
 import { isMutationErr } from "@/data/access/access-admin-guards.server";
 import { notFound } from "next/navigation";
-import { ContentText } from "@/components/atoms/ContentText";
+import { StatusText } from "@/components/ui/status-text";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
@@ -64,7 +64,9 @@ export const TeacherPupilFamilyContactsCard = async ({
 
   if (!pupil?.familyId || !pupil.family) {
     return (
-      <ContentText className="mb-4 text-sm text-warn">{messages.noFamily}</ContentText>
+      <StatusText tone="warn" className="mb-4 block text-base">
+        {messages.noFamily}
+      </StatusText>
     );
   }
 

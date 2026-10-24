@@ -177,7 +177,11 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
             </>
           )}
         </AnalyticsYearDetail>
-        <SchoolAttentionList items={data.attention} messages={schoolMessages} />
+        <SchoolAttentionList
+          items={data.attention}
+          messages={schoolMessages}
+          locale={locale}
+        />
       </AnalyticsYearScope>
     </>
   );

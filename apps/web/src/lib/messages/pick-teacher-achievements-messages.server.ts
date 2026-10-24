@@ -10,6 +10,7 @@ export const pickTeacherAchievementsMessages = (
   modeCardTitle: getMessage(teacher, "achievements.mode_card_title"),
   modeOnDescription: getMessage(teacher, "achievements.mode_on_description"),
   modeOffDescriptionTemplate: getMessage(teacher, "achievements.mode_off_description"),
+  modeOffDescriptionWithDateTemplate: getMessage(teacher, "achievements.mode_off_description_with_date"),
   modeOnLabel: getMessage(teacher, "achievements.mode_on_label"),
   modeOffLabel: getMessage(teacher, "achievements.mode_off_label"),
   modeToggleAria: getMessage(teacher, "achievements.mode_toggle_aria"),

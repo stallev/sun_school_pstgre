@@ -89,6 +89,7 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     pageSubtitle: getMessage(admin, "users.page_subtitle"),
     tabNav: getMessage(admin, "users.tab_nav"),
     listEmpty: getMessage(admin, "users.list_empty"),
+    unnamed: getMessage(admin, "users.unnamed"),
     registrationFooterNote: getMessage(admin, "users.registration_footer_note"),
     filterAll: getMessage(admin, "users.filter_all"),
     filterActive: getMessage(admin, "users.filter_active"),

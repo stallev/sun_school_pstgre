@@ -2,6 +2,7 @@ export type TeacherAchievementsMessages = {
   modeCardTitle: string;
   modeOnDescription: string;
   modeOffDescriptionTemplate: string;
+  modeOffDescriptionWithDateTemplate: string;
   modeOnLabel: string;
   modeOffLabel: string;
   modeToggleAria: string;

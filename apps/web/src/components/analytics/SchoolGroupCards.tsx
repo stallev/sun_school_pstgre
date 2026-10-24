@@ -32,7 +32,10 @@ export const SchoolGroupCards = ({
         row.lastLessonStatus === "ok"
           ? fillMessage(messages.lastLessonOk, { label: row.lastLessonLabel })
           : row.lastLessonStatus === "warn"
-            ? fillMessage(messages.lastLessonWarn, { label: row.lastLessonLabel })
+            ? fillMessage(messages.lastLessonWarn, {
+                checked: row.lastLessonChecked,
+                total: row.lastLessonTotal,
+              })
             : messages.lastLessonIdle;
       const lastTone =
         row.lastLessonStatus === "ok" ? "ok" : row.lastLessonStatus === "warn" ? "warn" : "neutral";
