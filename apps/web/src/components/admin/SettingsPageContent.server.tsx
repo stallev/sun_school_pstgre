@@ -4,6 +4,7 @@ import { SettingsLanguageForm } from "@/components/admin/SettingsLanguageForm";
 import { TimezonePicker } from "@/components/admin/TimezonePicker";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
 import { PageHeader } from "@/components/patterns/PageHeader";
+import { PageSection } from "@/components/ui/page-section";
 import { ContentText } from "@/components/atoms/ContentText";
 import { requireRole } from "@/lib/auth/require-user";
 import { getSchoolTimezoneUncached } from "@/lib/i18n/get-school-timezone.server";
@@ -29,12 +30,12 @@ export const SettingsPageContent = async () => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+      <PageSection width="wide" className="min-w-0 space-y-6 overflow-x-hidden">
         <PageHeader
           title={adminMessages.page.settingsTitle}
           description={adminMessages.settings.pageSubtitle}
         />
-        <div className="grid max-w-5xl grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start">
           <SettingsLanguageForm
             currentLocale={currentLocale}
             dictionaries={dictionaries}
@@ -47,10 +48,10 @@ export const SettingsPageContent = async () => {
             formError={formError}
           />
         </div>
-        <ContentText tone="muted" className="max-w-3xl text-sm">
+        <ContentText tone="muted" className="text-sm">
           {adminMessages.settings.footerNote}
         </ContentText>
-      </div>
+      </PageSection>
     </AdminMessagesProvider>
   );
 };

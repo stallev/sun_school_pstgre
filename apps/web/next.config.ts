@@ -20,6 +20,10 @@ loadEnvConfig(
  */
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Inlined into client bundles at build time (global_shell_spec §8 — dev-only dynamic imports).
+  env: {
+    APP_ENV: process.env.APP_ENV ?? "prod",
+  },
   cacheComponents: true,
   partialPrefetching: true,
   // `forbidden()` (AZ-D3: a 403 page for a wrong role) is experimental in Next.js 16.4.

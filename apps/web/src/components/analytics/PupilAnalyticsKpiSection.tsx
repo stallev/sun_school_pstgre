@@ -39,8 +39,8 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
   );
 
   return (
-    <dl className="mb-0 grid grid-cols-2 items-stretch gap-4 sm:grid-cols-4">
-      <Card className="h-full p-4">
+    <dl className="mb-0 grid grid-cols-2 items-stretch gap-4 lg:grid-cols-4">
+      <Card className="col-span-2 h-full p-4 lg:col-span-2">
         <dt className="text-sm text-muted">
           {messages.kpiAttendanceLabel}
           {personalSuffix}
@@ -54,8 +54,8 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
           {messages.kpiVersesLabel}
           {personalSuffix}
         </dt>
-        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2">
-          <NumberDisplay size="kpi">{versesValue ?? messages.kpiEmpty}</NumberDisplay>
+        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
+          <span className="tabular-nums">{versesValue ?? messages.kpiEmpty}</span>
           {versesValue !== null ? (
             <span className="text-sm text-muted">N={view.versesAverage.observationCount}</span>
           ) : null}
@@ -66,8 +66,8 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
           {messages.kpiTestLabel}
           {personalSuffix}
         </dt>
-        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2">
-          <NumberDisplay size="kpi">{testValue ?? messages.kpiEmpty}</NumberDisplay>
+        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
+          <span className="tabular-nums">{testValue ?? messages.kpiEmpty}</span>
           {testValue !== null ? (
             <span className="text-sm text-muted">N={view.testAverage.observationCount}</span>
           ) : null}
@@ -78,8 +78,8 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
           {messages.kpiNotebookLabel}
           {personalSuffix}
         </dt>
-        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2">
-          <NumberDisplay size="kpi">{notebookValue ?? messages.kpiEmpty}</NumberDisplay>
+        <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
+          <span className="tabular-nums">{notebookValue ?? messages.kpiEmpty}</span>
           {notebookValue !== null ? (
             <span className="text-sm text-muted">N={view.notebookAverage.observationCount}</span>
           ) : null}

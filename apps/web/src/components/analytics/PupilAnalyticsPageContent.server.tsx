@@ -34,6 +34,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { loadPupilAnalyticsPage } from "@/data/analytics/load-pupil-analytics-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
@@ -243,6 +244,7 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
           messages={messages}
           actionPath={`/analytics/pupils/${pupilId}`}
           hiddenFields={periodHiddenFields}
+          dateFieldCopy={getFormDateFieldCopy(commonDict, locale)}
         />
       ) : null}
       {view ? (

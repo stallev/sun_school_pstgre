@@ -88,7 +88,7 @@ export const NavDrawer = ({
             if (isResolvedNavGroup(item)) {
               return (
                 <div key={item.key}>
-                  <p className="px-3 pb-1 text-xs font-bold text-muted">{item.label}</p>
+                  <p className="px-3 pb-1 text-sm font-medium text-muted">{item.label}</p>
                   <ul className="space-y-0.5">
                     {item.children.map((child) => (
                       <li key={child.key}>

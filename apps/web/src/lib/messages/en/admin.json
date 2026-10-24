@@ -128,6 +128,7 @@
     "page_subtitle": "All accounts. Each row opens the user profile.",
     "tab_nav": "Filter users by status",
     "list_empty": "Empty.",
+    "unnamed": "Unnamed",
     "registration_footer_note": "Signed in but did not give consent or submit a request. Removed automatically 30 days after first sign-in.",
     "filter_all": "All",
     "filter_active": "Active",

@@ -1,8 +1,7 @@
 "use client";
 
-import { USER_ROLE } from "@sunschool/domain";
 import { ShellMessagesProvider } from "@/components/shell/shell-messages-provider.client";
-import { ShellNavigation } from "@/components/shell/shell-navigation.client";
+import { SidebarNav } from "@/components/shell/sidebar-nav";
 import { UserMenu } from "@/components/shell/user-menu";
 import type { ResolvedNavItem } from "@/lib/shell/nav-resolver";
 import type { ShellMessages } from "@/lib/messages/shell-messages";
@@ -79,14 +78,13 @@ const SAMPLE_NAV: ResolvedNavItem[] = [
 export const ShellMatrix = () => (
   <ShellMessagesProvider messages={LAB_SHELL_MESSAGES}>
     <div className="grid gap-3">
-      <MatrixCell label="TopNav + NavDrawer (teacher sample)">
-        <div className="rounded-xl border border-line bg-surface p-2">
-          <ShellNavigation
-            shellRole={USER_ROLE.TEACHER}
-            navItems={SAMPLE_NAV}
+      <MatrixCell label="SidebarNav (teacher sample)">
+        <div className="max-w-xs rounded-xl border border-line bg-surface">
+          <SidebarNav
+            items={SAMPLE_NAV}
+            activeKey="today"
             badgeCounts={{ approvals: 3, peopleGroup: 5 }}
-            showDevSwitcher={false}
-            previewRole={USER_ROLE.TEACHER}
+            asideClassName="static block h-auto"
           />
         </div>
       </MatrixCell>

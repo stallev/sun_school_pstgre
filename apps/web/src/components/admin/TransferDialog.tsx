@@ -16,7 +16,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { FormSelect } from "@/components/ui/form-select";
+import { FormDateField } from "@/components/ui/form-date-field";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import type { PeopleGroupOption } from "@/data/school/load-people-admin-list.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -29,6 +32,7 @@ type TransferDialogProps = {
   groups: readonly PeopleGroupOption[];
   defaultDate: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
 };
@@ -40,10 +44,12 @@ export const TransferDialog = ({
   groups,
   defaultDate,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
 }: TransferDialogProps) => {
   const messages = useAdminMessages();
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState<MutationResult | null, FormData>(
     transferPupilAction,
@@ -76,22 +82,25 @@ export const TransferDialog = ({
           <input type="hidden" name="pupilId" value={pupilId} />
           <label className="grid gap-1 text-sm">
             <span>{messages.people.toGroupLabel}</span>
-            <select
+            <FormSelect
               name="toGradeId"
               required
               disabled={pending}
-              className="min-h-11 w-full rounded-lg border border-input bg-card px-3 text-sm"
               defaultValue=""
-            >
-              <option value="" disabled>{messages.people.groupPlaceholder}</option>
-              {targetGroups.map((group) => (
-                <option key={group.gradeId} value={group.gradeId}>{group.name}</option>
-              ))}
-            </select>
+              placeholder={messages.people.groupPlaceholder}
+              options={targetGroups.map((group) => ({ value: group.gradeId, label: group.name }))}
+            />
           </label>
           <label className="grid gap-1 text-sm">
             <span>{messages.people.transferOnLabel}</span>
-            <Input name="onDate" type="date" required disabled={pending} defaultValue={defaultDate} />
+            <FormDateField
+              name="onDate"
+              disabled={pending}
+              defaultValue={defaultDate}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
+            />
           </label>
           <DialogFooter>
             <DialogClose render={<Button type="button" variant="outline" disabled={pending} />}>

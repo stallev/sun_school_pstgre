@@ -13,7 +13,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { Input } from "@/components/ui/input";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
@@ -30,6 +33,7 @@ type CompensateBricksDialogProps = {
   requestId: string;
   messages: TeacherBricksMessages;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
 };
 
@@ -44,8 +48,10 @@ export const CompensateBricksDialog = ({
   requestId,
   messages,
   dictionaries,
+  uiLocale,
   formError,
 }: CompensateBricksDialogProps) => {
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [state, formAction, pending] = useActionState<
     MutationResult<{ ledgerId: string }> | null,
     FormData
@@ -82,7 +88,13 @@ export const CompensateBricksDialog = ({
           </label>
           <label className="grid gap-1">
             <ContentText className="text-sm font-medium text-ink">{messages.dateLabel}</ContentText>
-            <Input name="issuedOn" type="date" defaultValue={defaultDate} required />
+            <FormDateField
+              name="issuedOn"
+              defaultValue={defaultDate}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
+            />
           </label>
           <label className="grid gap-1">
             <ContentText className="text-sm font-medium text-ink">{messages.noteLabel}</ContentText>

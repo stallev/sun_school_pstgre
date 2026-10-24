@@ -5,15 +5,18 @@ import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
 import { StatusText } from "@/components/ui/status-text";
 import type { SchoolAttentionItem } from "@/data/analytics/load-school-analytics-page.server";
+import { plural } from "@/lib/i18n/format";
 import { fillMessage } from "@/lib/messages/fill-message";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type SchoolAttentionListProps = {
   items: SchoolAttentionItem[];
   messages: AnalyticsMessages["school"];
+  locale: MessageLocale;
 };
 
-export const SchoolAttentionList = ({ items, messages }: SchoolAttentionListProps) => {
+export const SchoolAttentionList = ({ items, messages, locale }: SchoolAttentionListProps) => {
   if (items.length === 0) return null;
 
   return (
@@ -24,7 +27,7 @@ export const SchoolAttentionList = ({ items, messages }: SchoolAttentionListProp
           {items.map((item) => {
             const title =
               item.kind === "pending_access"
-                ? fillMessage(messages.attentionPending, { count: item.count })
+                ? plural(messages.attentionPendingUsers, item.count, locale)
                 : fillMessage(messages.attentionNegativeBricks, { count: item.count });
             const description =
               item.kind === "pending_access"

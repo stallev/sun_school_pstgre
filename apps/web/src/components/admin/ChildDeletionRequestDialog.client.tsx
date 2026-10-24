@@ -87,7 +87,7 @@ export const ChildDeletionRequestDialog = ({
             </DialogClose>
             <Button
               type="submit"
-              variant="destructive-solid"
+              variant="destructive"
               disabled={pending || note.trim().length === 0}
               aria-busy={pending}
               className={FORM_SUBMIT_BUTTON_CLASS}

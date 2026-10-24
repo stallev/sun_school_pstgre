@@ -2,8 +2,8 @@
 
 **Тип:** Index  
 **Статус:** Canonical  
-**Версия:** 1.7  
-**Дата:** 2026-10-23  
+**Версия:** 1.8  
+**Дата:** 2026-10-24  
 **Волна:** W14-06  
 **Зависит от:** [`architecture_master_index.md`](../../prds/architecture_master_index.md), [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md)
 
@@ -11,7 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**Статус (2026-10-23):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). **P12** — волна 1, достижения и штрафы: реализована за флагом `features.achievements` ([`P12_tasks.md`](./tasks/P12_tasks.md)); включение флага в prod — действие владельца. **P13** — волна 2, семьи и родители: реализована за флагом `features.parents` ([`P13_tasks.md`](./tasks/P13_tasks.md)); дайджест без почты; включение флага в prod — действие владельца. **P14** — редизайн v2: Source Sans 3, база 18 px, левый сайдбар, `Select` / `Checkbox` / `DateField` вместо нативных ([`P14_tasks.md`](./tasks/P14_tasks.md), [ADR-014](../../prds/07_governance/adr_014_app_redesign_v2.md)): документы и прототип готовы (2026-10-24), код не начат. Импорт данных из старого приложения — вне проекта (владелец).
+**Статус (2026-10-23):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). **P12** — волна 1, достижения и штрафы: реализована за флагом `features.achievements` ([`P12_tasks.md`](./tasks/P12_tasks.md)); включение флага в prod — действие владельца. **P13** — волна 2, семьи и родители: реализована за флагом `features.parents` ([`P13_tasks.md`](./tasks/P13_tasks.md)); дайджест без почты; включение флага в prod — действие владельца. **P14** — редизайн v2: Source Sans 3, база 18 px, левый сайдбар, `Select` / `Checkbox` / `DateField` вместо нативных ([`P14_tasks.md`](./tasks/P14_tasks.md), [ADR-014](../../prds/07_governance/adr_014_app_redesign_v2.md)): реализована (2026-10-24), повторный замер — [`ui_redesign_audit_2026-10-24.md`](./audits/ui_redesign_audit_2026-10-24.md) §5. Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 

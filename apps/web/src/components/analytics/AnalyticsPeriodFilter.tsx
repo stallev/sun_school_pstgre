@@ -1,5 +1,10 @@
+"use client";
+
 import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
+import { FormDateField } from "@/components/ui/form-date-field";
+import { FormSelect } from "@/components/ui/form-select";
+import type { FormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import type { AnalyticsPeriodFilter as PeriodFilter } from "@/data/analytics/analytics-period";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
@@ -9,6 +14,7 @@ type AnalyticsPeriodFilterProps = {
   messages: AnalyticsMessages;
   actionPath?: string;
   hiddenFields?: Record<string, string>;
+  dateFieldCopy: FormDateFieldCopy;
 };
 
 export const AnalyticsPeriodFilter = ({
@@ -17,6 +23,7 @@ export const AnalyticsPeriodFilter = ({
   messages,
   actionPath = "/analytics",
   hiddenFields,
+  dateFieldCopy,
 }: AnalyticsPeriodFilterProps) => {
   const mode = periodFilter.mode;
   const monthDefault = periodFilter.mode === "month" ? periodFilter.month : "";
@@ -33,15 +40,15 @@ export const AnalyticsPeriodFilter = ({
         : null}
       <label className="grid gap-1">
         <ContentText className="text-base font-medium text-ink">{messages.periodYear}</ContentText>
-        <select
+        <FormSelect
           name="mode"
           defaultValue={mode}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
-        >
-          <option value="year">{messages.periodYear}</option>
-          <option value="month">{messages.periodMonth}</option>
-          <option value="range">{messages.periodRange}</option>
-        </select>
+          options={[
+            { value: "year", label: messages.periodYear },
+            { value: "month", label: messages.periodMonth },
+            { value: "range", label: messages.periodRange },
+          ]}
+        />
       </label>
       <label className="grid gap-1">
         <ContentText className="text-base font-medium text-ink">{messages.monthLabel}</ContentText>
@@ -54,20 +61,22 @@ export const AnalyticsPeriodFilter = ({
       </label>
       <label className="grid gap-1">
         <ContentText className="text-base font-medium text-ink">{messages.rangeFrom}</ContentText>
-        <input
-          type="date"
+        <FormDateField
           name="from"
           defaultValue={fromDefault}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
+          locale={dateFieldCopy.locale}
+          calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+          className="max-w-none"
         />
       </label>
       <label className="grid gap-1">
         <ContentText className="text-base font-medium text-ink">{messages.rangeTo}</ContentText>
-        <input
-          type="date"
+        <FormDateField
           name="to"
           defaultValue={toDefault}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
+          locale={dateFieldCopy.locale}
+          calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+          className="max-w-none"
         />
       </label>
       <Button type="submit" variant="outline">{messages.periodApply}</Button>

@@ -82,7 +82,7 @@ export const PupilAchievementPanelContent = ({
                     {`: ${row.name} · ${row.points}`}
                   </ContentText>
                   {row.canCancel ? (
-                    <Button type="button" size="sm" variant="ghost" onClick={() => setCancelPenalty(row)}>
+                    <Button type="button" size="compact" variant="ghost" onClick={() => setCancelPenalty(row)}>
                       {messages.cancelPenaltyButton}
                     </Button>
                   ) : null}
@@ -131,7 +131,7 @@ export const PupilAchievementPanelContent = ({
                     </ContentText>
                   </div>
                   {row.canRevoke ? (
-                    <Button type="button" size="sm" variant="ghost" onClick={() => setRevokeAward(row)}>
+                    <Button type="button" size="compact" variant="ghost" onClick={() => setRevokeAward(row)}>
                       {messages.revokeButton}
                     </Button>
                   ) : null}

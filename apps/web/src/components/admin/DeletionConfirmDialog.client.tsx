@@ -74,7 +74,7 @@ export const DeletionConfirmDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button type="button" variant="destructive-solid" className="min-h-11" disabled={disabled} />
+          <Button type="button" variant="destructive" className="min-h-11" disabled={disabled} />
         }
       >
         {d.execute}
@@ -108,7 +108,7 @@ export const DeletionConfirmDialog = ({
             </DialogClose>
             <Button
               type="submit"
-              variant="destructive-solid"
+              variant="destructive"
               disabled={pending || !wordOk}
               aria-busy={pending}
               className={FORM_SUBMIT_BUTTON_CLASS}

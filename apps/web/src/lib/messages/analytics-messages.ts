@@ -1,5 +1,7 @@
 import type { TrendLabel } from "@sunschool/domain";
 
+import type { PluralForms } from "@/lib/messages/plural";
+
 export type AnalyticsYearMessages = {
   stripLabel: string;
   title: string;
@@ -191,7 +193,7 @@ export type AnalyticsMessages = {
     attendanceChartTitle: string;
     attendanceChartHint: string;
     attentionTitle: string;
-    attentionPending: string;
+    attentionPendingUsers: PluralForms;
     attentionPendingHint: string;
     attentionNegativeBricks: string;
     attentionNegativeBricksHint: string;

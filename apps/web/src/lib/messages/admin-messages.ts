@@ -67,6 +67,7 @@ export type AdminMessages = {
     pageSubtitle: string;
     tabNav: string;
     listEmpty: string;
+    unnamed: string;
     registrationFooterNote: string;
     filterAll: string;
     filterActive: string;

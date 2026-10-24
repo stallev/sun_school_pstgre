@@ -25,6 +25,10 @@ import type { TeacherLessonFormMessages } from "@/lib/messages/teacher-lesson-me
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
+import { FormDateField } from "@/components/ui/form-date-field";
+import { FormSelect } from "@/components/ui/form-select";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { VersePicker } from "@/components/teacher/VersePicker";
 import { VerseRefList } from "@/components/teacher/VerseRefList";
 import { useLessonFormSubmit } from "@/components/teacher/use-lesson-form-submit";
@@ -34,6 +38,7 @@ type LessonFormProps = {
   messages: TeacherLessonFormMessages;
   translationLabel: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   cancelHref: string;
 };
@@ -45,9 +50,11 @@ export const LessonForm = ({
   messages,
   translationLabel,
   dictionaries,
+  uiLocale,
   formError,
   cancelHref,
 }: LessonFormProps) => {
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const router = useRouter();
   const formId = useId();
   const [createState, createFormAction, createPending] = useActionState<
@@ -131,39 +138,36 @@ export const LessonForm = ({
         {data.grades.length > 1 ? (
           <label className="grid gap-1 text-sm">
             <span>{messages.gradeLabel}</span>
-            <select
-              className="h-10 rounded-lg border border-input bg-surface px-2 text-base"
+            <FormSelect
               value={gradeId}
+              placeholder={messages.gradePlaceholder}
               disabled={busy || data.mode === "edit"}
-              onChange={(e) => {
-                const next = e.target.value;
+              options={data.grades.map((grade) => ({ value: grade.gradeId, label: grade.name }))}
+              onValueChange={(next) => {
                 if (data.mode === "create") {
                   router.push(`/lessons/new?gradeId=${encodeURIComponent(next)}`);
                   return;
                 }
                 setGradeId(next);
               }}
-            >
-              <option value="">{messages.gradePlaceholder}</option>
-              {data.grades.map((grade) => (
-                <option key={grade.gradeId} value={grade.gradeId}>{grade.name}</option>
-              ))}
-            </select>
+            />
           </label>
         ) : null}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_8rem]">
           <label className="grid gap-1 text-sm" htmlFor={`${formId}-date`}>
             <span>{messages.dateLabel}</span>
-            <Input
+            <FormDateField
               id={`${formId}-date`}
               name="lessonDate"
-              type="date"
               min={data.yearStartIso}
               max={data.yearEndIso}
               value={lessonDate}
+              onValueChange={setLessonDate}
               disabled={busy || data.checksLockedFields}
-              aria-invalid={Boolean(fieldError("lessonDate"))}
-              onChange={(e) => setLessonDate(e.target.value)}
+              invalid={Boolean(fieldError("lessonDate"))}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
             />
             {fieldError("lessonDate") ? <AlertText>{fieldError("lessonDate")}</AlertText> : null}
           </label>
@@ -212,23 +216,19 @@ export const LessonForm = ({
         </label>
         <label className="grid gap-1 text-sm" htmlFor={`${formId}-lead`}>
           <span>{messages.leadLabel}</span>
-          <select
+          <FormSelect
             id={`${formId}-lead`}
             name="leadTeacherId"
-            className="h-10 rounded-lg border border-input bg-surface px-2 text-base"
             value={leadTeacherId}
+            placeholder={messages.leadPlaceholder}
             disabled={busy}
-            aria-invalid={Boolean(fieldError("leadTeacherId"))}
-            onChange={(e) => setLeadTeacherId(e.target.value)}
-          >
-            <option value="">{messages.leadPlaceholder}</option>
-            {data.teachers.map((teacher) => (
-              <option key={teacher.userId} value={teacher.userId}>
-                {teacher.displayName}
-                {teacher.isSelf ? messages.leadYouSuffix : ""}
-              </option>
-            ))}
-          </select>
+            invalid={Boolean(fieldError("leadTeacherId"))}
+            options={data.teachers.map((teacher) => ({
+              value: teacher.userId,
+              label: `${teacher.displayName}${teacher.isSelf ? messages.leadYouSuffix : ""}`,
+            }))}
+            onValueChange={setLeadTeacherId}
+          />
           <ContentText className="text-sm text-muted">{messages.leadHint}</ContentText>
           {fieldError("leadTeacherId") ? <AlertText>{fieldError("leadTeacherId")}</AlertText> : null}
         </label>

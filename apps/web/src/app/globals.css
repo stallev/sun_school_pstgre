@@ -64,6 +64,9 @@
   --chart-3: var(--series-3);
 
   --radius: 0.5rem;
+  --control-h: 2.5rem;
+  --control-h-compact: 2.25rem;
+  --control-h-touch: 2.75rem;
   --float-shadow: 0 10px 30px rgb(15 23 42 / 0.12);
 }
 
@@ -119,7 +122,7 @@
   --color-chart-3: var(--chart-3);
 
   --font-display: var(--font-alegreya), ui-serif, Georgia, serif;
-  --font-sans: var(--font-alegreya-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-sans);
   --font-heading: var(--font-display);
 
@@ -136,11 +139,17 @@
 
   html {
     @apply font-sans;
-    font-size: 106.25%; /* 17px base (UX-03 D-5) */
+    font-size: 112.5%; /* 18px base (UX-03 D-5 v2.0) */
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     @apply bg-background text-foreground;
+    line-height: 1.5;
+  }
+
+  main:focus:not(:focus-visible) {
+    outline: none;
   }
 
   :focus-visible {

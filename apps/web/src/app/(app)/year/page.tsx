@@ -18,7 +18,12 @@ const YearPage = async () => {
 
   return (
     <Suspense fallback={<YearPageSkeleton pendingLabel={pendingLabel} />}>
-      <YearPageContent messages={adminMessages} dictionaries={dictionaries} formError={formError} />
+      <YearPageContent
+        messages={adminMessages}
+        dictionaries={dictionaries}
+        uiLocale={locale}
+        formError={formError}
+      />
     </Suspense>
   );
 };

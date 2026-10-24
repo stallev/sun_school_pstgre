@@ -60,6 +60,7 @@ const EditLessonPage = async ({ params }: EditLessonPageProps) => {
         messages={messages}
         translationLabel={translationLabel}
         dictionaries={dictionaries}
+        uiLocale={locale}
         formError={formError}
         cancelHref={`/lessons/${lessonId}`}
       />

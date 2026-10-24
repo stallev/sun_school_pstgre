@@ -69,7 +69,10 @@ export const SchoolGroupsTable = ({
               row.lastLessonStatus === "ok"
                 ? fillMessage(messages.lastLessonOk, { label: row.lastLessonLabel })
                 : row.lastLessonStatus === "warn"
-                  ? fillMessage(messages.lastLessonWarn, { label: row.lastLessonLabel })
+                  ? fillMessage(messages.lastLessonWarn, {
+                      checked: row.lastLessonChecked,
+                      total: row.lastLessonTotal,
+                    })
                   : messages.lastLessonIdle;
             const lastTone =
               row.lastLessonStatus === "ok" ? "ok" : row.lastLessonStatus === "warn" ? "warn" : "neutral";
@@ -82,7 +85,7 @@ export const SchoolGroupsTable = ({
             return (
               <TableRow key={row.gradeId}>
                 <TableCell className="px-5 py-4 font-medium">{row.gradeName}</TableCell>
-                <TableCell className="px-3 py-4 text-sm text-ink-2">{row.teacherNames}</TableCell>
+                <TableCell className="px-3 py-4 text-base text-ink-2">{row.teacherNames}</TableCell>
                 <TableCell className="px-3 py-4 text-right tabular-nums">
                   {row.layerACount}
                   <span className="text-muted-foreground"> / {row.totalPupils}</span>

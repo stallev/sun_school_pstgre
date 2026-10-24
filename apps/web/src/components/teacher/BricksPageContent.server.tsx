@@ -107,6 +107,7 @@ export const BricksPageContent = async ({ searchParams }: BricksPageContentProps
             messages={messages}
             achievementMessages={data.rows.some((row) => row.achievementsUiEnabled) ? achievementMessages : undefined}
             dictionaries={dictionaries}
+            uiLocale={locale}
             formError={formError}
           />
         </>

@@ -41,7 +41,7 @@ export const RecordCard = ({
       <div
         className={cn(
           "min-w-0 font-medium text-ink",
-          isAnalytics && "text-[1.3125rem] leading-snug",
+          isAnalytics && "text-[1.25rem] leading-snug",
         )}
       >
         {title}
@@ -61,7 +61,7 @@ export const RecordCard = ({
           className={cn(
             "grid grid-cols-2 gap-x-3 gap-y-2",
             isAnalytics
-              ? "mt-2 text-[1.3125rem] leading-snug"
+              ? "mt-2 text-[1.25rem] leading-snug"
               : "mt-3 text-sm",
           )}
         >

@@ -27,7 +27,9 @@ export const UserRow = ({ row, messages }: UserRowProps) => (
       className="grid w-full grid-cols-1 gap-2 px-5 py-4 text-left transition-colors hover:bg-paper/70 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_1.5rem] md:items-center md:gap-6"
     >
       <span className="min-w-0">
-        <ContentText className="block truncate font-medium text-ink">{row.displayName}</ContentText>
+        <ContentText className="block truncate font-medium text-ink">
+          {row.displayName.trim().length > 0 ? row.displayName : messages.users.unnamed}
+        </ContentText>
       </span>
       <span className="flex flex-wrap items-center gap-1.5">
         {row.status === ACCOUNT_STATUS.ACTIVE ? (

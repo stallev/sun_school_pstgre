@@ -45,14 +45,12 @@ export const RatingTable = ({
             key={row.pupilId}
             title={
               <span className="flex items-baseline gap-3">
-                <NumberDisplay
-                  className={row.place <= 3 ? "text-lg tabular-nums" : "text-muted tabular-nums"}
-                >
+                <NumberDisplay className="font-display text-lg tabular-nums">
                   {row.place}
                 </NumberDisplay>
                 <CustomLink
                   href={`/analytics/pupils/${row.pupilId}`}
-                  className="hover:text-cobalt-ink"
+                  className="text-ink font-medium hover:text-cobalt-ink focus-visible:text-cobalt-ink"
                 >
                   {row.displayName}
                 </CustomLink>
@@ -111,18 +109,16 @@ export const RatingTable = ({
         </TableHeader>
         <TableBody className="divide-y divide-line">
           {rows.map((row) => (
-            <TableRow key={row.pupilId} className="hover:bg-transparent">
+            <TableRow key={row.pupilId} className="h-14 hover:bg-transparent">
               <TableCell className="px-5 py-3">
-                <NumberDisplay
-                  className={row.place <= 3 ? "text-lg tabular-nums" : "text-muted tabular-nums"}
-                >
+                <NumberDisplay className="font-display text-lg tabular-nums">
                   {row.place}
                 </NumberDisplay>
               </TableCell>
               <TableCell className="px-3 py-3">
                 <CustomLink
                   href={`/analytics/pupils/${row.pupilId}`}
-                  className="font-medium hover:text-cobalt-ink"
+                  className="text-ink font-medium hover:text-cobalt-ink focus-visible:text-cobalt-ink"
                 >
                   {row.displayName}
                 </CustomLink>

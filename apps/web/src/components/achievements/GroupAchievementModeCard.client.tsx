@@ -70,9 +70,9 @@ export const GroupAchievementModeCard = ({
 
   const description = achievementsEnabled
     ? messages.modeOnDescription
-    : fillMessage(messages.modeOffDescriptionTemplate, {
-        from: offPeriodLabel ?? "…",
-      });
+    : offPeriodLabel
+      ? fillMessage(messages.modeOffDescriptionWithDateTemplate, { from: offPeriodLabel })
+      : messages.modeOffDescriptionTemplate;
 
   return (
     <>

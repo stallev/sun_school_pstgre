@@ -18,6 +18,7 @@ import { IssueBricksDialog } from "@/components/teacher/IssueBricksDialog";
 import { BalanceCards } from "@/components/teacher/BalanceCards";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
 import type { BrickLedgerEntryDto } from "@/data/bricks/bricks-shared.server";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { BricksEarnedBonusLine } from "@/lib/achievements/format-bricks-bonus-line";
 import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
@@ -34,6 +35,7 @@ type BalanceTableProps = {
   messages: TeacherBricksMessages;
   achievementMessages?: TeacherAchievementsMessages;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
 };
 
@@ -53,6 +55,7 @@ export const BalanceTable = ({
   messages,
   achievementMessages,
   dictionaries,
+  uiLocale,
   formError,
 }: BalanceTableProps) => {
   const router = useRouter();
@@ -137,7 +140,7 @@ export const BalanceTable = ({
                     <div className="flex flex-wrap gap-2">
                       <Button
                         type="button"
-                        size="sm"
+                        size="compact"
                         onClick={(event) => {
                           event.stopPropagation();
                           openDialog("issue", row.pupilId);
@@ -147,7 +150,7 @@ export const BalanceTable = ({
                       </Button>
                       <Button
                         type="button"
-                        size="sm"
+                        size="compact"
                         variant="outline"
                         onClick={(event) => {
                           event.stopPropagation();
@@ -185,6 +188,7 @@ export const BalanceTable = ({
           requestId={dialog.requestId}
           messages={messages}
           dictionaries={dictionaries}
+          uiLocale={uiLocale}
           formError={formError}
         />
       ) : null}
@@ -202,6 +206,7 @@ export const BalanceTable = ({
           requestId={dialog.requestId}
           messages={messages}
           dictionaries={dictionaries}
+          uiLocale={uiLocale}
           formError={formError}
         />
       ) : null}

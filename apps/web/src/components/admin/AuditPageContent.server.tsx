@@ -12,6 +12,7 @@ import { parseAuditLogFilter } from "@/data/audit/parse-audit-filters.server";
 import { resolveAuditActionLabel } from "@/data/audit/audit-resolve-labels.server";
 import { requireActiveUser, requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
@@ -102,6 +103,7 @@ export const AuditPageContent = async ({
             action: params.action ?? "",
           }}
           actorOptions={actorOptions}
+          dateFieldCopy={getFormDateFieldCopy(commonDict, locale)}
           labels={{
             from: getMessage(adminDict, "audit.filter_from"),
             to: getMessage(adminDict, "audit.filter_to"),

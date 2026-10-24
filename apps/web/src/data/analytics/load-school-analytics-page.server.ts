@@ -36,6 +36,8 @@ export type SchoolGroupRow = {
   scoreAverage: string;
   lastLessonStatus: "ok" | "warn" | "idle";
   lastLessonLabel: string;
+  lastLessonChecked: number;
+  lastLessonTotal: number;
 };
 
 export type SchoolAttentionItem = {
@@ -211,6 +213,8 @@ export async function loadSchoolAnalyticsPage(
       scoreAverage,
       lastLessonStatus,
       lastLessonLabel,
+      lastLessonChecked: checkedOnLast,
+      lastLessonTotal: enrolled,
     });
 
     chartSeries.push({

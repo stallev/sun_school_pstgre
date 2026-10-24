@@ -1,7 +1,9 @@
 "use client";
 
+import { ChevronDownIcon } from "lucide-react";
+import { type UserRole } from "@sunschool/domain";
 import { useEffect, useId, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import type { DevRoleMenuGroup } from "@/components/shell/user-menu-dev.client";
 import { CustomLink } from "@/components/ui/custom-link";
 import { SignOutButton } from "@/components/shell/sign-out-button.client";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
@@ -10,14 +12,42 @@ import { cn } from "@/lib/utils";
 
 type UserMenuProps = {
   displayName: string;
+  roleSubtitle?: string;
+  showDevSwitcher?: boolean;
+  shellRole?: UserRole;
+  previewRole?: UserRole;
+  onPreviewRoleChange?: (role: UserRole) => void;
 };
 
-export const UserMenu = ({ displayName }: UserMenuProps) => {
+const profileInitial = (displayName: string): string => {
+  const trimmed = displayName.trim();
+  return trimmed ? trimmed.charAt(0).toUpperCase() : "?";
+};
+
+export const UserMenu = ({
+  displayName,
+  roleSubtitle,
+  showDevSwitcher = false,
+  shellRole,
+  previewRole,
+  onPreviewRoleChange,
+}: UserMenuProps) => {
   const messages = useShellMessages();
   const panelId = useId();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const [DevRoleMenuGroup, setDevRoleMenuGroup] = useState<DevRoleMenuGroup | null>(null);
+
+  useEffect(() => {
+    if (process.env.APP_ENV !== "dev") return;
+    if (!showDevSwitcher || !shellRole || !previewRole || !onPreviewRoleChange) return;
+    void import("@/components/shell/user-menu-dev.client").then((mod) => {
+      void mod.loadDevRoleMenuGroup().then((component) => {
+        setDevRoleMenuGroup(() => component);
+      });
+    });
+  }, [onPreviewRoleChange, previewRole, showDevSwitcher, shellRole]);
 
   useEffect(() => {
     if (!open) return;
@@ -44,33 +74,53 @@ export const UserMenu = ({ displayName }: UserMenuProps) => {
 
   return (
     <div className="relative" ref={rootRef}>
-      <Button
+      <button
         ref={buttonRef}
         type="button"
-        variant="ghost"
-        className="h-9 max-w-[12rem] truncate px-1.5 text-[0.9375rem] hover:bg-paper"
+        className="inline-flex h-10 items-center gap-2 rounded-lg px-1.5 hover:bg-paper"
         aria-expanded={open}
-        aria-haspopup="true"
+        aria-haspopup="menu"
         aria-controls={panelId}
         aria-label={`${messages.userMenu}: ${displayName}`}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="truncate" title={displayName}>{displayName}</span>
-      </Button>
+        <span
+          className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-paper font-display text-ink-2 ring-1 ring-line"
+          aria-hidden
+        >
+          {profileInitial(displayName)}
+        </span>
+        <span className="hidden max-w-[10rem] truncate text-base font-medium xl:inline">
+          {displayName}
+        </span>
+        <ChevronDownIcon className="size-4 shrink-0 text-ink-2 hidden sm:block" aria-hidden />
+      </button>
       {open ? (
         <div
           id={panelId}
-          className={cn(SHELL_NAV_DROPDOWN_PANEL, "right-0 min-w-56")}
-          role="group"
+          className={cn(SHELL_NAV_DROPDOWN_PANEL, "right-0 min-w-64")}
+          role="menu"
         >
+          <div className="border-b border-line px-2.5 pt-1 pb-2">
+            <p className="font-medium text-ink">{displayName}</p>
+            {roleSubtitle ? <p className="text-sm text-muted">{roleSubtitle}</p> : null}
+          </div>
           <CustomLink
             href="/profile"
-            className="flex min-h-11 items-center px-3 py-2.5 text-ink no-underline hover:bg-paper"
+            role="menuitem"
+            className="mt-1 flex h-10 items-center gap-3 rounded-lg px-2.5 text-base text-ink no-underline hover:bg-paper"
             onClick={() => setOpen(false)}
           >
             {messages.profile}
           </CustomLink>
-          <SignOutButton className="px-3" />
+          {showDevSwitcher && shellRole && previewRole && onPreviewRoleChange && DevRoleMenuGroup ? (
+            <DevRoleMenuGroup
+              shellRole={shellRole}
+              previewRole={previewRole}
+              onPreviewRoleChange={onPreviewRoleChange}
+            />
+          ) : null}
+          <SignOutButton className="px-2.5" />
         </div>
       ) : null}
     </div>

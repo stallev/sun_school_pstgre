@@ -14,7 +14,7 @@ export const FieldMatrix = () => (
       return (
         <MatrixCell key={state.id} label={state.label}>
           <div className="space-y-1.5">
-            <Label htmlFor={id} className="text-sm font-medium">
+            <Label htmlFor={id}>
               {LAB_TEXT.fieldLabel}
             </Label>
             <Input
@@ -33,7 +33,7 @@ export const FieldMatrix = () => (
     })}
     <MatrixCell label="textarea">
       <div className="space-y-1.5">
-        <Label htmlFor="lab-textarea" className="text-sm font-medium">
+        <Label htmlFor="lab-textarea">
           {LAB_TEXT.fieldLabel}
         </Label>
         <Textarea id="lab-textarea" placeholder={LAB_TEXT.fieldPlaceholder} />

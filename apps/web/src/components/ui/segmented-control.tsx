@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef, type KeyboardEvent } from "react";
+import { segmentedChipClassName } from "@/lib/ui/segmented-chip-classes";
 import { cn } from "@/lib/utils";
 
 export type SegmentedOption<T extends string> = {
@@ -9,29 +10,33 @@ export type SegmentedOption<T extends string> = {
   disabled?: boolean;
 };
 
-type SegmentedControlProps<T extends string> = {
+type SegmentedControlProps<T extends string, M extends "radio" | "toggle" = "radio"> = {
   options: readonly SegmentedOption<T>[];
   value: T | null;
-  onValueChange: (value: T) => void;
+  onValueChange: M extends "toggle" ? (value: T | null) => void : (value: T) => void;
   "aria-label": string;
   disabled?: boolean;
   invalid?: boolean;
+  mode?: M;
+  size?: "default" | "compact";
   className?: string;
 };
 
 /**
- * Single-choice radio group rendered as chips. Roving tabindex; Arrow keys move and select,
- * Home / End jump (WAI-ARIA radio group pattern).
+ * Single-choice chips: `mode="radio"` (WAI-ARIA radio group) or `mode="toggle"` (`aria-pressed`).
  */
-export const SegmentedControl = <T extends string>({
+export const SegmentedControl = <T extends string, M extends "radio" | "toggle" = "radio">({
   options,
   value,
   onValueChange,
   disabled = false,
   invalid = false,
+  mode,
+  size = "default",
   className,
   ...aria
-}: SegmentedControlProps<T>) => {
+}: SegmentedControlProps<T, M>) => {
+  const resolvedMode = mode ?? "radio";
   const groupId = useId();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const enabledIdx = options
@@ -55,6 +60,7 @@ export const SegmentedControl = <T extends string>({
   };
 
   const onKeyDown = (event: KeyboardEvent, index: number) => {
+    if (resolvedMode === "toggle") return;
     const keys: Record<string, 1 | -1 | "first" | "last"> = {
       ArrowRight: 1,
       ArrowDown: 1,
@@ -69,9 +75,20 @@ export const SegmentedControl = <T extends string>({
     move(index, action);
   };
 
+  const chipClass = (checked: boolean) =>
+    segmentedChipClassName(checked, { size, invalid });
+
+  const handleSelect = (optionValue: T, checked: boolean) => {
+    if (resolvedMode === "toggle" && checked) {
+      (onValueChange as (value: T | null) => void)(null);
+      return;
+    }
+    (onValueChange as (value: T) => void)(optionValue);
+  };
+
   return (
     <div
-      role="radiogroup"
+      role={resolvedMode === "radio" ? "radiogroup" : "group"}
       aria-label={aria["aria-label"]}
       aria-invalid={invalid || undefined}
       aria-disabled={disabled || undefined}
@@ -88,20 +105,14 @@ export const SegmentedControl = <T extends string>({
             }}
             id={`${groupId}-${option.value}`}
             type="button"
-            role="radio"
-            aria-checked={checked}
+            role={resolvedMode === "radio" ? "radio" : undefined}
+            aria-checked={resolvedMode === "radio" ? checked : undefined}
+            aria-pressed={resolvedMode === "toggle" ? checked : undefined}
             disabled={isDisabled}
-            tabIndex={index === tabStop ? 0 : -1}
-            onClick={() => onValueChange(option.value)}
+            tabIndex={resolvedMode === "radio" ? (index === tabStop ? 0 : -1) : undefined}
+            onClick={() => handleSelect(option.value, checked)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className={cn(
-              "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border bg-surface px-3 text-[0.9375rem] font-medium text-ink transition-[color,background-color,border-color,transform] duration-100 ease-out-soft hover:bg-paper active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
-              checked
-                ? "border-cobalt-ink bg-cobalt-soft text-cobalt-ink hover:bg-cobalt-soft"
-                : invalid
-                  ? "border-danger"
-                  : "border-input",
-            )}
+            className={chipClass(checked)}
           >
             {option.label}
           </button>

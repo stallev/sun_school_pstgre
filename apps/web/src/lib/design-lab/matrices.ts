@@ -10,7 +10,14 @@ export const BUTTON_VARIANTS = [
   "link",
 ] as const;
 
-export const BUTTON_SIZES = ["nav", "sm", "default", "lg"] as const;
+export const BUTTON_SIZES = [
+  "default",
+  "compact",
+  "touch",
+  "icon",
+  "icon-compact",
+  "icon-touch",
+] as const;
 
 export type FieldState = "default" | "focus" | "disabled" | "invalid" | "pending";
 
@@ -29,3 +36,7 @@ export const STATUS_TONES = ["neutral", "ok", "warn", "danger", "info"] as const
 export const BANNER_TONES = ["info", "success", "warning", "error"] as const;
 
 export const SCORE_MAX = 5;
+
+export const SEGMENTED_MODES = ["radio", "toggle"] as const;
+export const SEGMENTED_SIZES = ["default", "compact"] as const;
+export const PAGE_SECTION_WIDTHS = ["full", "wide", "form"] as const;

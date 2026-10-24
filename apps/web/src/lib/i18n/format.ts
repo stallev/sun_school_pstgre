@@ -73,3 +73,18 @@ export function formatPercent(
     ...options,
   }).format(value);
 }
+
+/** ISO `yyyy-MM-dd` → locale display string (ADR-009 / F13). */
+export {
+  formatIsoDateForLocale as formatDate,
+  getDateInputPlaceholder,
+  parseLocaleDateInput,
+} from "@/lib/date/locale-date-input";
+
+/** Pluralized UI copy (ADR-008 §4.4). */
+export {
+  formatPlural as plural,
+  getPluralCategory,
+  getPluralForms,
+  type PluralForms,
+} from "@/lib/messages/plural";

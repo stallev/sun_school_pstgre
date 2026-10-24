@@ -84,6 +84,7 @@ export const FamilyPageContent = async ({ searchParams }: FamilyPageProps) => {
           attachOptions={attachOptions}
           messages={messages}
           dictionaries={dictionaries}
+          uiLocale={locale}
           consentTextVersion={consentTextVersion}
           defaultSignedOn={isoTodayUtc()}
           createdLabel={createdLabel}

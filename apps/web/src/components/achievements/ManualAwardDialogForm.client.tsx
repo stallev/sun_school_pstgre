@@ -14,9 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import type { ManualAwardFormData } from "@/lib/achievements/manual-award-types";
-import { manualAwardSelectClass } from "@/lib/achievements/manual-award-types";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -106,16 +106,12 @@ export const ManualAwardDialogForm = ({
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label className="grid gap-1">
             <ContentText className="text-sm font-medium text-ink">{messages.awardPupilLabel}</ContentText>
-            <select
-              className={manualAwardSelectClass}
+            <FormSelect
               value={pupilId}
               disabled={pending || Boolean(fixedPupilId)}
-              onChange={(event) => setPupilId(event.target.value)}
-            >
-              {formData.pupils.map((row) => (
-                <option key={row.pupilId} value={row.pupilId}>{row.displayName}</option>
-              ))}
-            </select>
+              options={formData.pupils.map((row) => ({ value: row.pupilId, label: row.displayName }))}
+              onValueChange={setPupilId}
+            />
           </label>
           <label className="grid gap-1">
             <ContentText className="text-sm font-medium text-ink">{messages.awardPointsLabel}</ContentText>
@@ -137,18 +133,15 @@ export const ManualAwardDialogForm = ({
         </div>
         <label className="grid gap-1">
           <ContentText className="text-sm font-medium text-ink">{messages.awardAchievementLabel}</ContentText>
-          <select
-            className={manualAwardSelectClass}
+          <FormSelect
             value={achievementKey}
             disabled={pending}
-            onChange={(event) => handleAchievementChange(event.target.value)}
-          >
-            {formData.achievements.map((row) => (
-              <option key={optionKey(row.achievementId, row.tier)} value={optionKey(row.achievementId, row.tier)}>
-                {row.label}
-              </option>
-            ))}
-          </select>
+            options={formData.achievements.map((row) => ({
+              value: optionKey(row.achievementId, row.tier),
+              label: row.label,
+            }))}
+            onValueChange={handleAchievementChange}
+          />
         </label>
         {selectedAchievement && activeEvidenceNeed > 0 ? (
           <ManualAwardEvidencePicker

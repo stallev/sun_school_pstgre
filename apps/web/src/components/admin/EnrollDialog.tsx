@@ -6,6 +6,7 @@ import type { MutationResult } from "@sunschool/domain";
 import { enrollPupilAction, unenrollPupilAction } from "@/actions/school-pupils";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import {
   Dialog,
   DialogClose,
@@ -16,7 +17,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { FormDateField } from "@/components/ui/form-date-field";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import type { PeopleGroupOption } from "@/data/school/load-people-admin-list.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -29,6 +32,7 @@ type EnrollDialogProps = {
   groups: readonly PeopleGroupOption[];
   defaultDate: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
 };
@@ -40,9 +44,11 @@ export const EnrollDialog = ({
   groups,
   defaultDate,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
 }: EnrollDialogProps) => {
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const messages = useAdminMessages();
   const [open, setOpen] = useState(false);
   const action = mode === "enroll" ? enrollPupilAction : unenrollPupilAction;
@@ -85,30 +91,27 @@ export const EnrollDialog = ({
           {mode === "enroll" ? (
             <label className="grid gap-1 text-sm">
               <span>{messages.people.groupLabel}</span>
-              <select
+              <FormSelect
                 name="gradeId"
                 required
                 disabled={pending}
-                className="min-h-11 w-full rounded-lg border border-input bg-card px-3 text-sm"
                 defaultValue=""
-              >
-                <option value="" disabled>{messages.people.groupPlaceholder}</option>
-                {groups
+                placeholder={messages.people.groupPlaceholder}
+                options={groups
                   .filter((group) => group.isActive)
-                  .map((group) => (
-                    <option key={group.gradeId} value={group.gradeId}>{group.name}</option>
-                  ))}
-              </select>
+                  .map((group) => ({ value: group.gradeId, label: group.name }))}
+              />
             </label>
           ) : null}
           <label className="grid gap-1 text-sm">
             <span>{mode === "enroll" ? messages.people.startsOnLabel : messages.people.endsOnLabel}</span>
-            <Input
+            <FormDateField
               name={mode === "enroll" ? "startsOn" : "endsOn"}
-              type="date"
-              required
               disabled={pending}
               defaultValue={defaultDate}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
             />
           </label>
           <DialogFooter>

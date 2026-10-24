@@ -16,7 +16,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { Input } from "@/components/ui/input";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
@@ -27,6 +30,7 @@ type ConsentDialogProps = {
   consentTextVersion: string;
   defaultSignedOn: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
 };
@@ -37,10 +41,12 @@ export const ConsentDialog = ({
   consentTextVersion,
   defaultSignedOn,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
 }: ConsentDialogProps) => {
   const messages = useAdminMessages();
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [open, setOpen] = useState(false);
   const [consentState, formAction, pending] = useActionState(recordPaperConsentAction, null);
   const state: MutationResult | null = consentState;
@@ -72,7 +78,14 @@ export const ConsentDialog = ({
           </label>
           <label className="grid gap-1 text-sm">
             <span>{messages.people.signedOnLabel}</span>
-            <Input name="signedOn" type="date" required disabled={pending} defaultValue={defaultSignedOn} />
+            <FormDateField
+              name="signedOn"
+              disabled={pending}
+              defaultValue={defaultSignedOn}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
+            />
           </label>
           <p className="text-sm text-muted-foreground">
             {messages.people.consentVersionLabel}: {consentTextVersion}

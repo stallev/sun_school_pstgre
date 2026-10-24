@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Alegreya, Alegreya_Sans } from "next/font/google";
+import { Alegreya, Source_Sans_3 } from "next/font/google";
 import type { ReactNode } from "react";
 import { ProductToaster } from "@/components/shell/product-toaster.client";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
@@ -12,10 +12,10 @@ const alegreya = Alegreya({
   display: "swap",
 });
 
-const alegreyaSans = Alegreya_Sans({
+const sourceSans = Source_Sans_3({
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "700"],
-  variable: "--font-alegreya-sans",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-source-sans",
   display: "swap",
 });
 
@@ -34,7 +34,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
   return (
     <html
       lang={locale}
-      className={`${alegreya.variable} ${alegreyaSans.variable}`}
+      className={`${alegreya.variable} ${sourceSans.variable}`}
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>

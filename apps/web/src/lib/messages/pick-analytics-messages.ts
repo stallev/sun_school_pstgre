@@ -1,6 +1,7 @@
 import { TREND_LABEL } from "@sunschool/domain";
 import type { Dictionary } from "@/lib/messages/dictionary-types";
 import { getMessage } from "@/lib/messages/get-message";
+import { getPluralForms } from "@/lib/messages/plural";
 import type { AnalyticsMessages, PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages => ({
@@ -194,7 +195,7 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     attendanceChartTitle: getMessage(analytics, "school.attendance_chart_title"),
     attendanceChartHint: getMessage(analytics, "school.attendance_chart_hint"),
     attentionTitle: getMessage(analytics, "school.attention_title"),
-    attentionPending: getMessage(analytics, "school.attention_pending"),
+    attentionPendingUsers: getPluralForms(analytics, "school.attention_pending_users"),
     attentionNegativeBricks: getMessage(analytics, "school.attention_negative_bricks"),
     attentionPendingHint: getMessage(analytics, "school.attention_pending_hint"),
     attentionNegativeBricksHint: getMessage(analytics, "school.attention_negative_bricks_hint"),

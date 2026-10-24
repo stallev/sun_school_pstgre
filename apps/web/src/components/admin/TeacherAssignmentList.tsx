@@ -6,6 +6,7 @@ import { assignTeacherAction, unassignTeacherAction } from "@/actions/school-gro
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { ContentText, SectionTitle } from "@/components/atoms";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import type { GroupAdminDetail } from "@/data/school/load-group-admin-detail.server";
 import type { TeacherCandidate } from "@/data/school/load-teacher-candidates.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
@@ -80,27 +81,25 @@ export const TeacherAssignmentList = ({
         </ul>
       )}
       {available.length > 0 ? (
-        <form action={assignAction} className="flex flex-col gap-2 sm:flex-row sm:items-end">
+        <form action={assignAction} className="flex flex-col gap-2">
           <input type="hidden" name="gradeId" value={detail.gradeId} />
           <input type="hidden" name="yearId" value={detail.yearId} />
-          <label className="grid flex-1 gap-1 text-sm">
-            <span>{messages.group.assignTeacherLabel}</span>
-            <select
+          <span className="text-base font-medium">{messages.group.assignTeacherLabel}</span>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
+            <FormSelect
               name="userId"
-              className="min-h-11 rounded-lg border border-input bg-paper px-3"
+              aria-label={messages.group.assignTeacherLabel}
+              triggerClassName="min-w-0 flex-1"
               required
               disabled={pending}
               defaultValue=""
-            >
-              <option value="" disabled>{messages.group.assignTeacherPlaceholder}</option>
-              {available.map((row) => (
-                <option key={row.userId} value={row.userId}>{row.displayName}</option>
-              ))}
-            </select>
-          </label>
-          <Button type="submit" disabled={pending} aria-busy={pending}>
-            {assignPending ? messages.group.submitPending : messages.group.assignTeacher}
-          </Button>
+              placeholder={messages.group.assignTeacherPlaceholder}
+              options={available.map((row) => ({ value: row.userId, label: row.displayName }))}
+            />
+            <Button type="submit" className="h-10 w-full shrink-0 sm:w-auto" disabled={pending} aria-busy={pending}>
+              {assignPending ? messages.group.submitPending : messages.group.assignTeacher}
+            </Button>
+          </div>
         </form>
       ) : (
         <ContentText tone="secondary" className="text-sm">{messages.group.noTeachersAvailable}</ContentText>

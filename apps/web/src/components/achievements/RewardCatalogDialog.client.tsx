@@ -5,6 +5,7 @@ import type { MutationResult } from "@sunschool/domain";
 import { upsertRewardAchievementAction } from "@/actions/achievements";
 import { ContentText } from "@/components/atoms";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import {
   Dialog,
   DialogContent,
@@ -71,16 +72,16 @@ export const RewardCatalogDialog = ({
           </div>
           <label className="grid gap-1 text-sm">
             <span>{messages.fieldCategory}</span>
-            <select
+            <FormSelect
               name="category"
-              className="h-11 w-full rounded-lg border border-input bg-surface px-3 text-sm"
               defaultValue={row?.category ?? "EFFORT"}
               disabled={pending}
-            >
-              <option value="CONSISTENCY">{messages.sectionByCategory.CONSISTENCY}</option>
-              <option value="EFFORT">{messages.sectionByCategory.EFFORT}</option>
-              <option value="MEMORY">{messages.sectionByCategory.MEMORY}</option>
-            </select>
+              options={[
+                { value: "CONSISTENCY", label: messages.sectionByCategory.CONSISTENCY ?? "CONSISTENCY" },
+                { value: "EFFORT", label: messages.sectionByCategory.EFFORT ?? "EFFORT" },
+                { value: "MEMORY", label: messages.sectionByCategory.MEMORY ?? "MEMORY" },
+              ]}
+            />
           </label>
           {!row?.kindLocked ? (
             <>

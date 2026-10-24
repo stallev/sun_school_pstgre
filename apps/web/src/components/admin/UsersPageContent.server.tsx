@@ -6,6 +6,7 @@ import { UserRow } from "@/components/admin/UserRow";
 import { UsersStatusFilter } from "@/components/admin/UsersStatusFilter";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
+import { PageSection } from "@/components/ui/page-section";
 import { runAdminLazyPurge } from "@/data/access/admin-lazy-purge.server";
 import {
   loadUsersList,
@@ -42,7 +43,7 @@ export const UsersPageContent = async ({
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+      <PageSection width="full" className="min-w-0 space-y-6 overflow-x-hidden">
         <PageHeader
           title={adminMessages.page.usersTitle}
           description={adminMessages.users.pageSubtitle}
@@ -73,7 +74,7 @@ export const UsersPageContent = async ({
             {adminMessages.users.registrationFooterNote}
           </ContentText>
         ) : null}
-      </div>
+      </PageSection>
     </AdminMessagesProvider>
   );
 };

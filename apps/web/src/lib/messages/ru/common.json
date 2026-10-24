@@ -2,6 +2,9 @@
   "deletion": {
     "already_open": "Уже есть открытый запрос на удаление"
   },
+  "controls": {
+    "open_date_calendar": "Открыть календарь"
+  },
   "errors": {
     "unauthorized": "Войдите, чтобы продолжить",
     "forbidden": "Недостаточно прав для этого действия",

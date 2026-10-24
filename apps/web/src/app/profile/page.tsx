@@ -10,6 +10,7 @@ import { ContentText } from "@/components/atoms";
 import { CustomLink } from "@/components/ui/custom-link";
 import { FormSection } from "@/components/patterns/FormSection";
 import { PageHeader } from "@/components/patterns/PageHeader";
+import { PageSection } from "@/components/ui/page-section";
 import { loadOwnProfile } from "@/data/access/load-own-profile.server";
 import { loadOwnDeletionRequest } from "@/data/deletions/load-own-deletion-request.server";
 import { requireSession } from "@/lib/auth/require-user";
@@ -89,7 +90,7 @@ const ProfilePage = async () => {
   const rolesOrStatusLine = formatProfileSubtitle(profile, authMessages);
 
   return (
-    <main className={shellProfile ? "mx-auto max-w-5xl space-y-4" : "space-y-8"}>
+    <main className={shellProfile ? "space-y-4" : "space-y-8"}>
       <Suspense fallback={null}>
         <ProfileLinkToast />
       </Suspense>
@@ -104,15 +105,10 @@ const ProfilePage = async () => {
         </header>
       ) : null}
 
-      <PageHeader title={authMessages.profile.title} description={shellProfile ? undefined : rolesOrStatusLine} />
+      <PageSection width={shellProfile ? "wide" : "full"} className="space-y-4">
+        <PageHeader title={authMessages.profile.title} description={shellProfile ? undefined : rolesOrStatusLine} />
 
-      <div
-        className={
-          shellProfile
-            ? "grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch"
-            : "grid max-w-5xl grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch"
-        }
-      >
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
         <div className="h-full [&>section]:h-full">
           <FormSection title={authMessages.profile.nameSection}>
             <ProfileNameForm
@@ -162,7 +158,8 @@ const ProfilePage = async () => {
             />
           </FormSection>
         </div>
-      </div>
+        </div>
+      </PageSection>
     </main>
   );
 };

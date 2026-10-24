@@ -76,7 +76,7 @@ export const ScoreCell = ({
   const layout = mode === "verse" ? "inline" : "keypad";
   const triggerLabel = `${aria["aria-label"]}: ${displayValue(value)}`;
   const triggerClass = cn(
-    "inline-flex h-8 min-w-[2.5rem] items-center justify-center rounded-md border border-line bg-surface px-2 text-sm tabular-nums hover:border-ink-2",
+    "inline-flex h-9 min-w-[2.5rem] items-center justify-center rounded-md border border-line bg-surface px-2 text-base tabular-nums hover:border-ink-2",
     mode === "pad" && scoreTone(value),
     disabled && "pointer-events-none opacity-45",
   );

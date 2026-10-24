@@ -16,7 +16,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { Input } from "@/components/ui/input";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
@@ -24,6 +27,7 @@ import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 type ExtendLegacyDeadlineDialogProps = {
   defaultNewDeadlineOn: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
 };
@@ -31,10 +35,12 @@ type ExtendLegacyDeadlineDialogProps = {
 export const ExtendLegacyDeadlineDialog = ({
   defaultNewDeadlineOn,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
 }: ExtendLegacyDeadlineDialogProps) => {
   const messages = useAdminMessages();
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState(extendLegacyDeadlineAction, null);
   const mutationState: MutationResult | null = state;
@@ -60,7 +66,13 @@ export const ExtendLegacyDeadlineDialog = ({
         <form action={formAction} className="space-y-4">
           <label className="block space-y-1">
             <span className="text-sm text-muted-foreground">{messages.people.legacyNewDeadlineLabel}</span>
-            <Input name="newDeadlineOn" type="date" required defaultValue={defaultNewDeadlineOn} />
+            <FormDateField
+              name="newDeadlineOn"
+              defaultValue={defaultNewDeadlineOn}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
+            />
           </label>
           <label className="block space-y-1">
             <span className="text-sm text-muted-foreground">{messages.people.legacyExtendReasonLabel}</span>

@@ -6,6 +6,7 @@ import { PlusIcon } from "lucide-react";
 import { previewLessonVerseAction } from "@/actions/lesson-verse-preview";
 import { AlertText } from "@/components/atoms";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import type { BibleBookListItem } from "@/data/bible/list-books";
 import type { LessonFormVerseRow } from "@/data/lessons/load-lesson-form-page.server";
@@ -81,19 +82,18 @@ export const VersePicker = ({
     <div className="mt-5 border-t border-line pt-4">
       <p className="mb-2 text-sm font-medium text-ink">{messages.pickerAdd}</p>
       <div className="grid grid-cols-2 gap-2">
-        <select
+        <div className="col-span-2">
+        <FormSelect
           aria-label={messages.pickerBook}
-          className="col-span-2 h-10 rounded-lg border border-input bg-surface px-2 text-base"
           value={bookId}
           disabled={busy}
-          onChange={(e) => setBookId(e.target.value)}
-        >
-          {books.map((book) => (
-            <option key={book.id} value={book.id}>
-              {messages.locale === APP_LOCALE.EN ? book.titleEn : book.titleRu}
-            </option>
-          ))}
-        </select>
+          options={books.map((book) => ({
+            value: book.id,
+            label: messages.locale === APP_LOCALE.EN ? book.titleEn : book.titleRu,
+          }))}
+          onValueChange={setBookId}
+        />
+        </div>
         <Input
           inputMode="numeric"
           placeholder={messages.pickerChapter}
