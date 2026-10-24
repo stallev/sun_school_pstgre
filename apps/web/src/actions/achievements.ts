@@ -1,7 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { ACHIEVEMENT_KIND, USER_ROLE, type MutationResult } from "@sunschool/domain";
+import {
+  ACHIEVEMENT_KIND,
+  USER_ROLE,
+  parseSetGroupAchievementPointsInput,
+  type MutationResult,
+} from "@sunschool/domain";
 import { copyGroupAchievementPoints } from "@/data/achievements/copy-group-achievement-points";
 import type { CopyGroupAchievementPointsSuccess } from "@/data/achievements/copy-group-achievement-points";
 import { recalculateAchievements } from "@/data/achievements/recalculate-achievements";
@@ -61,18 +66,33 @@ export async function upsertRewardAchievementAction(
   return result;
 }
 
+const revalidateGroupPoints = (gradeId: string) => {
+  revalidatePath("/group/points");
+  revalidatePath(`/groups/${gradeId}/points`);
+};
+
 export async function setGroupAchievementPointsAction(
   raw: unknown,
 ): Promise<MutationResult<SetGroupAchievementPointsSuccess>> {
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
-  return setGroupAchievementPoints(await getPrisma(), actor.userId, raw);
+  const result = await setGroupAchievementPoints(await getPrisma(), actor.userId, raw);
+  if (result.ok) {
+    const parsed = parseSetGroupAchievementPointsInput(raw);
+    if (parsed.success) revalidateGroupPoints(parsed.data.gradeId);
+  }
+  return result;
 }
 
 export async function copyGroupAchievementPointsAction(
   raw: unknown,
 ): Promise<MutationResult<CopyGroupAchievementPointsSuccess>> {
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
-  return copyGroupAchievementPoints(await getPrisma(), actor.userId, raw);
+  const result = await copyGroupAchievementPoints(await getPrisma(), actor.userId, raw);
+  if (result.ok && result.data && typeof raw === "object" && raw !== null && "gradeId" in raw) {
+    const gradeId = (raw as { gradeId: string }).gradeId;
+    revalidateGroupPoints(gradeId);
+  }
+  return result;
 }
 
 export async function upsertPenaltyCatalogAction(

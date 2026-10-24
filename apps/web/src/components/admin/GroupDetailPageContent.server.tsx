@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { ACADEMIC_YEAR_STATUS, USER_ROLE } from "@sunschool/domain";
 import { GroupAchievementModeSection } from "@/components/achievements/GroupAchievementModeSection.server";
+import { GroupPointsCardLink } from "@/components/achievements/GroupPointsCardLink.server";
 import { GroupSettingsForm } from "@/components/admin/GroupSettingsForm";
 import { TeacherAssignmentList } from "@/components/admin/TeacherAssignmentList";
 import { AdminMessagesProvider } from "@/components/admin/admin-messages-provider.client";
@@ -51,6 +52,11 @@ export const GroupDetailPageContent = async ({ params }: GroupDetailPageProps) =
           gradeId={detail.gradeId}
           academicYearId={detail.yearId}
           canMutate={detail.yearStatus === ACADEMIC_YEAR_STATUS.ACTIVE}
+        />
+        <GroupPointsCardLink
+          gradeId={detail.gradeId}
+          academicYearId={detail.yearId}
+          href={`/groups/${detail.gradeId}/points`}
         />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
           <GroupSettingsForm

@@ -45,6 +45,7 @@ export const ROUTE_RULES: readonly RouteRule[] = [
   { pattern: /^\/lessons\/[^/]+(\/(edit|table|check))?$/, audience: "app", roles: ADMIN_OR_TEACHER },
   { pattern: /^\/check$/, audience: "app", roles: TEACHER },
   { pattern: /^\/group$/, audience: "app", roles: TEACHER },
+  { pattern: /^\/group\/points$/, audience: "app", roles: TEACHER },
 
   // Teacher or admin.
   { pattern: /^\/(calendar|rating|verses|bricks)$/, audience: "app", roles: ADMIN_OR_TEACHER },
@@ -53,6 +54,7 @@ export const ROUTE_RULES: readonly RouteRule[] = [
   // Admin only.
   { pattern: /^\/(school|approvals|people|year|deletions|audit|settings)$/, audience: "app", roles: ADMIN },
   { pattern: /^\/users(\/[^/]+)?$/, audience: "app", roles: ADMIN },
+  { pattern: /^\/groups\/[^/]+\/points$/, audience: "app", roles: ADMIN },
   { pattern: /^\/groups(\/[^/]+)?$/, audience: "app", roles: ADMIN },
 ];
 
