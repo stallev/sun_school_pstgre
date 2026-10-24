@@ -31,7 +31,7 @@ export const GroupYearSummarySection = ({
         <Button
           type="button"
           variant="outline"
-          size="sm"
+          size="compact"
           className="min-h-11"
           render={<CustomLink href={analyticsHref} />}
         >

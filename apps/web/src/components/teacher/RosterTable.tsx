@@ -99,7 +99,7 @@ export const RosterTable = ({
           <Button
             type="button"
             variant="destructive"
-            size="sm"
+            size="compact"
             className="min-h-11"
             disabled={pending || selected.length === 0}
             aria-busy={pending}

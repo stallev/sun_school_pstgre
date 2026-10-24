@@ -137,7 +137,7 @@ export const BalanceTable = ({
                     <div className="flex flex-wrap gap-2">
                       <Button
                         type="button"
-                        size="sm"
+                        size="compact"
                         onClick={(event) => {
                           event.stopPropagation();
                           openDialog("issue", row.pupilId);
@@ -147,7 +147,7 @@ export const BalanceTable = ({
                       </Button>
                       <Button
                         type="button"
-                        size="sm"
+                        size="compact"
                         variant="outline"
                         onClick={(event) => {
                           event.stopPropagation();

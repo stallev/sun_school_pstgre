@@ -131,7 +131,7 @@ export const CalendarEventForm = ({
                     <Button
                       key={value}
                       type="button"
-                      size="sm"
+                      size="compact"
                       variant={type === value ? "default" : "outline"}
                       disabled={pending}
                       onClick={() => setType(value)}

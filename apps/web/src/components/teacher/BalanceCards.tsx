@@ -72,12 +72,12 @@ export const BalanceCards = ({
           }
           actions={
             <>
-              <Button type="button" size="sm" className="min-h-11" onClick={() => onIssue(row.pupilId)}>
+              <Button type="button" size="compact" className="min-h-11" onClick={() => onIssue(row.pupilId)}>
                 {messages.actionIssue}
               </Button>
               <Button
                 type="button"
-                size="sm"
+                size="compact"
                 variant="outline"
                 className="min-h-11"
                 onClick={() => onCompensate(row.pupilId)}

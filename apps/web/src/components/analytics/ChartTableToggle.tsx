@@ -95,7 +95,7 @@ export const ChartTableToggle = ({
         <div className="flex gap-1">
           <Button
             type="button"
-            size="sm"
+            size="compact"
             variant="outline"
             className={showTable ? undefined : "border-line-strong bg-surface font-medium"}
             aria-pressed={!showTable}
@@ -105,7 +105,7 @@ export const ChartTableToggle = ({
           </Button>
           <Button
             type="button"
-            size="sm"
+            size="compact"
             variant="outline"
             className={showTable ? "border-line-strong bg-surface font-medium" : undefined}
             aria-pressed={showTable}

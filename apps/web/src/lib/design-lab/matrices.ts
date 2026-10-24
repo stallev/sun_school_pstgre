@@ -10,7 +10,14 @@ export const BUTTON_VARIANTS = [
   "link",
 ] as const;
 
-export const BUTTON_SIZES = ["nav", "sm", "default", "lg"] as const;
+export const BUTTON_SIZES = [
+  "default",
+  "compact",
+  "touch",
+  "icon",
+  "icon-compact",
+  "icon-touch",
+] as const;
 
 export type FieldState = "default" | "focus" | "disabled" | "invalid" | "pending";
 

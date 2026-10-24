@@ -66,7 +66,7 @@ export const CancelPenaltyDialog = ({
                 <Button
                   key={preset}
                   type="button"
-                  size="sm"
+                  size="compact"
                   variant="outline"
                   disabled={pending}
                   onClick={() => applyPreset(preset)}

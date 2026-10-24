@@ -92,7 +92,7 @@ export const YearCard = ({ row, dictionaries, formError }: YearCardProps) => {
             </label>
             <ConfirmDialog
               trigger={
-                <Button type="button" variant="destructive-solid" disabled={pending} aria-busy={pending}>
+                <Button type="button" variant="destructive" disabled={pending} aria-busy={pending}>
                   {messages.year.close}
                 </Button>
               }

@@ -7,7 +7,7 @@ export const SHELL_NAV_DROPDOWN_PANEL =
 
 /** Shared topnav control metrics — `Button` size `nav` (h-9), shell-specific color states below. */
 export const SHELL_TOPNAV_TRIGGER = cn(
-  buttonVariants({ variant: "ghost", size: "nav" }),
+  buttonVariants({ variant: "ghost", size: "compact" }),
   "active:scale-100 motion-reduce:active:scale-100 transition-[background-color,color] duration-100",
 );
 

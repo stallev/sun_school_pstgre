@@ -19,7 +19,7 @@ type ScorePadProps = {
 
 const chipClass = (checked: boolean, invalid?: boolean) =>
   cn(
-    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border bg-surface px-3 text-[0.9375rem] font-medium tabular-nums text-ink transition-[color,background-color,border-color,transform] duration-100 ease-out-soft hover:bg-paper active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
+    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border bg-surface px-3 text-base font-medium tabular-nums text-ink transition-[color,background-color,border-color,transform] duration-100 ease-out-soft hover:bg-paper active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
     checked
       ? "border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink hover:bg-cobalt-soft"
       : invalid
