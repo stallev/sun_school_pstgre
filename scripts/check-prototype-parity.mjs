@@ -68,10 +68,23 @@ export function normalizeClassSet(classString) {
   return set;
 }
 
+function isAllowedDiff(token, allowed) {
+  const canonical = canonicalizeToken(token);
+  for (const entry of allowed) {
+    const rule = canonicalizeToken(entry);
+    if (rule.endsWith(":*")) {
+      const prefix = rule.slice(0, -1);
+      if (canonical.startsWith(prefix)) return true;
+      continue;
+    }
+    if (rule === canonical) return true;
+  }
+  return false;
+}
+
 export function diffSets(a, b, allowed = []) {
-  const allowedSet = new Set(allowed.map(canonicalizeToken));
-  const onlyA = [...a].filter((c) => !b.has(c) && !allowedSet.has(c));
-  const onlyB = [...b].filter((c) => !a.has(c) && !allowedSet.has(c));
+  const onlyA = [...a].filter((c) => !b.has(c) && !isAllowedDiff(c, allowed));
+  const onlyB = [...b].filter((c) => !a.has(c) && !isAllowedDiff(c, allowed));
   return { onlyA, onlyB, drift: onlyA.length > 0 || onlyB.length > 0 };
 }
 
@@ -155,9 +168,33 @@ function extractExportConst(source, name) {
   return m?.[1] ?? "";
 }
 
+function extractChipClassBlock(source) {
+  const start = source.indexOf("const chipClass");
+  if (start < 0) return "";
+  const slice = source.slice(start);
+  const cnIdx = slice.indexOf("cn(");
+  if (cnIdx < 0) return "";
+  return slice.slice(cnIdx);
+}
+
 function extractCnByPick(source, pick) {
   if (pick === "SHELL_NAV_DROPDOWN_PANEL") {
     return extractExportConst(source, pick);
+  }
+  const chipBlock = extractChipClassBlock(source);
+  if (chipBlock) {
+    if (pick === "checked") {
+      const m = /\bchecked\s*\?\s*"([^"]+)"/.exec(chipBlock);
+      return m?.[1] ?? "";
+    }
+    if (pick === "unchecked") {
+      const m = /:\s*invalid\s*\?\s*"[^"]+"\s*:\s*"([^"]+)"/.exec(chipBlock);
+      return m?.[1] ?? "";
+    }
+    if (pick === "base") {
+      const m = /cn\(\s*\n?\s*"([^"]+)"/.exec(chipBlock);
+      return m?.[1] ?? "";
+    }
   }
   if (pick === "checked") {
     const m = /\?\s*"([^"]+)"/.exec(source);

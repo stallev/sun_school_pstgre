@@ -4,6 +4,8 @@ import { ColorGrid } from "@/components/design-lab/ColorGrid";
 import { ContrastTable } from "@/components/design-lab/ContrastTable";
 import { FeedbackMatrix } from "@/components/design-lab/FeedbackMatrix";
 import { FieldMatrix } from "@/components/design-lab/FieldMatrix";
+import { DateFieldMatrix } from "@/components/design-lab/DateFieldMatrix";
+import { PageSectionMatrix } from "@/components/design-lab/PageSectionMatrix";
 import { LabAnchorBar } from "@/components/design-lab/LabAnchorBar";
 import { LabSection } from "@/components/design-lab/LabSection";
 import { OverlayMatrix } from "@/components/design-lab/OverlayMatrix";
@@ -67,6 +69,9 @@ const DesignSystemPage = () => (
       <LabSection id="fields" title="L2 · Input / Textarea / Field" hint="UX-03 D-7: field border is muted">
         <FieldMatrix />
       </LabSection>
+      <LabSection id="date-field" title="L2 · DateField" hint="ISO value, locale display, calendar popover">
+        <DateFieldMatrix />
+      </LabSection>
       <LabSection id="choices" title="L2 · SegmentedControl, ScoreSelector, Checkbox, Switch">
         <ChoiceMatrix />
       </LabSection>
@@ -84,6 +89,9 @@ const DesignSystemPage = () => (
         <WidthFrame>
           <PatternsGallery />
         </WidthFrame>
+      </LabSection>
+      <LabSection id="page-section" title="L2 · PageSection" hint="full / wide / form — left-aligned, no mx-auto">
+        <PageSectionMatrix />
       </LabSection>
 
       <LabSection id="shell" title="L3 · Shell" hint="global_shell_spec §4 — navigation chrome">

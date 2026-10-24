@@ -61,12 +61,12 @@ describe("parity real rows", () => {
     expect(result.status).toBe("drift");
   });
 
-  it("SEG_ON (P-14) resolves prototype const (component drift until CU3)", () => {
+  it("SEG_ON (P-14) resolves prototype const and matches segmented-control (P14-CU3)", () => {
     const row = rows.find((r) => r.id === "P-14");
     const proto = resolveProtoConst(prototypeHtml, "SEG_ON");
     expect(proto).toContain("font-bold");
     const result = compareRow(row, { prototypeHtml, rootDir: REPO_ROOT });
-    expect(result.status).toBe("drift");
+    expect(result.status).toBe("ok");
   });
 });
 
