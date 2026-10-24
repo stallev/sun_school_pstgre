@@ -223,10 +223,16 @@ function extractCnByPick(source, pick) {
     return m?.[1] ?? "";
   }
   if (pick === "sidebar" || pick === "sidebar-active") {
+    const sidebarRow =
+      /sidebarRowClass[\s\S]*?cn\(\s*\n?\s*"([^"]+)"[\s\S]*?isActive\s*\?\s*"([^"]+)"\s*:\s*"([^"]+)"/.exec(
+        source,
+      );
+    if (sidebarRow) {
+      if (pick === "sidebar-active") return sidebarRow[2];
+      return sidebarRow[1];
+    }
     const active = /isActive\s*\?\s*"([^"]+)"/.exec(source)?.[1] ?? "";
-    const base =
-      /className=\{cn\(\s*"([^"]+)"/.exec(source)?.[1] ??
-      "";
+    const base = /className=\{cn\(\s*"([^"]+)"/.exec(source)?.[1] ?? "";
     if (pick === "sidebar-active") return active;
     return base;
   }

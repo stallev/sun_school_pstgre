@@ -26,14 +26,15 @@ export const AppShell = ({
 }: AppShellProps) => (
   <ShellMessagesProvider messages={shellMessages}>
     <SkipToMainLink label={shellMessages.skipToContent} />
-    <ShellHeader homeHref={homeHref} displayName={displayName} nav={nav} badgeCounts={badgeCounts} />
-    <main
-      id="main"
-      tabIndex={-1}
-      className="mx-auto w-full max-w-[1400px] px-4 pb-28 pt-4 sm:px-6 lg:px-8 lg:pb-16 lg:pt-7"
-    >
-      {children}
-    </main>
+    <ShellHeader homeHref={homeHref} displayName={displayName} nav={nav} badgeCounts={badgeCounts}>
+      <main
+        id="main"
+        tabIndex={-1}
+        className="min-w-0 px-4 pb-28 pt-4 outline-none sm:px-6 lg:px-8 lg:pb-16 lg:pt-7"
+      >
+        <div className="max-w-[1400px]">{children}</div>
+      </main>
+    </ShellHeader>
     <ShellRouteAnnouncer />
   </ShellMessagesProvider>
 );

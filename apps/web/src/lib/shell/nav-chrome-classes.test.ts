@@ -1,10 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { shellTopNavTriggerClass } from "./nav-chrome-classes";
+import { SHELL_NAV_DROPDOWN_PANEL } from "./nav-chrome-classes";
 
-describe("shellTopNavTriggerClass", () => {
-  it("idle topnav trigger is not primary-filled", () => {
-    const classes = shellTopNavTriggerClass({ isActive: false, isOpen: false });
-    expect(classes).not.toContain("bg-cobalt-ink");
-    expect(classes).toContain("h-9");
+describe("SHELL_NAV_DROPDOWN_PANEL", () => {
+  it("uses float shadow token, not ad-hoc shadow", () => {
+    expect(SHELL_NAV_DROPDOWN_PANEL).toContain("shadow-float");
+    expect(SHELL_NAV_DROPDOWN_PANEL).not.toMatch(/shadow-\[/);
   });
 });
