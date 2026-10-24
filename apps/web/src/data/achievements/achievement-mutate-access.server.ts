@@ -7,7 +7,13 @@ import {
   type UserRole,
 } from "@sunschool/domain";
 import type { Prisma } from "@sunschool/db";
-import { canAwardManually, canRevokeAward, canSetGroupAchievementMode } from "@sunschool/policy-server";
+import {
+  canAwardManually,
+  canCopyGroupAchievementPoints,
+  canRevokeAward,
+  canSetGroupAchievementMode,
+  canSetGroupAchievementPoints,
+} from "@sunschool/policy-server";
 import { teacherCanAccessPupilForAnalytics } from "../analytics/years/year-analytics-access.server";
 
 type Tx = Prisma.TransactionClient;
@@ -36,6 +42,13 @@ async function loadPolicySessionContext(tx: Tx, actorUserId: string) {
 }
 
 function policyToMutation(decision: { allowed: boolean; reason?: string }): MutationErr {
+  if (decision.reason === "YEAR_CLOSED") {
+    return {
+      ok: false,
+      code: MUTATION_ERROR_CODES.ACHIEVEMENT_YEAR_CLOSED,
+      message: "common.errors.year_closed",
+    };
+  }
   return {
     ok: false,
     code:
@@ -105,6 +118,85 @@ export async function assertSetGroupAchievementModeAccess(
   const decision = canSetGroupAchievementMode(await loadPolicySessionContext(tx, actorUserId), {
     gradeExistsInOrganization: Boolean(grade),
     teacherAssignedToGradeInYear: Boolean(teacherAssigned),
+  });
+
+  if (!decision.allowed) return policyToMutation(decision);
+  return null;
+}
+
+async function loadTeacherAssigned(
+  tx: Tx,
+  actorUserId: string,
+  gradeId: string,
+  academicYearId: string,
+): Promise<boolean> {
+  const row = await tx.teacherAssignment.findFirst({
+    where: { userId: actorUserId, gradeId, academicYearId },
+    select: { id: true },
+  });
+  return row !== null;
+}
+
+export async function assertSetGroupAchievementPointsAccess(
+  tx: Tx,
+  actorUserId: string,
+  organizationId: string,
+  gradeId: string,
+  academicYearId: string,
+  academicYearStatus: string,
+): Promise<MutationErr | null> {
+  const grade = await tx.grade.findFirst({
+    where: { id: gradeId, organizationId },
+    select: { id: true },
+  });
+  const teacherAssigned = grade
+    ? await loadTeacherAssigned(tx, actorUserId, gradeId, academicYearId)
+    : false;
+
+  const decision = canSetGroupAchievementPoints(await loadPolicySessionContext(tx, actorUserId), {
+    gradeExistsInOrganization: Boolean(grade),
+    teacherAssignedToGradeInYear: teacherAssigned,
+    academicYearStatus,
+  });
+
+  if (!decision.allowed) return policyToMutation(decision);
+  return null;
+}
+
+export async function assertCopyGroupAchievementPointsAccess(
+  tx: Tx,
+  actorUserId: string,
+  organizationId: string,
+  targetGradeId: string,
+  sourceGradeId: string,
+  academicYearId: string,
+  academicYearStatus: string,
+): Promise<MutationErr | null> {
+  const [targetGrade, sourceGrade] = await Promise.all([
+    tx.grade.findFirst({
+      where: { id: targetGradeId, organizationId },
+      select: { id: true },
+    }),
+    tx.grade.findFirst({
+      where: { id: sourceGradeId, organizationId },
+      select: { id: true },
+    }),
+  ]);
+  const teacherAssignedTarget = targetGrade
+    ? await loadTeacherAssigned(tx, actorUserId, targetGradeId, academicYearId)
+    : false;
+  const teacherAssignedSource = sourceGrade
+    ? await loadTeacherAssigned(tx, actorUserId, sourceGradeId, academicYearId)
+    : false;
+
+  const decision = canCopyGroupAchievementPoints(await loadPolicySessionContext(tx, actorUserId), {
+    target: {
+      gradeExistsInOrganization: Boolean(targetGrade),
+      teacherAssignedToGradeInYear: teacherAssignedTarget,
+      academicYearStatus,
+    },
+    sourceGradeExistsInOrganization: Boolean(sourceGrade),
+    teacherAssignedToSourceGradeInYear: teacherAssignedSource,
   });
 
   if (!decision.allowed) return policyToMutation(decision);

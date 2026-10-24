@@ -11,7 +11,9 @@ export type PolicySessionContext = {
 };
 
 /** Policy functions are pure: a decision, never `redirect()` or `notFound()` (policy-packages). */
-export type PolicyDecision = { allowed: true } | { allowed: false; reason: "FORBIDDEN" | "NOT_FOUND" };
+export type PolicyDecision =
+  | { allowed: true }
+  | { allowed: false; reason: "FORBIDDEN" | "NOT_FOUND" | "YEAR_CLOSED" };
 
 export const ALLOWED: PolicyDecision = { allowed: true };
 

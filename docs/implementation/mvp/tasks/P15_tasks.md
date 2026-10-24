@@ -73,7 +73,7 @@ Tier T3: миграция (sensitive zone).
 
 Tier T3: права, запись данных, влияющих на баланс.
 
-- [ ] P15-T6 · T3 · Spec: [контракт §5, §6.1, §8, §9](../contracts/achievement_group_points_contract.md) · AZ-65
+- [x] P15-T6 · T3 · Spec: [контракт §5, §6.1, §8, §9](../contracts/achievement_group_points_contract.md) · AZ-65
       Files: `packages/policy/server/src/achievements-mutate.ts`, `packages/policy/server/src/achievements-mutate.test.ts`, `apps/web/src/data/achievements/set-group-achievement-points.ts`, `apps/web/src/data/achievements/copy-group-achievement-points.ts`, `apps/web/src/data/achievements/set-group-achievement-points.test.ts`, `apps/web/src/actions/achievements.ts`
       Acceptance: операции `setGroupAchievementPoints`, `copyGroupAchievementPoints` по контракту §5; актор проверяется по БД; teacher — только группа с назначением и активный год; admin — любая, закрытый год с журналом; флаг проверяется в use-case; блокировка `grade_settings` `FOR UPDATE`; значение, равное глобальному или `null`, удаляет строку; пакет атомарен; один журнал `achievement.group_points_changed` с до/после без ФИО; повтор идемпотентен без журнала; Server Action — тонкий адаптер с `MutationResult` и кодами из domain
       Paths: H [teacher меняет цену своей группы; admin любой; сброс] · N [уровень не из каталога; штраф ≥ 0; пустой пакет; > 64; источник copy из другого года; закрытый год у teacher → `ACHIEVEMENT_YEAR_CLOSED`; флаг выключен → `ACHIEVEMENT_FLAG_OFF`] · S [чужая группа → `NOT_FOUND`; teacher не пишет глобальный каталог; гонка двух записей]

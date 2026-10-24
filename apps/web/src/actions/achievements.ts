@@ -2,9 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { ACHIEVEMENT_KIND, USER_ROLE, type MutationResult } from "@sunschool/domain";
+import { copyGroupAchievementPoints } from "@/data/achievements/copy-group-achievement-points";
+import type { CopyGroupAchievementPointsSuccess } from "@/data/achievements/copy-group-achievement-points";
 import { recalculateAchievements } from "@/data/achievements/recalculate-achievements";
 import type { RecalculateAchievementsSuccess } from "@/data/achievements/recalculate-achievements";
 import { setAchievementActive } from "@/data/achievements/set-achievement-active";
+import { setGroupAchievementPoints } from "@/data/achievements/set-group-achievement-points";
+import type { SetGroupAchievementPointsSuccess } from "@/data/achievements/set-group-achievement-points";
 import { upsertAchievement } from "@/data/achievements/upsert-achievement";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
@@ -55,6 +59,20 @@ export async function upsertRewardAchievementAction(
   );
   if (result.ok) revalidateAchievements();
   return result;
+}
+
+export async function setGroupAchievementPointsAction(
+  raw: unknown,
+): Promise<MutationResult<SetGroupAchievementPointsSuccess>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  return setGroupAchievementPoints(await getPrisma(), actor.userId, raw);
+}
+
+export async function copyGroupAchievementPointsAction(
+  raw: unknown,
+): Promise<MutationResult<CopyGroupAchievementPointsSuccess>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  return copyGroupAchievementPoints(await getPrisma(), actor.userId, raw);
 }
 
 export async function upsertPenaltyCatalogAction(
