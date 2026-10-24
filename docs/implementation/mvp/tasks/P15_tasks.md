@@ -39,7 +39,7 @@
 
 Tier T3: миграция (sensitive zone).
 
-- [ ] P15-T2 · T3 · Spec: [контракт §4](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 1
+- [x] P15-T2 · T3 · Spec: [контракт §4](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 1
       Files: `packages/db/prisma/schema.prisma`, `packages/db/prisma/migrations/<timestamp>_grade_achievement_points/migration.sql`, `packages/db/src/generated/**` (генерация), `packages/db/src/seed/dev/replace-fixture.ts` (если перечисляет таблицы)
       Acceptance: модель `GradeAchievementPoints` (`@@map("grade_achievement_points")`) с FK на `grade_settings` и `achievement`, `tier Int` (0 — штраф), `@@unique([gradeSettingsId, achievementId, tier])`, `CHECK (tier BETWEEN 0 AND 3)`; миграция аддитивна, существующие данные не трогает; процедура удаления учебного года (`delete-academic-year.ts`, `deletion`) удаляет переопределения вместе с `grade_settings`
       Paths: H [применение миграции на пустой и заполненной БД] · N [дубль `(settings, achievement, tier)` — ошибка уникальности; `tier` вне 0…3] · S [таблица не доступна из клиента; запись только DAL]
