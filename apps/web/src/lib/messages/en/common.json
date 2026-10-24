@@ -2,6 +2,9 @@
   "deletion": {
     "already_open": "An open deletion request already exists"
   },
+  "controls": {
+    "open_date_calendar": "Open calendar"
+  },
   "errors": {
     "unauthorized": "Sign in to continue",
     "forbidden": "You do not have permission for this action",

@@ -4,6 +4,7 @@ import { ExtendLegacyDeadlineDialog } from "@/components/admin/ExtendLegacyDeadl
 import { LegacyConsentBadge } from "@/components/admin/LegacyConsentBadge";
 import type { LegacyPendingRow } from "@/data/school/list-legacy-pending";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
 type LegacyConsentListProps = {
@@ -11,6 +12,7 @@ type LegacyConsentListProps = {
   rows: readonly LegacyPendingRow[];
   defaultNewDeadlineOn: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
   messages: AdminMessages;
@@ -21,6 +23,7 @@ export const LegacyConsentList = ({
   rows,
   defaultNewDeadlineOn,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
   messages,
@@ -45,6 +48,7 @@ export const LegacyConsentList = ({
           <ExtendLegacyDeadlineDialog
             defaultNewDeadlineOn={defaultNewDeadlineOn}
             dictionaries={dictionaries}
+            uiLocale={uiLocale}
             formError={formError}
             closeLabel={closeLabel}
           />

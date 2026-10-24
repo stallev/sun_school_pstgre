@@ -3,8 +3,9 @@
 import { AUDIT_ACTION, AUDIT_ENTITY_TYPE } from "@sunschool/domain";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { FormSelect } from "@/components/ui/form-select";
-import { Input } from "@/components/ui/input";
+import type { FormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { Label } from "@/components/ui/label";
 
 type ActorOption = { userId: string; label: string };
@@ -18,6 +19,7 @@ type AuditFilterBarProps = {
     action: string;
   };
   actorOptions: ActorOption[];
+  dateFieldCopy: FormDateFieldCopy;
   labels: {
     from: string;
     to: string;
@@ -32,7 +34,7 @@ type AuditFilterBarProps = {
   };
 };
 
-export const AuditFilterBar = ({ values, actorOptions, labels }: AuditFilterBarProps) => (
+export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: AuditFilterBarProps) => (
   <form
     method="get"
     action="/audit"
@@ -40,11 +42,25 @@ export const AuditFilterBar = ({ values, actorOptions, labels }: AuditFilterBarP
   >
     <div className="space-y-2">
       <Label htmlFor="audit-from">{labels.from}</Label>
-      <Input id="audit-from" name="from" type="date" value={values.from} className="min-h-11" />
+      <FormDateField
+        id="audit-from"
+        name="from"
+        defaultValue={values.from}
+        locale={dateFieldCopy.locale}
+        calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+        className="max-w-none"
+      />
     </div>
     <div className="space-y-2">
       <Label htmlFor="audit-to">{labels.to}</Label>
-      <Input id="audit-to" name="to" type="date" value={values.to} className="min-h-11" />
+      <FormDateField
+        id="audit-to"
+        name="to"
+        defaultValue={values.to}
+        locale={dateFieldCopy.locale}
+        calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+        className="max-w-none"
+      />
     </div>
     <div className="space-y-2">
       <Label htmlFor="audit-actor">{labels.actor}</Label>

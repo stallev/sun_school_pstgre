@@ -22,6 +22,7 @@ import { loadSchoolAnalyticsPage } from "@/data/analytics/load-school-analytics-
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { formatPlural, getPluralForms } from "@/lib/messages/plural";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
@@ -141,6 +142,7 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
                 messages={messages}
                 actionPath="/school"
                 hiddenFields={periodHiddenFields}
+                dateFieldCopy={getFormDateFieldCopy(commonDict, locale)}
               />
               <SchoolGroupsTable
                 rows={data.groupRows}

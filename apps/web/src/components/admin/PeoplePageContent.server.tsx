@@ -65,11 +65,17 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
           rows={legacyPending.rows}
           defaultNewDeadlineOn={legacyDefaultDeadline}
           dictionaries={dictionaries}
+          uiLocale={locale}
           formError={formError}
           closeLabel={closeLabel}
           messages={adminMessages}
         />
-        <PupilCardForm dictionaries={dictionaries} formError={formError} mode="create" />
+        <PupilCardForm
+          dictionaries={dictionaries}
+          uiLocale={locale}
+          formError={formError}
+          mode="create"
+        />
         {list.pupils.length === 0 ? (
           <EmptyState
             title={adminMessages.people.emptyTitle}
@@ -85,6 +91,7 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
                 consentTextVersion={consentTextVersion}
                 defaultDate={defaultDate}
                 dictionaries={dictionaries}
+                uiLocale={locale}
                 formError={formError}
                 closeLabel={closeLabel}
                 messages={adminMessages}

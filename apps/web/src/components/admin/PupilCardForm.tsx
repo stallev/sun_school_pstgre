@@ -6,12 +6,17 @@ import { createPupilAction, updatePupilAction } from "@/actions/school-pupils";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { SectionTitle } from "@/components/atoms";
 import { Button } from "@/components/ui/button";
+import { FormCheckbox } from "@/components/ui/form-checkbox";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { Input } from "@/components/ui/input";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
 type PupilCardFormProps = {
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   mode: "create" | "edit";
   pupilId?: string;
@@ -27,6 +32,7 @@ type PupilCardFormProps = {
 
 export const PupilCardForm = ({
   dictionaries,
+  uiLocale,
   formError,
   mode,
   pupilId,
@@ -34,6 +40,7 @@ export const PupilCardForm = ({
   onSuccess,
 }: PupilCardFormProps) => {
   const messages = useAdminMessages();
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [createState, createFormAction, createPending] = useActionState(createPupilAction, null);
   const [updateState, updateFormAction, updatePending] = useActionState(updatePupilAction, null);
   const state: MutationResult | null = mode === "create" ? createState : updateState;
@@ -69,17 +76,18 @@ export const PupilCardForm = ({
         </label>
         <label className="grid gap-1 text-sm">
           <span>{messages.people.birthDateLabel}</span>
-          <Input name="birthDate" type="date" required disabled={isBusy} defaultValue={initial?.birthDate ?? ""} />
+          <FormDateField
+            name="birthDate"
+            defaultValue={initial?.birthDate ?? ""}
+            disabled={isBusy}
+            locale={dateFieldCopy.locale}
+            calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+            className="max-w-none"
+          />
         </label>
         {mode === "edit" ? (
           <label className="flex min-h-11 items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              name="isActive"
-              defaultChecked={initial?.isActive ?? true}
-              disabled={isBusy}
-              className="size-4 rounded border-input"
-            />
+            <FormCheckbox name="isActive" defaultChecked={initial?.isActive ?? true} disabled={isBusy} />
             <span>{messages.people.activeLabel}</span>
           </label>
         ) : null}

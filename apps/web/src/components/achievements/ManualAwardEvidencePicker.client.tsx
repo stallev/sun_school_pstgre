@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { loadManualAwardEvidenceAction } from "@/actions/teacher-achievements";
 import { ContentText } from "@/components/atoms/ContentText";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { ManualAwardEvidenceOption } from "@/lib/achievements/manual-award-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
@@ -100,12 +101,10 @@ export const ManualAwardEvidencePicker = ({
         {(evidence ?? []).map((row) => (
           <li key={row.checkId}>
             <label className="flex cursor-pointer items-center gap-3 px-3 py-2.5">
-              <input
-                type="checkbox"
-                className="size-5 accent-cobalt-ink"
+              <Checkbox
                 checked={selectedChecks.has(row.checkId)}
                 disabled={disabled || loading}
-                onChange={() => toggleCheck(row.checkId)}
+                onCheckedChange={() => toggleCheck(row.checkId)}
               />
               <ContentText className="text-sm">{row.label}</ContentText>
             </label>

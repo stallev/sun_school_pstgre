@@ -12,7 +12,10 @@ import {
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { FormSelect } from "@/components/ui/form-select";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { Input } from "@/components/ui/input";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Sheet,
@@ -32,6 +35,7 @@ type CalendarEventFormProps = {
   gradeId: string;
   messages: TeacherCalendarMessages;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   canMutate: boolean;
   lessonsForLink: { lessonId: string; label: string }[];
@@ -44,6 +48,7 @@ export const CalendarEventForm = ({
   gradeId,
   messages,
   dictionaries,
+  uiLocale,
   formError,
   canMutate,
   lessonsForLink,
@@ -51,6 +56,7 @@ export const CalendarEventForm = ({
   defaultDate,
   closeHref,
 }: CalendarEventFormProps) => {
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const router = useRouter();
   const isEdit = Boolean(editEvent);
   const sheetOpen = Boolean(editEvent || defaultDate);
@@ -116,12 +122,13 @@ export const CalendarEventForm = ({
             <input type="hidden" name="type" value={type} />
             <label className="grid gap-1 text-sm">
               <span className="font-medium text-ink">{messages.dateLabel}</span>
-              <Input
-                type="date"
+              <FormDateField
                 name="eventDate"
-                required
                 defaultValue={editEvent?.eventDateIso ?? defaultDate ?? ""}
                 disabled={pending}
+                locale={dateFieldCopy.locale}
+                calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+                className="max-w-none"
               />
             </label>
             <fieldset className="grid gap-2">

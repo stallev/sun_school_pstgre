@@ -71,6 +71,7 @@ const NewLessonPage = async ({ searchParams }: NewLessonPageProps) => {
         messages={messages}
         translationLabel={translationLabel}
         dictionaries={dictionaries}
+        uiLocale={locale}
         formError={formError}
         cancelHref="/lessons"
       />

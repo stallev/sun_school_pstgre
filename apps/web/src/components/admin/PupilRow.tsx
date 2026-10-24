@@ -19,6 +19,7 @@ import {
 import type { PeopleGroupOption, PupilListRow } from "@/data/school/load-people-admin-list.server";
 import { formatPupilMeta } from "@/lib/admin/format-pupil-meta";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
 type PupilRowProps = {
@@ -27,6 +28,7 @@ type PupilRowProps = {
   consentTextVersion: string;
   defaultDate: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
   messages: AdminMessages;
@@ -39,6 +41,7 @@ export const PupilRow = ({
   consentTextVersion,
   defaultDate,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
   messages,
@@ -91,6 +94,7 @@ export const PupilRow = ({
                 isActive: row.isActive,
               }}
               dictionaries={dictionaries}
+              uiLocale={uiLocale}
               formError={formError}
               onSuccess={() => setEditOpen(false)}
             />
@@ -104,6 +108,7 @@ export const PupilRow = ({
             consentTextVersion={consentTextVersion}
             defaultSignedOn={defaultDate}
             dictionaries={dictionaries}
+            uiLocale={uiLocale}
             formError={formError}
             closeLabel={closeLabel}
           />
@@ -116,6 +121,7 @@ export const PupilRow = ({
             groups={groups}
             defaultDate={defaultDate}
             dictionaries={dictionaries}
+            uiLocale={uiLocale}
             formError={formError}
             closeLabel={closeLabel}
           />
@@ -136,6 +142,7 @@ export const PupilRow = ({
               groups={groups}
               defaultDate={defaultDate}
               dictionaries={dictionaries}
+              uiLocale={uiLocale}
               formError={formError}
               closeLabel={closeLabel}
             />
@@ -146,6 +153,7 @@ export const PupilRow = ({
               groups={groups}
               defaultDate={defaultDate}
               dictionaries={dictionaries}
+              uiLocale={uiLocale}
               formError={formError}
               closeLabel={closeLabel}
             />

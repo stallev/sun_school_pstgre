@@ -6,17 +6,22 @@ import { createYearAction } from "@/actions/school-year";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { SectionTitle } from "@/components/atoms";
 import { Button } from "@/components/ui/button";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { Input } from "@/components/ui/input";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
 type CreateYearFormProps = {
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
 };
 
-export const CreateYearForm = ({ dictionaries, formError }: CreateYearFormProps) => {
+export const CreateYearForm = ({ dictionaries, uiLocale, formError }: CreateYearFormProps) => {
   const messages = useAdminMessages();
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [state, formAction, pending] = useActionState<MutationResult<{ yearId: string }> | null, FormData>(
     createYearAction,
     null,
@@ -43,11 +48,23 @@ export const CreateYearForm = ({ dictionaries, formError }: CreateYearFormProps)
         </label>
         <label className="grid gap-1 text-sm">
           <span>{messages.year.startsOnLabel}</span>
-          <Input name="startsOn" type="date" required disabled={pending} />
+          <FormDateField
+            name="startsOn"
+            disabled={pending}
+            locale={dateFieldCopy.locale}
+            calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+            className="max-w-none"
+          />
         </label>
         <label className="grid gap-1 text-sm md:col-span-2">
           <span>{messages.year.endsOnLabel}</span>
-          <Input name="endsOn" type="date" required disabled={pending} />
+          <FormDateField
+            name="endsOn"
+            disabled={pending}
+            locale={dateFieldCopy.locale}
+            calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+            className="max-w-none"
+          />
         </label>
       </div>
       <Button type="submit" disabled={pending} aria-busy={pending}>

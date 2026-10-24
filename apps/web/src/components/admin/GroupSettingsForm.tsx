@@ -8,6 +8,7 @@ import { SectionTitle } from "@/components/atoms";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { FormSelect } from "@/components/ui/form-select";
+import { FormCheckbox } from "@/components/ui/form-checkbox";
 import { Input } from "@/components/ui/input";
 import type { GroupAdminDetail } from "@/data/school/load-group-admin-detail.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
@@ -107,7 +108,7 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
             ] as const
           ).map(([name, label, checked]) => (
             <label key={name} className="flex min-h-11 items-center gap-2 text-sm">
-              <input type="checkbox" name={name} defaultChecked={checked} disabled={pending} />
+              <FormCheckbox name={name} defaultChecked={checked} disabled={pending} />
               {label}
             </label>
           ))}

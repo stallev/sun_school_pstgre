@@ -6,6 +6,7 @@ import type { MutationResult } from "@sunschool/domain";
 import { enrollPupilAction, unenrollPupilAction } from "@/actions/school-pupils";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FormSelect } from "@/components/ui/form-select";
 import { StatusText } from "@/components/ui/status-text";
 import type { TeacherAddCandidate, TeacherRosterRow } from "@/data/school/load-teacher-group-page.server";
@@ -88,11 +89,9 @@ export const RosterTable = ({
       {canMutate ? (
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
           <label className="inline-flex min-h-11 items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              className="size-4 accent-cobalt-ink"
+            <Checkbox
               checked={allSelected}
-              onChange={toggleAll}
+              onCheckedChange={() => toggleAll()}
               disabled={pending || pupils.length === 0}
             />
             {messages.selectAll}
@@ -114,11 +113,9 @@ export const RosterTable = ({
         {pupils.map((row) => (
           <li key={row.pupilId} className="flex items-center gap-3 px-5 py-3">
               {canMutate ? (
-                <input
-                  type="checkbox"
-                  className="size-4 shrink-0 accent-cobalt-ink"
+                <Checkbox
                   checked={selected.includes(row.pupilId)}
-                  onChange={() => toggleOne(row.pupilId)}
+                  onCheckedChange={() => toggleOne(row.pupilId)}
                   disabled={pending}
                   aria-label={fillMessage(messages.selectPupil, { name: row.displayName })}
                 />

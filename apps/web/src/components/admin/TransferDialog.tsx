@@ -17,7 +17,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FormSelect } from "@/components/ui/form-select";
-import { Input } from "@/components/ui/input";
+import { FormDateField } from "@/components/ui/form-date-field";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import type { PeopleGroupOption } from "@/data/school/load-people-admin-list.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -30,6 +32,7 @@ type TransferDialogProps = {
   groups: readonly PeopleGroupOption[];
   defaultDate: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
 };
@@ -41,10 +44,12 @@ export const TransferDialog = ({
   groups,
   defaultDate,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
 }: TransferDialogProps) => {
   const messages = useAdminMessages();
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [open, setOpen] = useState(false);
   const [state, formAction, pending] = useActionState<MutationResult | null, FormData>(
     transferPupilAction,
@@ -88,7 +93,14 @@ export const TransferDialog = ({
           </label>
           <label className="grid gap-1 text-sm">
             <span>{messages.people.transferOnLabel}</span>
-            <Input name="onDate" type="date" required disabled={pending} defaultValue={defaultDate} />
+            <FormDateField
+              name="onDate"
+              disabled={pending}
+              defaultValue={defaultDate}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
+            />
           </label>
           <DialogFooter>
             <DialogClose render={<Button type="button" variant="outline" disabled={pending} />}>

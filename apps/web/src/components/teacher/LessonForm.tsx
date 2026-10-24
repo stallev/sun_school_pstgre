@@ -25,7 +25,10 @@ import type { TeacherLessonFormMessages } from "@/lib/messages/teacher-lesson-me
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { FormSelect } from "@/components/ui/form-select";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { VersePicker } from "@/components/teacher/VersePicker";
 import { VerseRefList } from "@/components/teacher/VerseRefList";
 import { useLessonFormSubmit } from "@/components/teacher/use-lesson-form-submit";
@@ -35,6 +38,7 @@ type LessonFormProps = {
   messages: TeacherLessonFormMessages;
   translationLabel: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   cancelHref: string;
 };
@@ -46,9 +50,11 @@ export const LessonForm = ({
   messages,
   translationLabel,
   dictionaries,
+  uiLocale,
   formError,
   cancelHref,
 }: LessonFormProps) => {
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const router = useRouter();
   const formId = useId();
   const [createState, createFormAction, createPending] = useActionState<
@@ -150,16 +156,18 @@ export const LessonForm = ({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_8rem]">
           <label className="grid gap-1 text-sm" htmlFor={`${formId}-date`}>
             <span>{messages.dateLabel}</span>
-            <Input
+            <FormDateField
               id={`${formId}-date`}
               name="lessonDate"
-              type="date"
               min={data.yearStartIso}
               max={data.yearEndIso}
               value={lessonDate}
+              onValueChange={setLessonDate}
               disabled={busy || data.checksLockedFields}
-              aria-invalid={Boolean(fieldError("lessonDate"))}
-              onChange={(e) => setLessonDate(e.target.value)}
+              invalid={Boolean(fieldError("lessonDate"))}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
             />
             {fieldError("lessonDate") ? <AlertText>{fieldError("lessonDate")}</AlertText> : null}
           </label>

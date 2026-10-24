@@ -35,6 +35,7 @@ import type {
 } from "@/data/families/load-families-admin.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { FamilyAdminMessages } from "@/lib/messages/pick-family-admin-messages.server";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getAccountStatusStMetaTone } from "@/lib/admin/account-status-tone";
 import { formatAccountStatusLabel } from "@/lib/admin/format-account-status-label";
@@ -45,6 +46,7 @@ type FamilyDetailBoardProps = {
   attachOptions: AttachPupilOption[];
   messages: FamilyAdminMessages;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   consentTextVersion: string;
   defaultSignedOn: string;
   createdLabel: string;
@@ -87,6 +89,7 @@ export const FamilyDetailBoard = ({
   attachOptions,
   messages,
   dictionaries,
+  uiLocale,
   consentTextVersion,
   defaultSignedOn,
   createdLabel,
@@ -292,6 +295,7 @@ export const FamilyDetailBoard = ({
                             consentTextVersion={consentTextVersion}
                             defaultSignedOn={defaultSignedOn}
                             dictionaries={dictionaries}
+                            uiLocale={uiLocale}
                             formError={messages.formError}
                             closeLabel={messages.closeLabel}
                           />

@@ -17,7 +17,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import { FormDateField } from "@/components/ui/form-date-field";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import type { PeopleGroupOption } from "@/data/school/load-people-admin-list.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -30,6 +32,7 @@ type EnrollDialogProps = {
   groups: readonly PeopleGroupOption[];
   defaultDate: string;
   dictionaries: Record<string, Dictionary>;
+  uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
 };
@@ -41,9 +44,11 @@ export const EnrollDialog = ({
   groups,
   defaultDate,
   dictionaries,
+  uiLocale,
   formError,
   closeLabel,
 }: EnrollDialogProps) => {
+  const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const messages = useAdminMessages();
   const [open, setOpen] = useState(false);
   const action = mode === "enroll" ? enrollPupilAction : unenrollPupilAction;
@@ -100,12 +105,13 @@ export const EnrollDialog = ({
           ) : null}
           <label className="grid gap-1 text-sm">
             <span>{mode === "enroll" ? messages.people.startsOnLabel : messages.people.endsOnLabel}</span>
-            <Input
+            <FormDateField
               name={mode === "enroll" ? "startsOn" : "endsOn"}
-              type="date"
-              required
               disabled={pending}
               defaultValue={defaultDate}
+              locale={dateFieldCopy.locale}
+              calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
+              className="max-w-none"
             />
           </label>
           <DialogFooter>

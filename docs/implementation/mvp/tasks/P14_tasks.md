@@ -116,11 +116,13 @@ Tier T3 по триггеру S: переключатель роли (ОК-5) п
 
 Начинается после CU3.
 
-- [ ] P14-T8 · T2 · Spec: [redesign §3.7, §3.4 `/settings`](../../../design/redesign_v2_ui_spec.md) · UX-06: F13 · ADR: R-7
+- [x] P14-T8 · T2 · Spec: [redesign §3.7, §3.4 `/settings`](../../../design/redesign_v2_ui_spec.md) · UX-06: F13 · ADR: R-7
       Files: `apps/web/src/components/admin/RoleSelector.tsx`, `apps/web/src/components/teacher/RosterTable.tsx`, `apps/web/src/components/teacher/PupilCardForm.tsx`, `apps/web/src/components/admin/GroupSettingsForm.tsx`, `apps/web/src/components/achievements/ManualAwardEvidencePicker.client.tsx`, `apps/web/src/components/analytics/AnalyticsPeriodFilter.tsx`, `apps/web/src/components/admin/CreateYearForm.client.tsx`, `apps/web/src/components/admin/AuditFilterBar.tsx`, `apps/web/src/components/teacher/LessonForm.tsx`, `apps/web/src/components/teacher/CalendarEventForm.tsx`, `apps/web/src/components/bricks/**`, `apps/web/src/components/people/**`, `apps/web/src/app/(app)/settings/page.tsx`, `apps/web/src/**/*.tsx`
       Заметка к Files: глоб покрывает остальные места, найденные поиском нативных checkbox и date в apps/web/src; конкретные файлы перечисляются в теле коммита
       Acceptance: `grep -rnE 'type="(checkbox|date)"' apps/web/src` пуст; `Checkbox` отправляет значения как раньше (`name`, `value`); `DateField` отправляет ISO `YYYY-MM-DD`; часовой пояс в `/settings` — выбор через поисковый `Select`/`Combobox` (Q-02 закрыт записью в [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md) §6); формат даты в интерфейсе из `lib/i18n/format.ts`
       Paths: H [отметка роли/группы; ввод даты урока и года] · N [неверная дата; `min`/`max` года (INV-02); снятая последняя роль] · S [`RoleSelector`: набор ролей отправляется как раньше, сервер проверяет права (AZ-D3); UI не расширяет доступные роли]
+      UI-verify: localhost — admin: `/users` (RoleSelector FormCheckbox), `/year` (CreateYearForm FormDateField), `/groups/[id]` (GroupSettingsForm), `/audit` (AuditFilterBar даты), `/settings` (TimezonePicker Select); teacher: `/lessons/new`, `/calendar` (CalendarEventForm), roster FormCheckbox на `/groups/[id]`; 1280 + выборочно 390; `grep -rnE 'type="(checkbox|date)"' apps/web/src` пуст; §5.1 на `/year` и `/lessons/new`: html 18px, smallText [], mainOutline none, nativeCheckbox 0, nativeDate 0; расхождений 0, консоль чистая (dev pg SSL warning; `type="month"` только в AnalyticsPeriodFilter — вне CU7 grep)
+      Parity: `FormCheckbox` → `Checkbox` P-14 (manual) + `FormDateField` → `DateField` P-15 (manual, N-5) — 2 строки сверено, расхождений 0
 
 **CU DoD:** `typecheck` · `lint` · `test` · UI-verify · Parity
 

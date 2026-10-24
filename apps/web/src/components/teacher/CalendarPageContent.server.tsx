@@ -163,6 +163,7 @@ export const CalendarPageContent = async ({
         gradeId={data.gradeId}
         messages={messages}
         dictionaries={dictionaries}
+        uiLocale={locale}
         formError={formError}
         canMutate={data.canMutate}
         lessonsForLink={data.lessonsForLink}
