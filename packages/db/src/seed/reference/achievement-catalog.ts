@@ -208,7 +208,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
 export async function ensureAchievementCatalog(tx: SeedTx): Promise<SeedCounts> {
   const counts = emptyCounts();
   for (const entry of ACHIEVEMENT_CATALOG) {
-    const definition = {
+    const definitionFields = {
       nameRu: entry.nameRu,
       nameEn: entry.nameEn,
       descriptionRu: entry.descriptionRu,
@@ -217,28 +217,34 @@ export async function ensureAchievementCatalog(tx: SeedTx): Promise<SeedCounts> 
       kind: entry.kind,
       ruleType: entry.ruleType,
       metric: entry.metric,
-      threshold: entry.threshold,
     } as const;
 
     let achievement = await tx.achievement.findUnique({ where: { code: entry.code } });
     if (!achievement) {
       achievement = await tx.achievement.create({
-        data: { code: entry.code, isActive: entry.isActive, ...definition },
+        data: {
+          code: entry.code,
+          isActive: entry.isActive,
+          threshold: entry.threshold,
+          ...definitionFields,
+        },
       });
       counts.created += 1;
     } else {
       const same =
-        achievement.nameRu === definition.nameRu &&
-        achievement.nameEn === definition.nameEn &&
-        achievement.descriptionRu === definition.descriptionRu &&
-        achievement.descriptionEn === definition.descriptionEn &&
-        achievement.category === definition.category &&
-        achievement.kind === definition.kind &&
-        achievement.ruleType === definition.ruleType &&
-        achievement.metric === definition.metric &&
-        achievement.threshold === definition.threshold;
+        achievement.nameRu === definitionFields.nameRu &&
+        achievement.nameEn === definitionFields.nameEn &&
+        achievement.descriptionRu === definitionFields.descriptionRu &&
+        achievement.descriptionEn === definitionFields.descriptionEn &&
+        achievement.category === definitionFields.category &&
+        achievement.kind === definitionFields.kind &&
+        achievement.ruleType === definitionFields.ruleType &&
+        achievement.metric === definitionFields.metric;
       if (!same) {
-        achievement = await tx.achievement.update({ where: { id: achievement.id }, data: definition });
+        achievement = await tx.achievement.update({
+          where: { id: achievement.id },
+          data: definitionFields,
+        });
         counts.updated += 1;
       }
     }
@@ -252,12 +258,6 @@ export async function ensureAchievementCatalog(tx: SeedTx): Promise<SeedCounts> 
           data: { achievementId: achievement.id, tier: tier.tier, length: tier.length, points: tier.points },
         });
         counts.created += 1;
-      } else if (existing.length !== tier.length || existing.points !== tier.points) {
-        await tx.achievementTier.update({
-          where: { id: existing.id },
-          data: { length: tier.length, points: tier.points },
-        });
-        counts.updated += 1;
       }
     }
   }

@@ -48,12 +48,12 @@ Tier T3: миграция (sensitive zone).
 
 ### P15-CU3 — feat(domain): add effective points resolver and seed guard · Review: diff-only · Commit: auto
 
-- [ ] P15-T3 · T1 · Spec: [контракт §6.2, §5](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 2
+- [x] P15-T3 · T1 · Spec: [контракт §6.2, §5](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 2
       Files: `packages/domain/src/achievements/effective-points.ts`, `packages/domain/src/achievements/effective-points.test.ts`, `packages/domain/src/achievements/group-points-schema.ts`, `packages/domain/src/constants/mutation-error-codes.ts`, `packages/domain/src/constants/audit-action.ts`, `packages/domain/src/index.ts`
       Acceptance: `resolveEffectivePoints(globalPoints, override | undefined)` чистая функция; Zod-схема пакета `items[]` (≤ 64, без дублей, награда ≥ 0 / штраф < 0, `null` — сброс) одна для сервера и формы; коды `ACHIEVEMENT_GROUP_POINTS_INVALID`, `ACHIEVEMENT_YEAR_CLOSED` добавлены до использования; действие `achievement.group_points_changed`; экспорты через `@sunschool/domain`
       Paths: H [override задан → он; нет → глобальное] · N [`0` как допустимая награда; дубль `(achievementId, tier)`; > 64 элементов; штраф ≥ 0] · S n/a — чистая логика
 
-- [ ] P15-T4 · T2 · Spec: [контракт §6.4](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 6
+- [x] P15-T4 · T2 · Spec: [контракт §6.4](../contracts/achievement_group_points_contract.md) · ADR-015 §4 п. 6
       Files: `packages/db/src/seed/reference/achievement-catalog.ts`, `packages/db/src/seed/reference/seed.integration.test.ts`
       Acceptance: для существующей строки каталога `ensureAchievementCatalog` обновляет тексты, категорию, вид, правило, метрику, но не `threshold`; для существующего уровня не меняет `length` и `points`; отсутствующее создаёт; повторный запуск после ручной правки баллов в БД их не меняет
       Paths: H [первый запуск создаёт каталог; повтор без правок — 0 изменений] · N [строка есть, уровень отсутствует — создаётся] · S n/a — seed

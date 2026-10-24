@@ -10,7 +10,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createPrismaClient } from "../../client";
 import { ENV_GUARD_REFUSAL } from "../../env-guard";
 import type { PrismaClient } from "../../generated/prisma/client";
-import { ACHIEVEMENT_CATALOG } from "./achievement-catalog";
+import { ACHIEVEMENT_CATALOG, ensureAchievementCatalog } from "./achievement-catalog";
 import { BIBLE_BOOKS } from "./bible-books";
 import { seedReference } from "./index";
 
@@ -73,6 +73,35 @@ describe.skipIf(!enabled)("reference seed on the dev database", () => {
     }
     expect(await counts()).toEqual(before);
   }, 120_000);
+
+  it("does not overwrite catalog points or penalty threshold after manual edits (§6.4)", async () => {
+    const verses = await prisma.achievement.findUniqueOrThrow({ where: { code: "verses" } });
+    const tier1 = await prisma.achievementTier.findUniqueOrThrow({
+      where: { achievementId_tier: { achievementId: verses.id, tier: 1 } },
+    });
+    const behavior = await prisma.achievement.findUniqueOrThrow({ where: { code: "behavior" } });
+
+    await prisma.achievementTier.update({
+      where: { id: tier1.id },
+      data: { points: tier1.points + 99 },
+    });
+    await prisma.achievement.update({
+      where: { id: behavior.id },
+      data: { threshold: (behavior.threshold ?? 0) - 7 },
+    });
+
+    const editedTierPoints = tier1.points + 99;
+    const editedThreshold = (behavior.threshold ?? 0) - 7;
+
+    await prisma.$transaction(async (tx) => {
+      await ensureAchievementCatalog(tx);
+    });
+
+    const tierAfter = await prisma.achievementTier.findUniqueOrThrow({ where: { id: tier1.id } });
+    const behaviorAfter = await prisma.achievement.findUniqueOrThrow({ where: { id: behavior.id } });
+    expect(tierAfter.points).toBe(editedTierPoints);
+    expect(behaviorAfter.threshold).toBe(editedThreshold);
+  }, 60_000);
 
   it("refuses APP_ENV=prod against a dev database and writes nothing (INV-24)", async () => {
     const before = await counts();

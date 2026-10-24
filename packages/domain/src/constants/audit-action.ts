@@ -71,6 +71,7 @@ export const AUDIT_ACTION = {
   ACHIEVEMENT_EVALUATED: "achievement.evaluated",
   ACHIEVEMENT_AWARDED: "achievement.awarded",
   ACHIEVEMENT_REVOKED: "achievement.revoked",
+  ACHIEVEMENT_GROUP_POINTS_CHANGED: "achievement.group_points_changed",
   PENALTY_ISSUED: "penalty.issued",
   PENALTY_CANCELLED: "penalty.cancelled",
   FAMILY_UPSERTED: "family.upserted",
