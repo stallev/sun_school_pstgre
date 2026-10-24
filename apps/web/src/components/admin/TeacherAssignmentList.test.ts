@@ -12,7 +12,7 @@ describe("P14-CU5 TeacherAssignmentList assign row layout", () => {
       source.match(/available\.length > 0[\s\S]*?noTeachersAvailable/)?.[0] ?? "";
 
     expect(assignBlock).toContain("flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2");
-    expect(assignBlock).toMatch(/select[\s\S]*className="h-10 min-w-0 flex-1/);
+    expect(assignBlock).toMatch(/FormSelect[\s\S]*triggerClassName="min-w-0 flex-1"/);
     expect(assignBlock).toMatch(/Button type="submit" className="h-10/);
     expect(assignBlock).not.toContain("min-h-11");
     expect(assignBlock).not.toContain("sm:items-end");

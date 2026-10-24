@@ -1,6 +1,9 @@
+"use client";
+
 import { AUDIT_ACTION, AUDIT_ENTITY_TYPE } from "@sunschool/domain";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -45,45 +48,42 @@ export const AuditFilterBar = ({ values, actorOptions, labels }: AuditFilterBarP
     </div>
     <div className="space-y-2">
       <Label htmlFor="audit-actor">{labels.actor}</Label>
-      <select
+      <FormSelect
         id="audit-actor"
         name="actor"
         defaultValue={values.actor}
-        className="flex min-h-11 w-full rounded-lg border border-input bg-card px-3 text-sm"
-      >
-        <option value="">{labels.all}</option>
-        {actorOptions.map((option) => (
-          <option key={option.userId} value={option.userId}>{option.label}</option>
-        ))}
-      </select>
+        placeholder={labels.all}
+        options={actorOptions.map((option) => ({ value: option.userId, label: option.label }))}
+        triggerClassName="max-w-none"
+      />
     </div>
     <div className="space-y-2">
       <Label htmlFor="audit-entity-type">{labels.entityType}</Label>
-      <select
+      <FormSelect
         id="audit-entity-type"
         name="entityType"
         defaultValue={values.entityType}
-        className="flex min-h-11 w-full rounded-lg border border-input bg-card px-3 text-sm"
-      >
-        <option value="">{labels.all}</option>
-        {Object.values(AUDIT_ENTITY_TYPE).map((type) => (
-          <option key={type} value={type}>{labels.entityTypeLabels[type] ?? type}</option>
-        ))}
-      </select>
+        placeholder={labels.all}
+        options={Object.values(AUDIT_ENTITY_TYPE).map((type) => ({
+          value: type,
+          label: labels.entityTypeLabels[type] ?? type,
+        }))}
+        triggerClassName="max-w-none"
+      />
     </div>
     <div className="space-y-2 md:col-span-2">
       <Label htmlFor="audit-action">{labels.action}</Label>
-      <select
+      <FormSelect
         id="audit-action"
         name="action"
         defaultValue={values.action}
-        className="flex min-h-11 w-full rounded-lg border border-input bg-card px-3 text-sm"
-      >
-        <option value="">{labels.all}</option>
-        {Object.values(AUDIT_ACTION).map((action) => (
-          <option key={action} value={action}>{labels.actionLabels[action] ?? action}</option>
-        ))}
-      </select>
+        placeholder={labels.all}
+        options={Object.values(AUDIT_ACTION).map((action) => ({
+          value: action,
+          label: labels.actionLabels[action] ?? action,
+        }))}
+        triggerClassName="max-w-none"
+      />
     </div>
     <div className="flex flex-wrap items-end gap-2 md:col-span-2 lg:col-span-3">
       <Button type="submit" className="min-h-11">{labels.submit}</Button>

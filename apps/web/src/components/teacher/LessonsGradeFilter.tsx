@@ -1,5 +1,8 @@
+"use client";
+
 import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-page.server";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
@@ -26,15 +29,12 @@ export const LessonsGradeFilter = ({
       : null}
     <label className="grid gap-1">
       <ContentText className="text-sm font-medium text-ink">{messages.gradeFilterLabel}</ContentText>
-      <select
+      <FormSelect
         name="gradeId"
         defaultValue={gradeId}
-        className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
-      >
-        {grades.map((grade) => (
-          <option key={grade.gradeId} value={grade.gradeId}>{grade.name}</option>
-        ))}
-      </select>
+        options={grades.map((grade) => ({ value: grade.gradeId, label: grade.name }))}
+        triggerClassName="min-w-[12rem]"
+      />
     </label>
     <Button type="submit" variant="outline">{messages.gradeFilterApply}</Button>
   </form>

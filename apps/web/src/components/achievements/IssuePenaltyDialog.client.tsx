@@ -13,10 +13,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import type { PupilPenaltyFormData } from "@/lib/achievements/pupil-penalty-form-types";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
-import { manualAwardSelectClass } from "@/lib/achievements/manual-award-types";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
@@ -82,33 +82,28 @@ export const IssuePenaltyDialog = ({
           <input type="hidden" name="points" value={negativePoints} />
           <label className="grid gap-1">
             <ContentText className="text-sm font-medium text-ink">{messages.penaltyLessonLabel}</ContentText>
-            <select
-              className={manualAwardSelectClass}
+            <FormSelect
               value={lessonId}
               disabled={pending}
-              onChange={(event) => setLessonId(event.target.value)}
-            >
-              {formData.lessons.map((row) => (
-                <option key={row.lessonId} value={row.lessonId}>{row.label}</option>
-              ))}
-            </select>
+              options={formData.lessons.map((row) => ({ value: row.lessonId, label: row.label }))}
+              onValueChange={setLessonId}
+            />
           </label>
           <label className="grid gap-1">
             <ContentText className="text-sm font-medium text-ink">{messages.penaltyTypeLabel}</ContentText>
-            <select
-              className={manualAwardSelectClass}
+            <FormSelect
               value={achievementId}
               disabled={pending}
-              onChange={(event) => {
-                setAchievementId(event.target.value);
-                const next = formData.penaltyTypes.find((row) => row.achievementId === event.target.value);
+              options={formData.penaltyTypes.map((row) => ({
+                value: row.achievementId,
+                label: row.label,
+              }))}
+              onValueChange={(nextId) => {
+                setAchievementId(nextId);
+                const next = formData.penaltyTypes.find((row) => row.achievementId === nextId);
                 if (next) setPoints(next.catalogPoints);
               }}
-            >
-              {formData.penaltyTypes.map((row) => (
-                <option key={row.achievementId} value={row.achievementId}>{row.label}</option>
-              ))}
-            </select>
+            />
           </label>
           <label className="grid gap-1">
             <ContentText className="text-sm font-medium text-ink">{messages.penaltyPointsLabel}</ContentText>

@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import type { PeopleGroupOption } from "@/data/school/load-people-admin-list.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
@@ -76,18 +77,14 @@ export const TransferDialog = ({
           <input type="hidden" name="pupilId" value={pupilId} />
           <label className="grid gap-1 text-sm">
             <span>{messages.people.toGroupLabel}</span>
-            <select
+            <FormSelect
               name="toGradeId"
               required
               disabled={pending}
-              className="min-h-11 w-full rounded-lg border border-input bg-card px-3 text-sm"
               defaultValue=""
-            >
-              <option value="" disabled>{messages.people.groupPlaceholder}</option>
-              {targetGroups.map((group) => (
-                <option key={group.gradeId} value={group.gradeId}>{group.name}</option>
-              ))}
-            </select>
+              placeholder={messages.people.groupPlaceholder}
+              options={targetGroups.map((group) => ({ value: group.gradeId, label: group.name }))}
+            />
           </label>
           <label className="grid gap-1 text-sm">
             <span>{messages.people.transferOnLabel}</span>

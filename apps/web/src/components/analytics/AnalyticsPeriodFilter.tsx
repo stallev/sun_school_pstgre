@@ -1,5 +1,8 @@
+"use client";
+
 import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import type { AnalyticsPeriodFilter as PeriodFilter } from "@/data/analytics/analytics-period";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
@@ -33,15 +36,15 @@ export const AnalyticsPeriodFilter = ({
         : null}
       <label className="grid gap-1">
         <ContentText className="text-base font-medium text-ink">{messages.periodYear}</ContentText>
-        <select
+        <FormSelect
           name="mode"
           defaultValue={mode}
-          className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-base text-ink"
-        >
-          <option value="year">{messages.periodYear}</option>
-          <option value="month">{messages.periodMonth}</option>
-          <option value="range">{messages.periodRange}</option>
-        </select>
+          options={[
+            { value: "year", label: messages.periodYear },
+            { value: "month", label: messages.periodMonth },
+            { value: "range", label: messages.periodRange },
+          ]}
+        />
       </label>
       <label className="grid gap-1">
         <ContentText className="text-base font-medium text-ink">{messages.monthLabel}</ContentText>

@@ -6,6 +6,7 @@ import type { MutationResult } from "@sunschool/domain";
 import { enrollPupilAction, unenrollPupilAction } from "@/actions/school-pupils";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import {
   Dialog,
   DialogClose,
@@ -85,20 +86,16 @@ export const EnrollDialog = ({
           {mode === "enroll" ? (
             <label className="grid gap-1 text-sm">
               <span>{messages.people.groupLabel}</span>
-              <select
+              <FormSelect
                 name="gradeId"
                 required
                 disabled={pending}
-                className="min-h-11 w-full rounded-lg border border-input bg-card px-3 text-sm"
                 defaultValue=""
-              >
-                <option value="" disabled>{messages.people.groupPlaceholder}</option>
-                {groups
+                placeholder={messages.people.groupPlaceholder}
+                options={groups
                   .filter((group) => group.isActive)
-                  .map((group) => (
-                    <option key={group.gradeId} value={group.gradeId}>{group.name}</option>
-                  ))}
-              </select>
+                  .map((group) => ({ value: group.gradeId, label: group.name }))}
+              />
             </label>
           ) : null}
           <label className="grid gap-1 text-sm">

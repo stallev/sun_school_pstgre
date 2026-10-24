@@ -102,11 +102,13 @@ Tier T3 по триггеру S: переключатель роли (ОК-5) п
 
 Начинается после CU3.
 
-- [ ] P14-T7 · T2 · Spec: [redesign §3.7](../../../design/redesign_v2_ui_spec.md) · UX-06: F13 · ADR: R-7
+- [x] P14-T7 · T2 · Spec: [redesign §3.7](../../../design/redesign_v2_ui_spec.md) · UX-06: F13 · ADR: R-7
       Files: `apps/web/src/components/admin/AuditFilterBar.tsx`, `apps/web/src/components/teacher/LessonForm.tsx`, `apps/web/src/components/achievements/ManualAwardDialogForm.client.tsx`, `apps/web/src/components/achievements/IssuePenaltyDialog.client.tsx`, `apps/web/src/components/teacher/VersePicker.tsx`, `apps/web/src/components/teacher/RosterTable.tsx`, `apps/web/src/components/teacher/LessonsGradeFilter.tsx`, `apps/web/src/components/teacher/CalendarEventForm.tsx`, `apps/web/src/components/admin/GroupSettingsForm.tsx`, `apps/web/src/lib/achievements/manual-award-types.ts`, `apps/web/src/**/*.tsx`
       Заметка к Files: глоб покрывает остальные места, найденные поиском нативных select в apps/web/src; конкретные файлы перечисляются в теле коммита
       Acceptance: `grep -rn "<select" apps/web/src` пуст; серверные формы отправляют то же значение под тем же `name`; `manualAwardSelectClass` удалён; `Select` с тем же набором опций и `defaultValue`; тесты форм (если есть) проходят без правок серверной части; в UI соседние контролы одной высоты
       Paths: H [выбор в фильтре и в форме сохраняется и отправляется] · N [пустой список опций — отключённый `Select` с подсказкой; значение по умолчанию отсутствует — placeholder] · S n/a — presentational; Zod-валидация сервера без изменений
+      UI-verify: localhost — admin: `/school`, `/groups/[id]` (2× FormSelect, h-45), `/achievements` (диалог «Достижение», 1× FormSelect); teacher: `/lessons`, `/verses` (список без триггеров до контекста урока — FormSelect в формах по Files); 1280 + выборочно 390; `grep "<select" apps/web/src` пуст; §5.1 на `/school` и `/groups/[id]`: html 18px, smallText [], mainOutline none, nativeSelect 0; расхождений 0, консоль чистая (dev pg SSL warning; `/audit` error boundary — вне CU6)
+      Parity: `FormSelect` → `Select` P-11 (auto, N-5) + P-12 panel/item (manual) — 2 строки сверено, расхождений 0
 
 **CU DoD:** `typecheck` · `lint` · `test` · UI-verify · Parity
 

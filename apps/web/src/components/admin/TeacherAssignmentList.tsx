@@ -6,6 +6,7 @@ import { assignTeacherAction, unassignTeacherAction } from "@/actions/school-gro
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { ContentText, SectionTitle } from "@/components/atoms";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import type { GroupAdminDetail } from "@/data/school/load-group-admin-detail.server";
 import type { TeacherCandidate } from "@/data/school/load-teacher-candidates.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
@@ -85,19 +86,16 @@ export const TeacherAssignmentList = ({
           <input type="hidden" name="yearId" value={detail.yearId} />
           <span className="text-base font-medium">{messages.group.assignTeacherLabel}</span>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
-            <select
+            <FormSelect
               name="userId"
               aria-label={messages.group.assignTeacherLabel}
-              className="h-10 min-w-0 flex-1 rounded-lg border border-input bg-paper px-3 text-base"
+              triggerClassName="min-w-0 flex-1"
               required
               disabled={pending}
               defaultValue=""
-            >
-              <option value="" disabled>{messages.group.assignTeacherPlaceholder}</option>
-              {available.map((row) => (
-                <option key={row.userId} value={row.userId}>{row.displayName}</option>
-              ))}
-            </select>
+              placeholder={messages.group.assignTeacherPlaceholder}
+              options={available.map((row) => ({ value: row.userId, label: row.displayName }))}
+            />
             <Button type="submit" className="h-10 w-full shrink-0 sm:w-auto" disabled={pending} aria-busy={pending}>
               {assignPending ? messages.group.submitPending : messages.group.assignTeacher}
             </Button>

@@ -11,6 +11,7 @@ import {
 } from "@/actions/calendar";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -157,17 +158,16 @@ export const CalendarEventForm = ({
             {type === GRADE_EVENT_TYPE.LESSON ? (
               <label className="grid gap-1 text-sm">
                 <span className="font-medium text-ink">{messages.lessonLinkLabel}</span>
-                <select
+                <FormSelect
                   name="lessonId"
                   defaultValue={editEvent?.lessonId ?? ""}
                   disabled={pending}
-                  className="min-h-11 rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
-                >
-                  <option value="">{messages.lessonLinkNone}</option>
-                  {lessonsForLink.map((lesson) => (
-                    <option key={lesson.lessonId} value={lesson.lessonId}>{lesson.label}</option>
-                  ))}
-                </select>
+                  placeholder={messages.lessonLinkNone}
+                  options={lessonsForLink.map((lesson) => ({
+                    value: lesson.lessonId,
+                    label: lesson.label,
+                  }))}
+                />
               </label>
             ) : null}
             <SheetFooter className="flex-col gap-2 sm:flex-row">

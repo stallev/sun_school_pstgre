@@ -6,6 +6,7 @@ import type { MutationResult } from "@sunschool/domain";
 import { enrollPupilAction, unenrollPupilAction } from "@/actions/school-pupils";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import { StatusText } from "@/components/ui/status-text";
 import type { TeacherAddCandidate, TeacherRosterRow } from "@/data/school/load-teacher-group-page.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
@@ -144,19 +145,23 @@ export const RosterTable = ({
           <input type="hidden" name="startsOn" value={defaultDate} />
           <label className="grid min-w-[12rem] flex-1 gap-1 text-sm">
             <span>{messages.addPupilLabel}</span>
-            <select name="pupilId" required className="min-h-11 rounded-lg border border-input bg-paper px-3" disabled={pending}>
-              <option value="">{messages.addPupilPlaceholder}</option>
-              {addCandidates.map((candidate) => (
-                <option key={candidate.pupilId} value={candidate.pupilId} disabled={!candidate.hasConsent}>
-                  {candidate.displayName}
-                  {candidate.isLegacyPending
+            <FormSelect
+              name="pupilId"
+              required
+              disabled={pending}
+              placeholder={messages.addPupilPlaceholder}
+              options={addCandidates.map((candidate) => ({
+                value: candidate.pupilId,
+                label: `${candidate.displayName}${
+                  candidate.isLegacyPending
                     ? ` (${messages.consentNoLegacy})`
                     : !candidate.hasConsent
                       ? ` (${messages.consentNo})`
-                      : ""}
-                </option>
-              ))}
-            </select>
+                      : ""
+                }`,
+                disabled: !candidate.hasConsent,
+              }))}
+            />
           </label>
           <Button type="submit" className="min-h-11" disabled={pending} aria-busy={pending}>
             {pending ? <Loader2Icon className="size-4 animate-spin" aria-hidden /> : null}

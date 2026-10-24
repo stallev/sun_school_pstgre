@@ -7,6 +7,7 @@ import { useAdminMessages } from "@/components/admin/admin-messages-provider.cli
 import { SectionTitle } from "@/components/atoms";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
+import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import type { GroupAdminDetail } from "@/data/school/load-group-admin-detail.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
@@ -56,17 +57,19 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
         <input type="hidden" name="language" value={nextLanguage} />
         <label className="grid max-w-xs gap-1 text-sm">
           <span>{messages.group.languageLabel}</span>
-          <select
-            className="min-h-11 rounded-lg border border-input bg-paper px-3"
+          <FormSelect
             value={nextLanguage}
             disabled={pending}
-            onChange={(event) => setNextLanguage(event.target.value as typeof detail.language)}
-          >
-            <option value={APP_LOCALE.RU}>{messages.group.languageRu}</option>
-            <option value={APP_LOCALE.EN} disabled={!detail.englishBibleReady}>
-              {messages.group.languageEn}
-            </option>
-          </select>
+            options={[
+              { value: APP_LOCALE.RU, label: messages.group.languageRu },
+              {
+                value: APP_LOCALE.EN,
+                label: messages.group.languageEn,
+                disabled: !detail.englishBibleReady,
+              },
+            ]}
+            onValueChange={(value) => setNextLanguage(value as typeof detail.language)}
+          />
         </label>
         {languageChanged ? (
           <ConfirmDialog
