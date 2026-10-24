@@ -396,6 +396,7 @@ model GradeSettings {
   academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
 
   achievementPeriods GradeAchievementPeriod[]
+  achievementPoints  GradeAchievementPoints[]
 
   @@unique([gradeId, academicYearId])
   @@map("grade_settings")
@@ -874,10 +875,11 @@ model Achievement {
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  tiers     AchievementTier[]
-  awards    AchievementAward[]
-  evidence  AchievementEvidence[]
-  penalties Penalty[]
+  tiers                AchievementTier[]
+  awards               AchievementAward[]
+  evidence             AchievementEvidence[]
+  penalties            Penalty[]
+  gradeAchievementPoints GradeAchievementPoints[]
 
   @@map("achievement")
 }
@@ -976,6 +978,22 @@ model GradeAchievementPeriod {
   gradeSettings GradeSettings @relation(fields: [gradeSettingsId], references: [id])
 
   @@map("grade_achievement_period")
+}
+
+model GradeAchievementPoints {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gradeSettingsId String   @map("grade_settings_id") @db.Uuid
+  achievementId   String   @map("achievement_id") @db.Uuid
+  tier            Int
+  points          Int
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  gradeSettings GradeSettings @relation(fields: [gradeSettingsId], references: [id])
+  achievement   Achievement   @relation(fields: [achievementId], references: [id])
+
+  @@unique([gradeSettingsId, achievementId, tier])
+  @@map("grade_achievement_points")
 }
 
 model Family {

@@ -84,6 +84,7 @@
 | `school.legacy_deadline_extended` | продлён общий срок переходного периода согласий | `app_setting` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
 | `school.legacy_pupil_imported` | ребёнок перенесён с `LEGACY_PENDING` (необязательно: запись импорта владельца, `SYSTEM`) | `child_data_consent` | [ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md) |
 | `achievement.catalog_upserted` / `achievement.catalog_toggled` | каталог создан, изменён или включён | `achievement` | achievements_and_penalties_contract §6.1 |
+| `achievement.group_points_changed` | баллы достижений и штрафов группы изменены (до/после по строкам, без ФИО) | `grade_settings` | achievement_group_points_contract §6.1 |
 | `achievement.mode_changed` | режим группы включён или выключен | `grade_settings` | achievements_and_penalties_contract §6.3 |
 | `achievement.evaluated` | автопересчёт записал новые выдачи (id выдач, без ФИО) | `achievement_award` | achievements_and_penalties_contract §6.2 |
 | `achievement.awarded` / `achievement.revoked` | ручная выдача / отзыв | `achievement_award` | achievements_and_penalties_contract §6.4 |

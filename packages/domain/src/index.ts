@@ -66,6 +66,8 @@ export * from "./deletion/can-execute";
 export * from "./achievements/constants";
 export * from "./achievements/award-key";
 export * from "./achievements/evaluate";
+export * from "./achievements/effective-points";
+export * from "./achievements/group-points-schema";
 export * from "./families/family-rules";
 export * from "./families/consent-revoke";
 export * from "./families/calendar-week-period";

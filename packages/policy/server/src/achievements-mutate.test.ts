@@ -1,11 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { ACCOUNT_STATUS, USER_ROLE, type AccountStatus, type UserRole } from "@sunschool/domain";
+import {
+  ACADEMIC_YEAR_STATUS,
+  ACCOUNT_STATUS,
+  USER_ROLE,
+  type AccountStatus,
+  type UserRole,
+} from "@sunschool/domain";
 import {
   canAwardManually,
+  canCopyGroupAchievementPoints,
   canRevokeAward,
   canSetGroupAchievementMode,
+  canSetGroupAchievementPoints,
   type CanAwardManuallyFacts,
+  type CanCopyGroupAchievementPointsFacts,
   type CanSetGroupAchievementModeFacts,
+  type CanSetGroupAchievementPointsFacts,
 } from "./achievements-mutate";
 import type { PolicySessionContext } from "./context";
 
@@ -101,6 +111,70 @@ describe("canSetGroupAchievementMode (AZ-55, AZ-D4)", () => {
         modeFacts({ teacherAssignedToGradeInYear: false }),
       ),
     ).toEqual(NOT_FOUND);
+  });
+});
+
+const pointsFacts = (
+  overrides: Partial<CanSetGroupAchievementPointsFacts> = {},
+): CanSetGroupAchievementPointsFacts => ({
+  gradeExistsInOrganization: true,
+  teacherAssignedToGradeInYear: true,
+  academicYearStatus: ACADEMIC_YEAR_STATUS.ACTIVE,
+  ...overrides,
+});
+
+describe("canSetGroupAchievementPoints (AZ-65)", () => {
+  it("allows admin for a closed year", () => {
+    expect(
+      canSetGroupAchievementPoints(
+        ctx([USER_ROLE.ADMIN]),
+        pointsFacts({ academicYearStatus: ACADEMIC_YEAR_STATUS.CLOSED }),
+      ),
+    ).toEqual({ allowed: true });
+  });
+
+  it("returns YEAR_CLOSED for teacher in a closed year", () => {
+    expect(
+      canSetGroupAchievementPoints(
+        ctx([USER_ROLE.TEACHER]),
+        pointsFacts({ academicYearStatus: ACADEMIC_YEAR_STATUS.CLOSED }),
+      ),
+    ).toEqual({ allowed: false, reason: "YEAR_CLOSED" });
+  });
+
+  it("returns NOT_FOUND for a foreign grade", () => {
+    expect(
+      canSetGroupAchievementPoints(
+        ctx([USER_ROLE.TEACHER]),
+        pointsFacts({ gradeExistsInOrganization: false }),
+      ),
+    ).toEqual(NOT_FOUND);
+  });
+});
+
+const copyFacts = (
+  overrides: Partial<CanCopyGroupAchievementPointsFacts> = {},
+): CanCopyGroupAchievementPointsFacts => ({
+  target: pointsFacts(),
+  sourceGradeExistsInOrganization: true,
+  teacherAssignedToSourceGradeInYear: true,
+  ...overrides,
+});
+
+describe("canCopyGroupAchievementPoints (AZ-65)", () => {
+  it("returns NOT_FOUND when source grade is foreign", () => {
+    expect(
+      canCopyGroupAchievementPoints(
+        ctx([USER_ROLE.TEACHER]),
+        copyFacts({ sourceGradeExistsInOrganization: false }),
+      ),
+    ).toEqual(NOT_FOUND);
+  });
+
+  it("allows admin when source exists", () => {
+    expect(canCopyGroupAchievementPoints(ctx([USER_ROLE.ADMIN]), copyFacts())).toEqual({
+      allowed: true,
+    });
   });
 });
 

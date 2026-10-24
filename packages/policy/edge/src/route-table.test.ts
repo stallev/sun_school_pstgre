@@ -20,7 +20,7 @@ describe("homeRouteFor", () => {
 
 describe("route table (canonical_routes §4, authorization_matrix §8)", () => {
   it("knows the canonical routes and rejects post-MVP / unknown ones", () => {
-    for (const path of ["/login", "/privacy", "/register", "/pending", "/profile", "/today", "/lessons", "/lessons/new", "/lessons/42", "/lessons/42/edit", "/lessons/42/table", "/lessons/42/check", "/check", "/group", "/calendar", "/rating", "/verses", "/analytics", "/analytics/pupils/7", "/bricks", "/school", "/approvals", "/users", "/users/9", "/people", "/groups", "/groups/3", "/year", "/deletions", "/audit", "/settings"]) {
+    for (const path of ["/login", "/privacy", "/register", "/pending", "/profile", "/today", "/lessons", "/lessons/new", "/lessons/42", "/lessons/42/edit", "/lessons/42/table", "/lessons/42/check", "/check", "/group", "/group/points", "/calendar", "/rating", "/verses", "/analytics", "/analytics/pupils/7", "/bricks", "/school", "/approvals", "/users", "/users/9", "/people", "/groups", "/groups/3", "/groups/3/points", "/year", "/deletions", "/audit", "/settings"]) {
       expect(isCanonicalRoute(path), path).toBe(true);
     }
     for (const path of ["/achievements", "/child", "/family", "/verse/1", "/users/1/extra", "/nope", "https://evil.example/", "//evil.example"]) {
@@ -35,6 +35,8 @@ describe("route table (canonical_routes §4, authorization_matrix §8)", () => {
     expect(routeRoles("/lessons/new")).toEqual([USER_ROLE.ADMIN, USER_ROLE.TEACHER]);
     expect(routeRoles("/lessons/42/check")).toEqual([USER_ROLE.ADMIN, USER_ROLE.TEACHER]);
     expect(routeRoles("/calendar")).toEqual([USER_ROLE.ADMIN, USER_ROLE.TEACHER]);
+    expect(routeRoles("/group/points")).toEqual([USER_ROLE.TEACHER]);
+    expect(routeRoles("/groups/3/points")).toEqual([USER_ROLE.ADMIN]);
     expect(routeRoles("/login")).toBeNull();
   });
 });

@@ -2,7 +2,7 @@
 
 **Тип:** Index  
 **Статус:** Canonical  
-**Версия:** 1.8  
+**Версия:** 1.9  
 **Дата:** 2026-10-24  
 **Волна:** W14-06  
 **Зависит от:** [`architecture_master_index.md`](../../prds/architecture_master_index.md), [`documentation_creation_registry.md`](../../meta/documentation_creation_registry.md)
@@ -11,7 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**Статус (2026-10-23):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). **P12** — волна 1, достижения и штрафы: реализована за флагом `features.achievements` ([`P12_tasks.md`](./tasks/P12_tasks.md)); включение флага в prod — действие владельца. **P13** — волна 2, семьи и родители: реализована за флагом `features.parents` ([`P13_tasks.md`](./tasks/P13_tasks.md)); дайджест без почты; включение флага в prod — действие владельца. **P14** — редизайн v2: Source Sans 3, база 18 px, левый сайдбар, `Select` / `Checkbox` / `DateField` вместо нативных ([`P14_tasks.md`](./tasks/P14_tasks.md), [ADR-014](../../prds/07_governance/adr_014_app_redesign_v2.md)): реализована (2026-10-24), повторный замер — [`ui_redesign_audit_2026-10-24.md`](./audits/ui_redesign_audit_2026-10-24.md) §5. Импорт данных из старого приложения — вне проекта (владелец).
+**Статус (2026-10-23):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). **P12** — волна 1, достижения и штрафы: реализована за флагом `features.achievements` ([`P12_tasks.md`](./tasks/P12_tasks.md)); включение флага в prod — действие владельца. **P13** — волна 2, семьи и родители: реализована за флагом `features.parents` ([`P13_tasks.md`](./tasks/P13_tasks.md)); дайджест без почты; включение флага в prod — действие владельца. **P14** — редизайн v2: Source Sans 3, база 18 px, левый сайдбар, `Select` / `Checkbox` / `DateField` вместо нативных ([`P14_tasks.md`](./tasks/P14_tasks.md), [ADR-014](../../prds/07_governance/adr_014_app_redesign_v2.md)): реализована (2026-10-24), повторный замер — [`ui_redesign_audit_2026-10-24.md`](./audits/ui_redesign_audit_2026-10-24.md) §5. **P15** — баллы достижений и штрафов по группам ([`P15_tasks.md`](./tasks/P15_tasks.md), [ADR-015](../../prds/07_governance/adr_015_group_achievement_points.md)): реализована (2026-10-24), флаг `features.achievements`; smoke — [`P15_tasks.md`](./tasks/P15_tasks.md) (CU7). Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
 
@@ -38,8 +38,9 @@
 | P12 | Достижения и штрафы (волна 1, флаг `features.achievements`) | [P12](./phases_tasks_descriptions/P12_phase_description.md) | [P12](./tasks/P12_tasks.md) |
 | P13 | Семьи и родители (волна 2, флаг `features.parents`) | [P13](./phases_tasks_descriptions/P13_phase_description.md) | [P13](./tasks/P13_tasks.md) |
 | P14 | Редизайн v2: шрифт, шкала, оболочка, контролы | [P14](./phases_tasks_descriptions/P14_phase_description.md) | [P14](./tasks/P14_tasks.md) |
+| P15 | Баллы достижений и штрафов по группам ([ADR-015](../../prds/07_governance/adr_015_group_achievement_points.md)) | [P15](./phases_tasks_descriptions/P15_phase_description.md) | [P15](./tasks/P15_tasks.md) |
 
-Нумерация фаз реализации (P01…P14) не совпадает с промптами bootstrap (P0…P6).
+Нумерация фаз реализации (P01…P15) не совпадает с промптами bootstrap (P0…P6).
 
 ## Контракты
 
@@ -55,6 +56,7 @@
 | [`bible_seed_contract.md`](./contracts/bible_seed_contract.md) | Загрузка Библии, нумерация |
 | [`analytics_year_snapshots_contract.md`](./contracts/analytics_year_snapshots_contract.md) | Снимки итогов учебного года, пороги, год по умолчанию (P08) |
 | [`achievements_and_penalties_contract.md`](./contracts/achievements_and_penalties_contract.md) | Достижения и штрафы, пересчёт, флаг (P12) |
+| [`achievement_group_points_contract.md`](./contracts/achievement_group_points_contract.md) | Баллы достижений и штрафов по группам (P15) |
 | [`families_and_parents_contract.md`](./contracts/families_and_parents_contract.md) | Семьи, роль родителя, согласие, дайджест без почты (P13) |
 
 ## Specs

@@ -141,6 +141,7 @@ Enum `ANALYTICS_SNAPSHOT_REASON`: `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL`. 
 | 1 | `achievement_evidence` | `award_id`, `achievement_id`, `tier`, `check_id` | `UNIQUE (achievement_id, tier, check_id)` (ДС-3, ДС-12) |
 | 1 | `penalty` | `pupil_id`, `achievement_id`, `lesson_id`, `points`, `reason`, `issued_by`, `issued_at`, `status PENALTY_STATUS`, `cancelled_at/by/reason · null` | не более одного `ACTIVE` на `(pupil_id, lesson_id)` (ШТ-4) |
 | 1 | `grade_achievement_period` | `grade_settings_id`, `starts_at`, `ends_at · null` | периоды выключения режима (ДС-14) |
+| 1 | `grade_achievement_points` | `grade_settings_id`, `achievement_id`, `tier` (0 — штраф), `points` | `UNIQUE (grade_settings_id, achievement_id, tier)`; `tier` 0…3; хранит только отличия от глобального каталога ([ADR-015](../07_governance/adr_015_group_achievement_points.md)) |
 | 2 | `family` | `organization_id`, `name`, `address · null`, `note · null` | не сохраняется пустой (СМ-5) |
 | 2 | `family_adult` | `family_id`, `last_name`, `first_name`, `middle_name · null`, `relation ADULT_RELATION`, `phones jsonb`, `email · null`, `user_id · null` | ≤ одной `MOTHER` и одного `FATHER` на семью (СМ-3) |
 | 2 | `weekly_digest` | `user_id`, `period_start`, `payload jsonb`, `sent_at · null` | дайджест (ДС-8, ШТ-8) |

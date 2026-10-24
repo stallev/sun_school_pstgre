@@ -88,6 +88,7 @@ async function eraseYear(tx: SeedTx, yearId: string): Promise<void> {
   await tx.lesson.deleteMany({ where: { academicYearId: yearId } });
   await tx.enrollment.deleteMany({ where: { academicYearId: yearId } });
   await tx.teacherAssignment.deleteMany({ where: { academicYearId: yearId } });
+  await tx.gradeAchievementPoints.deleteMany({ where: { gradeSettings: { academicYearId: yearId } } });
   await tx.gradeAchievementPeriod.deleteMany({ where: { gradeSettings: { academicYearId: yearId } } });
   await tx.gradeSettings.deleteMany({ where: { academicYearId: yearId } });
   await tx.analyticsPupilYearSnapshot.deleteMany({ where: { academicYearId: yearId } });
@@ -127,6 +128,7 @@ async function deleteEmptyRaceYears(tx: SeedTx): Promise<number> {
     const bricks = await tx.brickLedger.count({ where: { academicYearId: race.id } });
     if (lessons > 0 || enrollments > 0 || bricks > 0) continue;
     await tx.teacherAssignment.deleteMany({ where: { academicYearId: race.id } });
+    await tx.gradeAchievementPoints.deleteMany({ where: { gradeSettings: { academicYearId: race.id } } });
     await tx.gradeAchievementPeriod.deleteMany({ where: { gradeSettings: { academicYearId: race.id } } });
     await tx.gradeSettings.deleteMany({ where: { academicYearId: race.id } });
     await tx.analyticsPupilYearSnapshot.deleteMany({ where: { academicYearId: race.id } });
@@ -169,6 +171,7 @@ export async function replaceDevFixture(tx: SeedTx, fixture: Fixture, people: Pe
 
   await tx.gradeEvent.deleteMany({ where: { gradeId: { in: fixtureGradeIds } } });
   await tx.teacherAssignment.deleteMany({ where: { gradeId: { in: fixtureGradeIds } } });
+  await tx.gradeAchievementPoints.deleteMany({ where: { gradeSettings: { gradeId: { in: fixtureGradeIds } } } });
   await tx.gradeAchievementPeriod.deleteMany({ where: { gradeSettings: { gradeId: { in: fixtureGradeIds } } } });
   await tx.gradeSettings.deleteMany({ where: { gradeId: { in: fixtureGradeIds } } });
   await tx.analyticsGroupYearSnapshot.deleteMany({ where: { gradeId: { in: fixtureGradeIds } } });

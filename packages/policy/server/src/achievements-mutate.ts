@@ -1,4 +1,4 @@
-import { USER_ROLE } from "@sunschool/domain";
+import { ACADEMIC_YEAR_STATUS, USER_ROLE } from "@sunschool/domain";
 import { ALLOWED, isActive, type PolicyDecision, type PolicySessionContext } from "./context";
 
 export type CanSetGroupAchievementModeFacts = {
@@ -41,6 +41,47 @@ export function canSetGroupAchievementMode(
   if (context.roles.includes(USER_ROLE.ADMIN)) return ALLOWED;
 
   return facts.teacherAssignedToGradeInYear ? ALLOWED : NOT_FOUND;
+}
+
+export type CanSetGroupAchievementPointsFacts = CanSetGroupAchievementModeFacts & {
+  academicYearStatus: string;
+};
+
+/** AZ-65 — group achievement points; teacher only assigned grade in active year; admin any year. */
+export function canSetGroupAchievementPoints(
+  context: PolicySessionContext,
+  facts: CanSetGroupAchievementPointsFacts,
+): PolicyDecision {
+  const base = canSetGroupAchievementMode(context, facts);
+  if (!base.allowed) return base;
+
+  const isTeacherOnly =
+    context.roles.includes(USER_ROLE.TEACHER) && !context.roles.includes(USER_ROLE.ADMIN);
+  if (isTeacherOnly && facts.academicYearStatus === ACADEMIC_YEAR_STATUS.CLOSED) {
+    return { allowed: false, reason: "YEAR_CLOSED" };
+  }
+  return ALLOWED;
+}
+
+export type CanCopyGroupAchievementPointsFacts = {
+  target: CanSetGroupAchievementPointsFacts;
+  sourceGradeExistsInOrganization: boolean;
+  teacherAssignedToSourceGradeInYear: boolean;
+};
+
+/** AZ-65 — copy group points; actor must reach source and target grades. */
+export function canCopyGroupAchievementPoints(
+  context: PolicySessionContext,
+  facts: CanCopyGroupAchievementPointsFacts,
+): PolicyDecision {
+  const targetDecision = canSetGroupAchievementPoints(context, facts.target);
+  if (!targetDecision.allowed) return targetDecision;
+
+  if (!facts.sourceGradeExistsInOrganization) return NOT_FOUND;
+
+  if (context.roles.includes(USER_ROLE.ADMIN)) return ALLOWED;
+
+  return facts.teacherAssignedToSourceGradeInYear ? ALLOWED : NOT_FOUND;
 }
 
 /** AZ-54 — revoke only admin; teacher is forbidden (not masked as not found). */

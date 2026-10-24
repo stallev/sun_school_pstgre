@@ -1,9 +1,13 @@
 export {
   canAwardManually,
+  canCopyGroupAchievementPoints,
   canRevokeAward,
   canSetGroupAchievementMode,
+  canSetGroupAchievementPoints,
   type CanAwardManuallyFacts,
+  type CanCopyGroupAchievementPointsFacts,
   type CanSetGroupAchievementModeFacts,
+  type CanSetGroupAchievementPointsFacts,
 } from "./achievements-mutate";
 export {
   canCreateFamily,

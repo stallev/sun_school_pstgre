@@ -64,6 +64,7 @@
 | `/check` | `check` | Вход в проверку текущего урока (перенаправление) |
 | `/lessons/[lessonId]/check` | `check` | Последовательная проверка ДЗ |
 | `/group` | `group` | Моя группа, состав |
+| `/group/points` | `groupPoints` | Баллы достижений и штрафов моей группы (teacher, активный год). Только при `features.achievements = true`, иначе 404 ([ADR-015](../prds/07_governance/adr_015_group_achievement_points.md), P15) |
 | `/bricks` | `bricks` | Баланс и журнал кирпичиков (teacher; admin — в меню «Люди») |
 
 ### 4.4 Admin
@@ -77,6 +78,7 @@
 | `/people` | `people` | Ученики (карточки, зачисление, согласие) |
 | `/groups` | `groups` | Группы |
 | `/groups/[groupId]` | `groupEdit` | Группа: язык, настройки, назначения |
+| `/groups/[groupId]/points` | `groupPoints` | Баллы достижений и штрафов группы (admin). Только при `features.achievements = true`, иначе 404 ([ADR-015](../prds/07_governance/adr_015_group_achievement_points.md), P15) |
 | `/year` | `year` | Учебный год |
 | `/deletions` | `deletions` | Запросы на удаление |
 | `/audit` | `audit` | Журнал изменений |

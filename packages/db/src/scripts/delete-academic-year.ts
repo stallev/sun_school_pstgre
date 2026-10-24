@@ -138,6 +138,7 @@ async function eraseYear(tx: Tx, yearId: string): Promise<void> {
   await tx.lesson.deleteMany({ where: { academicYearId: yearId } });
   await tx.enrollment.deleteMany({ where: { academicYearId: yearId } });
   await tx.teacherAssignment.deleteMany({ where: { academicYearId: yearId } });
+  await tx.gradeAchievementPoints.deleteMany({ where: { gradeSettings: { academicYearId: yearId } } });
   await tx.gradeAchievementPeriod.deleteMany({ where: { gradeSettings: { academicYearId: yearId } } });
   await tx.gradeSettings.deleteMany({ where: { academicYearId: yearId } });
   await tx.analyticsPupilYearSnapshot.deleteMany({ where: { academicYearId: yearId } });
