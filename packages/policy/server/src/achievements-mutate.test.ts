@@ -9,10 +9,12 @@ import {
 import {
   canAwardManually,
   canCopyGroupAchievementPoints,
+  canResolveAchievementSuggestion,
   canRevokeAward,
   canSetGroupAchievementMode,
   canSetGroupAchievementPoints,
   type CanAwardManuallyFacts,
+  type CanResolveAchievementSuggestionFacts,
   type CanCopyGroupAchievementPointsFacts,
   type CanSetGroupAchievementModeFacts,
   type CanSetGroupAchievementPointsFacts,
@@ -193,5 +195,63 @@ describe("canRevokeAward (AZ-54)", () => {
 
   it("forbids an inactive admin", () => {
     expect(canRevokeAward(ctx([USER_ROLE.ADMIN], ACCOUNT_STATUS.DISABLED))).toEqual(FORBIDDEN);
+  });
+});
+
+const suggestionFacts = (
+  overrides: Partial<CanResolveAchievementSuggestionFacts> = {},
+): CanResolveAchievementSuggestionFacts => ({
+  suggestionExistsInOrganization: true,
+  teacherAssignedToSuggestionGradeInYear: true,
+  academicYearStatus: ACADEMIC_YEAR_STATUS.ACTIVE,
+  ...overrides,
+});
+
+describe("canResolveAchievementSuggestion (AZ-66)", () => {
+  it("allows an assigned teacher in the active year", () => {
+    expect(canResolveAchievementSuggestion(ctx([USER_ROLE.TEACHER]), suggestionFacts())).toEqual({
+      allowed: true,
+    });
+  });
+
+  it("returns NOT_FOUND for a foreign group", () => {
+    expect(
+      canResolveAchievementSuggestion(
+        ctx([USER_ROLE.TEACHER]),
+        suggestionFacts({ teacherAssignedToSuggestionGradeInYear: false }),
+      ),
+    ).toEqual(NOT_FOUND);
+  });
+
+  it("returns YEAR_CLOSED for a teacher, allows admin in a closed year", () => {
+    const closed = suggestionFacts({ academicYearStatus: ACADEMIC_YEAR_STATUS.CLOSED });
+    expect(canResolveAchievementSuggestion(ctx([USER_ROLE.TEACHER]), closed)).toEqual({
+      allowed: false,
+      reason: "YEAR_CLOSED",
+    });
+    expect(canResolveAchievementSuggestion(ctx([USER_ROLE.ADMIN]), closed)).toEqual({ allowed: true });
+  });
+
+  it("admin reaches any existing suggestion; unknown suggestion is NOT_FOUND", () => {
+    expect(
+      canResolveAchievementSuggestion(
+        ctx([USER_ROLE.ADMIN]),
+        suggestionFacts({ teacherAssignedToSuggestionGradeInYear: false }),
+      ),
+    ).toEqual({ allowed: true });
+    expect(
+      canResolveAchievementSuggestion(
+        ctx([USER_ROLE.ADMIN]),
+        suggestionFacts({ suggestionExistsInOrganization: false }),
+      ),
+    ).toEqual(NOT_FOUND);
+  });
+
+  it("returns FORBIDDEN for parent, no role and disabled account", () => {
+    expect(canResolveAchievementSuggestion(ctx([USER_ROLE.PARENT]), suggestionFacts())).toEqual(FORBIDDEN);
+    expect(canResolveAchievementSuggestion(ctx([]), suggestionFacts())).toEqual(FORBIDDEN);
+    expect(
+      canResolveAchievementSuggestion(ctx([USER_ROLE.ADMIN], ACCOUNT_STATUS.DISABLED), suggestionFacts()),
+    ).toEqual(FORBIDDEN);
   });
 });

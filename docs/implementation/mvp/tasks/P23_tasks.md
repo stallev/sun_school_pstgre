@@ -81,10 +81,10 @@ Tier T3: запись данных, влияющих на баланс, в sensi
 
 Tier T3: права (AZ-66), запись баланса, новый Server Action.
 
-- [ ] P23-T8 · T3 · Contract: [suggestions §5–§9](../contracts/achievement_suggestions_contract.md) · AZ-66 · ADR-016 §4 п. 5–7, 11
+- [x] P23-T8 · T3 · Contract: [suggestions §5–§9](../contracts/achievement_suggestions_contract.md) · AZ-66 · ADR-016 §4 п. 5–7, 11
       Files: `packages/policy/server/src/achievements-mutate.ts`, `packages/policy/server/src/achievements-mutate.test.ts`, `apps/web/src/data/achievements/achievement-mutate-access.server.ts`, `apps/web/src/data/achievements/confirm-suggestion.ts`, `apps/web/src/data/achievements/defer-suggestion.ts`, `apps/web/src/data/achievements/dismiss-suggestion.ts`, `apps/web/src/data/achievements/suggestions.test.ts`, `apps/web/src/actions/teacher-achievements.ts`, `apps/web/src/lib/messages/{ru,en}/teacher.json`
       Acceptance: три операции по §6.2–§6.4; актор и группа предложения по БД; условный `updateMany where status = SUGGESTED`, `count = 0` → `ACHIEVEMENT_SUGGESTION_RESOLVED`; подтверждение в одной транзакции с блокировкой ученика создаёт выдачу (`source = AUTO`, `awarded_by`, доказательства, `resolveEffectivePoints` по `grade_id`, `rule_snapshot.suggestionId`), пишет `award_id`; P2002 → `ACHIEVEMENT_EVIDENCE_TAKEN` с откатом; журнал по §6; Server Action — тонкий адаптер, `MutationResult`, коды из domain, без Route Handler fallback (ADR-016 §4 п. 11); ключи `suggestion_not_found`, `suggestion_resolved` в ru и en
-      Paths: H [teacher подтверждает, откладывает, отклоняет своё; admin — любое] · N [гонка двух подтверждений; закрытый год у teacher → `ACHIEVEMENT_YEAR_CLOSED`; admin в закрытом году — успех с журналом; флаг выкл. → `ACHIEVEMENT_FLAG_OFF`; режим выкл. → `ACHIEVEMENT_MODE_OFF`; строка выключена → `ACHIEVEMENT_INACTIVE`; доказательство занято] · S [чужая группа → `NOT_FOUND`; `PARENT` → `FORBIDDEN`; баллы и ключ не с клиента; журнал без ФИО]
+      Paths: H [teacher подтверждает, откладывает, отклоняет своё; admin — любое] · N [гонка двух подтверждений; закрытый год у teacher → `ACHIEVEMENT_YEAR_CLOSED`; admin в закрытом году — успех с журналом; флаг выкл. → `ACHIEVEMENT_FLAG_OFF`; режим выкл. → `ACHIEVEMENT_MODE_OFF`; строка выключена → `ACHIEVEMENT_INACTIVE`; доказательство занято] · S [чужая группа → `ACHIEVEMENT_SUGGESTION_NOT_FOUND`; `PARENT` → `FORBIDDEN`; баллы и ключ не с клиента; журнал без ФИО]
 
 **CU DoD:** `node scripts/cu-verify.mjs --full` · тесты policy (allow / чужая группа / не та роль) и DAL (гонка, закрытый год, флаг)
 

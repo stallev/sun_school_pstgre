@@ -460,7 +460,9 @@
     "evidence_short": "Select the required number of lessons",
     "evidence_taken": "Lessons already used for another award",
     "already_revoked": "Achievement already revoked",
-    "reason_required": "Enter a reason"
+    "reason_required": "Enter a reason",
+    "suggestion_not_found": "Suggestion not found",
+    "suggestion_resolved": "Suggestion was already handled"
   },
   "family": {
     "section_title_prefix": "Family",

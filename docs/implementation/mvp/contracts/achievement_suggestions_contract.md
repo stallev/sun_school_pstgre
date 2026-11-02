@@ -96,10 +96,11 @@
 
 1. Флаг, актор по БД, группа предложения, год (teacher — только `ACTIVE`), режим группы на текущую дату, строка каталога активна.
 2. Блокировка ученика (как в `evaluatePupil`).
-3. `updateMany where { id, status: SUGGESTED } set { status: CONFIRMED, resolved_by, resolved_at }`; `count = 0` → `ACHIEVEMENT_SUGGESTION_RESOLVED`, откат.
+3. Предпроверки до любой записи: статус перечитан под блокировкой ученика (не `SUGGESTED` → `ACHIEVEMENT_SUGGESTION_RESOLVED`), `award_key` и доказательства `(achievement_id, tier, check_id)` свободны (иначе `ACHIEVEMENT_EVIDENCE_TAKEN`), доказательства по-прежнему принадлежат ученику за год.
 4. Баллы — `resolveEffectivePoints` по `grade_id` и году на момент подтверждения.
-5. Создание `achievement_award` тем же путём, что `persistProposedAwards`: `award_key` предложения, доказательства из `evidence_check_ids`, `source = AUTO`, `awarded_by` = актор, `rule_snapshot` с `pointsSource`, `gradeId` и `suggestionId`. P2002 (уровень или доказательство заняты) → `ACHIEVEMENT_EVIDENCE_TAKEN`, откат, предложение остаётся `SUGGESTED`.
-6. `award_id` в предложение; журнал `achievement.suggestion_confirmed` (id предложения и выдачи, баллы). Сброс кэша баланса, как у выдачи.
+5. Создание `achievement_award` тем же путём, что `persistProposedAwards`: `award_key` предложения, доказательства из `evidence_check_ids`, `source = AUTO`, `awarded_by` = актор, `rule_snapshot` с `pointsSource`, `gradeId` и `suggestionId`.
+6. Один `updateMany where { id, status: SUGGESTED } set { status: CONFIRMED, award_id, resolved_by, resolved_at }`: CHECK `award_status` (`award_id IS NOT NULL` ⇔ `CONFIRMED`) не откладываемый, поэтому статус и `award_id` пишутся вместе, после создания выдачи. `count = 0` (гонка) → бросок внутри транзакции, откат всей транзакции вместе с выдачей, ответ `ACHIEVEMENT_SUGGESTION_RESOLVED`. P2002 внутри транзакции не ловится (25P02): гонка отображается в `ACHIEVEMENT_EVIDENCE_TAKEN` снаружи, предложение остаётся `SUGGESTED`.
+7. Журнал `achievement.suggestion_confirmed` (id предложения и выдачи, баллы). Сброс кэша баланса, как у выдачи.
 
 ### 6.3 Отложить
 
@@ -138,7 +139,7 @@
 
 | Путь | Требование | AZ |
 |------|------------|----|
-| S-1 | Teacher — только предложения группы с назначением в году; чужое → `NOT_FOUND` (без различия «нет» и «чужое») | AZ-66, AZ-D4 |
+| S-1 | Teacher — только предложения группы с назначением в году; чужое → `ACHIEVEMENT_SUGGESTION_NOT_FOUND` (без различия «нет» и «чужое») | AZ-66, AZ-D4 |
 | S-2 | Роль не teacher/admin → `FORBIDDEN` | AZ-66, AZ-D3 |
 | S-3 | Закрытый год — только admin, с журналом | AZ-66 |
 | S-4 | Флаг и режим проверяются в use-case | ADR-012 |

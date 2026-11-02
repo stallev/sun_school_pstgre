@@ -1,10 +1,12 @@
 export {
   canAwardManually,
   canCopyGroupAchievementPoints,
+  canResolveAchievementSuggestion,
   canRevokeAward,
   canSetGroupAchievementMode,
   canSetGroupAchievementPoints,
   type CanAwardManuallyFacts,
+  type CanResolveAchievementSuggestionFacts,
   type CanCopyGroupAchievementPointsFacts,
   type CanSetGroupAchievementModeFacts,
   type CanSetGroupAchievementPointsFacts,
