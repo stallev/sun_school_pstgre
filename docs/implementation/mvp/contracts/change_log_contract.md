@@ -87,7 +87,11 @@
 | `achievement.group_points_changed` | баллы достижений и штрафов группы изменены (до/после по строкам, без ФИО) | `grade_settings` | achievement_group_points_contract §6.1 |
 | `achievement.mode_changed` | режим группы включён или выключен | `grade_settings` | achievements_and_penalties_contract §6.3 |
 | `achievement.evaluated` | автопересчёт записал новые выдачи (id выдач, без ФИО) | `achievement_award` | achievements_and_penalties_contract §6.2 |
-| `achievement.awarded` / `achievement.revoked` | ручная выдача / отзыв | `achievement_award` | achievements_and_penalties_contract §6.4 |
+| `achievement.awarded` / `achievement.revoked` | ручная выдача (в том числе разовое событие `EVENT`, `worship_recital`) / отзыв | `achievement_award` | achievements_and_penalties_contract §6.4 |
+| `achievement.suggested` | пересчёт создал предложения, требующие подтверждения (id предложений, без ФИО; одна запись на вызов) | `achievement_suggestion` | achievement_suggestions_contract §6.1 |
+| `achievement.suggestion_confirmed` | предложение подтверждено, создана выдача (id предложения и выдачи, баллы) | `achievement_suggestion` | achievement_suggestions_contract §6.2 |
+| `achievement.suggestion_deferred` | подтверждение отложено (`deferred_at`; статус не меняется) | `achievement_suggestion` | achievement_suggestions_contract §6.3 |
+| `achievement.suggestion_dismissed` | предложение отклонено (причина — в `reason`, необязательна) | `achievement_suggestion` | achievement_suggestions_contract §6.4 |
 | `penalty.issued` / `penalty.cancelled` | штраф выдан / снят | `penalty` | achievements_and_penalties_contract §6.5 |
 | `family.upserted` | семья создана или изменена (без адреса в тексте журнала, если в нём есть ПД) | `family` | families_and_parents_contract §6.1 |
 | `family.adult_changed` | взрослый добавлен, изменён или исключён (ссылки, без ФИО и телефонов) | `family_adult` | families_and_parents_contract §6.1 |
@@ -208,3 +212,4 @@
 | 2026-10-19 | v1.3 — §4: `analytics.snapshot_created`, `analytics.snapshot_versioned`, сущность `analytics_snapshot` (P08) |
 | 2026-10-22 | v1.4 — §4: action-коды достижений и штрафов (P12) |
 | 2026-10-23 | v1.5 — §4: action-коды семьи, согласия и дайджеста (P13) |
+| 2026-11-02 | v1.6 — §4: `achievement.suggested`, `achievement.suggestion_confirmed`, `achievement.suggestion_deferred`, `achievement.suggestion_dismissed`; событие `EVENT` пишет существующий `achievement.awarded` (P23, ADR-016) |
