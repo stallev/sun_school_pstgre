@@ -46,7 +46,7 @@ describe.skipIf(!enabled)("reference seed on the dev database", () => {
     expect(now.translations).toBe(2);
     expect(now.books).toBe(66);
     expect(now.achievements).toBe(ACHIEVEMENT_CATALOG.length);
-    expect(ACHIEVEMENT_CATALOG.filter((a) => a.kind === "REWARD")).toHaveLength(8);
+    expect(ACHIEVEMENT_CATALOG.filter((a) => a.kind === "REWARD")).toHaveLength(9);
     expect(ACHIEVEMENT_CATALOG.filter((a) => a.kind === "PENALTY")).toHaveLength(3);
     expect(now.tiers).toBe(ACHIEVEMENT_CATALOG.reduce((sum, a) => sum + a.tiers.length, 0));
     expect(BIBLE_BOOKS.map((b) => b.sortOrder)).toEqual(Array.from({ length: 66 }, (_, i) => i + 1));
@@ -101,6 +101,38 @@ describe.skipIf(!enabled)("reference seed on the dev database", () => {
     const behaviorAfter = await prisma.achievement.findUniqueOrThrow({ where: { id: behavior.id } });
     expect(tierAfter.points).toBe(editedTierPoints);
     expect(behaviorAfter.threshold).toBe(editedThreshold);
+  }, 60_000);
+
+  it("requires confirmation for the verses series on a fresh seed (ADR-016)", async () => {
+    const row = await prisma.achievement.findUniqueOrThrow({ where: { code: "verses" } });
+    expect(row.requiresConfirmation).toBe(true);
+  });
+
+  it("creates worship_recital as a non-confirmable EVENT row (ADR-016)", async () => {
+    const row = await prisma.achievement.findUniqueOrThrow({ where: { code: "worship_recital" } });
+    expect(row.ruleType).toBe("EVENT");
+    expect(row.requiresConfirmation).toBe(false);
+    const tier = await prisma.achievementTier.findUniqueOrThrow({
+      where: { achievementId_tier: { achievementId: row.id, tier: 1 } },
+    });
+    expect({ length: tier.length, points: tier.points }).toEqual({ length: 1, points: 6 });
+  });
+
+  it("does not overwrite requires_confirmation of an existing row", async () => {
+    const row = await prisma.achievement.findUniqueOrThrow({ where: { code: "worship_recital" } });
+    await prisma.achievement.update({ where: { id: row.id }, data: { requiresConfirmation: true } });
+    try {
+      await prisma.$transaction(async (tx) => {
+        await ensureAchievementCatalog(tx);
+      });
+      const after = await prisma.achievement.findUniqueOrThrow({ where: { id: row.id } });
+      expect(after.requiresConfirmation).toBe(true);
+    } finally {
+      await prisma.achievement.update({
+        where: { id: row.id },
+        data: { requiresConfirmation: false },
+      });
+    }
   }, 60_000);
 
   it("refuses APP_ENV=prod against a dev database and writes nothing (INV-24)", async () => {

@@ -64,6 +64,7 @@ describe("eraseChildDataInTransaction (deletion_requests §6.2)", () => {
           calls.push("checks");
         }),
       },
+      achievementSuggestion: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
       achievementAward: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
       penalty: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
       recitationAttempt: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },

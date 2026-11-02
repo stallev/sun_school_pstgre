@@ -51,15 +51,15 @@
 
 Tier T3: миграция (sensitive zone `packages/db/**`, `**/migrations/**`).
 
-- [ ] P23-T4 · T3 · Contract: [suggestions §4](../contracts/achievement_suggestions_contract.md) · Schema [§4, §6, §8](../../../prds/03_data_model/database_schema_v1.md) · ADR-016 §4 п. 1–2
+- [x] P23-T4 · T3 · Contract: [suggestions §4](../contracts/achievement_suggestions_contract.md) · Schema [§4, §6, §8](../../../prds/03_data_model/database_schema_v1.md) · ADR-016 §4 п. 1–2
       Files: `packages/db/prisma/schema.prisma`, `packages/db/prisma/migrations/<timestamp>_achievement_suggestions/migration.sql`, `packages/db/src/generated/**` (генерация), `packages/db/src/seed/dev/replace-fixture.ts` (если перечисляет таблицы), `packages/db/src/scripts/delete-academic-year.ts`, `apps/web/src/data/deletions/erase-child-data.ts`
       Acceptance: модель `AchievementSuggestion` (`@@map("achievement_suggestion")`), enum `AchievementSuggestionStatus` (`_enum`), `Achievement.requiresConfirmation Boolean @default(false) @map("requires_confirmation")`; `UNIQUE (award_key)`, `UNIQUE (award_id)`, CHECK из схемы §6, индексы §8; миграция аддитивна и содержит `UPDATE achievement SET requires_confirmation = true WHERE code = 'verses'`; удаление года и стирание ребёнка удаляют предложения до выдач
       Paths: H [миграция на пустой и заполненной БД] · N [дубль `award_key`; `CONFIRMED` без `award_id` — CHECK] · S [таблица только через DAL; стирание ребёнка удаляет предложения (схема §9)]
-- [ ] P23-T5 · T1 · Contract: [suggestions §3, §11](../contracts/achievement_suggestions_contract.md) · ADR-016 §4 п. 3, 9, 10
+- [x] P23-T5 · T1 · Contract: [suggestions §3, §11](../contracts/achievement_suggestions_contract.md) · ADR-016 §4 п. 3, 9, 10
       Files: `packages/domain/src/achievements/constants.ts`, `packages/domain/src/achievements/requires-confirmation.ts`, `packages/domain/src/achievements/requires-confirmation.test.ts`, `packages/domain/src/achievements/suggestion-verses.ts` (чистая сборка списка текстов), `packages/domain/src/achievements/evaluate.ts` (пропуск `EVENT`), `packages/domain/src/achievements/evaluate.test.ts`, `packages/domain/src/constants/mutation-error-codes.ts`, `packages/domain/src/constants/audit-action.ts`, `packages/domain/src/index.ts`
       Acceptance: `MIN_LESSONS_FOR_CONFIRMATION = 2`; `requiresConfirmation({ requiresConfirmation }, tierLength)` — тесты (false-флаг, length 1, 2, 3); `ACHIEVEMENT_SUGGESTION_STATUS`; `ACHIEVEMENT_RULE_TYPE.EVENT`, `evaluate` пропускает `EVENT`; коды `ACHIEVEMENT_SUGGESTION_RESOLVED`, `ACHIEVEMENT_SUGGESTION_NOT_FOUND`; 4 действия журнала; экспорт через `@sunschool/domain`
       Paths: H [флаг + длина ≥ 2 → true] · N [флаг false; длина 1; `EVENT` в `evaluate` не даёт выдач] · S n/a — чистая логика
-- [ ] P23-T6 · T1 · Contract: [achievements §6.1](../contracts/achievements_and_penalties_contract.md)
+- [x] P23-T6 · T1 · Contract: [achievements §6.1](../contracts/achievements_and_penalties_contract.md)
       Files: `packages/db/src/seed/reference/achievement-catalog.ts`, `packages/db/src/seed/reference/seed.integration.test.ts`
       Acceptance: строка `worship_recital` (`REWARD`, `EVENT`, `MEMORY`, `{ tier: 1, length: 1, points: 6 }`, `requires_confirmation = false`) создаётся; тип `ruleType` seed включает `EVENT`; для существующей строки seed не меняет `requires_confirmation`
       Paths: H [первый запуск создаёт строку] · N [повтор после ручной смены `requires_confirmation` — значение не меняется] · S n/a — seed

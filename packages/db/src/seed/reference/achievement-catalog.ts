@@ -5,7 +5,7 @@ import { emptyCounts, type SeedCounts, type SeedTx } from "./types";
  * Starter catalog (seed_data_spec §6.1; source `achievements_spec.md` §9). Rewards carry tiers
  * `(tier, length N, points)`; penalties are `kind = PENALTY` rows whose `threshold` holds the
  * (negative) points. The catalog sleeps while `features.achievements = false` (ADR-005).
- * Definition fields are re-applied on every run; `isActive` is set only on creation.
+ * Definition fields are re-applied on every run; `isActive` and `requiresConfirmation` are set only on creation.
  */
 export type CatalogTier = { tier: 1 | 2 | 3; length: number; points: number };
 
@@ -17,11 +17,13 @@ export type CatalogEntry = {
   descriptionRu: string;
   descriptionEn: string;
   category: "MEMORY" | "EFFORT" | "CONSISTENCY" | null;
-  ruleType: "SERIES" | "ACCUMULATION" | "ONCE" | "MANUAL";
+  ruleType: "SERIES" | "ACCUMULATION" | "ONCE" | "MANUAL" | "EVENT";
   metric: string | null;
   /** Penalty points (negative) for PENALTY; `null` for rewards. */
   threshold: number | null;
   isActive: boolean;
+  /** Set only on creation; the migration flips `verses` for existing databases (ADR-016). */
+  requiresConfirmation: boolean;
   tiers: readonly CatalogTier[];
 };
 
@@ -38,6 +40,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "verses_all_perfect",
     threshold: null,
     isActive: true,
+    requiresConfirmation: true,
     tiers: [
       { tier: 1, length: 3, points: 10 },
       { tier: 2, length: 5, points: 15 },
@@ -56,6 +59,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "notebook_score_gte_9",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 3, points: 5 },
       { tier: 2, length: 5, points: 10 },
@@ -74,6 +78,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "test_score_gte_8",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 3, points: 5 },
       { tier: 2, length: 5, points: 10 },
@@ -92,6 +97,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "verse_voice_three_days",
     threshold: null,
     isActive: false,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 1, points: 3 },
       { tier: 2, length: 5, points: 10 },
@@ -110,6 +116,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "lesson_homework_done",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 5, points: 5 },
       { tier: 2, length: 15, points: 10 },
@@ -128,6 +135,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "verse_perfect",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [{ tier: 1, length: 1, points: 2 }],
   },
   {
@@ -142,6 +150,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "choir_attended",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 5, points: 5 },
       { tier: 2, length: 15, points: 10 },
@@ -159,7 +168,23 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "lesson_points_sum",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [{ tier: 1, length: 100, points: 10 }],
+  },
+  {
+    code: "worship_recital",
+    kind: ACHIEVEMENT_KIND.REWARD,
+    nameRu: "Рассказал стихотворение на богослужении",
+    nameEn: "Recited a poem at the service",
+    descriptionRu: "Выдаётся учителем вручную каждый раз, когда ученик рассказал стихотворение на богослужении. Не ограничено одним разом за год.",
+    descriptionEn: "Awarded manually by the teacher each time the pupil recites a poem at the church service. Not limited to once per year.",
+    category: "MEMORY",
+    ruleType: "EVENT",
+    metric: null,
+    threshold: null,
+    isActive: true,
+    requiresConfirmation: false,
+    tiers: [{ tier: 1, length: 1, points: 6 }],
   },
   {
     code: "behavior",
@@ -173,6 +198,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: null,
     threshold: -3,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [],
   },
   {
@@ -187,6 +213,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: null,
     threshold: -2,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [],
   },
   {
@@ -201,6 +228,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: null,
     threshold: -5,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [],
   },
 ];
@@ -226,6 +254,7 @@ export async function ensureAchievementCatalog(tx: SeedTx): Promise<SeedCounts> 
           code: entry.code,
           isActive: entry.isActive,
           threshold: entry.threshold,
+          requiresConfirmation: entry.requiresConfirmation,
           ...definitionFields,
         },
       });

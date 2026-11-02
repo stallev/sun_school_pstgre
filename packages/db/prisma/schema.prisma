@@ -167,6 +167,14 @@ enum AwardSource {
   @@map("award_source_enum")
 }
 
+enum AchievementSuggestionStatus {
+  SUGGESTED
+  CONFIRMED
+  DISMISSED
+
+  @@map("achievement_suggestion_status_enum")
+}
+
 enum PenaltyStatus {
   ACTIVE
   CANCELLED
@@ -246,6 +254,7 @@ model AppUser {
   familyAdults       FamilyAdult[]
   weeklyDigests      WeeklyDigest[]
   achievementAwards  AchievementAward[]     @relation("AwardAwardedBy")
+  suggestionsResolved AchievementSuggestion[]   @relation("SuggestionResolvedBy")
   penaltiesIssued    Penalty[]              @relation("PenaltyIssuedBy")
   recitationsRecorded RecitationAttempt[]
   voicePhotoGiven    VoicePhotoConsent[]
@@ -343,6 +352,7 @@ model AcademicYear {
   lessons       Lesson[]
   bricks        BrickLedger[]
   awards        AchievementAward[]
+  achievementSuggestions AchievementSuggestion[]
   groupYearSnapshots AnalyticsGroupYearSnapshot[]
   pupilYearSnapshots AnalyticsPupilYearSnapshot[]
 
@@ -370,6 +380,7 @@ model Grade {
   enrollments Enrollment[]
   lessons     Lesson[]
   events      GradeEvent[]
+  achievementSuggestions AchievementSuggestion[]
   groupYearSnapshots AnalyticsGroupYearSnapshot[]
 
   @@index([organizationId])
@@ -442,6 +453,7 @@ model Pupil {
   bricks         BrickLedger[]
   deletions      DeletionRequest[]
   awards         AchievementAward[]
+  achievementSuggestions AchievementSuggestion[]
   penalties      Penalty[]
   recitations    RecitationAttempt[]
   voicePhoto     VoicePhotoConsent[]
@@ -872,11 +884,13 @@ model Achievement {
   metric      String?
   threshold   Int?
   isActive    Boolean         @default(true) @map("is_active")
+  requiresConfirmation Boolean    @default(false) @map("requires_confirmation")
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   tiers                AchievementTier[]
   awards               AchievementAward[]
+  suggestions          AchievementSuggestion[]
   evidence             AchievementEvidence[]
   penalties            Penalty[]
   gradeAchievementPoints GradeAchievementPoints[]
@@ -921,10 +935,41 @@ model AchievementAward {
   academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
   awardedBy    AppUser?     @relation("AwardAwardedBy", fields: [awardedById], references: [id])
 
-  evidence AchievementEvidence[]
+  evidence   AchievementEvidence[]
+  suggestion AchievementSuggestion?
 
   @@index([pupilId, academicYearId])
   @@map("achievement_award")
+}
+
+model AchievementSuggestion {
+  id               String                          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pupilId          String                          @map("pupil_id") @db.Uuid
+  achievementId    String                          @map("achievement_id") @db.Uuid
+  tier             Int
+  academicYearId   String                          @map("academic_year_id") @db.Uuid
+  gradeId          String                          @map("grade_id") @db.Uuid
+  awardKey         String                          @unique @map("award_key")
+  evidenceCheckIds String[]                        @map("evidence_check_ids") @db.Uuid
+  status           AchievementSuggestionStatus     @default(SUGGESTED)
+  suggestedAt      DateTime                        @default(now()) @map("suggested_at") @db.Timestamptz(6)
+  deferredAt       DateTime?                       @map("deferred_at") @db.Timestamptz(6)
+  resolvedById     String?                         @map("resolved_by") @db.Uuid
+  resolvedAt       DateTime?                       @map("resolved_at") @db.Timestamptz(6)
+  awardId          String?                         @unique @map("award_id") @db.Uuid
+  createdAt        DateTime                        @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  pupil        Pupil             @relation(fields: [pupilId], references: [id])
+  achievement  Achievement       @relation(fields: [achievementId], references: [id])
+  academicYear AcademicYear      @relation(fields: [academicYearId], references: [id])
+  grade        Grade             @relation(fields: [gradeId], references: [id])
+  resolvedBy   AppUser?          @relation("SuggestionResolvedBy", fields: [resolvedById], references: [id], onDelete: Restrict)
+  award        AchievementAward? @relation(fields: [awardId], references: [id], onDelete: Restrict)
+
+  // CHECK constraints (tier, status ⇔ award_id / resolved_*, cardinality) — in migration SQL
+  @@index([gradeId, academicYearId, status])
+  @@index([pupilId, academicYearId, status])
+  @@map("achievement_suggestion")
 }
 
 model AchievementEvidence {

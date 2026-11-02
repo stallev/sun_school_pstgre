@@ -276,6 +276,9 @@ export function evaluateAchievements(
       case ACHIEVEMENT_RULE_TYPE.ONCE:
         proposeOnce(rule, facts, awards, context, proposed);
         break;
+      case ACHIEVEMENT_RULE_TYPE.EVENT:
+        // Manual repeatable event (ADR-016): awarded by hand only, never by recalculation.
+        break;
       default:
         break;
     }

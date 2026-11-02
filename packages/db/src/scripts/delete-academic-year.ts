@@ -105,6 +105,7 @@ async function erasePupils(tx: Tx, pupilIds: string[]): Promise<void> {
   for (const pupilId of pupilIds) await scrubAuditLogForPupilPrivileged(tx, pupilId);
   await tx.homeworkCheck.deleteMany({ where: { pupilId: { in: pupilIds } } });
   for (const pupilId of pupilIds) await deleteBrickLedgerForPupilPrivileged(tx, pupilId);
+  await tx.achievementSuggestion.deleteMany({ where: { pupilId: { in: pupilIds } } });
   await tx.achievementAward.deleteMany({ where: { pupilId: { in: pupilIds } } });
   await tx.penalty.deleteMany({ where: { pupilId: { in: pupilIds } } });
   await tx.recitationAttempt.deleteMany({ where: { pupilId: { in: pupilIds } } });
@@ -130,6 +131,7 @@ async function eraseYear(tx: Tx, yearId: string): Promise<void> {
   await tx.homeworkVerseScore.deleteMany({ where: { check: { lessonId: { in: lessonIds } } } });
   await tx.achievementEvidence.deleteMany({ where: { check: { lessonId: { in: lessonIds } } } });
   await tx.homeworkCheck.deleteMany({ where: { lessonId: { in: lessonIds } } });
+  await tx.achievementSuggestion.deleteMany({ where: { academicYearId: yearId } });
   await tx.achievementAward.deleteMany({ where: { academicYearId: yearId } });
   await tx.penalty.deleteMany({ where: { lessonId: { in: lessonIds } } });
   await tx.recitationAttempt.deleteMany({ where: { lessonVerse: { lessonId: { in: lessonIds } } } });
