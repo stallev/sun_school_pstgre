@@ -134,11 +134,7 @@ export const ScorePad = ({
         onClick={() => pick(option)}
         onKeyDown={(event) => onKeyDown(event, index)}
         aria-label={option === null ? notRatedLabel : String(option)}
-        className={cn(
-          chipClass(checked),
-          wide && "col-span-full w-full min-w-0",
-          layout === "inline" && "min-w-[1.75rem] px-1",
-        )}
+        className={cn(chipClass(checked), wide && "col-span-full w-full min-w-0")}
       >
         {labelFor(option)}
       </button>

@@ -66,7 +66,7 @@ export const savePartialCheckInputSchema = z
 
 export type SavePartialCheckInput = z.infer<typeof savePartialCheckInputSchema>;
 
-/** homework_check_contract §4.2, §5.5 — final save requires presence. */
+/** homework_check_contract §4.2, §5.5 — final save requires explicit present boolean (absent = false). */
 export const saveCheckedInputSchema = z
   .object({
     lessonId: z.uuid(),
@@ -81,16 +81,7 @@ export const saveCheckedInputSchema = z
     expectedUpdatedAt: expectedUpdatedAtSchema,
   })
   .strict()
-  .superRefine((value, ctx) => {
-    reviewCheckRefine(value, ctx);
-    if (!value.present) {
-      ctx.addIssue({
-        code: "custom",
-        message: "teacher.check.present_required",
-        path: ["present"],
-      });
-    }
-  });
+  .superRefine(reviewCheckRefine);
 
 export type SaveCheckedInput = z.infer<typeof saveCheckedInputSchema>;
 

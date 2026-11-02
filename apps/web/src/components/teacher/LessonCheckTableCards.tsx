@@ -1,6 +1,6 @@
 "use client";
 
-import type { LessonVerseToRecite } from "@sunschool/domain";
+import type { LessonKind, LessonVerseToRecite, ScoringSnapshot } from "@sunschool/domain";
 import { NumberDisplay } from "@/components/atoms";
 import { ContentText } from "@/components/atoms";
 import { ScoreCell } from "@/components/ui/score-cell";
@@ -9,6 +9,7 @@ import { CustomLink } from "@/components/ui/custom-link";
 import { LateBadge } from "@/components/teacher/LateBadge";
 import { LessonCheckPressToggle } from "@/components/teacher/LessonCheckPressToggle";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
+import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-display";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,8 @@ import { cn } from "@/lib/utils";
 type LessonCheckTableCardsProps = {
   rows: readonly LessonTablePupilRow[];
   lessonId: string;
+  lessonKind: LessonKind;
+  scoring: ScoringSnapshot;
   hasTest: boolean;
   versesToRecite: readonly LessonVerseToRecite[];
   readOnly: boolean;
@@ -35,6 +38,8 @@ type LessonCheckTableCardsProps = {
 export const LessonCheckTableCards = ({
   rows,
   lessonId,
+  lessonKind,
+  scoring,
   hasTest,
   versesToRecite,
   readOnly,
@@ -58,12 +63,13 @@ export const LessonCheckTableCards = ({
         : !row.present
           ? messages.tableLegendAbsent
           : null;
+      const totalDisplay = formatLessonCheckRowTotal(row, lessonKind, versesToRecite, scoring);
       return (
         <li
           key={row.pupilId}
           className={cn(
             "rounded-xl border border-line bg-card p-3",
-            hasConflict && "ring-2 ring-danger",
+            hasConflict && "ring-2 ring-danger ring-inset",
           )}
         >
           <div className="flex items-start gap-2">
@@ -82,9 +88,7 @@ export const LessonCheckTableCards = ({
                 {row.late ? <LateBadge label={messages.lateSubmitted} /> : null}
               </span>
             </div>
-            <NumberDisplay className="font-display text-lg tabular-nums">
-              {row.homeworkChecked && row.pointsTotal !== null ? row.pointsTotal : "—"}
-            </NumberDisplay>
+            <NumberDisplay className="font-display text-lg tabular-nums">{totalDisplay}</NumberDisplay>
           </div>
           <div className="mt-3 flex gap-2">
             <div className="flex flex-1 items-center gap-2">
@@ -94,6 +98,7 @@ export const LessonCheckTableCards = ({
                 label={`${messages.presentLabel}: ${row.displayName}`}
                 disabled={readOnly}
                 busy={busyCells.has(`${row.pupilId}:present`)}
+                size="touch"
                 onPressedChange={(present) => onPresentChange(row.pupilId, present)}
               />
             </div>
@@ -104,6 +109,7 @@ export const LessonCheckTableCards = ({
                 label={`${messages.singingLabel}: ${row.displayName}`}
                 disabled={readOnly}
                 busy={busyCells.has(`${row.pupilId}:singing`)}
+                size="touch"
                 onPressedChange={(singing) => onSingingChange(row.pupilId, singing)}
               />
             </div>

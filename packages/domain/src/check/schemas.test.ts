@@ -49,14 +49,14 @@ describe("check input schemas", () => {
     expect(saveCheckedInputSchema.safeParse(withVerses).success).toBe(false);
   });
 
-  it("requires presence on saveChecked", () => {
+  it("accepts absent pupil on saveChecked", () => {
     const input = {
       ...baseIds,
       lessonKind: LESSON_KIND.REGULAR,
       present: false,
       singing: false,
     };
-    expect(saveCheckedInputSchema.safeParse(input).success).toBe(false);
+    expect(saveCheckedInputSchema.safeParse(input).success).toBe(true);
   });
 
   it.each([
