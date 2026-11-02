@@ -42,5 +42,12 @@ export const pickGroupPointsMessages = (
   tierLengthPoints: getMessage(admin, "achievements.tier_length_points"),
   penaltyMaxLabel: getMessage(admin, "achievements.group_points_penalty_max"),
   cardLink: getMessage(admin, "achievements.group_points_card_link"),
+  inactiveBadge: getMessage(admin, "achievements.group_points_inactive"),
+  detailsShow: getMessage(admin, "achievements.group_points_details_show"),
+  detailsHide: getMessage(admin, "achievements.group_points_details_hide"),
+  noDescription: getMessage(admin, "achievements.group_points_no_description"),
+  conditionSeries: getMessage(admin, "achievements.group_points_condition_series"),
+  conditionAccumulation: getMessage(admin, "achievements.group_points_condition_accumulation"),
+  conditionOnce: getMessage(admin, "achievements.group_points_condition_once"),
   formError: getMessage(common, "errors.form"),
 });

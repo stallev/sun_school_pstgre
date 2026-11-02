@@ -27,11 +27,11 @@
 
 ### P23-CU1 — fix(web): clarify group points editor rows · Review: reviewer · Commit: auto
 
-- [ ] P23-T1 · T1 · Spec: [screens spec §5.7 «Уточнения P23-CU1»](../specs/achievements_screens_spec.md) · ADR-016 «Проверено по»
+- [x] P23-T1 · T1 · Spec: [screens spec §5.7 «Уточнения P23-CU1»](../specs/achievements_screens_spec.md) · ADR-016 «Проверено по»
       Files: `apps/web/src/components/ui/form-select.tsx`, `apps/web/src/components/ui/form-select.test.tsx`, `apps/web/src/components/parent/ParentChildSwitcher.client.tsx`
       Acceptance: `FormSelect` передаёт в `Select.Root` `items={options}` (пары `{ value, label }`); тест: триггер до открытия показывает label, а не value; переключатель ребёнка проверен на тот же дефект
       Paths: H [§5.7: год названием] · N [§5.7: value без опции — пусто, без uuid] · S n/a — presentational
-- [ ] P23-T2 · T1 · Spec: [screens spec §5.7](../specs/achievements_screens_spec.md)
+- [x] P23-T2 · T1 · Spec: [screens spec §5.7](../specs/achievements_screens_spec.md)
       Files: `apps/web/src/lib/achievements/catalog-display.ts`, `apps/web/src/data/achievements/load-achievements-catalog-page.server.ts`, `apps/web/src/data/achievements/load-group-points-page.server.ts`, `apps/web/src/lib/achievements/group-points-display.ts`, `apps/web/src/lib/achievements/group-points-display.test.ts`, `apps/web/src/components/achievements/GroupPointsRow.tsx`, `apps/web/src/components/achievements/GroupPointsRow.test.tsx`, `apps/web/src/lib/messages/{ru,en}/admin.json`, `apps/web/src/lib/messages/group-points-messages.ts`, `apps/web/src/lib/messages/pick-group-points-messages.server.ts`, `packages/db/src/seed/reference/achievement-catalog.ts`
       Acceptance: `isActive`, `descriptionRu/En`, `ruleType`, `tierLength` в DTO строки; бейдж «Неактивно» текстом; кнопка «Как зарабатывается» с `aria-expanded` раскрывает описание; «Условие» — фраза по `ruleType` + `length` (`SERIES`, `ACCUMULATION`, `ONCE`), прочие — текст каталога; ключи в ru и en и в срезе; описания seed расширены; `practice` только чтение
       Paths: H [§5.7: бейдж, раскрытие, условие] · N [§5.7: пустое описание, неизвестный `ruleType`, штраф] · S n/a — DTO существующего экрана, права не меняются

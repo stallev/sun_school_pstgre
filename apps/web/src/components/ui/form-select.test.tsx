@@ -65,4 +65,19 @@ describe("FormSelect empty options (P14-CU6 N-path)", () => {
     const trigger = container.querySelector('[data-slot="select-trigger"]') as HTMLButtonElement;
     expect(trigger?.disabled).toBe(false);
   });
+
+  it("shows the option label, not the raw value, before the popup is opened", () => {
+    act(() => {
+      root.render(
+        <FormSelect
+          value="9d1f0c2e-0000-4000-8000-000000000001"
+          options={[{ value: "9d1f0c2e-0000-4000-8000-000000000001", label: "2026–2027" }]}
+        />,
+      );
+    });
+
+    const trigger = container.querySelector('[data-slot="select-trigger"]') as HTMLButtonElement;
+    expect(trigger?.textContent).toContain("2026–2027");
+    expect(trigger?.textContent).not.toContain("9d1f0c2e");
+  });
 });

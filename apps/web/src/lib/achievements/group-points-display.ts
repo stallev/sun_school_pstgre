@@ -1,8 +1,29 @@
+import { ACHIEVEMENT_RULE_TYPE } from "@sunschool/domain";
 import type { GroupPointsTableRowDto } from "@/data/achievements/load-group-points-page.server";
+import { fillMessage } from "@/lib/messages/fill-message";
+import type { GroupPointsMessages } from "@/lib/messages/group-points-messages";
 
 export const formatGlobalPoints = (row: GroupPointsTableRowDto): string => {
   if (row.isPenalty) return `−${Math.abs(row.globalPoints)}`;
   return `+${row.globalPoints}`;
+};
+
+/** Human-readable earning condition; penalties and unknown rule types keep the catalog text. */
+export const formatGroupPointsCondition = (
+  row: GroupPointsTableRowDto,
+  messages: GroupPointsMessages,
+): string => {
+  if (row.tierLength === null) return row.conditionLabel;
+  switch (row.ruleType) {
+    case ACHIEVEMENT_RULE_TYPE.SERIES:
+      return fillMessage(messages.conditionSeries, { length: row.tierLength });
+    case ACHIEVEMENT_RULE_TYPE.ACCUMULATION:
+      return fillMessage(messages.conditionAccumulation, { length: row.tierLength });
+    case ACHIEVEMENT_RULE_TYPE.ONCE:
+      return messages.conditionOnce;
+    default:
+      return row.conditionLabel;
+  }
 };
 
 const formatPointsValue = (points: number, isPenalty: boolean): string => {

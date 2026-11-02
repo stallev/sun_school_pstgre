@@ -26,6 +26,10 @@ export const ParentChildSwitcher = ({
       <Label className="mb-1.5 block text-sm text-ink-2">{label}</Label>
       <Select
         value={pupilId}
+        items={childOptions.map((row) => ({
+          value: row.pupilId,
+          label: `${row.displayName}${row.gradeName ? ` · ${row.gradeName}` : ""}`,
+        }))}
         onValueChange={(value) => {
           router.push(`${basePath}?pupilId=${value}`);
         }}

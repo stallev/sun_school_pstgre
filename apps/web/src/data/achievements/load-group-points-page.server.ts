@@ -31,6 +31,13 @@ export type GroupPointsTableRowDto = {
   achievementName: string;
   tierLabel: string;
   conditionLabel: string;
+  /** Rule type of a reward (`SERIES` / `ACCUMULATION` / `ONCE`); null for penalties. */
+  ruleType: string | null;
+  /** Tier length of a reward; null for penalties. */
+  tierLength: number | null;
+  /** How the achievement is earned (catalog description). */
+  description: string | null;
+  isActive: boolean;
   globalPoints: number;
   overridePoints: number | null;
   isPenalty: boolean;
@@ -80,6 +87,10 @@ function buildTableRows(
         achievementName: reward.nameRu,
         tierLabel: reward.tiers.length > 1 ? (tierLabels[tier.tier - 1] ?? "—") : "—",
         conditionLabel: `${tier.length}`,
+        ruleType: reward.ruleType,
+        tierLength: tier.length,
+        description: reward.descriptionRu,
+        isActive: reward.isActive,
         globalPoints: tier.points,
         overridePoints: override === undefined ? null : override,
         isPenalty: false,
@@ -102,6 +113,10 @@ function buildTableRows(
       achievementName: penalty.nameRu,
       tierLabel: "—",
       conditionLabel: penalty.descriptionRu ?? penalty.nameRu,
+      ruleType: null,
+      tierLength: null,
+      description: penalty.descriptionRu,
+      isActive: penalty.isActive,
       globalPoints: global,
       overridePoints: override === undefined ? null : override,
       isPenalty: true,
