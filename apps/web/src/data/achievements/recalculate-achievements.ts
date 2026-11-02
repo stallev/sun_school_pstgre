@@ -124,13 +124,16 @@ export async function recalculateAchievements(
   const parsed = recalculateAchievementsInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  const result: MutationResult<RecalculateAchievementsSuccess> = await db.$transaction(async (tx) => {
-    const organizationId = await loadActorOrganizationId(tx, actorUserId);
-    if (!organizationId) {
-      return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
-    }
-    return recalculateAchievementsInTransaction(tx, actorUserId, organizationId, parsed.data);
-  });
+  const result: MutationResult<RecalculateAchievementsSuccess> = await db.$transaction(
+    async (tx) => {
+      const organizationId = await loadActorOrganizationId(tx, actorUserId);
+      if (!organizationId) {
+        return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+      }
+      return recalculateAchievementsInTransaction(tx, actorUserId, organizationId, parsed.data);
+    },
+    { maxWait: 20_000, timeout: 180_000 },
+  );
 
   if (result.ok) {
     revalidateBricksCachesForPupils(result.data.pupilIds, result.data.yearId);
