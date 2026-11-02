@@ -32,7 +32,7 @@ export const pickGroupPointsMessages = (
   emptyCatalogTitle: getMessage(admin, "achievements.group_points_empty_title"),
   emptyCatalogDescription: getMessage(admin, "achievements.group_points_empty_description"),
   practiceReadOnly: getMessage(admin, "achievements.status_practice_pending"),
-  yearLabel: getMessage(common, "shell.page_titles.year"),
+  yearLabel: getMessage(common, "shell.titles.year"),
   tableCaption: getMessage(admin, "achievements.group_points_table_caption"),
   tierLabels: [
     getMessage(admin, "achievements.tier_bronze"),
