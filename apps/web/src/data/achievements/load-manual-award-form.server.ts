@@ -1,6 +1,11 @@
 import "server-only";
 
-import { ACHIEVEMENT_KIND, ACHIEVEMENT_RULE_TYPE, LESSON_STATUS } from "@sunschool/domain";
+import {
+  ACHIEVEMENT_KIND,
+  ACHIEVEMENT_RULE_TYPE,
+  LESSON_STATUS,
+  getCalendarDateInTimeZone,
+} from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { formatDisplayName } from "@/lib/person/format-display-name";
 import { formatTierLabel } from "@/lib/achievements/format-tier-label";
@@ -14,6 +19,9 @@ import type {
 } from "@/lib/achievements/manual-award-types";
 
 export type { ManualAwardEvidenceOption, ManualAwardFormData } from "@/lib/achievements/manual-award-types";
+
+const isEvidenceFree = (ruleType: string): boolean =>
+  ruleType === ACHIEVEMENT_RULE_TYPE.MANUAL || ruleType === ACHIEVEMENT_RULE_TYPE.EVENT;
 
 export async function loadManualAwardForm(
   db: PrismaClient,
@@ -44,6 +52,15 @@ export async function loadManualAwardForm(
     },
   });
 
+  const [year, timezoneRow] = await Promise.all([
+    db.academicYear.findUnique({ where: { id: academicYearId }, select: { startsOn: true } }),
+    db.appSetting.findUnique({ where: { key: "school_timezone" }, select: { value: true } }),
+  ]);
+  const timeZone =
+    typeof timezoneRow?.value === "string" && timezoneRow.value.trim() !== "" ? timezoneRow.value : "UTC";
+  const today = getCalendarDateInTimeZone(new Date(), timeZone);
+  const yearStart = year ? year.startsOn.toISOString().slice(0, 10) : today;
+
   const pupils = enrollments.map((row) => ({
     pupilId: row.pupil.id,
     displayName: formatDisplayName(row.pupil),
@@ -59,12 +76,17 @@ export async function loadManualAwardForm(
         tier: tierRow.tier,
         label: `${name} · ${tierLabel} · ${tierRow.points}`,
         catalogPoints: tierRow.points,
-        evidenceNeed: row.ruleType === ACHIEVEMENT_RULE_TYPE.MANUAL ? 0 : tierRow.length,
+        evidenceNeed: isEvidenceFree(row.ruleType) ? 0 : tierRow.length,
+        isEvent: row.ruleType === ACHIEVEMENT_RULE_TYPE.EVENT,
       });
     }
   }
 
-  return { pupils, achievements: achievementOptions };
+  return {
+    pupils,
+    achievements: achievementOptions,
+    eventDate: { locale, today, min: yearStart },
+  };
 }
 
 export async function loadManualAwardEvidence(
@@ -82,7 +104,7 @@ export async function loadManualAwardEvidence(
   });
   const tierRow = achievement?.tiers[0];
   const need =
-    achievement?.ruleType === ACHIEVEMENT_RULE_TYPE.MANUAL ? 0 : (tierRow?.length ?? 0);
+    !achievement || isEvidenceFree(achievement.ruleType) ? 0 : (tierRow?.length ?? 0);
 
   if (need === 0) return { need: 0, options: [] };
 

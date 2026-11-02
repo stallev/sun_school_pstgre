@@ -89,6 +89,7 @@
     "group_points_no_description": "No description yet",
     "group_points_condition_series": "{length} in a row",
     "group_points_condition_accumulation": "{length} in total",
+    "group_points_condition_event": "Each recital",
     "group_points_condition_once": "Once"
   },
   "settings": {

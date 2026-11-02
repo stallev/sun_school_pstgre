@@ -106,7 +106,7 @@ Teacher чужой группы — `NOT_FOUND`; parent вызывает под�
 - [ ] Все CU закоммичены; у каждого trace `Review: …`
 - [ ] `typecheck` · `lint` · `test` · `rules:check` зелёные; `encoding:check` · `docs:links` для docs-CU
 - [ ] Acceptance [контракта](../contracts/achievement_suggestions_contract.md) §12 и ADR-016 §9 закрыты тестами
-- [ ] Open question ADR-016 Q-1 решён до CU8
+- [x] Open question ADR-016 Q-1 решён до CU8
 
 ## Open questions фазы
 

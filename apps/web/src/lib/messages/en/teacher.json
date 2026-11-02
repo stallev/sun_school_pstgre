@@ -461,6 +461,10 @@
     "evidence_taken": "Lessons already used for another award",
     "already_revoked": "Achievement already revoked",
     "reason_required": "Enter a reason",
+    "event_date_invalid": "Date not allowed: it must be within the school year and not in the future",
+    "event_no_evidence": "Lessons are not used for an event",
+    "award_event_date_label": "Event date",
+    "award_event_calendar_aria": "Open event date calendar",
     "suggestion_not_found": "Suggestion not found",
     "suggestion_resolved": "Suggestion was already handled",
     "suggestion": {

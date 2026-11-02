@@ -45,6 +45,8 @@ export const pickTeacherAchievementsMessages = (
   awardEvidenceLabel: getMessage(teacher, "achievements.award_evidence_label"),
   awardEvidenceHint: getMessage(teacher, "achievements.award_evidence_hint"),
   awardEvidenceCountTemplate: getMessage(teacher, "achievements.award_evidence_count"),
+  awardEventDateLabel: getMessage(teacher, "achievements.award_event_date_label"),
+  awardEventCalendarAria: getMessage(teacher, "achievements.award_event_calendar_aria"),
   awardReasonLabel: getMessage(teacher, "achievements.award_reason_label"),
   awardReasonPlaceholder: getMessage(teacher, "achievements.award_reason_placeholder"),
   awardSubmit: getMessage(teacher, "achievements.award_submit"),

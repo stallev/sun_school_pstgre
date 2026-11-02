@@ -49,5 +49,6 @@ export const pickGroupPointsMessages = (
   conditionSeries: getMessage(admin, "achievements.group_points_condition_series"),
   conditionAccumulation: getMessage(admin, "achievements.group_points_condition_accumulation"),
   conditionOnce: getMessage(admin, "achievements.group_points_condition_once"),
+  conditionEvent: getMessage(admin, "achievements.group_points_condition_event"),
   formError: getMessage(common, "errors.form"),
 });

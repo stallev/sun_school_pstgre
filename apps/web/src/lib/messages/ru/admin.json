@@ -89,6 +89,7 @@
     "group_points_no_description": "Описание пока не заполнено",
     "group_points_condition_series": "{length} подряд",
     "group_points_condition_accumulation": "Всего {length}",
+    "group_points_condition_event": "Каждое выступление",
     "group_points_condition_once": "Один раз"
   },
   "settings": {

@@ -21,6 +21,8 @@ export const formatGroupPointsCondition = (
       return fillMessage(messages.conditionAccumulation, { length: row.tierLength });
     case ACHIEVEMENT_RULE_TYPE.ONCE:
       return messages.conditionOnce;
+    case ACHIEVEMENT_RULE_TYPE.EVENT:
+      return messages.conditionEvent;
     default:
       return row.conditionLabel;
   }

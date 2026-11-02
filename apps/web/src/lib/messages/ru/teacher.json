@@ -461,6 +461,10 @@
     "evidence_taken": "Уроки уже заняты другой выдачей",
     "already_revoked": "Достижение уже отозвано",
     "reason_required": "Укажите причину",
+    "event_date_invalid": "Дата не подходит: она должна быть в учебном году и не позже сегодня",
+    "event_no_evidence": "Для события уроки не отмечаются",
+    "award_event_date_label": "Дата события",
+    "award_event_calendar_aria": "Открыть календарь даты события",
     "suggestion_not_found": "Предложение не найдено",
     "suggestion_resolved": "Предложение уже обработано",
     "suggestion": {

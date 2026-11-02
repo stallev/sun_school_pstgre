@@ -90,6 +90,7 @@ export async function awardManuallyFormAction(
     points: Number(formData.get("points")),
     reason: formData.get("reason"),
     academicYearId: formData.get("academicYearId") || undefined,
+    eventOn: formData.get("eventOn") || undefined,
     checkIds,
   };
   const result = await awardManually(await getPrisma(), actor.userId, raw);

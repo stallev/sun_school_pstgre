@@ -35,5 +35,6 @@ export type GroupPointsMessages = {
   conditionSeries: string;
   conditionAccumulation: string;
   conditionOnce: string;
+  conditionEvent: string;
   formError: string;
 };

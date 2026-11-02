@@ -38,6 +38,7 @@ describe("formatGroupPointsCondition", () => {
     conditionSeries: "{length} in a row",
     conditionAccumulation: "{length} in total",
     conditionOnce: "Once",
+    conditionEvent: "Each recital",
   } as GroupPointsMessages;
 
   it("formats each reward rule type with its tier length", () => {
@@ -51,6 +52,9 @@ describe("formatGroupPointsCondition", () => {
     expect(
       formatGroupPointsCondition({ ...row(null), ruleType: ACHIEVEMENT_RULE_TYPE.ONCE }, messages),
     ).toBe("Once");
+    expect(
+      formatGroupPointsCondition({ ...row(null), ruleType: ACHIEVEMENT_RULE_TYPE.EVENT }, messages),
+    ).toBe("Each recital");
   });
 
   it("keeps the catalog text for penalties", () => {

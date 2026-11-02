@@ -21,7 +21,7 @@
 - [x] ADR-016, контракт предложений, spec §5.4 / §5.7 / §5.8, spec родителя §5.2, AZ-66, схема, коды журнала существуют — 2026-11-02 · architect · CU2
 - [x] Задачи ниже ссылаются на `§`-якоря, называют Files, Acceptance и Paths; T3 — свой CU; CU ≤ ~400 строк
 - [x] `Проверено по`: Prisma `7.10.0`, `@base-ui/react` `1.9.0` (`Select.Root` `items`)
-- [ ] Open questions: ADR-016 Q-1 (ключ события) — блокирует только CU8; Q-2 не блокирует
+- [x] Open questions: ADR-016 Q-1 закрыт (ключ события = дата `eventOn`); Q-2 не блокирует
 
 ## Commit plan
 
@@ -112,9 +112,9 @@ Tier T3: ролевые данные ребёнка для `PARENT` (S).
 
 ### P23-CU8 — feat(web): add repeatable worship recital award · Review: reviewer · Commit: auto
 
-Tier T3: ручная выдача баллов (AZ-53), изменение ключа уникальности. Блокируется ADR-016 Q-1 до решения владельца.
+Tier T3: ручная выдача баллов (AZ-53), изменение ключа уникальности. ADR-016 Q-1 закрыт: ключ события = дата.
 
-- [ ] P23-T11 · T3 · Contract: [achievements §5, §6.4, §7, §9](../contracts/achievements_and_penalties_contract.md) · Spec: [screens spec §5.4](../specs/achievements_screens_spec.md) · ADR-016 §4 п. 10, §10 Q-1
+- [x] P23-T11 · T3 · Contract: [achievements §5, §6.4, §7, §9](../contracts/achievements_and_penalties_contract.md) · Spec: [screens spec §5.4](../specs/achievements_screens_spec.md) · ADR-016 §4 п. 10, §10 Q-1
       Files: `apps/web/src/data/achievements/award-manually.ts` (прочитать целиком до правки), `apps/web/src/data/achievements/award-manually.test.ts`, `packages/domain/src/achievements/award-key.ts`, `packages/domain/src/achievements/award-key.test.ts`, `apps/web/src/data/achievements/load-manual-award-form.server.ts`, `apps/web/src/lib/achievements/manual-award-types.ts`, `apps/web/src/components/achievements/ManualAwardDialogForm.client.tsx`, `apps/web/src/components/achievements/ManualAwardEvidencePicker.client.tsx`, `apps/web/src/lib/messages/{ru,en}/teacher.json`
       Acceptance: ветка `EVENT` без `checkIds` и без доказательств; `eventOn` обязателен, в границах года, не в будущем; `award_key` с ключом события; потолок — эффективные баллы уровня 1 группы активного зачисления на `eventOn`; причина обязательна; журнал `achievement.awarded`; в диалоге вместо уроков `DateField`; строка `worship_recital` видна в редакторе баллов группы
       Paths: H [§5.4: две выдачи в разные даты] · N [та же дата → `CONFLICT`; баллы выше потолка → `ACHIEVEMENT_POINTS_EXCEED`; режим выкл.; дата вне года] · S [чужой ученик → `NOT_FOUND`; баллы и ключ формирует сервер]
