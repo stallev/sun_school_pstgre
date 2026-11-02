@@ -3,9 +3,11 @@ import {
   AUDIT_ACTION,
   AUDIT_ENTITY_TYPE,
   AUDIT_SOURCE,
+  ACHIEVEMENT_SUGGESTION_STATUS,
   AWARD_SOURCE,
   LESSON_STATUS,
   evaluateAchievements,
+  requiresConfirmation,
   type AchievementEvaluateRule,
   type AchievementExistingAward,
   type AchievementProposedAward,
@@ -24,7 +26,7 @@ import { loadGradeAchievementMode } from "./achievement-mode.server";
 
 type Tx = PrismaTypes.TransactionClient;
 
-export type EvaluatePupilResult = { awardIds: string[] };
+export type EvaluatePupilResult = { awardIds: string[]; suggestionIds: string[] };
 
 function mergeAwards(
   existing: readonly AchievementExistingAward[],
@@ -93,8 +95,9 @@ async function persistProposedAwards(
   proposed: readonly PersistProposedAward[],
   rules: readonly AchievementEvaluateRule[],
   awardedAt: Date,
-): Promise<string[]> {
+): Promise<{ awardIds: string[]; suggestionIds: string[] }> {
   const createdIds: string[] = [];
+  const suggestionIds: string[] = [];
   for (const award of proposed) {
     const achievement = await tx.achievement.findUnique({
       where: { id: award.achievementId },
@@ -103,12 +106,45 @@ async function persistProposedAwards(
         ruleType: true,
         metric: true,
         threshold: true,
+        requiresConfirmation: true,
         tiers: { where: { tier: award.tier } },
       },
     });
     if (!achievement) continue;
     const tierRow = achievement.tiers[0];
     if (!tierRow) continue;
+
+    if (requiresConfirmation(achievement, tierRow.length)) {
+      // Points are not stored: resolved at confirmation time (suggestions contract §4, S-1).
+      // Check the key first: a caught P2002 leaves the Postgres transaction aborted (25P02).
+      const taken = await tx.achievementSuggestion.findUnique({
+        where: { awardKey: award.awardKey },
+        select: { id: true },
+      });
+      if (taken) continue;
+      try {
+        const suggestion = await tx.achievementSuggestion.create({
+          data: {
+            pupilId,
+            achievementId: award.achievementId,
+            tier: award.tier,
+            academicYearId,
+            gradeId: award.gradeId,
+            awardKey: award.awardKey,
+            evidenceCheckIds: [...award.evidenceFactIds],
+            status: ACHIEVEMENT_SUGGESTION_STATUS.SUGGESTED,
+          },
+          select: { id: true },
+        });
+        suggestionIds.push(suggestion.id);
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+          continue;
+        }
+        throw error;
+      }
+      continue;
+    }
 
     const snapshotTier = { tier: tierRow.tier, length: tierRow.length, points: award.points };
 
@@ -144,7 +180,7 @@ async function persistProposedAwards(
       throw error;
     }
   }
-  return createdIds;
+  return { awardIds: createdIds, suggestionIds };
 }
 
 /**
@@ -159,13 +195,13 @@ export async function evaluatePupilInTransaction(
   gradeId: string,
 ): Promise<EvaluatePupilResult> {
   const flagOn = await readFeaturesAchievementsEnabled(tx);
-  if (!flagOn) return { awardIds: [] };
+  if (!flagOn) return { awardIds: [], suggestionIds: [] };
 
   const mode = await loadGradeAchievementMode(tx, gradeId, academicYearId);
-  if (!mode?.achievementsEnabled) return { awardIds: [] };
+  if (!mode?.achievementsEnabled) return { awardIds: [], suggestionIds: [] };
 
   const locked = await lockPupilRow(tx, pupilId);
-  if (!locked) return { awardIds: [] };
+  if (!locked) return { awardIds: [], suggestionIds: [] };
 
   const { rules, awards, factsByMetric, checkGradeByCheckId } =
     await loadAchievementEvaluateContext(tx, pupilId, academicYearId, gradeId);
@@ -190,7 +226,7 @@ export async function evaluatePupilInTransaction(
     mergedAwards = mergeAwards(mergedAwards, batch);
   }
 
-  if (proposed.length === 0) return { awardIds: [] };
+  if (proposed.length === 0) return { awardIds: [], suggestionIds: [] };
 
   const withEffectivePoints = applyEffectivePointsToProposed(
     proposed,
@@ -216,7 +252,7 @@ export async function evaluatePupilInTransaction(
   });
 
   const awardedAt = new Date();
-  const awardIds = await persistProposedAwards(
+  const { awardIds, suggestionIds } = await persistProposedAwards(
     tx,
     pupilId,
     academicYearId,
@@ -225,18 +261,31 @@ export async function evaluatePupilInTransaction(
     awardedAt,
   );
   const primaryAwardId = awardIds[0];
-  if (!primaryAwardId) return { awardIds: [] };
+  if (primaryAwardId) {
+    await writeAudit(tx, {
+      actorUserId,
+      source: AUDIT_SOURCE.USER,
+      entityType: AUDIT_ENTITY_TYPE.ACHIEVEMENT_AWARD,
+      entityId: primaryAwardId,
+      action: AUDIT_ACTION.ACHIEVEMENT_EVALUATED,
+      newValue: { awardIds, pupilId },
+    });
+  }
 
-  await writeAudit(tx, {
-    actorUserId,
-    source: AUDIT_SOURCE.USER,
-    entityType: AUDIT_ENTITY_TYPE.ACHIEVEMENT_AWARD,
-    entityId: primaryAwardId,
-    action: AUDIT_ACTION.ACHIEVEMENT_EVALUATED,
-    newValue: { awardIds, pupilId },
-  });
+  const primarySuggestionId = suggestionIds[0];
+  if (primarySuggestionId) {
+    // One entry, ids only — no PII (suggestions contract §6.1 п. 4).
+    await writeAudit(tx, {
+      actorUserId,
+      source: AUDIT_SOURCE.USER,
+      entityType: AUDIT_ENTITY_TYPE.ACHIEVEMENT_SUGGESTION,
+      entityId: primarySuggestionId,
+      action: AUDIT_ACTION.ACHIEVEMENT_SUGGESTED,
+      newValue: { suggestionIds, pupilId },
+    });
+  }
 
-  return { awardIds };
+  return { awardIds, suggestionIds };
 }
 
 export async function maybeEvaluatePupilAchievements(

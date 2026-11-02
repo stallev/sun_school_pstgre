@@ -70,7 +70,7 @@ Tier T3: миграция (sensitive zone `packages/db/**`, `**/migrations/**`).
 
 Tier T3: запись данных, влияющих на баланс, в sensitive-контуре пересчёта.
 
-- [ ] P23-T7 · T3 · Contract: [suggestions §6.1, §9, §10](../contracts/achievement_suggestions_contract.md) · [achievements §6.2](../contracts/achievements_and_penalties_contract.md) · ADR-016 §4 п. 4
+- [x] P23-T7 · T3 · Contract: [suggestions §6.1, §9, §10](../contracts/achievement_suggestions_contract.md) · [achievements §6.2](../contracts/achievements_and_penalties_contract.md) · ADR-016 §4 п. 4
       Files: `apps/web/src/data/achievements/evaluate-pupil.ts`, `apps/web/src/data/achievements/achievement-evaluate-context.server.ts`, `apps/web/src/data/achievements/evaluate-pupil.test.ts`, `apps/web/src/data/achievements/recalculate-achievements.test.ts`
       Acceptance: `persistProposedAwards` пишет `achievement_suggestion`, если `requiresConfirmation(achievement, tier.length)`; иначе выдача как раньше; `grade_id` — группа урока последней проверки; P2002 — пропуск; существующие предложения любого статуса — занятые уровни на входе `evaluate`; журнал `achievement.suggested` одной записью; `achievement-points-readers-grep-gate.test.ts` зелёный без правок
       Paths: H [серия `verses` 3 → предложение; `first` → выдача] · N [повтор пересчёта; рост серии до 5 при ожидающем 3; отклонённый уровень не возвращается; режим группы выключен; закрытый год (пересчёт при `closeYear`)] · S [баллы в предложении не хранятся; читатели баллов не читают таблицу]

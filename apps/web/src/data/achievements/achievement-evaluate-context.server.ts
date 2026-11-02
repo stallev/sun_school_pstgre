@@ -102,6 +102,21 @@ export async function loadAchievementEvaluateContext(
     evidenceFactIds: row.evidence.map((evidence) => evidence.checkId),
   }));
 
+  // Suggestions of any status occupy their level (suggestions contract §6.1 п. 3).
+  const suggestionRows = await tx.achievementSuggestion.findMany({
+    where: { pupilId, academicYearId },
+    select: { achievementId: true, tier: true, academicYearId: true, evidenceCheckIds: true },
+  });
+  awards.push(
+    ...suggestionRows.map((row) => ({
+      achievementId: row.achievementId,
+      tier: row.tier,
+      academicYearId: row.academicYearId,
+      revokedAt: null,
+      evidenceFactIds: row.evidenceCheckIds,
+    })),
+  );
+
   const metrics = rules.map((rule) => rule.metric ?? "");
   const factsByMetric = buildAchievementEvaluateFacts(factRows, metrics);
 
