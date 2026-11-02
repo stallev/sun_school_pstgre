@@ -25,6 +25,14 @@ export type ParentMessages = {
     digestAward: string;
     digestPenalty: string;
     digestLate: string;
+    suggestion: {
+      caption: string;
+      hint: string;
+      tier: string;
+      versesTitle: string;
+      versesEmpty: string;
+      textMissing: string;
+    };
   };
   data: {
     pageTitle: string;
@@ -96,6 +104,14 @@ export const pickParentMessages = (parentDict: Dictionary): ParentMessages => ({
     digestAward: getMessage(parentDict, "child.digest_award"),
     digestPenalty: getMessage(parentDict, "child.digest_penalty"),
     digestLate: getMessage(parentDict, "child.digest_late"),
+    suggestion: {
+      caption: getMessage(parentDict, "child.suggestion.caption"),
+      hint: getMessage(parentDict, "child.suggestion.hint"),
+      tier: getMessage(parentDict, "child.suggestion.tier"),
+      versesTitle: getMessage(parentDict, "child.suggestion.verses_title"),
+      versesEmpty: getMessage(parentDict, "child.suggestion.verses_empty"),
+      textMissing: getMessage(parentDict, "child.suggestion.text_missing"),
+    },
   },
   data: {
     pageTitle: getMessage(parentDict, "data.page_title"),

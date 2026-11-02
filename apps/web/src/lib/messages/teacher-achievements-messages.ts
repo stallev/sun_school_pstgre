@@ -37,6 +37,8 @@ export type TeacherAchievementsMessages = {
   awardEvidenceLabel: string;
   awardEvidenceHint: string;
   awardEvidenceCountTemplate: string;
+  awardEventDateLabel: string;
+  awardEventCalendarAria: string;
   awardReasonLabel: string;
   awardReasonPlaceholder: string;
   awardSubmit: string;

@@ -10,10 +10,13 @@ import {
   AWARD_SOURCE,
   MUTATION_ERROR_CODES,
   buildAchievementAwardKey,
+  getCalendarDateInTimeZone,
+  type MutationErr,
   type MutationResult,
 } from "@sunschool/domain";
 import { Prisma, writeAudit, type PrismaClient } from "@sunschool/db";
 import { mutationFromZodError } from "../access/map-zod-fields";
+import { calendarDateFromIso, isoFromCalendarDate } from "../school/calendar-date";
 import { loadActiveEnrollment } from "../school/school-enrollment-shared.server";
 import { loadActorOrganizationId, lockPupilRow } from "../school/school-pupil-shared.server";
 import { revalidateBricksCaches } from "../bricks/revalidate-bricks-cache";
@@ -26,6 +29,11 @@ import {
   resolveRewardTierPoints,
 } from "./group-achievement-points.server";
 
+const SCHOOL_TIMEZONE_KEY = "school_timezone";
+const DEFAULT_SCHOOL_TIMEZONE = "UTC";
+const EVENT_DATE_INVALID = "teacher.achievements.event_date_invalid";
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
 const awardManuallyInputSchema = z
   .object({
     pupilId: z.string().uuid(),
@@ -35,8 +43,73 @@ const awardManuallyInputSchema = z
     reason: z.string().trim().min(1, "teacher.achievements.reason_required"),
     checkIds: z.array(z.string().uuid()).default([]),
     academicYearId: z.string().uuid().optional(),
+    eventOn: z
+      .string()
+      .regex(ISO_DATE_PATTERN, EVENT_DATE_INVALID)
+      .refine((value) => isoFromCalendarDate(calendarDateFromIso(value)) === value, EVENT_DATE_INVALID)
+      .optional(),
   })
   .strict();
+
+type Tx = Prisma.TransactionClient;
+
+const eventOnFieldError = (): MutationErr => ({
+  ok: false,
+  code: MUTATION_ERROR_CODES.VALIDATION,
+  message: EVENT_DATE_INVALID,
+  fields: { eventOn: EVENT_DATE_INVALID },
+});
+
+type EventContext = { ok: true; eventOn: string; gradeId: string } | MutationErr;
+
+/** EVENT branch (ADR-016 §4 п. 10): date inside the pupil's year, not in the future; group on that date. */
+async function resolveEventContext(
+  tx: Tx,
+  input: { pupilId: string; academicYearId: string; eventOn: string | undefined; hasChecks: boolean },
+): Promise<EventContext> {
+  if (input.hasChecks) {
+    return {
+      ok: false,
+      code: MUTATION_ERROR_CODES.VALIDATION,
+      message: "teacher.achievements.event_no_evidence",
+      fields: { checkIds: "teacher.achievements.event_no_evidence" },
+    };
+  }
+  if (input.eventOn === undefined) return eventOnFieldError();
+
+  const year = await tx.academicYear.findUnique({
+    where: { id: input.academicYearId },
+    select: { startsOn: true, endsOn: true },
+  });
+  if (!year) {
+    return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+  }
+  const tzRow = await tx.appSetting.findUnique({ where: { key: SCHOOL_TIMEZONE_KEY } });
+  const timeZone =
+    typeof tzRow?.value === "string" && tzRow.value.trim() !== "" ? tzRow.value : DEFAULT_SCHOOL_TIMEZONE;
+  const todayIso = getCalendarDateInTimeZone(new Date(), timeZone);
+  if (
+    input.eventOn < isoFromCalendarDate(year.startsOn) ||
+    input.eventOn > isoFromCalendarDate(year.endsOn) ||
+    input.eventOn > todayIso
+  ) {
+    return eventOnFieldError();
+  }
+
+  const eventDate = calendarDateFromIso(input.eventOn);
+  const onDate = await tx.enrollment.findFirst({
+    where: {
+      pupilId: input.pupilId,
+      academicYearId: input.academicYearId,
+      startsOn: { lte: eventDate },
+      OR: [{ endsOn: null }, { endsOn: { gte: eventDate } }],
+    },
+    orderBy: { startsOn: "desc" },
+    select: { gradeId: true },
+  });
+  if (!onDate) return eventOnFieldError();
+  return { ok: true, eventOn: input.eventOn, gradeId: onDate.gradeId };
+}
 
 export type AwardManuallySuccess = { awardId: string };
 
@@ -123,9 +196,26 @@ export async function awardManually(
 
     const { tier: catalogTier, length: catalogLength, points: catalogTierPoints } = tierRow;
 
+    const isEvent = achievement.ruleType === ACHIEVEMENT_RULE_TYPE.EVENT;
+    let ceilingGradeId = enrollment.gradeId;
+    let eventOn: string | undefined;
+    if (isEvent) {
+      const event = await resolveEventContext(tx, {
+        pupilId: parsed.data.pupilId,
+        academicYearId,
+        eventOn: parsed.data.eventOn,
+        hasChecks: parsed.data.checkIds.length > 0,
+      });
+      if (!event.ok) return event;
+      ceilingGradeId = event.gradeId;
+      eventOn = event.eventOn;
+    } else if (parsed.data.eventOn !== undefined) {
+      return eventOnFieldError();
+    }
+
     const pointOverrides = await loadGroupAchievementPointsOverrides(
       tx,
-      enrollment.gradeId,
+      ceilingGradeId,
       academicYearId,
     );
     const effectiveTier = resolveRewardTierPoints(
@@ -143,7 +233,7 @@ export async function awardManually(
       };
     }
 
-    const needsEvidence = achievement.ruleType !== ACHIEVEMENT_RULE_TYPE.MANUAL;
+    const needsEvidence = achievement.ruleType !== ACHIEVEMENT_RULE_TYPE.MANUAL && !isEvent;
     const checkIds = parsed.data.checkIds;
     if (needsEvidence && checkIds.length < catalogLength) {
       return {
@@ -184,30 +274,47 @@ export async function awardManually(
       }
     }
 
-    const existingLevel = await tx.achievementAward.findFirst({
-      where: {
-        pupilId: parsed.data.pupilId,
-        achievementId: parsed.data.achievementId,
-        tier: parsed.data.tier,
-        academicYearId,
-      },
-      select: { id: true },
-    });
-    if (existingLevel) {
-      return {
-        ok: false,
-        code: MUTATION_ERROR_CODES.ACHIEVEMENT_EVIDENCE_TAKEN,
-        message: "teacher.achievements.evidence_taken",
-      };
-    }
-
-    const awardedAt = new Date();
     const awardKey = buildAchievementAwardKey({
       pupilId: parsed.data.pupilId,
       achievementId: parsed.data.achievementId,
       tier: parsed.data.tier,
       academicYearId,
+      eventOn,
     });
+
+    if (isEvent) {
+      // Checked up front: a P2002 inside the interactive transaction would abort it.
+      const sameEvent = await tx.achievementAward.findUnique({
+        where: { awardKey },
+        select: { id: true },
+      });
+      if (sameEvent) {
+        return {
+          ok: false,
+          code: MUTATION_ERROR_CODES.CONFLICT,
+          message: "common.errors.conflict",
+        };
+      }
+    } else {
+      const existingLevel = await tx.achievementAward.findFirst({
+        where: {
+          pupilId: parsed.data.pupilId,
+          achievementId: parsed.data.achievementId,
+          tier: parsed.data.tier,
+          academicYearId,
+        },
+        select: { id: true },
+      });
+      if (existingLevel) {
+        return {
+          ok: false,
+          code: MUTATION_ERROR_CODES.ACHIEVEMENT_EVIDENCE_TAKEN,
+          message: "teacher.achievements.evidence_taken",
+        };
+      }
+    }
+
+    const awardedAt = new Date();
 
     try {
       const award = await tx.achievementAward.create({
@@ -220,7 +327,7 @@ export async function awardManually(
           ruleSnapshot: buildAchievementRuleSnapshot(
             achievement,
             { tier: catalogTier, length: catalogLength, points: effectiveTier.points },
-            { pointsSource: effectiveTier.pointsSource, gradeId: enrollment.gradeId },
+            { pointsSource: effectiveTier.pointsSource, gradeId: ceilingGradeId },
           ),
           source: AWARD_SOURCE.MANUAL,
           awardedById: actorUserId,
@@ -252,6 +359,7 @@ export async function awardManually(
           pupilId: parsed.data.pupilId,
           achievementId: parsed.data.achievementId,
           tier: parsed.data.tier,
+          ...(eventOn === undefined ? {} : { eventOn }),
         },
       });
 

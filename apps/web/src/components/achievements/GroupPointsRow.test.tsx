@@ -13,6 +13,11 @@ const messages = {
   placeholderInherit: "Inherit",
   differsLabel: "Custom",
   resetRow: "Reset",
+  inactiveBadge: "Inactive",
+  detailsShow: "How it is earned",
+  detailsHide: "Hide description",
+  noDescription: "No description yet",
+  conditionSeries: "{length} in a row",
 } as GroupPointsMessages;
 
 const row: GroupPointsTableRowDto = {
@@ -22,6 +27,10 @@ const row: GroupPointsTableRowDto = {
   achievementName: "Achievement",
   tierLabel: "I",
   conditionLabel: "5",
+  ruleType: "SERIES",
+  tierLength: 5,
+  description: null,
+  isActive: true,
   globalPoints: 10,
   overridePoints: 4,
   isPenalty: false,
@@ -65,5 +74,44 @@ describe("GroupPointsRow read-only group column", () => {
     const cells = container.querySelectorAll("td");
     expect(cells[3]?.textContent).toBe("+10");
     expect(cells[4]?.textContent).toBe("+4");
+  });
+
+  const renderRow = (dto: GroupPointsTableRowDto) =>
+    act(async () => {
+      root.render(
+        <table>
+          <tbody>
+            <GroupPointsRow
+              row={dto}
+              draftValue=""
+              canEdit
+              differs={false}
+              messages={messages}
+              onDraftChange={() => {}}
+              onReset={() => {}}
+            />
+          </tbody>
+        </table>,
+      );
+    });
+
+  it("shows the inactive badge only for globally inactive achievements", async () => {
+    await renderRow({ ...row, isActive: false });
+    expect(container.textContent).toContain("Inactive");
+
+    await renderRow(row);
+    expect(container.textContent).not.toContain("Inactive");
+  });
+
+  it("expands the earning description on demand", async () => {
+    await renderRow({ ...row, description: "Five lessons in a row" });
+    expect(container.textContent).not.toContain("Five lessons in a row");
+
+    const toggle = container.querySelector("button[aria-expanded]") as HTMLButtonElement;
+    await act(async () => toggle.click());
+
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(container.textContent).toContain("Five lessons in a row");
+    expect(container.textContent).toContain("5 in a row");
   });
 });

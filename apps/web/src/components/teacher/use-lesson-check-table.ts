@@ -10,7 +10,7 @@ import {
   type ScoringSnapshot,
 } from "@sunschool/domain";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { correctCheckAction, savePartialCheckAction } from "@/actions/checks";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
@@ -33,6 +33,41 @@ type UseLessonCheckTableArgs = {
   messages: TeacherCheckMessages;
   dictionaries: Record<string, Dictionary>;
 };
+
+type QueuedMutation = {
+  pupilId: string;
+  cellKey: string;
+  rollbackPatch: Partial<LessonTablePupilRow>;
+  payload: Record<string, unknown>;
+  correction: boolean;
+};
+
+const rollbackPatchForPayload = (
+  previous: LessonTablePupilRow,
+  payload: Record<string, unknown>,
+): Partial<LessonTablePupilRow> => {
+  const rollback: Partial<LessonTablePupilRow> = {};
+  if ("present" in payload) rollback.present = previous.present;
+  if ("singing" in payload) rollback.singing = previous.singing;
+  if ("testScore" in payload) rollback.testScore = previous.testScore;
+  if ("notebookScore" in payload) rollback.notebookScore = previous.notebookScore;
+  if ("verseScores" in payload && Array.isArray(payload.verseScores)) {
+    const entry = payload.verseScores[0] as { lessonVerseId: string; score: number | null };
+    rollback.verseScores = {
+      [entry.lessonVerseId]: previous.verseScores[entry.lessonVerseId] ?? null,
+    };
+  }
+  return rollback;
+};
+
+const applyRowPatch = (
+  row: LessonTablePupilRow,
+  patch: Partial<LessonTablePupilRow>,
+): LessonTablePupilRow => ({
+  ...row,
+  ...patch,
+  verseScores: patch.verseScores ? { ...row.verseScores, ...patch.verseScores } : row.verseScores,
+});
 
 export const useLessonCheckTable = ({
   lessonId,
@@ -58,6 +93,15 @@ export const useLessonCheckTable = ({
   const [conflictIds, setConflictIds] = useState<ReadonlySet<string>>(() => new Set());
   const [busyCells, setBusyCells] = useState<ReadonlySet<string>>(() => new Set());
   const [pending, startTransition] = useTransition();
+
+  const updatedAtRef = useRef<Map<string, string | null>>(new Map());
+  const mutationTailRef = useRef<Map<string, Promise<void>>>(new Map());
+
+  useEffect(() => {
+    for (const row of initialPupils) {
+      updatedAtRef.current.set(row.pupilId, row.updatedAt ?? null);
+    }
+  }, [initialPupils]);
 
   const readOnly = !canMutate && !(yearClosed && isAdmin);
   const lessonCorrection = lessonStatus === LESSON_STATUS.CHECK_COMPLETED;
@@ -112,6 +156,64 @@ export const useLessonCheckTable = ({
     );
   }, []);
 
+  const runQueuedMutation = useCallback(
+    (job: QueuedMutation) => {
+      const prior = mutationTailRef.current.get(job.pupilId) ?? Promise.resolve();
+      const next = prior
+        .then(async () => {
+          const expectedUpdatedAt = updatedAtRef.current.get(job.pupilId) ?? undefined;
+          const action = job.correction ? correctCheckAction : savePartialCheckAction;
+          const result = await action({
+            lessonId,
+            pupilId: job.pupilId,
+            lessonKind,
+            expectedUpdatedAt: expectedUpdatedAt ?? undefined,
+            ...job.payload,
+          });
+          setBusyCells((keys) => {
+            const updated = new Set(keys);
+            updated.delete(job.cellKey);
+            return updated;
+          });
+          if (!result.ok) {
+            setRows((current) =>
+              current.map((row) =>
+                row.pupilId === job.pupilId ? applyRowPatch(row, job.rollbackPatch) : row,
+              ),
+            );
+            if (result.code === MUTATION_ERROR_CODES.CONFLICT) {
+              setConflictIds((ids) => new Set(ids).add(job.pupilId));
+            }
+            toast.error(
+              result.message
+                ? resolveMessageKey(dictionaries, result.message)
+                : messages.formError,
+              { duration: PRODUCT_TOAST_DURATION_MS },
+            );
+            return;
+          }
+          updatedAtRef.current.set(job.pupilId, result.data.updatedAt);
+          patchRow(job.pupilId, { updatedAt: result.data.updatedAt });
+          router.refresh();
+        })
+        .catch(() => {
+          setBusyCells((keys) => {
+            const updated = new Set(keys);
+            updated.delete(job.cellKey);
+            return updated;
+          });
+          setRows((current) =>
+            current.map((row) =>
+              row.pupilId === job.pupilId ? applyRowPatch(row, job.rollbackPatch) : row,
+            ),
+          );
+          toast.error(messages.formError, { duration: PRODUCT_TOAST_DURATION_MS });
+        });
+      mutationTailRef.current.set(job.pupilId, next);
+    },
+    [dictionaries, lessonId, lessonKind, messages.formError, patchRow, router],
+  );
+
   const mutateField = useCallback(
     (
       pupilId: string,
@@ -144,50 +246,17 @@ export const useLessonCheckTable = ({
         return next;
       });
 
-      startTransition(async () => {
-        const action = correction ? correctCheckAction : savePartialCheckAction;
-        const result = await action({
-          lessonId,
+      startTransition(() => {
+        runQueuedMutation({
           pupilId,
-          lessonKind,
-          expectedUpdatedAt: previous.updatedAt ?? undefined,
-          ...payload,
+          cellKey,
+          rollbackPatch: rollbackPatchForPayload(previous, payload),
+          payload,
+          correction,
         });
-        setBusyCells((keys) => {
-          const next = new Set(keys);
-          next.delete(cellKey);
-          return next;
-        });
-        if (!result.ok) {
-          patchRow(pupilId, previous);
-          if (result.code === MUTATION_ERROR_CODES.CONFLICT) {
-            setConflictIds((ids) => new Set(ids).add(pupilId));
-          }
-          toast.error(
-            result.message
-              ? resolveMessageKey(dictionaries, result.message)
-              : messages.formError,
-            { duration: PRODUCT_TOAST_DURATION_MS },
-          );
-          return;
-        }
-        patchRow(pupilId, { updatedAt: result.data.updatedAt });
-        router.refresh();
       });
     },
-    [
-      dictionaries,
-      lessonCorrection,
-      lessonId,
-      lessonKind,
-      lessonStatus,
-      messages.formError,
-      patchRow,
-      readOnly,
-      recomputePoints,
-      router,
-      rows,
-    ],
+    [lessonCorrection, lessonStatus, patchRow, readOnly, recomputePoints, rows, runQueuedMutation],
   );
 
   return {

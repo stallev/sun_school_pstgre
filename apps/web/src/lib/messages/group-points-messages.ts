@@ -28,5 +28,13 @@ export type GroupPointsMessages = {
   tierLengthPoints: string;
   penaltyMaxLabel: string;
   cardLink: string;
+  inactiveBadge: string;
+  detailsShow: string;
+  detailsHide: string;
+  noDescription: string;
+  conditionSeries: string;
+  conditionAccumulation: string;
+  conditionOnce: string;
+  conditionEvent: string;
   formError: string;
 };

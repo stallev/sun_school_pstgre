@@ -3,6 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { MUTATION_ERROR_CODES, USER_ROLE, type MutationResult } from "@sunschool/domain";
 import { assertAwardManuallyAccess } from "@/data/achievements/achievement-mutate-access.server";
+import { confirmAchievementSuggestion } from "@/data/achievements/confirm-suggestion";
+import { deferAchievementSuggestion } from "@/data/achievements/defer-suggestion";
+import { dismissAchievementSuggestion } from "@/data/achievements/dismiss-suggestion";
 import { awardManually } from "@/data/achievements/award-manually";
 import { cancelPenalty } from "@/data/achievements/cancel-penalty";
 import { issuePenalty } from "@/data/achievements/issue-penalty";
@@ -26,6 +29,42 @@ const revalidateAchievementSurfaces = () => {
   revalidatePath("/analytics/pupils/[pupilId]", "page");
   revalidatePath("/groups/[groupId]", "page");
 };
+
+// Client sends only the suggestion id (and an optional dismiss reason): points, key, evidence, group
+// and actor are resolved on the server (suggestions contract section 5).
+export async function confirmAchievementSuggestionAction(
+  suggestionId: string,
+): Promise<MutationResult<{ suggestionId: string; awardId: string }>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const result = await confirmAchievementSuggestion(await getPrisma(), actor.userId, { suggestionId });
+  if (!result.ok) return result;
+  revalidateAchievementSurfaces();
+  return { ok: true, data: { suggestionId: result.data.suggestionId, awardId: result.data.awardId } };
+}
+
+export async function deferAchievementSuggestionAction(
+  suggestionId: string,
+): Promise<MutationResult<{ suggestionId: string }>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const result = await deferAchievementSuggestion(await getPrisma(), actor.userId, { suggestionId });
+  if (!result.ok) return result;
+  revalidateAchievementSurfaces();
+  return { ok: true, data: { suggestionId: result.data.suggestionId } };
+}
+
+export async function dismissAchievementSuggestionAction(
+  suggestionId: string,
+  reason?: string,
+): Promise<MutationResult<{ suggestionId: string }>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const result = await dismissAchievementSuggestion(await getPrisma(), actor.userId, {
+    suggestionId,
+    reason,
+  });
+  if (!result.ok) return result;
+  revalidateAchievementSurfaces();
+  return { ok: true, data: { suggestionId: result.data.suggestionId } };
+}
 
 export async function setGroupAchievementModeAction(
   raw: unknown,
@@ -51,6 +90,7 @@ export async function awardManuallyFormAction(
     points: Number(formData.get("points")),
     reason: formData.get("reason"),
     academicYearId: formData.get("academicYearId") || undefined,
+    eventOn: formData.get("eventOn") || undefined,
     checkIds,
   };
   const result = await awardManually(await getPrisma(), actor.userId, raw);

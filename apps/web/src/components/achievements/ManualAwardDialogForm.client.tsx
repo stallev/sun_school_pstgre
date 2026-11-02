@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { FormDateField } from "@/components/ui/form-date-field";
 import { FormSelect } from "@/components/ui/form-select";
 import { Input } from "@/components/ui/input";
 import type { ManualAwardFormData } from "@/lib/achievements/manual-award-types";
@@ -57,6 +58,7 @@ export const ManualAwardDialogForm = ({
   );
   const [points, setPoints] = useState(defaultAchievement?.catalogPoints ?? 0);
   const [selectedChecks, setSelectedChecks] = useState<Set<string>>(new Set());
+  const [eventOn, setEventOn] = useState(formData.eventDate.today);
 
   const selectedAchievement = useMemo(
     () =>
@@ -74,9 +76,11 @@ export const ManualAwardDialogForm = ({
     onSuccess: onClose,
   });
 
+  const isEvent = selectedAchievement?.isEvent ?? false;
   const activeEvidenceNeed = selectedAchievement?.evidenceNeed ?? 0;
   const selectedCount = selectedChecks.size;
   const evidenceOk = activeEvidenceNeed === 0 || selectedCount >= activeEvidenceNeed;
+  const eventOk = !isEvent || eventOn !== "";
 
   const handleAchievementChange = (nextKey: string) => {
     setAchievementKey(nextKey);
@@ -159,6 +163,21 @@ export const ManualAwardDialogForm = ({
             disabled={pending}
           />
         ) : null}
+        {isEvent ? (
+          <label className="grid gap-1">
+            <ContentText className="text-sm font-medium text-ink">{messages.awardEventDateLabel}</ContentText>
+            <FormDateField
+              name="eventOn"
+              value={eventOn}
+              onValueChange={setEventOn}
+              min={formData.eventDate.min}
+              max={formData.eventDate.today}
+              disabled={pending}
+              locale={formData.eventDate.locale}
+              calendarAriaLabel={messages.awardEventCalendarAria}
+            />
+          </label>
+        ) : null}
         <label className="grid gap-1">
           <ContentText className="text-sm font-medium text-ink">{messages.awardReasonLabel}</ContentText>
           <textarea
@@ -174,7 +193,7 @@ export const ManualAwardDialogForm = ({
           <Button type="button" variant="ghost" disabled={pending} onClick={onClose}>
             {messages.cancel}
           </Button>
-          <Button type="submit" disabled={pending || !evidenceOk || !pupilId} aria-busy={pending}>
+          <Button type="submit" disabled={pending || !evidenceOk || !eventOk || !pupilId} aria-busy={pending}>
             {pending ? <Loader2Icon className="size-4 animate-spin" aria-hidden /> : null}
             {pending ? messages.saving : messages.awardSubmit}
           </Button>

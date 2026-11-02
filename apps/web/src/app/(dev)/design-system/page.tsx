@@ -15,6 +15,7 @@ import { ShapeMotion } from "@/components/design-lab/ShapeMotion";
 import { TableMatrix } from "@/components/design-lab/TableMatrix";
 import { TypeScale } from "@/components/design-lab/TypeScale";
 import { WidthFrame } from "@/components/design-lab/WidthFrame";
+import { SuggestionConfirmLab } from "@/components/design-lab/SuggestionConfirmLab";
 import { AchievementsCatalogLab } from "@/components/design-lab/AchievementsCatalogLab";
 import { FamilyAdminLab } from "@/components/design-lab/FamilyAdminLab";
 import { AnalyticsYearsLab } from "@/components/design-lab/AnalyticsYearsLab";
@@ -36,6 +37,7 @@ const ANCHORS = [
   { id: "shell", label: "Shell" },
   { id: "analytics-years", label: "Analytics years" },
   { id: "achievements-catalog", label: "Achievements catalog" },
+  { id: "suggestion-confirm", label: "Suggestion confirm" },
   { id: "family-admin", label: "Family admin" },
 ] as const;
 
@@ -115,6 +117,16 @@ const DesignSystemPage = () => (
       >
         <WidthFrame>
           <AchievementsCatalogLab />
+        </WidthFrame>
+      </LabSection>
+
+      <LabSection
+        id="suggestion-confirm"
+        title="L3 · Suggestion confirm"
+        hint="Ждёт подтверждения, список текстов серии — achievements_screens §5.8"
+      >
+        <WidthFrame>
+          <SuggestionConfirmLab />
         </WidthFrame>
       </LabSection>
 

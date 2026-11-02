@@ -1,6 +1,7 @@
 import "server-only";
 
 import {
+  ACADEMIC_YEAR_STATUS,
   ACCOUNT_STATUS,
   MUTATION_ERROR_CODES,
   type MutationErr,
@@ -10,6 +11,7 @@ import type { Prisma } from "@sunschool/db";
 import {
   canAwardManually,
   canCopyGroupAchievementPoints,
+  canResolveAchievementSuggestion,
   canRevokeAward,
   canSetGroupAchievementMode,
   canSetGroupAchievementPoints,
@@ -201,4 +203,72 @@ export async function assertCopyGroupAchievementPointsAccess(
 
   if (!decision.allowed) return policyToMutation(decision);
   return null;
+}
+
+export type ResolvableSuggestion = {
+  id: string;
+  pupilId: string;
+  achievementId: string;
+  tier: number;
+  academicYearId: string;
+  gradeId: string;
+  awardKey: string;
+  evidenceCheckIds: string[];
+  status: string;
+  yearIsClosed: boolean;
+};
+
+/**
+ * AZ-66 — loads the suggestion by id inside the actor's organization and decides access from the DB
+ * (group, assignment in the suggestion's year, year status). Foreign / unknown → NOT_FOUND.
+ */
+export async function assertResolveSuggestionAccess(
+  tx: Tx,
+  actorUserId: string,
+  organizationId: string,
+  suggestionId: string,
+): Promise<{ error: MutationErr } | { suggestion: ResolvableSuggestion }> {
+  const row = await tx.achievementSuggestion.findFirst({
+    where: { id: suggestionId, pupil: { organizationId } },
+    select: {
+      id: true,
+      pupilId: true,
+      achievementId: true,
+      tier: true,
+      academicYearId: true,
+      gradeId: true,
+      awardKey: true,
+      evidenceCheckIds: true,
+      status: true,
+      academicYear: { select: { status: true } },
+    },
+  });
+  const teacherAssigned = row
+    ? await loadTeacherAssigned(tx, actorUserId, row.gradeId, row.academicYearId)
+    : false;
+
+  const decision = canResolveAchievementSuggestion(await loadPolicySessionContext(tx, actorUserId), {
+    suggestionExistsInOrganization: Boolean(row),
+    teacherAssignedToSuggestionGradeInYear: teacherAssigned,
+    academicYearStatus: row?.academicYear.status ?? "",
+  });
+  if (!decision.allowed || !row) {
+    const mapped = policyToMutation(decision);
+    // Unknown / foreign suggestion keeps its own code (contract §7); the role gate stays FORBIDDEN.
+    return {
+      error:
+        mapped.code === MUTATION_ERROR_CODES.NOT_FOUND
+          ? {
+              ok: false,
+              code: MUTATION_ERROR_CODES.ACHIEVEMENT_SUGGESTION_NOT_FOUND,
+              message: "teacher.achievements.suggestion_not_found",
+            }
+          : mapped,
+    };
+  }
+
+  const { academicYear, ...rest } = row;
+  return {
+    suggestion: { ...rest, yearIsClosed: academicYear.status === ACADEMIC_YEAR_STATUS.CLOSED },
+  };
 }

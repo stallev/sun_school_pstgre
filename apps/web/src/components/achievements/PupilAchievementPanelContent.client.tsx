@@ -6,16 +6,23 @@ import { AchievementTierDot } from "@/components/achievements/AchievementTierDot
 import { CancelPenaltyDialog } from "@/components/achievements/CancelPenaltyDialog.client";
 import { IssuePenaltyDialog } from "@/components/achievements/IssuePenaltyDialog.client";
 import { ManualAwardDialog } from "@/components/achievements/ManualAwardDialog.client";
+import { PupilSuggestionSection } from "@/components/achievements/PupilSuggestionSection.client";
 import { RevokeAwardDialog } from "@/components/achievements/RevokeAwardDialog.client";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { PupilAwardRow, PupilPenaltyRow } from "@/lib/achievements/pupil-achievement-panel-types";
+import type {
+  PupilAwardRow,
+  PupilPenaltyRow,
+  PupilSuggestionRow,
+} from "@/lib/achievements/pupil-achievement-panel-types";
 import { formatTierLabel } from "@/lib/achievements/format-tier-label";
 import type { ManualAwardFormData } from "@/lib/achievements/manual-award-types";
 import type { PupilPenaltyFormData } from "@/lib/achievements/pupil-penalty-form-types";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { TeacherSuggestionMessages } from "@/lib/messages/teacher-suggestion-messages";
 import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 
 type PupilAchievementPanelContentProps = {
@@ -26,6 +33,9 @@ type PupilAchievementPanelContentProps = {
   canMutate: boolean;
   awards: PupilAwardRow[];
   penalties: PupilPenaltyRow[];
+  suggestions: PupilSuggestionRow[];
+  suggestionMessages: TeacherSuggestionMessages;
+  locale: MessageLocale;
   manualAwardForm: ManualAwardFormData;
   penaltyForm: PupilPenaltyFormData;
   messages: TeacherAchievementsMessages;
@@ -41,6 +51,9 @@ export const PupilAchievementPanelContent = ({
   canMutate,
   awards,
   penalties,
+  suggestions,
+  suggestionMessages,
+  locale,
   manualAwardForm,
   penaltyForm,
   messages,
@@ -54,6 +67,15 @@ export const PupilAchievementPanelContent = ({
 
   return (
     <div className="space-y-4">
+      <PupilSuggestionSection
+        pupilName={pupilName}
+        suggestions={suggestions}
+        messages={suggestionMessages}
+        formatTier={(tier) => formatTierLabel(tier, messages)}
+        locale={locale}
+        dictionaries={dictionaries}
+        formError={formError}
+      />
       <Card className="p-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>

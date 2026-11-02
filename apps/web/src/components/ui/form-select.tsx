@@ -74,7 +74,12 @@ export const FormSelect = ({
           disabled={isSelectDisabled}
         />
       ) : null}
-      <Select value={value} onValueChange={handleChange} disabled={isSelectDisabled}>
+      <Select
+        value={value}
+        onValueChange={handleChange}
+        disabled={isSelectDisabled}
+        items={options}
+      >
         <SelectTrigger
           id={id}
           aria-label={ariaLabel}

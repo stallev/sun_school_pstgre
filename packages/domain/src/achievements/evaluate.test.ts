@@ -245,4 +245,16 @@ describe("evaluateAchievements (achievements_spec §7.3)", () => {
     }));
     expect(evaluateAchievements(manyLessonsLowPoints, [hundred], [], ctx)).toHaveLength(0);
   });
+
+  it("never proposes awards for EVENT rules", () => {
+    const eventRule: AchievementEvaluateRule = {
+      achievementId: "ach-event",
+      ruleType: ACHIEVEMENT_RULE_TYPE.EVENT,
+      metric: null,
+      isActive: true,
+      tiers: [{ tier: 1, length: 1, points: 6 }],
+    };
+    const facts = factsFromStates([ACHIEVEMENT_FACT_STATE.CREDITED, ACHIEVEMENT_FACT_STATE.CREDITED]);
+    expect(evaluateAchievements(facts, [eventRule], [], ctx)).toEqual([]);
+  });
 });

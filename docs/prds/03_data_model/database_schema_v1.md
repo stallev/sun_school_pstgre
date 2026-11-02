@@ -52,6 +52,7 @@
 | `ADULT_RELATION` | `MOTHER`, `FATHER`, `GUARDIAN` | post-MVP `family_adult.relation` |
 | `ACHIEVEMENT_KIND` | `REWARD`, `PENALTY` | post-MVP `achievement.kind` |
 | `AWARD_SOURCE` | `AUTO`, `MANUAL` | post-MVP `achievement_award.source` |
+| `ACHIEVEMENT_SUGGESTION_STATUS` | `SUGGESTED`, `CONFIRMED`, `DISMISSED` | post-MVP `achievement_suggestion.status` ([ADR-016](../07_governance/adr_016_confirmable_achievements_and_events.md)) |
 | `PENALTY_STATUS` | `ACTIVE`, `CANCELLED` | post-MVP `penalty.status` |
 | `CONSENT_TYPE` | `PD_PROCESSING`, `CHILD_DATA`, `VOICE`, `PHOTO` | `privacy_consent` / `child_data_consent` |
 | `RECITATION_STATUS` | `UPLOADED`, `PROCESSING`, `SCORED`, `FAILED` | post-MVP `recitation_attempt.status` |
@@ -135,11 +136,12 @@ Enum `ANALYTICS_SNAPSHOT_REASON`: `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL`. 
 
 | Волна | Таблица | Колонки (кратко) | Ограничения |
 |-------|---------|------------------|-------------|
-| 1 | `achievement` | `code`, `name_ru`, `name_en`, `description_ru`, `description_en`, `icon`, `category`, `kind ACHIEVEMENT_KIND`, `rule_type`, `metric`, `threshold`, `is_active` | `kind` не меняется после первой выдачи |
+| 1 | `achievement` | `code`, `name_ru`, `name_en`, `description_ru`, `description_en`, `icon`, `category`, `kind ACHIEVEMENT_KIND`, `rule_type` (`SERIES`, `ACCUMULATION`, `ONCE`, `MANUAL`, `EVENT`), `metric`, `threshold`, `is_active`, `requires_confirmation bool` (по умолчанию `false`) | `kind` не меняется после первой выдачи; `requires_confirmation = true` у `verses` (миграция P23, [ADR-016](../07_governance/adr_016_confirmable_achievements_and_events.md)); seed значение существующей строки не затирает |
 | 1 | `achievement_tier` | `achievement_id`, `tier`, `length`, `points` | `UNIQUE (achievement_id, tier)` |
 | 1 | `achievement_award` | `pupil_id`, `achievement_id`, `tier`, `academic_year_id`, `points`, `rule_snapshot jsonb`, `source AWARD_SOURCE`, `awarded_by · null`, `reason · null`, `awarded_at`, `revoked_at/by/reason · null`, `award_key text · null` | `UNIQUE (award_key)` (ДС-11) |
 | 1 | `achievement_evidence` | `award_id`, `achievement_id`, `tier`, `check_id` | `UNIQUE (achievement_id, tier, check_id)` (ДС-3, ДС-12) |
 | 1 | `penalty` | `pupil_id`, `achievement_id`, `lesson_id`, `points`, `reason`, `issued_by`, `issued_at`, `status PENALTY_STATUS`, `cancelled_at/by/reason · null` | не более одного `ACTIVE` на `(pupil_id, lesson_id)` (ШТ-4) |
+| 1 | `achievement_suggestion` | `pupil_id`, `achievement_id`, `tier int`, `academic_year_id`, `grade_id` (группа последней проверки), `award_key text`, `evidence_check_ids uuid[]`, `status ACHIEVEMENT_SUGGESTION_STATUS`, `suggested_at`, `deferred_at · null`, `resolved_by · null` (FK `app_user`), `resolved_at · null`, `award_id · null` (FK `achievement_award`) | `UNIQUE (award_key)`; `UNIQUE (award_id)`; CHECK: `tier` 1…3; `award_id IS NOT NULL` ⇔ `status = CONFIRMED`; `resolved_by`, `resolved_at` заданы ⇔ `status <> SUGGESTED`; `cardinality(evidence_check_ids) ≥ 1`; неподтверждённые баллы здесь не хранятся и не читаются читателями баллов ([ADR-016](../07_governance/adr_016_confirmable_achievements_and_events.md), [контракт](../../implementation/mvp/contracts/achievement_suggestions_contract.md) §4) |
 | 1 | `grade_achievement_period` | `grade_settings_id`, `starts_at`, `ends_at · null` | периоды выключения режима (ДС-14) |
 | 1 | `grade_achievement_points` | `grade_settings_id`, `achievement_id`, `tier` (0 — штраф), `points` | `UNIQUE (grade_settings_id, achievement_id, tier)`; `tier` 0…3; хранит только отличия от глобального каталога ([ADR-015](../07_governance/adr_015_group_achievement_points.md)) |
 | 2 | `family` | `organization_id`, `name`, `address · null`, `note · null` | не сохраняется пустой (СМ-5) |
@@ -179,6 +181,7 @@ Enum `ANALYTICS_SNAPSHOT_REASON`: `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL`. 
 | `login_identity` | unique `(provider, provider_account_id)` | вход |
 | `analytics_group_year_snapshot` | unique `(grade_id, academic_year_id, version)`, `(academic_year_id)` | итоги группы по годам, сводка школы |
 | `analytics_pupil_year_snapshot` | unique `(pupil_id, academic_year_id, version)`, `(academic_year_id)` | строки лет ученика |
+| `achievement_suggestion` | `(grade_id, academic_year_id, status)`, `(pupil_id, academic_year_id, status)` | счётчик группы, панель ученика, `/child` |
 
 Подробности — `indexing_strategy` (W6-02, не требуется на lean).
 
@@ -193,7 +196,7 @@ Enum `ANALYTICS_SNAPSHOT_REASON`: `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL`. 
 | Проверки, оценки, комментарии ребёнка | `homework_*` | ПД ребёнка | удалить |
 | Кирпичики ребёнка | `brick_ledger` | ПД ребёнка | удалить (исключение из «только добавление») |
 | Годовые итоги ребёнка | `analytics_pupil_year_snapshot` | ПД ребёнка (агрегаты по `pupil_id`) | удалить все версии; вклад в `analytics_group_year_snapshot` убрать пересчётом групп-лет (контракт снимков §6.3) |
-| Достижения и штрафы ребёнка | `achievement_award`, `penalty` | ПД ребёнка | удалить |
+| Достижения и штрафы ребёнка | `achievement_award`, `achievement_suggestion`, `penalty` | ПД ребёнка | удалить (`achievement_suggestion` — до `achievement_award`, FK `award_id`); удаление учебного года удаляет предложения года |
 | Голосовые попытки (post-MVP) | `recitation_attempt` | ПД ребёнка | удалить (MVP: таблица пуста) |
 | Зачисления, согласия по ребёнку | `enrollment`, `child_data_consent` | ПД ребёнка | удалить |
 | Журнал изменений | `audit_log` | служебные | оставить; значения о ребёнке стереть |
@@ -259,3 +262,4 @@ Enum `ANALYTICS_SNAPSHOT_REASON`: `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL`. 
 | 2026-10-11 | Реализовано в `packages/db/prisma/schema.prisma` (P5): 39 таблиц, миграция `init`. Соглашения реализации: модели PascalCase с `@@map`, enum-типы БД с суффиксом `_enum`, модель таблицы `user_role` называется `UserRoleAssignment`; ограничения вне Prisma (partial unique R-1, R-2, один PENDING-запрос, один default на язык, открытый запрос на удаление, один активный штраф, МАТЬ/ОТЕЦ; CHECK: subject удаления, `signed_on` при `LEGACY_PENDING`, диапазоны оценок, `quantity <> 0`) — в SQL миграции; запрет UPDATE/DELETE (R-6) — репозиторием, роль БД — P07 |
 | 2026-10-18 | §9: `recitation_attempt` в классификации удаления ребёнка (P06) |
 | 2026-10-19 | §5.7: снимки итогов учебного года (`analytics_group_year_snapshot`, `analytics_pupil_year_snapshot`), enum `ANALYTICS_SNAPSHOT_REASON`, R-10, R-11, индексы §8, ПД §9 (P08) |
+| 2026-11-02 | §4 enum `ACHIEVEMENT_SUGGESTION_STATUS`; §6 `achievement.requires_confirmation`, `rule_type` `EVENT`, таблица `achievement_suggestion`; §8 индексы; §9 удаление (P23, ADR-016) |

@@ -460,7 +460,42 @@
     "evidence_short": "Select the required number of lessons",
     "evidence_taken": "Lessons already used for another award",
     "already_revoked": "Achievement already revoked",
-    "reason_required": "Enter a reason"
+    "reason_required": "Enter a reason",
+    "event_date_invalid": "Date not allowed: it must be within the school year and not in the future",
+    "event_no_evidence": "Lessons are not used for an event",
+    "award_event_date_label": "Event date",
+    "award_event_calendar_aria": "Open event date calendar",
+    "suggestion_not_found": "Suggestion not found",
+    "suggestion_resolved": "Suggestion was already handled",
+    "suggestion": {
+      "title": "Awaiting confirmation",
+      "deferred": "deferred {date}",
+      "confirm_button": "Confirm achievement",
+      "dialog_title": "Confirm achievement",
+      "intro": {
+        "one": "The pupil learned the verses {count} lesson in a row. Make sure they remember them.",
+        "few": "The pupil learned the verses {count} lessons in a row. Make sure they remember them.",
+        "many": "The pupil learned the verses {count} lessons in a row. Make sure they remember them.",
+        "other": "The pupil learned the verses {count} lessons in a row. Make sure they remember them."
+      },
+      "verses_title": "Series verses",
+      "verses_empty": "No verses found",
+      "text_missing": "Text in the group translation is unavailable",
+      "confirm": "Confirm",
+      "confirming": "Confirming…",
+      "defer": "Defer",
+      "deferring": "Deferring…",
+      "dismiss": "Dismiss",
+      "dismissing": "Dismissing…",
+      "dismiss_title": "Dismiss achievement?",
+      "dismiss_description": "No points will be awarded and the suggestion will leave the list.",
+      "dismiss_reason_label": "Reason (optional)",
+      "dismiss_reason_placeholder": "For example: the pupil does not remember the verses",
+      "toast_confirmed": "Achievement confirmed",
+      "toast_deferred": "Suggestion deferred",
+      "toast_dismissed": "Suggestion dismissed",
+      "count_label": "Awaiting confirmation"
+    }
   },
   "family": {
     "section_title_prefix": "Family",

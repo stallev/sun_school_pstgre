@@ -32,7 +32,7 @@ export const pickGroupPointsMessages = (
   emptyCatalogTitle: getMessage(admin, "achievements.group_points_empty_title"),
   emptyCatalogDescription: getMessage(admin, "achievements.group_points_empty_description"),
   practiceReadOnly: getMessage(admin, "achievements.status_practice_pending"),
-  yearLabel: getMessage(common, "shell.page_titles.year"),
+  yearLabel: getMessage(common, "shell.titles.year"),
   tableCaption: getMessage(admin, "achievements.group_points_table_caption"),
   tierLabels: [
     getMessage(admin, "achievements.tier_bronze"),
@@ -42,5 +42,13 @@ export const pickGroupPointsMessages = (
   tierLengthPoints: getMessage(admin, "achievements.tier_length_points"),
   penaltyMaxLabel: getMessage(admin, "achievements.group_points_penalty_max"),
   cardLink: getMessage(admin, "achievements.group_points_card_link"),
+  inactiveBadge: getMessage(admin, "achievements.group_points_inactive"),
+  detailsShow: getMessage(admin, "achievements.group_points_details_show"),
+  detailsHide: getMessage(admin, "achievements.group_points_details_hide"),
+  noDescription: getMessage(admin, "achievements.group_points_no_description"),
+  conditionSeries: getMessage(admin, "achievements.group_points_condition_series"),
+  conditionAccumulation: getMessage(admin, "achievements.group_points_condition_accumulation"),
+  conditionOnce: getMessage(admin, "achievements.group_points_condition_once"),
+  conditionEvent: getMessage(admin, "achievements.group_points_condition_event"),
   formError: getMessage(common, "errors.form"),
 });

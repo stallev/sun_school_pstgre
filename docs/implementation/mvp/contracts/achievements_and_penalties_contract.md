@@ -2,7 +2,7 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.1  
+**Версия:** 1.2  
 **Дата:** 2026-10-22  
 **Волна:** W8-11  
 **Зависит от:** [`adr_012_achievements_and_penalties.md`](../../../prds/07_governance/adr_012_achievements_and_penalties.md), [`achievements_spec.md`](../../../my_specs/achievements_spec.md) (ДС-1…ДС-15, ШТ-1…ШТ-10, §7, §9), [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §4, §6, [`bricks_ledger_contract.md`](./bricks_ledger_contract.md) §3, [`homework_check_contract.md`](./homework_check_contract.md) §5.5–§5.8, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-52…AZ-57), [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) PKG-03, INV-17, INV-23  
@@ -44,9 +44,10 @@
 | `setAchievementActive` | `ADMIN` | вкл/выкл строки каталога | AZ-52 |
 | `setGroupAchievementPoints` / `copyGroupAchievementPoints` | `TEACHER` (своя, активный год), `ADMIN` | баллы группы в году, [контракт](./achievement_group_points_contract.md) | AZ-65 |
 | `setGroupAchievementMode` | `TEACHER` (своя), `ADMIN` | режим группы, период выключения | AZ-55 |
-| `evaluatePupil` | система | новые выдачи одного ученика | AZ-56 |
+| `evaluatePupil` | система | новые выдачи одного ученика; для уровней, требующих подтверждения, — предложения ([контракт](./achievement_suggestions_contract.md)) | AZ-56 |
+| `confirm/defer/dismissAchievementSuggestion` | `TEACHER` (группа предложения, активный год), `ADMIN` | подтверждение предложения в выдачу, отложить, отклонить ([контракт](./achievement_suggestions_contract.md) §5) | AZ-66 |
 | `recalculateAchievements` | `ADMIN` | пересчёт учеников года | AZ-52 |
-| `awardManually` | `TEACHER` (своя), `ADMIN` | ручная выдача | AZ-53 |
+| `awardManually` | `TEACHER` (своя), `ADMIN` | ручная выдача, в том числе разовое событие `EVENT` (§6.4) | AZ-53 |
 | `revokeAward` | `ADMIN` | отзыв | AZ-54 |
 | `issuePenalty` | `TEACHER` (своя), `ADMIN` | действующий штраф | AZ-53 |
 | `cancelPenalty` | `TEACHER` (своя, год `ACTIVE`), `ADMIN` | снятие | AZ-53 |
@@ -63,7 +64,8 @@
 | | `points` уровня | награда: целое ≥ 0; штраф: целое < 0 |
 | `setGroupAchievementMode` | `enabled` | включение пишет закрытие открытого периода и запускает пересчёт учеников группы; выключение открывает период с `starts_at` = сейчас |
 | `awardManually` | `tier`, `points` | `points` ≤ баллов уровня каталога; причина обязательна |
-| | `checkIds` | для правила — не меньше N фактов уровня; занятый факт этого уровня отклоняется; «не засчитан» отметить можно (ДС-13) |
+| | `checkIds` | для правила — не меньше N фактов уровня; занятый факт этого уровня отклоняется; «не засчитан» отметить можно (ДС-13); для `EVENT` не принимаются |
+| | `eventOn` | только `EVENT`: дата события (`date`), в границах года, не позже сегодня по поясу школы; ключ повторяемости (§6.4) |
 | `revokeAward` | `reason` | обязательна; повторный отзыв отклонён |
 | `issuePenalty` | `lessonId`, `points`, `reason` | `points` целое, по модулю ≤ каталога и < 0 в хранении; не больше одного `ACTIVE` на (ученик, урок) |
 | `cancelPenalty` | `reason` | обязательна; в закрытом году — только admin (ШТ-10) |
@@ -78,6 +80,8 @@
 - Admin создаёт или правит строку. Вид после первой выдачи или первого штрафа не меняется. Смена баллов и порогов действует только на будущие выдачи; у уже выданного остаётся `rule_snapshot` (ДС-10).
 - Баллы в каталоге — **значения по умолчанию**. Группа может переопределить баллы уровня и размер штрафа на год ([`achievement_group_points_contract.md`](./achievement_group_points_contract.md), ADR-015); решает `resolveEffectivePoints`. Пороги и условия глобальны. Seed не затирает баллы существующих строк.
 - `practice` остаётся `is_active = false` до волны 3. Неактивная строка не участвует в `evaluate`.
+- Признак `requires_confirmation` (ADR-016): у `verses` — `true` (миграция P23); seed не затирает значение существующей строки. Правило `EVENT` — только ручная выдача, `evaluate` его пропускает, как `MANUAL`.
+- Строка `worship_recital` («Рассказал стихотворение на богослужении» / “Recited a poem at the service”): `REWARD`, `EVENT`, категория `MEMORY`, `metric = null`, `threshold = null`, один уровень `{ tier: 1, length: 1, points: 6 }`, `requires_confirmation = false`, `is_active = true`. Создаётся seed (P23-CU3).
 - Журнал: `achievement.catalog_upserted`, `achievement.catalog_toggled`.
 
 ### 6.2 `evaluatePupil`
@@ -85,11 +89,13 @@
 Чистая `evaluate(facts, rules, awards) → новые выдачи` (спека §7.2–§7.3):
 
 - серия: максимальные серии засчитанных подряд; пропуск не рвёт и не продлевает (ДС-1); уровень выдаётся, если длина ≥ N и нет выдачи этого уровня (включая отозванную и ручную), чьи доказательства пересекают серию; доказательства — первые N фактов серии;
-- накопление и разовое событие: не больше одной выдачи уровня за год (`award_key` = ученик + достижение + уровень + год);
+- накопление и `ONCE`: не больше одной выдачи уровня за год (`award_key` = ученик + достижение + уровень + год);
 - `hundred`: N — сумма баллов уроков, не число уроков; бонус в метрику не входит (ДС-10);
 - обзорный урок — пропуск для стихов и теста, обычный факт для тетради, спевки и накопления «уроки с ДЗ», если оценена тетрадь (ДС-15).
 
-Запись: транзакция, блокировка ученика, вставка выдач и доказательств. Нарушение уникальности — пропуск этой выдачи. Журнал одной записью `achievement.evaluated` со списком id новых выдач (без ФИО, INV-23). Возврат — только новые выдачи этого вызова («кого отметить», ДС-8).
+Запись: транзакция, блокировка ученика, вставка выдач и доказательств. Нарушение уникальности — пропуск этой выдачи.
+
+**Ветка предложения (ADR-016).** Если `requiresConfirmation(achievement, tier.length)` истинно (`requires_confirmation` и `length ≥ MIN_LESSONS_FOR_CONFIRMATION = 2`), вместо выдачи пишется `achievement_suggestion` (`SUGGESTED`); существующие предложения ученика за год любого статуса — занятые уровни на входе `evaluate`. Журнал `achievement.suggested`. Детали — [`achievement_suggestions_contract.md`](./achievement_suggestions_contract.md) §6.1. Ядро `evaluate` не меняется. Журнал одной записью `achievement.evaluated` со списком id новых выдач (без ФИО, INV-23). Возврат — только новые выдачи этого вызова («кого отметить», ДС-8).
 
 ### 6.3 Когда вызывается пересчёт
 
@@ -108,6 +114,8 @@
 ### 6.4 Ручная выдача и отзыв
 
 - Предусловия выдачи: флаг и режим включены, строка каталога активна, вид `REWARD`. Снимок правила пишется с сервера. Журнал `achievement.awarded`.
+- **Разовое событие `EVENT`** (ADR-016 §4 п. 10): доказательства не требуются и не пишутся; выдача повторяема — `award_key` = `buildAchievementAwardKey` + ключ события `eventOn` (ADR-016 §10 Q-1, закрыт: ключ события = дата `eventOn` в поясе школы; повтор с той же датой → `CONFLICT`, проверка по `award_key` до записи; отозванная выдача ключ не освобождает); потолок `points` — эффективные баллы уровня 1 (`resolveEffectivePoints`) группы активного зачисления ученика на `eventOn`; причина обязательна, как у любой ручной выдачи. Журнал `achievement.awarded`. Строка автоматически видна в редакторе баллов группы (уровень 1).
+- Подтверждение предложения — не ручная выдача: отдельная операция ([`achievement_suggestions_contract.md`](./achievement_suggestions_contract.md) §6.2), журнал `achievement.suggestion_confirmed`.
 - Отзыв: только admin, причина, баллы выходят из бонуса, доказательства остаются. Журнал `achievement.revoked`. Повторная выдача того же уровня за те же проверки невозможна, в том числе вручную (ДС-7).
 
 ### 6.5 Штраф
@@ -134,6 +142,9 @@
 | Баллы выше каталога | ручная выдача или штраф | `ACHIEVEMENT_POINTS_EXCEED` / `PENALTY_POINTS_EXCEED` | `teacher.achievements.points_exceed` | отказ |
 | Мало уроков | отмечено < N | `ACHIEVEMENT_EVIDENCE_SHORT` | `teacher.achievements.evidence_short` | отказ |
 | Урок занят | факт уже в доказательствах уровня | `ACHIEVEMENT_EVIDENCE_TAKEN` | `teacher.achievements.evidence_taken` | отказ |
+| Дата события не подходит | `EVENT`: нет `eventOn`, дата вне года ученика, в будущем, нет зачисления на дату; либо `checkIds` / `eventOn` не для своего типа правила | `VALIDATION` (`fields.eventOn` / `fields.checkIds`) | `teacher.achievements.event_date_invalid` / `event_no_evidence` | отказ |
+| Событие на ту же дату | `EVENT`, тот же `eventOn` | `CONFLICT` | `common.errors.conflict` | отказ (ADR-016 §10 Q-1) |
+| Предложение уже обработано | подтвердить / отложить / отклонить | `ACHIEVEMENT_SUGGESTION_RESOLVED` | `teacher.achievements.suggestion_resolved` | отказ ([контракт](./achievement_suggestions_contract.md) §7) |
 | Повторный отзыв | `revoked_at` уже задан | `ACHIEVEMENT_ALREADY_REVOKED` | `teacher.achievements.already_revoked` | отказ |
 | Второй штраф на урок | есть `ACTIVE` | `PENALTY_ONE_ACTIVE` | `teacher.penalty.one_active` | отказ |
 | Снятие в закрытом году | actor — teacher | `PENALTY_YEAR_CLOSED` | `teacher.penalty.year_closed` | отказ |
@@ -152,6 +163,8 @@
 | S-4 | Флаг проверяется в use-case, не только в UI | ADR-012 |
 | S-5 | В журнале ссылки на ученика и урок; ФИО нет (INV-23) | — |
 | S-6 | Teacher не открывает `/achievements` | AZ-D3, 403 |
+| S-7 | Подтвердить / отложить / отклонить предложение — группа предложения или admin; закрытый год — только admin | AZ-66 |
+| S-8 | Неподтверждённое предложение не входит в бонус, рейтинг и потолок штрафа (читатели баллов не читают `achievement_suggestion`) | ADR-016 |
 
 ## 9. Concurrency & idempotency
 
@@ -160,6 +173,8 @@
 | Два пересчёта одного ученика | блокировка ученика в интерактивной транзакции; уникальность доказательств и `award_key` | одна выдача; вторая не создаёт дубль |
 | Двойной клик выдачи | `disabled` на кнопке; тот же набор доказательств | вторая — `ACHIEVEMENT_EVIDENCE_TAKEN` |
 | Два штрафа на один урок | частичный уникальный индекс одного `ACTIVE` | второй — `PENALTY_ONE_ACTIVE` |
+| Два подтверждения одного предложения | условный `updateMany where status = SUGGESTED` | второе — `ACHIEVEMENT_SUGGESTION_RESOLVED` |
+| Двойной клик выдачи события | `disabled`; `award_key` с `eventOn` | вторая — `CONFLICT` |
 | Правка проверки во время пересчёта | пересчёт читает факты внутри своей транзакции после блокировки | видит зафиксированную правку или предыдущее состояние, не смесь |
 
 ## 10. Drift & consistency
@@ -227,3 +242,5 @@
 |------|--------|
 | 2026-10-22 | v1.0 — Canonical (W8-11, P12) |
 | 2026-10-24 | v1.1 — баллы группы: §4, §6.1, ссылка на `achievement_group_points_contract` (ADR-015) |
+| 2026-11-02 | v1.2 — ADR-016 (P23): §4 операции предложений и `EVENT`, §5 `eventOn`, §6.1 `requires_confirmation` и `worship_recital`, §6.2 ветка предложения, §6.4 событие, §7–§9 |
+| 2026-11-02 | v1.2.1 — P23-CU8: Q-1 закрыт (ключ события = дата `eventOn`), §5/§6.4/§9 уточнены |

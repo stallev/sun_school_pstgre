@@ -82,7 +82,15 @@
     "group_points_empty_description": "Сначала добавьте достижения и штрафы в общем каталоге.",
     "group_points_table_caption": "Переопределение баллов достижений и штрафов",
     "group_points_penalty_max": "до −{max}",
-    "group_points_card_link": "Баллы достижений и штрафов"
+    "group_points_card_link": "Баллы достижений и штрафов",
+    "group_points_inactive": "Неактивно",
+    "group_points_details_show": "Как зарабатывается",
+    "group_points_details_hide": "Скрыть описание",
+    "group_points_no_description": "Описание пока не заполнено",
+    "group_points_condition_series": "{length} подряд",
+    "group_points_condition_accumulation": "Всего {length}",
+    "group_points_condition_event": "Каждое выступление",
+    "group_points_condition_once": "Один раз"
   },
   "settings": {
     "page_subtitle": "Общие для всей школы: язык интерфейса и часовой пояс.",

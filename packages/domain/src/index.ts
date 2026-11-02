@@ -67,6 +67,8 @@ export * from "./achievements/constants";
 export * from "./achievements/award-key";
 export * from "./achievements/evaluate";
 export * from "./achievements/effective-points";
+export * from "./achievements/requires-confirmation";
+export * from "./achievements/suggestion-verses";
 export * from "./achievements/group-points-schema";
 export * from "./families/family-rules";
 export * from "./families/consent-revoke";

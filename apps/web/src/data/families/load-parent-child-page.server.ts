@@ -12,6 +12,10 @@ import { buildPupilAnalyticsView } from "../analytics/pupil-analytics-present.se
 import { loadBricksBalanceInTransaction } from "../bricks/bricks-shared.server";
 import { loadPupilAchievementPanel } from "../achievements/load-pupil-achievement-panel.server";
 import { readFeaturesAchievementsEnabled } from "../achievements/achievement-feature.server";
+import {
+  loadParentPendingSuggestions,
+  type ParentSuggestionView,
+} from "./load-parent-pending-suggestions.server";
 import { ensureWeeklyDigest } from "./ensure-weekly-digest";
 import {
   assertParentCanViewChildData,
@@ -43,6 +47,7 @@ export type ParentChildPageData =
       yearId: string;
       yearName: string;
       achievementsEnabled: boolean;
+      pendingSuggestions: ParentSuggestionView[];
       digest: ParentDigestView | null;
       bricks: { earned: number; issued: number; pending: number };
       analyticsView: ReturnType<typeof buildPupilAnalyticsView> | null;
@@ -136,6 +141,14 @@ export async function loadParentChildPage(
     false,
   );
 
+  const pendingSuggestions = await loadParentPendingSuggestions(db, {
+    pupilId,
+    academicYearId: year.id,
+    achievementsEnabled,
+    locale,
+    timeZone,
+  });
+
   const digest: ParentDigestView | null = digestPayload
     ? {
         payload: digestPayload,
@@ -154,6 +167,7 @@ export async function loadParentChildPage(
     yearId: year.id,
     yearName: year.name,
     achievementsEnabled,
+    pendingSuggestions,
     digest,
     bricks: {
       earned: bricks.earned,

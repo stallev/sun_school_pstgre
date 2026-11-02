@@ -51,7 +51,6 @@ export const CheckScoresSection = ({
   onTestScoreChange,
   onNotebookScoreChange,
 }: CheckScoresSectionProps) => {
-  const [openKey, setOpenKey] = useState<string | null>(null);
   const [revealedPupilId, setRevealedPupilId] = useState<string | null>(null);
   const [trackedPresent, setTrackedPresent] = useState(pupil.presentChoice);
   if (pupil.presentChoice !== trackedPresent) {
@@ -103,32 +102,26 @@ export const CheckScoresSection = ({
       )}
       {isReview ? null : hasTest ? (
         <CheckScaleField
-          fieldKey="test"
           label={messages.testLabel}
           value={pupil.testScore}
-          open={openKey === "test"}
           notRatedLabel={messages.scoreNotRated}
           bandLabel={testBand.label}
           bandClassName={testBand.className}
           disabled={disabled}
           trailing={late}
-          onOpenChange={setOpenKey}
           onValueChange={onTestScoreChange}
         />
       ) : isReview ? null : (
         <ContentText tone="secondary" className="py-3 text-sm">{messages.noTestOnLesson}</ContentText>
       )}
       <CheckScaleField
-        fieldKey="notebook"
         label={messages.notebookLabel}
         value={pupil.notebookScore}
-        open={openKey === "notebook"}
         notRatedLabel={messages.scoreNotRated}
         bandLabel={notebookBand.label}
         bandClassName={notebookBand.className}
         disabled={disabled}
         trailing={late}
-        onOpenChange={setOpenKey}
         onValueChange={onNotebookScoreChange}
       />
     </div>

@@ -37,6 +37,7 @@ export async function eraseChildDataInTransaction(
   await scrubAuditLogForPupilPrivileged(tx, pupilId);
   await tx.homeworkCheck.deleteMany({ where: { pupilId } });
   await deleteBrickLedgerForPupilPrivileged(tx, pupilId);
+  await tx.achievementSuggestion.deleteMany({ where: { pupilId } });
   await tx.achievementAward.deleteMany({ where: { pupilId } });
   await tx.penalty.deleteMany({ where: { pupilId } });
   await tx.recitationAttempt.deleteMany({ where: { pupilId } });

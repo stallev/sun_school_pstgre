@@ -185,6 +185,8 @@ export const LessonCheckTable = ({
                     index={index}
                     row={row}
                     lessonId={data.lessonId}
+                    lessonKind={data.lessonKind}
+                    scoring={data.scoring}
                     hasTest={data.hasTest}
                     versesToRecite={data.versesToRecite}
                     readOnly={table.readOnly}
@@ -210,6 +212,8 @@ export const LessonCheckTable = ({
         <LessonCheckTableCards
           rows={table.rows}
           lessonId={data.lessonId}
+          lessonKind={data.lessonKind}
+          scoring={data.scoring}
           hasTest={data.hasTest}
           versesToRecite={data.versesToRecite}
           readOnly={table.readOnly}

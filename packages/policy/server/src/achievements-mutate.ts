@@ -91,3 +91,27 @@ export function canRevokeAward(context: PolicySessionContext): PolicyDecision {
   if (context.roles.includes(USER_ROLE.TEACHER)) return FORBIDDEN;
   return FORBIDDEN;
 }
+
+export type CanResolveAchievementSuggestionFacts = {
+  suggestionExistsInOrganization: boolean;
+  teacherAssignedToSuggestionGradeInYear: boolean;
+  academicYearStatus: string;
+};
+
+/**
+ * AZ-66 — confirm / defer / dismiss a suggestion. Teacher: only a group assigned in the suggestion's
+ * year, active year only; admin: any suggestion, closed year allowed (journaled by the caller).
+ */
+export function canResolveAchievementSuggestion(
+  context: PolicySessionContext,
+  facts: CanResolveAchievementSuggestionFacts,
+): PolicyDecision {
+  if (!isActive(context) || !hasAwardRole(context)) return FORBIDDEN;
+  if (!facts.suggestionExistsInOrganization) return NOT_FOUND;
+  if (context.roles.includes(USER_ROLE.ADMIN)) return ALLOWED;
+  if (!facts.teacherAssignedToSuggestionGradeInYear) return NOT_FOUND;
+  if (facts.academicYearStatus === ACADEMIC_YEAR_STATUS.CLOSED) {
+    return { allowed: false, reason: "YEAR_CLOSED" };
+  }
+  return ALLOWED;
+}

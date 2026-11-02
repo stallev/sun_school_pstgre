@@ -5,7 +5,7 @@ import { emptyCounts, type SeedCounts, type SeedTx } from "./types";
  * Starter catalog (seed_data_spec §6.1; source `achievements_spec.md` §9). Rewards carry tiers
  * `(tier, length N, points)`; penalties are `kind = PENALTY` rows whose `threshold` holds the
  * (negative) points. The catalog sleeps while `features.achievements = false` (ADR-005).
- * Definition fields are re-applied on every run; `isActive` is set only on creation.
+ * Definition fields are re-applied on every run; `isActive` and `requiresConfirmation` are set only on creation.
  */
 export type CatalogTier = { tier: 1 | 2 | 3; length: number; points: number };
 
@@ -17,11 +17,13 @@ export type CatalogEntry = {
   descriptionRu: string;
   descriptionEn: string;
   category: "MEMORY" | "EFFORT" | "CONSISTENCY" | null;
-  ruleType: "SERIES" | "ACCUMULATION" | "ONCE" | "MANUAL";
+  ruleType: "SERIES" | "ACCUMULATION" | "ONCE" | "MANUAL" | "EVENT";
   metric: string | null;
   /** Penalty points (negative) for PENALTY; `null` for rewards. */
   threshold: number | null;
   isActive: boolean;
+  /** Set only on creation; the migration flips `verses` for existing databases (ADR-016). */
+  requiresConfirmation: boolean;
   tiers: readonly CatalogTier[];
 };
 
@@ -31,13 +33,14 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     kind: ACHIEVEMENT_KIND.REWARD,
     nameRu: "Хранитель слова",
     nameEn: "Keeper of the Word",
-    descriptionRu: "Все стихи, рассказанные на уроке, на «2» несколько уроков подряд",
-    descriptionEn: "Every verse recited in class scored 2, several lessons in a row",
+    descriptionRu: "Ученик рассказывает на проверке все золотые стихи урока на «2» несколько уроков подряд. Серия прерывается, если хотя бы один стих получил меньше «2»; повторные уроки без новых стихов серию не прерывают и не продлевают.",
+    descriptionEn: "The pupil recites every golden verse of the lesson and scores 2 for each, several lessons in a row. The series breaks if any verse scores less than 2; review lessons without new verses neither break nor extend it.",
     category: "MEMORY",
     ruleType: "SERIES",
     metric: "verses_all_perfect",
     threshold: null,
     isActive: true,
+    requiresConfirmation: true,
     tiers: [
       { tier: 1, length: 3, points: 10 },
       { tier: 2, length: 5, points: 15 },
@@ -49,13 +52,14 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     kind: ACHIEVEMENT_KIND.REWARD,
     nameRu: "Аккуратная тетрадь",
     nameEn: "Neat notebook",
-    descriptionRu: "Тетрадь от 9 баллов несколько уроков подряд",
-    descriptionEn: "Notebook scored 9 or more, several lessons in a row",
+    descriptionRu: "Оценка за тетрадь на проверке 9 баллов или выше несколько уроков подряд. Урок с оценкой ниже 9 прерывает серию.",
+    descriptionEn: "Notebook score of 9 or more at the check, several lessons in a row. A lesson scored below 9 breaks the series.",
     category: "EFFORT",
     ruleType: "SERIES",
     metric: "notebook_score_gte_9",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 3, points: 5 },
       { tier: 2, length: 5, points: 10 },
@@ -67,13 +71,14 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     kind: ACHIEVEMENT_KIND.REWARD,
     nameRu: "Внимательный читатель",
     nameEn: "Attentive reader",
-    descriptionRu: "Тест от 8 баллов несколько уроков подряд",
-    descriptionEn: "Test scored 8 or more, several lessons in a row",
+    descriptionRu: "Оценка за тест на проверке 8 баллов или выше несколько уроков подряд. Урок с оценкой ниже 8 прерывает серию.",
+    descriptionEn: "Test score of 8 or more at the check, several lessons in a row. A lesson scored below 8 breaks the series.",
     category: "EFFORT",
     ruleType: "SERIES",
     metric: "test_score_gte_8",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 3, points: 5 },
       { tier: 2, length: 5, points: 10 },
@@ -92,6 +97,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: "verse_voice_three_days",
     threshold: null,
     isActive: false,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 1, points: 3 },
       { tier: 2, length: 5, points: 10 },
@@ -103,13 +109,14 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     kind: ACHIEVEMENT_KIND.REWARD,
     nameRu: "Верный ученик",
     nameEn: "Faithful pupil",
-    descriptionRu: "Уроки с выполненным домашним заданием",
-    descriptionEn: "Lessons with completed homework",
+    descriptionRu: "Накопительно считаются уроки, по которым домашнее задание отмечено выполненным. Пропуски не обнуляют накопленное.",
+    descriptionEn: "Counts lessons whose homework is marked as done, cumulatively. Missed lessons do not reset the total.",
     category: "CONSISTENCY",
     ruleType: "ACCUMULATION",
     metric: "lesson_homework_done",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 5, points: 5 },
       { tier: 2, length: 15, points: 10 },
@@ -121,13 +128,14 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     kind: ACHIEVEMENT_KIND.REWARD,
     nameRu: "Первый идеальный стих",
     nameEn: "First perfect verse",
-    descriptionRu: "Хотя бы один стих на «2»",
-    descriptionEn: "At least one verse scored 2",
+    descriptionRu: "Выдаётся один раз за учебный год, когда ученик впервые рассказал любой золотой стих на «2».",
+    descriptionEn: "Awarded once per school year, the first time the pupil recites any golden verse and scores 2.",
     category: "MEMORY",
     ruleType: "ONCE",
     metric: "verse_perfect",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [{ tier: 1, length: 1, points: 2 }],
   },
   {
@@ -135,13 +143,14 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     kind: ACHIEVEMENT_KIND.REWARD,
     nameRu: "Голос хора",
     nameEn: "Voice of the choir",
-    descriptionRu: "Присутствие на спевках",
-    descriptionEn: "Attendance at choir practice",
+    descriptionRu: "Накопительно считаются спевки, на которых ученик присутствовал.",
+    descriptionEn: "Counts choir practices the pupil attended, cumulatively.",
     category: "CONSISTENCY",
     ruleType: "ACCUMULATION",
     metric: "choir_attended",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [
       { tier: 1, length: 5, points: 5 },
       { tier: 2, length: 15, points: 10 },
@@ -152,14 +161,30 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     kind: ACHIEVEMENT_KIND.REWARD,
     nameRu: "Сто кирпичиков",
     nameEn: "One hundred bricks",
-    descriptionRu: "Сто баллов за уроки нарастающим итогом (бонусы не считаются)",
-    descriptionEn: "One hundred lesson points cumulatively (bonuses do not count)",
+    descriptionRu: "Выдаётся, когда баллы ученика за уроки набирают сто нарастающим итогом. Бонусы не считаются.",
+    descriptionEn: "Awarded when the pupil's lesson points reach one hundred cumulatively. Bonuses do not count.",
     category: "EFFORT",
     ruleType: "ACCUMULATION",
     metric: "lesson_points_sum",
     threshold: null,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [{ tier: 1, length: 100, points: 10 }],
+  },
+  {
+    code: "worship_recital",
+    kind: ACHIEVEMENT_KIND.REWARD,
+    nameRu: "Рассказал стихотворение на богослужении",
+    nameEn: "Recited a poem at the service",
+    descriptionRu: "Выдаётся учителем вручную каждый раз, когда ученик рассказал стихотворение на богослужении. Не ограничено одним разом за год.",
+    descriptionEn: "Awarded manually by the teacher each time the pupil recites a poem at the church service. Not limited to once per year.",
+    category: "MEMORY",
+    ruleType: "EVENT",
+    metric: null,
+    threshold: null,
+    isActive: true,
+    requiresConfirmation: false,
+    tiers: [{ tier: 1, length: 1, points: 6 }],
   },
   {
     code: "behavior",
@@ -173,6 +198,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: null,
     threshold: -3,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [],
   },
   {
@@ -187,6 +213,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: null,
     threshold: -2,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [],
   },
   {
@@ -201,6 +228,7 @@ export const ACHIEVEMENT_CATALOG: readonly CatalogEntry[] = [
     metric: null,
     threshold: -5,
     isActive: true,
+    requiresConfirmation: false,
     tiers: [],
   },
 ];
@@ -226,6 +254,7 @@ export async function ensureAchievementCatalog(tx: SeedTx): Promise<SeedCounts> 
           code: entry.code,
           isActive: entry.isActive,
           threshold: entry.threshold,
+          requiresConfirmation: entry.requiresConfirmation,
           ...definitionFields,
         },
       });

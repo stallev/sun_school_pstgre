@@ -1,6 +1,6 @@
 "use client";
 
-import type { LessonVerseToRecite } from "@sunschool/domain";
+import type { LessonKind, LessonVerseToRecite, ScoringSnapshot } from "@sunschool/domain";
 import { NumberDisplay } from "@/components/atoms";
 import { ScoreCell } from "@/components/ui/score-cell";
 import { StatusText } from "@/components/ui/status-text";
@@ -9,6 +9,8 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { LateBadge } from "@/components/teacher/LateBadge";
 import { LessonCheckPressToggle } from "@/components/teacher/LessonCheckPressToggle";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
+import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-display";
+import { lessonCheckTableConflictCellOutline } from "@/lib/check/lesson-check-table-conflict-outline";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
@@ -17,6 +19,8 @@ export type LessonCheckTableRowProps = {
   index: number;
   row: LessonTablePupilRow;
   lessonId: string;
+  lessonKind: LessonKind;
+  scoring: ScoringSnapshot;
   hasTest: boolean;
   versesToRecite: readonly LessonVerseToRecite[];
   readOnly: boolean;
@@ -34,10 +38,15 @@ export type LessonCheckTableRowProps = {
 
 const stickyCell = "sticky z-10 bg-card";
 
+const conflictCell = (hasConflict: boolean, position: "first" | "middle" | "last") =>
+  hasConflict ? lessonCheckTableConflictCellOutline(position) : undefined;
+
 export const LessonCheckTableRow = ({
   index,
   row,
   lessonId,
+  lessonKind,
+  scoring,
   hasTest,
   versesToRecite,
   readOnly,
@@ -58,11 +67,16 @@ export const LessonCheckTableRow = ({
     : !row.present
       ? messages.tableLegendAbsent
       : null;
+  const totalDisplay = formatLessonCheckRowTotal(row, lessonKind, versesToRecite, scoring);
 
   return (
-    <TableRow className={cn(hasConflict && "ring-2 ring-inset ring-danger")}>
-      <TableCell className="pl-4 tabular-nums text-muted-foreground">{index + 1}</TableCell>
-      <TableCell className={cn(stickyCell, "left-0 font-medium")}>
+    <TableRow>
+      <TableCell
+        className={cn("pl-4 tabular-nums text-muted-foreground", conflictCell(hasConflict, "first"))}
+      >
+        {index + 1}
+      </TableCell>
+      <TableCell className={cn(stickyCell, "left-0 font-medium", conflictCell(hasConflict, "middle"))}>
         <CustomLink href={href} className="text-cobalt-ink hover:underline">
           {row.displayName}
         </CustomLink>
@@ -74,17 +88,21 @@ export const LessonCheckTableRow = ({
         </span>
         {hasConflict ? <p className="mt-1 text-sm text-danger">{messages.conflictTitle}</p> : null}
       </TableCell>
-      <TableCell className="text-center">
+      <TableCell className={cn("text-center", conflictCell(hasConflict, "middle"))}>
         <LessonCheckPressToggle
           pressed={row.present}
           label={`${messages.presentLabel}: ${row.displayName}`}
           disabled={readOnly}
           busy={busyCells.has(`${row.pupilId}:present`)}
+          size="compact"
           onPressedChange={onPresentChange}
         />
       </TableCell>
       {versesToRecite.map((verse) => (
-        <TableCell key={verse.lessonVerseId} className="text-center">
+        <TableCell
+          key={verse.lessonVerseId}
+          className={cn("text-center", conflictCell(hasConflict, "middle"))}
+        >
           <ScoreCell
             mode="verse"
             max={2}
@@ -101,7 +119,7 @@ export const LessonCheckTableRow = ({
         </TableCell>
       ))}
       {hasTest ? (
-        <TableCell className="text-center">
+        <TableCell className={cn("text-center", conflictCell(hasConflict, "middle"))}>
           <ScoreCell
             mode="pad"
             max={10}
@@ -117,7 +135,7 @@ export const LessonCheckTableRow = ({
           />
         </TableCell>
       ) : null}
-      <TableCell className="text-center">
+      <TableCell className={cn("text-center", conflictCell(hasConflict, "middle"))}>
         <ScoreCell
           mode="pad"
           max={10}
@@ -132,19 +150,18 @@ export const LessonCheckTableRow = ({
           onValueChange={onNotebookScoreChange}
         />
       </TableCell>
-      <TableCell className="text-center">
+      <TableCell className={cn("text-center", conflictCell(hasConflict, "middle"))}>
         <LessonCheckPressToggle
           pressed={row.singing}
           label={`${messages.singingLabel}: ${row.displayName}`}
           disabled={readOnly}
           busy={busyCells.has(`${row.pupilId}:singing`)}
+          size="compact"
           onPressedChange={onSingingChange}
         />
       </TableCell>
-      <TableCell className={cn(stickyCell, "right-0 text-right")}>
-        <NumberDisplay className="font-display text-base tabular-nums">
-          {row.homeworkChecked && row.pointsTotal !== null ? row.pointsTotal : "—"}
-        </NumberDisplay>
+      <TableCell className={cn(stickyCell, "right-0 text-right", conflictCell(hasConflict, "last"))}>
+        <NumberDisplay className="font-display text-base tabular-nums">{totalDisplay}</NumberDisplay>
       </TableCell>
     </TableRow>
   );

@@ -2,11 +2,11 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.0  
+**Версия:** 1.1  
 **Дата:** 2026-10-23  
 **Волна:** W9-10  
 **Зависит от:** [`families_and_parents_contract.md`](../contracts/families_and_parents_contract.md), [`adr_013_families_and_parents.md`](../../../prds/07_governance/adr_013_families_and_parents.md) §4 п. 7–8, [`canonical_routes.md`](../../../design/canonical_routes.md) §5, [`ui_states_contract.md`](../../../design/ui_states_contract.md), [`visual_identity_contract.md`](../../../design/visual_identity_contract.md), [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html)  
-**Связанные документы:** [`design_system_lab_spec.md`](./design_system_lab_spec.md), [`global_shell_spec.md`](./global_shell_spec.md), [`P13_phase_description.md`](../phases_tasks_descriptions/P13_phase_description.md)  
+**Связанные документы:** [`achievement_suggestions_contract.md`](../contracts/achievement_suggestions_contract.md) §6.5, [`adr_016_confirmable_achievements_and_events.md`](../../../prds/07_governance/adr_016_confirmable_achievements_and_events.md) §4 п. 8, [`design_system_lab_spec.md`](./design_system_lab_spec.md), [`global_shell_spec.md`](./global_shell_spec.md), [`P13_phase_description.md`](../phases_tasks_descriptions/P13_phase_description.md)  
 **Проверено по:** не применимо (экранные требования). Визуальный эталон — прототип.
 
 ---
@@ -54,6 +54,8 @@
 
 Только свой ребёнок: посещаемость за год, динамика баллов, достижения и штрафы (если включён `features.achievements`; иначе секции нет), баланс кирпичиков. Без рейтинга и без сравнения с другими детьми. Секция дайджеста текущей недели. Голосовой прогресс скрыт. Нет ребёнка с действующим согласием — пустое состояние, не чужие данные.
 
+**Карточка «Ждёт подтверждения учителем» (P23, ADR-016).** Компонент `ParentSuggestionCard` (`components/parent/`, один на файл) в секции достижений, по одной на ожидающее предложение (`pendingSuggestions` из `loadParentChildPage`). Состав: название достижения и уровень, подпись «Ждёт подтверждения учителем», список выученных текстов серии (дата урока, ссылка на стих, текст в переводе группы; `ul` / `li`). Только чтение: кнопок нет. Не показывается при выключенном `features.achievements`, в закрытом году и после подтверждения или отклонения (подтверждённое уходит в список выдач). Баллы в карточке не показываются: до подтверждения их нет. Тексты — срез `parent` (`parent.child.suggestion.*`), ru и en. Новых маршрутов нет.
+
 ### 5.3 `vChildData` и `vChildConsent`
 
 «Данные и согласия»: семья на чтение, правка своих телефона и email, список согласий, отзыв, запрос на удаление и его отмена, открытый запрос другого взрослого. Экран согласия: один ребёнок за раз, флажок по умолчанию снят, без согласия данные ребёнка не показываются.
@@ -71,6 +73,7 @@ Parent на `/calendar` видит события групп, куда зачи�
 | Чужой ребёнок | parent | 404 |
 | Teacher на `/family` или `/child` | флаг включён | «Нет доступа» |
 | Нет семей / нет выдач в дайджесте | список | `EmptyState` |
+| Нет ожидающих предложений | `/child`, секция достижений | карточки нет, без пустого состояния |
 | Ошибка мутации | формы | поле с ошибкой, toast, pending по правилам мутаций |
 
 ## 7. Open questions
@@ -101,3 +104,4 @@ Parent на `/calendar` видит события групп, куда зачи�
 | Date | Change |
 |------|--------|
 | 2026-10-23 | v1.0 — Canonical (W9-10, P13) |
+| 2026-11-02 | v1.1 — §5.2 карточка «Ждёт подтверждения учителем» (P23, ADR-016); §6 |

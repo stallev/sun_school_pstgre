@@ -133,7 +133,12 @@ export const useSequentialCheck = ({
   const handleSave = useCallback(() => {
     if (!activePupil || readOnly) return;
     if (activePupil.presentChoice === null) {
-      setPresentError(resolveMessageKey(dictionaries, "teacher.check.present_required"));
+      const presentRequiredMessage = resolveMessageKey(
+        dictionaries,
+        "teacher.check.present_required",
+      );
+      setPresentError(presentRequiredMessage);
+      toast.error(presentRequiredMessage, { duration: PRODUCT_TOAST_DURATION_MS });
       return;
     }
     if (data.yearClosed && data.isAdmin && isCorrection && !reason.trim()) {
@@ -153,6 +158,12 @@ export const useSequentialCheck = ({
       if (!result.ok) {
         if (result.code === MUTATION_ERROR_CODES.CONFLICT) {
           setConflict(true);
+        }
+        if (result.fields?.present) {
+          const presentMessage = resolveMessageKey(dictionaries, result.fields.present);
+          setPresentError(presentMessage);
+          toast.error(presentMessage, { duration: PRODUCT_TOAST_DURATION_MS });
+          return;
         }
         toast.error(
           result.message

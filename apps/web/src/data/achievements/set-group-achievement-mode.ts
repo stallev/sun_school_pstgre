@@ -40,7 +40,9 @@ export async function setGroupAchievementMode(
 
   const bricksInvalidation = { pupilIds: null as string[] | null, yearId: null as string | null };
 
-  const result: MutationResult<SetGroupAchievementModeSuccess> = await db.$transaction(async (tx) => {
+  // Enable + backfill awards for every enrolled pupil does not finish inside Prisma's 5s default.
+  const result: MutationResult<SetGroupAchievementModeSuccess> = await db.$transaction(
+    async (tx) => {
     const organizationId = await loadActorOrganizationId(tx, actorUserId);
     if (!organizationId) {
       return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
@@ -180,7 +182,9 @@ export async function setGroupAchievementMode(
       ok: true,
       data: { achievementsEnabled: false, pupilsEvaluated: 0, awardIds: [] },
     };
-  });
+    },
+    { maxWait: 20_000, timeout: 180_000 },
+  );
 
   if (result.ok && bricksInvalidation.pupilIds && bricksInvalidation.yearId) {
     revalidateBricksCachesForPupils(bricksInvalidation.pupilIds, bricksInvalidation.yearId);

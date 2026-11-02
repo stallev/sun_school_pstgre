@@ -82,7 +82,15 @@
     "group_points_empty_description": "Add achievements and penalties in the global catalogue first.",
     "group_points_table_caption": "Achievement and penalty point overrides",
     "group_points_penalty_max": "up to −{max}",
-    "group_points_card_link": "Achievement and penalty points"
+    "group_points_card_link": "Achievement and penalty points",
+    "group_points_inactive": "Inactive",
+    "group_points_details_show": "How it is earned",
+    "group_points_details_hide": "Hide description",
+    "group_points_no_description": "No description yet",
+    "group_points_condition_series": "{length} in a row",
+    "group_points_condition_accumulation": "{length} in total",
+    "group_points_condition_event": "Each recital",
+    "group_points_condition_once": "Once"
   },
   "settings": {
     "page_subtitle": "Shared for the whole school: interface language and time zone.",
