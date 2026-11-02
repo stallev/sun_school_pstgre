@@ -128,6 +128,7 @@ export const ParentChildPageContent = async ({ searchParams }: ParentChildPagePr
             <ParentAchievementsReadOnly
               panel={data.achievementPanel}
               achievementsEnabled={data.achievementsEnabled}
+              pendingSuggestions={data.pendingSuggestions}
               messages={messages}
             />
           </>

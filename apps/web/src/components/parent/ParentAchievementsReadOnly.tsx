@@ -2,19 +2,23 @@ import { FlagIcon } from "lucide-react";
 import { AchievementTierDot } from "@/components/achievements/AchievementTierDot";
 import { ContentText } from "@/components/atoms/ContentText";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
+import { ParentSuggestionCard } from "@/components/parent/ParentSuggestionCard";
 import { Card } from "@/components/ui/card";
+import type { ParentSuggestionView } from "@/data/families/load-parent-pending-suggestions.server";
 import type { PupilAchievementPanelData } from "@/data/achievements/load-pupil-achievement-panel.server";
 import type { ParentMessages } from "@/lib/messages/parent-messages";
 
 type ParentAchievementsReadOnlyProps = {
   panel: PupilAchievementPanelData;
   achievementsEnabled: boolean;
+  pendingSuggestions: ParentSuggestionView[];
   messages: ParentMessages;
 };
 
 export const ParentAchievementsReadOnly = ({
   panel,
   achievementsEnabled,
+  pendingSuggestions,
   messages,
 }: ParentAchievementsReadOnlyProps) => {
   if (!achievementsEnabled) return null;
@@ -41,6 +45,15 @@ export const ParentAchievementsReadOnly = ({
           </ul>
         )}
       </Card>
+      {panel.modeOn
+        ? pendingSuggestions.map((suggestion) => (
+            <ParentSuggestionCard
+              key={suggestion.suggestionId}
+              suggestion={suggestion}
+              messages={messages}
+            />
+          ))
+        : null}
       {panel.modeOn ? (
         <Card className="p-4">
           <SectionTitle as="h2">{messages.child.penaltiesTitle}</SectionTitle>

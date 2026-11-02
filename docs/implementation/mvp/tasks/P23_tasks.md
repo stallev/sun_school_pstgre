@@ -103,7 +103,7 @@ Tier T3: новый загрузчик ролевых данных (S — role-s
 
 Tier T3: ролевые данные ребёнка для `PARENT` (S).
 
-- [ ] P23-T10 · T3 · Spec: [parents spec §5.2, §6](../specs/families_and_parents_screens_spec.md) · Contract: [suggestions §6.5, §8 S-6](../contracts/achievement_suggestions_contract.md) · AZ-60
+- [x] P23-T10 · T3 · Spec: [parents spec §5.2, §6](../specs/families_and_parents_screens_spec.md) · Contract: [suggestions §6.5, §8 S-6](../contracts/achievement_suggestions_contract.md) · AZ-60
       Files: `apps/web/src/data/families/load-parent-child-page.server.ts`, `apps/web/src/data/families/*.test.ts`, `apps/web/src/components/parent/ParentSuggestionCard.tsx`, `apps/web/src/components/parent/ParentChildPageContent.server.tsx`, `apps/web/src/components/parent/ParentAchievementsReadOnly.tsx`, `apps/web/src/lib/messages/{ru,en}/parent.json` и срез `parent`
       Acceptance: `pendingSuggestions` только `SUGGESTED`, только активный год, только при `features.parents` и `features.achievements` и действующем согласии; карточка с названием, уровнем, подписью и списком текстов (переиспользует `SuggestionVerseList` из CU6); только чтение; баллов нет
       Paths: H [§5.2: карточка видна до подтверждения, исчезает после] · N [§6: нет предложений — карточки нет; закрытый год; флаг выкл.] · S [чужой ребёнок → 404; без согласия — данные скрыты; отклонённое не показывается]

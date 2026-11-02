@@ -22,7 +22,15 @@
     "digest_empty": "No new awards, penalties or late notebooks this week.",
     "digest_award": "New achievement",
     "digest_penalty": "Penalty",
-    "digest_late": "Notebook accepted late"
+    "digest_late": "Notebook accepted late",
+    "suggestion": {
+      "caption": "Waiting for the teacher to confirm",
+      "hint": "The teacher will confirm the achievement at the next lesson. Points appear after confirmation.",
+      "tier": "Level {tier}",
+      "verses_title": "Memorised verses",
+      "verses_empty": "No verses found",
+      "text_missing": "Text in the group translation is unavailable"
+    }
   },
   "data": {
     "page_title": "Data and consents",
