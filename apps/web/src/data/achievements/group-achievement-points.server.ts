@@ -4,9 +4,9 @@ import {
   GROUP_ACHIEVEMENT_PENALTY_TIER,
   resolveEffectivePoints,
 } from "@sunschool/domain";
-import type { Prisma } from "@sunschool/db";
+import type { DbReader } from "@sunschool/db";
 
-type Tx = Prisma.TransactionClient;
+type Tx = DbReader;
 
 export type GroupAchievementPointsOverrideMap = Map<string, number>;
 
@@ -29,11 +29,11 @@ export function getGroupPointsOverride(
 
 /** achievement_group_points_contract §6.2 — one query per group-year. */
 export async function loadGroupAchievementPointsOverrides(
-  tx: Tx,
+  db: DbReader,
   gradeId: string,
   academicYearId: string,
 ): Promise<GroupAchievementPointsOverrideMap> {
-  const settings = await tx.gradeSettings.findUnique({
+  const settings = await db.gradeSettings.findUnique({
     where: { gradeId_academicYearId: { gradeId, academicYearId } },
     select: {
       achievementPoints: {

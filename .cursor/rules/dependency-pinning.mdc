@@ -12,7 +12,7 @@ alwaysApply: false
 
 ## Контракт
 
-1. **Exact versions** во всех `package.json` монорепо (root, `apps/*`, `packages/*`) в `dependencies`, `devDependencies`, `optionalDependencies`, `overrides`: `"next": "16.4.2"`.
+1. **Exact versions** во всех `package.json` монорепо (root, `apps/*`, `packages/*`) в `dependencies`, `devDependencies`, `optionalDependencies`, `overrides`: `"next": "16.4.4"`.
    **Запрещено:** `^`, `~`, `>=`, `*`, `x`, `latest` / dist-tags, git / http / `file:` источники без ADR.
 2. **Исключения:**
    - внутренние пакеты workspace (`@sunschool/*`) — `"*"` (npm workspaces резолвит локально);

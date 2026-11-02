@@ -161,7 +161,7 @@ export async function loadRatingPage(
       ? ""
       : grades.find((g) => g.gradeId === gradeId)?.name ?? "";
 
-  const achievementsUiEnabled = await db.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
+  const achievementsUiEnabled = await readFeaturesAchievementsEnabled(db);
   if (achievementsUiEnabled && rows.length > 0) {
     rows = await enrichRatingRowsWithAchievements(db, year.id, rows);
   }

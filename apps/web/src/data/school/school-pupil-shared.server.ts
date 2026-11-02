@@ -5,13 +5,13 @@ import {
   type ConsentStatus,
   type MutationErr,
 } from "@sunschool/domain";
-import type { Prisma } from "@sunschool/db";
+import type { DbReader } from "@sunschool/db";
 import { hasEnrollableConsentStatus } from "./pupil-consent-view.server";
 
-type Tx = Prisma.TransactionClient;
+type Tx = DbReader;
 
-export async function loadActorOrganizationId(tx: Tx, actorUserId: string): Promise<string | null> {
-  const user = await tx.appUser.findUnique({
+export async function loadActorOrganizationId(db: DbReader, actorUserId: string): Promise<string | null> {
+  const user = await db.appUser.findUnique({
     where: { id: actorUserId },
     select: { organizationId: true },
   });

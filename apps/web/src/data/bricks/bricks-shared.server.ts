@@ -8,8 +8,8 @@ import {
   type BricksBalanceSnapshot,
   type MutationErr,
 } from "@sunschool/domain";
+import type { DbReader } from "@sunschool/db";
 import { readFeaturesAchievementsEnabled } from "../achievements/achievement-feature.server";
-import type { Prisma } from "@sunschool/db";
 import { isMutationErr, userHasAdminRole } from "../access/access-admin-guards.server";
 import { calendarDateFromIso, isoFromCalendarDate } from "../school/calendar-date";
 import {
@@ -20,7 +20,7 @@ import {
 import { loadAcademicYearForOrganization } from "../school/school-year-guards.server";
 import { formatDisplayName } from "@/lib/person/format-display-name";
 
-type Tx = Prisma.TransactionClient;
+type Tx = DbReader;
 
 export type BrickLedgerEntryDto = {
   id: string;
@@ -31,6 +31,93 @@ export type BrickLedgerEntryDto = {
   createdAt: string;
 };
 
+export type BricksBalanceComponentsRow = {
+  checkPoints: number;
+  achievementBonus: number;
+  penaltiesTotal: number;
+  issued: number;
+};
+
+const emptyBricksBalanceComponents = (): BricksBalanceComponentsRow => ({
+  checkPoints: 0,
+  achievementBonus: 0,
+  penaltiesTotal: 0,
+  issued: 0,
+});
+
+export async function loadBricksBalanceComponentsForPupils(
+  db: DbReader,
+  pupilIds: string[],
+  yearId: string,
+): Promise<Map<string, BricksBalanceComponentsRow>> {
+  const result = new Map<string, BricksBalanceComponentsRow>();
+  for (const pupilId of pupilIds) {
+    result.set(pupilId, emptyBricksBalanceComponents());
+  }
+  if (pupilIds.length === 0) return result;
+
+  const pupilIdIn = { in: pupilIds };
+
+  const [checkGroups, issuedGroups, bonusGroups, penaltyRows] = await Promise.all([
+    db.homeworkCheck.groupBy({
+      by: ["pupilId"],
+      where: {
+        pupilId: pupilIdIn,
+        homeworkChecked: true,
+        pointsTotal: { not: null },
+        lesson: { academicYearId: yearId },
+      },
+      _sum: { pointsTotal: true },
+    }),
+    db.brickLedger.groupBy({
+      by: ["pupilId"],
+      where: { pupilId: pupilIdIn, academicYearId: yearId },
+      _sum: { quantity: true },
+    }),
+    db.achievementAward.groupBy({
+      by: ["pupilId"],
+      where: { pupilId: pupilIdIn, academicYearId: yearId, revokedAt: null },
+      _sum: { points: true },
+    }),
+    db.penalty.findMany({
+      where: {
+        pupilId: pupilIdIn,
+        status: PENALTY_STATUS.ACTIVE,
+        lesson: { academicYearId: yearId },
+      },
+      select: { pupilId: true, points: true },
+    }),
+  ]);
+
+  for (const row of checkGroups) {
+    const entry = result.get(row.pupilId);
+    if (entry) entry.checkPoints = row._sum.pointsTotal ?? 0;
+  }
+  for (const row of issuedGroups) {
+    const entry = result.get(row.pupilId);
+    if (entry) entry.issued = row._sum.quantity ?? 0;
+  }
+  for (const row of bonusGroups) {
+    const entry = result.get(row.pupilId);
+    if (entry) entry.achievementBonus = row._sum.points ?? 0;
+  }
+  for (const row of penaltyRows) {
+    const entry = result.get(row.pupilId);
+    if (entry) entry.penaltiesTotal += Math.abs(row.points);
+  }
+
+  return result;
+}
+
+export async function loadBricksBalanceComponents(
+  db: DbReader,
+  pupilId: string,
+  yearId: string,
+): Promise<BricksBalanceComponentsRow> {
+  const map = await loadBricksBalanceComponentsForPupils(db, [pupilId], yearId);
+  return map.get(pupilId) ?? emptyBricksBalanceComponents();
+}
+
 export async function loadBricksEarnedAndIssued(
   tx: Tx,
   pupilId: string,
@@ -40,62 +127,16 @@ export async function loadBricksEarnedAndIssued(
   return { earned: components.checkPoints, issued: components.issued };
 }
 
-export async function loadBricksBalanceComponents(
-  tx: Tx,
-  pupilId: string,
-  yearId: string,
-): Promise<{
-  checkPoints: number;
-  achievementBonus: number;
-  penaltiesTotal: number;
-  issued: number;
-}> {
-  const [checkRow, issuedRow, bonusRow, penaltyRows] = await Promise.all([
-    tx.homeworkCheck.aggregate({
-      where: {
-        pupilId,
-        homeworkChecked: true,
-        pointsTotal: { not: null },
-        lesson: { academicYearId: yearId },
-      },
-      _sum: { pointsTotal: true },
-    }),
-    tx.brickLedger.aggregate({
-      where: { pupilId, academicYearId: yearId },
-      _sum: { quantity: true },
-    }),
-    tx.achievementAward.aggregate({
-      where: { pupilId, academicYearId: yearId, revokedAt: null },
-      _sum: { points: true },
-    }),
-    tx.penalty.findMany({
-      where: {
-        pupilId,
-        status: PENALTY_STATUS.ACTIVE,
-        lesson: { academicYearId: yearId },
-      },
-      select: { points: true },
-    }),
-  ]);
-
-  const penaltiesTotal = penaltyRows.reduce((sum, row) => sum + Math.abs(row.points), 0);
-
-  return {
-    checkPoints: checkRow._sum.pointsTotal ?? 0,
-    achievementBonus: bonusRow._sum.points ?? 0,
-    penaltiesTotal,
-    issued: issuedRow._sum.quantity ?? 0,
-  };
-}
-
 export async function loadBricksBalanceInTransaction(
   tx: Tx,
   pupilId: string,
   yearId: string,
+  achievementsEnabled?: boolean,
 ): Promise<BricksBalanceSnapshot> {
-  const achievementsEnabled = await readFeaturesAchievementsEnabled(tx);
+  const enabled =
+    achievementsEnabled ?? (await readFeaturesAchievementsEnabled(tx as DbReader));
   const components = await loadBricksBalanceComponents(tx, pupilId, yearId);
-  return buildBricksBalanceSnapshot(components, achievementsEnabled);
+  return buildBricksBalanceSnapshot(components, enabled);
 }
 
 export async function assertBricksReadAccess(
@@ -134,19 +175,11 @@ async function assertTeacherBricksScope(
   pupilId: string,
   yearId: string,
 ): Promise<MutationErr | null> {
-  const enrollments = await tx.enrollment.findMany({
-    where: { pupilId, academicYearId: yearId },
-    select: { gradeId: true },
-  });
-  if (enrollments.length === 0) {
-    return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
-  }
-
   const assignment = await tx.teacherAssignment.findFirst({
     where: {
       userId: actorUserId,
       academicYearId: yearId,
-      gradeId: { in: enrollments.map((row) => row.gradeId) },
+      grade: { enrollments: { some: { pupilId, academicYearId: yearId } } },
     },
     select: { id: true },
   });

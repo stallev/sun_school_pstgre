@@ -1,7 +1,5 @@
 import "server-only";
-import type { Prisma } from "@sunschool/db";
-
-type Tx = Prisma.TransactionClient;
+import type { DbReader } from "@sunschool/db";
 
 export type GradeAchievementMode = {
   achievementsEnabled: boolean;
@@ -9,11 +7,11 @@ export type GradeAchievementMode = {
 };
 
 export async function loadGradeAchievementMode(
-  tx: Tx,
+  db: DbReader,
   gradeId: string,
   academicYearId: string,
 ): Promise<GradeAchievementMode | null> {
-  const settings = await tx.gradeSettings.findUnique({
+  const settings = await db.gradeSettings.findUnique({
     where: { gradeId_academicYearId: { gradeId, academicYearId } },
     select: {
       achievementsEnabled: true,

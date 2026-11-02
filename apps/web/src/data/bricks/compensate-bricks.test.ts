@@ -23,6 +23,15 @@ const yearId = "55555555-5555-4555-8555-555555555555";
 const gradeId = "44444444-4444-4444-8444-444444444444";
 const requestId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 
+function groupByForPupils(field: string, value: number | (() => number)) {
+  return vi.fn().mockImplementation(async ({ where }: { where: { pupilId: { in: string[] } } }) =>
+    where.pupilId.in.map((id) => ({
+      pupilId: id,
+      _sum: { [field]: typeof value === "function" ? value() : value },
+    })),
+  );
+}
+
 function baseTx(issued: number, overrides: Record<string, unknown> = {}) {
   return {
     appUser: {
@@ -51,14 +60,14 @@ function baseTx(issued: number, overrides: Record<string, unknown> = {}) {
     },
     $queryRaw: vi.fn().mockResolvedValue([{ id: pupilId }]),
     homeworkCheck: {
-      aggregate: vi.fn().mockResolvedValue({ _sum: { pointsTotal: 20 } }),
+      groupBy: groupByForPupils("pointsTotal", 20),
     },
     brickLedger: {
-      aggregate: vi.fn().mockResolvedValue({ _sum: { quantity: issued } }),
+      groupBy: groupByForPupils("quantity", issued),
       create: vi.fn().mockResolvedValue({ id: "ledger-comp" }),
     },
     achievementAward: {
-      aggregate: vi.fn().mockResolvedValue({ _sum: { points: 0 } }),
+      groupBy: groupByForPupils("points", 0),
     },
     penalty: {
       findMany: vi.fn().mockResolvedValue([]),
@@ -141,7 +150,7 @@ describe("compensateBricks (bricks_ledger §6.3, §8)", () => {
         return [{ id: pupilId }];
       }),
       brickLedger: {
-        aggregate: vi.fn().mockResolvedValue({ _sum: { quantity: 5 } }),
+        groupBy: groupByForPupils("quantity", 5),
         create: vi.fn().mockImplementation(async () => {
           createCount += 1;
           auditVisible = true;

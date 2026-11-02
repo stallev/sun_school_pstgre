@@ -3,7 +3,7 @@ import { recalculateLessonOrdinals } from "./lesson-shared.server";
 
 describe("recalculateLessonOrdinals", () => {
   it("assigns ordinals by date then created_at for same-day lessons", async () => {
-    const updates: { id: string; ordinal: number }[] = [];
+    const executeRaw = vi.fn().mockResolvedValue(0);
     const tx = {
       lesson: {
         findMany: vi.fn().mockResolvedValue([
@@ -11,24 +11,48 @@ describe("recalculateLessonOrdinals", () => {
             id: "b",
             lessonDate: new Date("2026-09-01T00:00:00.000Z"),
             createdAt: new Date("2026-08-01T12:00:00.000Z"),
+            ordinal: 2,
           },
           {
             id: "a",
             lessonDate: new Date("2026-09-01T00:00:00.000Z"),
             createdAt: new Date("2026-08-01T10:00:00.000Z"),
+            ordinal: 1,
           },
         ]),
-        update: vi.fn(async ({ where, data }: { where: { id: string }; data: { ordinal: number } }) => {
-          updates.push({ id: where.id, ordinal: data.ordinal });
-        }),
       },
+      $executeRaw: executeRaw,
     };
 
     await recalculateLessonOrdinals(tx as never, "grade", "year");
 
-    expect(updates).toEqual([
-      { id: "a", ordinal: 1 },
-      { id: "b", ordinal: 2 },
-    ]);
+    expect(executeRaw).not.toHaveBeenCalled();
+  });
+
+  it("batch-updates only lessons whose ordinal changed", async () => {
+    const executeRaw = vi.fn().mockResolvedValue(1);
+    const tx = {
+      lesson: {
+        findMany: vi.fn().mockResolvedValue([
+          {
+            id: "b",
+            lessonDate: new Date("2026-09-01T00:00:00.000Z"),
+            createdAt: new Date("2026-08-01T12:00:00.000Z"),
+            ordinal: 1,
+          },
+          {
+            id: "a",
+            lessonDate: new Date("2026-09-01T00:00:00.000Z"),
+            createdAt: new Date("2026-08-01T10:00:00.000Z"),
+            ordinal: 2,
+          },
+        ]),
+      },
+      $executeRaw: executeRaw,
+    };
+
+    await recalculateLessonOrdinals(tx as never, "grade", "year");
+
+    expect(executeRaw).toHaveBeenCalledTimes(1);
   });
 });

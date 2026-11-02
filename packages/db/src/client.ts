@@ -1,5 +1,29 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "./generated/prisma/client";
+import { Prisma, PrismaClient } from "./generated/prisma/client";
+
+/**
+ * Prisma interactive defaults are maxWait 2s and timeout 5s.
+ * Against Neon a page holds the pool with many short transactions, so a new one
+ * fails to start (P2028, empty meta), and a check save of sequential statements
+ * expires before it finishes (P2028, timeout 5000). Call sites that pass their
+ * own options (year close, seed) still override these.
+ */
+const INTERACTIVE_TRANSACTION_MAX_WAIT_MS = 10_000;
+const INTERACTIVE_TRANSACTION_TIMEOUT_MS = 30_000;
+
+const INTERACTIVE_TRANSACTION_OPTIONS = {
+  maxWait: INTERACTIVE_TRANSACTION_MAX_WAIT_MS,
+  timeout: INTERACTIVE_TRANSACTION_TIMEOUT_MS,
+} as const;
+
+const POOL_MAX = 10;
+const POOL_IDLE_TIMEOUT_MS = 30_000;
+const POOL_CONNECTION_TIMEOUT_MS = 15_000;
+
+export type DbReader = PrismaClient | Prisma.TransactionClient;
+
+const shouldLogQueries =
+  process.env.DB_QUERY_LOG === "1" && process.env.APP_ENV === "dev";
 
 /**
  * PrismaClient factory (Prisma 7 requires a driver adapter).
@@ -10,8 +34,29 @@ export function createPrismaClient(connectionString: string): PrismaClient {
   if (!connectionString) {
     throw new Error("createPrismaClient: connection string is empty");
   }
-  const adapter = new PrismaPg({ connectionString });
-  return new PrismaClient({ adapter });
+  const adapter = new PrismaPg({
+    connectionString,
+    max: POOL_MAX,
+    idleTimeoutMillis: POOL_IDLE_TIMEOUT_MS,
+    connectionTimeoutMillis: POOL_CONNECTION_TIMEOUT_MS,
+  });
+  const baseOptions = {
+    adapter,
+    transactionOptions: INTERACTIVE_TRANSACTION_OPTIONS,
+  } as const;
+
+  if (!shouldLogQueries) {
+    return new PrismaClient(baseOptions);
+  }
+
+  const client = new PrismaClient({
+    ...baseOptions,
+    log: [{ emit: "event", level: "query" }],
+  });
+  client.$on("query", (event) => {
+    console.log(`[db] ${event.duration}ms ${event.query}`);
+  });
+  return client;
 }
 
 export type { PrismaClient };

@@ -93,9 +93,7 @@ async function countNegativeBrickBalances(
   });
   let count = 0;
   for (const row of enrollments) {
-    const snapshot = await db.$transaction((tx) =>
-      loadBricksBalanceInTransaction(tx, row.pupilId, yearId),
-    );
+    const snapshot = await loadBricksBalanceInTransaction(db, row.pupilId, yearId);
     if (snapshot.balance < 0) count += 1;
   }
   return count;

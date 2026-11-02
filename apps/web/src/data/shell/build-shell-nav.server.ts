@@ -42,9 +42,9 @@ export const buildShellNav = async (
 
   const shellRole = resolveShellRole(context.roles);
   const prisma = await getPrisma();
-  const [achievementsEnabled, parentsEnabled] = await prisma.$transaction(async (tx) => [
-    await readFeaturesAchievementsEnabled(tx),
-    await readFeaturesParentsEnabled(tx),
+  const [achievementsEnabled, parentsEnabled] = await Promise.all([
+    readFeaturesAchievementsEnabled(prisma),
+    readFeaturesParentsEnabled(prisma),
   ]);
   const stripKeys: string[] = [];
   if (!achievementsEnabled) stripKeys.push("achievements");

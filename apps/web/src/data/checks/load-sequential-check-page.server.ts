@@ -62,10 +62,11 @@ export async function loadSequentialCheckPage(
   lessonId: string,
   isAdmin: boolean,
 ): Promise<SequentialCheckPageData> {
-  const roster = await getCheckRoster(db, actorUserId, lessonId);
+  const [roster, access] = await Promise.all([
+    getCheckRoster(db, actorUserId, lessonId),
+    loadCheckLessonAccess(db, actorUserId, lessonId),
+  ]);
   if (roster.kind === "not_found") return { kind: "not_found" };
-
-  const access = await loadCheckLessonAccess(db, actorUserId, lessonId);
   if (access.kind === "not_found") return { kind: "not_found" };
 
   const settings = await db.gradeSettings.findUnique({

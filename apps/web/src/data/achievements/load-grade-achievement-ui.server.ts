@@ -19,10 +19,10 @@ export async function loadGradeAchievementUi(
   locale: MessageLocale,
   timeZone: string,
 ): Promise<GradeAchievementUi | null> {
-  const flagOn = await db.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
+  const flagOn = await readFeaturesAchievementsEnabled(db);
   if (!flagOn) return null;
 
-  const mode = await db.$transaction((tx) => loadGradeAchievementMode(tx, gradeId, academicYearId));
+  const mode = await loadGradeAchievementMode(db, gradeId, academicYearId);
   if (!mode) return null;
 
   const lastOff = mode.offPeriods

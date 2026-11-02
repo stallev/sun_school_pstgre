@@ -110,11 +110,13 @@ function mockTx(overrides: Record<string, unknown> = {}) {
         singing: false,
       }),
     },
-    homeworkScoreEvent: { create: vi.fn(), findMany: vi.fn().mockResolvedValue([]) },
+    homeworkScoreEvent: { create: vi.fn(), createMany: vi.fn(), findMany: vi.fn().mockResolvedValue([]) },
     homeworkVerseScore: {
       findMany: vi.fn().mockResolvedValue([{ lessonVerseId, score: 1 }]),
       upsert: vi.fn(),
       deleteMany: vi.fn(),
+      createMany: vi.fn(),
+      update: vi.fn(),
     },
     auditLog: { create: vi.fn() },
     ...overrides,
@@ -160,7 +162,7 @@ describe("overrideVerseScoreInTransaction", () => {
     });
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.code).toBe(MUTATION_ERROR_CODES.FORBIDDEN);
-    expect(tx.homeworkVerseScore.upsert).not.toHaveBeenCalled();
+    expect(tx.homeworkVerseScore.update).not.toHaveBeenCalled();
   });
 
   it("writes check.verse_overridden audit and recalculates points", async () => {
@@ -174,7 +176,7 @@ describe("overrideVerseScoreInTransaction", () => {
       expectedUpdatedAt: checkedRow.updatedAt.toISOString(),
     });
     expect(result.ok).toBe(true);
-    expect(tx.homeworkVerseScore.upsert).toHaveBeenCalled();
+    expect(tx.homeworkVerseScore.update).toHaveBeenCalled();
     expect(writeAudit).toHaveBeenCalledWith(
       tx,
       expect.objectContaining({ action: AUDIT_ACTION.CHECK_VERSE_OVERRIDDEN, entityId: checkId }),

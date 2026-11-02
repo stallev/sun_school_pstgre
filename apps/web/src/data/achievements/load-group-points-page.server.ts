@@ -182,9 +182,7 @@ async function loadEditorForGradeYear(
     return { kind: "empty_catalog" };
   }
 
-  const overrides = await db.$transaction((tx) =>
-    loadGroupAchievementPointsOverrides(tx, gradeId, academicYearId),
-  );
+  const overrides = await loadGroupAchievementPointsOverrides(db, gradeId, academicYearId);
 
   const yearClosed = yearStatus !== ACADEMIC_YEAR_STATUS.ACTIVE;
   const canMutate = role === USER_ROLE.ADMIN ? true : !yearClosed;
@@ -220,7 +218,7 @@ export async function loadTeacherGroupPointsPage(
   yearParam?: string,
   tierLabels: [string, string, string] = ["", "", ""],
 ): Promise<GroupPointsPageData> {
-  const flagOn = await db.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
+  const flagOn = await readFeaturesAchievementsEnabled(db);
   if (!flagOn) return { kind: "flag_off" };
 
   const base = await loadTeacherGroupPage(db, teacherUserId);
@@ -263,7 +261,7 @@ export async function loadAdminGroupPointsPage(
   yearParam?: string,
   tierLabels: [string, string, string] = ["", "", ""],
 ): Promise<GroupPointsPageData> {
-  const flagOn = await db.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
+  const flagOn = await readFeaturesAchievementsEnabled(db);
   if (!flagOn) return { kind: "flag_off" };
 
   const organizationId = await getDefaultOrganizationId(db);

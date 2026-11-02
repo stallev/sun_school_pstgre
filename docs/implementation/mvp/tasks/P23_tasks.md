@@ -121,6 +121,58 @@ Tier T3: ручная выдача баллов (AZ-53), изменение кл
 
 **CU DoD:** `node scripts/cu-verify.mjs --full` · тесты `awardManually` и `award-key`
 
+### P23-CU9 — chore(db): prisma pool defaults and db latency probe · Review: reviewer · Commit: auto
+
+Spec: [`db_latency_optimization_spec.md`](../specs/db_latency_optimization_spec.md) CU1 · [`ai_nextjs_db_data_handle.md`](../../../guidelines/nextjs/ai_nextjs_db_data_handle.md) §6
+
+- [x] P23-T12 · T2 · Files: `packages/db/src/client.ts`, `packages/db/src/index.ts`, `scripts/db-latency.mjs`, `docs/guidelines/nextjs/ai_nextjs_db_data_handle.md`
+      Acceptance: `transactionOptions` maxWait 10s / timeout 30s; pool max 10 + idle/connection timeouts; `DB_QUERY_LOG=1` при `APP_ENV=dev`; скрипт RTT с маскированием URL
+      Paths: H [дефолт tx timeout] · N [холодный Neon в connectionTimeout] · S n/a
+
+**CU DoD:** `node scripts/cu-verify.mjs`
+
+### P23-CU10 — perf(web): parallel feature reads and load-* without read tx · Review: reviewer · Commit: auto
+
+- [x] P23-T13 · T2 · Spec: db latency spec CU2 · Files: `DbReader`, `achievement-feature.server.ts`, `family-feature.server.ts`, `build-shell-nav.server.ts`, `load-*.server.ts` (grep single-read tx)
+      Acceptance: меню ≤2 параллельных запроса без BEGIN/COMMIT; одиночные read-tx заменены на `db`
+      Paths: H [меню] · N [флаг отсутствует → false] · S n/a — без смены AZ
+
+**CU DoD:** `node scripts/cu-verify.mjs`
+
+### P23-CU11 — perf(web): batch bricks page balances · Review: reviewer · Commit: auto
+
+- [x] P23-T14 · T2 · Spec: db latency spec CU3 · Files: `bricks-shared.server.ts`, `load-bricks-page.server.ts`, `bricks-balance-batch.test.ts`
+      Acceptance: число запросов не зависит от числа учеников; batch == per-pupil на фикстурах
+      Paths: H [страница кирпичиков] · N [ученик без записей → нули] · S n/a
+
+**CU DoD:** `node scripts/cu-verify.mjs`
+
+### P23-CU12 — perf(web): batch lesson ordinal updates · Review: reviewer · Commit: auto
+
+- [x] P23-T15 · T2 · Spec: db latency spec CU4 · Files: `lesson-shared.server.ts`, `lesson-ordinal.test.ts`
+      Acceptance: один `$executeRaw` для изменившихся ordinal; `updated_at` обновляется; тест порядка
+      Paths: H [create/update/delete lesson] · N [нет изменений → 0 UPDATE] · S n/a
+
+**CU DoD:** `node scripts/cu-verify.mjs`
+
+### P23-CU13 — perf(web): batch check saves and issue bricks reads · Review: reviewer · Commit: auto
+
+Tier T3: мутации проверки ДЗ и выдача кирпичиков (блокировки и assert* в tx).
+
+- [x] P23-T16 · T3 · Spec: db latency spec CU5 · Files: `check-shared.server.ts`, `save-checked.ts`, `save-partial-check.ts`, `complete-lesson-check.ts`, `correct-check.ts`, `override-verse-score.ts`, `issue-bricks.ts`, `bricks-shared.server.ts`, `revalidate-*-cache.ts`, `bricks-teacher-scope.test.ts`
+      Acceptance: score events `createMany`; preload timezone/org вне tx; флаг достижений до tx в issue-bricks; порядок lock/assert неизменён; существующие тесты checks/bricks зелёные
+      Paths: H [save check, issue bricks] · N [гонки, closed year] · S [assert в tx, teacher scope]
+
+**CU DoD:** `node scripts/cu-verify.mjs --full`
+
+### P23-CU14 — perf(web): parallel load-* page reads · Review: reviewer · Commit: auto
+
+- [x] P23-T17 · T2 · Spec: db latency spec CU6 · Files: `load-check-entry-page`, `load-lesson-table-page`, `load-sequential-check-page`, `load-today-week-rows`, `load-calendar-page`, `load-lessons-list-page`
+      Acceptance: независимые `await` в `Promise.all`; без read-only `$transaction`
+      Paths: H [§2 P6 маршруты] · N [частичный сбой — без изменения семантики] · S n/a
+
+**CU DoD:** `node scripts/cu-verify.mjs`
+
 ## Verification (phase)
 
 - [ ] Все CU закоммичены; у каждого trace `Review: …`

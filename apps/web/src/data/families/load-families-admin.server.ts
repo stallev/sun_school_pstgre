@@ -120,7 +120,7 @@ export async function loadFamiliesAdminList(
   db: PrismaClient,
   actorUserId: string,
 ): Promise<MutationResult<{ families: FamilyListRow[]; unassignedPupilCount: number }>> {
-  const flagOn = await db.$transaction((tx) => readFeaturesParentsEnabled(tx));
+  const flagOn = await readFeaturesParentsEnabled(db);
   if (!flagOn) {
     return { ok: false, code: MUTATION_ERROR_CODES.FAMILY_FLAG_OFF, message: "parent.flag_off" };
   }
@@ -191,12 +191,12 @@ export async function loadFamilyAdminDetail(
   familyId: string,
   deletedUserTemplate: string,
 ): Promise<MutationResult<FamilyAdminDetail>> {
-  const organizationId = await db.$transaction((tx) => loadActorOrganizationId(tx, actorUserId));
+  const organizationId = await loadActorOrganizationId(db, actorUserId);
   if (!organizationId) {
     return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
   }
 
-  const flagOn = await db.$transaction((tx) => readFeaturesParentsEnabled(tx));
+  const flagOn = await readFeaturesParentsEnabled(db);
   if (!flagOn) {
     return { ok: false, code: MUTATION_ERROR_CODES.FAMILY_FLAG_OFF, message: "parent.flag_off" };
   }
@@ -323,7 +323,7 @@ export async function loadPupilsForFamilyAttach(
   db: PrismaClient,
   actorUserId: string,
 ): Promise<MutationResult<AttachPupilOption[]>> {
-  const organizationId = await db.$transaction((tx) => loadActorOrganizationId(tx, actorUserId));
+  const organizationId = await loadActorOrganizationId(db, actorUserId);
   if (!organizationId) {
     return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
   }

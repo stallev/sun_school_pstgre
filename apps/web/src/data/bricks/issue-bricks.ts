@@ -11,6 +11,7 @@ import {
 import { writeAudit, type PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
+import { readFeaturesAchievementsEnabled } from "../achievements/achievement-feature.server";
 import { isoTodayUtc } from "../school/school-pupil-shared.server";
 import {
   assertBricksMutateAccess,
@@ -32,6 +33,8 @@ export async function issueBricks(
   if (!parsed.success) return mutationFromZodError(parsed.error);
   const input = parsed.data;
   const issuedOnIso = input.issuedOn ?? today;
+
+  const achievementsEnabled = await readFeaturesAchievementsEnabled(db);
 
   const result = await db.$transaction(async (tx) => {
     const organizationId = await loadOrganizationIdForActor(tx, actorUserId);
@@ -56,7 +59,12 @@ export async function issueBricks(
       }
     }
 
-    const balance = await loadBricksBalanceInTransaction(tx, input.pupilId, input.yearId);
+    const balance = await loadBricksBalanceInTransaction(
+      tx,
+      input.pupilId,
+      input.yearId,
+      achievementsEnabled,
+    );
     const ruleError = canIssue({
       earned: balance.earned,
       issued: balance.issued,
