@@ -77,7 +77,15 @@ function mockTx(overrides: Record<string, unknown> = {}) {
     enrollment: {
       findFirst: vi.fn().mockResolvedValue({ id: "enroll-1" }),
     },
-    appSetting: { findFirst: vi.fn().mockResolvedValue({ value: "Europe/Moscow" }) },
+    appSetting: {
+      findUnique: vi.fn(({ where }: { where: { key: string } }) =>
+        Promise.resolve(
+          where.key === "school_timezone"
+            ? { value: "Europe/Moscow" }
+            : { value: false },
+        ),
+      ),
+    },
     gradeSettings: {
       findUnique: vi.fn().mockResolvedValue({
         useVerses: true,

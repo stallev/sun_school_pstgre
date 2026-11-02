@@ -75,9 +75,9 @@ export type SaveCheckMode = "partial" | "checked";
 
 export type CheckSaveInput = SavePartialCheckInput | SaveCheckedInput;
 
-async function loadSchoolTimeZone(tx: Tx, organizationId: string): Promise<string> {
-  const row = await tx.appSetting.findFirst({
-    where: { organizationId, key: APP_SETTING_SCHOOL_TIMEZONE_KEY },
+async function loadSchoolTimeZone(tx: Tx): Promise<string> {
+  const row = await tx.appSetting.findUnique({
+    where: { key: APP_SETTING_SCHOOL_TIMEZONE_KEY },
     select: { value: true },
   });
   const value = row?.value;
@@ -376,7 +376,7 @@ export async function saveCheckInTransaction(
   }
 
   const setAt = new Date();
-  const schoolTimeZone = await loadSchoolTimeZone(tx, organizationId);
+  const schoolTimeZone = await loadSchoolTimeZone(tx);
 
   if (!existing) {
     const created = await tx.homeworkCheck.create({
@@ -811,7 +811,7 @@ export async function correctCheckInTransaction(
   }
 
   const setAt = new Date();
-  const schoolTimeZone = await loadSchoolTimeZone(tx, organizationId);
+  const schoolTimeZone = await loadSchoolTimeZone(tx);
   const oldSnapshot = existing ? await snapshotCheckFields(tx, existing.id, existing) : null;
 
   if (!existing) {
@@ -1064,7 +1064,7 @@ export async function overrideVerseScoreInTransaction(
   }
 
   const setAt = new Date();
-  const schoolTimeZone = await loadSchoolTimeZone(tx, organizationId);
+  const schoolTimeZone = await loadSchoolTimeZone(tx);
   const verseMap = await loadVerseScoreMap(tx, existing.id);
   const previousScore = verseMap.get(input.lessonVerseId) ?? null;
   if (valuesEqual(previousScore, input.score)) {
