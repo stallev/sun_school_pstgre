@@ -6,6 +6,7 @@ import { getPrisma } from "@/lib/db.server";
 import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { pickTeacherSuggestionMessages } from "@/lib/messages/pick-teacher-suggestion-messages.server";
 import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { formatDisplayName } from "@/lib/person/format-display-name";
 
@@ -69,6 +70,9 @@ export const PupilAchievementPanel = async ({
       canMutate={panel.canMutate}
       awards={panel.awards}
       penalties={panel.penalties}
+      suggestions={panel.suggestions}
+      suggestionMessages={pickTeacherSuggestionMessages(teacherDict)}
+      locale={locale}
       manualAwardForm={manualAwardForm}
       penaltyForm={penaltyForm}
       messages={messages}

@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/patterns/EmptyState";
 import { ErrorState } from "@/components/patterns/ErrorState";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { GroupAchievementModeSection } from "@/components/achievements/GroupAchievementModeSection.server";
+import { GroupSuggestionCount } from "@/components/achievements/GroupSuggestionCount.server";
 import { GroupPointsCardLink } from "@/components/achievements/GroupPointsCardLink.server";
 import { RosterTable } from "@/components/teacher/RosterTable";
 import { loadGroupYearSummaryPage } from "@/data/school/load-group-year-summary.server";
@@ -98,6 +99,7 @@ export const GroupPageContent = async ({ searchParams }: GroupPageProps) => {
             academicYearId={yearTotals.selectedYearId}
             canMutate={canMutate}
           />
+          <GroupSuggestionCount gradeId={data.gradeId} academicYearId={yearTotals.selectedYearId} />
           <GroupPointsCardLink
             gradeId={data.gradeId}
             academicYearId={yearTotals.selectedYearId}

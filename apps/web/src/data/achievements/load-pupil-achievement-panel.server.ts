@@ -5,14 +5,20 @@ import {
   PENALTY_STATUS,
 } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
+import { canActOnSuggestions } from "@/lib/achievements/can-act-on-suggestions";
 import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
 import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
 import { loadGradeAchievementUi } from "./load-grade-achievement-ui.server";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 
-import type { PupilAwardRow, PupilPenaltyRow } from "@/lib/achievements/pupil-achievement-panel-types";
+import type {
+  PupilAwardRow,
+  PupilPenaltyRow,
+  PupilSuggestionRow,
+} from "@/lib/achievements/pupil-achievement-panel-types";
+import { loadPupilSuggestions } from "./load-pupil-suggestions.server";
 
-export type { PupilAwardRow, PupilPenaltyRow } from "@/lib/achievements/pupil-achievement-panel-types";
+export type { PupilAwardRow, PupilPenaltyRow, PupilSuggestionRow } from "@/lib/achievements/pupil-achievement-panel-types";
 
 export type PupilAchievementPanelData =
   | { kind: "hidden" }
@@ -23,6 +29,7 @@ export type PupilAchievementPanelData =
       isAdmin: boolean;
       awards: PupilAwardRow[];
       penalties: PupilPenaltyRow[];
+      suggestions: PupilSuggestionRow[];
     };
 
 export async function loadPupilAchievementPanel(
@@ -42,7 +49,7 @@ export async function loadPupilAchievementPanel(
   const isAdmin = await userHasAdminRole(db, actorUserId);
   const canMutate = ui.achievementsEnabled && (!yearClosed || isAdmin);
 
-  const [awards, penalties] = await Promise.all([
+  const [awards, penalties, suggestions] = await Promise.all([
     db.achievementAward.findMany({
       where: { pupilId, academicYearId },
       orderBy: { awardedAt: "desc" },
@@ -75,6 +82,15 @@ export async function loadPupilAchievementPanel(
         achievement: { select: { nameRu: true } },
         lesson: { select: { academicYear: { select: { status: true } } } },
       },
+    }),
+    loadPupilSuggestions(db, {
+      actorUserId,
+      isAdmin,
+      canAct: canActOnSuggestions(yearClosed, isAdmin),
+      pupilId,
+      academicYearId,
+      locale,
+      timeZone,
     }),
   ]);
 
@@ -120,5 +136,6 @@ export async function loadPupilAchievementPanel(
     isAdmin,
     awards: awardRows,
     penalties: penaltyRows,
+    suggestions,
   };
 }
