@@ -117,10 +117,12 @@ export async function loadCalendarPage(
   monthKey: string | null,
 ): Promise<CalendarPageData> {
   const organizationId = await getDefaultOrganizationId(db);
-  const isAdmin = await userHasAdminRole(db, actorUserId);
-  const isParent = await userHasParentRole(db, actorUserId);
+  const [isAdmin, isParent] = await Promise.all([
+    userHasAdminRole(db, actorUserId),
+    userHasParentRole(db, actorUserId),
+  ]);
   if (isParent) {
-    const parentsOn = await db.$transaction((tx) => readFeaturesParentsEnabled(tx));
+    const parentsOn = await readFeaturesParentsEnabled(db);
     if (!parentsOn) return { kind: "unassigned" };
   }
   const year = await db.academicYear.findFirst({
@@ -150,21 +152,28 @@ export async function loadCalendarPage(
     monthKey && /^\d{4}-\d{2}$/.test(monthKey) ? monthKey : new Date().toISOString().slice(0, 7);
   const { start, end } = monthBounds(resolvedMonth);
 
-  const rows = await db.gradeEvent.findMany({
-    where: {
-      gradeId,
-      eventDate: { gte: start, lte: end },
-    },
-    orderBy: [{ eventDate: "asc" }, { title: "asc" }],
-    select: {
-      id: true,
-      eventDate: true,
-      type: true,
-      title: true,
-      description: true,
-      lessonId: true,
-    },
-  });
+  const [rows, lessons] = await Promise.all([
+    db.gradeEvent.findMany({
+      where: {
+        gradeId,
+        eventDate: { gte: start, lte: end },
+      },
+      orderBy: [{ eventDate: "asc" }, { title: "asc" }],
+      select: {
+        id: true,
+        eventDate: true,
+        type: true,
+        title: true,
+        description: true,
+        lessonId: true,
+      },
+    }),
+    db.lesson.findMany({
+      where: { gradeId, academicYearId: year.id },
+      orderBy: [{ lessonDate: "asc" }, { ordinal: "asc" }],
+      select: { id: true, title: true, ordinal: true, lessonDate: true },
+    }),
+  ]);
 
   const events: CalendarEventRow[] = rows.map((row) => {
     const iso = lessonDateToIso(row.eventDate);
@@ -179,11 +188,6 @@ export async function loadCalendarPage(
     };
   });
 
-  const lessons = await db.lesson.findMany({
-    where: { gradeId, academicYearId: year.id },
-    orderBy: [{ lessonDate: "asc" }, { ordinal: "asc" }],
-    select: { id: true, title: true, ordinal: true, lessonDate: true },
-  });
   const lessonsForLink = lessons.map((lesson) => ({
     lessonId: lesson.id,
     label: `#${lesson.ordinal} · ${lesson.title} (${lessonDateToIso(lesson.lessonDate)})`,

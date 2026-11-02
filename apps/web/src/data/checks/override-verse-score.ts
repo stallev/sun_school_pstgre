@@ -9,7 +9,7 @@ import { mutationFromZodError } from "../access/map-zod-fields";
 import { loadActorOrganizationId } from "../lessons/lesson-shared.server";
 import type { YearSnapshotCacheTargets } from "../analytics/years/create-year-snapshots";
 import { revalidateYearSnapshotCaches } from "../analytics/years/revalidate-year-snapshot-cache";
-import { overrideVerseScoreInTransaction } from "./check-shared.server";
+import { overrideVerseScoreInTransaction, loadCheckSchoolTimeZone } from "./check-shared.server";
 
 type OverrideVerseScoreSuccess = {
   checkId: string;
@@ -25,17 +25,27 @@ export async function overrideVerseScore(
   const parsed = overrideVerseScoreInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  const result = await db.$transaction(async (tx) => {
-    const organizationId = await loadActorOrganizationId(tx, actorUserId);
-    if (!organizationId) {
-      return {
-        ok: false as const,
-        code: MUTATION_ERROR_CODES.NOT_FOUND,
-        message: "common.errors.not_found",
-      };
-    }
-    return overrideVerseScoreInTransaction(tx, actorUserId, organizationId, parsed.data);
-  });
+  const [organizationId, schoolTimeZone] = await Promise.all([
+    loadActorOrganizationId(db, actorUserId),
+    loadCheckSchoolTimeZone(db),
+  ]);
+  if (!organizationId) {
+    return {
+      ok: false as const,
+      code: MUTATION_ERROR_CODES.NOT_FOUND,
+      message: "common.errors.not_found",
+    };
+  }
+
+  const result = await db.$transaction(async (tx) =>
+    overrideVerseScoreInTransaction(
+      tx,
+      actorUserId,
+      organizationId,
+      parsed.data,
+      schoolTimeZone,
+    ),
+  );
 
   if (result.ok && result.data.yearSnapshotCache) {
     const lesson = await db.lesson.findUnique({

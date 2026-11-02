@@ -1,7 +1,11 @@
 import "server-only";
 
 import type { PrismaClient } from "@sunschool/db";
-import { loadBricksBalanceInTransaction } from "@/data/bricks/bricks-shared.server";
+import { buildBricksBalanceSnapshot } from "@sunschool/domain";
+import {
+  loadBricksBalanceComponentsForPupils,
+} from "@/data/bricks/bricks-shared.server";
+import { readFeaturesAchievementsEnabled } from "@/data/achievements/achievement-feature.server";
 import type { LessonsListRow } from "@/data/lessons/load-lessons-list-page.server";
 import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
@@ -92,12 +96,22 @@ export async function buildTodayWeekRows({
     },
   });
 
+  const pupilIds = enrollments.map((row) => row.pupil.id);
+  const [achievementsEnabled, componentsByPupil] = await Promise.all([
+    readFeaturesAchievementsEnabled(db),
+    loadBricksBalanceComponentsForPupils(db, pupilIds, yearId),
+  ]);
+
   let bricksToIssue = 0;
   let hasNegativeBalance = false;
   for (const row of enrollments) {
-    const snapshot = await db.$transaction((tx) =>
-      loadBricksBalanceInTransaction(tx, row.pupil.id, yearId),
-    );
+    const components = componentsByPupil.get(row.pupil.id) ?? {
+      checkPoints: 0,
+      achievementBonus: 0,
+      penaltiesTotal: 0,
+      issued: 0,
+    };
+    const snapshot = buildBricksBalanceSnapshot(components, achievementsEnabled);
     const unissued = Math.max(0, snapshot.earned - snapshot.issued);
     bricksToIssue += unissued;
     if (snapshot.balance < 0) {

@@ -39,13 +39,11 @@ export async function loadParentChildDataPage(
   actorUserId: string,
   preferredPupilId: string | null,
 ): Promise<ParentChildDataPageData> {
-  const flagOn = await db.$transaction((tx) => readFeaturesParentsEnabled(tx));
+  const flagOn = await readFeaturesParentsEnabled(db);
   if (!flagOn) return { kind: "flag_off" };
 
   const organizationId = await getDefaultOrganizationId(db);
-  const children = await db.$transaction((tx) =>
-    loadParentChildOptions(tx, actorUserId, organizationId),
-  );
+  const children = await loadParentChildOptions(db, actorUserId, organizationId);
   if (children.length === 0) return { kind: "not_found" };
 
   const pupilId = resolveParentSelectedPupilId(children, preferredPupilId, children[0]!.pupilId);

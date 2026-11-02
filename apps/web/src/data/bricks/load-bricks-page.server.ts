@@ -1,6 +1,6 @@
 import "server-only";
 
-import { ACADEMIC_YEAR_STATUS } from "@sunschool/domain";
+import { ACADEMIC_YEAR_STATUS, buildBricksBalanceSnapshot } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
 import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
@@ -8,7 +8,7 @@ import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-pa
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { formatDisplayName } from "@/lib/person/format-display-name";
 import { readFeaturesAchievementsEnabled } from "../achievements/achievement-feature.server";
-import { loadBricksBalanceComponents, loadBricksBalanceInTransaction } from "./bricks-shared.server";
+import { loadBricksBalanceComponentsForPupils } from "./bricks-shared.server";
 import { listLedger } from "./list-ledger";
 import type { BrickLedgerEntryDto } from "./bricks-shared.server";
 
@@ -71,11 +71,13 @@ export async function loadBricksPage(
   preferredPupilId: string | null,
 ): Promise<BricksPageData> {
   const organizationId = await getDefaultOrganizationId(db);
-  const isAdmin = await userHasAdminRole(db, actorUserId);
-  const year = await db.academicYear.findFirst({
-    where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
-    select: { id: true, name: true, status: true },
-  });
+  const [isAdmin, year] = await Promise.all([
+    userHasAdminRole(db, actorUserId),
+    db.academicYear.findFirst({
+      where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+      select: { id: true, name: true, status: true },
+    }),
+  ]);
   if (!year) return { kind: "no_active_year" };
 
   const grades = await loadGradeOptions(db, actorUserId, year.id, organizationId, isAdmin);
@@ -102,28 +104,30 @@ export async function loadBricksPage(
     },
   });
 
-  const achievementsUiEnabled = await db.$transaction((tx) => readFeaturesAchievementsEnabled(tx));
+  const pupilIds = enrollments.map((row) => row.pupil.id);
+  const achievementsUiEnabled = await readFeaturesAchievementsEnabled(db);
+  const componentsByPupil = await loadBricksBalanceComponentsForPupils(db, pupilIds, year.id);
 
-  const rows: BricksBalanceRow[] = [];
-  for (const row of enrollments) {
-    const snapshot = await db.$transaction((tx) =>
-      loadBricksBalanceInTransaction(tx, row.pupil.id, year.id),
-    );
-    const components = achievementsUiEnabled
-      ? await db.$transaction((tx) => loadBricksBalanceComponents(tx, row.pupil.id, year.id))
-      : null;
-    rows.push({
+  const rows: BricksBalanceRow[] = enrollments.map((row) => {
+    const components = componentsByPupil.get(row.pupil.id) ?? {
+      checkPoints: 0,
+      achievementBonus: 0,
+      penaltiesTotal: 0,
+      issued: 0,
+    };
+    const snapshot = buildBricksBalanceSnapshot(components, achievementsUiEnabled);
+    return {
       pupilId: row.pupil.id,
       displayName: formatDisplayName(row.pupil),
       earned: snapshot.earned,
       issued: snapshot.issued,
       balance: snapshot.balance,
-      needsAttention: snapshot.balance < 0,
-      achievementBonus: achievementsUiEnabled ? (components?.achievementBonus ?? 0) : 0,
-      penaltiesTotal: achievementsUiEnabled ? (components?.penaltiesTotal ?? 0) : 0,
+      needsAttention: snapshot.needsAttention,
+      achievementBonus: snapshot.achievementBonus,
+      penaltiesTotal: snapshot.penaltiesTotal,
       achievementsUiEnabled,
-    });
-  }
+    };
+  });
 
   const selectedPupilId =
     preferredPupilId && rows.some((r) => r.pupilId === preferredPupilId) ? preferredPupilId : null;

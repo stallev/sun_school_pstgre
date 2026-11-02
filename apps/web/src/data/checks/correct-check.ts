@@ -10,7 +10,7 @@ import { loadActorOrganizationId } from "../lessons/lesson-shared.server";
 import { revalidateBricksCachesForLessonCheck } from "../bricks/revalidate-bricks-cache";
 import { revalidateAnalyticsCachesForLessonCheck } from "../analytics/revalidate-analytics-cache";
 import { revalidateYearSnapshotCaches } from "../analytics/years/revalidate-year-snapshot-cache";
-import { correctCheckInTransaction } from "./check-shared.server";
+import { correctCheckInTransaction, loadCheckSchoolTimeZone } from "./check-shared.server";
 
 export async function correctCheck(
   db: PrismaClient,
@@ -20,17 +20,21 @@ export async function correctCheck(
   const parsed = correctCheckInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  const result = await db.$transaction(async (tx) => {
-    const organizationId = await loadActorOrganizationId(tx, actorUserId);
-    if (!organizationId) {
-      return {
-        ok: false as const,
-        code: MUTATION_ERROR_CODES.NOT_FOUND,
-        message: "common.errors.not_found",
-      };
-    }
-    return correctCheckInTransaction(tx, actorUserId, organizationId, parsed.data);
-  });
+  const [organizationId, schoolTimeZone] = await Promise.all([
+    loadActorOrganizationId(db, actorUserId),
+    loadCheckSchoolTimeZone(db),
+  ]);
+  if (!organizationId) {
+    return {
+      ok: false as const,
+      code: MUTATION_ERROR_CODES.NOT_FOUND,
+      message: "common.errors.not_found",
+    };
+  }
+
+  const result = await db.$transaction(async (tx) =>
+    correctCheckInTransaction(tx, actorUserId, organizationId, parsed.data, schoolTimeZone),
+  );
   if (result.ok) {
     await revalidateBricksCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);
     await revalidateAnalyticsCachesForLessonCheck(db, parsed.data.pupilId, parsed.data.lessonId);

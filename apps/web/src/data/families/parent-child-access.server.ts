@@ -7,14 +7,14 @@ import {
   MUTATION_ERROR_CODES,
   type MutationResult,
 } from "@sunschool/domain";
-import type { Prisma } from "@sunschool/db";
+import type { DbReader } from "@sunschool/db";
 import { formatDisplayName } from "@/lib/person/format-display-name";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import { loadActorOrganizationId } from "../school/school-pupil-shared.server";
 import { assertParentsFeatureOn } from "./family-mutate-access.server";
 import { loadParentGuardianForPupil } from "./parent-consent-access.server";
 
-type Tx = Prisma.TransactionClient;
+type Tx = DbReader;
 
 export type ParentChildOption = {
   pupilId: string;

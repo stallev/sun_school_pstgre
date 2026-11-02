@@ -110,11 +110,17 @@ function mockTx(overrides: Record<string, unknown> = {}) {
         updatedAt,
       }),
     },
-    homeworkScoreEvent: { create: vi.fn(), findMany: vi.fn().mockResolvedValue([]) },
+    homeworkScoreEvent: {
+      create: vi.fn(),
+      createMany: vi.fn(),
+      findMany: vi.fn().mockResolvedValue([]),
+    },
     homeworkVerseScore: {
       findMany: vi.fn().mockResolvedValue([]),
       upsert: vi.fn(),
       deleteMany: vi.fn(),
+      createMany: vi.fn(),
+      update: vi.fn(),
     },
     auditLog: { create: vi.fn() },
     ...overrides,
@@ -236,7 +242,7 @@ describe("saveCheckInTransaction", () => {
       "partial",
     );
     expect(result.ok).toBe(true);
-    expect(tx.homeworkScoreEvent.create).toHaveBeenCalled();
+    expect(tx.homeworkScoreEvent.createMany).toHaveBeenCalled();
   });
 
   it("keeps frozen points when grade weights change later (INV-13)", async () => {

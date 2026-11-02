@@ -122,17 +122,18 @@ export async function completeLessonCheck(
   const parsed = completeLessonCheckInputSchema.safeParse(raw);
   if (!parsed.success) return mutationFromZodError(parsed.error);
 
-  const result: MutationResult<CompleteLessonCheckSuccess> = await db.$transaction(async (tx) => {
-    const organizationId = await loadActorOrganizationId(tx, actorUserId);
-    if (!organizationId) {
-      return {
-        ok: false as const,
-        code: MUTATION_ERROR_CODES.NOT_FOUND,
-        message: "common.errors.not_found",
-      };
-    }
-    return completeLessonCheckInTransaction(tx, actorUserId, organizationId, parsed.data.lessonId);
-  });
+  const organizationId = await loadActorOrganizationId(db, actorUserId);
+  if (!organizationId) {
+    return {
+      ok: false as const,
+      code: MUTATION_ERROR_CODES.NOT_FOUND,
+      message: "common.errors.not_found",
+    };
+  }
+
+  const result: MutationResult<CompleteLessonCheckSuccess> = await db.$transaction(async (tx) =>
+    completeLessonCheckInTransaction(tx, actorUserId, organizationId, parsed.data.lessonId),
+  );
 
   if (result.ok && result.data.bricksInvalidation) {
     revalidateBricksCachesForPupils(

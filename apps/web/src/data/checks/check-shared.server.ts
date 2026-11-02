@@ -20,7 +20,7 @@ import {
   type SavePartialCheckInput,
   type VerseScoreInput,
 } from "@sunschool/domain";
-import { Prisma, writeAudit } from "@sunschool/db";
+import { Prisma, writeAudit, type DbReader } from "@sunschool/db";
 import { maybeEvaluatePupilAchievements } from "../achievements/evaluate-pupil";
 import { isMutationErr } from "../access/access-admin-guards.server";
 import {
@@ -75,14 +75,53 @@ export type SaveCheckMode = "partial" | "checked";
 
 export type CheckSaveInput = SavePartialCheckInput | SaveCheckedInput;
 
-async function loadSchoolTimeZone(tx: Tx): Promise<string> {
-  const row = await tx.appSetting.findUnique({
+async function loadSchoolTimeZone(db: DbReader): Promise<string> {
+  const row = await db.appSetting.findUnique({
     where: { key: APP_SETTING_SCHOOL_TIMEZONE_KEY },
     select: { value: true },
   });
   const value = row?.value;
   return typeof value === "string" && value.length > 0 ? value : DEFAULT_SCHOOL_TIMEZONE;
 }
+
+export async function loadCheckSchoolTimeZone(db: DbReader): Promise<string> {
+  return loadSchoolTimeZone(db);
+}
+
+type ScoreEventRow = {
+  checkId: string;
+  field: string;
+  value: Prisma.InputJsonValue | typeof Prisma.DbNull;
+  setAt: Date;
+  setById: string;
+};
+
+type ScoreEventCollector = {
+  queue: (checkId: string, field: string, value: unknown) => void;
+  flush: (tx: Tx) => Promise<void>;
+};
+
+const createScoreEventCollector = (actorUserId: string, setAt: Date): ScoreEventCollector => {
+  const pending: ScoreEventRow[] = [];
+  return {
+    queue(checkId: string, field: string, value: unknown) {
+      pending.push({
+        checkId,
+        field,
+        value:
+          value === undefined || value === null
+            ? Prisma.DbNull
+            : (value as Prisma.InputJsonValue),
+        setAt,
+        setById: actorUserId,
+      });
+    },
+    async flush(tx: Tx) {
+      if (pending.length === 0) return;
+      await tx.homeworkScoreEvent.createMany({ data: pending });
+    },
+  };
+};
 
 async function assertPupilOnLesson(
   tx: Tx,
@@ -156,28 +195,6 @@ async function computeLateForCheck(
   return false;
 }
 
-async function recordScoreEvent(
-  tx: Tx,
-  checkId: string,
-  actorUserId: string,
-  field: string,
-  value: unknown,
-  setAt: Date,
-): Promise<void> {
-  await tx.homeworkScoreEvent.create({
-    data: {
-      checkId,
-      field,
-      value:
-        value === undefined || value === null
-          ? Prisma.DbNull
-          : (value as Prisma.InputJsonValue),
-      setAt,
-      setById: actorUserId,
-    },
-  });
-}
-
 async function applyVerseScores(
   tx: Tx,
   checkId: string,
@@ -185,39 +202,56 @@ async function applyVerseScores(
   verseScores: VerseScoreInput[] | undefined,
   existing: Map<string, number | null>,
   setAt: Date,
+  events: ScoreEventCollector,
 ): Promise<boolean> {
   if (!verseScores) return false;
   let changed = false;
+  const nullVerseIds: string[] = [];
+  const creates: Prisma.HomeworkVerseScoreCreateManyInput[] = [];
+  const updates: { lessonVerseId: string; score: number }[] = [];
+
   for (const row of verseScores) {
     const previous = existing.get(row.lessonVerseId) ?? null;
     if (valuesEqual(previous, row.score)) continue;
     changed = true;
-    await recordScoreEvent(tx, checkId, actorUserId, verseScoreEventField(row.lessonVerseId), row.score, setAt);
+    events.queue(checkId, verseScoreEventField(row.lessonVerseId), row.score);
     if (row.score === null) {
-      await tx.homeworkVerseScore.deleteMany({
-        where: { checkId, lessonVerseId: row.lessonVerseId },
-      });
+      nullVerseIds.push(row.lessonVerseId);
       existing.delete(row.lessonVerseId);
-    } else {
-      await tx.homeworkVerseScore.upsert({
-        where: { checkId_lessonVerseId: { checkId, lessonVerseId: row.lessonVerseId } },
-        create: {
-          checkId,
-          lessonVerseId: row.lessonVerseId,
-          score: row.score,
-          source: SCORE_SOURCE.MANUAL,
-          scoredAt: setAt,
-          scoredById: actorUserId,
-        },
-        update: {
-          score: row.score,
-          source: SCORE_SOURCE.MANUAL,
-          scoredAt: setAt,
-          scoredById: actorUserId,
-        },
+    } else if (previous === null || previous === undefined) {
+      creates.push({
+        checkId,
+        lessonVerseId: row.lessonVerseId,
+        score: row.score,
+        source: SCORE_SOURCE.MANUAL,
+        scoredAt: setAt,
+        scoredById: actorUserId,
       });
       existing.set(row.lessonVerseId, row.score);
+    } else {
+      updates.push({ lessonVerseId: row.lessonVerseId, score: row.score });
+      existing.set(row.lessonVerseId, row.score);
     }
+  }
+
+  if (nullVerseIds.length > 0) {
+    await tx.homeworkVerseScore.deleteMany({
+      where: { checkId, lessonVerseId: { in: nullVerseIds } },
+    });
+  }
+  if (creates.length > 0) {
+    await tx.homeworkVerseScore.createMany({ data: creates });
+  }
+  for (const row of updates) {
+    await tx.homeworkVerseScore.update({
+      where: { checkId_lessonVerseId: { checkId, lessonVerseId: row.lessonVerseId } },
+      data: {
+        score: row.score,
+        source: SCORE_SOURCE.MANUAL,
+        scoredAt: setAt,
+        scoredById: actorUserId,
+      },
+    });
   }
   return changed;
 }
@@ -225,10 +259,9 @@ async function applyVerseScores(
 async function applyScalarChanges(
   tx: Tx,
   checkId: string,
-  actorUserId: string,
   input: CheckSaveInput,
   existing: CheckRow,
-  setAt: Date,
+  events: ScoreEventCollector,
 ): Promise<{ changed: boolean; data: Prisma.HomeworkCheckUpdateInput }> {
   const data: Prisma.HomeworkCheckUpdateInput = {};
   let changed = false;
@@ -236,50 +269,22 @@ async function applyScalarChanges(
   if (input.present !== undefined && input.present !== existing.present) {
     changed = true;
     data.present = input.present;
-    await recordScoreEvent(
-      tx,
-      checkId,
-      actorUserId,
-      HOMEWORK_SCORE_EVENT_FIELD.PRESENT,
-      input.present,
-      setAt,
-    );
+    events.queue(checkId, HOMEWORK_SCORE_EVENT_FIELD.PRESENT, input.present);
   }
   if (input.testScore !== undefined && input.testScore !== existing.testScore) {
     changed = true;
     data.testScore = input.testScore;
-    await recordScoreEvent(
-      tx,
-      checkId,
-      actorUserId,
-      HOMEWORK_SCORE_EVENT_FIELD.TEST_SCORE,
-      input.testScore,
-      setAt,
-    );
+    events.queue(checkId, HOMEWORK_SCORE_EVENT_FIELD.TEST_SCORE, input.testScore);
   }
   if (input.notebookScore !== undefined && input.notebookScore !== existing.notebookScore) {
     changed = true;
     data.notebookScore = input.notebookScore;
-    await recordScoreEvent(
-      tx,
-      checkId,
-      actorUserId,
-      HOMEWORK_SCORE_EVENT_FIELD.NOTEBOOK_SCORE,
-      input.notebookScore,
-      setAt,
-    );
+    events.queue(checkId, HOMEWORK_SCORE_EVENT_FIELD.NOTEBOOK_SCORE, input.notebookScore);
   }
   if (input.singing !== undefined && input.singing !== existing.singing) {
     changed = true;
     data.singing = input.singing;
-    await recordScoreEvent(
-      tx,
-      checkId,
-      actorUserId,
-      HOMEWORK_SCORE_EVENT_FIELD.SINGING,
-      input.singing,
-      setAt,
-    );
+    events.queue(checkId, HOMEWORK_SCORE_EVENT_FIELD.SINGING, input.singing);
   }
   if (input.comment !== undefined && input.comment !== (existing.comment ?? undefined)) {
     changed = true;
@@ -347,6 +352,7 @@ export async function saveCheckInTransaction(
   organizationId: string,
   input: CheckSaveInput,
   mode: SaveCheckMode,
+  schoolTimeZone?: string,
 ): Promise<MutationResult<{ checkId: string; updatedAt: string }>> {
   const lesson = await loadLessonInOrganization(tx, input.lessonId, organizationId);
   if (isMutationErr(lesson)) return lesson;
@@ -376,7 +382,8 @@ export async function saveCheckInTransaction(
   }
 
   const setAt = new Date();
-  const schoolTimeZone = await loadSchoolTimeZone(tx);
+  const resolvedTimeZone = schoolTimeZone ?? (await loadSchoolTimeZone(tx));
+  const scoreEvents = createScoreEventCollector(actorUserId, setAt);
 
   if (!existing) {
     const created = await tx.homeworkCheck.create({
@@ -395,46 +402,27 @@ export async function saveCheckInTransaction(
     });
     const verseMap = new Map<string, number | null>();
     if (input.present !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.PRESENT,
-        input.present,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.PRESENT, input.present);
     }
     if (input.testScore !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.TEST_SCORE,
-        input.testScore,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.TEST_SCORE, input.testScore);
     }
     if (input.notebookScore !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.NOTEBOOK_SCORE,
-        input.notebookScore,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.NOTEBOOK_SCORE, input.notebookScore);
     }
     if (input.singing !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.SINGING,
-        input.singing,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.SINGING, input.singing);
     }
-    await applyVerseScores(tx, created.id, actorUserId, input.verseScores, verseMap, setAt);
+    await applyVerseScores(
+      tx,
+      created.id,
+      actorUserId,
+      input.verseScores,
+      verseMap,
+      setAt,
+      scoreEvents,
+    );
+    await scoreEvents.flush(tx);
 
     if (mode === "checked") {
       return finalizeCheckedRecord(
@@ -446,7 +434,7 @@ export async function saveCheckInTransaction(
         lesson.gradeId,
         lesson.academicYearId,
         lesson.id,
-        schoolTimeZone,
+        resolvedTimeZone,
         setAt,
         true,
       );
@@ -460,7 +448,7 @@ export async function saveCheckInTransaction(
   }
 
   const verseMap = await loadVerseScoreMap(tx, existing.id);
-  const scalar = await applyScalarChanges(tx, existing.id, actorUserId, input, existing, setAt);
+  const scalar = await applyScalarChanges(tx, existing.id, input, existing, scoreEvents);
   const versesChanged = await applyVerseScores(
     tx,
     existing.id,
@@ -468,7 +456,9 @@ export async function saveCheckInTransaction(
     input.verseScores,
     verseMap,
     setAt,
+    scoreEvents,
   );
+  await scoreEvents.flush(tx);
   const changed = scalar.changed || versesChanged;
 
   if (Object.keys(scalar.data).length > 0) {
@@ -499,7 +489,7 @@ export async function saveCheckInTransaction(
     lesson.gradeId,
     lesson.academicYearId,
     lesson.id,
-    schoolTimeZone,
+    resolvedTimeZone,
     setAt,
     changed || !existing.homeworkChecked,
   );
@@ -786,6 +776,7 @@ export async function correctCheckInTransaction(
   actorUserId: string,
   organizationId: string,
   input: CorrectCheckInput,
+  schoolTimeZone?: string,
 ): Promise<MutationResult<CheckMutationSuccess>> {
   const lesson = await loadLessonInOrganization(tx, input.lessonId, organizationId);
   if (isMutationErr(lesson)) return lesson;
@@ -811,7 +802,8 @@ export async function correctCheckInTransaction(
   }
 
   const setAt = new Date();
-  const schoolTimeZone = await loadSchoolTimeZone(tx);
+  const resolvedTimeZone = schoolTimeZone ?? (await loadSchoolTimeZone(tx));
+  const scoreEvents = createScoreEventCollector(actorUserId, setAt);
   const oldSnapshot = existing ? await snapshotCheckFields(tx, existing.id, existing) : null;
 
   if (!existing) {
@@ -831,44 +823,16 @@ export async function correctCheckInTransaction(
     });
     const verseMap = new Map<string, number | null>();
     if (input.present !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.PRESENT,
-        input.present,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.PRESENT, input.present);
     }
     if (input.testScore !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.TEST_SCORE,
-        input.testScore,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.TEST_SCORE, input.testScore);
     }
     if (input.notebookScore !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.NOTEBOOK_SCORE,
-        input.notebookScore,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.NOTEBOOK_SCORE, input.notebookScore);
     }
     if (input.singing !== undefined) {
-      await recordScoreEvent(
-        tx,
-        created.id,
-        actorUserId,
-        HOMEWORK_SCORE_EVENT_FIELD.SINGING,
-        input.singing,
-        setAt,
-      );
+      scoreEvents.queue(created.id, HOMEWORK_SCORE_EVENT_FIELD.SINGING, input.singing);
     }
     const versesChanged = await applyVerseScores(
       tx,
@@ -877,7 +841,9 @@ export async function correctCheckInTransaction(
       input.verseScores,
       verseMap,
       setAt,
+      scoreEvents,
     );
+    await scoreEvents.flush(tx);
     const hasScalarInput =
       input.present !== undefined ||
       input.testScore !== undefined ||
@@ -899,7 +865,7 @@ export async function correctCheckInTransaction(
       lesson.gradeId,
       lesson.academicYearId,
       lesson.id,
-      schoolTimeZone,
+      resolvedTimeZone,
       setAt,
       actorUserId,
     );
@@ -947,7 +913,7 @@ export async function correctCheckInTransaction(
   }
 
   const verseMap = await loadVerseScoreMap(tx, existing.id);
-  const scalar = await applyScalarChanges(tx, existing.id, actorUserId, input, existing, setAt);
+  const scalar = await applyScalarChanges(tx, existing.id, input, existing, scoreEvents);
   const versesChanged = await applyVerseScores(
     tx,
     existing.id,
@@ -955,7 +921,9 @@ export async function correctCheckInTransaction(
     input.verseScores,
     verseMap,
     setAt,
+    scoreEvents,
   );
+  await scoreEvents.flush(tx);
   const changed = scalar.changed || versesChanged;
 
   if (!changed) {
@@ -993,7 +961,7 @@ export async function correctCheckInTransaction(
     lesson.gradeId,
     lesson.academicYearId,
     lesson.id,
-    schoolTimeZone,
+    resolvedTimeZone,
     setAt,
     actorUserId,
   );
@@ -1043,6 +1011,7 @@ export async function overrideVerseScoreInTransaction(
   actorUserId: string,
   organizationId: string,
   input: OverrideVerseScoreInput,
+  schoolTimeZone?: string,
 ): Promise<MutationResult<CheckMutationSuccess>> {
   const lesson = await loadLessonInOrganization(tx, input.lessonId, organizationId);
   if (isMutationErr(lesson)) return lesson;
@@ -1064,7 +1033,8 @@ export async function overrideVerseScoreInTransaction(
   }
 
   const setAt = new Date();
-  const schoolTimeZone = await loadSchoolTimeZone(tx);
+  const resolvedTimeZone = schoolTimeZone ?? (await loadSchoolTimeZone(tx));
+  const scoreEvents = createScoreEventCollector(actorUserId, setAt);
   const verseMap = await loadVerseScoreMap(tx, existing.id);
   const previousScore = verseMap.get(input.lessonVerseId) ?? null;
   if (valuesEqual(previousScore, input.score)) {
@@ -1082,7 +1052,9 @@ export async function overrideVerseScoreInTransaction(
     [{ lessonVerseId: input.lessonVerseId, score: input.score }],
     verseMap,
     setAt,
+    scoreEvents,
   );
+  await scoreEvents.flush(tx);
 
   const updated = await recalculateCheckPointsAndLate(
     tx,
@@ -1091,7 +1063,7 @@ export async function overrideVerseScoreInTransaction(
     lesson.gradeId,
     lesson.academicYearId,
     lesson.id,
-    schoolTimeZone,
+    resolvedTimeZone,
     setAt,
     actorUserId,
   );

@@ -2,12 +2,12 @@
 
 **Тип:** ADR
 **Статус:** ACCEPTED
-**Версия:** 1.1
+**Версия:** 1.2
 **Дата:** 2026-10-10
 **Волна:** W1-F2
 **Зависит от:** [`adr_001_stack_and_runtime.md`](./adr_001_stack_and_runtime.md), [`adr_002_nextjs_vercel_runtime_policy.template.md`](./adr_002_nextjs_vercel_runtime_policy.template.md)
 **Связанные документы:** [`architecture_master_index.md`](../architecture_master_index.md), [`ai_loading_patterns.md`](../../guidelines/nextjs/ai_loading_patterns.md), [`nextjs-vercel-app-router.mdc`](../../../.cursor/rules/tiers/t1-implementation/nextjs-vercel-app-router.mdc)
-**Проверено по:** next@16.4.2 (пин с 2026-10-23: `next upgrade --agent=security`, цель — последний безопасный патч 16.4; CVE закрыты в 16.4.1). API сверены по next@16.4.0, nextjs.org через WebFetch, 2026-10-10: `proxy.ts` (Middleware переименован в Proxy с Next.js 16; экспорт `proxy` или default), `cacheComponents` (стабилен с 16.0.0; включать вместе с `partialPrefetching`; требует Node.js runtime). `experimental.agentUpgrade` в 16.4.2 нет (строка отсутствует в пакете) — опция не ставится. Context7 `/websites/nextjs` (agent upgrade), 2026-10-23.
+**Проверено по:** next@16.4.4 (`npm view next version`, 2026-11-02; патч 16.4.3 — [vercel/next.js#100277](https://github.com/vercel/next.js/pull/100277), фикс extensionless URL Google Fonts). API сверены по next@16.4.0, nextjs.org через WebFetch, 2026-10-10: `proxy.ts` (Middleware переименован в Proxy с Next.js 16; экспорт `proxy` или default), `cacheComponents` (стабилен с 16.0.0; включать вместе с `partialPrefetching`; требует Node.js runtime). `experimental.agentUpgrade` в 16.4.2 не было — опция не ставится. Context7 `/websites/nextjs` (agent upgrade), 2026-10-23.
 **Owner:** Architecture + Runtime
 
 **Methodology:** [`docs/meta/ai_first_project_methodology.md`](../../meta/ai_first_project_methodology.md)
@@ -30,7 +30,7 @@ Agents must not treat Next.js 15 `middleware.ts` as the canonical interception f
 
 | Policy | Value |
 |--------|-------|
-| **Next.js version** | **16.4, exact patch pin** — current pin **`16.4.2`** (`next`, `@next/env`, `eslint-config-next`). In `apps/web` `package.json`: `"next": "16.4.<patch>"` (no caret). Align `@next/third-parties` and `eslint-config-next` to the **same** patch. Bump 16.4 security/patch pins in the **same task**. **16.5+** requires an ADR amend. |
+| **Next.js version** | **16.4, exact patch pin** — current pin **`16.4.4`** (`next`, `@next/env`, `eslint-config-next`). In `apps/web` `package.json`: `"next": "16.4.<patch>"` (no caret). Align `@next/third-parties` and `eslint-config-next` to the **same** patch. Bump 16.4 security/patch pins in the **same task**. **16.5+** requires an ADR amend. |
 | **React** | 19.x (peer of Next 16.4) |
 | **Hosting** | Vercel |
 | **Bundler** | Turbopack default (`next dev`, `next build`) |
@@ -169,3 +169,4 @@ Detail: [`docs/guidelines/nextjs/ai_loading_patterns.md`](../../guidelines/nextj
 |------|--------|
 | 2026-10-10 | v1.0 — ACCEPTED (W1-F2), создан из шаблона |
 | 2026-10-23 | v1.1 — security-пин `next@16.4.2` (фиксы 16.4.1: RCE в `use cache` / Image Optimization, DoS Server Actions). `experimental.agentUpgrade` в 16.4.2 нет |
+| 2026-11-02 | v1.2 — пин `next@16.4.4`. Сборка Vercel на 16.4.2 падает: Google Fonts отдаёт `/l/font?kit=…&skey=…` без расширения, Turbopack рвёт query по `&` (`next/font/google queries have exactly one entry`, [#99114](https://github.com/vercel/next.js/issues/99114)). Фикс — 16.4.3 ([#100277](https://github.com/vercel/next.js/pull/100277)); 16.4.4 — текущий патч 16.4 |

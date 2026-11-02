@@ -102,6 +102,18 @@ When Sentry is enabled: `Sentry.setTag('submit_transport', 'server-action' | 'ro
 
 ---
 
+## 6. DB latency (Neon, RTT ~260 мс)
+
+Подробности и план: [`db_latency_optimization_spec.md`](../../implementation/mvp/specs/db_latency_optimization_spec.md).
+
+- Время запроса ≈ число обращений к БД × RTT. Оптимизировать **число обращений**, не SQL.
+- Интерактивная `$transaction(async tx => …)`: дефолт клиента `maxWait` 10 с / `timeout` 30 с (Prisma out-of-box 2 с / 5 с ≈ 19 обращений). Не открывать транзакцию ради чтения — читать через `db` (`DbReader` в `@sunschool/db`).
+- `Promise.all` внутри одного `tx` не параллелит (одно соединение). Параллелить только запросы на `db` вне транзакции.
+- Не делать запрос/`$transaction` в цикле по сущностям: `groupBy`, `findMany({ where: { id: { in } } })`, `createMany`, один `UPDATE … FROM unnest(…)`.
+- Авторизационные проверки и блокировки (`FOR UPDATE`) остаются внутри транзакции в прежнем порядке.
+
+---
+
 ## 8. Related rules
 
 - [`data-server-actions-and-api.mdc`](../../../.cursor/rules/data-server-actions-and-api.mdc)

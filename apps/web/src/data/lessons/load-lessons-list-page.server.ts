@@ -84,11 +84,13 @@ export async function loadLessonsListPage(
   preferredGradeId: string | null,
 ): Promise<LessonsListPageData> {
   const organizationId = await getDefaultOrganizationId(db);
-  const isAdmin = await userHasAdminRole(db, actorUserId);
-  const year = await db.academicYear.findFirst({
-    where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
-    select: { id: true, name: true, status: true },
-  });
+  const [isAdmin, year] = await Promise.all([
+    userHasAdminRole(db, actorUserId),
+    db.academicYear.findFirst({
+      where: { organizationId, status: ACADEMIC_YEAR_STATUS.ACTIVE },
+      select: { id: true, name: true, status: true },
+    }),
+  ]);
   if (!year) return { kind: "no_active_year" };
 
   const grades = await loadGradeOptions(db, actorUserId, year.id, organizationId, isAdmin);
@@ -123,21 +125,22 @@ export async function loadLessonsListPage(
     },
   });
 
-  const lessons: LessonsListRow[] = [];
-  for (const row of lessonRows) {
-    const totalPupils = await countPupilsOnLesson(db, gradeId, year.id, row.lessonDate);
-    lessons.push({
-      lessonId: row.id,
-      ordinal: row.ordinal,
-      lessonDateIso: lessonDateToIso(row.lessonDate),
-      title: row.title,
-      kind: row.kind as LessonKind,
-      leadName: formatDisplayName(row.leadTeacher),
-      status: row.status as LessonStatus,
-      checkedCount: row._count.checks,
-      totalPupils,
-    });
-  }
+  const lessons: LessonsListRow[] = await Promise.all(
+    lessonRows.map(async (row) => {
+      const totalPupils = await countPupilsOnLesson(db, gradeId, year.id, row.lessonDate);
+      return {
+        lessonId: row.id,
+        ordinal: row.ordinal,
+        lessonDateIso: lessonDateToIso(row.lessonDate),
+        title: row.title,
+        kind: row.kind as LessonKind,
+        leadName: formatDisplayName(row.leadTeacher),
+        status: row.status as LessonStatus,
+        checkedCount: row._count.checks,
+        totalPupils,
+      };
+    }),
+  );
 
   const yearClosed = year.status !== ACADEMIC_YEAR_STATUS.ACTIVE;
 

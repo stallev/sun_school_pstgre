@@ -233,8 +233,9 @@ export async function recalculateLessonOrdinals(
 ): Promise<void> {
   const lessons = await tx.lesson.findMany({
     where: { gradeId, academicYearId },
-    select: { id: true, lessonDate: true, createdAt: true },
+    select: { id: true, lessonDate: true, createdAt: true, ordinal: true },
   });
+  const currentOrdinalById = new Map(lessons.map((row) => [row.id, row.ordinal]));
   const withOrdinals = assignLessonOrdinals(
     lessons.map((row) => ({
       id: row.id,
@@ -242,12 +243,19 @@ export async function recalculateLessonOrdinals(
       createdAt: row.createdAt.toISOString(),
     })),
   );
-  for (const row of withOrdinals) {
-    await tx.lesson.update({
-      where: { id: row.id },
-      data: { ordinal: row.ordinal },
-    });
-  }
+  const changed = withOrdinals.filter(
+    (row) => currentOrdinalById.get(row.id) !== row.ordinal,
+  );
+  if (changed.length === 0) return;
+
+  const ids = changed.map((row) => row.id);
+  const ordinals = changed.map((row) => row.ordinal);
+  await tx.$executeRaw`
+    UPDATE lesson
+    SET ordinal = v.ordinal, updated_at = NOW()
+    FROM unnest(${ids}::uuid[], ${ordinals}::int[]) AS v(id, ordinal)
+    WHERE lesson.id = v.id
+  `;
 }
 
 export async function ensureLessonGradeEvent(

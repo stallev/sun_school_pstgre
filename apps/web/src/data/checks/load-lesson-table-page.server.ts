@@ -71,10 +71,11 @@ export async function loadLessonTablePage(
   lessonId: string,
   isAdmin: boolean,
 ): Promise<LessonTablePageData> {
-  const table = await getLessonTable(db, actorUserId, lessonId);
+  const [table, access] = await Promise.all([
+    getLessonTable(db, actorUserId, lessonId),
+    loadCheckLessonAccess(db, actorUserId, lessonId),
+  ]);
   if (table.kind === "not_found") return { kind: "not_found" };
-
-  const access = await loadCheckLessonAccess(db, actorUserId, lessonId);
   if (access.kind === "not_found") return { kind: "not_found" };
 
   const settings = await db.gradeSettings.findUnique({

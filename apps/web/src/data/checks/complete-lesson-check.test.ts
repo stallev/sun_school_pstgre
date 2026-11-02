@@ -153,6 +153,9 @@ describe("completeLessonCheck", () => {
       },
     });
     const db = {
+      appUser: {
+        findUnique: vi.fn().mockResolvedValue({ organizationId: orgId }),
+      },
       $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
     };
 
@@ -171,6 +174,9 @@ describe("completeLessonCheck", () => {
         .mockResolvedValueOnce([{ status: LESSON_STATUS.CHECK_COMPLETED }]),
     });
     const db = {
+      appUser: {
+        findUnique: vi.fn().mockResolvedValue({ organizationId: orgId }),
+      },
       $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
     };
 

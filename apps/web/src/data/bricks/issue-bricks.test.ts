@@ -30,17 +30,26 @@ const baseInput = {
   quantity: 3,
 };
 
+function groupByForPupils(field: string, value: number | (() => number)) {
+  return vi.fn().mockImplementation(async ({ where }: { where: { pupilId: { in: string[] } } }) =>
+    where.pupilId.in.map((id) => ({
+      pupilId: id,
+      _sum: { [field]: typeof value === "function" ? value() : value },
+    })),
+  );
+}
+
 function mockTotals(earned: number, issued: number) {
   return {
     homeworkCheck: {
-      aggregate: vi.fn().mockResolvedValue({ _sum: { pointsTotal: earned } }),
+      groupBy: groupByForPupils("pointsTotal", earned),
     },
     brickLedger: {
-      aggregate: vi.fn().mockResolvedValue({ _sum: { quantity: issued } }),
+      groupBy: groupByForPupils("quantity", issued),
       create: vi.fn().mockResolvedValue({ id: "ledger-1" }),
     },
     achievementAward: {
-      aggregate: vi.fn().mockResolvedValue({ _sum: { points: 0 } }),
+      groupBy: groupByForPupils("points", 0),
     },
     penalty: {
       findMany: vi.fn().mockResolvedValue([]),
@@ -48,6 +57,13 @@ function mockTotals(earned: number, issued: number) {
     appSetting: {
       findUnique: vi.fn().mockResolvedValue(null),
     },
+  };
+}
+
+function wrapDb(tx: ReturnType<typeof baseTx>) {
+  return {
+    appSetting: { findUnique: vi.fn().mockResolvedValue(null) },
+    $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
   };
 }
 
@@ -90,9 +106,7 @@ describe("issueBricks (bricks_ledger §6.2, §8–§10)", () => {
 
   it("returns BRICKS_INSUFFICIENT when quantity exceeds balance", async () => {
     const tx = baseTx({ ...mockTotals(10, 9) });
-    const db = {
-      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
-    };
+    const db = wrapDb(tx);
 
     const result = await issueBricks(db as never, actorTeacherId, { ...baseInput, quantity: 5 });
 
@@ -108,9 +122,7 @@ describe("issueBricks (bricks_ledger §6.2, §8–§10)", () => {
     const tx = baseTx({
       teacherAssignment: { findFirst: vi.fn().mockResolvedValue(null) },
     });
-    const db = {
-      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
-    };
+    const db = wrapDb(tx);
 
     const result = await issueBricks(db as never, actorTeacherId, baseInput);
 
@@ -156,10 +168,10 @@ describe("issueBricks (bricks_ledger §6.2, §8–§10)", () => {
         return [{ id: pupilId }];
       }),
       homeworkCheck: {
-        aggregate: vi.fn().mockResolvedValue({ _sum: { pointsTotal: 10 } }),
+        groupBy: groupByForPupils("pointsTotal", 10),
       },
       brickLedger: {
-        aggregate: vi.fn().mockResolvedValue({ _sum: { quantity: 2 } }),
+        groupBy: groupByForPupils("quantity", 2),
         create: vi.fn().mockImplementation(async () => {
           createCount += 1;
           auditVisible = true;
@@ -168,9 +180,7 @@ describe("issueBricks (bricks_ledger §6.2, §8–§10)", () => {
         }),
       },
     });
-    const db = {
-      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
-    };
+    const db = wrapDb(tx);
 
     const input = { ...baseInput, requestId };
     const [first, second] = await Promise.all([
@@ -189,9 +199,7 @@ describe("issueBricks (bricks_ledger §6.2, §8–§10)", () => {
         findFirst: vi.fn().mockResolvedValue({ entityId: "ledger-existing" }),
       },
     });
-    const db = {
-      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
-    };
+    const db = wrapDb(tx);
 
     const result = await issueBricks(db as never, actorTeacherId, { ...baseInput, requestId });
 
@@ -201,9 +209,7 @@ describe("issueBricks (bricks_ledger §6.2, §8–§10)", () => {
 
   it("creates one ledger row and audit on success", async () => {
     const tx = baseTx();
-    const db = {
-      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
-    };
+    const db = wrapDb(tx);
     const { writeAudit } = await import("@sunschool/db");
 
     const result = await issueBricks(db as never, actorTeacherId, baseInput);
@@ -224,21 +230,17 @@ describe("issueBricks (bricks_ledger §6.2, §8–§10)", () => {
     let issued = 2;
     const tx = baseTx({
       homeworkCheck: {
-        aggregate: vi.fn().mockResolvedValue({ _sum: { pointsTotal: 10 } }),
+        groupBy: groupByForPupils("pointsTotal", 10),
       },
       brickLedger: {
-        aggregate: vi
-          .fn()
-          .mockImplementation(async () => ({ _sum: { quantity: issued } })),
+        groupBy: groupByForPupils("quantity", () => issued),
         create: vi.fn().mockImplementation(async () => {
           issued += 3;
           return { id: "ledger-1" };
         }),
       },
     });
-    const db = {
-      $transaction: vi.fn(async (fn: (inner: typeof tx) => Promise<unknown>) => fn(tx)),
-    };
+    const db = wrapDb(tx);
 
     const first = await issueBricks(db as never, actorTeacherId, baseInput);
     const second = await issueBricks(db as never, actorTeacherId, { ...baseInput, quantity: 6 });
