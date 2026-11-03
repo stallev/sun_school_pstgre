@@ -40,7 +40,7 @@ export const ConsentBlock = ({
       </ul>
       <button
         type="button"
-        className="min-h-11 text-cobalt-ink text-sm underline-offset-4 hover:underline"
+        className="min-h-11 text-cobalt-ink text-sm"
         aria-expanded={disclosureOpen}
         aria-controls={panelId}
         onClick={() => setDisclosureOpen((open) => !open)}

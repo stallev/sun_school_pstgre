@@ -91,7 +91,7 @@ export const PupilLessonCards = ({
           showCorrectActions && row.homeworkChecked ? (
             <CustomLink
               href={`/lessons/${row.lessonId}/check?pupil=${pupilId}`}
-              className="inline-flex min-h-11 items-center text-[1.3125rem] leading-snug text-cobalt-ink hover:underline"
+              className="inline-flex min-h-11 items-center text-[1.3125rem] leading-snug text-cobalt-ink"
             >
               {messages.lessonCorrectLabel}
             </CustomLink>

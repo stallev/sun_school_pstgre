@@ -126,7 +126,7 @@ export const PupilLessonTable = ({
                     {row.homeworkChecked ? (
                       <CustomLink
                         href={`/lessons/${row.lessonId}/check?pupil=${pupilId}`}
-                        className="text-sm text-cobalt-ink hover:underline"
+                        className="text-sm text-cobalt-ink"
                       >
                         {messages.lessonCorrectLabel}
                       </CustomLink>

@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "border-danger/60 bg-surface text-danger hover:bg-danger-soft",
         /** ConfirmDialog only — do not use on product screens outside `@/components/patterns/ConfirmDialog`. */
         "destructive-solid": "bg-danger text-surface hover:bg-danger/90",
-        link: "text-cobalt-ink underline-offset-4 hover:underline",
+        link: "text-cobalt-ink",
       },
       size: {
         default: cn(

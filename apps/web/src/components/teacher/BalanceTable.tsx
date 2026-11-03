@@ -108,7 +108,7 @@ export const BalanceTable = ({
                   <TableCell>
                     <button
                       type="button"
-                      className="min-h-11 w-full text-left font-medium text-cobalt-ink underline-offset-2 hover:underline"
+                      className="min-h-11 w-full text-left font-medium text-cobalt-ink"
                       aria-current={isSelected ? "true" : undefined}
                       onClick={() => selectPupil(row.pupilId)}
                     >

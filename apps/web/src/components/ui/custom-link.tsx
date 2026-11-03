@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export const CustomLink = ({ className, ...props }: ComponentProps<typeof Link>) => (
   <Link
     className={cn(
-      "rounded-sm font-medium text-cobalt-ink underline-offset-4 hover:underline",
+      "rounded-sm font-medium text-cobalt-ink",
       className,
     )}
     {...props}
