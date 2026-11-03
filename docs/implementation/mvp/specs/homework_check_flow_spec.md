@@ -2,12 +2,12 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.4  
+**Версия:** 1.5  
 **Дата:** 2026-11-03  
 **Волна:** W9-04; P11 — панель оценок сводной таблицы; P24 — плотная раскладка, диалог несохранённых изменений, ошибка присутствия, Enter  
 **Зависит от:** [`homework_check_contract.md`](../contracts/homework_check_contract.md), [`bricks_ledger_contract.md`](../contracts/bricks_ledger_contract.md), [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (D3…D7, D10, D14), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) §4–§7, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-30…AZ-36, AZ-P5, AZ-P6), [`global_shell_spec.md`](./global_shell_spec.md), [`teacher_flow.md`](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) §4.2–§4.5, [`canonical_routes.md`](../../../design/canonical_routes.md)  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`vCheck`, `vLessonTable`, `scoreRow`), [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
-**Проверено по:** бизнес-правила — контракт и спецификация (БП-1…БП-5, БП-10, БП-12). Группа переключателей оценок на последовательной проверке (§5.3) — WAI-ARIA APG `radiogroup`. Панель 0–10 сводной таблицы (P11, §7.2) — `@base-ui/react` **1.9.0** (уже в `apps/web`, новой зависимости нет), Context7 `/mui/base-ui/v1.9.0`: `Popover.Root` закрывается по `outside-press` и `escape-key`; `Popover.Positioner` — `collisionAvoidance.side = "flip"` (предпочтительная сторона `bottom`, при нехватке места — вверх). Транспорт отправки iOS Safari — правило `ios-safari-mutation-transport`. Next.js 16.4 `loading` / `error` — [`ui_states_contract.md`](../../../design/ui_states_contract.md).
+**Проверено по:** бизнес-правила — контракт и спецификация (БП-1…БП-5, БП-10, БП-12). Группа переключателей оценок на последовательной проверке (§5.3) — WAI-ARIA APG `radiogroup`. Панель 0–10 сводной таблицы (P11, §7.2) — `@base-ui/react` **1.9.0** (уже в `apps/web`, новой зависимости нет), Context7 `/mui/base-ui/v1.9.0`: `Popover.Root` закрывается по `outside-press` и `escape-key`; `Popover.Positioner` — `collisionAvoidance.side = "flip"` (предпочтительная сторона `bottom`, при нехватке места — вверх). Фокус диалога несохранённых изменений (§5.5 п. 5) — тот же пакет, Context7 `/mui/base-ui/v1.9.0` (2026-11-03): `Dialog.Popup` `finalFocus` по умолчанию возвращает фокус на trigger (или ранее сфокусированный элемент); `RefObject` задаёт элемент при закрытии; `Dialog.Root` `onOpenChangeComplete` вызывается после завершения анимации закрытия. Транспорт отправки iOS Safari — правило `ios-safari-mutation-transport`. Next.js 16.4 `loading` / `error` — [`ui_states_contract.md`](../../../design/ui_states_contract.md).
 
 ---
 
@@ -116,7 +116,7 @@
 4. Последний ученик: «Завершить проверку» → `saveChecked` для него, затем `completeLessonCheck` (явная кнопка, решено 2026-10-11); показывается экран §5.6.
 5. Смена ученика (выбор в списке, «Предыдущий», «Следующий», ←/→) при несохранённых изменениях открывает **модальный диалог** (`ConfirmDialog` на базе `Dialog`, не `window.confirm`; UX-06 §7.2):
    - заголовок «Есть несохранённые изменения», текст «Сохранить оценки ученика <ФИО> перед переходом?»;
-   - «Сохранить и перейти» (primary) — `saveChecked` (или `correctCheck` в режиме исправления) по текущему ученику; при успехе — переход к выбранному; при ошибке (`VALIDATION`, в том числе нет присутствия) — диалог закрывается, перехода нет, ошибка у поля;
+   - «Сохранить и перейти» (primary) — `saveChecked` (или `correctCheck` в режиме исправления) по текущему ученику; при успехе — переход к выбранному и фокус на его `h2` (§5.7); при ошибке (`VALIDATION`, в том числе нет присутствия) — диалог закрывается, перехода нет, ошибка у поля. Инвариант: после успешного «Сохранить и перейти» диалог закрывается первым, и фокус на `h2` выбранного ученика ставится уже после закрытия — через `finalFocus` на этот заголовок либо после завершения закрытия (`onOpenChangeComplete`); Base UI при закрытии возвращает фокус на trigger, и перенос фокуса, сделанный пока диалог ещё открыт, этим возвратом затирается.
    - «Не сохранять» (outline) — локальные изменения текущего ученика отбрасываются, переход к выбранному, toast «Изменения сброшены» (2000 мс);
    - «Остаться» (ghost), Escape, клик по фону — диалог закрывается, ученик и введённое не меняются, фокус возвращается на элемент, вызвавший переход.
    Фокус при открытии — на «Сохранить и перейти». Пока идёт сохранение — кнопки `disabled`, `aria-busy`, подпись «Сохраняем…».
@@ -358,3 +358,4 @@ P10-CU9 зафиксировал `<select>` на этом экране; **P11 �
 | 2026-10-21 | v1.2 — P11: §7.1–§7.3 панель оценок сводной таблицы (без `select`); H/N/S §9–§11; Q-06 |
 | 2026-10-21 | v1.3 — Журнал и карточка: тихий стих, чипы, статус словом, свёртка «Не был», счётчик «заполнено K из N»; мутации без изменений (Q-07) |
 | 2026-11-03 | v1.4 — P24: §5.2 компактное «Присутствие»; §5.2а плотная раскладка ≥ `lg` (присутствие + спевка в строку, 2 колонки, inline 0–10); §5.5 модальный диалог из трёх действий вместо `window.confirm`, сброс ошибки присутствия, без автосохранения; §5.7 Enter не на кнопках; R-11…R-14; мутации без изменений |
+| 2026-11-03 | v1.5 — P24: §5.5 п. 5 инвариант фокуса на `h2` после успешного «Сохранить и перейти» (закрытие Base UI Dialog раньше переноса фокуса) |

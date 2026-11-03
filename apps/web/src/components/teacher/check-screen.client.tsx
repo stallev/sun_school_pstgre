@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
 import { CheckBottomBar } from "@/components/teacher/CheckBottomBar";
+import { CheckUnsavedDialog } from "@/components/teacher/CheckUnsavedDialog.client";
 import { CheckCard } from "@/components/teacher/CheckCard";
 import { CheckCardHeader } from "@/components/teacher/CheckCardHeader";
 import { CheckFinishedCard } from "@/components/teacher/CheckFinishedCard";
@@ -266,6 +267,18 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
           }}
         />
       ) : null}
+
+      <CheckUnsavedDialog
+        open={screen.unsavedDialogOpen}
+        pupilName={pupil.displayName}
+        pending={screen.pending}
+        messages={messages}
+        onOpenChange={screen.handleUnsavedDialogOpenChange}
+        onOpenChangeComplete={screen.handleUnsavedDialogOpenChangeComplete}
+        finalFocus={screen.unsavedDialogFinalFocus}
+        onSave={screen.handleUnsavedSave}
+        onDiscard={screen.handleUnsavedDiscard}
+      />
     </div>
   );
 };

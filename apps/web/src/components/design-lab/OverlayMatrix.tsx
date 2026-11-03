@@ -28,6 +28,20 @@ export const OverlayMatrix = () => (
         destructive
       />
     </MatrixCell>
+    <MatrixCell label="Dialog (unsaved)">
+      <ConfirmDialog
+        variant="unsaved"
+        open={false}
+        onOpenChange={() => undefined}
+        title={LAB_TEXT.unsavedTitle}
+        description={LAB_TEXT.unsavedBody}
+        saveLabel={LAB_TEXT.unsavedSave}
+        discardLabel={LAB_TEXT.unsavedDiscard}
+        stayLabel={LAB_TEXT.unsavedStay}
+        onSave={() => undefined}
+        onDiscard={() => undefined}
+      />
+    </MatrixCell>
     <MatrixCell label="Sheet (NavDrawer)">
       <NavDrawer
         trigger={<Button variant="outline">{LAB_TEXT.drawerTitle}</Button>}
