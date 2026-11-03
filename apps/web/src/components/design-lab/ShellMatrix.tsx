@@ -55,6 +55,8 @@ const LAB_SHELL_MESSAGES: ShellMessages = {
   displayNameFallback: "User",
   forbiddenHome: "Go to home",
   badgeInQueue: "{count} in queue",
+  sidebarCollapse: "Collapse menu",
+  sidebarExpand: "Expand menu",
   devViewAs: "View as",
   devRoleAdmin: "Administrator",
   devRoleTeacher: "Teacher",
@@ -77,14 +79,26 @@ const SAMPLE_NAV: ResolvedNavItem[] = [
 
 export const ShellMatrix = () => (
   <ShellMessagesProvider messages={LAB_SHELL_MESSAGES}>
-    <div className="grid gap-3">
-      <MatrixCell label="SidebarNav (teacher sample)">
+    <div className="grid gap-3 md:grid-cols-2">
+      <MatrixCell label="SidebarNav — expanded">
         <div className="max-w-xs rounded-xl border border-line bg-surface">
           <SidebarNav
             items={SAMPLE_NAV}
             activeKey="today"
             badgeCounts={{ approvals: 3, peopleGroup: 5 }}
             asideClassName="static block h-auto"
+            collapsed={false}
+          />
+        </div>
+      </MatrixCell>
+      <MatrixCell label="SidebarNav — rail">
+        <div className="max-w-[4.5rem] rounded-xl border border-line bg-surface">
+          <SidebarNav
+            items={SAMPLE_NAV}
+            activeKey="today"
+            badgeCounts={{ approvals: 3, peopleGroup: 5 }}
+            asideClassName="static block h-auto"
+            collapsed
           />
         </div>
       </MatrixCell>

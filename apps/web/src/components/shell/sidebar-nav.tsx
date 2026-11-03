@@ -4,29 +4,41 @@ import { NavBadge } from "@/components/shell/nav-badge";
 import { NavLinkRow } from "@/components/shell/nav-link-row";
 import type { ShellNavProps } from "@/components/shell/shell-nav-types";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
+import { Separator } from "@/components/ui/separator";
 import { isNavLeafActive, isResolvedNavGroup } from "@/lib/shell/nav-resolver";
-import { useId } from "react";
+import { Fragment, useId } from "react";
 import { cn } from "@/lib/utils";
 
 const badgeLabel = (template: string, count: number) => template.replace("{count}", String(count));
 
 type SidebarNavProps = Pick<ShellNavProps, "items" | "activeKey" | "badgeCounts"> & {
+  id?: string;
   asideClassName?: string;
+  collapsed?: boolean;
 };
 
-export const SidebarNav = ({ items, activeKey, badgeCounts, asideClassName }: SidebarNavProps) => {
+export const SidebarNav = ({
+  id,
+  items,
+  activeKey,
+  badgeCounts,
+  asideClassName,
+  collapsed = false,
+}: SidebarNavProps) => {
   const messages = useShellMessages();
-  const navId = useId();
+  const generatedId = useId();
+  const navId = id ?? generatedId;
 
   return (
     <aside
       className={cn(
-        "sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface px-3 py-4 lg:block",
+        "sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface py-4 lg:block",
+        collapsed ? "px-2" : "px-3",
         asideClassName,
       )}
     >
       <nav id={navId} aria-label={messages.mainNav}>
-        {items.map((item) => {
+        {items.map((item, index) => {
           if (isResolvedNavGroup(item)) {
             const groupHeadingId = `${navId}-group-${item.key}`;
             const groupBadge =
@@ -34,32 +46,44 @@ export const SidebarNav = ({ items, activeKey, badgeCounts, asideClassName }: Si
                 ? badgeCounts[item.badgeSlotId]!
                 : 0;
             return (
-              <div key={item.key} className="mt-5 first:mt-0">
-                <p
-                  id={groupHeadingId}
-                  className="flex items-center px-3 pb-1 text-sm font-medium text-muted"
-                >
-                  <span className="min-w-0 flex-1">{item.label}</span>
-                  {groupBadge > 0 ? (
-                    <NavBadge
-                      count={groupBadge}
-                      ariaLabel={badgeLabel(messages.badgeInQueue, groupBadge)}
-                    />
-                  ) : null}
-                </p>
-                <ul aria-labelledby={groupHeadingId} className="space-y-0.5">
-                  {item.children.map((child) => (
-                    <li key={child.key}>
-                      <NavLinkRow
-                        leaf={child}
-                        isActive={isNavLeafActive(child, activeKey)}
-                        badgeCount={child.badgeSlotId ? badgeCounts[child.badgeSlotId] : 0}
-                        density="sidebar"
+              <Fragment key={item.key}>
+                {collapsed && index > 0 ? (
+                  <Separator className="my-3 bg-line" />
+                ) : null}
+                <div className={cn("mt-5 first:mt-0", collapsed && "mt-0 first:mt-0")}>
+                  <p
+                    id={groupHeadingId}
+                    className={cn(
+                      "flex items-center px-3 pb-1 text-sm font-medium text-muted",
+                      collapsed && "sr-only",
+                    )}
+                  >
+                    <span className="min-w-0 flex-1">{item.label}</span>
+                    {!collapsed && groupBadge > 0 ? (
+                      <NavBadge
+                        count={groupBadge}
+                        ariaLabel={badgeLabel(messages.badgeInQueue, groupBadge)}
                       />
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                    ) : null}
+                  </p>
+                  <ul
+                    aria-labelledby={groupHeadingId}
+                    className={cn("space-y-0.5", collapsed && "space-y-1")}
+                  >
+                    {item.children.map((child) => (
+                      <li key={child.key}>
+                        <NavLinkRow
+                          leaf={child}
+                          isActive={isNavLeafActive(child, activeKey)}
+                          badgeCount={child.badgeSlotId ? badgeCounts[child.badgeSlotId] : 0}
+                          density="sidebar"
+                          collapsed={collapsed}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Fragment>
             );
           }
           return (
@@ -70,6 +94,7 @@ export const SidebarNav = ({ items, activeKey, badgeCounts, asideClassName }: Si
                   isActive={isNavLeafActive(item, activeKey)}
                   badgeCount={item.badgeSlotId ? badgeCounts[item.badgeSlotId] : 0}
                   density="sidebar"
+                  collapsed={collapsed}
                 />
               </li>
             </ul>

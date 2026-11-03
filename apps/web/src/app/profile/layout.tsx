@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ACCOUNT_STATUS } from "@sunschool/domain";
 import { ACCESS_DENIED_ROUTE, homeRouteFor } from "@sunschool/policy-edge";
@@ -15,6 +16,10 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary } from "@/lib/messages/get-dictionary";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
+import {
+  parseSidebarCollapsedCookie,
+  SIDEBAR_COLLAPSED_COOKIE_NAME,
+} from "@/lib/shell/sidebar-collapsed-cookie";
 
 export const instant = false;
 
@@ -41,6 +46,10 @@ const ProfileLayout = async ({ children }: ProfileLayoutProps) => {
   ]);
   const authMessages = pickAuthMessages(authDictionary);
   const shellMessages = pickShellMessages(common);
+  const cookieStore = await cookies();
+  const sidebarCollapsed = parseSidebarCollapsedCookie(
+    cookieStore.get(SIDEBAR_COLLAPSED_COOKIE_NAME)?.value,
+  );
 
   if (policy.status === ACCOUNT_STATUS.ACTIVE) {
     const { APP_ENV } = getServerEnv();
@@ -59,6 +68,7 @@ const ProfileLayout = async ({ children }: ProfileLayoutProps) => {
           displayName={shellUser.displayName}
           nav={nav}
           badgeCounts={badgeCounts}
+          sidebarCollapsed={sidebarCollapsed}
         >
           {children}
         </AppShell>

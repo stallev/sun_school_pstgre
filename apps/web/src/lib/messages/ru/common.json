@@ -58,6 +58,8 @@
     "display_name_fallback": "Пользователь",
     "forbidden_home": "На главную",
     "badge_in_queue": "В очереди: {count}",
+    "sidebar_collapse": "Свернуть меню",
+    "sidebar_expand": "Развернуть меню",
     "document_suffix": "Воскресная школа",
     "document_description": "Приложение воскресной школы",
     "dev_view_as": "Смотреть как",

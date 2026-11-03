@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { connection } from "next/server";
+import { cookies } from "next/headers";
 import { USER_ROLE } from "@sunschool/domain";
 import { homeRouteFor } from "@sunschool/policy-edge";
 
@@ -20,6 +21,10 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { getPrisma } from "@/lib/db.server";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
+import {
+  parseSidebarCollapsedCookie,
+  SIDEBAR_COLLAPSED_COOKIE_NAME,
+} from "@/lib/shell/sidebar-collapsed-cookie";
 import {
   readRequestPathname,
   resolveShellRouteDocumentTitle,
@@ -63,6 +68,10 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
   ]);
 
   const shellMessages = pickShellMessages(common);
+  const cookieStore = await cookies();
+  const sidebarCollapsed = parseSidebarCollapsedCookie(
+    cookieStore.get(SIDEBAR_COLLAPSED_COOKIE_NAME)?.value,
+  );
   const homeHref = homeRouteFor(context.status, context.roles);
   const bannerCopy: ShellBannerCopy = {
     noActiveYearTitle: getMessage(common, "states.no_active_year_title"),
@@ -111,6 +120,7 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
       displayName={shellUser.displayName}
       nav={nav}
       badgeCounts={badgeCounts}
+      sidebarCollapsed={sidebarCollapsed}
     >
       {legacyConsentBanner}
       <ShellBanners banners={shellBanners} />

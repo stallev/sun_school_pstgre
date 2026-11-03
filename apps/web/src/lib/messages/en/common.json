@@ -58,6 +58,8 @@
     "display_name_fallback": "User",
     "forbidden_home": "Go to home",
     "badge_in_queue": "{count} in queue",
+    "sidebar_collapse": "Collapse menu",
+    "sidebar_expand": "Expand menu",
     "document_suffix": "Sunday School",
     "document_description": "Sunday school application",
     "dev_view_as": "View as",
