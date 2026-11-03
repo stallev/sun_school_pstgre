@@ -2,11 +2,11 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 2.0  
-**Дата:** 2026-10-24  
-**Волна:** W9-01 (v2.0 — W12, P14)  
+**Версия:** 2.1  
+**Дата:** 2026-11-03  
+**Волна:** W9-01 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md) (UX-02), [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`canonical_routes.md`](../../../design/canonical_routes.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) §6, [`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §10, [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md) §5, [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §3–§5.2, [`adr_008_i18n_ru_en_dictionary_slices.md`](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md), [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md)  
-**Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`#shell`, `NAV`, `render`, `sidebarHTML`), [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md), [`prototype_class_parity_spec.md`](./prototype_class_parity_spec.md), [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
+**Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`#shell`, `NAV`, `render`, `sidebarHTML`), [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_017_shell_container_toast_buttons.md`](../../../prds/07_governance/adr_017_shell_container_toast_buttons.md), [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md), [`prototype_class_parity_spec.md`](./prototype_class_parity_spec.md), [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
 **Проверено по:** WAI-ARIA Authoring Practices (w3.org, WebFetch 2026-10-11): модальный диалог — фокус внутрь при открытии, цикл Tab внутри, Esc закрывает, возврат фокуса на вызвавший элемент, `role="dialog"` + `aria-modal` + имя; навигация сайта — **disclosure-кнопки с `aria-expanded` и `aria-controls`**, а не `role="menu"` (роль `menu` подразумевает сложное клавиатурное поведение, которое навигации не нужно), `aria-current="page"` у ссылки текущей страницы, Esc закрывает раскрытый список и возвращает фокус. Next.js 16.4 layouts / `loading.tsx` / `error.tsx` — [`ui_states_contract.md`](../../../design/ui_states_contract.md) (WebFetch 2026-10-11). `'use cache'`, `partialPrefetching` и Instant Navigations — по ADR-002 §5; значения в проекте не пересверялись, остаются Open question до P5. Context7 недоступен.
 
 ---
@@ -40,8 +40,9 @@
 | `app/(app)/layout.tsx` | Server | `requireActiveUser()`, выбор NAV, бейджи (Suspense), оболочка |
 | `app/(app)/loading.tsx` | Server | skeleton области контента (не навигации) |
 | `app/(app)/error.tsx` | Client | ошибка внутри оболочки, `retry()` |
-| `components/shell/app-shell.tsx` | Server | каркас: skip-link, header, на `lg+` сетка `grid-cols-[16rem_minmax(0,1fr)]` (сайдбар + `main#main`), слоты; контейнер `#view` (R-4) |
-| `components/shell/app-header.tsx` | Server | бренд, слот пользователя (слота навигации нет, v2.0) |
+| `components/shell/app-shell.tsx` | Server | каркас: skip-link, header, на `lg+` сетка `grid-cols-[16rem_minmax(0,1fr)]` или `grid-cols-[4rem_minmax(0,1fr)]` в свёрнутом состоянии (сайдбар + `main#main`), слоты; центрирующий контейнер `max-w-[1600px] mx-auto` для шапки и `#view` (ADR-017; P24). Получает `sidebarCollapsed: boolean` из layout |
+| `components/shell/shell-header.client.tsx` | Client | бренд, кнопка сворачивания сайдбара (≥ `lg`, §6.1а), кнопка меню (< `lg`), слот пользователя (слота навигации нет, v2.0); внутреннее содержимое — в том же контейнере `max-w-[1600px] mx-auto`, что и `#view` |
+| `lib/shell/sidebar-collapsed-cookie.ts` | модуль | имя cookie `sidebar_collapsed`, значения `"1"` / `"0"`, парсер для сервера и запись для клиента (P24) |
 | `components/shell/nav-config.ts` | модуль | `NAV_BY_ROLE`, `NAV_ALIAS` (данные, без JSX); единственный источник для сайдбара и drawer |
 | `components/shell/sidebar-nav.tsx` | Server/Client | сайдбар (≥ `lg`): плоские группы ссылок, `aria-current`; заменил `top-nav.tsx` (удаляется) |
 | `components/shell/nav-link-row.tsx` | Server | строка пункта; варианты `sidebar` и `drawer` |
@@ -61,6 +62,7 @@
 | 2 | Определить роль оболочки | `ADMIN`, иначе `TEACHER`; при двух ролях — NAV admin + пункт «Группа» не добавляется (admin видит группы через «Учёба») |
 | 3 | Передать NAV и текущий путь клиентским компонентам | в props — только список `{key, label key, href, group}`; без ПД и без полного словаря (срез `common`, ADR-008 §4.3) |
 | 4 | Бейджи | значения `pendingRequests`, `openDeletions` — отдельные `<Suspense>`-регионы с запросами count; сбой бейджа не ломает оболочку (показывается без числа) |
+| 4а | Состояние сайдбара (P24) | `(app)/layout.tsx` читает cookie `sidebar_collapsed` через `cookies()` (Next.js 16.4, динамический API — внутри уже динамического сегмента с `requireActiveUser()`, за Suspense по ADR-002 §5) и передаёт `sidebarCollapsed` в `app-shell`; первый HTML уже с нужной шириной колонки — без мигания и без hydration mismatch. Нет cookie или значение не `"1"` → развёрнут |
 | 5 | Баннеры уровня оболочки | D1 (нет активного года) и D13 (пояс не выбран) — для admin; D3 (год закрыт) — для teacher на экранах с данными года; решение — сервер, значения из кэшируемых функций |
 | 6 | Заголовок документа | «Название экрана — Sunday School»; каждая страница задаёт `metadata.title` по ключу словаря |
 
@@ -75,6 +77,19 @@
 - Прокрутка сайдбара — внутри `aside` (`overflow-y-auto`), страница при этом не прыгает; высота `calc(100dvh - 3.5rem)`.
 - `role="menu"` / `menuitem` не используется (по APG навигация сайта — список ссылок); пункты — настоящие ссылки (`<Link>`), доступные для prefetch и открытия в новой вкладке.
 - Disclosure остаётся только у меню пользователя (§6.3): `aria-expanded`, `aria-controls`, `Esc` и клик снаружи закрывают.
+
+### 6.1а Свёрнутый сайдбар (rail, ≥ `lg`; P24, ADR-017)
+
+| Аспект | Правило |
+|--------|---------|
+| Состояния | развёрнут — `16rem`, иконка + подпись + бейдж; свёрнут (rail) — `4rem`, только иконки `size-5` по центру строки `h-10 w-10` |
+| Переключатель | кнопка-иконка в шапке слева от бренда (только ≥ `lg`), `Button variant="ghost" size="icon"`; `aria-label` «Свернуть меню» / «Развернуть меню», `aria-expanded` (true = развёрнут), `aria-controls` → `id` сайдбара |
+| Сохранение | клиент пишет cookie `sidebar_collapsed=1|0; Path=/; Max-Age=31536000; SameSite=Lax` (не `HttpOnly`: это UI-предпочтение без ПД) и меняет состояние локально без перезагрузки; сервер читает её при следующем запросе (§5 шаг 4а) |
+| Пункт в rail | ссылка остаётся `<Link>` с `aria-label` = подпись пункта и `aria-current`; видимая подсказка (tooltip) с подписью при `hover` и `focus-visible`; текущий — `bg-cobalt-soft text-cobalt-ink` |
+| Бейдж в rail | точка-индикатор на иконке + число в `aria-label` пункта («Люди, ожидают: 3»); статус не только цветом |
+| Подзаголовки групп | в rail скрыты визуально, группы разделены `Separator`; `<ul aria-labelledby>` сохраняет имя группы (`sr-only`) |
+| Анимация | ширина колонки `transition-[grid-template-columns] duration-200 ease-out-soft`, `motion-reduce:transition-none` |
+| < `lg` | состояние rail не применяется: навигация — drawer (§6.2) |
 
 ### 6.2 Drawer (< `lg`)
 
@@ -101,7 +116,7 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 
 | Поверхность | Позиция | Правила |
 |-------------|---------|---------|
-| Toast (Sonner) | < `lg`: сверху `top-16`, ≥ `lg`: снизу `bottom-6` по центру | 2000 ms (`PRODUCT_TOAST_DURATION_MS`); `role="status"`; ошибки — `aria-live="assertive"` |
+| Toast (Sonner) | < `lg`: сверху по центру `top-16`; ≥ `lg`: **справа снизу** (`position="bottom-right"`, отступ `bottom-6 right-6`) — ADR-017 | 2000 ms (`PRODUCT_TOAST_DURATION_MS`); success — `bg-ok-soft border-ok text-ink` + иконка `CircleCheck` (`text-ok`); error — `bg-danger-soft border-danger text-ink` + иконка `CircleAlert` (`text-danger`); info / нейтральный — `bg-surface border-line`; иконка `aria-hidden`, смысл в тексте (статус не только цветом); `role="status"`; ошибки — `aria-live="assertive"`; `shadow-float`; ширина `min(24rem, 100vw - 2rem)` |
 | Диалог | bottom-sheet `max-h-[92dvh]` | APG: фокус внутрь, Esc, возврат; опасные — фокус на «Отмена» (UX-06 §7.1) |
 | Drawer | см. §6.2 | — |
 
@@ -206,8 +221,10 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | R-6 | MUST: dev-переключатель отсутствует в prod-сборке |
 | R-7 | SHOULD: бейдж не ломает оболочку при сбое запроса |
 | R-8 | SHOULD: touch-цели ≥ 44 px в drawer и сайдбаре (`h-10` при базе 18 px = 45 px; UX-03 D-9) |
-| R-9 | MUST: на `lg+` сайдбар — единственная навигация; выпадающих панелей навигации нет; список пунктов сайдбара и drawer — из одного `nav-config.ts` |
+| R-9 | MUST: на `lg+` сайдбар — единственная навигация; выпадающих панелей навигации нет; список пунктов сайдбара и drawer — из одного `nav-config.ts`. Сайдбар сворачивается до rail иконок (§6.1а); состояние — cookie `sidebar_collapsed`, читается сервером (P24) |
 | R-10 | MUST: `main#main` без видимой рамки при программном фокусе |
+| R-11 | MUST (P24, ADR-017): шапка и `#view` — в одном центрирующем контейнере `max-w-[1600px] mx-auto px-4 md:px-6 lg:px-8`; на ширине больше 1600 px + сайдбар поля слева и справа от контейнера равны |
+| R-12 | MUST (P24): toast справа снизу на `lg+`, сверху на < `lg`; success / error различаются цветом **и** иконкой; 2000 мс |
 
 ## 16. Acceptance criteria
 
@@ -215,7 +232,9 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 - [ ] На 390 px и 768 px нет горизонтальной прокрутки; на `lg` сайдбар заменяет drawer — исход: ручная проверка.
 - [ ] Клавиатура: Esc закрывает drawer и меню пользователя, фокус возвращается — исход: ручной шаг.
 - [ ] У текущей страницы `aria-current="page"`, у пунктов сайдбара нет `aria-expanded` — исход: проверка DOM.
-- [ ] Ширина `main` на 1920 px = остаток после `w-64`, контент `#view` ≤ 1400 px, прижат влево — исход: замер.
+- [ ] Ширина `main` на 1920 px = остаток после колонки сайдбара (`16rem` или `4rem`); контент `#view` и шапка ≤ 1600 px, **по центру** `main` (равные поля) — исход: замер (P24, ADR-017).
+- [ ] Свёрнутый сайдбар переживает перезагрузку (cookie `sidebar_collapsed`), первый HTML без мигания ширины; кнопка имеет `aria-expanded` и `aria-label`; в rail у пунктов есть доступное имя и tooltip — исход: тест + проверка DOM (P24).
+- [ ] Toast success и error на `lg` — справа снизу, на 390 px — сверху; у каждого иконка и свой фон — исход: тест рендера `product-toaster` + ручная проверка (P24).
 - [ ] В prod-сборке нет dev-переключателя и его кода — исход: проверка бандла.
 - [ ] Бейдж «Люди» = заявки + запросы на удаление; скрыт при нуле — исход: сверка с данными.
 - [ ] Teacher не получает пунктов admin в DOM — исход: проверка рендера.
@@ -249,6 +268,7 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 - Не класть ПД и полные словари в props клиентских компонентов оболочки.
 - Не включать dev-переключатель в prod и не давать ему серверных прав.
 - Не добавлять `middleware.ts`; перенаправления — `proxy.ts` и `requireActiveUser()`.
+- P24: не хранить состояние сайдбара только в `localStorage` (мигание при SSR) — cookie, читаемая сервером; не прижимать контейнер влево (ADR-014 R-4 отменён ADR-017).
 
 ## Change log
 
@@ -257,3 +277,4 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | 2026-10-11 | v1.0 — Canonical (W9-01) |
 | 2026-10-20 | v1.1 — P09: drawer без видимого «Меню» и без пункта «Профиль»; внизу имя → `/profile` и «Выйти» |
 | 2026-10-24 | v2.0 — ADR-014 (P14): `top-nav.tsx` заменён `sidebar-nav.tsx`; §6.1 сайдбар вместо disclosure-групп; «Смотреть как» внутри меню пользователя; фокус `main` без рамки; R-9, R-10. Раздел «Проверено по» про disclosure относится теперь только к меню пользователя |
+| 2026-11-03 | v2.1 — P24, ADR-017: §4 контейнер `max-w-[1600px] mx-auto` для шапки и `#view`, `shell-header.client.tsx`, cookie-модуль; §5 шаг 4а; §6.1а rail-сайдбар; §6.5 toast справа снизу с цветом и иконкой; R-9, R-11, R-12; §16 |

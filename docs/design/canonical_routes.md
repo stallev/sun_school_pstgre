@@ -45,7 +45,7 @@
 | Маршрут | Экран | Роли | Назначение |
 |---------|-------|------|------------|
 | `/profile` | `profile` | статусы «Заявка на рассмотрении», «Отклонена», «Активна» | Профиль, запрос на удаление своей учётной записи ([`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md) §6) |
-| `/calendar` | `calendar` | teacher, admin | События группы (admin — в меню «Учёба») |
+| `/calendar` | `calendar` | teacher, admin | События группы (admin — в меню «Учёба»); дни рождения учеников группы — производные от `pupil.birth_date`, только teacher и admin (P24, AZ-20a) |
 | `/rating` | `rating` | teacher, admin | Рейтинг группы / школы |
 | `/verses` | `verses` | teacher, admin | Золотые стихи (справочник) |
 | `/analytics` | `analytics` | teacher, admin | Аналитика группы; `?year=` — учебный год (по умолчанию: активный → последний закрытый), `?gradeId=` (admin) |
@@ -96,7 +96,7 @@
 | `/child/data` | `childData` | parent | Данные и согласия, правка своих контактов, запрос на удаление |
 | `/child/consent` | `childConsent` | parent | Электронное согласие по ребёнку (не пункт меню) |
 
-Родитель на существующем `/calendar` (§4.2) видит события групп своих детей, только чтение.
+Родитель на существующем `/calendar` (§4.2) видит события групп своих детей, только чтение; дней рождения родитель не видит (P24, AZ-20a).
 
 ### 4.6 Dev-only
 
@@ -150,6 +150,7 @@
 - Не дублировать список маршрутов в specs и задачах — ссылаться на § этого файла.
 - Один экран `lessonForm` обслуживает `/lessons/new` и `/lessons/[lessonId]/edit`.
 - P23 ([ADR-016](../prds/07_governance/adr_016_confirmable_achievements_and_events.md)): подтверждение достижения — модалка в панели ученика и счётчик на карточке группы (`/group`, `/groups/[groupId]`); карточка родителя — на `/child`; событие `worship_recital` — в диалоге ручной выдачи. **Новых маршрутов и query-параметров нет.**
+- P24 ([ADR-017](../prds/07_governance/adr_017_shell_container_toast_buttons.md)): **новых маршрутов нет.** Диалог «Дата рождения» — на `/group` (teacher); дни рождения — на `/calendar` (teacher, admin); сворачивание сайдбара — cookie `sidebar_collapsed`, не query-параметр; правки формы `/lessons/[lessonId]/check` без новых query-параметров.
 
 ## Change log
 
@@ -161,3 +162,4 @@
 | 2026-10-23 | §4.4: `/achievements` (admin, флаг `features.achievements`); удалён из §5 (P12-CU9) |
 | 2026-10-23 | §4.5: `/family`, `/child`, `/child/data`, `/child/consent` (флаг `features.parents`); §5 — только `/verse*` (P13-CU11) |
 | 2026-11-02 | §10: P23 (ADR-016) — подтверждаемые достижения и событие живут на существующих экранах; новых путей нет |
+| 2026-11-03 | §4.2 `/calendar`: дни рождения (teacher, admin); §10: P24 (ADR-017) — новых маршрутов нет |

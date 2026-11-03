@@ -23,7 +23,7 @@ alwaysApply: false
 | default | 0 | Base layout, bottom nav, sheets |
 | `md` | 768px | Sidebar вместо bottom nav; tablet padding |
 | `lg` | 1024px | Filter sidebars, multi-column, wider sidebar |
-| `xl` / `2xl` | 1280 / 1536px | Wide layouts, `max-w-[1400px]` containers |
+| `xl` / `2xl` | 1280 / 1536px | Wide layouts; shell container `max-w-[1600px] mx-auto` (ADR-017) |
 
 ## Обязательные паттерны
 

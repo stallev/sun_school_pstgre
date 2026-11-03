@@ -216,7 +216,7 @@ UI-экраны входят в **commit units** фазы (`docs/implementation/
 - Optimistic toggles: `useOptimistic` + обязательный `toast.error` при откате
 - Локальные правки (add chip, toggle) до Save — **без success toast spam**
 - Ошибка save → `toast.error`
-- Toast position: `bottom-center` на mobile, `bottom-right` на desktop
+- Toast position (Sunday School, ADR-017): сверху по центру на mobile, `bottom-right` на desktop (`lg+`); success / error — цвет **и** иконка, 2000 мс
 
 ### FX-8 — Zero Dead Ends
 

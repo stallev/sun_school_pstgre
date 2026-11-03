@@ -33,10 +33,10 @@
     --font-display "Alegreya", Georgia, serif (500 / 700 / 400 italic) · --font-body "Source Sans 3", system-ui, sans-serif (400 / 500 / 600 / 700)
     html { font-size: 112.5% } (базовый кегль 18px); text-base 18 · text-sm 15.75 (пол метаданных) · text-xs 13.5 (только бейджи/счётчики)
   КОНТРОЛЫ (v2.0, UX-03 D-9, D-10)
-    --control-h 2.5rem (h-10, 45px) · --control-h-compact 2.25rem (h-9, только в таблицах) · --control-h-touch 2.75rem (h-11)
+    --control-h 2.5rem (h-10, 45px) · --control-h-compact 2.25rem (h-9: единый размер кнопок и чипов, ширина по содержимому) · --control-h-touch 2.75rem (h-11: только мобильный touch)
     выбранный чип/сегмент: border-cobalt-ink bg-cobalt-soft text-cobalt-ink font-bold (константы CHIP / CHIP_ON / CHIP_OFF)
   ДВИЖЕНИЕ  --ease-out-soft cubic-bezier(0.22, 1, 0.36, 1) · transition 100–300 ms · motion-reduce / reduce-transparency учтены
-  ОБОЛОЧКА (v2.0, ADR-014 R-4, R-8)  header h-14 sticky · на lg+ левый сайдбар w-64 (sidebarHTML) + main · контент max-w-[1400px], прижат влево · drawer w-[min(20rem,86vw)] (< lg) · bottom-sheet диалог max-h-[92dvh] · toast
+  ОБОЛОЧКА (v2.0, ADR-014 R-4, R-8)  header h-14 sticky · на lg+ левый сайдбар w-64 (sidebarHTML) + main · шапка и контент в контейнере max-w-[1600px] mx-auto (ADR-017, отмена R-4) · сайдбар сворачивается до иконок (rail 4rem, переключатель в шапке, состояние в localStorage sidebar_collapsed) · drawer w-[min(20rem,86vw)] (< lg) · bottom-sheet диалог max-h-[92dvh] · toast
   БРЕЙКПОИНТЫ  mobile-first 390 px; sm / md / lg (навигация переходит из drawer в сайдбар на lg)
 
   СООТВЕТСТВИЕ ПРОТОТИПНЫЙ ТОКЕН → СЕМАНТИЧЕСКАЯ РОЛЬ (предложение для W2)
@@ -171,6 +171,7 @@
     <symbol id="i-logout" viewBox="0 0 24 24"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16l-4-4 4-4M6 12h10"/></symbol>
     <symbol id="i-merge" viewBox="0 0 24 24"><path d="M7 4v5a5 5 0 0 0 5 5h5M7 20v-6M14 11l3 3-3 3"/></symbol>
     <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/></symbol>
+    <symbol id="i-cake" viewBox="0 0 24 24"><path d="M4 21h16M5 21v-6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v6M5 17.5c2 1.3 3.2 1.3 4.7 0s3-1.3 4.6 0 3 1.3 4.7 0M12 14v-3.5M12 8.5c-1-1-1-2 0-3.5 1 1.5 1 2.5 0 3.5z"/></symbol>
     <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" stroke-linejoin="round"/></symbol>
   </defs>
 </svg>
@@ -179,23 +180,27 @@
 
 <div id="login" class="hidden min-h-dvh"></div>
 
-<div id="shell" class="flex min-h-dvh flex-col">
+<div id="shell" data-rail="expanded" class="group/shell flex min-h-dvh flex-col">
   <header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md reduce-transparency:bg-surface reduce-transparency:backdrop-blur-none">
-    <div class="flex h-14 items-center gap-2 px-2 sm:px-4 lg:gap-0 lg:px-0">
+    <div class="mx-auto flex h-14 w-full max-w-[1600px] items-center gap-2 px-2 sm:px-4 lg:gap-0 lg:px-0">
       <button id="menuBtn" type="button" data-act="menu-open" aria-label="Открыть меню" aria-expanded="false" aria-controls="drawer"
         class="inline-flex size-10 items-center justify-center rounded-lg text-ink transition-[background-color,transform] duration-100 hover:bg-paper active:scale-[0.96] lg:hidden">
         <svg class="size-6 fill-none stroke-current" stroke-width="1.75" stroke-linecap="round"><use href="#i-menu"/></svg>
       </button>
-      <div id="brand" class="flex min-w-0 items-center gap-2.5 lg:h-full lg:w-64 lg:shrink-0 lg:border-r lg:border-line lg:px-5"></div>
+      <div id="brand" class="flex min-w-0 items-center gap-2.5 lg:h-full lg:w-64 lg:shrink-0 lg:border-r lg:border-line lg:px-5 lg:group-data-[rail=collapsed]/shell:w-16 lg:group-data-[rail=collapsed]/shell:justify-center lg:group-data-[rail=collapsed]/shell:px-0"></div>
+      <button id="railBtn" type="button" data-act="rail-toggle" aria-controls="sidebar" aria-expanded="true" aria-label="Свернуть меню до значков" title="Свернуть меню до значков"
+        class="ml-2 hidden size-10 items-center justify-center rounded-lg text-ink transition-[background-color,transform] duration-100 hover:bg-paper active:scale-[0.96] lg:inline-flex">
+        <svg class="size-6 fill-none stroke-current" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><use href="#i-menu"/></svg>
+      </button>
       <div id="hdrRight" class="ml-auto flex items-center gap-1.5 lg:px-8"></div>
     </div>
   </header>
-  <div id="shellGrid" class="flex-1 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
-    <aside id="sidebar" class="sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface px-3 py-4 lg:block">
+  <div id="shellGrid" class="mx-auto w-full max-w-[1600px] flex-1 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:group-data-[rail=collapsed]/shell:grid-cols-[4rem_minmax(0,1fr)]">
+    <aside id="sidebar" class="sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface px-3 py-4 lg:block lg:group-data-[rail=collapsed]/shell:px-2">
       <nav id="sidenav" aria-label="Разделы"></nav>
     </aside>
     <main id="main" tabindex="-1" class="min-w-0 px-4 pt-4 pb-28 sm:px-6 lg:px-8 lg:pt-7 lg:pb-16 outline-none">
-      <div id="view" class="max-w-[1400px]"></div>
+      <div id="view" class="mx-auto max-w-[1600px]"></div>
     </main>
   </div>
 </div>
@@ -217,8 +222,8 @@
   <div id="dlgPanel" class="absolute inset-x-0 bottom-0 max-h-[92dvh] translate-y-full overflow-y-auto rounded-t-2xl bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] transition-transform duration-300 ease-out-soft motion-reduce:transition-none sm:inset-auto sm:top-1/2 sm:left-1/2 sm:w-[32rem] sm:-translate-x-1/2 sm:rounded-2xl sm:p-6"></div>
 </div>
 
-<div aria-live="polite" class="pointer-events-none fixed inset-x-0 top-16 z-[65] flex justify-center px-4 lg:top-auto lg:bottom-6">
-  <div id="toast" class="max-w-md rounded-lg bg-ink px-4 py-3 text-sm text-surface opacity-0 transition-opacity duration-200"></div>
+<div aria-live="polite" class="pointer-events-none fixed inset-x-0 top-16 z-[65] flex justify-center px-4 lg:inset-x-auto lg:top-auto lg:right-6 lg:bottom-6 lg:justify-end lg:px-0">
+  <div id="toast" class="max-w-md opacity-0 transition-opacity duration-200 motion-reduce:transition-none"></div>
 </div>
 
 <script>
@@ -444,11 +449,15 @@ const LESSONS = [
 const CUR = 8;               /* урок с незавершённой проверкой */
 const HELD = [1,2,3,4,5,6,7,8];
 
+/* Дата рождения — полная ISO-дата (БД: pupil.birth_date). Год для отображения и когорт — bornYear(); дни рождения в календаре — только учитель и админ */
+const BORN_MD = ['11-05','10-12','11-22','03-17','11-29','06-30','10-26','11-09','02-28','08-14','11-16','12-03','04-21','10-19'];
+const bornYear = p => p && p.born ? +String(p.born).slice(0,4) : null;
+const bornRu = iso => { const [y,m,d] = iso.split('-'); return d+'.'+m+'.'+y; };
 const PUPILS = ['Миша Смирнов','Варя Ковалёва','Лёва Орлов','Соня Белова','Тимофей Зайцев','Алиса Морозова','Даниил Ким','Ева Новикова','Артём Волков','Полина Егорова','Марк Соколов','Вера Лебедева','Глеб Павлов','Ника Фёдорова']
-  .map((n,i)=>({ id:i+1, name:n, born: 2015 + (i*7)%3, active:true, from:'06.09', group:'Средняя' }));
-PUPILS.push({ id:16, name:'Стёпа Рыбаков', born:2016, active:true, from:'25.10', group:'Средняя' });
-const INACTIVE = [{ id:15, name:'Кирилл Гаврилов', born:2015, active:false, group:'Средняя' }];
-const UNASSIGNED = [ { id:21, name:'Иван Ткачёв', born:2014, note:'Переехал, ждёт решения о группе' }, { id:22, name:'Лиза Миронова', born:2019, note:'Новенькая, с 1 ноября' } ];
+  .map((n,i)=>({ id:i+1, name:n, born: (2015 + (i*7)%3) + '-' + BORN_MD[i], active:true, from:'06.09', group:'Средняя' }));
+PUPILS.push({ id:16, name:'Стёпа Рыбаков', born:'2016-11-12', active:true, from:'25.10', group:'Средняя' });
+const INACTIVE = [{ id:15, name:'Кирилл Гаврилов', born:'2015-09-09', active:false, group:'Средняя' }];
+const UNASSIGNED = [ { id:21, name:'Иван Ткачёв', born:'2014-11-30', note:'Переехал, ждёт решения о группе' }, { id:22, name:'Лиза Миронова', born:'2019-12-25', note:'Новенькая, с 1 ноября' } ];
 
 const num = d => { const [dd,mm] = d.split('.').map(Number); return mm*100+dd; };
 const lessonById = id => LESSONS.find(l=>l.id===id);
@@ -688,7 +697,8 @@ const SCHOOL_ATT = {
    UI-ХЕЛПЕРЫ
    ========================================================= */
 const ic = (id, cls='size-5') => `<svg class="${cls} shrink-0 fill-none stroke-current" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#${id}"/></svg>`;
-const BTN = 'inline-flex h-10 whitespace-nowrap items-center justify-center gap-2 rounded-lg px-3.5 text-base font-medium select-none transition-[background-color,border-color,color,transform] duration-100 active:scale-[0.97] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt disabled:opacity-45 disabled:active:scale-100';
+/* P24: единый компактный размер кнопки (как «Выдать»): h-9 px-3, ширина по содержимому, rounded-lg. Крупнее — только touch на узком экране (h-11, явно на месте: SUBMIT, нижняя панель проверки) */
+const BTN = 'inline-flex h-9 whitespace-nowrap items-center justify-center gap-2 rounded-lg px-3 text-base font-medium select-none transition-[background-color,border-color,color,transform] duration-100 active:scale-[0.97] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cobalt disabled:opacity-45 disabled:active:scale-100';
 const B_PRIMARY = BTN + ' bg-cobalt-ink text-surface hover:bg-cobalt-deep';
 const B_OUTLINE = BTN + ' border border-line-strong bg-surface text-ink hover:bg-paper';
 const B_GHOST   = BTN + ' text-ink hover:bg-line/60';
@@ -705,7 +715,7 @@ const LABEL = 'mb-1.5 block text-base font-medium';
 /* Чип и сегмент (UX-03 D-10, ADR-014 R-5): выбранный — cobalt-soft; solid ink как «выбрано» запрещён */
 const SEG_ON = 'border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink';
 const SEG_OFF = 'border-muted bg-surface text-ink hover:border-ink-2';
-const CHIP = 'h-10 rounded-lg border px-3 text-base transition-[background-color,border-color,color] duration-100';
+const CHIP = 'h-9 rounded-lg border px-3 text-base transition-[background-color,border-color,color] duration-100';
 
 const REMOVED = [], GONE = [];
 const pupil = id => PUPILS.concat(INACTIVE, REMOVED, GONE).find(p=>p.id===id);
@@ -736,10 +746,11 @@ function meter(value, max, label){
   return `<div class="h-2 w-full overflow-hidden rounded-full bg-line" role="meter" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${value}" aria-label="${label}"><div class="h-full rounded-full bg-ink-2 w-[${p}%]"></div></div>`;
 }
 const tierDot = t => `<span class="inline-block size-2.5 shrink-0 rounded-full ${TIER_CLS[t]}" aria-hidden="true"></span>`;
-function seg(name, opts, val, act, extra=''){
-  return `<div class="grid gap-1.5 grid-cols-${opts.length}" role="radiogroup" aria-label="${name}">
+/* fit=true — чипы по ширине содержимого в одну строку (без grid-cols-N): «Присутствие» Да/Нет */
+function seg(name, opts, val, act, extra='', fit=false){
+  return `<div class="${fit ? 'inline-flex flex-wrap gap-1.5' : 'grid gap-1.5 grid-cols-'+opts.length}" role="radiogroup" aria-label="${name}">
     ${opts.map(([v,l])=>`<button type="button" role="radio" aria-checked="${val===v}" data-act="${act}" data-val="${v}" ${extra}
-      class="${CHIP} ${val===v ? SEG_ON : SEG_OFF}">${l}</button>`).join('')}</div>`;
+      class="${CHIP} ${fit ? 'min-w-14 ' : ''}${val===v ? SEG_ON : SEG_OFF}">${l}</button>`).join('')}</div>`;
 }
 function toggle(on, act, label, extra=''){
   return `<button type="button" role="switch" aria-checked="${on}" data-act="${act}" aria-label="${label}" ${extra}
@@ -1178,19 +1189,27 @@ const badge = n => n ? `<span class="ml-auto inline-flex min-w-5 items-center ju
 const DD_PANEL = 'absolute top-full z-50 mt-1.5 min-w-64 origin-top rounded-xl border border-line bg-surface p-1.5 shadow-[0_10px_30px_rgba(15,23,42,0.12)]';
 
 function brandHTML(){
-  return `${LOGO}<span class="min-w-0"><span class="block truncate font-display text-lg font-medium leading-tight">${window.innerWidth >= 1024 ? t('common.brand') : TITLES[S.view]}</span>
+  return `${LOGO}<span class="min-w-0 lg:group-data-[rail=collapsed]/shell:hidden"><span class="block truncate font-display text-lg font-medium leading-tight">${window.innerWidth >= 1024 ? t('common.brand') : TITLES[S.view]}</span>
     <span class="block truncate text-sm text-muted lg:hidden">${ME[S.role].name} · ${t('common.role_names.'+S.role)}</span></span>`;
 }
 /* Сайдбар lg+ (ADR-014 R-8): плоские группы, все пункты видны, без раскрытия; пункты как в NAV, описание (desc) не выводится */
 const SIDE_ROW = 'flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight transition-[background-color,color] duration-100';
 const SIDE_ROW_ON = 'bg-cobalt-soft font-bold text-cobalt-ink';
 const SIDE_ROW_OFF = 'text-ink hover:bg-line/60';
+/* Rail (P24, ADR-017): сайдбар сворачивается до значков 4rem; строка — только иконка + title/aria-label; бейдж — точка */
+const SIDE_ROW_RAIL = 'relative flex h-10 w-full items-center justify-center rounded-lg text-base transition-[background-color,color] duration-100';
+const RAIL_KEY = 'sidebar_collapsed';
+const railDot = k => navBadge(k) ? '<span class="absolute top-1.5 right-2 size-2.5 rounded-full bg-cobalt-ink ring-2 ring-surface" aria-hidden="true"></span>' : '';
 function sidebarHTML(){
-  const av = activeView();
-  const row = ([k,l,i]) => `<li><button type="button" data-act="go" data-view="${k}" ${av===k?'aria-current="page"':''} class="${SIDE_ROW} ${av===k ? SIDE_ROW_ON : SIDE_ROW_OFF}">${ic(i)}<span class="min-w-0 flex-1">${t(l)}</span>${navBadge(k)}</button></li>`;
+  const av = activeView(), rail = !!S.railCollapsed;
+  const row = ([k,l,i]) => rail
+    ? `<li><button type="button" data-act="go" data-view="${k}" ${av===k?'aria-current="page"':''} title="${t(l)}" aria-label="${t(l)}" class="${SIDE_ROW_RAIL} ${av===k ? SIDE_ROW_ON : SIDE_ROW_OFF}">${ic(i)}${railDot(k)}</button></li>`
+    : `<li><button type="button" data-act="go" data-view="${k}" ${av===k?'aria-current="page"':''} class="${SIDE_ROW} ${av===k ? SIDE_ROW_ON : SIDE_ROW_OFF}">${ic(i)}<span class="min-w-0 flex-1">${t(l)}</span>${navBadge(k)}</button></li>`;
   return NAV[S.role].map(it=> Array.isArray(it)
     ? `<ul class="mt-1 first:mt-0">${row(it)}</ul>`
-    : `<div class="mt-5 first:mt-0"><p id="sg-${it.id}" class="flex items-center px-3 pb-1 text-sm font-medium text-muted">${t(it.label)}${it.id==='a-people' ? badge(pendingCount() + openDel()) : ''}</p><ul aria-labelledby="sg-${it.id}" class="space-y-0.5">${it.items.map(row).join('')}</ul></div>`).join('');
+    : rail
+      ? `<div class="mt-3 border-t border-line pt-3 first:mt-0 first:border-0 first:pt-0"><ul aria-label="${t(it.label)}" class="space-y-0.5">${it.items.map(row).join('')}</ul></div>`
+      : `<div class="mt-5 first:mt-0"><p id="sg-${it.id}" class="flex items-center px-3 pb-1 text-sm font-medium text-muted">${t(it.label)}${it.id==='a-people' ? badge(pendingCount() + openDel()) : ''}</p><ul aria-labelledby="sg-${it.id}" class="space-y-0.5">${it.items.map(row).join('')}</ul></div>`).join('');
 }
 function rightHTML(){
   const u = ME[S.role], roleLabel = t('common.roles.'+S.role);
@@ -1582,21 +1601,16 @@ function vCheck(){
   const lateTag = k => c.late[k] ? `<span class="text-sm text-amber-ink">сдано ${c.late[k]}</span>` : '';
   const verseRadio = (key, val) => {
     const btn = (v, label, quiet) => `<button type="button" role="radio" aria-checked="${val===v}" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" ${v===null?'aria-label="Не оценивалось"':''}
-      class="h-11 min-w-11 rounded-lg border px-2 text-base tabular-nums ${val===v ? SEG_ON : SEG_OFF} ${quiet?'text-muted':''}">${label}</button>`;
+      class="h-11 min-w-11 rounded-lg border px-2 text-base tabular-nums lg:h-9 lg:min-w-9 ${val===v ? SEG_ON : SEG_OFF} ${quiet?'text-muted':''}">${label}</button>`;
     return `<div role="radiogroup" aria-label="Стих" class="flex flex-wrap items-center gap-1">${[0,1,2].map(v=>btn(v,v,false)).join('')}${btn(null,'не ставил',true)}</div>`;
   };
   const band = v => v==null ? '' : v<=4 ? 'до 4' : v>=8 ? 'от 8' : 'средний';
   const bandCls = v => v==null ? '' : v<=4 ? 'text-danger' : v>=8 ? 'text-ok' : 'text-ink-2';
-  const checkPad = (key) => {
-    const pick = (v,l,wide) => `<button type="button" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" class="${wide?'col-span-full ':''}h-9 rounded-md border text-base tabular-nums ${SEG_OFF}">${l}</button>`;
-    return `<div data-check-pad class="mt-2 max-w-xs rounded-lg border border-line bg-surface p-2 shadow-float">${pick(null,'Не оценивалось',true)}
-      <div class="mt-1 grid grid-cols-6 gap-1">${[0,1,2,3,4,5].map(v=>pick(v,v,false)).join('')}</div>
-      <div class="mt-1 grid grid-cols-5 gap-1">${[6,7,8,9,10].map(v=>pick(v,v,false)).join('')}</div></div>`;
-  };
-  const scaleField = (key, val, label, late) => { const open = S.checkPad===key;
-    return `<div class="py-3" data-check-pad-root><div class="flex items-center justify-between gap-2"><span class="font-medium">${label}</span>${late}</div>
-      <button type="button" data-act="check-pad" data-k="${key}" aria-expanded="${open}" aria-label="${label}" class="mt-2 font-display text-[2.5rem] leading-none tabular-nums ${bandCls(val)}">${val==null?'—':val}</button>
-      <p class="text-sm ${bandCls(val)}">${band(val)}</p>${open ? checkPad(key) : ''}</div>`; };
+  /* P24: inline-клавиатура 0–10 в одну строку на desktop, без карточки с тенью и крупного числа */
+  const scaleField = (key, val, label, late) => {
+    const btn = (v, text, aria) => `<button type="button" role="radio" aria-checked="${val===v}" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" ${aria?`aria-label="${aria}" title="${aria}"`:''} class="h-11 min-w-0 rounded-lg border px-1 text-base tabular-nums lg:h-9 lg:flex-1 ${val===v ? SEG_ON : SEG_OFF}">${text}</button>`;
+    return `<div class="py-3"><div class="mb-2 flex flex-wrap items-center gap-2"><span class="font-medium">${label}</span>${val==null ? '' : `<span class="text-sm ${bandCls(val)}">${band(val)}</span>`}${late}</div>
+      <div class="grid grid-cols-6 gap-1 lg:flex" role="radiogroup" aria-label="${label}, 0–10">${btn(null,'—','Не оценивалось')}${Array.from({length:11},(_,v)=>btn(v,v)).join('')}</div></div>`; };
   const verseRows = rv.map((r,k)=>{ const voice = c.vs[k]==='voice';
     return `<div class="py-3"><div class="mb-2 flex flex-wrap items-center gap-2">${ref(r)}${voice ? `<span class="inline-flex items-center gap-1 text-sm text-ink-2">${ic('i-mic','size-4')} голос: 3 дня</span>` : ''}${lateTag('v'+k)}</div>
       ${verseRadio('v'+k, c.v[k])}
@@ -1627,18 +1641,16 @@ function vCheck(){
     <section class="${CARD} px-4 pb-1 sm:px-5" aria-labelledby="pupilName">
       <div class="flex items-center justify-between gap-3 border-b border-line py-3">
         <div class="min-w-0"><h2 id="pupilName" class="truncate font-display text-[1.5rem] font-medium leading-tight">${p.name}</h2>
-          <p class="text-sm text-muted">${S.cur+1} из ${R.length} · ${p.born ? p.born+' г. р.' : 'данные удалены'}</p></div>
+          <p class="text-sm text-muted">${S.cur+1} из ${R.length} · ${p.born ? bornYear(p)+' г. р.' : 'данные удалены'}</p></div>
         <div class="text-right"><p class="font-display text-[1.75rem] leading-none tabular-nums">${pts({...c, done:true})}</p><p class="text-sm text-muted">баллов</p>
           <p class="text-sm tabular-nums text-ink-2">заполнено ${filled} из ${need}</p></div>
       </div>
-      <div class="border-b border-line py-3">
-        <span class="font-medium">Был на уроке</span>
-        <div class="mt-2">${seg('Присутствие', [[true,'Да'],[false,'Нет']], c.present, 'present')}</div>
-        <p class="mt-2 text-sm text-muted">Присутствие на баллы не влияет: задания можно сдать позже.</p>
-      </div>
-      <div class="flex flex-wrap items-center gap-3 border-b border-line py-3"><span class="font-medium">Спевка</span>${toggle(c.sing,'sing','Был на спевке')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и спевка</span>' : ''}</div>
-      ${rubricOpen ? `${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${prevRegular(lid).n} — рассказывают сегодня</p><div class="divide-y divide-line border-b border-line">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не рассказывают, теста нет.' : 'На первом уроке года стихов не рассказывают.'}</p>`}
-      <div class="divide-y divide-line border-b border-line">
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-3 border-b border-line py-3">
+        <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Был на уроке</span>${seg('Присутствие', [[true,'Да'],[false,'Нет']], c.present, 'present', '', true)}</div>
+        <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Спевка</span>${toggle(c.sing,'sing','Был на спевке')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и спевка</span>' : ''}</div>
+        <p class="basis-full text-sm text-muted">Присутствие на баллы не влияет: задания можно сдать позже.</p></div>
+      ${rubricOpen ? `${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${prevRegular(lid).n} — рассказывают сегодня</p><div class="grid grid-cols-1 gap-x-6 border-b border-line lg:grid-cols-2">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не рассказывают, теста нет.' : 'На первом уроке года стихов не рассказывают.'}</p>`}
+      <div class="grid grid-cols-1 gap-x-6 border-b border-line md:grid-cols-2">
         ${L.test ? scaleField('test', c.test, 'Тест', lateTag('test')) : (isReview(L) ? '' : '<p class="py-3 text-sm text-muted">Тест на этом уроке не проводился.</p>')}
         ${scaleField('nb', c.nb, 'Тетрадь', lateTag('nb'))}
       </div>` : `<div class="border-b border-line py-3"><button type="button" data-act="reveal-scores" class="${B_OUTLINE}">Показать оценки</button></div>`}
@@ -1655,9 +1667,9 @@ function vCheck(){
   </div>
   <div class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/90 px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] backdrop-blur-md reduce-transparency:bg-surface reduce-transparency:backdrop-blur-none lg:hidden">
     <div class="flex gap-2">
-      <button type="button" data-act="prev" class="${B_OUTLINE} w-12 px-0" aria-label="Предыдущий ученик" ${S.cur===0?'disabled':''}>${ic('i-left')}</button>
-      <button type="button" data-act="save" class="${B_PRIMARY} flex-1">${saveLabel}</button>
-      ${corr ? `<button type="button" data-act="next" class="${B_OUTLINE} w-12 px-0" aria-label="Следующий ученик">${ic('i-right')}</button>` : ''}
+      <button type="button" data-act="prev" class="${B_OUTLINE} h-11 w-12 px-0" aria-label="Предыдущий ученик" ${S.cur===0?'disabled':''}>${ic('i-left')}</button>
+      <button type="button" data-act="save" class="${B_PRIMARY} h-11 flex-1">${saveLabel}</button>
+      ${corr ? `<button type="button" data-act="next" class="${B_OUTLINE} h-11 w-12 px-0" aria-label="Следующий ученик">${ic('i-right')}</button>` : ''}
     </div>
   </div>`;
 }
@@ -1684,7 +1696,8 @@ function vGroup(){
       return `<li class="flex items-center gap-3 px-5 py-3">
         <input type="checkbox" data-act="sel" data-pid="${p.id}" ${S.groupSel.includes(p.id)?'checked':''} aria-label="Выбрать ${p.name}" class="size-5 shrink-0 accent-cobalt-ink">
         <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 flex-1 text-left"><span class="block truncate font-medium hover:text-cobalt">${p.name}</span>
-          <span class="block text-sm text-muted">${p.born ? p.born+' г. р.' : 'данные удалены'} · в группе с ${p.from}</span></button>
+          <span class="block text-sm text-muted">${p.born ? 'д. р. '+bornRu(p.born) : 'данные удалены'} · в группе с ${p.from}</span></button>
+        <button type="button" data-act="birth-edit" data-pid="${p.id}" aria-label="Дата рождения: ${p.name}" class="${B_GHOST} shrink-0">${ic('i-cake','size-4')}<span class="hidden sm:inline">Дата рождения</span></button>
         <span class="hidden text-sm tabular-nums text-ink-2 sm:block">${st.nE ? `явка ${pct(st.rate)}` : 'нет проверенных уроков'}</span>
         ${lay==='B' ? status('warn','реже 50%') : lay==='D' ? status('idle','новенький') : ''}
       </li>`;}).join('')}</ul>
@@ -1702,7 +1715,7 @@ function vBricks(){
     const pp = penPts(p.id), bp = bonusPts(p.id);
     return `<li class="${CARD} p-3.5 sm:p-4 ${bal<0 ? 'ring-1 ring-danger/40' : ''}">
       <div class="flex items-baseline justify-between gap-3">
-        <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 truncate text-left font-medium text-cobalt-ink hover:underline">${p.name} ${p.born ? `<span class="font-normal text-muted">(${2026-p.born} ${plural(2026-p.born,'год','года','лет')})</span>` : ''}</button>
+        <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 truncate text-left font-medium text-cobalt-ink hover:underline">${p.name} ${p.born ? `<span class="font-normal text-muted">(${2026-bornYear(p)} ${plural(2026-bornYear(p),'год','года','лет')})</span>` : ''}</button>
         ${bal<0 ? status('danger','выдано больше') : bal===0 ? status('ok','всё выдано') : ''}
       </div>
       <dl class="mt-1.5 grid grid-cols-3 gap-2 text-sm">
@@ -1786,6 +1799,10 @@ function vCalendar(){
   const cells = []; for (let i=0;i<first;i++) cells.push(null); for (let d=1; d<=days; d++) cells.push(d); while (cells.length % 7) cells.push(null);
   const evs = EVENTS.filter(e=>Math.floor(num(e.d)/100)===month).sort((a,b)=>num(a.d)-num(b.d));
   const ds = d => String(d).padStart(2,'0')+'.'+month;
+  /* P24: дни рождения — производные от pupil.birth_date, не тип события; видят только учитель и админ (родитель — нет); 29 февраля → 28 в невисокосный год */
+  const showBd = S.role==='teacher' || S.role==='admin';
+  const bdDay = p => p.born.slice(5)==='02-29' ? 28 : +p.born.slice(8,10);
+  const bdOf = d => showBd ? PUPILS.filter(p=>p.active && p.born && +p.born.slice(5,7)===month && bdDay(p)===d) : [];
   return pageHead(`${mName} 2026`, S.role==='parent' ? 'Средняя группа · только просмотр' : 'Средняя группа',
     `<div class="flex gap-1"><button type="button" data-act="month" data-val="10" aria-label="Октябрь" class="${B_OUTLINE} w-11 px-0" ${month===10?'disabled':''}>${ic('i-left','size-4')}</button>
      <button type="button" data-act="month" data-val="11" aria-label="Ноябрь" class="${B_OUTLINE} w-11 px-0" ${month===11?'disabled':''}>${ic('i-right','size-4')}</button></div>
@@ -1794,13 +1811,14 @@ function vCalendar(){
     <div class="${CARD} min-w-0 p-2 sm:p-4">
       <div class="grid grid-cols-7 text-center text-sm text-muted sm:text-sm">${['пн','вт','ср','чт','пт','сб','вс'].map(d=>`<div class="py-2">${d}</div>`).join('')}</div>
       <div class="grid grid-cols-7 gap-px overflow-hidden rounded-lg bg-line">
-        ${cells.map(d=>{ const ev = d && EVENTS.find(e=>e.d===ds(d)); const m = ev && TYPE_META[ev.type]; const today = month===10 && d===31;
+        ${cells.map(d=>{ const ev = d && EVENTS.find(e=>e.d===ds(d)); const m = ev && TYPE_META[ev.type]; const today = month===10 && d===31; const bds = d ? bdOf(d) : [];
           const inner = d ? `<span class="inline-flex size-7 items-center justify-center rounded-full text-base tabular-nums ${today ? 'bg-ink text-surface' : 'text-ink'}">${d}</span>
-            ${ev ? `<span class="mt-0.5 flex items-center gap-1 ${m[2]}">${ic(m[0],'size-4')}<span class="hidden truncate text-sm sm:inline">${m[1]}</span></span>` : ''}` : '';
-          return d && (canEdit || ev) ? `<button type="button" data-act="${ev ? 'event-edit' : 'event-new'}" ${ev ? `data-id="${ev.id}"` : `data-date="${ds(d)}"`} class="flex min-h-14 flex-col items-start justify-start bg-surface p-1 text-left hover:bg-paper sm:min-h-24 sm:p-2" aria-label="${d} ${mName.toLowerCase()}${ev?': '+ev.t:''}">${inner}</button>`
+            ${ev ? `<span class="mt-0.5 flex items-center gap-1 ${m[2]}">${ic(m[0],'size-4')}<span class="hidden truncate text-sm sm:inline">${m[1]}</span></span>` : ''}
+            ${bds.length ? `<span class="mt-0.5 flex min-w-0 items-center gap-1 text-amber-ink" data-birthday>${ic('i-cake','size-4')}<span class="hidden truncate text-sm sm:inline">${bds.map(p=>p.name.split(' ')[0]).join(', ')}</span></span>` : ''}` : '';
+          return d && (canEdit || ev) ? `<button type="button" data-act="${ev ? 'event-edit' : 'event-new'}" ${ev ? `data-id="${ev.id}"` : `data-date="${ds(d)}"`} class="flex min-h-14 flex-col items-start justify-start bg-surface p-1 text-left hover:bg-paper sm:min-h-24 sm:p-2" aria-label="${d} ${mName.toLowerCase()}${ev?': '+ev.t:''}${bds.length?'. День рождения: '+bds.map(p=>p.name).join(', '):''}">${inner}</button>`
             : `<div class="min-h-14 p-1 sm:min-h-24 sm:p-2 ${d?'bg-surface':'bg-paper'}">${inner}</div>`; }).join('')}
       </div>
-      <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 px-1 text-sm text-ink-2">${Object.values(TYPE_META).map(([i,l,c])=>`<span class="inline-flex items-center gap-1.5"><span class="${c}">${ic(i,'size-4')}</span>${l}</span>`).join('')}</div>
+      <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 px-1 text-sm text-ink-2">${Object.values(TYPE_META).map(([i,l,c])=>`<span class="inline-flex items-center gap-1.5"><span class="${c}">${ic(i,'size-4')}</span>${l}</span>`).join('')}${showBd ? `<span class="inline-flex items-center gap-1.5"><span class="text-amber-ink">${ic('i-cake','size-4')}</span>День рождения</span>` : ''}</div>
     </div>
     <section class="min-w-0">
       <h2 class="${H2} mb-3">События месяца</h2>
@@ -1892,7 +1910,7 @@ function vAnalytics(){
   const all = A.map(p=>personalAvgs(p.id));
   const nObs = k => all.reduce((a,x)=>a+x[k],0);
   const avgOf = (k) => { const v = all.map(x=>x[k]).filter(x=>x!=null); return mean(v); };
-  const cohorts = [...new Set(A.filter(p=>p.born).map(p=>p.born))].sort().map(y=>{ const ps=A.filter(p=>p.born===y); const av=ps.map(p=>personalAvgs(p.id));
+  const cohorts = [...new Set(A.filter(p=>p.born).map(bornYear))].sort().map(y=>{ const ps=A.filter(p=>bornYear(p)===y); const av=ps.map(p=>personalAvgs(p.id));
     return { y, n:ps.length, att:mean(ps.map(p=>pupilStats(p).rate)), v:mean(av.map(a=>a.v).filter(x=>x!=null)), t:mean(av.map(a=>a.t).filter(x=>x!=null)), nb:mean(av.map(a=>a.n).filter(x=>x!=null)) }; });
   return pageHead(t('analytics.title'), `Средняя группа · ${S.period==='year' ? 'учебный год '+YEAR : S.period==='oct' ? 'октябрь' : 'сентябрь'} · ${ser.length} ${plural(ser.length,'урок','урока','уроков')}`, periodChips()) + `
   ${S.role==='admin' ? groupChips() : ''}${yTop}${yearState(yearOf('2026'))==='closed' ? readOnlyNote : ''}
@@ -1917,14 +1935,14 @@ function vAnalytics(){
   ${teacherLessonsBlock()}
 
   <h2 class="${H2} mt-8 mb-3">Основная выборка</h2>
-  ${pupilTable(A, [['Ученик'],['Год рожд.',p=>p.born ?? '—'],['Явка',p=>pct(pupilStats(p).rate)],['Был / проверено',p=>{const s=pupilStats(p);return s.nP+' / '+s.nE;}],['Стихов',p=>f1(personalAvgs(p.id).v)],['Тест',p=>f1(personalAvgs(p.id).t)],['Тетрадь',p=>f1(personalAvgs(p.id).n)]])}
+  ${pupilTable(A, [['Ученик'],['Год рожд.',p=>bornYear(p) ?? '—'],['Явка',p=>pct(pupilStats(p).rate)],['Был / проверено',p=>{const s=pupilStats(p);return s.nP+' / '+s.nE;}],['Стихов',p=>f1(personalAvgs(p.id).v)],['Тест',p=>f1(personalAvgs(p.id).t)],['Тетрадь',p=>f1(personalAvgs(p.id).n)]])}
 
   <h2 class="${H2} mt-8 mb-1">Не входят в средние: явка ниже 50%</h2>
   <p class="mb-3 text-sm text-ink-2">Редкие посещения не должны искажать картину группы. Личные средние этих детей видны в их карточках.</p>
-  ${L.B.length ? pupilTable(L.B, [['Ученик'],['Год рожд.',p=>p.born ?? '—'],['Был',p=>pupilStats(p).nP],['Проверено уроков',p=>pupilStats(p).nE],['Явка',p=>pct(pupilStats(p).rate)]]) : '<p class="text-muted">Таких учеников нет.</p>'}
+  ${L.B.length ? pupilTable(L.B, [['Ученик'],['Год рожд.',p=>bornYear(p) ?? '—'],['Был',p=>pupilStats(p).nP],['Проверено уроков',p=>pupilStats(p).nE],['Явка',p=>pct(pupilStats(p).rate)]]) : '<p class="text-muted">Таких учеников нет.</p>'}
 
   <div class="mt-8 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
-    <section class="min-w-0"><h2 class="${H2} mb-3">Неактивные</h2>${pupilTable(L.C, [['Ученик'],['Год рожд.',p=>p.born ?? '—']])}</section>
+    <section class="min-w-0"><h2 class="${H2} mb-3">Неактивные</h2>${pupilTable(L.C, [['Ученик'],['Год рожд.',p=>bornYear(p) ?? '—']])}</section>
     <section class="min-w-0"><h2 class="${H2} mb-3">Без проверенных уроков</h2>${pupilTable(L.D, [['Ученик'],['В группе с',p=>p.from]])}</section>
   </div>
 
@@ -1981,7 +1999,7 @@ function vPupil(){
   const canFix = S.role!=='parent';
   const rows = pupilYearRows(p.id), sel = pupilSel(rows), selRow = rows.find(r=>r.yid===sel);
   const groupLine = selRow ? selRow.groups.join(' → ') + (selRow.groups.length>1 ? '' : ' группа') : 'Средняя группа';
-  const head = pageHead(p.name, `${p.born ? p.born+' г. р.' : 'личные данные удалены'} · ${groupLine} · ${p.active?'активен':'неактивен'}`, '', backLink('analytics','Аналитика группы'));
+  const head = pageHead(p.name, `${p.born ? bornYear(p)+' г. р.' : 'личные данные удалены'} · ${groupLine} · ${p.active?'активен':'неактивен'}`, '', backLink('analytics','Аналитика группы'));
   const body = () => `
   <p class="mb-6 flex max-w-3xl items-start gap-3 rounded-xl ${inAvg ? 'bg-ok-soft' : 'bg-warn-soft'} px-4 py-3">${ic(inAvg?'i-ok':'i-alert','size-5 '+(inAvg?'text-ok':'text-warn'))}
     <span><b class="font-bold">Учитывается в групповых средних: ${inAvg?'да':'нет'}.</b> ${LAYER_TEXT[lay]}${st.nE ? ` Явка ${pct(st.rate)}.` : ''}</span></p>
@@ -2385,11 +2403,11 @@ function vPeople(){
   let body = '', action = '';
   if (S.peopleTab==='pupils'){ action = `<button type="button" data-act="pupil-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Ученик</button>`;
     body = `<ul class="${CARD} divide-y divide-line">${PUPILS.concat(INACTIVE).map(p=>`<li class="flex items-center justify-between gap-4 px-5 py-3">
-      <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 text-left"><span class="block font-medium hover:text-cobalt">${p.name}</span><span class="block text-sm text-muted">${p.born ? p.born+' г. р.' : 'данные удалены'} · ${p.group} группа${p.active?'':' · неактивен'} · ${famOfKid(p.id) ? 'семья '+famOfKid(p.id).name : '<span class="text-warn">без семьи</span>'} · ${hasKidConsent(p.id) ? 'согласие '+(KID_CONSENT[p.id].how==='paper'?'на бумаге':'в приложении') : '<span class="text-warn">нет согласия</span>'}</span></button>
+      <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 text-left"><span class="block font-medium hover:text-cobalt">${p.name}</span><span class="block text-sm text-muted">${p.born ? bornRu(p.born) : 'данные удалены'} · ${p.group} группа${p.active?'':' · неактивен'} · ${famOfKid(p.id) ? 'семья '+famOfKid(p.id).name : '<span class="text-warn">без семьи</span>'} · ${hasKidConsent(p.id) ? 'согласие '+(KID_CONSENT[p.id].how==='paper'?'на бумаге':'в приложении') : '<span class="text-warn">нет согласия</span>'}</span></button>
       <button type="button" data-act="pupil-edit" data-pid="${p.id}" class="inline-flex h-9 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-edit','size-4')} Изменить</button></li>`).join('')}</ul>`; }
   if (S.peopleTab==='families'){ action = `<button type="button" data-act="family-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Семья</button>`; body = familiesTab(); }
   if (S.peopleTab==='unassigned') body = `<ul class="${CARD} divide-y divide-line">${UNASSIGNED.map(u=>`<li class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-      <div><p class="font-medium">${u.name}</p><p class="text-sm text-muted">${u.born} г. р. · ${u.note} · ${famOfKid(u.id) ? `семья ${famLink(famOfKid(u.id))}` : 'без семьи'}</p>
+      <div><p class="font-medium">${u.name}</p><p class="text-sm text-muted">${bornRu(u.born)} · ${u.note} · ${famOfKid(u.id) ? `семья ${famLink(famOfKid(u.id))}` : 'без семьи'}</p>
         <p class="mt-0.5 text-sm">${hasKidConsent(u.id) ? status('ok', 'Согласие опекуна: '+(KID_CONSENT[u.id].how==='paper'?'на бумаге':'в приложении')+', '+KID_CONSENT[u.id].at) : status('warn','Нет согласия опекуна — зачислить нельзя')}</p></div>
       ${hasKidConsent(u.id) ? `<button type="button" data-act="enroll" data-id="${u.id}" class="${B_OUTLINE}">Зачислить в группу</button>` : `<button type="button" data-act="paper-consent" data-id="${u.id}" class="${B_OUTLINE}">Отметить бумажное согласие</button>`}</li>`).join('') || '<li class="px-5 py-4 text-ink-2">Все ученики распределены</li>'}</ul>`;
   return pageHead(t('common.titles.people'), '', action) + `
@@ -2972,7 +2990,7 @@ document.addEventListener('click', e=>{
 document.addEventListener('change', e=>{ if (e.target.dataset.input==='rg-ok') document.getElementById('rg-send').disabled = !e.target.checked; });
 document.addEventListener('submit', e=>{
   const f = e.target, kind = f.dataset.form, err = f.querySelector('[data-err]');
-  const fail = msg => { if (err){ err.textContent = msg; err.classList.remove('hidden'); } else toast(msg); };
+  const fail = msg => { if (err){ err.textContent = msg; err.classList.remove('hidden'); } else toast(msg, 'error'); };
   const nameOk = v => /^[A-Za-zА-Яа-яЁёІіЎў' -]{1,50}$/.test(v);
   if (kind==='loginpw'){
     e.preventDefault();
@@ -3239,7 +3257,7 @@ document.addEventListener('change', e=>{
 });
 document.addEventListener('submit', e=>{
   const f = e.target, kind = f.dataset.form, err = f.querySelector('[data-err]');
-  const fail = msg => { if (err){ err.textContent = msg; err.classList.remove('hidden'); } else toast(msg); };
+  const fail = msg => { if (err){ err.textContent = msg; err.classList.remove('hidden'); } else toast(msg, 'error'); };
   if (kind==='family'){ const name = f.name.value.trim(); if (!name) return fail('Укажите название');
     if (f.dataset.id){ const fam = famById(f.dataset.id); Object.assign(fam, { name, address:f.address.value.trim(), note:f.note.value.trim() }); audit('Семья '+name, 'Изменены данные семьи'); closeDialog(); render(); toast('Сохранено'); return; }
     const kid = f.dataset.kid ? (/^\d+$/.test(f.dataset.kid) ? +f.dataset.kid : f.dataset.kid) : null;
@@ -3433,7 +3451,7 @@ function addPupilsDialog(){
   openDialog(dlgHead('Добавить в группу','Ученики без группы. Новых учеников создаёт администратор.') + `
   <form data-form="addpupils" class="mt-5" novalidate>
     <ul class="divide-y divide-line rounded-lg border border-line">${UNASSIGNED.map(u=>`<li><label class="flex items-center gap-3 px-3 py-3 ${hasKidConsent(u.id)?'cursor-pointer':'text-muted'}"><input type="checkbox" name="u" value="${u.id}" ${hasKidConsent(u.id)?'':'disabled'} class="size-5 accent-cobalt-ink">
-      <span><span class="block font-medium">${u.name}</span><span class="block text-sm text-muted">${u.born} г. р. · ${hasKidConsent(u.id) ? u.note : 'нет согласия опекуна — зачислить нельзя, обратитесь к администратору'}</span></span></label></li>`).join('') || '<li class="px-3 py-3 text-ink-2">Все ученики уже в группах.</li>'}</ul>
+      <span><span class="block font-medium">${u.name}</span><span class="block text-sm text-muted">${bornYear(u)} г. р. · ${hasKidConsent(u.id) ? u.note : 'нет согласия опекуна — зачислить нельзя, обратитесь к администратору'}</span></span></label></li>`).join('') || '<li class="px-3 py-3 text-ink-2">Все ученики уже в группах.</li>'}</ul>
     <div class="mt-4"><label for="ap-d" class="${LABEL}">В группе с</label><input id="ap-d" type="date" value="2026-11-01" class="${FIELD} sm:w-48"></div>
     <div class="mt-4">${dlgFoot('Добавить')}</div>
   </form>`);
@@ -3451,15 +3469,24 @@ function pupilDialog(p){
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="pp-l" class="${LABEL}">Фамилия</label><input id="pp-l" name="last" value="${p?p.name.split(' ')[1]:''}" class="${FIELD}"></div>
       <div><label for="pp-f" class="${LABEL}">Имя</label><input id="pp-f" name="first" value="${p?p.name.split(' ')[0]:''}" class="${FIELD}"></div></div>
     <div><label for="pp-m" class="${LABEL}">Отчество <span class="font-normal text-muted">— необязательно</span></label><input id="pp-m" class="${FIELD}"></div>
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="pp-b" class="${LABEL}">Дата рождения</label><input id="pp-b" name="born" type="date" value="${p?p.born+'-05-14':''}" class="${FIELD}"></div>
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="pp-b" class="${LABEL}">Дата рождения</label><input id="pp-b" name="born" type="date" value="${p&&p.born?p.born:''}" max="2026-10-31" class="${FIELD}"></div>
       <div><label for="pp-g" class="${LABEL}">Группа</label><select id="pp-g" class="${SEL}"><option value="">Без группы</option>${GROUPS.map(g=>`<option ${p&&p.group===g.name?'selected':''}>${g.name}</option>`).join('')}</select></div></div>
     <div><label for="pp-gu" class="${LABEL}">Семья</label><select id="pp-gu" class="${SEL}"><option value="">Без семьи</option>${FAMILIES.map(f=>`<option ${p && famOfKid(p.id)===f ? 'selected' : ''}>${f.name} (${f.adults.map(a=>a.fio).join(', ') || 'нет взрослых'})</option>`).join('')}</select><p class="mt-1.5 text-sm text-muted">У ребёнка одна семья. Состав семьи меняется на странице семьи.</p></div>
     <label class="flex items-start gap-3"><input type="checkbox" ${!p||p.active?'checked':''} class="mt-1 size-5 accent-cobalt-ink"><span>Активен</span></label>
     ${dlgFoot(p ? 'Сохранить' : 'Создать')}
   </form>`);
 }
+/* Учитель: только дата рождения ученика своей группы (P24, CU6); админ правит всю карточку через pupilDialog */
+function birthDialog(p){
+  openDialog(dlgHead('Дата рождения', p.name) + `
+  <form data-form="birth" data-id="${p.id}" class="mt-5 space-y-4" novalidate>
+    <div><label for="bd-d" class="${LABEL}">Дата рождения</label><input id="bd-d" name="born" type="date" value="${p.born||''}" max="2026-10-31" class="${FIELD} sm:w-48"></div>
+    <p class="text-sm text-muted">Изменение попадёт в журнал. Остальные данные ученика правит администратор.</p>
+    ${dlgFoot('Сохранить')}
+  </form>`);
+}
 function enrollDialog(u){
-  openDialog(dlgHead(`Зачислить: ${u.name}`, `${u.born} г. р.`) + `
+  openDialog(dlgHead(`Зачислить: ${u.name}`, `${bornYear(u)} г. р.`) + `
   <form data-form="enroll" data-id="${u.id}" class="mt-5 space-y-4" novalidate>
     <div><label for="en-g" class="${LABEL}">Группа</label><select id="en-g" name="g" class="${SEL}">${GROUPS.map(g=>`<option>${g.name} · ${g.age}</option>`).join('')}</select></div>
     <div><label for="en-d" class="${LABEL}">С даты</label><input id="en-d" type="date" value="2026-11-01" class="${FIELD} sm:w-48"></div>
@@ -3538,9 +3565,24 @@ function go(view){
   document.getElementById('main').focus({ preventScroll:true });
 }
 let toastT;
-function toast(msg){
-  const t = document.getElementById('toast'); t.textContent = msg; t.classList.replace('opacity-0','opacity-100');
-  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.replace('opacity-100','opacity-0'), 2800);
+/* Toast (P24, ADR-017): ok / error, иконка + текст, 2000 мс; desktop — снизу справа, mobile — сверху */
+const TOAST_BASE = 'flex max-w-md items-start gap-2 rounded-lg px-4 py-3 text-base shadow-float transition-opacity duration-200 motion-reduce:transition-none';
+const TOAST_OK = 'bg-ok-soft text-ok';
+const TOAST_ERR = 'bg-danger-soft text-danger';
+const TOAST_MS = 2000;
+function toast(msg, kind='ok'){
+  const t = document.getElementById('toast'), isErr = kind==='error';
+  t.className = TOAST_BASE + ' ' + (isErr ? TOAST_ERR : TOAST_OK) + ' opacity-100';
+  t.setAttribute('role', isErr ? 'alert' : 'status');
+  t.innerHTML = ic(isErr ? 'i-alert' : 'i-ok', 'size-5 mt-0.5') + '<span class="min-w-0"></span>';
+  t.lastChild.textContent = msg;
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.replace('opacity-100','opacity-0'), TOAST_MS);
+}
+function loadRail(){ try { return localStorage.getItem(RAIL_KEY)==='1'; } catch(_) { return false; } }
+function applyRail(){
+  const c = !!S.railCollapsed, b = document.getElementById('railBtn'), l = c ? 'Развернуть меню' : 'Свернуть меню до значков';
+  document.getElementById('shell').dataset.rail = c ? 'collapsed' : 'expanded';
+  b.setAttribute('aria-expanded', String(!c)); b.setAttribute('aria-label', l); b.title = l;
 }
 function openMenu(){
   const d = document.getElementById('drawer'); d.classList.remove('hidden');
@@ -3592,6 +3634,24 @@ function savePupil(){
   snapCur(); render(); window.scrollTo({ top:0, behavior:'auto' });
 }
 
+/* Переходы между учениками (P24): несохранённые изменения → диалог из трёх действий, не window.confirm */
+const checkDirty = () => { const p = roster(S.checkLesson)[S.cur]; return !!(p && S.snap && JSON.stringify(S.hc[S.checkLesson][p.id]) !== JSON.stringify(S.snap)); };
+function gotoPupil(i, scroll){
+  S.cur = i; S.revealScores = false; S.checkPad = null; snapCur(); render();
+  if (scroll) document.getElementById('pupilName')?.scrollIntoView({ block:'start', behavior: reduceMotion() ? 'auto':'smooth' });
+}
+function navCheck(i, scroll){
+  if (i < 0 || i >= roster(S.checkLesson).length || i === S.cur) return;
+  if (checkDirty()){ S.navTarget = { i, scroll }; unsavedDialog(); return; }
+  gotoPupil(i, scroll);
+}
+function unsavedDialog(){
+  openDialog(dlgHead('Есть несохранённые изменения', 'Оценки этого ученика ещё не записаны. Сохранить их перед переходом?') + `
+  <div class="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" data-act="unsaved-stay" class="${B_GHOST} h-11 sm:h-9">Остаться</button>
+  <button type="button" data-act="unsaved-discard" class="${B_OUTLINE} h-11 sm:h-9">Не сохранять</button>
+  <button type="button" data-act="unsaved-save" class="${B_PRIMARY} h-11 sm:h-9">Сохранить и перейти</button></div>`);
+}
+
 /* =========================================================
    СОБЫТИЯ
    ========================================================= */
@@ -3625,10 +3685,10 @@ document.addEventListener('click', e=>{
     case 'lesson-edit': { const L = lessonById(+el.dataset.lid); S.lf = { id:L.id, kind:L.kind, d:isoOf(L.d), t:L.t, teacher:L.teacher, v:[...L.v], content:L.content, cal:true, picker:{ book:'Исх.', ch:'', from:'', to:'' }, err:{} }; go('lessonForm'); break; }
     case 'lf-del': S.lf.v.splice(+el.dataset.i,1); render(); break;
     case 'lf-add': { const pk = S.lf.picker;
-      if (!pk.ch || !pk.from){ toast('Укажите главу и стих'); break; }
-      if (pk.to && +pk.to < +pk.from){ toast('«По» должно быть не меньше «с»'); break; }
+      if (!pk.ch || !pk.from){ toast('Укажите главу и стих', 'error'); break; }
+      if (pk.to && +pk.to < +pk.from){ toast('«По» должно быть не меньше «с»', 'error'); break; }
       const r = `${pk.book} ${pk.ch}:${pk.from}${pk.to && pk.to!==pk.from ? '–'+pk.to : ''}`;
-      if (S.lf.v.includes(r)){ toast('Этот стих уже добавлен'); break; }
+      if (S.lf.v.includes(r)){ toast('Этот стих уже добавлен', 'error'); break; }
       S.lf.v.push(r); S.lf.picker = { book:pk.book, ch:'', from:'', to:'' }; delete S.lf.err.v; render(); break; }
     case 'lsf': {
       if (el.dataset.k==='all') S.lsFilter = { present:false, unchecked:false };
@@ -3648,7 +3708,7 @@ document.addEventListener('click', e=>{
     /* проверка */
     case 'check-open': openCheck(+el.dataset.lid); break;
     case 'fix-pupil': openCheck(+el.dataset.lid, +el.dataset.pid); break;
-    case 'pick': S.cur = +el.dataset.i; S.revealScores = false; S.checkPad = null; snapCur(); render(); document.getElementById('pupilName')?.scrollIntoView({ block:'start', behavior: reduceMotion() ? 'auto':'smooth' }); break;
+    case 'pick': navCheck(+el.dataset.i, true); break;
     case 'present': c.present = el.dataset.val==='true'; if (c.present) S.revealScores = false; render(); break;
     case 'reveal-scores': S.revealScores = true; render(); break;
     case 'check-pad': S.checkPad = S.checkPad===el.dataset.k ? null : el.dataset.k; render(); break;
@@ -3657,8 +3717,13 @@ document.addEventListener('click', e=>{
     case 'sing': c.sing = !c.sing; render(); break;
     case 'reason': S.reason = el.dataset.val; render(); break;
     case 'save': savePupil(); break;
-    case 'prev': if (S.cur>0){ S.cur--; snapCur(); render(); } break;
-    case 'next': if (S.cur<R.length-1){ S.cur++; snapCur(); render(); } break;
+    case 'prev': navCheck(S.cur-1); break;
+    case 'next': navCheck(S.cur+1); break;
+    case 'unsaved-stay': S.navTarget = null; closeDialog(); break;
+    case 'unsaved-discard': { const T = S.navTarget; S.navTarget = null; const pp = R[S.cur]; if (pp && S.snap) S.hc[lid][pp.id] = JSON.parse(JSON.stringify(S.snap)); closeDialog(); if (T) gotoPupil(T.i, T.scroll); toast('Изменения сброшены'); break; }
+    case 'unsaved-save': { const T = S.navTarget; S.navTarget = null; closeDialog(); savePupil(); if (T && !S.finished) gotoPupil(T.i, T.scroll); break; }
+    case 'rail-toggle': S.railCollapsed = !S.railCollapsed; try { localStorage.setItem(RAIL_KEY, S.railCollapsed ? '1' : '0'); } catch(_) {} applyRail(); renderChrome(); break;
+    case 'birth-edit': birthDialog(pupil(+el.dataset.pid)); break;
 
     /* группа учителя */
     case 'sel': { const id=+el.dataset.pid; S.groupSel = el.checked ? [...S.groupSel,id] : S.groupSel.filter(x=>x!==id); render(); break; }
@@ -3759,7 +3824,7 @@ document.addEventListener('click', e=>{
     case 'close-year': closeYearDialog(); break;
     case 'close-year-do': S.yearClosed = true; S.year = null; S.pupilYear = null; audit('Учебный год '+YEAR,'Завершён'); closeDialog(); render(); toast(`Учебный год ${YEAR} завершён`); break;
     case 'year-new': yearNewDialog(); break;
-    case 'dlg-close': closeDialog(); break;
+    case 'dlg-close': S.navTarget = null; closeDialog(); break;
   }
 });
 
@@ -3791,7 +3856,7 @@ document.addEventListener('change', e=>{
 document.addEventListener('submit', e=>{
   e.preventDefault();
   const f = e.target, kind = f.dataset.form, err = f.querySelector('[data-err]');
-  const fail = msg => { if (err){ err.textContent = msg; err.classList.remove('hidden','text-muted'); err.classList.add('text-danger'); } else toast(msg); };
+  const fail = msg => { if (err){ err.textContent = msg; err.classList.remove('hidden','text-muted'); err.classList.add('text-danger'); } else toast(msg, 'error'); };
   if (kind==='lesson'){
     const L = S.lf; L.err = {};
     if (!L.d) L.err.d = 'Укажите дату';
@@ -3893,7 +3958,11 @@ document.addEventListener('submit', e=>{
     if (approved) audit('Заявка одобрена · '+u.name, roles.map(r=>ROLE_NAME[r]).join(', '));
     S.userOpen = null; render(); toast(approved ? `${u.name}: заявка одобрена` : `${u.name}: роли сохранены`); return;
   }
-  if (kind==='pupil'){ if (!f.first.value.trim() || !f.last.value.trim()) return fail('Укажите имя и фамилию'); closeDialog(); toast(f.dataset.id ? 'Карточка сохранена' : 'Ученик создан'); return; }
+  if (kind==='birth'){ const p = pupil(+f.dataset.id), v = f.born.value; if (!v) return fail('Укажите дату рождения'); if (v >= '2026-10-31') return fail('Дата рождения должна быть в прошлом');
+    if (p.born !== v){ audit('Состав · '+p.name, 'Дата рождения: '+(p.born ? bornRu(p.born) : '—')+' → '+bornRu(v)); p.born = v; } closeDialog(); render(); toast('Дата рождения сохранена'); return; }
+  if (kind==='pupil'){ if (!f.first.value.trim() || !f.last.value.trim()) return fail('Укажите имя и фамилию'); const bv = f.born.value; if (bv && bv >= '2026-10-31') return fail('Дата рождения должна быть в прошлом');
+    if (f.dataset.id && bv){ const p = pupil(+f.dataset.id); if (p.born !== bv){ audit('Ученик · '+p.name, 'Дата рождения: '+(p.born ? bornRu(p.born) : '—')+' → '+bornRu(bv)); p.born = bv; } }
+    closeDialog(); render(); toast(f.dataset.id ? 'Карточка сохранена' : 'Ученик создан'); return; }
   if (kind==='enroll'){ const i = UNASSIGNED.findIndex(u=>u.id===+f.dataset.id); const u = UNASSIGNED.splice(i,1)[0]; audit('Состав · '+u.name, 'Зачислен: '+f.g.value.split(' ·')[0]); closeDialog(); render(); toast(`${u.name} зачислен`); return; }
   if (kind==='addpupils'){ const ids = [...f.querySelectorAll('[name=u]:checked')].map(x=>+x.value); if (!ids.length) return fail('Отметьте хотя бы одного ученика');
     ids.forEach(id=>{ const i=UNASSIGNED.findIndex(u=>u.id===id); const u=UNASSIGNED.splice(i,1)[0]; const r=REMOVED.findIndex(p=>p.id===id); PUPILS.push(r>=0 ? REMOVED.splice(r,1)[0] : { id:u.id, name:u.name, born:u.born, active:true, from:'01.11', group:'Средняя' }); audit('Состав · '+u.name,'Зачислен: Средняя'); }); closeDialog(); render(); toast(`Добавлено: ${ids.length}`); return; }
@@ -3908,11 +3977,11 @@ document.addEventListener('submit', e=>{
 
 document.addEventListener('keydown', e=>{
   if (e.key==='Escape'){ if (S.tblPad){ S.tblPad=null; render(); return; } if (S.dd){ const id=S.dd; S.dd=null; renderChrome(); document.querySelector(`[data-act=dd][data-id="${id}"]`)?.focus(); return; } closeMenu(); closeDialog(); }
-  if (S.view==='check' && !S.finished && !['TEXTAREA','INPUT','SELECT'].includes(document.activeElement?.tagName) && document.getElementById('dialog').classList.contains('hidden')){
+  if (S.view==='check' && !S.finished && !['TEXTAREA','INPUT','SELECT','BUTTON'].includes(document.activeElement?.tagName) && document.getElementById('dialog').classList.contains('hidden')){
     const R = roster(S.checkLesson);
     if (e.key==='Enter'){ e.preventDefault(); savePupil(); }
-    if (e.key==='ArrowRight' && S.cur<R.length-1){ S.cur++; snapCur(); render(); }
-    if (e.key==='ArrowLeft' && S.cur>0){ S.cur--; snapCur(); render(); }
+    if (e.key==='ArrowRight') navCheck(S.cur+1);
+    if (e.key==='ArrowLeft') navCheck(S.cur-1);
   }
 });
 document.addEventListener('pointermove', e=>{ const el = e.target.closest?.('[data-chart]'); document.querySelectorAll('[data-chart]').forEach(x=>{ if (x!==el) chartLeave(x); }); if (el) chartHover(el, e.clientX); });
@@ -3920,6 +3989,7 @@ document.addEventListener('pointerdown', e=>{ const el = e.target.closest?.('[da
 let rT; addEventListener('resize', ()=>{ clearTimeout(rT); rT = setTimeout(()=>{ renderChrome(); drawCharts(); }, 120); });
 matchMedia('(min-width: 1024px)').addEventListener('change', m=>{ if (m.matches) closeMenu(); });
 
+S.railCollapsed = loadRail(); applyRail();
 snapCur();
 render();
 

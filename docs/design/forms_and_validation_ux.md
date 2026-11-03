@@ -2,9 +2,9 @@
 
 **Тип:** UX-контракт (UX-06)  
 **Статус:** Canonical  
-**Версия:** 1.1  
-**Дата:** 2026-10-24  
-**Волна:** W7-03 (v1.1 — W12, P14)  
+**Версия:** 1.2  
+**Дата:** 2026-11-03  
+**Волна:** W7-03 (v1.1 — W12, P14; v1.2 — P24)  
 **Зависит от:** [`ui_states_contract.md`](./ui_states_contract.md), [`visual_identity_contract.md`](./visual_identity_contract.md) (D-6…D-8), [`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md), [`domain_invariants.md`](../prds/02_domain_model/domain_invariants.md), [`lifecycle_models.md`](../prds/02_domain_model/lifecycle_models.md), [`database_schema_v1.md`](../prds/03_data_model/database_schema_v1.md), [`ai_form_handling_pattern.md`](../guidelines/react/ai_form_handling_pattern.md), [`sunday_school_data_analytics_spec.md`](../my_specs/sunday_school_data_analytics_spec.md) (РГ-2, РГ-3, БП-4, БП-12, ПБ-5, УД-2)  
 **Связанные документы:** [`adr_004_timezone_scheduling_model.md`](../prds/07_governance/adr_004_timezone_scheduling_model.md), [`adr_008_i18n_ru_en_dictionary_slices.md`](../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md), [`canonical_routes.md`](./canonical_routes.md), [`architecture_master_index.md`](../prds/architecture_master_index.md)  
 **Проверено по:** React 19 — react.dev, `useActionState` через WebFetch, 2026-10-11: возвращает `[state, formAction, isPending]`; форма с `action` **автоматически сбрасывается** после выполнения, поэтому неуправляемые поля не сохраняют значения — введённое при ошибке возвращают в `state` и подставляют в `defaultValue` (либо поля управляемые); `permalink` — прогрессивное улучшение для Server Functions. Next.js 16.4 `error.js` — по [`ui_states_contract.md`](./ui_states_contract.md). Правила `ui-mutation-pending`, `ui-toast-mutations` — репозиторий (`.cursor/rules/tiers/t2-ui`). Context7 недоступен.
@@ -109,6 +109,7 @@
 | Обратимое и быстрое (переключатель, сохранение) | Без диалога; результат — toast |
 | Причина обязательна | Поле в том же диалоге; кнопка неактивна до ввода (серверная проверка остаётся) |
 | Повтор после ошибки | Диалог остаётся открытым, введённое сохранено, ошибка внутри |
+| Несохранённые изменения при переходе внутри приложения (P24) | Модальный диалог (`ConfirmDialog`), **не** `window.confirm`: заголовок «Есть несохранённые изменения»; три действия — «Сохранить и перейти» (primary, фокус по умолчанию), «Не сохранять» (outline; переход + toast «Изменения сброшены», 2000 мс), «Остаться» (ghost; = Esc / клик по фону). Ошибка сохранения — диалог закрывается, перехода нет, ошибка у поля формы. Подписи кнопок — глаголы действия, не «ОК / Отмена» |
 
 Ввод слова-подтверждения не требуется, **кроме выполнения запроса на удаление** ПД (`executeDeletion`, УД-8): там обязателен ввод слова из словаря и подтверждение плана ([`deletion_requests_contract.md`](../implementation/mvp/contracts/deletion_requests_contract.md) §5.4).
 
@@ -118,7 +119,7 @@
 |---------|-----------|
 | Сохранение по ученику | Кнопка «Сохранить и далее»; частичное сохранение допустимо (D5, ui_states) |
 | «Не оценивалось» | Поле остаётся пустым («—»); `NULL`, не `0` (INV-11); в среднее не входит |
-| Несохранённые изменения | Индикатор в шапке; предупреждение при уходе со страницы (`beforeunload`) и при переходе к другому ученику без сохранения |
+| Несохранённые изменения | Индикатор в шапке. Переход к другому ученику или клиентская навигация — модальный диалог §7.1 (P24; [`homework_check_flow_spec.md`](../implementation/mvp/specs/homework_check_flow_spec.md) §5.5 п. 5–6). Перезагрузка / закрытие вкладки — `beforeunload` браузера. Автосохранения при переходе нет |
 | Параллельная правка | Сервер отвечает `CONFLICT` при изменении записи другим пользователем после загрузки формы; сообщение «Запись изменилась — обновите» и кнопка «Загрузить актуальное», локальные правки показываются для переноса |
 | Повторная отправка | Идемпотентна: повтор не создаёт новой записи и не удваивает баллы (INV-13) |
 
@@ -190,3 +191,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W7-03, UX-06) |
 | 2026-10-24 | v1.1 — ADR-014 (P14): F9 по шкале D-9 и базе 18 px; F13 запрет нативных select / checkbox / date; F14 одинаковая высота соседних контролов и ширина кнопки отправки |
+| 2026-11-03 | v1.2 — P24: §7.1 модальный диалог несохранённых изменений из трёх действий вместо `window.confirm`; §7.2 ссылка на поток проверки ДЗ |

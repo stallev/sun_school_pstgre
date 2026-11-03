@@ -1,9 +1,9 @@
 # ADR-014 — Редизайн v2: шрифт, шкала кегля, оболочка и контролы
 
 **Тип:** ADR  
-**Статус:** ACCEPTED  
-**Версия:** 1.0  
-**Дата:** 2026-10-24  
+**Статус:** ACCEPTED (R-4 — superseded [ADR-017](./adr_017_shell_container_toast_buttons.md); R-6 для кнопок и R-8 дополнены ADR-017)  
+**Версия:** 1.1  
+**Дата:** 2026-11-03  
 **Волна:** W12 (P14)  
 **Зависит от:** [`visual_identity_contract.md`](../../design/visual_identity_contract.md) (UX-03), [`responsive_navigation_contract.md`](../../design/responsive_navigation_contract.md) (UX-02), [`typography_text_guidelines.md`](../../guidelines/typography_text_guidelines.md), [`ui_redesign_audit_2026-10-24.md`](../../implementation/mvp/audits/ui_redesign_audit_2026-10-24.md)  
 **Связанные документы:** [`redesign_v2_ui_spec.md`](../../design/redesign_v2_ui_spec.md), [`prototype_class_parity_spec.md`](../../implementation/mvp/specs/prototype_class_parity_spec.md), [`global_shell_spec.md`](../../implementation/mvp/specs/global_shell_spec.md), [`design_system_lab_spec.md`](../../implementation/mvp/specs/design_system_lab_spec.md), [`P14_phase_description.md`](../../implementation/mvp/phases_tasks_descriptions/P14_phase_description.md), [`architecture_master_index.md`](../architecture_master_index.md)  
@@ -37,11 +37,11 @@
 | R-1 | `font-body` — **Source Sans 3** (веса 400, 500, 600, 700; latin + cyrillic; `next/font/google`). `font-display` — Alegreya (500, 700, курсив 400): заголовки, крупные числа, тексты стихов. Alegreya Sans удаляется. Семейств на странице — два. Отменяет UX-03 D-2 |
 | R-2 | Базовый кегль **18 px** (`html { font-size: 112.5% }`), размеры — в `rem`. `text-base` = 18 px, `text-sm` = 15.75 px (пол для метаданных), `text-xs` = 13.5 px — **только** в `Badge` и `CountBadge`. `line-height` основного текста 1.5. Отменяет UX-03 D-5 |
 | R-3 | В содержимом `<main>`: подписи полей, ячейки таблиц, пункты списков, кнопки, чипы, пункты меню — `text-base`. `text-sm` — только подпись под значением, подсказка, метаданные строки. `text-xs` и произвольные `text-[…rem]` меньше 0.875rem в `<main>` запрещены |
-| R-4 | Один контейнер страницы: `max-w-[1400px]`, `px-4 sm:px-6 lg:px-8`, выравнивание влево. Узкие страницы (форма, текст) — только через компонент `PageSection` с `width="form"` (`max-w-3xl`, 48rem) или `width="wide"` (`max-w-5xl`, 64rem), прижатый влево, не по центру. Экраны `(auth)` остаются на `AuthScreen` |
+| R-4 | Один контейнер страницы: `max-w-[1400px]`, `px-4 sm:px-6 lg:px-8`, выравнивание влево. Узкие страницы (форма, текст) — только через компонент `PageSection` с `width="form"` (`max-w-3xl`, 48rem) или `width="wide"` (`max-w-5xl`, 64rem), прижатый влево, не по центру. Экраны `(auth)` остаются на `AuthScreen`. **Superseded (P24, [ADR-017](./adr_017_shell_container_toast_buttons.md) §4 п. 1):** контейнер `max-w-[1600px] mx-auto` по центру `main`, шапка в том же контейнере; `PageSection` — по левому краю контейнера |
 | R-5 | Один вид выбранного чипа и сегмента: `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`; невыбранный — `border-input bg-surface text-ink hover:border-ink-2`. Solid `ink` как «выбрано» запрещён. Единый компонент — существующий `SegmentedControl` (расширяется режимом `toggle` с `aria-pressed` и размером `compact`); ручные кнопки-чипы аналитики заменяются им |
-| R-6 | Шкала высот контролов: `default` = `h-10` (45 px), `compact` = `h-9` (40.5 px, только внутри таблиц), `touch` = `h-11` (49.5 px, главное действие на мобильном). Рядом стоящие контролы одной высоты. Шкала в токенах `--control-h`, `--control-h-compact`, `--control-h-touch` |
+| R-6 | Шкала высот контролов: `default` = `h-10` (45 px), `compact` = `h-9` (40.5 px, только внутри таблиц), `touch` = `h-11` (49.5 px, главное действие на мобильном). Рядом стоящие контролы одной высоты. Шкала в токенах `--control-h`, `--control-h-compact`, `--control-h-touch`. **Дополнено ADR-017 §4 п. 4:** кнопки, чипы и сегменты по умолчанию — компактные `h-9`; поля ввода остаются `h-10` |
 | R-7 | В продуктовом UI нет нативных `<select>`, `<input type="checkbox">` и `<input type="date">`. Используются `Select` (Base UI, уже есть в `components/ui/select.tsx`, доводится до шкалы v2), `Checkbox` (уже есть, `size-5`), `DateField` (новый: текстовое поле с вводом даты и календарём). Формат даты — из `lib/i18n/format.ts`, не из локали браузера |
-| R-8 | Навигация `lg+` — **постоянный левый сайдбар** `w-64` (16rem) с плоским списком разделов и заголовками групп; выпадающих панелей нет. Контент занимает остаток (контейнер R-4). Шапка `lg+` содержит только меню пользователя (профиль, «Смотреть как» в dev, «Выйти»). `< lg` — drawer и заголовок экрана без изменений. Брейкпоинт 1024 px сохраняется |
+| R-8 | Навигация `lg+` — **постоянный левый сайдбар** `w-64` (16rem) с плоским списком разделов и заголовками групп; выпадающих панелей нет. Контент занимает остаток (контейнер R-4). Шапка `lg+` содержит только меню пользователя (профиль, «Смотреть как» в dev, «Выйти»). `< lg` — drawer и заголовок экрана без изменений. Брейкпоинт 1024 px сохраняется. **Дополнено ADR-017 §4 п. 2:** сайдбар сворачивается до rail иконок `4rem`, состояние — cookie `sidebar_collapsed`; кнопка сворачивания — в шапке |
 | R-9 | Программный фокус `main#main` не рисует рамку: `main:focus:not(:focus-visible) { outline: none }`. `:focus-visible` на интерактивных элементах остаётся (cobalt, 2 px, смещение 2 px) |
 | R-10 | Бюджет акцента: имя ученика в таблице рейтинга — `text-ink font-medium`, cobalt только при `hover` и `focus-visible`; числа дней календаря — `text-ink`; `cobalt-ink` — основная кнопка, текущий пункт, ссылки в прозе, главная цифра экрана |
 | R-11 | Опасное действие в строке с полем — контурная `destructive`; сплошная `destructive-solid` — только внутри `ConfirmDialog` |
@@ -68,3 +68,10 @@
 - Меняется только слой представления: маршруты, права, данные и сообщения мутаций не затронуты.
 - Контраст пар цветов UX-03 §5 не меняется. Порог крупного текста WCAG (≥ 24 px или ≥ 18.66 px жирным) остаётся прежним: 18 px и 15.75 px — обычный текст, требуется 4.5:1.
 - HTML-прототип обновляется в одном изменении с этим ADR (прототип подчинён контракту, UX-03 §10).
+
+## Change log
+
+| Date | Change |
+|------|--------|
+| 2026-10-24 | v1.0 — ACCEPTED (P14) |
+| 2026-11-03 | v1.1 — R-4 superseded ADR-017 (контейнер 1600 по центру); R-6 и R-8 дополнены ADR-017 (компактные кнопки, rail-сайдбар) — P24 |

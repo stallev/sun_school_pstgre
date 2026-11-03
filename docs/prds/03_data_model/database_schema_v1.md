@@ -84,7 +84,7 @@
 
 | Таблица | Колонки | Ограничения |
 |---------|---------|-------------|
-| `pupil` | `organization_id`, `last_name`, `first_name`, `middle_name · null`, `birth_date · null`, `photo_ref · null`, `is_active bool`, `family_id · null` (**post-MVP**, FK) | в MVP `family_id = NULL` |
+| `pupil` | `organization_id`, `last_name`, `first_name`, `middle_name · null`, `birth_date · null`, `photo_ref · null`, `is_active bool`, `family_id · null` (**post-MVP**, FK) | в MVP `family_id = NULL`; `birth_date` редактируют admin (`updatePupil`) и teacher своей группы активного года (`updatePupilBirthDate`, AZ-20a, P24); дни рождения в календаре — производные от `birth_date`, отдельной таблицы и типа `grade_event` нет |
 | `enrollment` | `pupil_id`, `grade_id`, `academic_year_id`, `starts_on date`, `ends_on date · null` | не более одного активного (`ends_on IS NULL`) на `pupil_id`; зачисление — только при действующем `child_data_consent` (СО-4, проверка в приложении) |
 | `child_data_consent` | `pupil_id`, `guardian_adult_id · null` (**post-MVP** FK `family_adult`), `signer_name text · null` (MVP: подписант текстом), `channel CONSENT_CHANNEL`, `text_version`, `signed_on date · null` (NULL только при `LEGACY_PENDING`; CHECK), `paper_storage_note text · null`, `marked_by user_id`, `status CONSENT_STATUS`, `revoked_at · null` | запись создаёт admin (СО-3) |
 
@@ -263,3 +263,4 @@ Enum `ANALYTICS_SNAPSHOT_REASON`: `CLOSE`, `CORRECTION`, `ERASURE`, `BACKFILL`. 
 | 2026-10-18 | §9: `recitation_attempt` в классификации удаления ребёнка (P06) |
 | 2026-10-19 | §5.7: снимки итогов учебного года (`analytics_group_year_snapshot`, `analytics_pupil_year_snapshot`), enum `ANALYTICS_SNAPSHOT_REASON`, R-10, R-11, индексы §8, ПД §9 (P08) |
 | 2026-11-02 | §4 enum `ACHIEVEMENT_SUGGESTION_STATUS`; §6 `achievement.requires_confirmation`, `rule_type` `EVENT`, таблица `achievement_suggestion`; §8 индексы; §9 удаление (P23, ADR-016) |
+| 2026-11-03 | §5.3 `pupil.birth_date`: кто редактирует (admin, teacher своей группы) и дни рождения в календаре как read-model. **Изменений схемы нет** (P24) |
