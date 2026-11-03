@@ -12,7 +12,6 @@ type SegmentedControlLinksProps = {
   options: readonly SegmentedLinkOption[];
   value: string;
   "aria-label": string;
-  size?: "default" | "compact";
   className?: string;
 };
 
@@ -20,7 +19,6 @@ type SegmentedControlLinksProps = {
 export const SegmentedControlLinks = ({
   options,
   value,
-  size = "default",
   className,
   ...aria
 }: SegmentedControlLinksProps) => (
@@ -37,7 +35,7 @@ export const SegmentedControlLinks = ({
           href={option.href}
           role="radio"
           aria-checked={checked}
-          className={segmentedChipClassName(checked, { size })}
+          className={segmentedChipClassName(checked)}
         >
           {option.label}
         </CustomLink>

@@ -18,7 +18,6 @@ type SegmentedControlProps<T extends string, M extends "radio" | "toggle" = "rad
   disabled?: boolean;
   invalid?: boolean;
   mode?: M;
-  size?: "default" | "compact";
   /** Content width by default (P24); `false` allows full-width / grid via `className`. */
   fit?: boolean;
   className?: string;
@@ -34,7 +33,6 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
   disabled = false,
   invalid = false,
   mode,
-  size = "default",
   fit = true,
   className,
   ...aria
@@ -79,7 +77,7 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
   };
 
   const chipClass = (checked: boolean) =>
-    segmentedChipClassName(checked, { size, invalid });
+    segmentedChipClassName(checked, { invalid });
 
   const handleSelect = (optionValue: T, checked: boolean) => {
     if (resolvedMode === "toggle" && checked) {

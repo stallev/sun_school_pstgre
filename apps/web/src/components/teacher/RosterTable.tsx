@@ -99,7 +99,7 @@ export const RosterTable = ({
           <Button
             type="button"
             variant="destructive"
-            size="compact"
+           
             className="min-h-11"
             disabled={pending || selected.length === 0}
             aria-busy={pending}
@@ -160,7 +160,7 @@ export const RosterTable = ({
               }))}
             />
           </label>
-          <Button type="submit" className="min-h-11" disabled={pending} aria-busy={pending}>
+          <Button type="submit" size="field" disabled={pending} aria-busy={pending}>
             {pending ? <Loader2Icon className="size-4 animate-spin" aria-hidden /> : null}
             {messages.addPupilSubmit}
           </Button>

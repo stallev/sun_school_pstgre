@@ -21,6 +21,8 @@ describe("SegmentedControl (P14-CU3)", () => {
     );
     const source = fs.readFileSync(path.join(uiDir, "segmented-control.tsx"), "utf8");
     expect(chipSource).toMatch(/\?\s*"border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink hover:bg-cobalt-soft"/);
+    expect(chipSource).toMatch(/\bh-9\b/);
+    expect(chipSource).toContain("after:-inset-y-1");
     expect(chipSource).toMatch(/:\s*"border-muted bg-surface text-ink hover:border-ink-2"/);
     expect(chipSource).toMatch(/transition-\[background-color,border-color,color/);
     expect(source).toContain("segmentedChipClassName");

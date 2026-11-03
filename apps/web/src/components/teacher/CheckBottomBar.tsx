@@ -42,7 +42,8 @@ export const CheckBottomBar = ({
           <Button
             type="button"
             variant="outline"
-            className="w-12 px-0"
+            size="icon-touch"
+            className="shrink-0 px-0"
             disabled={!canPrevious || pending}
             aria-label={previousLabel}
             onClick={onPrevious}
@@ -51,7 +52,8 @@ export const CheckBottomBar = ({
           </Button>
           <Button
             type="button"
-            className="flex-1"
+            size="touch"
+            className="min-w-0 flex-1"
             disabled={pending}
             aria-busy={pending}
             onClick={onPrimary}
@@ -62,7 +64,8 @@ export const CheckBottomBar = ({
             <Button
               type="button"
               variant="outline"
-              className="w-12 px-0"
+              size="icon-touch"
+              className="shrink-0 px-0"
               disabled={pending}
               aria-label={nextLabel}
               onClick={onNext}

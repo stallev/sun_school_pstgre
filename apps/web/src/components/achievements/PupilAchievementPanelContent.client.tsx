@@ -85,7 +85,7 @@ export const PupilAchievementPanelContent = ({
             </ContentText>
           </div>
           {canMutate ? (
-            <Button type="button" variant="outline" className="min-h-11" onClick={() => setPenaltyOpen(true)}>
+            <Button type="button" variant="outline" onClick={() => setPenaltyOpen(true)}>
               <FlagIcon className="size-4 text-penalty" aria-hidden />
               {messages.issuePenaltyButton}
             </Button>
@@ -104,7 +104,7 @@ export const PupilAchievementPanelContent = ({
                     {`: ${row.name} · ${row.points}`}
                   </ContentText>
                   {row.canCancel ? (
-                    <Button type="button" size="compact" variant="ghost" onClick={() => setCancelPenalty(row)}>
+                    <Button type="button" variant="ghost" onClick={() => setCancelPenalty(row)}>
                       {messages.cancelPenaltyButton}
                     </Button>
                   ) : null}
@@ -123,7 +123,7 @@ export const PupilAchievementPanelContent = ({
             </ContentText>
           </div>
           {canMutate ? (
-            <Button type="button" variant="outline" className="min-h-11" onClick={() => setAwardOpen(true)}>
+            <Button type="button" variant="outline" onClick={() => setAwardOpen(true)}>
               <AwardIcon className="size-4" aria-hidden />
               {messages.manualAwardButton}
             </Button>
@@ -153,7 +153,7 @@ export const PupilAchievementPanelContent = ({
                     </ContentText>
                   </div>
                   {row.canRevoke ? (
-                    <Button type="button" size="compact" variant="ghost" onClick={() => setRevokeAward(row)}>
+                    <Button type="button" variant="ghost" onClick={() => setRevokeAward(row)}>
                       {messages.revokeButton}
                     </Button>
                   ) : null}

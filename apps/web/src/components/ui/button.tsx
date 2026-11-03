@@ -2,6 +2,9 @@ import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
+const touchHitPadding =
+  "max-md:relative max-md:after:absolute max-md:after:-inset-y-1 max-md:after:inset-x-0"
+
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-transparent text-base font-medium whitespace-nowrap transition-[background-color,transform] duration-150 ease-out-soft outline-none select-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:pointer-events-none disabled:opacity-45 aria-busy:pointer-events-none aria-busy:opacity-70 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
@@ -19,13 +22,14 @@ const buttonVariants = cva(
         link: "text-cobalt-ink underline-offset-4 hover:underline",
       },
       size: {
-        default:
-          "h-10 px-3.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
-        compact:
+        default: cn(
           "h-9 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
+          touchHitPadding,
+        ),
+        field:
+          "h-10 px-3.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
         touch: "h-11 px-5",
-        icon: "size-10",
-        "icon-compact": "size-9",
+        icon: cn("size-9", touchHitPadding),
         "icon-touch": "size-11",
       },
     },

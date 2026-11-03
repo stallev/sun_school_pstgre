@@ -8,7 +8,7 @@ type LessonCheckPressToggleProps = {
   label: string;
   disabled?: boolean;
   busy?: boolean;
-  size?: "compact" | "touch";
+  size?: "default" | "touch";
   onPressedChange: (pressed: boolean) => void;
 };
 
@@ -18,7 +18,7 @@ export const LessonCheckPressToggle = ({
   label,
   disabled = false,
   busy = false,
-  size = "compact",
+  size = "default",
   onPressedChange,
 }: LessonCheckPressToggleProps) => (
   <button
@@ -29,7 +29,7 @@ export const LessonCheckPressToggle = ({
     disabled={disabled || busy}
     className={cn(
       "inline-flex items-center justify-center border border-line bg-surface transition-[color,background-color,border-color] duration-100 ease-out-soft hover:bg-paper disabled:pointer-events-none disabled:opacity-45",
-      size === "touch" ? "min-h-11 min-w-11 rounded-lg" : "h-8 w-8 rounded-md",
+      size === "touch" ? "min-h-11 min-w-11 rounded-lg" : "size-9 rounded-lg max-md:relative max-md:after:absolute max-md:after:-inset-y-1 max-md:after:inset-x-0",
     )}
     onClick={() => onPressedChange(!pressed)}
   >

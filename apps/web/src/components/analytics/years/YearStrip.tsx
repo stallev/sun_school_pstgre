@@ -30,7 +30,6 @@ export const YearStrip = ({
   <div aria-busy={isPending} className={cn("mb-5", className)}>
     <SegmentedControl
       mode="radio"
-      size="default"
       aria-label={messages.stripLabel}
       value={selectedYearId}
       onValueChange={onSelectYear}
