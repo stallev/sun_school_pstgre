@@ -2,7 +2,7 @@
 
 **Тип:** UX-контракт (UX-06)  
 **Статус:** Canonical  
-**Версия:** 1.2  
+**Версия:** 1.3  
 **Дата:** 2026-11-03  
 **Волна:** W7-03 (v1.1 — W12, P14; v1.2 — P24)  
 **Зависит от:** [`ui_states_contract.md`](./ui_states_contract.md), [`visual_identity_contract.md`](./visual_identity_contract.md) (D-6…D-8), [`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md), [`domain_invariants.md`](../prds/02_domain_model/domain_invariants.md), [`lifecycle_models.md`](../prds/02_domain_model/lifecycle_models.md), [`database_schema_v1.md`](../prds/03_data_model/database_schema_v1.md), [`ai_form_handling_pattern.md`](../guidelines/react/ai_form_handling_pattern.md), [`sunday_school_data_analytics_spec.md`](../my_specs/sunday_school_data_analytics_spec.md) (РГ-2, РГ-3, БП-4, БП-12, ПБ-5, УД-2)  
@@ -192,3 +192,4 @@
 | 2026-10-11 | v1.0 — Canonical (W7-03, UX-06) |
 | 2026-10-24 | v1.1 — ADR-014 (P14): F9 по шкале D-9 и базе 18 px; F13 запрет нативных select / checkbox / date; F14 одинаковая высота соседних контролов и ширина кнопки отправки |
 | 2026-11-03 | v1.2 — P24: §7.1 модальный диалог несохранённых изменений из трёх действий вместо `window.confirm`; §7.2 ссылка на поток проверки ДЗ |
+| 2026-11-03 | v1.3 — P25 (ADR-018): поиск и фильтры длинных списков, опасные действия в меню «⋯», форма «Новый ученик» в диалоге — см. [`P25_phase_description.md`](../implementation/mvp/phases_tasks_descriptions/P25_phase_description.md) |

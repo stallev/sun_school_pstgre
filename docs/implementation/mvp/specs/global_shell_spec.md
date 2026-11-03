@@ -2,7 +2,7 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 2.1  
+**Версия:** 2.3  
 **Дата:** 2026-11-03  
 **Волна:** W9-01 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md) (UX-02), [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`canonical_routes.md`](../../../design/canonical_routes.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) §6, [`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §10, [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md) §5, [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §3–§5.2, [`adr_008_i18n_ru_en_dictionary_slices.md`](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md), [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md)  
@@ -145,7 +145,9 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | Данные | фикстуры `seed:dev` ([`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8): вымышленные пользователи; вход «как» пользователь — через dev-вход фикстур, не через OAuth |
 | Тест | в prod-сборке нет строки `dev-role-switcher` (проверка бандла) |
 
-Конкретный механизм (dev-вход фикстур, dev-cookie) — Q-03; **до решения** переключатель допускается только как смена NAV для просмотра оболочки.
+**P25 (ADR-018 §4 п. 6).** Выбранный режим хранится в cookie `view_as` (`admin` | `teacher`; `Path=/`, `SameSite=Lax`, UI-предпочтение без ПД, не auth-cookie) и читается сервером только для набора пунктов меню и бейджа; после перезагрузки страницы режим сохраняется. В шапке при режиме, отличном от реальной роли, показан бейдж «Режим: учитель» (подпись роли в меню остаётся реальной). Пункты предпросмотра, на которые у реальной роли нет доступа (например `/group` требует `TEACHER`), **не показываются**; если для режима нет ни одного доступного пункта — пояснение «Для режима учителя назначьте себя на группу». Права по-прежнему решает реальная роль (AZ без изменений). Повреждённое значение cookie → реальная роль.
+
+Конкретный механизм (dev-вход фикстур) — Q-03; **до решения** переключатель допускается только как смена NAV для просмотра оболочки.
 
 ## 9. Instant Navigations и кэш (требования, пересверить на P5)
 
@@ -225,6 +227,7 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | R-10 | MUST: `main#main` без видимой рамки при программном фокусе |
 | R-11 | MUST (P24, ADR-017): шапка и `#view` — в одном центрирующем контейнере `max-w-[1600px] mx-auto px-4 md:px-6 lg:px-8`; на ширине больше 1600 px + сайдбар поля слева и справа от контейнера равны |
 | R-13 | MUST (P24): компактный верх страницы — `main` с `pt-2` (< `lg`) и `lg:pt-3`; заголовок страницы (`PageHeader`) отделён от контента `mb-3` / `lg:mb-4`; ссылка «назад» над заголовком `h-9` и `mb-1`. Пустое место между шапкой оболочки и первым содержательным блоком не больше ~24 px на `lg` |
+| R-14 | MUST (P25, ADR-018): режим «Смотреть как» хранится в cookie `view_as`, переживает перезагрузку, в шапке виден бейдж «Режим: …»; пункты предпросмотра без доступа реальной роли не показываются; права не меняются |
 | R-12 | MUST (P24): toast справа снизу на `lg+`, сверху на < `lg`; success / error различаются цветом **и** иконкой; 2000 мс |
 
 ## 16. Acceptance criteria
@@ -280,3 +283,4 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | 2026-10-24 | v2.0 — ADR-014 (P14): `top-nav.tsx` заменён `sidebar-nav.tsx`; §6.1 сайдбар вместо disclosure-групп; «Смотреть как» внутри меню пользователя; фокус `main` без рамки; R-9, R-10. Раздел «Проверено по» про disclosure относится теперь только к меню пользователя |
 | 2026-11-03 | v2.2 — P24: R-13 компактный верх страницы (меньшие `pt` у `main`, отступы `PageHeader`) |
 | 2026-11-03 | v2.1 — P24, ADR-017: §4 контейнер `max-w-[1600px] mx-auto` для шапки и `#view`, `shell-header.client.tsx`, cookie-модуль; §5 шаг 4а; §6.1а rail-сайдбар; §6.5 toast справа снизу с цветом и иконкой; R-9, R-11, R-12; §16 |
+| 2026-11-03 | v2.3 — P25 (ADR-018): §8 режим «Смотреть как» — cookie `view_as`, бейдж «Режим: …», фильтр пунктов по реальным правам; R-14 |

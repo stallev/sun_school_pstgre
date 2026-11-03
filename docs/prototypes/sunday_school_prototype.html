@@ -56,6 +56,7 @@
   Уроки                [+] lessons, lesson, lessonForm, verses, calendar; [~] диапазон золотых стихов — форма выбора стиха, проверить диапазоны
   Проверка ДЗ          [+] check, lessonTable (сдано позже, корректировка проверенных уроков)
   Кирпичики, рейтинг   [+] bricks, rating
+  P25 (ADR-018): понятные названия («регулярно ходят», «из 10», «% к прошлому году»), termHint() «?», поиск учеников, «Как мы считали» свёрнуто
   Аналитика по годам   [+] полоса лет и таблица итогов на analytics, school, pupil; итоги года и «Все годы» на group; разница с прошлым годом, пороги N=10 / M=4 (не утверждены), год по умолчанию, снимки закрытых лет (multi_year_analytics.md)
   Аналитика            [+] analytics, school; [~] «кто какие уроки провёл» (9.1.4), динамика успеваемости (9.1.3), строка качества данных (9.1) — присутствуют фрагментарно
   Журнал изменений     [+] audit
@@ -161,6 +162,7 @@
     <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></symbol>
     <symbol id="i-trip" viewBox="0 0 24 24"><path d="M3 20L12 5l9 15zM12 20v-6"/></symbol>
     <symbol id="i-cancel" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M10 13.5l4 4M14 13.5l-4 4"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2v.1"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></symbol>
     <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 6.1Q11.3 6 12 6c5 0 9 6 9 6a17 17 0 0 1-3 3.6M6.1 6.9C4 8.6 3 12 3 12s4 6 9 6c1.3 0 2.5-.3 3.6-.8"/></symbol>
     <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5"/></symbol>
@@ -491,7 +493,7 @@ function topScorerIds(lid){
   return ids;
 }
 const topMark = () => `<span class="inline-flex shrink-0 items-center text-gold-ink">${ic('i-award','size-4')}<span class="sr-only">Лучший результат урока</span></span>`;
-const sheetLink = lid => `<a href="#sheet=${lid}" target="_blank" rel="noopener noreferrer" aria-label="Ведомость урока (откроется в новой вкладке)" class="${B_OUTLINE}">${ic('i-grid','size-4')} Ведомость ${ic('i-right','size-4 text-muted')}</a>`;
+const sheetLink = lid => `<a href="#sheet=${lid}" target="_blank" rel="noopener noreferrer" aria-label="Ведомость урока (откроется в новой вкладке)" class="${B_OUTLINE}">${ic('i-grid','size-4')} Печатная ведомость ${ic('i-right','size-4 text-muted')}</a>`;
 
 const S = {
   authed:true, role:'teacher', view:'today', child:1,
@@ -500,7 +502,7 @@ const S = {
   awarded:[], ledger:[], audit:[], penalties:[], penOpen:null, achMode:{ on:true, off:[] }, lastNew:[],
   rec:{ state:'idle', t:0, verse:'Еф. 4:32', lid:8, timer:null, showText:false }, debtLid:7,
   consent:{ 1:{ voice:true, photo:true }, 2:{ voice:false, photo:true } },
-  bricksOpen:null, fixOpen:null, peopleTab:'pupils', usersTab:'pending', userOpen:null,
+  bricksOpen:null, fixOpen:null, peopleTab:'pupils', peopleQ:'', usersTab:'pending', userOpen:null,
   yearClosed:false, year:null, pupilYear:null, pupilMetric:'att', period:'year', anaGroup:'Средняя', month:11, verseQ:'', groupSel:[], groupEdit:'Средняя',
   lf:null, lang:'ru', loginAdminOpen:false, tblPad:null, versesOpen:false
 };
@@ -732,6 +734,13 @@ const ach = code => ACH.find(a=>a.code===code);
 const plural = (n, a, b, c) => { const m10=n%10, m100=n%100; return m10===1&&m100!==11 ? a : (m10>=2&&m10<=4&&(m100<10||m100>=20)) ? b : c; };
 const f1 = x => x==null || isNaN(x) ? '—' : (Math.round(x*10)/10).toString().replace('.',',');
 const pct = x => x==null || isNaN(x) ? '—' : (Math.round(x*1000)/10).toString().replace('.',',')+'%';
+/* TermHint (P25, ADR-018, UX-03 D-17): «?» у термина; popover по клику / Enter, Esc и клик вне закрывают; текст ≤ 200 знаков */
+const termHint = (term, text) => `<span class="relative inline-flex align-middle"><button type="button" data-term-hint aria-expanded="false" aria-label="Что значит «${term}»?" class="-my-2.5 inline-flex size-9 items-center justify-center rounded-md text-muted hover:text-cobalt-ink">${ic('i-help','size-4')}</button><span role="note" hidden class="absolute left-0 top-8 z-20 w-[min(20rem,calc(100vw-2rem))] rounded-lg border border-line bg-surface p-3 text-left text-base font-normal normal-case text-ink shadow-float">${text}</span></span>`;
+const kids = n => `${n} ${plural(n,'ребёнок','ребёнка','детей')}`;
+function closeTermHints(except){ document.querySelectorAll('[data-term-hint][aria-expanded=true]').forEach(b=>{ if (b!==except){ b.setAttribute('aria-expanded','false'); b.nextElementSibling.hidden = true; } }); }
+document.addEventListener('click', e=>{ const b = e.target.closest('[data-term-hint]'); closeTermHints(b); if (!b) return;
+  const open = b.getAttribute('aria-expanded')!=='true'; b.setAttribute('aria-expanded', String(open)); b.nextElementSibling.hidden = !open; });
+document.addEventListener('keydown', e=>{ if (e.key==='Escape'){ const o = document.querySelector('[data-term-hint][aria-expanded=true]'); if (o){ closeTermHints(null); o.focus(); } } });
 const mean = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
 const ref = r => `<span class="inline-flex items-center whitespace-nowrap rounded-md bg-paper px-1.5 py-px text-sm font-medium text-ink ring-1 ring-line">${r}</span>`;
 
@@ -952,9 +961,9 @@ function diffBadge(k, cur, prev, ok, prevName){
   if (!ok) return `<span class="text-muted">мало данных для сравнения</span>`;
   if (cur==null || prev==null) return '';
   const d = k==='att' ? Math.round((cur-prev)*100) : Math.round((cur-prev)*10)/10;
-  if (d===0) return `<span title="Сравнение с ${prevName}">как в прошлом году</span>`;
-  const amount = k==='att' ? Math.abs(d)+' п. п.' : f1(Math.abs(d));
-  return `<span class="inline-flex items-center gap-1" title="Сравнение с ${prevName}">${ic('i-down','size-3.5 '+(d>0?'rotate-180':''))}на ${amount} ${d>0?'выше':'ниже'}</span>`;
+  if (d===0) return `<span title="Сравнение с ${prevName}">без изменений</span>`;
+  const amount = k==='att' ? Math.abs(d)+'%' : f1(Math.abs(d));
+  return `<span class="inline-flex items-center gap-1" title="Сравнение с ${prevName}">${ic('i-down','size-3.5 '+(d>0?'rotate-180':''))}${d>0?'+':'−'}${amount} к прошлому году</span>`;
 }
 function snapDiff(group, yid, k){
   const cur = groupSnap(group, yid), p = prevSnapFor(group, yid);
@@ -971,14 +980,14 @@ function kpiTiles(group, yid){
   return `<dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">${SNAP_KEYS.map(([k,l])=>`<div class="${CARD} p-4"><dt class="text-sm text-muted">${l}</dt>
       <dd class="mt-1 font-display text-2xl tabular-nums">${fmtSnap(k, s[k])}</dd>${k==='test'||k==='nb' ? '<dd class="text-sm text-muted">из 10</dd>' : ''}
       <dd class="mt-1 text-sm text-ink-2">${snapDiff(group, yid, k)}</dd></div>`).join('')}</dl>
-    <p class="mt-2 text-sm text-muted">Детей в основной выборке: <b class="font-bold">${s.kids}</b> · проверено уроков: <b class="font-bold">${s.lessons}</b></p>`;
+    <p class="mt-2 text-sm text-muted">Регулярно ходят: <b class="font-bold">${kids(s.kids)}</b> · проверено уроков: <b class="font-bold">${s.lessons}</b></p>`;
 }
 function yearsTable(group, sel){
   const ys = visibleYears(group);
   return `<section class="mb-6"><h2 class="${H2} mb-1">Итоги по годам</h2>
-    <p class="mb-3 text-sm text-ink-2">Годовые итоги основной выборки. Строка открывает год. В разные годы в группе могли быть разные дети: это сравнение составов, а не одних и тех же учеников.</p>
+    <p class="mb-3 text-sm text-ink-2">Сводка по годам: строка открывает год. Состав детей в разные годы разный — сравнивайте осторожно.</p>
     <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[46rem] text-left"><caption class="sr-only">Итоги группы ${group} по учебным годам</caption>
-      <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Год</th><th scope="col" class="px-3 py-3 text-right font-normal">Детей в основной выборке</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
+      <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Год</th><th scope="col" class="px-3 py-3 text-right font-normal">Регулярно ходят (детей)</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
       <tbody class="divide-y divide-line">${ys.map(y=>{ const s = groupSnap(group, y.id);
         return `<tr class="${sel===y.id ? 'bg-paper' : ''}"><th scope="row" class="px-5 py-3 font-medium"><button type="button" data-act="ana-year" data-val="${y.id}" ${sel===y.id?'aria-current="true"':''} class="text-left hover:text-cobalt">${y.name}</button>
           <span class="block text-sm font-normal text-muted">${yearState(y)==='active' ? 'идёт' : 'закрыт'}${s.method!==METHOD_NOW ? ' · методология '+s.method : ''}</span></th>
@@ -1458,7 +1467,7 @@ function vLesson(){
       </div>
       <div class="grid shrink-0 grid-cols-1 gap-2 sm:flex">
         <button type="button" data-act="check-open" data-lid="${L.id}" class="${full ? B_OUTLINE : B_PRIMARY}">${full ? ic('i-undo','size-4')+' Исправить оценки' : ic('i-check','size-4')+(done?' Продолжить проверку':' Начать проверку')}</button>
-        <button type="button" data-act="lesson-table" data-lid="${L.id}" class="${B_OUTLINE}">${ic('i-grid','size-4')} Сводная таблица</button>
+        <button type="button" data-act="lesson-table" data-lid="${L.id}" class="${B_OUTLINE}">${ic('i-grid','size-4')} Таблица всех оценок</button>
       </div>
     </div>`}
   </section>
@@ -1654,7 +1663,7 @@ function vCheck(){
       : `<p class="text-ink-2">Режим достижений в группе выключен — пересчёт не запускался.</p>`}
       <div class="mt-4 flex flex-wrap gap-2">
         <button type="button" data-act="go" data-view="bricks" class="${B_PRIMARY}">${ic('i-brick','size-4')} К выдаче кирпичиков</button>
-        <button type="button" data-act="lesson-table" data-lid="${lid}" class="${B_GHOST}">Сводная таблица</button>
+        <button type="button" data-act="lesson-table" data-lid="${lid}" class="${B_GHOST}">Таблица всех оценок</button>
       </div>
     </section>`;
   }
@@ -1675,7 +1684,7 @@ function vCheck(){
   const verseRadio = (key, val) => {
     const btn = (v, label, quiet) => `<button type="button" role="radio" aria-checked="${val===v}" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" ${v===null?'aria-label="Не оценивалось"':''}
       class="h-11 min-w-11 rounded-lg border px-2 text-base tabular-nums lg:h-9 lg:min-w-9 ${val===v ? SEG_ON : SEG_OFF} ${quiet?'text-muted':''}">${label}</button>`;
-    return `<div role="radiogroup" aria-label="Стих" class="flex flex-wrap items-center gap-1">${[0,1,2].map(v=>btn(v,v,false)).join('')}${btn(null,'не ставил',true)}</div>`;
+    return `<div role="radiogroup" aria-label="Стих" class="flex flex-wrap items-center gap-1">${[0,1,2].map(v=>btn(v,v,false)).join('')}${btn(null,'Не отвечал',true)}</div>`;
   };
   const band = v => v==null ? '' : v<=4 ? 'до 4' : v>=8 ? 'от 8' : 'средний';
   const bandCls = v => v==null ? '' : v<=4 ? 'text-danger' : v>=8 ? 'text-ok' : 'text-ink-2';
@@ -1700,7 +1709,7 @@ function vCheck(){
   return `${backLink('lesson','К уроку')}
   <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
     <div><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">${corr ? 'Исправление оценок' : 'Проверка ДЗ'}</h1><p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t} · ${L.d}</p></div>
-    <div class="flex flex-wrap gap-2"><button type="button" data-act="lesson-table" data-lid="${lid}" class="${B_OUTLINE}">${ic('i-grid','size-4')} Сводная таблица</button>${sheetLink(lid)}</div>
+    <div class="flex flex-wrap gap-2"><button type="button" data-act="lesson-table" data-lid="${lid}" class="${B_OUTLINE}">${ic('i-grid','size-4')} Таблица всех оценок</button>${sheetLink(lid)}</div>
   </div>
   ${corr ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок уже проверен. Изменения пересчитают баллы и кирпичики и попадут в журнал; новые оценки получат отметку «сдано ${TODAY}». Присутствие задним числом не меняйте.</p>`
   : `<div class="mb-4 flex items-center gap-3"><div class="flex-1">${meter(done, R.length, 'Проверено учеников')}</div><p class="shrink-0 text-sm tabular-nums text-ink-2">${done} из ${R.length}</p></div>`}
@@ -1717,11 +1726,11 @@ function vCheck(){
         <div class="min-w-0"><h2 id="pupilName" class="truncate font-display text-[1.5rem] font-medium leading-tight">${p.name}</h2>
           <p class="text-sm text-muted">${S.cur+1} из ${R.length} · ${p.born ? bornYear(p)+' г. р.' : 'данные удалены'}</p></div>
         <div class="text-right"><p class="font-display text-[1.75rem] leading-none tabular-nums">${pts({...c, done:true})}</p><p class="text-sm text-muted">баллов</p>
-          <p class="text-sm tabular-nums text-ink-2">заполнено ${filled} из ${need}</p></div>
+          <p class="text-sm tabular-nums text-ink-2">Заполнено полей: ${filled} из ${need}</p></div>
       </div>
       <div class="flex flex-wrap items-center gap-x-8 gap-y-3 border-b border-line py-3">
         <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Был на уроке</span>${seg('Присутствие', [[true,'Да'],[false,'Нет']], c.present, 'present', '', true)}</div>
-        <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Спевка</span>${toggle(c.sing,'sing','Был на спевке')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и спевка</span>' : ''}</div>
+        <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Пел вместе с хором ${termHint('Спевка','Отметьте, если ребёнок участвовал в пении на уроке. На баллы за домашнее задание не влияет.')}</span>${toggle(c.sing,'sing','Пел вместе с хором')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и пение</span>' : ''}</div>
         <p class="basis-full text-sm text-muted">Присутствие на баллы не влияет: задания можно сдать позже.</p></div>
       ${rubricOpen ? `${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${L.n} — оценки за стихи этого урока</p><div class="grid grid-cols-1 gap-x-6 border-b border-line lg:grid-cols-2">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не задаются, теста нет.' : 'На этом уроке стихи не задаются.'}</p>`}
       <div class="grid grid-cols-1 gap-x-6 border-b border-line md:grid-cols-2">
@@ -1773,7 +1782,7 @@ function vGroup(){
           <span class="block text-sm text-muted">${p.born ? 'д. р. '+bornRu(p.born) : 'данные удалены'} · в группе с ${p.from}</span></button>
         <button type="button" data-act="birth-edit" data-pid="${p.id}" aria-label="Дата рождения: ${p.name}" class="${B_GHOST} shrink-0">${ic('i-cake','size-4')}<span class="hidden sm:inline">Дата рождения</span></button>
         <span class="hidden text-sm tabular-nums text-ink-2 sm:block">${st.nE ? `явка ${pct(st.rate)}` : 'нет проверенных уроков'}</span>
-        ${lay==='B' ? status('warn','реже 50%') : lay==='D' ? status('idle','новенький') : ''}
+        ${lay==='B' ? status('warn','ходит редко') : lay==='D' ? status('idle','новенький') : ''}
       </li>`;}).join('')}</ul>
   </div>
   <p class="mt-3 text-sm text-muted">Исключение не удаляет историю: оценки остаются в уроках, ученик попадает в список «Без группы».</p>`;
@@ -1837,7 +1846,7 @@ function vBricks(){
 function vRating(){
   const isAdmin = S.role==='admin';
   const list = PUPILS.map(p=>({ p, lp:lessonPts(p.id), b:bonusPts(p.id), a:S.awarded.filter(x=>x.pid===p.id && !x.revoked).length, f:activePens(p.id).length })).sort((a,b)=>b.lp-a.lp);
-  return pageHead(isAdmin ? 'Рейтинг' : 'Рейтинг группы', 'Рабочий инструмент: кому нужна помощь и кого отметить.') + `
+  return pageHead(isAdmin ? 'Рейтинг' : 'Рейтинг группы', 'Кто лидирует и кому нужна помощь.') + `
   <p class="mb-5 flex max-w-3xl items-start gap-2 text-sm text-ink-2">${ic('i-lock','size-4 mt-0.5 text-muted')} Видят только учителя и администратор. Родителям и детям рейтинг не показывается, на проектор не выводится.</p>
   ${isAdmin ? groupChips() : ''}
   ${isAdmin && S.anaGroup!=='Средняя' ? `<p class="${CARD} max-w-xl p-3 text-[1.3125rem] leading-snug text-ink-2">В прототипе рейтинг есть только у Средней группы.</p>` : `<div class="${CARD} overflow-x-auto">
@@ -1946,14 +1955,14 @@ function groupCharts(ser){
   const labels = ser.map(s=>s.d);
   const c = (title, note, spec) => `<section class="${CARD} min-w-0 p-5"><h3 class="font-display text-lg font-medium">${title}</h3><div class="mt-4">${chart(spec)}</div><p class="mt-2 text-sm text-muted">${note}</p></section>`;
   return `<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
-    ${c('Посещаемость по урокам','Доля присутствовавших от основной выборки на этот урок. Число детей — в подсказке.',
+    ${c('Посещаемость по урокам','Доля присутствовавших от тех, кто регулярно ходит, на этот урок. Число детей — в подсказке.',
       { labels, series:[{ name:'Посещаемость', color:'var(--color-series-1)', values:ser.map(s=>s.att) }], min:0, max:1, ticks:[0,0.25,0.5,0.75,1], tickFmt:t=>Math.round(t*100)+'%', fmt:v=>pct(v), extra:i=>`${ser[i].present} из ${ser[i].base}`, aria:'Посещаемость по урокам' })}
     ${c('Золотые стихи за урок','Оценки за стихи урока N вносятся в запись урока N — точка стоит на нём. Обзорный урок не участвует. Рассказан — оценка 1 или 2, только при присутствии.',
-      { labels, series:[{ name:'Стихов', color:'var(--color-series-1)', values:ser.map(s=>s.verses) }], min:0, max:3, ticks:[0,1,2,3], fmt:v=>f1(v), extra:i=> ser[i].slots ? `N=${ser[i].nV}` : (ser[i].review || isReview(lessonById(ser[i].lid))) ? 'обзорный урок' : 'стихов ещё не задавали', aria:'Среднее число рассказанных стихов' })}
+      { labels, series:[{ name:'Стихов', color:'var(--color-series-1)', values:ser.map(s=>s.verses) }], min:0, max:3, ticks:[0,1,2,3], fmt:v=>f1(v), extra:i=> ser[i].slots ? kids(ser[i].nV) : (ser[i].review || isReview(lessonById(ser[i].lid))) ? 'обзорный урок' : 'стихов ещё не задавали', aria:'Среднее число рассказанных стихов' })}
     ${c('Средний балл теста','Оценки при присутствии на проверенном уроке и «сдано позже». Пропуск точки — тест не проводился.',
-      { labels, series:[{ name:'Тест', color:'var(--color-series-1)', values:ser.map(s=>s.test) }], min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v), extra:i=> ser[i].testNA ? 'не проводился' : 'N='+ser[i].nTest, aria:'Средний балл теста' })}
+      { labels, series:[{ name:'Тест', color:'var(--color-series-1)', values:ser.map(s=>s.test) }], min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v), extra:i=> ser[i].testNA ? 'не проводился' : kids(ser[i].nTest), aria:'Средний балл теста' })}
     ${c('Средний балл тетради','Оценки при присутствии и «сдано позже». «Не оценивалось» в среднее не входит.',
-      { labels, series:[{ name:'Тетрадь', color:'var(--color-series-1)', values:ser.map(s=>s.nb) }], min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v), extra:i=>'N='+ser[i].nNb, aria:'Средний балл тетради' })}
+      { labels, series:[{ name:'Тетрадь', color:'var(--color-series-1)', values:ser.map(s=>s.nb) }], min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v), extra:i=>kids(ser[i].nNb), aria:'Средний балл тетради' })}
   </div>`;
 }
 
@@ -1991,25 +2000,25 @@ function vAnalytics(){
   ${S.role==='admin' && S.kidsDeleted.length ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-2 ring-1 ring-line">${ic('i-alert','size-4 mt-0.5 text-warn')} Показатели пересчитаны после удаления данных по запросу опекуна, ${S.kidsDeleted[S.kidsDeleted.length-1]}.</p>` : ''}
   <section class="${CARD} grid grid-cols-1 gap-3 p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:items-center">
     <div>
-      <p class="text-sm text-muted">Средняя явка основной выборки</p>
+      <p class="text-sm text-muted">Средняя явка ${termHint('Средняя явка','Считаем детей, которые были не меньше чем на половине проверенных уроков, — «регулярно ходят». Редкие визиты не портят картину группы.')}</p>
       <p class="mt-1 font-display text-[3.5rem] font-medium leading-none tabular-nums tracking-[-0.02em]">${pct(attA)}</p>
-      <p class="mt-1 text-sm text-ink-2">${A.length} ${plural(A.length,'ребёнок','ребёнка','детей')} с явкой от 50%</p>
+      <p class="mt-1 text-sm text-ink-2">Регулярно ходят: ${kids(A.length)} (были на половине уроков и больше)</p>
     </div>
     <dl class="grid grid-cols-3 gap-2 border-t border-line pt-3 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-3">
-      <div><dt class="text-sm text-muted">Стихов за урок</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('v'))}</dd><dd class="text-base text-muted">N=${nObs('nV')}</dd></div>
-      <div><dt class="text-sm text-muted">Тест</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('t'))}</dd><dd class="text-base text-muted">из 10 · N=${nObs('nT')}</dd></div>
-      <div><dt class="text-sm text-muted">Тетрадь</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('n'))}</dd><dd class="text-base text-muted">из 10 · N=${nObs('nN')}</dd></div>
+      <div><dt class="text-sm text-muted">Стихов за урок ${termHint('Стихов за урок','Сколько золотых стихов ребёнок в среднем рассказывает на уроке. Считаем по тем, кто регулярно ходит.')}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('v'))}</dd><dd class="text-base text-muted">в среднем · ${kids(nObs('nV'))}</dd></div>
+      <div><dt class="text-sm text-muted">Тест ${termHint('Тест','Средний балл за тест по шкале от 0 до 10. Урок без теста в среднее не входит.')}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('t'))}</dd><dd class="text-base text-muted">из 10 · ${kids(nObs('nT'))}</dd></div>
+      <div><dt class="text-sm text-muted">Тетрадь ${termHint('Тетрадь','Средний балл за тетрадь по шкале от 0 до 10. «Не оценивалось» — это не ноль, в среднее не входит.')}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('n'))}</dd><dd class="text-base text-muted">из 10 · ${kids(nObs('nN'))}</dd></div>
     </dl>
   </section>
-  ${S.role==='admin' ? `<p class="mt-3 text-sm text-ink-2">${ic('i-alert','size-4 inline text-warn')} Качество данных: пропущенных записей на проверенных уроках — <b class="font-bold">${missingRecords()}</b> · удалено дублей при переносе — <b class="font-bold">2</b></p>` : ''}
-  <p class="mt-2 mb-6 text-sm text-ink-2">Состав: основная выборка <b class="font-bold">${L.A.length}</b> · реже 50% <b class="font-bold">${L.B.length}</b> · неактивные <b class="font-bold">${L.C.length}</b> · без проверенных уроков <b class="font-bold">${L.D.length}</b></p>
+  ${S.role==='admin' ? `<p class="mt-3 text-sm text-ink-2">${ic('i-alert','size-4 inline text-warn')} Нет отметки в <b class="font-bold">${missingRecords()}</b> записях проверенных уроков — откройте журнал уроков и дополните · при переносе убрано дублей: <b class="font-bold">2</b></p>` : ''}
+  <p class="mt-2 mb-6 text-sm text-ink-2">Состав: регулярно ходят <b class="font-bold">${L.A.length}</b> · ходят редко (меньше половины уроков) <b class="font-bold">${L.B.length}</b> · неактивные <b class="font-bold">${L.C.length}</b> · без проверенных уроков <b class="font-bold">${L.D.length}</b></p>
 
   ${groupCharts(ser)}
 
   ${teacherLessonsBlock()}
 
   <h2 class="${H2} mt-8 mb-3">Основная выборка</h2>
-  ${pupilTable(A, [['Ученик'],['Год рожд.',p=>bornYear(p) ?? '—'],['Явка',p=>pct(pupilStats(p).rate)],['Был / проверено',p=>{const s=pupilStats(p);return s.nP+' / '+s.nE;}],['Стихов',p=>f1(personalAvgs(p.id).v)],['Тест',p=>f1(personalAvgs(p.id).t)],['Тетрадь',p=>f1(personalAvgs(p.id).n)]])}
+  ${pupilTable(A, [['Ученик'],['Год рожд.',p=>bornYear(p) ?? '—'],['Явка',p=>pct(pupilStats(p).rate)],['Был на уроках',p=>{const s=pupilStats(p);return s.nP+' / '+s.nE;}],['Стихов',p=>f1(personalAvgs(p.id).v)],['Тест',p=>f1(personalAvgs(p.id).t)],['Тетрадь',p=>f1(personalAvgs(p.id).n)]])}
 
   <h2 class="${H2} mt-8 mb-1">Не входят в средние: явка ниже 50%</h2>
   <p class="mb-3 text-sm text-ink-2">Редкие посещения не должны искажать картину группы. Личные средние этих детей видны в их карточках.</p>
@@ -2021,13 +2030,13 @@ function vAnalytics(){
   </div>
 
   <h2 class="${H2} mt-8 mb-1">По году рождения</h2>
-  <p class="mb-3 text-sm text-ink-2">Описательно, только основная выборка. Класс общеобразовательной школы в данных отсутствует; при такой малой выборке различия могут быть случайными.</p>
+  <p class="mb-3 text-sm text-ink-2">Описательно, только те, кто регулярно ходит. Класс общеобразовательной школы в данных отсутствует; при такой малой выборке различия могут быть случайными.</p>
   <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[36rem] text-left"><thead class="border-b border-line text-sm text-muted"><tr>
     <th class="px-5 py-3 font-normal">Год рождения</th><th class="px-3 py-3 text-right font-normal">Детей</th><th class="px-3 py-3 text-right font-normal">Явка</th><th class="px-3 py-3 text-right font-normal">Стихов</th><th class="px-3 py-3 text-right font-normal">Тест</th><th class="px-5 py-3 text-right font-normal">Тетрадь</th></tr></thead>
     <tbody class="divide-y divide-line">${cohorts.map(c=>`<tr><td class="px-5 py-3 tabular-nums">${c.y}</td><td class="px-3 py-3 text-right tabular-nums">${c.n}</td><td class="px-3 py-3 text-right tabular-nums">${pct(c.att)}</td><td class="px-3 py-3 text-right tabular-nums">${f1(c.v)}</td><td class="px-3 py-3 text-right tabular-nums">${f1(c.t)}</td><td class="px-5 py-3 text-right tabular-nums">${f1(c.nb)}</td></tr>`).join('')}</tbody></table></div>
 
-  <section class="mt-8 max-w-3xl border-t border-line pt-6">
-    <h2 class="${H2}">Как мы считали цифры</h2>
+  <details class="mt-8 max-w-3xl border-t border-line pt-6">
+    <summary class="${H2} cursor-pointer">Как мы считали цифры</summary>
     <ul class="mt-3 space-y-2 text-ink-2">
       <li>— В средние и графики входят активные ученики, которые были не меньше чем на половине проверенных уроков с момента прихода в группу.</li>
       <li>— Оценки за стихи урока N вносятся в запись урока N, и наблюдение относится к нему. Обзорный урок не участвует.</li>
@@ -2035,7 +2044,7 @@ function vAnalytics(){
       <li>— «Не оценивалось» — это не ноль: в среднее не входит. Если у ученика нет записи на проверенном уроке, это дефект журнала, урок не идёт в его явку.</li>
       <li>— Оценки, внесённые позже, относятся к дате урока.</li>
     </ul>
-  </section>`;
+  </details>`;
 }
 
 function teacherLessonsBlock(){
@@ -2078,7 +2087,7 @@ function vPupil(){
   <p class="mb-6 flex max-w-3xl items-start gap-3 rounded-xl ${inAvg ? 'bg-ok-soft' : 'bg-warn-soft'} px-4 py-3">${ic(inAvg?'i-ok':'i-alert','size-5 '+(inAvg?'text-ok':'text-warn'))}
     <span><b class="font-bold">Учитывается в групповых средних: ${inAvg?'да':'нет'}.</b> ${LAYER_TEXT[lay]}${st.nE ? ` Явка ${pct(st.rate)}.` : ''}</span></p>
   <dl class="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-3">
-    ${[['Явка', st.nE ? `${st.nP} из ${st.nE}` : '—'],['Стихов за урок', f1(av.v)+` <span class="text-base text-muted">N=${av.nV}</span>`],['Тест', f1(av.t)+` <span class="text-base text-muted">N=${av.nT}</span>`],['Тетрадь', f1(av.n)+` <span class="text-base text-muted">N=${av.nN}</span>`]]
+    ${[['Явка', st.nE ? `${st.nP} из ${st.nE}` : '—'],['Стихов за урок', f1(av.v)+` <span class="text-base text-muted">по ${av.nV} ${plural(av.nV,'уроку','урокам','урокам')}</span>`],['Тест', f1(av.t)+` <span class="text-base text-muted">из 10 · ${av.nT} ${plural(av.nT,'урок','урока','уроков')}</span>`],['Тетрадь', f1(av.n)+` <span class="text-base text-muted">из 10 · ${av.nN} ${plural(av.nN,'урок','урока','уроков')}</span>`]]
       .map(([k,v])=>`<div class="${CARD} p-3"><dt class="text-sm text-muted">${k}${inAvg?'':' (личное)'}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${v}</dd></div>`).join('')}
   </dl>
   ${famContacts(p.id)}
@@ -2363,7 +2372,7 @@ function schoolClosedBlock(yid){
   const rows = GROUPS.map(g=>({ g, s:groupSnap(g.name, yid) }));
   return `${readOnlyNote}${methodNote(yearOf(yid).method)}
   <div class="${CARD} overflow-x-auto"><table class="w-full min-w-[46rem] text-left"><caption class="sr-only">Итоги групп за ${yearOf(yid).name}</caption>
-    <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Группа</th><th scope="col" class="px-3 py-3 text-right font-normal">Детей в основной выборке</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
+    <thead class="border-b border-line text-sm text-muted"><tr><th scope="col" class="px-5 py-3 font-normal">Группа</th><th scope="col" class="px-3 py-3 text-right font-normal">Регулярно ходят (детей)</th><th scope="col" class="px-3 py-3 text-right font-normal">Уроков проверено</th>${SNAP_KEYS.map(([,l],i)=>`<th scope="col" class="${i===3?'px-5':'px-3'} py-3 text-right font-normal">${l.replace(' за урок','')}</th>`).join('')}</tr></thead>
     <tbody class="divide-y divide-line">${rows.map(({g,s})=> s ? `<tr><th scope="row" class="px-5 py-4 text-left font-medium">${g.name}<span class="block text-sm font-normal text-muted">${g.age}</span></th>
       <td class="px-3 py-4 text-right tabular-nums">${s.kids}</td><td class="px-3 py-4 text-right tabular-nums">${s.lessons}</td>
       ${SNAP_KEYS.map(([k],i)=>`<td class="${i===3?'px-5':'px-3'} py-4 text-right tabular-nums">${fmtSnap(k, s[k])}<span class="block text-sm font-normal text-ink-2">${snapDiff(g.name, yid, k)}</span></td>`).join('')}</tr>`
@@ -2382,8 +2391,8 @@ function vSchool(){
       <caption class="sr-only">Показатели групп</caption>
       <thead class="border-b border-line text-sm text-muted"><tr>
         <th scope="col" class="px-5 py-3 font-normal">Группа</th><th scope="col" class="px-3 py-3 font-normal">Учителя</th>
-        <th scope="col" class="px-3 py-3 text-right font-normal">Ученики</th><th scope="col" class="w-48 px-3 py-3 font-normal">Посещаемость</th>
-        <th scope="col" class="px-3 py-3 text-right font-normal">Средний балл</th><th scope="col" class="px-5 py-3 font-normal">Последний урок</th></tr></thead>
+        <th scope="col" class="px-3 py-3 text-right font-normal">Регулярно ходят / всего</th><th scope="col" class="w-48 px-3 py-3 font-normal">Посещаемость</th>
+        <th scope="col" class="px-3 py-3 text-right font-normal">Средний балл</th><th scope="col" class="px-5 py-3 font-normal">Проверка последнего урока</th></tr></thead>
       <tbody class="divide-y divide-line">
         ${GROUPS.map(g=>`<tr>
           <td class="px-5 py-4"><button type="button" data-act="group-edit" data-val="${g.name}" class="text-left"><span class="block font-medium hover:text-cobalt">${g.name}</span><span class="block text-sm text-muted">${g.age}</span></button></td>
@@ -2394,11 +2403,11 @@ function vSchool(){
           <td class="px-5 py-4">${g.check.includes('9/15') ? status('warn',g.check) : status('ok',g.check)}</td></tr>`).join('')}
       </tbody></table>
   </div>
-  <p class="mt-3 text-sm text-muted">Ученики: основная выборка (посещаемость от 50%) / всего. Средние считаются по основной выборке.</p>
+  <p class="mt-3 text-sm text-muted">Регулярно ходят — дети, которые были не меньше чем на половине уроков. Средние считаются по ним.</p>
 
   <section class="${CARD} mt-8 p-3">
     <h2 class="${H2}">Посещаемость групп по урокам</h2>
-    <p class="mt-1 text-[1.3125rem] leading-snug text-ink-2">Доля присутствовавших от основной выборки группы, %.</p>
+    <p class="mt-1 text-[1.3125rem] leading-snug text-ink-2">Доля присутствовавших от тех, кто регулярно ходит в группу, %.</p>
     <div class="mt-4">${chart({ h:240, labels, series:[
       { name:'Младшая', color:'var(--color-series-1)', values:SCHOOL_ATT['Младшая'] },
       { name:'Средняя', color:'var(--color-series-2)', values:mid },
@@ -2476,9 +2485,10 @@ function vPeople(){
   const tabs = [['pupils','Ученики'],['families','Семьи'],['unassigned','Без группы']];
   let body = '', action = '';
   if (S.peopleTab==='pupils'){ action = `<button type="button" data-act="pupil-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Ученик</button>`;
-    body = `<ul class="${CARD} divide-y divide-line">${PUPILS.concat(INACTIVE).map(p=>`<li class="flex items-center justify-between gap-4 px-5 py-3">
+    const pq = (S.peopleQ||'').trim().toLowerCase(), plist = PUPILS.concat(INACTIVE).filter(p=>!pq || p.name.toLowerCase().includes(pq));
+    body = `<div class="mb-3"><label for="pq" class="${LABEL}">Найти ученика</label><input id="pq" type="search" data-input="peopleQ" value="${S.peopleQ||''}" placeholder="Фамилия или имя" class="${FIELD}"></div><ul class="${CARD} divide-y divide-line">${plist.map(p=>`<li class="flex items-center justify-between gap-4 px-5 py-3">
       <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 text-left"><span class="block font-medium hover:text-cobalt">${p.name}</span><span class="block text-sm text-muted">${p.born ? bornRu(p.born) : 'данные удалены'} · ${p.group} группа${p.active?'':' · неактивен'} · ${famOfKid(p.id) ? 'семья '+famOfKid(p.id).name : '<span class="text-warn">без семьи</span>'} · ${hasKidConsent(p.id) ? 'согласие '+(KID_CONSENT[p.id].how==='paper'?'на бумаге':'в приложении') : '<span class="text-warn">нет согласия</span>'}</span></button>
-      <button type="button" data-act="pupil-edit" data-pid="${p.id}" class="inline-flex h-9 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-edit','size-4')} Изменить</button></li>`).join('')}</ul>`; }
+      <button type="button" data-act="pupil-edit" data-pid="${p.id}" class="inline-flex h-9 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-edit','size-4')} Изменить</button></li>`).join('') || '<li class="px-5 py-4 text-ink-2">Никого не нашли. Проверьте написание или очистите поиск.</li>'}</ul>`; }
   if (S.peopleTab==='families'){ action = `<button type="button" data-act="family-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Семья</button>`; body = familiesTab(); }
   if (S.peopleTab==='unassigned') body = `<ul class="${CARD} divide-y divide-line">${UNASSIGNED.map(u=>`<li class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
       <div><p class="font-medium">${u.name}</p><p class="text-sm text-muted">${bornRu(u.born)} · ${u.note} · ${famOfKid(u.id) ? `семья ${famLink(famOfKid(u.id))}` : 'без семьи'}</p>
@@ -3909,6 +3919,7 @@ document.addEventListener('input', e=>{
   const t = e.target, k = t.dataset.input;
   if (k==='comment'){ const R=roster(S.checkLesson); S.hc[S.checkLesson][R[S.cur].id].comment = t.value; }
   if (k==='close-confirm') document.getElementById('cyBtn').disabled = t.value.trim().replace('-','–') !== YEAR;
+  if (k==='peopleQ'){ S.peopleQ = t.value; const pos=t.selectionStart; render(); const n=document.getElementById('pq'); n.focus(); n.setSelectionRange(pos,pos); }
   if (k==='verseQ'){ S.verseQ = t.value; const pos=t.selectionStart; render(); const n=document.getElementById('vq'); n.focus(); n.setSelectionRange(pos,pos); }
   if (t.dataset.lf){ S.lf[t.dataset.lf] = t.type==='checkbox' ? t.checked : t.value; if (S.lf.err[t.dataset.lf]){ delete S.lf.err[t.dataset.lf]; } }
   if (t.dataset.pk){ S.lf.picker[t.dataset.pk] = t.value; const pk=S.lf.picker; const r = pk.ch && pk.from ? `${pk.book} ${pk.ch}:${pk.from}${pk.to && pk.to!==pk.from ? '–'+pk.to : ''}` : '';

@@ -89,3 +89,10 @@ From design system — **mobile-first** (base = mobile, `md:`/`lg:` = desktop). 
 All strings from **`@/lib/messages`** — not hardcoded in typography components except dev placeholders.
 
 **Reference:** Pulse snapshot [`typography_text_guidelines.md`](../examples/pulse/docs/guidelines/typography_text_guidelines.md) — Calm Editorial → Slate Cobalt.
+
+## Термины и подсказки (P25, ADR-018)
+
+- В пользовательском тексте нет статистического и внутреннего жаргона: «выборка», `N=`, «п. п.», `IANA`, `ADR`, `LEGACY` — проверяет тест словаря. Название вместо термина — таблица [`adr_018_ui_terminology_and_term_hints.md`](../prds/07_governance/adr_018_ui_terminology_and_term_hints.md) §4 п. 1.
+- Каждая метрика — «значение + единица + база»: `86%`, `6,3 из 10`, `26 детей`.
+- Объяснение термина — `TermHint` у термина (UX-03 D-17), не сноска внизу страницы; подсказка ≤ 200 знаков, без персональных данных.
+- Форматы: процент — целое с `%`; дробные — запятая по локали (`@/lib/i18n/format`); даты — «4 окт. 2026». `toFixed` + шаблон и `toLocaleDateString()` без локали запрещены.

@@ -97,3 +97,11 @@ Dates, times, money, relative timestamps — **`@/lib/i18n/format.ts`** with exp
 Prefer **`lucide-react`** — **ui-icons-lucide** rule and [React README](./README.md).
 
 **Reference:** Pulse snapshot [`copy_and_messages.md`](../../examples/pulse/docs/guidelines/react/copy_and_messages.md)
+
+## Стоп-слова и форматы (P25, ADR-018)
+
+- В `apps/web/src/lib/messages/ru/*.json` запрещены: `выборка`, `N=`, `п. п.`, `IANA`, `ADR`, `LEGACY`, `DTO` (в `en` — `sample`, `N=`, `IANA`, `ADR`). Проверка — vitest по словарю; исключение — только в самом тесте с причиной.
+- Нет `N=` и других текстов в JSX: числа и единицы собираются из ключей словаря и `@/lib/i18n/format`.
+- Один термин — один ключ глоссария (`glossary.*`); подсказка термина — ключ `*.hint`, ≤ 200 знаков.
+- Подпись по значению домена (`AUDIT_ENTITY_TYPE`, `AUDIT_ACTION`, статусы) — через безопасный хелпер (`safeAdminMessage(...) ?? значение`), а не через бросающий `getMessage`; полнота ключей — тест паритета домен ↔ ru/en (Sentry `SUN_SCHOOL_POSTGRES_DEV-Q`, 2026-11-03).
+- В `"use client"`-компонент передаются только нужные строки, не весь объект `pick*Messages` с функциями-форматтерами (Sentry `-1Y`/`-2C`, 135 событий).
