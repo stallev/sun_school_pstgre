@@ -21,6 +21,8 @@ type ScoreCellProps = {
   disabled?: boolean;
   "aria-busy"?: boolean;
   className?: string;
+  /** Neutral text colour: status colours miss 4.5:1 on `gold-soft` lesson leader rows (UX-03 D-16). */
+  plainTone?: boolean;
 };
 
 const scoreTone = (value: number | null) => {
@@ -45,6 +47,7 @@ export const ScoreCell = ({
   disabled = false,
   "aria-busy": ariaBusy,
   className,
+  plainTone = false,
   ...aria
 }: ScoreCellProps) => {
   const padId = useId();
@@ -77,7 +80,7 @@ export const ScoreCell = ({
   const triggerLabel = `${aria["aria-label"]}: ${displayValue(value)}`;
   const triggerClass = cn(
     "inline-flex h-9 min-w-[2.5rem] items-center justify-center rounded-md border border-line bg-surface px-2 text-base tabular-nums hover:border-ink-2",
-    mode === "pad" && scoreTone(value),
+    mode === "pad" && !plainTone && scoreTone(value),
     disabled && "pointer-events-none opacity-45",
   );
 

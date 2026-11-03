@@ -138,7 +138,7 @@
 |---------------|------------|-----------------|
 | Вход, профиль | `ProviderButton`, `ConsentBlock`, `LinkedIdentityRow` | `login`, `vRegister`, `vProfile` |
 | Школа, люди | `GroupCard`, `PupilRow`, `ApprovalRow`, `UserRow`, `YearCard` | `groups`, `people`, `approvals`, `year` |
-| Уроки, проверка | `LessonCard`, `VerseRefList`, `CheckProgress`, `LessonTable` | `lessons`, `vCheck`, `lessonTable` |
+| Уроки, проверка | `LessonCard`, `VerseRefList`, `CheckProgress`, `LessonTable`, `LessonSheet` (P24) | `lessons`, `vCheck`, `lessonTable`, `lessonSheet` |
 | Кирпичики | `BalanceCard`, `LedgerRow`, `IssueForm` | `bricks` |
 | Журнал, удаление | `AuditRow`, `DeletionRequestCard`, `DeletionPlan` | `audit`, `deletions` |
 
@@ -152,6 +152,7 @@
 | Структура | `:root` — семантические переменные (shadcn); `@theme inline` — маппинг на Tailwind v4; **без** `.dark` (D-4) |
 | Основные соответствия | `background`=`paper`; `card`/`popover`=`surface`; `foreground`=`ink`; `primary`=`cobalt-ink`, hover=`cobalt-deep`; `ring`=`cobalt`; `input`/граница поля=`muted` (D-7); `border`=`line`; `destructive`=`danger`; `success`=`ok`; `warning`=`warn`/`amber`; `accent`=`cobalt-soft` |
 | Зарезервировано (post-MVP) | `penalty`, `penalty-soft`, `tier-1..3` — объявлены, в компонентах MVP не используются |
+| Лидер урока (P24, D-16) | `gold` (`#EAB308`), `gold-soft`, `gold-ink` — токены в `:root` и `@theme inline`, строки в `lib/design-lab/tokens.ts` (сетка цветов и пары контраста); секция Lab «Лидер урока»: золотая строка списка (в покое / активная) и строка таблицы — до использования на экранах (C-2) |
 | Шрифты | `next/font`: Alegreya (display), Source Sans 3 (body; v2.0, D-2), subsets `latin` + `cyrillic`; переменные `--font-display`, `--font-body` |
 | Размер | `html { font-size: 112.5% }` (18 px), размеры в `rem` (D-5 v2.0) |
 | Высоты контролов | `--control-h` (2.5rem), `--control-h-compact` (2.25rem), `--control-h-touch` (2.75rem) (D-9) |
@@ -291,5 +292,6 @@ apps/web/src/
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W15-01) |
 | 2026-10-21 | v1.1 — P11: строка `ScorePad` (§5.3); `ScoreSelector` без изменений |
+| 2026-11-03 | v2.2 — P24: токены `gold-soft`, `gold-ink` и секция Lab «Лидер урока» (D-16); `LessonSheet` в каталоге доменных компонентов |
 | 2026-11-03 | v2.1 — P24 (ADR-017): `Button` компактный `default` `h-9`, размер `field`; `SegmentedControl` `h-9` и `fit`; `ScorePad` inline 0–10; `Toast` варианты и позиции; `ConfirmDialog` `unsaved`; `SidebarNav` rail; `PageSection` в контейнере 1600 |
 | 2026-10-24 | v2.0 — ADR-014 (P14): Source Sans 3, 18 px, высоты контролов; `Select` (Base UI) приведён к шкале v2; новые примитивы `DateField`, `PageSection`; `SegmentedControl` получил режим `toggle` и размер `compact` (вместо отдельного `Chip`); `SidebarNav` вместо `TopNav`; ширина Lab 1024; шаг 6 fidelity (parity-spec) |

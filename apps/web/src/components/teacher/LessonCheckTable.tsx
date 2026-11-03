@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, ExternalLinkIcon, FileSpreadsheetIcon } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
@@ -19,6 +19,8 @@ import { CheckProgress } from "@/components/teacher/CheckProgress";
 import { LessonCheckTableCards } from "@/components/teacher/LessonCheckTableCards";
 import { LessonCheckTableFilters } from "@/components/teacher/LessonCheckTableFilters";
 import { LessonCheckTableRow } from "@/components/teacher/LessonCheckTableRow";
+import { findLessonTopScorerIds } from "@/lib/check/lesson-top-scorers";
+import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-display";
 import { useLessonCheckTable } from "@/components/teacher/use-lesson-check-table";
 import type { LessonTablePageData } from "@/data/checks/load-lesson-table-page.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -91,6 +93,13 @@ export const LessonCheckTable = ({
   });
   const counts = `${fillMessage(messages.tableCountPresent, { count: table.stats.present })} · ${fillMessage(messages.tableCountUnchecked, { count: table.stats.unchecked })} · ${fillMessage(messages.tableProgressHeader, { checked: table.stats.checked, total: table.stats.total })}`;
   const workSpan = (data.hasTest ? 1 : 0) + 2;
+  const topScorerIds = findLessonTopScorerIds(
+    table.rows.map((row) => ({
+      pupilId: row.pupilId,
+      homeworkChecked: row.homeworkChecked,
+      total: formatLessonCheckRowTotal(row, data.lessonKind, data.versesToRecite, data.scoring),
+    })),
+  );
 
   return (
     <div className="space-y-4">
@@ -103,10 +112,21 @@ export const LessonCheckTable = ({
         title={messages.tablePageTitle}
         description={`${subtitle} · ${lessonDateLabel}`}
         actions={
-          <Button render={<CustomLink href={`/lessons/${data.lessonId}/check`} />}>
-            <CheckIcon className="size-4" aria-hidden />
-            {messages.tableLinkSequential}
-          </Button>
+          <>
+            <Button render={<CustomLink href={`/lessons/${data.lessonId}/check`} />}>
+              <CheckIcon className="size-4" aria-hidden />
+              {messages.tableLinkSequential}
+            </Button>
+            <Button
+        variant="outline"
+        aria-label={messages.sheetOpenAria}
+        render={<CustomLink href={`/lessons/${data.lessonId}/sheet`} target="_blank" rel="noopener noreferrer" />}
+      >
+        <FileSpreadsheetIcon className="size-4" aria-hidden />
+        {messages.sheetOpen}
+        <ExternalLinkIcon className="size-4 text-muted-foreground" aria-hidden />
+      </Button>
+          </>
         }
       />
 
@@ -197,6 +217,7 @@ export const LessonCheckTable = ({
                     readOnly={table.readOnly}
                     busyCells={table.busyCells}
                     hasConflict={table.conflictIds.has(row.pupilId)}
+                    isTopScorer={topScorerIds.has(row.pupilId)}
                     messages={messages}
                     openCellKey={openCellKey}
                     onOpenCellKeyChange={setOpenCellKey}
@@ -224,6 +245,7 @@ export const LessonCheckTable = ({
           readOnly={table.readOnly}
           busyCells={table.busyCells}
           conflictIds={table.conflictIds}
+          topScorerIds={topScorerIds}
           pending={table.pending}
           messages={messages}
           openCellKey={openCellKey}

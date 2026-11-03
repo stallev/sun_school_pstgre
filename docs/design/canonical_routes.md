@@ -61,6 +61,7 @@
 | `/lessons/[lessonId]` | `lesson` | Карточка урока |
 | `/lessons/[lessonId]/edit` | `lessonForm` | Правка урока |
 | `/lessons/[lessonId]/table` | `lessonTable` | Сводная таблица проверки |
+| `/lessons/[lessonId]/sheet` | `lessonSheet` | Ведомость урока: read-only, без оболочки, открывается в новой вкладке (P24, [flow §7.4](../implementation/mvp/specs/homework_check_flow_spec.md)) |
 | `/check` | `check` | Вход в проверку текущего урока (перенаправление) |
 | `/lessons/[lessonId]/check` | `check` | Последовательная проверка ДЗ |
 | `/group` | `group` | Моя группа, состав |
@@ -150,7 +151,7 @@
 - Не дублировать список маршрутов в specs и задачах — ссылаться на § этого файла.
 - Один экран `lessonForm` обслуживает `/lessons/new` и `/lessons/[lessonId]/edit`.
 - P23 ([ADR-016](../prds/07_governance/adr_016_confirmable_achievements_and_events.md)): подтверждение достижения — модалка в панели ученика и счётчик на карточке группы (`/group`, `/groups/[groupId]`); карточка родителя — на `/child`; событие `worship_recital` — в диалоге ручной выдачи. **Новых маршрутов и query-параметров нет.**
-- P24 ([ADR-017](../prds/07_governance/adr_017_shell_container_toast_buttons.md)): **новых маршрутов нет.** Диалог «Дата рождения» — на `/group` (teacher); дни рождения — на `/calendar` (teacher, admin); сворачивание сайдбара — cookie `sidebar_collapsed`, не query-параметр; правки формы `/lessons/[lessonId]/check` без новых query-параметров.
+- P24 ([ADR-017](../prds/07_governance/adr_017_shell_container_toast_buttons.md)): **один новый маршрут — `/lessons/[lessonId]/sheet` (ведомость урока, без оболочки, `target="_blank"`).** Остальное: Диалог «Дата рождения» — на `/group` (teacher); дни рождения — на `/calendar` (teacher, admin); сворачивание сайдбара — cookie `sidebar_collapsed`, не query-параметр; правки формы `/lessons/[lessonId]/check` без новых query-параметров.
 
 ## Change log
 

@@ -27,7 +27,7 @@
     amber #F59E0B · amber-ink #B45309 · amber-soft #FEF3C7 · edit #F97316
     ok #15803D · ok-soft #DCFCE7 · warn #B45309 · warn-soft #FEF9C3 · danger #DC2626 · danger-soft #FEE2E2
     penalty #1E3A8A · penalty-soft #E0E7FF
-    bronze #EA580C · silver #94A3B8 · gold #EAB308
+    bronze #EA580C · silver #94A3B8 · gold #EAB308 · gold-soft #FDF0B8 · gold-ink #854D0E (лидер урока, D-16)
     series-1 #3370FF · series-2 #EA580C · series-3 #0D9488
   ТИПОГРАФИКА (v2.0, ADR-014 R-1, R-2)
     --font-display "Alegreya", Georgia, serif (500 / 700 / 400 italic) · --font-body "Source Sans 3", system-ui, sans-serif (400 / 500 / 600 / 700)
@@ -101,6 +101,8 @@
     --color-bronze: #EA580C;
     --color-silver: #94A3B8;
     --color-gold: #EAB308;
+    --color-gold-soft: #FDF0B8;
+    --color-gold-ink: #854D0E;
 
     --color-series-1: #3370FF;
     --color-series-2: #EA580C;
@@ -482,6 +484,14 @@ function gen(pid, lid){
 }
 const emptyRec = lid => ({ present:false, v:recVerses(lid).map(()=>null), vs:recVerses(lid).map(()=>'manual'), test:null, nb:null, sing:false, comment:'', done:false, late:{} });
 const pts = c => c && c.done ? c.v.reduce((a,b)=>a+(b||0),0) + (c.test||0) + (c.nb||0) + (c.sing?1:0) : 0;
+/* P24, D-16: лидер урока — проверенные ученики с наибольшим итогом > 0; при равенстве — все */
+function topScorerIds(lid){
+  const recs = S.hc[lid] || {}; let max = 0, ids = [];
+  Object.keys(recs).forEach(k=>{ const r = recs[k]; if (!r.done) return; const v = pts(r); if (v > max){ max = v; ids = []; } if (v === max && v > 0) ids.push(+k); });
+  return ids;
+}
+const topMark = () => `<span class="inline-flex shrink-0 items-center text-gold-ink">${ic('i-award','size-4')}<span class="sr-only">Лучший результат урока</span></span>`;
+const sheetLink = lid => `<a href="#sheet=${lid}" target="_blank" rel="noopener noreferrer" aria-label="Ведомость урока (откроется в новой вкладке)" class="${B_OUTLINE}">${ic('i-grid','size-4')} Ведомость ${ic('i-right','size-4 text-muted')}</a>`;
 
 const S = {
   authed:true, role:'teacher', view:'today', child:1,
@@ -1414,11 +1424,11 @@ const verseList = refs => refs.length ? `<ol class="space-y-2.5">${refs.map(r=>`
 function verseAccordion(L){
   if (!L || isReview(L) || !L.v.length) return '';
   const open = !!S.versesOpen;
-  return `<section class="${CARD} mb-3" aria-label="Стихи урока ${L.n}">
+  return `<section class="${CARD} mb-3 ${open?'sticky top-14 z-30':''}" aria-label="Стихи урока ${L.n}">
     <h2 class="m-0"><button type="button" data-act="verses-toggle" aria-expanded="${open}" aria-controls="lesson-verses" class="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left hover:bg-paper lg:min-h-9">
       ${ic('i-scroll','size-4 shrink-0 text-muted')}<span class="shrink-0 text-sm font-medium">Стихи урока ${L.n}</span><span class="min-w-0 flex-1 truncate text-sm text-ink-2">${L.v.join(' · ')}</span>
       ${ic('i-down',`size-5 shrink-0 text-ink-2 transition-transform duration-150 motion-reduce:transition-none ${open?'rotate-180':''}`)}</button></h2>
-    <div id="lesson-verses" ${open?'':'hidden'} class="border-t border-line px-3 py-2.5"><ol class="space-y-2">${L.v.map(r=>`<li>${ref(r)}<p class="mt-0.5 font-display text-base italic leading-snug text-ink-2">${VERSES[r] || 'Текст подставится из Синодального перевода.'}</p></li>`).join('')}</ol></div></section>`;
+    <div id="lesson-verses" ${open?'':'hidden'} class="max-h-[min(45dvh,22rem)] overflow-y-auto border-t border-line px-3 py-2.5"><ol class="space-y-2">${L.v.map(r=>`<li>${ref(r)}<p class="mt-0.5 font-display text-base italic leading-snug text-ink-2">${VERSES[r] || 'Текст подставится из Синодального перевода.'}</p></li>`).join('')}</ol></div></section>`;
 }
 
 function vLesson(){
@@ -1497,12 +1507,13 @@ function vLessonTable(){
   const rowStatus = r => !r.done ? status('warn','не проверен') : !r.present ? status('idle','не был') : '';
   const lateOnce = r => Object.keys(r.late).some(k=>r.late[k]) ? '<span class="text-sm text-amber-ink">позже</span>' : '';
   const workSpan = (L.test ? 1 : 0) + 2;
+  const top = topScorerIds(L.id), isTop = id => top.includes(id), stickyBg = id => isTop(id) ? 'bg-gold-soft' : 'bg-card';
   return `${backLink('lesson','К уроку')}
   <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
     <div class="min-w-0 flex-1"><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1>
       <p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t}</p><p class="text-sm text-muted">${L.d} · были ${presentN} · не проверены ${uncheckedN} · проверено ${checked} из ${all.length}</p>
       <div class="mt-2 max-w-md">${meter(checked, all.length || 1, 'Проверено')}</div></div>
-    <button type="button" data-act="check-open" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-check','size-4')} Последовательная проверка</button>
+    <div class="flex flex-wrap gap-2"><button type="button" data-act="check-open" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-check','size-4')} Последовательная проверка</button>${sheetLink(L.id)}</div>
   </div>
   ${corr ? `<p class="mb-3 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок проверен. Правки пересчитают баллы и попадут в журнал, новые оценки получат отметку «сдано ${TODAY}».</p>` : ''}
   ${verseAccordion(L)}
@@ -1533,24 +1544,24 @@ function vLessonTable(){
         </tr>
       </thead>
       <tbody class="divide-y divide-line">
-        ${ids.map((id,i)=>{ const r=recs[id]; return `<tr>
-          <td class="py-1.5 pl-4 pr-2 tabular-nums text-muted">${i+1}</td>
-          <td class="sticky left-0 z-10 bg-card py-1.5 pr-2"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button>
+        ${ids.map((id,i)=>{ const r=recs[id]; return `<tr class="${isTop(id) ? 'bg-gold-soft' : ''}">
+          <td class="py-1.5 pl-4 pr-2 tabular-nums ${isTop(id) ? 'border-l-4 border-gold text-ink-2' : 'text-muted'}">${i+1}</td>
+          <td class="sticky left-0 z-10 ${stickyBg(id)} py-1.5 pr-2"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button>${isTop(id) ? ' ' + topMark() : ''}
             <span class="mt-0.5 flex flex-wrap items-center gap-2">${rowStatus(r)}${lateOnce(r)}</span></td>
           <td class="px-2 py-1.5 text-center">${pressBtn(id,'present',r.present,'Присутствие')}</td>
           ${rv.map((ref,k)=>`<td class="px-1 py-1.5 text-center">${padCell(id,'v'+k,r.v[k],ref,false,2)}</td>`).join('')}
           ${L.test ? `<td class="px-1 py-1.5 text-center">${padCell(id,'test',r.test,'Тест',false,10)}</td>` : ''}
           <td class="px-1 py-1.5 text-center">${padCell(id,'nb',r.nb,'Тетрадь',false,10)}</td>
           <td class="px-2 py-1.5 text-center">${pressBtn(id,'sing',r.sing,'Спевка')}</td>
-          <td class="sticky right-0 z-10 bg-card px-2 py-1.5 text-right font-display text-base tabular-nums">${r.done ? pts(r) : '—'}</td></tr>`; }).join('')}
+          <td class="sticky right-0 z-10 ${stickyBg(id)} px-2 py-1.5 text-right font-display text-base tabular-nums">${r.done ? pts(r) : '—'}</td></tr>`; }).join('')}
       </tbody></table>
   </div>
 
   <ul class="space-y-2 md:hidden">
     ${ids.map((id,i)=>{ const r=recs[id];
-      return `<li class="${CARD} p-3">
-      <div class="flex items-start gap-2"><span class="w-6 pt-0.5 text-sm tabular-nums text-muted">${i+1}</span>
-        <div class="min-w-0 flex-1"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="block w-full truncate text-left font-medium text-cobalt-ink">${pupil(id).name}</button>
+      return `<li class="${isTop(id) ? CARD.replace('bg-surface','border-l-4 border-l-gold bg-gold-soft') : CARD} p-3">
+      <div class="flex items-start gap-2"><span class="w-6 pt-0.5 text-sm tabular-nums ${isTop(id) ? 'text-ink-2' : 'text-muted'}">${i+1}</span>
+        <div class="min-w-0 flex-1"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="inline-block max-w-full truncate text-left font-medium text-cobalt-ink">${pupil(id).name}</button>${isTop(id) ? ' ' + topMark() : ''}
           <span class="mt-0.5 flex flex-wrap items-center gap-2">${rowStatus(r)}${lateOnce(r)}</span></div>
         <span class="font-display text-lg tabular-nums">${r.done ? pts(r) : '—'}</span></div>
       <div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
@@ -1561,8 +1572,58 @@ function vLessonTable(){
         <div class="col-span-2"><p class="mb-1 text-muted">Тетрадь · 0–10</p>${padCell(id,'nb',r.nb,'Тетрадь',true,10)}</div>
       </div></li>`; }).join('')}
   </ul>
-  <p class="mt-3 text-sm text-muted">Стихи — заданные на прошлом уроке. Итого = стихи + тест + тетрадь + спевка. Зелёным — от 8, красным — до 4 баллов.</p>`;
+  <p class="mt-3 text-sm text-muted">Стихи — заданные на этом уроке. Итого = стихи + тест + тетрадь + спевка. Зелёным — от 8, красным — до 4 баллов. Золотой фон — лучший результат урока.</p>`;
 }
+
+/* ---------- Ведомость урока (P24, flow §7.4): без оболочки, открывается в новой вкладке по #sheet=<id> ---------- */
+function vLessonSheet(lid){
+  const L = lessonById(lid);
+  if (!L || L.planned || !S.hc[lid]) return `<main class="p-6"><h1 class="font-display text-[1.5rem]">Ведомость</h1><p class="mt-2 text-ink-2">Урок не найден или ещё не проведён.</p></main>`;
+  const R = roster(lid), recs = S.hc[lid], rv = recVerses(lid), top = topScorerIds(lid);
+  if (!R.length) return `<main class="p-6"><h1 class="font-display text-[1.5rem]">Ведомость · Урок ${L.n}</h1><p class="mt-2 text-ink-2">В группе на дату урока нет учеников.</p></main>`;
+  const presentN = R.filter(p=>recs[p.id].present).length, doneN = R.filter(p=>recs[p.id].done).length;
+  const topNames = top.map(id=>pupil(id).name).join(', '), topPts = top.length ? pts(recs[top[0]]) : 0;
+  const val = (r, v, k, max) => { if (v==null) return '<span class="text-muted">—</span>'; const c = max>2 ? (v>=8 ? 'text-ok' : v<=4 ? 'text-danger' : '') : ''; return `<span class="${c}">${v}</span>`; };
+  const yes = on => on ? `<span class="inline-flex text-ok">${ic('i-ok','size-4')}<span class="sr-only">да</span></span>` : '<span class="text-muted">—</span>';
+  const head = (text, cls='') => `<th scope="col" class="px-1 text-center font-normal ${cls}">${text}</th>`;
+  const rowH = 'h-[var(--sheet-row)]';
+  return `<div class="flex min-h-dvh flex-col bg-paper px-4 py-3 sm:px-6 print:min-h-0 print:bg-surface print:p-0">
+    <header class="mb-2 flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+      <div class="min-w-0"><h1 class="font-display text-[1.5rem] font-medium leading-tight">Ведомость · Урок ${L.n} · ${L.t}</h1>
+        <p class="text-sm text-ink-2">${L.d} · были ${presentN} из ${R.length} · проверено ${doneN} из ${R.length}${top.length ? ` · ${topMark()} Лучший результат: <b class="font-bold text-ink">${topNames}</b> — ${topPts} б.` : ''}</p></div>
+      <div class="flex gap-2 print:hidden"><button type="button" data-act="sheet-print" class="${B_OUTLINE}">${ic('i-log','size-4')} Печать</button>
+        <a href="${location.pathname}${location.search}" class="${B_GHOST}">${ic('i-left','size-4')} К приложению</a></div>
+    </header>
+    <div class="${CARD} flex-1 overflow-hidden print:rounded-none print:border-0" style="--sheet-row:clamp(1.5rem, calc((100dvh - 8.5rem) / ${R.length + 1}), 2.5rem)">
+      <table class="w-full table-fixed text-left text-sm tabular-nums">
+        <colgroup><col class="w-9"><col><col class="w-12">${rv.map(()=>'<col class="w-12">').join('')}${L.test ? '<col class="w-14">' : ''}<col class="w-16"><col class="w-14"><col class="w-16"></colgroup>
+        <thead class="border-b border-line bg-surface text-muted"><tr class="${rowH}">
+          <th scope="col" class="pl-3 font-normal">№</th><th scope="col" class="px-1 font-normal">Ученик</th>${head('Был')}
+          ${rv.map((r,k)=>`<th scope="col" class="px-1 text-center font-normal" title="${r}">С${k+1}<span class="sr-only"> ${r}</span></th>`).join('')}
+          ${L.test ? head('Тест') : ''}${head('Тетр.')}${head('Спев.')}<th scope="col" class="pr-3 text-right font-normal">Итого</th></tr></thead>
+        <tbody class="divide-y divide-line">${R.map((p,i)=>{ const r = recs[p.id], gold = top.includes(p.id);
+          return `<tr class="${rowH} ${gold ? 'bg-gold-soft' : ''}">
+            <td class="pl-3 ${gold ? 'border-l-4 border-gold text-ink-2' : 'text-muted'}">${i+1}</td>
+            <td class="truncate px-1 font-medium">${p.name}${Object.keys(r.late).length ? '<span class="text-amber-ink" title="сдано позже" aria-label="сдано позже"> *</span>' : ''}${gold ? ' ' + topMark() : ''}${!r.done ? ' <span class="ml-1 text-sm font-normal text-warn">не проверен</span>' : ''}</td>
+            <td class="px-1 text-center">${yes(r.present)}</td>
+            ${rv.map((_,k)=>`<td class="px-1 text-center">${val(r, r.v[k], 'v'+k, 2)}</td>`).join('')}
+            ${L.test ? `<td class="px-1 text-center">${val(r, r.test, 'test', 10)}</td>` : ''}
+            <td class="px-1 text-center">${val(r, r.nb, 'nb', 10)}</td><td class="px-1 text-center">${yes(r.sing)}</td>
+            <td class="pr-3 text-right font-display text-base font-medium">${r.done ? pts(r) : '—'}</td></tr>`; }).join('')}</tbody>
+      </table>
+    </div>
+    <p class="mt-2 text-sm text-muted print:hidden">Золотой фон — лучший результат урока · * — сдано позже · ${rv.length ? 'С1…С'+rv.length+' — стихи урока (0–2) · ' : ''}Итого = стихи + тест + тетрадь + спевка</p>
+  </div>`;
+}
+function renderSheet(lid){
+  document.getElementById('login').classList.add('hidden'); document.getElementById('shell').classList.add('hidden');
+  let root = document.getElementById('sheetRoot');
+  if (!root){ root = document.createElement('div'); root.id = 'sheetRoot'; document.body.prepend(root); }
+  root.innerHTML = vLessonSheet(lid);
+  const L = lessonById(lid);
+  document.title = 'Ведомость' + (L ? ' · Урок ' + L.n : '') + ' — ' + t('common.brand');
+}
+const SHEET_ID = (location.hash.match(/^#sheet=(\d+)/) || [])[1];
 
 /* ---------- Проверка ДЗ (и исправление проверенного урока) ---------- */
 function scoreRow(key, val, max, opts={}){
@@ -1598,14 +1659,16 @@ function vCheck(){
     </section>`;
   }
   const p = R[S.cur] || R[0], c = S.hc[lid][p.id];
-  const list = R.map((q,i)=>{ const cq = S.hc[lid][q.id];
+  const top = topScorerIds(lid);
+  const list = R.map((q,i)=>{ const cq = S.hc[lid][q.id], gold = top.includes(q.id);
     const partial = !cq.done && (cq.v.some(v=>v!=null) || cq.test!=null || cq.nb!=null);
     const word = cq.done ? 'проверен' : partial ? 'частично' : 'не проверен';
     return `<li><button type="button" data-act="pick" data-i="${i}" ${i===S.cur?'aria-current="true"':''}
-      class="flex min-h-11 w-full items-center gap-2.5 rounded-md px-2.5 text-left text-base transition-[background-color] duration-100 ${i===S.cur ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'hover:bg-paper'}">
+      class="flex min-h-11 w-full items-center gap-2.5 rounded-md px-2.5 text-left text-base transition-[background-color] duration-100 ${gold ? 'border-l-4 border-gold bg-gold-soft' + (i===S.cur ? ' font-bold text-ink ring-2 ring-inset ring-cobalt-ink' : ' hover:brightness-95') : i===S.cur ? 'bg-cobalt-soft font-bold text-cobalt-ink' : 'hover:bg-paper'}">
       <span class="${cq.done ? 'text-ok' : 'text-line-strong'}">${ic(cq.done?'i-ok':'i-circle','size-4')}</span>
       <span class="text-sm ${cq.done ? 'text-ok' : 'text-muted'}">${word}</span>
       <span class="flex-1 truncate">${q.name}</span>
+      ${gold ? topMark() : ''}
       ${Object.keys(cq.late).length ? '<span class="text-sm text-amber-ink">позже</span>' : ''}
       ${cq.done ? `<span class="text-sm tabular-nums text-muted">${pts(cq)}</span>` : ''}</button></li>`; }).join('');
   const lateTag = k => c.late[k] ? `<span class="text-sm text-amber-ink">сдано ${c.late[k]}</span>` : '';
@@ -1637,7 +1700,7 @@ function vCheck(){
   return `${backLink('lesson','К уроку')}
   <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
     <div><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">${corr ? 'Исправление оценок' : 'Проверка ДЗ'}</h1><p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t} · ${L.d}</p></div>
-    <button type="button" data-act="lesson-table" data-lid="${lid}" class="${B_OUTLINE}">${ic('i-grid','size-4')} Сводная таблица</button>
+    <div class="flex flex-wrap gap-2"><button type="button" data-act="lesson-table" data-lid="${lid}" class="${B_OUTLINE}">${ic('i-grid','size-4')} Сводная таблица</button>${sheetLink(lid)}</div>
   </div>
   ${corr ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок уже проверен. Изменения пересчитают баллы и кирпичики и попадут в журнал; новые оценки получат отметку «сдано ${TODAY}». Присутствие задним числом не меняйте.</p>`
   : `<div class="mb-4 flex items-center gap-3"><div class="flex-1">${meter(done, R.length, 'Проверено учеников')}</div><p class="shrink-0 text-sm tabular-nums text-ink-2">${done} из ${R.length}</p></div>`}
@@ -3552,6 +3615,7 @@ const VIEWS = { today:vToday, lessons:vLessons, lesson:vLesson, lessonTable:vLes
   child:vChild, verse:vVerse, verseDebts:vVerseDebts, verseLesson:vVerseLesson, childData:vChildData, school:vSchool, settings:vSettings, family:vFamily, childConsent:vChildConsent, users:vUsers, approvals:vApprovals, userProfile:vUserProfile, deletions:vDeletions, register:vRegister, groups:vGroups, groupEdit:vGroupEdit, people:vPeople, year:vYear, achievements:vAchievements, audit:vAudit, pending:vPending, profile:vProfile };
 
 function render(){
+  if (SHEET_ID){ renderSheet(+SHEET_ID); return; }
   const login = document.getElementById('login'), shell = document.getElementById('shell');
   if (!S.authed){ login.innerHTML = loginHTML(); login.classList.remove('hidden'); shell.classList.add('hidden'); document.title='Вход — Воскресная школа'; return; }
   login.classList.add('hidden'); shell.classList.remove('hidden');
@@ -3682,6 +3746,7 @@ document.addEventListener('click', e=>{
     case 'role': S.role = el.dataset.role; S.dd = null; S.view = FIRST_VIEW[S.role]; render(); closeMenu(); toast('Вы смотрите как: ' + ROLE_NAME[S.role]); break;
     case 'go': closeDialog(); if (el.dataset.tab) S.peopleTab = el.dataset.tab; if (el.dataset.view==='analytics' && S.role==='teacher') S.anaGroup='Средняя'; if (el.dataset.view==='check' && S.view!=='check') { openCheck(CUR); break; } go(el.dataset.view); break;
     case 'verses-toggle': S.versesOpen = !S.versesOpen; render(); break;
+    case 'sheet-print': window.print(); break;
     case 'toast': toast(el.dataset.msg); break;
     case 'noop': el.parentElement.querySelectorAll('[role=radio]').forEach(b=>{ const on=b===el; b.setAttribute('aria-checked',on); b.className = b.className.replace(on?SEG_OFF:SEG_ON, on?SEG_ON:SEG_OFF); }); break;
     case 'login-admin-toggle': S.loginAdminOpen = !S.loginAdminOpen; render(); break;

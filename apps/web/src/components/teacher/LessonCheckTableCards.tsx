@@ -7,6 +7,7 @@ import { ScoreCell } from "@/components/ui/score-cell";
 import { StatusText } from "@/components/ui/status-text";
 import { CustomLink } from "@/components/ui/custom-link";
 import { LateBadge } from "@/components/teacher/LateBadge";
+import { LessonLeaderMark } from "@/components/teacher/LessonLeaderMark";
 import { LessonCheckPressToggle } from "@/components/teacher/LessonCheckPressToggle";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
 import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-display";
@@ -24,6 +25,8 @@ type LessonCheckTableCardsProps = {
   readOnly: boolean;
   busyCells: ReadonlySet<string>;
   conflictIds: ReadonlySet<string>;
+  /** Lesson leaders (check flow spec §5.2в). */
+  topScorerIds: ReadonlySet<string>;
   pending: boolean;
   messages: TeacherCheckMessages;
   openCellKey: string | null;
@@ -45,6 +48,7 @@ export const LessonCheckTableCards = ({
   readOnly,
   busyCells,
   conflictIds,
+  topScorerIds,
   pending,
   messages,
   openCellKey,
@@ -58,6 +62,7 @@ export const LessonCheckTableCards = ({
   <ul className="space-y-2" aria-busy={pending}>
     {rows.map((row, index) => {
       const hasConflict = conflictIds.has(row.pupilId);
+      const isTopScorer = topScorerIds.has(row.pupilId);
       const statusLabel = !row.homeworkChecked
         ? messages.tableLegendUnchecked
         : !row.present
@@ -69,23 +74,27 @@ export const LessonCheckTableCards = ({
           key={row.pupilId}
           className={cn(
             "rounded-xl border border-line bg-card p-3",
+            isTopScorer && "border-l-4 border-l-gold bg-gold-soft",
             hasConflict && "ring-2 ring-danger ring-inset",
           )}
         >
           <div className="flex items-start gap-2">
-            <span className="w-6 pt-0.5 text-sm tabular-nums text-muted-foreground">{index + 1}</span>
+            <span className={cn("w-6 pt-0.5 text-sm tabular-nums", isTopScorer ? "text-ink-2" : "text-muted-foreground")}>
+              {index + 1}
+            </span>
             <div className="min-w-0 flex-1">
               <CustomLink
                 href={`/lessons/${lessonId}/check?pupil=${row.pupilId}`}
-                className="block truncate font-medium text-cobalt-ink"
+                className="inline-block max-w-full truncate align-bottom font-medium text-cobalt-ink"
               >
                 {row.displayName}
               </CustomLink>
+              {isTopScorer ? <LessonLeaderMark label={messages.topScorer} /> : null}
               <span className="mt-0.5 flex flex-wrap items-center gap-2">
                 {statusLabel ? (
                   <StatusText tone={!row.homeworkChecked ? "warn" : "neutral"}>{statusLabel}</StatusText>
                 ) : null}
-                {row.late ? <LateBadge label={messages.lateSubmitted} /> : null}
+                {row.late ? <LateBadge label={messages.lateSubmitted} plain={isTopScorer} /> : null}
               </span>
             </div>
             <NumberDisplay className="font-display text-lg tabular-nums">{totalDisplay}</NumberDisplay>
@@ -144,6 +153,7 @@ export const LessonCheckTableCards = ({
                 </ContentText>
                 <ScoreCell
                   mode="pad"
+            plainTone={isTopScorer}
                   max={10}
                   value={row.testScore}
                   notRatedLabel={messages.scoreNotRated}
@@ -163,6 +173,7 @@ export const LessonCheckTableCards = ({
               </ContentText>
               <ScoreCell
                 mode="pad"
+            plainTone={isTopScorer}
                 max={10}
                 value={row.notebookScore}
                 notRatedLabel={messages.scoreNotRated}

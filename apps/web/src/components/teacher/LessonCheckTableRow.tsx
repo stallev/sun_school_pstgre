@@ -7,6 +7,7 @@ import { StatusText } from "@/components/ui/status-text";
 import { CustomLink } from "@/components/ui/custom-link";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { LateBadge } from "@/components/teacher/LateBadge";
+import { LessonLeaderMark } from "@/components/teacher/LessonLeaderMark";
 import { LessonCheckPressToggle } from "@/components/teacher/LessonCheckPressToggle";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
 import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-display";
@@ -26,6 +27,8 @@ export type LessonCheckTableRowProps = {
   readOnly: boolean;
   busyCells: ReadonlySet<string>;
   hasConflict: boolean;
+  /** Lesson leader row (check flow spec §5.2в). */
+  isTopScorer: boolean;
   messages: TeacherCheckMessages;
   openCellKey: string | null;
   onOpenCellKeyChange: (key: string | null) => void;
@@ -36,7 +39,7 @@ export type LessonCheckTableRowProps = {
   onVerseScoreChange: (lessonVerseId: string, score: number | null) => void;
 };
 
-const stickyCell = "sticky z-10 bg-card";
+const stickyCell = "sticky z-10";
 
 const conflictCell = (hasConflict: boolean, position: "first" | "middle" | "last") =>
   hasConflict ? lessonCheckTableConflictCellOutline(position) : undefined;
@@ -52,6 +55,7 @@ export const LessonCheckTableRow = ({
   readOnly,
   busyCells,
   hasConflict,
+  isTopScorer,
   messages,
   openCellKey,
   onOpenCellKeyChange,
@@ -69,22 +73,31 @@ export const LessonCheckTableRow = ({
       : null;
   const totalDisplay = formatLessonCheckRowTotal(row, lessonKind, versesToRecite, scoring);
 
+  const stickyBg = isTopScorer ? "bg-gold-soft" : "bg-card";
+
   return (
-    <TableRow>
+    <TableRow
+      className={cn(isTopScorer && "bg-gold-soft hover:bg-gold-soft has-aria-expanded:bg-gold-soft")}
+    >
       <TableCell
-        className={cn("pl-4 tabular-nums text-muted-foreground", conflictCell(hasConflict, "first"))}
+        className={cn(
+          "pl-4 tabular-nums",
+          isTopScorer ? "border-l-4 border-gold text-ink-2" : "text-muted-foreground",
+          conflictCell(hasConflict, "first"),
+        )}
       >
         {index + 1}
       </TableCell>
-      <TableCell className={cn(stickyCell, "left-0 font-medium", conflictCell(hasConflict, "middle"))}>
+      <TableCell className={cn(stickyCell, stickyBg, "left-0 font-medium", conflictCell(hasConflict, "middle"))}>
         <CustomLink href={href} className="text-cobalt-ink">
           {row.displayName}
         </CustomLink>
+        {isTopScorer ? <LessonLeaderMark label={messages.topScorer} /> : null}
         <span className="mt-0.5 flex flex-wrap items-center gap-2">
           {statusLabel ? (
             <StatusText tone={!row.homeworkChecked ? "warn" : "neutral"}>{statusLabel}</StatusText>
           ) : null}
-          {row.late ? <LateBadge label={messages.lateSubmitted} /> : null}
+          {row.late ? <LateBadge label={messages.lateSubmitted} plain={isTopScorer} /> : null}
         </span>
         {hasConflict ? <p className="mt-1 text-sm text-danger">{messages.conflictTitle}</p> : null}
       </TableCell>
@@ -122,6 +135,7 @@ export const LessonCheckTableRow = ({
         <TableCell className={cn("text-center", conflictCell(hasConflict, "middle"))}>
           <ScoreCell
             mode="pad"
+            plainTone={isTopScorer}
             max={10}
             value={row.testScore}
             notRatedLabel={messages.scoreNotRated}
@@ -138,6 +152,7 @@ export const LessonCheckTableRow = ({
       <TableCell className={cn("text-center", conflictCell(hasConflict, "middle"))}>
         <ScoreCell
           mode="pad"
+            plainTone={isTopScorer}
           max={10}
           value={row.notebookScore}
           notRatedLabel={messages.scoreNotRated}
@@ -160,7 +175,7 @@ export const LessonCheckTableRow = ({
           onPressedChange={onSingingChange}
         />
       </TableCell>
-      <TableCell className={cn(stickyCell, "right-0 text-right", conflictCell(hasConflict, "last"))}>
+      <TableCell className={cn(stickyCell, stickyBg, "right-0 text-right", conflictCell(hasConflict, "last"))}>
         <NumberDisplay className="font-display text-base tabular-nums">{totalDisplay}</NumberDisplay>
       </TableCell>
     </TableRow>

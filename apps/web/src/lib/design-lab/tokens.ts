@@ -38,6 +38,9 @@ export const COLOR_TOKENS: readonly ColorToken[] = [
   { name: "tier-1", hex: "#EA580C", role: "post-MVP, reserved", swatch: "bg-tier-1" },
   { name: "tier-2", hex: "#94A3B8", role: "post-MVP, reserved", swatch: "bg-tier-2" },
   { name: "tier-3", hex: "#EAB308", role: "post-MVP, reserved", swatch: "bg-tier-3" },
+  { name: "gold", hex: "#EAB308", role: "lesson leader accent (border)", swatch: "bg-gold", note: "decor only, not text" },
+  { name: "gold-soft", hex: "#FDF0B8", role: "lesson leader row fill", swatch: "bg-gold-soft" },
+  { name: "gold-ink", hex: "#854D0E", role: "lesson leader icon", swatch: "bg-gold-ink" },
 ];
 
 export type ContrastPair = {
@@ -67,6 +70,10 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
   { fg: pick("danger"), bg: pick("surface"), documented: 4.83, required: 4.5, usage: "field error" },
   { fg: pick("ink"), bg: pick("danger-soft"), documented: 14.61, required: 4.5, usage: "error banner text (D-8)" },
   { fg: pick("surface"), bg: pick("penalty"), documented: 10.36, required: 4.5, usage: "penalty button (reserved)" },
+  { fg: pick("ink"), bg: pick("gold-soft"), documented: 15.59, required: 4.5, usage: "lesson leader row text (D-16)" },
+  { fg: pick("ink-2"), bg: pick("gold-soft"), documented: 6.62, required: 4.5, usage: "lesson leader secondary text" },
+  { fg: pick("gold-ink"), bg: pick("gold-soft"), documented: 5.98, required: 4.5, usage: "lesson leader icon" },
+  { fg: pick("cobalt-ink"), bg: pick("gold-soft"), documented: 5.85, required: 4.5, usage: "link inside leader row" },
 ];
 
 function channel(value: number): number {
