@@ -46,7 +46,6 @@ describe("CheckScoresSection absent collapse", () => {
           lessonKind={LESSON_KIND.REGULAR}
           hasTest
           versesToRecite={[{ lessonVerseId: "verse-1", position: 1 }]}
-          previousLessonOrdinal={1}
           disabled={false}
           messages={messages}
           onVerseScoreChange={vi.fn()}
@@ -87,7 +86,6 @@ describe("CheckScoresSection absent collapse", () => {
           lessonKind={LESSON_KIND.REGULAR}
           hasTest
           versesToRecite={[{ lessonVerseId: "verse-1", position: 1 }]}
-          previousLessonOrdinal={1}
           disabled={false}
           messages={messages}
           onVerseScoreChange={vi.fn()}

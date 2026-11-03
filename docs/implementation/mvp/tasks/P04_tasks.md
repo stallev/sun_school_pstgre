@@ -35,8 +35,8 @@
       Paths: H [§7] · N [нет следующего урока, равные даты]
 - [x] P04-T3 · T1 · Contract: [homework_check §4.2](../contracts/homework_check_contract.md)
       Files: `packages/domain/src/check/{schemas,resolve-verses-to-recite}.ts`, коды `CHECK_*` (проверка), `AUDIT_ACTION` (`check.*`)
-      Acceptance: диапазоны оценок, обзорный без стихов/теста, `resolveVersesToRecite` по БП-2 (первый обычный урок года — пусто) → unit-тесты
-      Paths: H [БП-2] · N [первый урок, обзорный между]
+      Acceptance: диапазоны оценок, обзорный без стихов/теста, `resolveVersesToRecite` по БП-2 (стихи самого урока; обзорный — пусто; с 2026-11-03, ранее — предыдущий обычный урок) → unit-тесты
+      Paths: H [БП-2] · N [обзорный урок — без стихов]
 
 **CU DoD:** `typecheck` · `lint` · `test` (таблицы границ)
 
@@ -66,7 +66,7 @@
       Paths: H · N [`CHECK_NOTHING_CHECKED`] · S [AZ-33]
 - [x] P04-T7 · T1 · Spec: [flow §3, §5, §7](../specs/homework_check_flow_spec.md)
       Files: `data/checks/{get-check-roster,get-check-record,get-lesson-table,get-lesson-progress,get-current-lesson}.ts`
-      Acceptance: roster на дату урока (+ добавленные позже), стихи предыдущего обычного урока, прогресс N из M, «текущий урок» по поясу школы → тесты выборок
+      Acceptance: roster на дату урока (+ добавленные позже), стихи этого урока (БП-2, с 2026-11-03), прогресс N из M, «текущий урок» по поясу школы → тесты выборок
       Paths: H · N [нет учеников, нет текущего урока] · S [фильтр по группе и году; чужой → `NOT_FOUND`]
 
 **CU DoD:** `typecheck` · `lint` · `test`

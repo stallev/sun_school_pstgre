@@ -25,7 +25,6 @@ type CheckScoresSectionProps = {
   lessonKind: LessonKind;
   hasTest: boolean;
   versesToRecite: readonly LessonVerseToRecite[];
-  previousLessonOrdinal: number | null;
   disabled: boolean;
   messages: TeacherCheckMessages;
   onVerseScoreChange: (lessonVerseId: string, value: number | null) => void;
@@ -45,7 +44,6 @@ export const CheckScoresSection = ({
   lessonKind,
   hasTest,
   versesToRecite,
-  previousLessonOrdinal,
   disabled,
   messages,
   onVerseScoreChange,
@@ -77,11 +75,6 @@ export const CheckScoresSection = ({
 
   const versesColumn = isReview ? null : versesToRecite.length > 0 ? (
     <div className="divide-y divide-line">
-      {previousLessonOrdinal !== null ? (
-        <ContentText tone="secondary" className="pt-3 text-sm">
-          {fillMessage(messages.versesIntro, { lessonOrdinal: previousLessonOrdinal })}
-        </ContentText>
-      ) : null}
       {versesToRecite.map((verse) => (
         <CheckVerseField
           key={verse.lessonVerseId}
@@ -97,7 +90,7 @@ export const CheckScoresSection = ({
     </div>
   ) : (
     <ContentText tone="secondary" className="py-3 text-sm">
-      {messages.noVersesFirstLesson}
+      {messages.noVerses}
     </ContentText>
   );
 

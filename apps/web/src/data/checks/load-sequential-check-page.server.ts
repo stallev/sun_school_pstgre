@@ -1,6 +1,6 @@
 import "server-only";
 
-import { buildScoringSnapshot, LESSON_KIND } from "@sunschool/domain";
+import { buildScoringSnapshot } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { lessonDateToIso } from "@/data/lessons/lesson-shared.server";
 import { loadCheckLessonAccess } from "./check-read-shared.server";
@@ -107,21 +107,6 @@ export async function loadSequentialCheckPage(
     pupil.comment = commentByPupil.get(pupil.pupilId) ?? "";
   }
 
-  let previousLessonOrdinal: number | null = null;
-  if (roster.versesToRecite.length > 0) {
-    const previous = await db.lesson.findFirst({
-      where: {
-        gradeId: access.lesson.gradeId,
-        academicYearId: access.lesson.academicYearId,
-        kind: LESSON_KIND.REGULAR,
-        lessonDate: { lt: access.lesson.lessonDate },
-      },
-      orderBy: [{ lessonDate: "desc" }, { createdAt: "desc" }],
-      select: { ordinal: true },
-    });
-    previousLessonOrdinal = previous?.ordinal ?? null;
-  }
-
   return {
     kind: "page",
     lessonId: roster.lessonId,
@@ -135,7 +120,6 @@ export async function loadSequentialCheckPage(
     yearClosed: roster.yearClosed,
     isAdmin,
     versesToRecite: roster.versesToRecite,
-    previousLessonOrdinal,
     scoring,
     pupils,
   };

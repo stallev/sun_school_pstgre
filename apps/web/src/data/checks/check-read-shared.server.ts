@@ -90,32 +90,17 @@ export async function loadCheckLessonAccess(
 
 export async function loadVersesToReciteForLesson(
   db: PrismaClient,
-  lesson: { id: string; gradeId: string; academicYearId: string },
+  lesson: { id: string; kind: LessonKind },
 ): Promise<readonly LessonVerseToRecite[]> {
-  const rows = await db.lesson.findMany({
-    where: { gradeId: lesson.gradeId, academicYearId: lesson.academicYearId },
-    select: {
-      id: true,
-      lessonDate: true,
-      createdAt: true,
-      kind: true,
-      verses: {
-        select: { id: true, position: true },
-        orderBy: { position: "asc" },
-      },
-    },
+  const verses = await db.lessonGoldenVerse.findMany({
+    where: { lessonId: lesson.id },
+    select: { id: true, position: true },
+    orderBy: { position: "asc" },
   });
-  const lessons = rows.map((row) => ({
-    id: row.id,
-    lessonDate: lessonDateToIso(row.lessonDate),
-    createdAt: row.createdAt.toISOString(),
-    kind: row.kind as LessonKind,
-    verses: row.verses.map((verse) => ({
-      lessonVerseId: verse.id,
-      position: verse.position,
-    })),
-  }));
-  return resolveVersesToRecite(lessons, lesson.id);
+  return resolveVersesToRecite({
+    kind: lesson.kind,
+    verses: verses.map((verse) => ({ lessonVerseId: verse.id, position: verse.position })),
+  });
 }
 
 export async function loadCheckRosterRows(

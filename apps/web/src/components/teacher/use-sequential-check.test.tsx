@@ -70,7 +70,6 @@ const pageData = {
   yearClosed: false,
   isAdmin: false,
   versesToRecite: [] as const,
-  previousLessonOrdinal: null,
   scoring: buildScoringSnapshot({
     useVerses: false,
     useTest: true,

@@ -3,7 +3,6 @@ import "server-only";
 import {
   LESSON_KIND,
   compareLessonsForOrdinal,
-  previousRegularLesson,
   type AppLocale,
   type LessonKind,
   type LessonStatus,
@@ -11,12 +10,11 @@ import {
 import type { PrismaClient } from "@sunschool/db";
 import { isMutationErr } from "@/data/access/access-admin-guards.server";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
-import { buildVerseTextForRange } from "@/data/bible/get-verse-text";
 import { resolveGroupTranslation } from "@/data/bible/get-group-translation";
 import { listBooks } from "@/data/bible/list-books";
 import { formatDisplayName } from "@/lib/person/format-display-name";
-import { formatVerseRefLabel } from "@/lib/lesson/format-verse-ref";
 import { assertLessonReadAccess } from "./lesson-read-access.server";
+import { loadGoldenVerseRowsForLesson } from "./load-lesson-verse-texts.server";
 import {
   lessonDateToIso,
   lessonHasHomeworkChecks,
@@ -24,11 +22,9 @@ import {
 } from "./lesson-shared.server";
 import { calendarDateFromIso } from "@/data/school/calendar-date";
 
-export type LessonDetailVerseRow = {
-  refLabel: string;
-  text: string | null;
-  hasMissing: boolean;
-};
+import type { LessonDetailVerseRow } from "./load-lesson-verse-texts.server";
+
+export type { LessonDetailVerseRow };
 
 export type LessonDetailPageData =
   | { kind: "not_found" }
@@ -43,8 +39,6 @@ export type LessonDetailPageData =
       hasTest: boolean;
       body: string | null;
       verses: LessonDetailVerseRow[];
-      recitingVerses: LessonDetailVerseRow[];
-      previousRegularOrdinal: number | null;
       nextRegularOrdinal: number | null;
       gradeName: string;
       yearName: string;
@@ -83,53 +77,6 @@ const nextRegularLesson = (
   }
   return null;
 };
-
-async function loadGoldenVerseRowsForLesson(
-  db: PrismaClient,
-  targetLessonId: string,
-  lessonKind: LessonKind,
-  locale: AppLocale,
-  translationCode: string,
-  bookById: Map<string, Awaited<ReturnType<typeof listBooks>>[number]>,
-): Promise<LessonDetailVerseRow[]> {
-  if (lessonKind !== LESSON_KIND.REGULAR) {
-    return [];
-  }
-  const linked = await db.lessonGoldenVerse.findMany({
-    where: { lessonId: targetLessonId },
-    orderBy: { position: "asc" },
-    select: {
-      goldenVerse: {
-        select: {
-          bookId: true,
-          startChapter: true,
-          startVerse: true,
-          endChapter: true,
-          endVerse: true,
-        },
-      },
-    },
-  });
-
-  const rows: LessonDetailVerseRow[] = [];
-  for (const row of linked) {
-    const range = {
-      bookId: row.goldenVerse.bookId,
-      startChapter: row.goldenVerse.startChapter,
-      startVerse: row.goldenVerse.startVerse,
-      endChapter: row.goldenVerse.endChapter,
-      endVerse: row.goldenVerse.endVerse,
-    };
-    const built = await buildVerseTextForRange(translationCode, range);
-    const book = bookById.get(range.bookId);
-    rows.push({
-      refLabel: book ? formatVerseRefLabel(book, locale, range) : range.bookId,
-      text: built.ok ? built.text : null,
-      hasMissing: !built.ok,
-    });
-  }
-  return rows;
-}
 
 export async function loadLessonDetailPage(
   db: PrismaClient,
@@ -180,23 +127,8 @@ export async function loadLessonDetailPage(
     createdAt: row.createdAt.toISOString(),
     ordinal: row.ordinal,
   }));
-  const previousRegular = previousRegularLesson(siblingRows, lesson.id);
   const nextRegular = nextRegularLesson(siblingRows, lesson.id);
-  const ordinalByLessonId = new Map(siblingRows.map((row) => [row.id, row.ordinal]));
-  const previousRegularOrdinal =
-    previousRegular ? (ordinalByLessonId.get(previousRegular.id) ?? null) : null;
   const nextRegularOrdinal = nextRegular?.ordinal ?? null;
-  const recitingVerses =
-    previousRegular
-      ? await loadGoldenVerseRowsForLesson(
-          db,
-          previousRegular.id,
-          LESSON_KIND.REGULAR,
-          locale,
-          translation.code,
-          bookById,
-        )
-      : [];
 
   const leadTeacher = await db.appUser.findFirst({
     where: { id: lesson.leadTeacherId },
@@ -227,8 +159,6 @@ export async function loadLessonDetailPage(
     title: lesson.title,
     lessonDateIso: lessonDateToIso(lesson.lessonDate),
     lessonKind,
-    recitingVerses,
-    previousRegularOrdinal,
     nextRegularOrdinal,
     leadName: leadTeacher ? formatDisplayName(leadTeacher) : "",
     hasTest: lesson.hasTest,

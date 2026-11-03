@@ -20,7 +20,6 @@ type CheckCardProps = {
   lessonKind: LessonKind;
   hasTest: boolean;
   versesToRecite: readonly LessonVerseToRecite[];
-  previousLessonOrdinal: number | null;
   isCorrection: boolean;
   reason: string;
   presentError?: string;
@@ -40,7 +39,6 @@ export const CheckCard = ({
   lessonKind,
   hasTest,
   versesToRecite,
-  previousLessonOrdinal,
   isCorrection,
   reason,
   presentError,
@@ -112,7 +110,6 @@ export const CheckCard = ({
         lessonKind={lessonKind}
         hasTest={hasTest}
         versesToRecite={versesToRecite}
-        previousLessonOrdinal={previousLessonOrdinal}
         disabled={disabled}
         messages={messages}
         onVerseScoreChange={onVerseScoreChange}

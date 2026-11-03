@@ -199,7 +199,7 @@
     <aside id="sidebar" class="sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface px-3 py-4 lg:block lg:group-data-[rail=collapsed]/shell:px-2">
       <nav id="sidenav" aria-label="Разделы"></nav>
     </aside>
-    <main id="main" tabindex="-1" class="min-w-0 px-4 pt-4 pb-28 sm:px-6 lg:px-8 lg:pt-7 lg:pb-16 outline-none">
+    <main id="main" tabindex="-1" class="min-w-0 px-4 pt-2 pb-28 sm:px-6 lg:px-8 lg:pt-3 lg:pb-16 outline-none">
       <div id="view" class="mx-auto max-w-[1600px]"></div>
     </main>
   </div>
@@ -462,10 +462,9 @@ const UNASSIGNED = [ { id:21, name:'Иван Ткачёв', born:'2014-11-30', n
 const num = d => { const [dd,mm] = d.split('.').map(Number); return mm*100+dd; };
 const lessonById = id => LESSONS.find(l=>l.id===id);
 const isReview = L => L && L.kind==='review';
-/* Обзорный урок пропускается: стихи урока N рассказывают на следующем обычном уроке (БП-2) */
-const prevRegular = lid => LESSONS.filter(l=>l.id<lid && !isReview(l)).sort((a,b)=>b.id-a.id)[0];
+/* Стихи урока N рассказывают на следующем обычном уроке, но оценки вносятся в запись урока N (БП-2, 2026-11-03); обзорный урок стихов не имеет */
 const nextRegular = lid => LESSONS.filter(l=>l.id>lid && !isReview(l)).sort((a,b)=>a.id-b.id)[0];
-const recVerses = lid => { const L = lessonById(lid); if (!L || isReview(L)) return []; const p = prevRegular(lid); return p ? p.v : []; };
+const recVerses = lid => { const L = lessonById(lid); return !L || isReview(L) ? [] : L.v; };
 
 function gen(pid, lid){
   const r = k => ((pid*37 + lid*91 + k*53) % 97) / 97;
@@ -493,7 +492,7 @@ const S = {
   consent:{ 1:{ voice:true, photo:true }, 2:{ voice:false, photo:true } },
   bricksOpen:null, fixOpen:null, peopleTab:'pupils', usersTab:'pending', userOpen:null,
   yearClosed:false, year:null, pupilYear:null, pupilMetric:'att', period:'year', anaGroup:'Средняя', month:11, verseQ:'', groupSel:[], groupEdit:'Средняя',
-  lf:null, lang:'ru', loginAdminOpen:false, tblPad:null
+  lf:null, lang:'ru', loginAdminOpen:false, tblPad:null, versesOpen:false
 };
 
 /* Записи проверок: уроки 1–7 проверены у всех, урок 8 — у первых 9 */
@@ -727,7 +726,7 @@ const mean = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
 const ref = r => `<span class="inline-flex items-center whitespace-nowrap rounded-md bg-paper px-1.5 py-px text-sm font-medium text-ink ring-1 ring-line">${r}</span>`;
 
 function pageHead(title, sub, actions='', back=''){
-  return `${back}<div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between lg:mb-6">
+  return `${back}<div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between lg:mb-4">
     <div class="min-w-0">
       <h1 class="font-display text-[1.75rem] font-medium leading-[1.1] tracking-[-0.01em] sm:text-[2.125rem]">${title}</h1>
       ${sub ? `<p class="mt-1 text-ink-2">${sub}</p>` : ''}
@@ -735,7 +734,7 @@ function pageHead(title, sub, actions='', back=''){
     ${actions ? `<div class="flex flex-wrap gap-2">${actions}</div>` : ''}
   </div>`;
 }
-const backLink = (view, label, extra='') => `<button type="button" data-act="go" data-view="${view}" ${extra} class="mb-3 -ml-2 inline-flex h-10 items-center gap-1 rounded-lg px-2 text-sm text-ink-2 hover:bg-line/50 hover:text-ink">${ic('i-left','size-4')} ${label}</button>`;
+const backLink = (view, label, extra='') => `<button type="button" data-act="go" data-view="${view}" ${extra} class="mb-1 -ml-2 inline-flex h-9 items-center gap-1 rounded-lg px-2 text-sm text-ink-2 hover:bg-line/50 hover:text-ink">${ic('i-left','size-4')} ${label}</button>`;
 function status(kind, text){
   const map = { ok:['text-ok','i-ok'], warn:['text-warn','i-alert'], danger:['text-danger','i-alert'], idle:['text-muted','i-circle'], info:['text-cobalt','i-circle'] };
   const [c,i] = map[kind];
@@ -799,7 +798,7 @@ function layers(){
   PUPILS.concat(INACTIVE).forEach(p=>L[layerOf(p)].push(p));
   return L;
 }
-/* Стихи (БП-2): на уроке N рассказывают стихи урока N−1; нужна проверенная запись и присутствие */
+/* Стихи (БП-2): оценки за стихи урока N вносятся в запись урока N; нужна проверенная запись и присутствие */
 function verseObs(lid, pid){
   if (!recVerses(lid).length) return null;
   const r = S.hc[lid] && S.hc[lid][pid];
@@ -1364,7 +1363,7 @@ function vLessonForm(){
       </div>
       <div><p class="${LABEL}">Тип урока</p>
         ${edit && lessonProgress(f.id)[0] ? `<p class="flex h-10 items-center rounded-lg bg-paper px-3 text-ink-2">${f.kind==='review'?'Обзорный':'Обычный'} · по уроку есть проверки, тип не меняется</p>` : seg('Тип урока', [['regular','Обычный'],['review','Обзорный']], f.kind, 'lf-kind')}
-        <p class="mt-1.5 text-sm text-muted">${f.kind==='review' ? 'Обзорный: золотые стихи не задаются и не рассказываются, теста нет — оцениваются тетрадь и спевка. Стихи прошлого урока расскажут на следующем обычном уроке.' : 'Обычный: золотые стихи, тест, тетрадь, спевка.'}</p></div>
+        <p class="mt-1.5 text-sm text-muted">${f.kind==='review' ? 'Обзорный: золотые стихи не задаются и не рассказываются, теста нет — оцениваются тетрадь и спевка. Стихи предыдущего урока оцениваются в его записи.' : 'Обычный: золотые стихи, тест, тетрадь, спевка.'}</p></div>
       <div><label for="lf-t" class="${LABEL}">Тема</label><input id="lf-t" data-lf="t" value="${f.t}" placeholder="Например: Рождение Моисея" class="${FIELD}">${err('t')}</div>
       <div><label for="lf-teacher" class="${LABEL}">Ведёт</label>
         <select id="lf-teacher" data-lf="teacher" class="${SEL}"><option value="" ${f.teacher?'':'selected'} disabled>Выберите учителя</option>${groupTeachers('Средняя').map(t=>`<option value="${t}" ${f.teacher===t?'selected':''}>${t}${t===ME[S.role].name?' (вы)':''}</option>`).join('')}</select>
@@ -1409,10 +1408,21 @@ const MONTHS = ['января','февраля','марта','апреля','м�
 const longDate = d => { const [dd,mm] = d.split('.').map(Number); return `${dd} ${MONTHS[mm-1]} ${mm>=9?2026:2027}`; };
 function cell(v, late){ return v==null ? '<span class="text-muted">—</span>' : `${v}${late ? `<span class="ml-1 text-sm text-amber-ink">позже</span>` : ''}`; }
 function lessonProgress(lid){ const recs = S.hc[lid] ? Object.values(S.hc[lid]) : []; return [recs.filter(r=>r.done).length, recs.length]; }
-const verseList = refs => refs.length ? `<ol class="space-y-2.5">${refs.map(r=>`<li>${ref(r)}<p class="mt-1 font-display text-[1.0625rem] italic leading-snug text-ink-2">${VERSES[r] || 'Текст подставится из Синодального перевода.'}</p></li>`).join('')}</ol>` : '<p class="text-sm text-muted">На первом уроке года стихов не рассказывают.</p>';
+const verseList = refs => refs.length ? `<ol class="space-y-2.5">${refs.map(r=>`<li>${ref(r)}<p class="mt-1 font-display text-[1.0625rem] italic leading-snug text-ink-2">${VERSES[r] || 'Текст подставится из Синодального перевода.'}</p></li>`).join('')}</ol>` : '<p class="text-sm text-muted">На этом уроке стихи не задаются.</p>';
+
+/* P24: компактный аккордеон «Стихи урока» на проверке и сводной таблице (по умолчанию свёрнут); тексты — из библиотеки стихов */
+function verseAccordion(L){
+  if (!L || isReview(L) || !L.v.length) return '';
+  const open = !!S.versesOpen;
+  return `<section class="${CARD} mb-3" aria-label="Стихи урока ${L.n}">
+    <h2 class="m-0"><button type="button" data-act="verses-toggle" aria-expanded="${open}" aria-controls="lesson-verses" class="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left hover:bg-paper lg:min-h-9">
+      ${ic('i-scroll','size-4 shrink-0 text-muted')}<span class="shrink-0 text-sm font-medium">Стихи урока ${L.n}</span><span class="min-w-0 flex-1 truncate text-sm text-ink-2">${L.v.join(' · ')}</span>
+      ${ic('i-down',`size-5 shrink-0 text-ink-2 transition-transform duration-150 motion-reduce:transition-none ${open?'rotate-180':''}`)}</button></h2>
+    <div id="lesson-verses" ${open?'':'hidden'} class="border-t border-line px-3 py-2.5"><ol class="space-y-2">${L.v.map(r=>`<li>${ref(r)}<p class="mt-0.5 font-display text-base italic leading-snug text-ink-2">${VERSES[r] || 'Текст подставится из Синодального перевода.'}</p></li>`).join('')}</ol></div></section>`;
+}
 
 function vLesson(){
-  const L = lessonById(S.lessonId), [done,total] = lessonProgress(L.id), full = !L.planned && total && done===total, prev = prevRegular(L.id), nxt = nextRegular(L.id);
+  const L = lessonById(S.lessonId), [done,total] = lessonProgress(L.id), full = !L.planned && total && done===total, nxt = nextRegular(L.id);
   const canDelete = L.planned || !total;
   return `${backLink('lessons','Все уроки')}
   <section class="${CARD} p-4 sm:p-5">
@@ -1444,10 +1454,9 @@ function vLesson(){
   </section>
 
   ${isReview(L) ? `<section class="${CARD} mt-3 p-4 sm:p-5"><h2 class="font-medium">Обзорный урок</h2>
-    <p class="mt-1 text-ink-2">Золотые стихи не задаются и не рассказываются, теста нет — на проверке оцениваются тетрадь и спевка.${prev && prev.v.length ? ` Стихи урока ${prev.n} (${prev.v.map(ref).join(', ')}) расскажут на ${nxt ? 'уроке '+nxt.n : 'следующем обычном уроке'}.` : ''}</p></section>` : `
-  <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
-    <section class="${CARD} p-4 sm:p-5"><h2 class="mb-3 font-medium">Задано на этот урок <span class="font-normal text-muted">· расскажут ${nxt ? 'на уроке '+nxt.n : 'на следующем обычном уроке'}</span></h2>${verseList(L.v)}</section>
-    <section class="${CARD} p-4 sm:p-5"><h2 class="mb-3 font-medium">Рассказывают на этом уроке <span class="font-normal text-muted">${prev ? '· заданы на уроке '+prev.n : ''}</span></h2>${verseList(recVerses(L.id))}</section>
+    <p class="mt-1 text-ink-2">Золотые стихи не задаются и не рассказываются, теста нет — на проверке оцениваются тетрадь и спевка.</p></section>` : `
+  <div class="mt-3 grid grid-cols-1 gap-3">
+    <section class="${CARD} p-4 sm:p-5"><h2 class="mb-3 font-medium">Задано на этот урок <span class="font-normal text-muted">· расскажут ${nxt ? 'на уроке '+nxt.n : 'на следующем обычном уроке'}; оценки вносятся на проверке этого урока</span></h2>${verseList(L.v)}</section>
   </div>`}`;
 }
 
@@ -1496,6 +1505,7 @@ function vLessonTable(){
     <button type="button" data-act="check-open" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-check','size-4')} Последовательная проверка</button>
   </div>
   ${corr ? `<p class="mb-3 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок проверен. Правки пересчитают баллы и попадут в журнал, новые оценки получат отметку «сдано ${TODAY}».</p>` : ''}
+  ${verseAccordion(L)}
   <div class="sticky top-14 z-20 -mx-4 mb-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur-md reduce-transparency:bg-surface sm:mx-0 sm:rounded-lg sm:border sm:backdrop-blur-none">
     <div class="flex flex-wrap items-center gap-2 text-sm">
       ${chip('all', !S.lsFilter.present && !S.lsFilter.unchecked, 'Все')}
@@ -1625,12 +1635,13 @@ function vCheck(){
   const lastNew = !corr && R.filter(q=>!S.hc[lid][q.id].done && q.id!==p.id).length===0;
   const saveLabel = corr ? 'Сохранить исправление' : lastNew ? 'Завершить проверку' : 'Сохранить и далее';
   return `${backLink('lesson','К уроку')}
-  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+  <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
     <div><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">${corr ? 'Исправление оценок' : 'Проверка ДЗ'}</h1><p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t} · ${L.d}</p></div>
     <button type="button" data-act="lesson-table" data-lid="${lid}" class="${B_OUTLINE}">${ic('i-grid','size-4')} Сводная таблица</button>
   </div>
   ${corr ? `<p class="mb-4 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок уже проверен. Изменения пересчитают баллы и кирпичики и попадут в журнал; новые оценки получат отметку «сдано ${TODAY}». Присутствие задним числом не меняйте.</p>`
   : `<div class="mb-4 flex items-center gap-3"><div class="flex-1">${meter(done, R.length, 'Проверено учеников')}</div><p class="shrink-0 text-sm tabular-nums text-ink-2">${done} из ${R.length}</p></div>`}
+  ${verseAccordion(L)}
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start">
     <details class="${CARD} group lg:hidden">
       <summary class="flex h-11 cursor-pointer list-none items-center justify-between px-3"><span class="text-sm text-ink-2">Ученики · ${done} из ${R.length}</span>${ic('i-down','size-5 text-ink-2 transition-transform duration-150 group-open:rotate-180')}</summary>
@@ -1649,7 +1660,7 @@ function vCheck(){
         <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Был на уроке</span>${seg('Присутствие', [[true,'Да'],[false,'Нет']], c.present, 'present', '', true)}</div>
         <div class="flex flex-wrap items-center gap-3"><span class="font-medium">Спевка</span>${toggle(c.sing,'sing','Был на спевке')}${isReview(L) ? '<span class="text-sm text-muted">Обзорный урок: тетрадь и спевка</span>' : ''}</div>
         <p class="basis-full text-sm text-muted">Присутствие на баллы не влияет: задания можно сдать позже.</p></div>
-      ${rubricOpen ? `${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${prevRegular(lid).n} — рассказывают сегодня</p><div class="grid grid-cols-1 gap-x-6 border-b border-line lg:grid-cols-2">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не рассказывают, теста нет.' : 'На первом уроке года стихов не рассказывают.'}</p>`}
+      ${rubricOpen ? `${rv.length ? `<p class="pt-3 text-sm text-muted">Стихи урока ${L.n} — оценки за стихи этого урока</p><div class="grid grid-cols-1 gap-x-6 border-b border-line lg:grid-cols-2">${verseRows}</div>` : `<p class="border-b border-line py-3 text-sm text-muted">${isReview(L) ? 'Обзорный урок: стихи не задаются, теста нет.' : 'На этом уроке стихи не задаются.'}</p>`}
       <div class="grid grid-cols-1 gap-x-6 border-b border-line md:grid-cols-2">
         ${L.test ? scaleField('test', c.test, 'Тест', lateTag('test')) : (isReview(L) ? '' : '<p class="py-3 text-sm text-muted">Тест на этом уроке не проводился.</p>')}
         ${scaleField('nb', c.nb, 'Тетрадь', lateTag('nb'))}
@@ -1874,7 +1885,7 @@ function groupCharts(ser){
   return `<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
     ${c('Посещаемость по урокам','Доля присутствовавших от основной выборки на этот урок. Число детей — в подсказке.',
       { labels, series:[{ name:'Посещаемость', color:'var(--color-series-1)', values:ser.map(s=>s.att) }], min:0, max:1, ticks:[0,0.25,0.5,0.75,1], tickFmt:t=>Math.round(t*100)+'%', fmt:v=>pct(v), extra:i=>`${ser[i].present} из ${ser[i].base}`, aria:'Посещаемость по урокам' })}
-    ${c('Золотые стихи за урок','Стихи урока N рассказывают на уроке N+1 — точка стоит на нём. Первый урок года не участвует. Рассказан — оценка 1 или 2, только при присутствии.',
+    ${c('Золотые стихи за урок','Оценки за стихи урока N вносятся в запись урока N — точка стоит на нём. Обзорный урок не участвует. Рассказан — оценка 1 или 2, только при присутствии.',
       { labels, series:[{ name:'Стихов', color:'var(--color-series-1)', values:ser.map(s=>s.verses) }], min:0, max:3, ticks:[0,1,2,3], fmt:v=>f1(v), extra:i=> ser[i].slots ? `N=${ser[i].nV}` : (ser[i].review || isReview(lessonById(ser[i].lid))) ? 'обзорный урок' : 'стихов ещё не задавали', aria:'Среднее число рассказанных стихов' })}
     ${c('Средний балл теста','Оценки при присутствии на проверенном уроке и «сдано позже». Пропуск точки — тест не проводился.',
       { labels, series:[{ name:'Тест', color:'var(--color-series-1)', values:ser.map(s=>s.test) }], min:0, max:10, ticks:[0,5,10], fmt:v=>f1(v), extra:i=> ser[i].testNA ? 'не проводился' : 'N='+ser[i].nTest, aria:'Средний балл теста' })}
@@ -1956,7 +1967,7 @@ function vAnalytics(){
     <h2 class="${H2}">Как мы считали цифры</h2>
     <ul class="mt-3 space-y-2 text-ink-2">
       <li>— В средние и графики входят активные ученики, которые были не меньше чем на половине проверенных уроков с момента прихода в группу.</li>
-      <li>— Стихи урока N рассказывают на уроке N+1, и наблюдение относится к нему. Первый урок года не участвует.</li>
+      <li>— Оценки за стихи урока N вносятся в запись урока N, и наблюдение относится к нему. Обзорный урок не участвует.</li>
       <li>— Тест и тетрадь: оценки при присутствии на проверенном уроке и оценки «сдано позже».</li>
       <li>— «Не оценивалось» — это не ноль: в среднее не входит. Если у ученика нет записи на проверенном уроке, это дефект журнала, урок не идёт в его явку.</li>
       <li>— Оценки, внесённые позже, относятся к дате урока.</li>
@@ -2101,11 +2112,11 @@ function childSwitch(){
 const NEED = () => SETTINGS.verses.days;
 const dayBar = n => `<span class="flex flex-1 gap-1" aria-label="${n} из ${NEED()} дней">${Array.from({length:NEED()},(_,k)=>`<span class="h-1.5 flex-1 rounded-full ${k<n ? 'bg-cobalt' : 'bg-line'}"></span>`).join('')}</span>`;
 
-/* Невыученные стихи прошедших уроков (ВП-16): стих урока L рассказывают на следующем обычном уроке */
+/* Невыученные стихи прошедших уроков (ВП-16): стих урока L рассказывают на следующем обычном уроке, оценка лежит в записи урока L (БП-2) */
 function debts(pid){
   const out = [];
   LESSONS.filter(L=>!L.planned && !isReview(L) && L.v.length && nextRegular(L.id) && nextRegular(L.id).id <= CUR).forEach(L=>{
-    const nx = nextRegular(L.id), rec = S.hc[nx.id] && S.hc[nx.id][pid];
+    const rec = S.hc[L.id] && S.hc[L.id][pid];
     const items = L.v.map((r,k)=>({ r, k, score: rec && rec.done ? rec.v[k] : null, late: rec && rec.late['v'+k], days: practiceDays(L.id, r).length }));
     const open = items.filter(x=>x.score==null || x.score<2);
     if (open.length) out.push({ L, items, learned: items.length-open.length, open:open.length });
@@ -3670,6 +3681,7 @@ document.addEventListener('click', e=>{
     case 'menu-close': closeMenu(); break;
     case 'role': S.role = el.dataset.role; S.dd = null; S.view = FIRST_VIEW[S.role]; render(); closeMenu(); toast('Вы смотрите как: ' + ROLE_NAME[S.role]); break;
     case 'go': closeDialog(); if (el.dataset.tab) S.peopleTab = el.dataset.tab; if (el.dataset.view==='analytics' && S.role==='teacher') S.anaGroup='Средняя'; if (el.dataset.view==='check' && S.view!=='check') { openCheck(CUR); break; } go(el.dataset.view); break;
+    case 'verses-toggle': S.versesOpen = !S.versesOpen; render(); break;
     case 'toast': toast(el.dataset.msg); break;
     case 'noop': el.parentElement.querySelectorAll('[role=radio]').forEach(b=>{ const on=b===el; b.setAttribute('aria-checked',on); b.className = b.className.replace(on?SEG_OFF:SEG_ON, on?SEG_ON:SEG_OFF); }); break;
     case 'login-admin-toggle': S.loginAdminOpen = !S.loginAdminOpen; render(); break;
@@ -3783,7 +3795,7 @@ document.addEventListener('click', e=>{
         r.dup = days.some(d=>d[0]==='сб'); r.completed = 0; r.showText = false;
         if (!r.dup && r.quality >= 80) days.push(['сб', r.quality]);
         if (debt && days.length >= NEED()){
-          const nx = nextRegular(r.lid), rec = nx && S.hc[nx.id] && S.hc[nx.id][1], k = lessonById(r.lid).v.indexOf(r.verse);
+          const rec = S.hc[r.lid] && S.hc[r.lid][1], k = lessonById(r.lid).v.indexOf(r.verse);
           if (rec && k>=0 && (rec.v[k]==null || rec.v[k] < 2)){
             r.completed = 2 - (rec.v[k]||0); rec.v[k] = 2; rec.vs[k] = 'voice'; rec.late['v'+k] = TODAY;
             audit(`Голосовая проверка · Миша Смирнов · ${r.verse}`, `Стих урока ${lessonById(r.lid).n} выучен позже: +${r.completed}`);

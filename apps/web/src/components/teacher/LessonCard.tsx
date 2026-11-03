@@ -37,10 +37,6 @@ export const LessonCard = ({
     data.nextRegularOrdinal !== null
       ? messages.assignedVersesHintNext(data.nextRegularOrdinal)
       : messages.assignedVersesHintNextFallback;
-  const recitingHint =
-    data.previousRegularOrdinal !== null
-      ? messages.recitingVersesHintPrev(data.previousRegularOrdinal)
-      : null;
 
   return (
     <div className="space-y-3">
@@ -127,22 +123,13 @@ export const LessonCard = ({
           <ContentText className="mt-1 text-sm text-ink-2">{messages.reviewSectionDescription}</ContentText>
         </section>
       ) : (
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <LessonDetailVersePanel
-            title={messages.assignedVersesTitle}
-            hint={assignedHint}
-            verses={data.verses}
-            emptyLabel={messages.versesEmpty}
-            verseMissing={messages.verseMissing}
-          />
-          <LessonDetailVersePanel
-            title={messages.recitingVersesTitle}
-            hint={recitingHint}
-            verses={data.recitingVerses}
-            emptyLabel={messages.versesEmpty}
-            verseMissing={messages.verseMissing}
-          />
-        </div>
+        <LessonDetailVersePanel
+          title={messages.assignedVersesTitle}
+          hint={assignedHint}
+          verses={data.verses}
+          emptyLabel={messages.versesEmpty}
+          verseMissing={messages.verseMissing}
+        />
       )}
     </div>
   );

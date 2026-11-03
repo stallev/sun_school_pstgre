@@ -6,7 +6,6 @@ import {
   classifySampleLayer,
   collectReportAverageScores,
   computeAttendanceCounts,
-  findFirstRegularLessonId,
   isMainSampleLayer,
   isVerseRecitationAnalyticsLesson,
   resolveSampleCountingStartDate,
@@ -183,15 +182,6 @@ export async function computeGroupAnalyticsSnapshot(
       lessonIsChecked(lesson.id),
   );
 
-  const firstRegularLessonId = findFirstRegularLessonId(
-    lessons.map((lesson) => ({
-      id: lesson.id,
-      kind: lesson.kind as LessonKind,
-      lessonDate: isoFromCalendarDate(lesson.lessonDate),
-      createdAt: lesson.createdAt.toISOString(),
-    })),
-  );
-
   const pupilsByLayer = emptyLayerMap();
   const sampleCounts = emptySampleCounts();
   const layerAPupilIds = new Set<string>();
@@ -244,7 +234,7 @@ export async function computeGroupAnalyticsSnapshot(
       attendanceRate: attendance.rate,
       checkedLessonCount: attendance.checkedWithRecordCount,
       attendedLessonCount: attendance.presentCount,
-      versesAverage: collectVerseAverage(periodPupilChecks, lessons, firstRegularLessonId),
+      versesAverage: collectVerseAverage(periodPupilChecks, lessons),
       testAverage: collectReportAverageScores(
         periodPupilChecks.map((check) => ({
           present: check.present,
@@ -268,7 +258,7 @@ export async function computeGroupAnalyticsSnapshot(
     }
   }
 
-  const charts = buildGroupCharts(periodLessons, checksByLesson, layerAPupilIds, firstRegularLessonId);
+  const charts = buildGroupCharts(periodLessons, checksByLesson, layerAPupilIds);
 
   const layerARows = pupilsByLayer[SAMPLE_LAYER.A];
   const kpiAttendance = averageReportScores(
@@ -312,7 +302,6 @@ function earliestCheckedLessonDate(
 function collectVerseAverage(
   checks: CheckRow[],
   lessons: LessonRow[],
-  firstRegularLessonId: string | null,
 ): ScoreAverageResult {
   const scores: number[] = [];
   for (const check of checks) {
@@ -320,15 +309,7 @@ function collectVerseAverage(
     const lesson = lessons.find((row) => row.id === check.lessonId);
     if (!lesson) continue;
     if (
-      !isVerseRecitationAnalyticsLesson(
-        {
-          id: lesson.id,
-          kind: lesson.kind as LessonKind,
-          lessonDate: isoFromCalendarDate(lesson.lessonDate),
-          createdAt: lesson.createdAt.toISOString(),
-        },
-        firstRegularLessonId,
-      )
+      !isVerseRecitationAnalyticsLesson({ kind: lesson.kind as LessonKind })
     ) {
       continue;
     }
@@ -353,7 +334,6 @@ function buildGroupCharts(
   periodLessons: LessonRow[],
   checksByLesson: Map<string, CheckRow[]>,
   layerAPupilIds: Set<string>,
-  firstRegularLessonId: string | null,
 ): GroupAnalyticsSnapshot["charts"] {
   const attendance: AnalyticsChartPoint[] = [];
   const verses: AnalyticsChartPoint[] = [];
@@ -382,15 +362,7 @@ function buildGroupCharts(
         verseScores: row.verseScores.map((score) => score.score),
       })),
     );
-    const verseEligible = isVerseRecitationAnalyticsLesson(
-      {
-        id: lesson.id,
-        kind: lesson.kind as LessonKind,
-        lessonDate,
-        createdAt: lesson.createdAt.toISOString(),
-      },
-      firstRegularLessonId,
-    );
+    const verseEligible = isVerseRecitationAnalyticsLesson({ kind: lesson.kind as LessonKind });
     verses.push({
       lessonId: lesson.id,
       lessonDate,

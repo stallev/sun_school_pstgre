@@ -5,7 +5,6 @@ import {
   computeAttendanceCounts,
   computeGroupYearTotals,
   computePupilYearTotals,
-  findFirstRegularLessonId,
   isVerseRecitationAnalyticsLesson,
   resolveSampleCountingStartDate,
   type AnalyticsSnapshotReason,
@@ -106,18 +105,6 @@ type CheckRow = {
   notebookScore: number | null;
   verseScores: { score: number }[];
 };
-
-function firstRegularLessonIdForGrade(lessons: LessonRow[], gradeId: string): string | null {
-  const gradeLessons = lessons.filter((lesson) => lesson.gradeId === gradeId);
-  return findFirstRegularLessonId(
-    gradeLessons.map((lesson) => ({
-      id: lesson.id,
-      kind: lesson.kind,
-      lessonDate: isoFromCalendarDate(lesson.lessonDate),
-      createdAt: lesson.createdAt.toISOString(),
-    })),
-  );
-}
 
 function isEnrolledOnLessonDate(
   enrollments: { gradeId: string; startsOn: Date; endsOn: Date | null }[],
@@ -223,11 +210,6 @@ export async function computePupilYearSnapshotMetrics(
 
   const attendance = computeAttendanceCounts(attendanceRows);
 
-  const firstRegularByGrade = new Map<string, string | null>();
-  for (const gradeId of gradeIds) {
-    firstRegularByGrade.set(gradeId, firstRegularLessonIdForGrade(lessons, gradeId));
-  }
-
   const verseScores: number[] = [];
   const reportRows: { present: boolean; submittedLate: boolean; score: number | null }[] = [];
   const notebookRows: { present: boolean; submittedLate: boolean; score: number | null }[] = [];
@@ -239,18 +221,7 @@ export async function computePupilYearSnapshotMetrics(
     const lessonDateIso = isoFromCalendarDate(lesson.lessonDate);
     if (!isEnrolledOnLessonDate(enrollments, lesson.gradeId, lessonDateIso, yearEndIso)) continue;
 
-    if (
-      check.present &&
-      isVerseRecitationAnalyticsLesson(
-        {
-          id: lesson.id,
-          kind: lesson.kind,
-          lessonDate: lessonDateIso,
-          createdAt: lesson.createdAt.toISOString(),
-        },
-        firstRegularByGrade.get(lesson.gradeId) ?? null,
-      )
-    ) {
+    if (check.present && isVerseRecitationAnalyticsLesson(lesson)) {
       const recited = check.verseScores.filter((row) => row.score === 1 || row.score === 2).length;
       verseScores.push(recited);
     }

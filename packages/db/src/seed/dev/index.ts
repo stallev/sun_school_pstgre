@@ -7,7 +7,6 @@ import {
   BIBLE_TRANSLATION_STATUS,
   CONSENT_CHANNEL,
   CONSENT_STATUS,
-  LESSON_KIND,
   LOGIN_PROVIDER,
   SCORE_SOURCE,
   USER_ROLE,
@@ -28,7 +27,6 @@ import {
   deterministicUuid,
   fixtureLessonName,
   type Fixture,
-  type FixtureLesson,
   type GradeKey,
 } from "./fixture";
 import { FIXTURE_USER_KEY, buildPeopleFixture } from "./people";
@@ -304,14 +302,6 @@ export async function seedDevInTx(
 
   const checkedAt = (isoDate: string): Date => new Date(`${isoDate}T13:00:00Z`);
   const lessonByName = new Map(fixture.lessons.map((lesson) => [fixtureLessonName(lesson), lesson]));
-  const previousRegular = (lesson: FixtureLesson): FixtureLesson | null => {
-    for (let index = lesson.index - 1; index >= 0; index -= 1) {
-      const candidate = lessonByName.get(fixtureLessonName({ ...lesson, index }));
-      if (candidate?.kind === LESSON_KIND.REGULAR) return candidate;
-    }
-    return null;
-  };
-
   const checkRows = fixture.checks.map((check) => {
     const lesson = lessonByName.get(fixtureLessonName({ gradeKey: check.gradeKey, yearKey: check.yearKey, index: check.lessonIndex }))!;
     return {
@@ -334,10 +324,9 @@ export async function seedDevInTx(
 
   const verseRows = fixture.checks.flatMap((check) => {
     const lesson = lessonByName.get(fixtureLessonName({ gradeKey: check.gradeKey, yearKey: check.yearKey, index: check.lessonIndex }))!;
-    const source = previousRegular(lesson);
     return check.verseScores.map((score, position) => ({
       checkId: id(`check:${fixtureLessonName(lesson)}:${check.pupilKey}`),
-      lessonVerseId: id(`lesson-verse:${fixtureLessonName(source!)}:${position + 1}`),
+      lessonVerseId: id(`lesson-verse:${fixtureLessonName(lesson)}:${position + 1}`),
       score,
       source: SCORE_SOURCE.MANUAL,
       scoredAt: checkedAt(lesson.date),

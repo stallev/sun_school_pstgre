@@ -2,12 +2,16 @@ import { connection } from "next/server";
 import { USER_ROLE } from "@sunschool/domain";
 import { notFound } from "next/navigation";
 import { CheckScreen } from "@/components/teacher/check-screen.client";
+import { LessonVersesAccordion } from "@/components/teacher/LessonVersesAccordion";
 import { loadSequentialCheckPage } from "@/data/checks/load-sequential-check-page.server";
+import { loadLessonVerseTexts } from "@/data/lessons/load-lesson-verse-texts.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary } from "@/lib/messages/get-dictionary";
 import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-messages.server";
+import { fillMessage } from "@/lib/messages/fill-message";
 
 export type LessonCheckPageProps = {
   params: Promise<{ lessonId: string }>;
@@ -21,7 +25,8 @@ export const LessonCheckPageContent = async ({ params, searchParams }: LessonChe
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
   const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);
   const locale = await getUiLocale();
-  const data = await loadSequentialCheckPage(await getPrisma(), actor.userId, lessonId, isAdmin);
+  const db = await getPrisma();
+  const data = await loadSequentialCheckPage(db, actor.userId, lessonId, isAdmin);
   const [teacherDict, commonDict] = await Promise.all([
     getDictionary(locale, "teacher"),
     getDictionary(locale, "common"),
@@ -33,12 +38,21 @@ export const LessonCheckPageContent = async ({ params, searchParams }: LessonChe
     notFound();
   }
 
+  const verses = await loadLessonVerseTexts(db, { id: data.lessonId, kind: data.lessonKind }, messageLocaleToAppLocale(locale));
+
   return (
     <CheckScreen
       data={data}
       initialPupilId={pupilParam ?? null}
       messages={messages}
       dictionaries={dictionaries}
+      versesAccordion={
+        <LessonVersesAccordion
+          title={fillMessage(messages.versesAccordionTitle, { ordinal: data.lessonOrdinal })}
+          verses={verses}
+          missingLabel={messages.versesAccordionMissing}
+        />
+      }
     />
   );
 };

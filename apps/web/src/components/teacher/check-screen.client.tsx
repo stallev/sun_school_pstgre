@@ -2,6 +2,7 @@
 
 import { LESSON_KIND } from "@sunschool/domain";
 import { ChevronDownIcon, LayoutGridIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
@@ -27,9 +28,17 @@ type CheckScreenProps = {
   initialPupilId: string | null;
   messages: TeacherCheckMessages;
   dictionaries: Record<string, Dictionary>;
+  /** Server-rendered verse texts accordion (check flow spec §5.2б). */
+  versesAccordion?: ReactNode;
 };
 
-export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: CheckScreenProps) => {
+export const CheckScreen = ({
+  data,
+  initialPupilId,
+  messages,
+  dictionaries,
+  versesAccordion = null,
+}: CheckScreenProps) => {
   const screen = useSequentialCheck({ data, initialPupilId, messages, dictionaries });
 
   if (data.pupils.length === 0) {
@@ -145,6 +154,8 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
 
       <p className="sr-only" aria-live="polite">{screen.liveMessage}</p>
 
+      {versesAccordion}
+
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start">
         <details className="rounded-xl border border-line bg-surface lg:hidden">
           <summary className="flex h-11 cursor-pointer list-none items-center justify-between px-3">
@@ -205,7 +216,6 @@ export const CheckScreen = ({ data, initialPupilId, messages, dictionaries }: Ch
                 lessonKind={data.lessonKind}
                 hasTest={data.hasTest}
                 versesToRecite={data.versesToRecite}
-                previousLessonOrdinal={data.previousLessonOrdinal}
                 isCorrection={screen.isCorrection}
                 reason={screen.reason}
                 presentError={screen.presentError}

@@ -69,9 +69,6 @@ export const pickTeacherLessonScreensMessages = (
     teacher,
     "lesson.detail.assigned_verses_hint_next_fallback",
   ),
-  recitingVersesTitle: getMessage(teacher, "lesson.detail.reciting_verses_title"),
-  recitingVersesHintPrev: (previousOrdinal) =>
-    fill(getMessage(teacher, "lesson.detail.reciting_verses_hint_prev"), { n: previousOrdinal }),
   reviewSectionTitle: getMessage(teacher, "lesson.detail.review_section_title"),
   reviewSectionDescription: getMessage(teacher, "lesson.detail.review_section_description"),
   dateLabel: getMessage(teacher, "lesson.detail.date"),

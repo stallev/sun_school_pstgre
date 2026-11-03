@@ -39,7 +39,6 @@ export type SequentialCheckPageData =
       yearClosed: boolean;
       isAdmin: boolean;
       versesToRecite: readonly LessonVerseToRecite[];
-      previousLessonOrdinal: number | null;
       scoring: ScoringSnapshot;
       pupils: SequentialCheckPupil[];
     };
