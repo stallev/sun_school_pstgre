@@ -77,7 +77,7 @@ export const LessonCheckTableRow = ({
         {index + 1}
       </TableCell>
       <TableCell className={cn(stickyCell, "left-0 font-medium", conflictCell(hasConflict, "middle"))}>
-        <CustomLink href={href} className="text-cobalt-ink hover:underline">
+        <CustomLink href={href} className="text-cobalt-ink">
           {row.displayName}
         </CustomLink>
         <span className="mt-0.5 flex flex-wrap items-center gap-2">

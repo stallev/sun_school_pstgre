@@ -10,7 +10,7 @@ type PageHeaderProps = {
 };
 
 export const PageHeader = ({ title, description, actions }: PageHeaderProps) => (
-  <header className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between lg:mb-6">
+  <header className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between lg:mb-4">
     <div className="min-w-0 space-y-1">
       <Heading>{title}</Heading>
       {description ? <ContentText tone="secondary">{description}</ContentText> : null}

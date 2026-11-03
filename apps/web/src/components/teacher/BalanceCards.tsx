@@ -37,7 +37,7 @@ export const BalanceCards = ({
           title={
             <button
               type="button"
-              className="min-h-11 text-left text-cobalt-ink underline-offset-2 hover:underline"
+              className="min-h-11 text-left text-cobalt-ink"
               aria-current={isSelected ? "true" : undefined}
               onClick={() => onSelectPupil(row.pupilId)}
             >

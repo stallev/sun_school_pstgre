@@ -1,23 +1,19 @@
-import { previousRegularLesson, type LessonForPreviousRegular } from "../lesson/previous-regular";
+import { LESSON_KIND, type LessonKind } from "../constants/enums";
 
 export type LessonVerseToRecite = {
   lessonVerseId: string;
   position: number;
 };
 
-export type LessonWithVersesForRecite = LessonForPreviousRegular & {
+export type LessonWithVersesForRecite = {
+  kind: LessonKind;
   verses: readonly LessonVerseToRecite[];
 };
 
-/** БП-2 — verses assigned on the previous regular lesson are recited on this lesson. */
+/**
+ * БП-2 — verse scores are entered on the check of the lesson where the verses were assigned
+ * (recited on the next regular lesson, scored in this lesson's record). A review lesson has none.
+ */
 export const resolveVersesToRecite = (
-  lessons: readonly LessonWithVersesForRecite[],
-  currentLessonId: string,
-): readonly LessonVerseToRecite[] => {
-  const previousLesson = previousRegularLesson(lessons, currentLessonId);
-  if (!previousLesson) {
-    return [];
-  }
-  const source = lessons.find((lesson) => lesson.id === previousLesson.id);
-  return source?.verses ?? [];
-};
+  lesson: LessonWithVersesForRecite,
+): readonly LessonVerseToRecite[] => (lesson.kind === LESSON_KIND.REGULAR ? lesson.verses : []);

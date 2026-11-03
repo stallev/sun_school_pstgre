@@ -347,7 +347,6 @@ export function buildFixture(): Fixture {
 
   for (const year of YEARS) {
     for (const gradeKey of Object.values(GRADE_KEY)) {
-      let previousRegular: FixtureLesson | null = null;
       year.lessonDates.forEach((date, index) => {
         const isReview = year.reviewIndexes.includes(index);
         const isHeld = year.status === ACADEMIC_YEAR_STATUS.ACTIVE && index === year.lessonDates.length - 1;
@@ -373,7 +372,7 @@ export function buildFixture(): Fixture {
         const checkedKeys = isHeld
           ? new Set(covered.map((row) => row.pupilKey).sort().slice(0, HELD_LESSON_CHECKED_COUNT))
           : null;
-        const versesToRecite = previousRegular?.verseIndexes ?? [];
+        const versesToRecite = lesson.verseIndexes;
         const yearShift = year.key === YEAR_KEY.Y1 ? -0.06 : year.key === YEAR_KEY.Y2 ? 0 : 0.04;
         const groupShift = gradeKey === GRADE_KEY.JUNIOR ? -0.04 : gradeKey === GRADE_KEY.SENIOR ? 0.04 : 0;
         for (const enrollment of covered) {
@@ -406,7 +405,6 @@ export function buildFixture(): Fixture {
             scoringSnapshot: snapshot,
           });
         }
-        if (!isReview) previousRegular = lesson;
       });
     }
   }

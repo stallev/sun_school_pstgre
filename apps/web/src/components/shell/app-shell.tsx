@@ -39,7 +39,7 @@ export const AppShell = ({
       <main
         id="main"
         tabIndex={-1}
-        className="min-w-0 pb-28 pt-4 outline-none lg:pb-16 lg:pt-7"
+        className="min-w-0 pb-28 pt-2 outline-none lg:pb-16 lg:pt-3"
       >
         <div id="view" className={shellViewContainerClassName}>
           {children}

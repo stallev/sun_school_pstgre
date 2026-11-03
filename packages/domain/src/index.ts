@@ -34,7 +34,6 @@ export * from "./bible/resolve-translation-ref";
 export * from "./bible/build-verse-text";
 export * from "./lesson/schemas";
 export * from "./lesson/ordinal";
-export * from "./lesson/previous-regular";
 export * from "./check/compute-points";
 export * from "./check/scoring-snapshot";
 export * from "./check/compute-late";

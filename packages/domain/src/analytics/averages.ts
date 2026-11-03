@@ -1,5 +1,5 @@
 import { LESSON_KIND, type LessonKind } from "../constants/enums";
-import { compareLessonsForOrdinal, type LessonOrdinalKey } from "../lesson/ordinal";
+import type { LessonOrdinalKey } from "../lesson/ordinal";
 
 export type ScoreAverageResult = {
   average: number | null;
@@ -44,29 +44,9 @@ export type LessonKindKey = LessonOrdinalKey & {
   kind: LessonKind;
 };
 
-/** Первый обычный урок года (БП-2 — не участвует в аналитике стихов). */
-export const findFirstRegularLessonId = (
-  lessons: readonly LessonKindKey[],
-): string | null => {
-  const regularLessons = [...lessons]
-    .filter((lesson) => lesson.kind === LESSON_KIND.REGULAR)
-    .sort(compareLessonsForOrdinal);
-  return regularLessons[0]?.id ?? null;
-};
-
-/** Урок, на котором рассказывали стихи предыдущего обычного урока (не первый обычный, не обзорный). */
-export const isVerseRecitationAnalyticsLesson = (
-  lesson: LessonKindKey,
-  firstRegularLessonId: string | null,
-): boolean => {
-  if (lesson.kind !== LESSON_KIND.REGULAR) {
-    return false;
-  }
-  if (!firstRegularLessonId || lesson.id === firstRegularLessonId) {
-    return false;
-  }
-  return true;
-};
+/** Урок, в запись которого вносят оценки за стихи (БП-2): любой обычный, обзорный не участвует. */
+export const isVerseRecitationAnalyticsLesson = (lesson: Pick<LessonKindKey, "kind">): boolean =>
+  lesson.kind === LESSON_KIND.REGULAR;
 
 /** «Рассказан» — оценка 1 или 2 (БП-2). */
 export const countRecitedVerses = (verseScores: readonly (number | null)[]): number =>

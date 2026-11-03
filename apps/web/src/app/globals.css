@@ -157,3 +157,11 @@
     outline-offset: 2px;
   }
 }
+
+/* Unlayered: beats Tailwind utilities, so link and button text never underlines. */
+a:hover,
+a:focus-visible,
+button:hover,
+button:focus-visible {
+  text-decoration-line: none;
+}

@@ -46,7 +46,7 @@ Gate G3 (к P5): `database_schema_v1.md` canonical, контракты W8 и spe
 | 11 | Явное завершение проверки урока; два урока в день; удаление урока без проверок teacher'ом | 2026-10-11 | [`homework_check_contract.md`](../implementation/mvp/contracts/homework_check_contract.md) |
 | 12 | Первый admin проходит экран согласия; год не переоткрывается; деактивация группы с зачислениями — с подтверждением; teacher выдаёт кирпичики и в закрытом году; слово подтверждения удаления по языку | 2026-10-11 | контракты W8-03, W8-04, W8-06, W8-08 |
 | 13 | Одобрение `TEACHER` без групп — с предупреждением `NO_GROUPS` | 2026-10-11 | [`access_requests_and_roles_contract.md`](../implementation/mvp/contracts/access_requests_and_roles_contract.md) §5.4 |
-| 14 | Метрика рейтинга — сумма баллов за год; сдвиг оценок за стихи (поле i урока N → стих i урока N−1) | 2026-10-11 | спец. 12.2 п. 5, 15 |
+| 14 | Метрика рейтинга — сумма баллов за год; импорт оценок за стихи: поле i урока N → стих i урока N−1. **С 2026-11-03** оценка за стих хранится в записи урока, где стих задан (БП-2): при импорте значение попадает в запись урока N−1 | 2026-10-11, уточнено 2026-11-03 | спец. 12.2 п. 5, 15, 22 |
 | 15 | Переходный период согласий перенесённых детей: `LEGACY_PENDING`, 60 дней | 2026-10-11 | [ADR-011](../prds/07_governance/adr_011_transitional_child_consent.md) |
 | 16 | **Перенос данных из действующего приложения реализует владелец** вне проекта | 2026-10-11 | [`P07_phase_description.md`](../implementation/mvp/phases_tasks_descriptions/P07_phase_description.md), [`migration_runbook.md`](../prds/06_operations/migration_runbook.md) §11 |
 

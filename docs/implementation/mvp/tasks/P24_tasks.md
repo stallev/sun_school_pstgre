@@ -101,6 +101,39 @@ Tier T3: ролевой срез ПД (дата рождения) в загру�
 
 **CU DoD:** `node scripts/cu-verify.mjs --full` · тесты `birthday-in-month`, `calendar-birthdays` (teacher / admin / parent)
 
+### P24-CU8 — feat(web): record verse scores on the lesson where verses are assigned · Review: reviewer · Commit: auto
+
+Tier T2: изменение доменного правила БП-2 (решение владельца 2026-11-03) и чтения экранов проверки; схема БД не меняется, запись `saveChecked` / `savePartialCheck` не меняется.
+
+- [x] P24-T8 · T2 · Spec: [БП-2](../../../my_specs/sunday_school_data_analytics_spec.md), [INV-15](../../../prds/02_domain_model/domain_invariants.md), [check contract §verseScores](../contracts/homework_check_contract.md), [check flow §5.4](../specs/homework_check_flow_spec.md)
+      Files: `packages/domain/src/check/resolve-verses-to-recite.ts` (+ test), `packages/domain/src/analytics/averages.ts` (+ test), `packages/db/src/analytics/{group-analytics-snapshot,compute-year-snapshots}.ts`, `apps/web/src/data/analytics/analytics-compute.server.ts`, `apps/web/src/data/checks/{check-read-shared.server,load-sequential-check-page.server,sequential-check-types}.ts`, `apps/web/src/data/lessons/load-lesson-detail-page.server.ts`, `apps/web/src/components/teacher/{CheckCard,CheckScoresSection,check-screen.client,LessonCard}.tsx`, `apps/web/src/lib/messages/{ru,en}/teacher.json` и pick/типы, `packages/db/src/seed/dev/{fixture,index}.ts`
+      Acceptance: экран проверки и сводная таблица показывают стихи **этого** урока; обзорный урок — без стихов; первый обычный урок участвует в аналитике стихов, обзорный — нет (присутствие по уроку, где стихи заданы); `previousLessonOrdinal`, `previousRegularOrdinal`, `recitingVerses`, `check.no_verses_first_lesson`, `lesson.detail.reciting_verses_*` удалены; сид dev пишет оценки за стихи в запись того же урока и пересидирован (`npm run db:seed:dev`)
+      Paths: H [БП-2: оценка за стихи урока N вносится на странице проверки урока N] · N [обзорный урок; обычный урок без стихов; первый урок года] · S n/a — права и DTO записи не меняются
+
+**CU DoD:** `node scripts/cu-verify.mjs --full` · тесты `resolve-verses-to-recite`, `averages`, `check-read-models`, `check-scores-section`
+
+### P24-CU9 — feat(web): add collapsed verses accordion to check and table screens · Review: reviewer · Commit: auto
+
+Tier T1: чтение текстов стихов на сервере (после проверки доступа экрана), права и мутации не меняются.
+
+- [x] P24-T9 · T1 · Spec: [check flow §5.2б, §7.1, R-15](../specs/homework_check_flow_spec.md) · Lab: нативный `details`, без нового примитива
+      Files: `apps/web/src/data/lessons/load-lesson-verse-texts.server.ts`, `apps/web/src/data/lessons/load-lesson-detail-page.server.ts`, `apps/web/src/components/teacher/LessonVersesAccordion.tsx`, `apps/web/src/components/teacher/lesson-verses-accordion.test.tsx`, `apps/web/src/components/teacher/{LessonCheckPageContent,LessonTableContent}.server.tsx`, `apps/web/src/components/teacher/{check-screen.client,LessonCheckTable}.tsx`, `apps/web/src/lib/messages/{ru,en}/teacher.json`, `apps/web/src/lib/messages/{teacher-check-messages,pick-teacher-check-messages.server}.ts`
+      Acceptance: на `/lessons/[id]/check` и `/lessons/[id]/table` обычного урока со стихами — аккордеон «Стихи урока N», свёрнут по умолчанию, в заголовке ссылки стихов одной строкой, внутри тексты; обзорный урок и урок без стихов — аккордеона нет; нет текста в переводе группы — подпись `verses_accordion_missing`; тексты грузятся после успешной проверки доступа экрана (чужой урок → 404 до загрузки)
+      Paths: H [§5.2б: учитель раскрывает стихи урока, не уходя с экрана] · N [обзорный урок; нет стихов; нет текста в переводе] · S n/a — текст стиха не персональные данные, доступ к экрану проверен до загрузки
+
+**CU DoD:** `node scripts/cu-verify.mjs` · тест `lesson-verses-accordion`
+
+### P24-CU10 — style(ui): tighten page top spacing · Review: diff-only · Commit: auto
+
+- [x] P24-T10 · T0 · Spec: [shell R-13](../specs/global_shell_spec.md) · [prototype_class_parity P-30](../specs/prototype_class_parity_spec.md)
+      Files: `apps/web/src/components/shell/app-shell.tsx`, `apps/web/src/components/patterns/PageHeader.tsx`
+      Acceptance: `main` — `pt-2` / `lg:pt-3` (было `pt-4` / `lg:pt-7`); `PageHeader` — `mb-3 gap-2 lg:mb-4` (было `mb-5 gap-3 lg:mb-6`); прототип и строка P-30 обновлены; `npm run parity:check` по P-30 без расхождений
+      Paths: H [R-13: первый блок страницы ближе к шапке] · N n/a · S n/a — только отступы
+
+**CU DoD:** `node scripts/cu-verify.mjs`
+
+> Владелец (2026-11-03) попросил один коммит на CU8–CU10.
+
 ## Verification (phase)
 
 - [ ] Все CU закоммичены; у каждого trace `Review: …`
@@ -125,3 +158,5 @@ Tier T3: ролевой срез ПД (дата рождения) в загру�
 | Date | Change |
 |------|--------|
 | 2026-11-03 | v1.0 — Canonical (подготовка P24): CU1–CU7, Phase DoR audit; документы, прототип и parity обновлены до CU1 |
+| 2026-11-03 | v1.2 — CU9 аккордеон стихов на проверке и таблице, CU10 компактный верх страниц |
+| 2026-11-03 | v1.1 — CU8: оценки за стихи вносятся на странице проверки урока, где стихи заданы (БП-2 уточнено) |

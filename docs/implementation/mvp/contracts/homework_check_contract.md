@@ -58,7 +58,7 @@
 | `homeworkChecked` | выставляет только `saveChecked` |
 | `testScore` | целое 0–10 или `NULL` («не оценивалось»); запрещено на `REVIEW` |
 | `notebookScore` | целое 0–10 или `NULL` |
-| `verseScores[]` | по стихам **предыдущего обычного урока** (БП-2): `lessonVerseId`, `score` ∈ {0,1,2} или `NULL` |
+| `verseScores[]` | по стихам **этого урока** (БП-2; на обзорном уроке — пусто): `lessonVerseId`, `score` ∈ {0,1,2} или `NULL` |
 | `singing` | bool |
 | `comment` | ≤ 500, необязательно |
 | `expectedUpdatedAt` | для оптимистичной блокировки (TX-3) |

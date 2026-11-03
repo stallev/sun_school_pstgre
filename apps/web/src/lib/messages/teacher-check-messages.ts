@@ -19,8 +19,9 @@ export type TeacherCheckMessages = {
   presentHint: string;
   singingLabel: string;
   reviewHint: string;
-  versesIntro: string;
-  noVersesFirstLesson: string;
+  noVerses: string;
+  versesAccordionTitle: string;
+  versesAccordionMissing: string;
   noTestOnLesson: string;
   verseLabel: string;
   testLabel: string;

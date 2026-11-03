@@ -18,7 +18,7 @@ export const AuditEntryRow = ({ entry, occurredLabel, actionLabel }: AuditEntryR
     <TableCell className="px-5 py-4 text-sm">{actionLabel}</TableCell>
     <TableCell className="px-5 py-4 text-sm">
       {entry.entityHref ? (
-        <CustomLink href={entry.entityHref} className="text-cobalt-ink hover:underline">
+        <CustomLink href={entry.entityHref} className="text-cobalt-ink">
           {entry.entityLabel}
         </CustomLink>
       ) : (

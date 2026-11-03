@@ -45,7 +45,7 @@
 | `domain` | `computePoints`, `computeLate`, `nextLessonDate`, схемы входов проверки, `resolveVersesToRecite` (БП-2) |
 | Проверка | `savePartialCheck`, `saveChecked`, `correctCheck`, `overrideVerseScore`, `completeLessonCheck` |
 | События оценок | `homework_score_event` на каждое изменённое поле; вычисление `late` по поясу школы |
-| Чтение | roster урока, стихи предыдущего обычного урока, прогресс «N из M», сводные данные |
+| Чтение | roster урока, стихи этого урока (БП-2, с 2026-11-03), прогресс «N из M», сводные данные |
 | Экраны | `/check`, `/lessons/[lessonId]/check`, `/lessons/[lessonId]/table`; прогресс на `/today`; статусы в `/lessons` |
 | Dev | фикстуры: проверки уроков 1–7, частичная проверка урока 8, «сдано позже» |
 

@@ -33,8 +33,6 @@ export type TeacherLessonScreensMessages = {
   assignedVersesTitle: string;
   assignedVersesHintNext: (nextOrdinal: number) => string;
   assignedVersesHintNextFallback: string;
-  recitingVersesTitle: string;
-  recitingVersesHintPrev: (previousOrdinal: number) => string;
   reviewSectionTitle: string;
   reviewSectionDescription: string;
   dateLabel: string;

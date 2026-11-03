@@ -2,14 +2,18 @@ import { connection } from "next/server";
 import { USER_ROLE } from "@sunschool/domain";
 import { notFound } from "next/navigation";
 import { LessonCheckTable } from "@/components/teacher/LessonCheckTable";
+import { LessonVersesAccordion } from "@/components/teacher/LessonVersesAccordion";
 import { loadLessonTablePage } from "@/data/checks/load-lesson-table-page.server";
+import { loadLessonVerseTexts } from "@/data/lessons/load-lesson-verse-texts.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
 import { getDictionary } from "@/lib/messages/get-dictionary";
 import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-messages.server";
+import { fillMessage } from "@/lib/messages/fill-message";
 
 type LessonTableContentProps = {
   params: Promise<{ lessonId: string }>;
@@ -22,7 +26,8 @@ export const LessonTableContent = async ({ params }: LessonTableContentProps) =>
   const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);
   const locale = await getUiLocale();
   const timeZone = await getSchoolTimezone();
-  const data = await loadLessonTablePage(await getPrisma(), actor.userId, lessonId, isAdmin);
+  const db = await getPrisma();
+  const data = await loadLessonTablePage(db, actor.userId, lessonId, isAdmin);
   const [teacherDict, commonDict] = await Promise.all([
     getDictionary(locale, "teacher"),
     getDictionary(locale, "common"),
@@ -35,6 +40,7 @@ export const LessonTableContent = async ({ params }: LessonTableContentProps) =>
   }
 
   const lessonDateLabel = formatLessonDisplayDate(data.lessonDateIso, { locale, timeZone });
+  const verses = await loadLessonVerseTexts(db, { id: data.lessonId, kind: data.lessonKind }, messageLocaleToAppLocale(locale));
 
   return (
     <LessonCheckTable
@@ -42,6 +48,13 @@ export const LessonTableContent = async ({ params }: LessonTableContentProps) =>
       lessonDateLabel={lessonDateLabel}
       messages={messages}
       dictionaries={dictionaries}
+      versesAccordion={
+        <LessonVersesAccordion
+          title={fillMessage(messages.versesAccordionTitle, { ordinal: data.lessonOrdinal })}
+          verses={verses}
+          missingLabel={messages.versesAccordionMissing}
+        />
+      }
     />
   );
 };

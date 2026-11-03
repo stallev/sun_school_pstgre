@@ -4,7 +4,6 @@ import {
   averageRecitedVersesForLesson,
   collectReportAverageScores,
   countRecitedVerses,
-  findFirstRegularLessonId,
   isVerseRecitationAnalyticsLesson,
   scoreCountsTowardReportAverage,
 } from "./averages";
@@ -57,13 +56,11 @@ describe("verse analytics lessons (БП-2)", () => {
   const firstRegularLesson = lessons[0]!;
   const reviewLesson = lessons[1]!;
   const secondRegularLesson = lessons[2]!;
-  const firstRegularId = findFirstRegularLessonId(lessons);
 
-  it("skips first regular and review lessons", () => {
-    expect(firstRegularId).toBe("regular-1");
-    expect(isVerseRecitationAnalyticsLesson(firstRegularLesson, firstRegularId)).toBe(false);
-    expect(isVerseRecitationAnalyticsLesson(reviewLesson, firstRegularId)).toBe(false);
-    expect(isVerseRecitationAnalyticsLesson(secondRegularLesson, firstRegularId)).toBe(true);
+  it("counts every regular lesson including the first, and skips review lessons", () => {
+    expect(isVerseRecitationAnalyticsLesson(firstRegularLesson)).toBe(true);
+    expect(isVerseRecitationAnalyticsLesson(reviewLesson)).toBe(false);
+    expect(isVerseRecitationAnalyticsLesson(secondRegularLesson)).toBe(true);
   });
 
   it("counts recited verses and averages per lesson", () => {

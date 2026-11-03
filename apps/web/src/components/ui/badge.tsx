@@ -17,7 +17,7 @@ const badgeVariants = cva(
           "border-border text-foreground [a]:hover:bg-line [a]:hover:text-muted-foreground",
         ghost:
           "hover:bg-line hover:text-muted-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary",
       },
     },
     defaultVariants: {

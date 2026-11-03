@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
@@ -32,6 +32,8 @@ type LessonCheckTableProps = {
   lessonDateLabel: string;
   messages: TeacherCheckMessages;
   dictionaries: Record<string, Dictionary>;
+  /** Server-rendered verse texts accordion (check flow spec §5.2б). */
+  versesAccordion?: ReactNode;
 };
 
 export const LessonCheckTable = ({
@@ -39,6 +41,7 @@ export const LessonCheckTable = ({
   lessonDateLabel,
   messages,
   dictionaries,
+  versesAccordion = null,
 }: LessonCheckTableProps) => {
   const table = useLessonCheckTable({
     lessonId: data.lessonId,
@@ -122,6 +125,8 @@ export const LessonCheckTable = ({
         total={table.stats.total}
         label={counts}
       />
+
+      {versesAccordion}
 
       <LessonCheckTableFilters
         filterPresent={table.filterPresent}

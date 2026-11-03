@@ -47,7 +47,7 @@ export const GroupPageContent = async ({ searchParams }: GroupPageProps) => {
   const defaultDate = isoTodayUtc();
   const maxBirthDateIso = subtractCalendarDays(defaultDate, 1);
   const dateFieldCopy = getFormDateFieldCopy(commonDict, locale);
-  const closeLabel = getMessage(commonDict, "controls.close");
+  const closeLabel = getMessage(commonDict, "shell.close");
   const retryLabel = getMessage(commonDict, "states.error_retry");
 
   if (data.kind === "no_active_year") {

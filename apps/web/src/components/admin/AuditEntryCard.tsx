@@ -32,7 +32,7 @@ export const AuditEntryCard = ({
       {
         label: columnEntity,
         value: entry.entityHref ? (
-          <CustomLink href={entry.entityHref} className="text-cobalt-ink hover:underline">
+          <CustomLink href={entry.entityHref} className="text-cobalt-ink">
             {entry.entityLabel}
           </CustomLink>
         ) : (

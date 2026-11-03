@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { LESSON_KIND, LESSON_STATUS } from "@sunschool/domain";
-import { previousRegularLesson, resolveVersesToRecite } from "@sunschool/domain";
+import { resolveVersesToRecite } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { calendarDateFromIso } from "@/data/school/calendar-date";
 import * as checkReadShared from "./check-read-shared.server";
@@ -81,37 +81,10 @@ describe("pickCurrentHeldLessonId", () => {
 });
 
 describe("resolveVersesToRecite selection", () => {
-  it("uses verses from the previous regular lesson (БП-2)", () => {
-    const lessons = [
-      {
-        id: "regular-1",
-        lessonDate: "2026-10-01",
-        createdAt: "2026-10-01T08:00:00.000Z",
-        kind: LESSON_KIND.REGULAR,
-        verses: [{ lessonVerseId: "verse-1", position: 1 }],
-      },
-      {
-        id: "review-1",
-        lessonDate: "2026-10-08",
-        createdAt: "2026-10-08T08:00:00.000Z",
-        kind: LESSON_KIND.REVIEW,
-        verses: [],
-      },
-      {
-        id: "regular-2",
-        lessonDate: "2026-10-15",
-        createdAt: "2026-10-15T08:00:00.000Z",
-        kind: LESSON_KIND.REGULAR,
-        verses: [{ lessonVerseId: "verse-2", position: 1 }],
-      },
-    ];
-    expect(previousRegularLesson(lessons, "regular-2")?.id).toBe("regular-1");
-    expect(resolveVersesToRecite(lessons, "regular-2")).toEqual([
-      { lessonVerseId: "verse-1", position: 1 },
-    ]);
-    expect(resolveVersesToRecite(lessons, "review-1")).toEqual([
-      { lessonVerseId: "verse-1", position: 1 },
-    ]);
+  it("uses the verses of the lesson itself and none on a review lesson (БП-2)", () => {
+    const verses = [{ lessonVerseId: "verse-2", position: 1 }];
+    expect(resolveVersesToRecite({ kind: LESSON_KIND.REGULAR, verses })).toEqual(verses);
+    expect(resolveVersesToRecite({ kind: LESSON_KIND.REVIEW, verses })).toEqual([]);
   });
 });
 
