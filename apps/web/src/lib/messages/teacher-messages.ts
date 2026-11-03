@@ -23,4 +23,11 @@ export type TeacherRosterMessages = {
   yearClosedDescription: string;
   pageTitle: string;
   pageSubtitle: string;
+  birthDateButton: string;
+  birthDateDialogTitle: string;
+  birthDateDialogDescription: string;
+  birthDateLabel: string;
+  birthDateSubmit: string;
+  birthDateSaving: string;
+  birthDateToastSaved: string;
 };

@@ -22,7 +22,16 @@
     "no_year_title": "The school year has not started",
     "no_year_description": "The roster will appear after the school year is activated.",
     "year_closed_title": "Year closed — read only",
-    "year_closed_description": "You cannot change the group roster."
+    "year_closed_description": "You cannot change the group roster.",
+    "birth_date": {
+      "button": "Date of birth",
+      "dialog_title": "Date of birth",
+      "dialog_description": "Enter the pupil's date of birth.",
+      "label": "Date of birth",
+      "submit": "Save",
+      "saving": "Saving…",
+      "toast_saved": "Date of birth saved"
+    }
   },
   "lesson": {
     "translation_rst": "Russian Synodal",

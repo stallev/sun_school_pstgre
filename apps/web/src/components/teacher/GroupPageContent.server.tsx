@@ -12,10 +12,12 @@ import { GroupSuggestionCount } from "@/components/achievements/GroupSuggestionC
 import { GroupPointsCardLink } from "@/components/achievements/GroupPointsCardLink.server";
 import { RosterTable } from "@/components/teacher/RosterTable";
 import { loadGroupYearSummaryPage } from "@/data/school/load-group-year-summary.server";
+import { subtractCalendarDays } from "@/data/school/calendar-date";
 import { isoTodayUtc } from "@/data/school/school-pupil-shared.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
 import { fillMessage } from "@/lib/messages/fill-message";
@@ -43,6 +45,9 @@ export const GroupPageContent = async ({ searchParams }: GroupPageProps) => {
   const dictionaries = { teacher: teacherDict, common: commonDict, admin: adminDict };
   const formError = getMessage(commonDict, "errors.form");
   const defaultDate = isoTodayUtc();
+  const maxBirthDateIso = subtractCalendarDays(defaultDate, 1);
+  const dateFieldCopy = getFormDateFieldCopy(commonDict, locale);
+  const closeLabel = getMessage(commonDict, "controls.close");
   const retryLabel = getMessage(commonDict, "states.error_retry");
 
   if (data.kind === "no_active_year") {
@@ -131,6 +136,9 @@ export const GroupPageContent = async ({ searchParams }: GroupPageProps) => {
           messages={messages}
           dictionaries={dictionaries}
           formError={formError}
+          maxBirthDateIso={maxBirthDateIso}
+          dateFieldCopy={dateFieldCopy}
+          closeLabel={closeLabel}
         />
       )}
     </div>

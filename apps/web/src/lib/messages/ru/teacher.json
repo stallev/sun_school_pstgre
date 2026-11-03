@@ -22,7 +22,16 @@
     "no_year_title": "Учебный год ещё не начат",
     "no_year_description": "Состав группы появится после активации учебного года.",
     "year_closed_title": "Год закрыт — только чтение",
-    "year_closed_description": "Изменять состав группы нельзя."
+    "year_closed_description": "Изменять состав группы нельзя.",
+    "birth_date": {
+      "button": "Дата рождения",
+      "dialog_title": "Дата рождения",
+      "dialog_description": "Укажите дату рождения ученика.",
+      "label": "Дата рождения",
+      "submit": "Сохранить",
+      "saving": "Сохраняем…",
+      "toast_saved": "Дата рождения сохранена"
+    }
   },
   "lesson": {
     "translation_rst": "Синодальный перевод",

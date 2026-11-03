@@ -11,11 +11,13 @@ import { FormSelect } from "@/components/ui/form-select";
 import { StatusText } from "@/components/ui/status-text";
 import type { TeacherAddCandidate, TeacherRosterRow } from "@/data/school/load-teacher-group-page.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
+import type { FormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import type { TeacherRosterMessages } from "@/lib/messages/teacher-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { PRODUCT_TOAST_DURATION_MS } from "@/lib/ui/product-toast";
 import { toast } from "sonner";
+import { PupilBirthDateDialog } from "@/components/teacher/PupilBirthDateDialog.client";
 
 type RosterTableProps = {
   gradeId: string;
@@ -26,6 +28,9 @@ type RosterTableProps = {
   messages: TeacherRosterMessages;
   dictionaries: Record<string, Dictionary>;
   formError: string;
+  maxBirthDateIso: string;
+  dateFieldCopy: FormDateFieldCopy;
+  closeLabel: string;
 };
 
 export const RosterTable = ({
@@ -37,6 +42,9 @@ export const RosterTable = ({
   messages,
   dictionaries,
   formError,
+  maxBirthDateIso,
+  dateFieldCopy,
+  closeLabel,
 }: RosterTableProps) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -133,6 +141,17 @@ export const RosterTable = ({
                   ? messages.consentYes
                   : messages.consentNo}
             </StatusText>
+            <PupilBirthDateDialog
+              pupilId={row.pupilId}
+              birthDateIso={row.birthDateIso}
+              canEdit={canMutate}
+              maxDateIso={maxBirthDateIso}
+              dateFieldCopy={dateFieldCopy}
+              closeLabel={closeLabel}
+              messages={messages}
+              dictionaries={dictionaries}
+              formError={formError}
+            />
           </li>
         ))}
       </ul>

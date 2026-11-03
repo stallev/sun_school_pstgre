@@ -9,17 +9,37 @@ import {
   type UpdatePupilInput,
 } from "@sunschool/domain";
 import { writeAudit, type Prisma, type PrismaClient } from "@sunschool/db";
-
-type Tx = Prisma.TransactionClient;
-import { isMutationErr } from "../access/access-admin-guards.server";
 import { mutationFromZodError } from "../access/map-zod-fields";
-import { calendarDateFromIso } from "./calendar-date";
+import { calendarDateFromIso, isoFromCalendarDate } from "./calendar-date";
 import {
   isoTodayUtc,
   loadActorOrganizationId,
-  loadPupilInOrganization,
   validateBirthDateInPast,
 } from "./school-pupil-shared.server";
+
+type Tx = Prisma.TransactionClient;
+
+type PupilRow = {
+  id: string;
+  isActive: boolean;
+  birthDate: Date | null;
+  lastName: string;
+  firstName: string;
+  middleName: string | null;
+};
+
+const collectChangedFields = (pupil: PupilRow, input: UpdatePupilInput): string[] => {
+  const fields: string[] = [];
+  if (pupil.isActive !== input.isActive) fields.push("isActive");
+  const currentBirthIso = pupil.birthDate ? isoFromCalendarDate(pupil.birthDate) : "";
+  if (currentBirthIso !== input.birthDate) fields.push("birthDate");
+  if (pupil.lastName !== input.lastName) fields.push("lastName");
+  if (pupil.firstName !== input.firstName) fields.push("firstName");
+  const currentMiddle = pupil.middleName ?? "";
+  const nextMiddle = input.middleName ?? "";
+  if (currentMiddle !== nextMiddle) fields.push("middleName");
+  return fields;
+};
 
 export async function updatePupilInTransaction(
   tx: Tx,
@@ -31,8 +51,22 @@ export async function updatePupilInTransaction(
   const birthError = validateBirthDateInPast(input.birthDate, todayIso);
   if (birthError) return birthError;
 
-  const pupil = await loadPupilInOrganization(tx, input.pupilId, organizationId);
-  if (isMutationErr(pupil)) return pupil;
+  const pupil = await tx.pupil.findFirst({
+    where: { id: input.pupilId, organizationId },
+    select: {
+      id: true,
+      isActive: true,
+      birthDate: true,
+      lastName: true,
+      firstName: true,
+      middleName: true,
+    },
+  });
+  if (!pupil) {
+    return { ok: false, code: MUTATION_ERROR_CODES.NOT_FOUND, message: "common.errors.not_found" };
+  }
+
+  const changedFields = collectChangedFields(pupil, input);
 
   await tx.pupil.update({
     where: { id: input.pupilId },
@@ -52,8 +86,19 @@ export async function updatePupilInTransaction(
     entityId: input.pupilId,
     action: AUDIT_ACTION.SCHOOL_PUPIL_UPDATED,
     oldValue: { isActive: pupil.isActive },
-    newValue: { isActive: input.isActive },
+    newValue: { isActive: input.isActive, fields: changedFields },
   });
+
+  if (changedFields.includes("birthDate")) {
+    await writeAudit(tx, {
+      actorUserId,
+      source: AUDIT_SOURCE.USER,
+      entityType: AUDIT_ENTITY_TYPE.PUPIL,
+      entityId: input.pupilId,
+      action: AUDIT_ACTION.SCHOOL_PUPIL_BIRTHDATE_UPDATED,
+      newValue: { fields: ["birthDate"] },
+    });
+  }
 
   return { ok: true };
 }

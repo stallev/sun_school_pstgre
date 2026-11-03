@@ -17,6 +17,10 @@ export {
   type CanMutateFamilyFacts,
 } from "./family-mutate";
 export {
+  canEditPupilBirthDate,
+  type CanEditPupilBirthDateFacts,
+} from "./pupil-birth-date";
+export {
   canListFamilyContacts,
   type CanListFamilyContactsFacts,
 } from "./family-contacts";
