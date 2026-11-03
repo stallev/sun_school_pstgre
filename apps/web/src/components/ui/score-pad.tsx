@@ -17,9 +17,12 @@ type ScorePadProps = {
   className?: string;
 };
 
-const chipClass = (checked: boolean, invalid?: boolean) =>
+const chipClass = (checked: boolean, invalid: boolean | undefined, layout: ScorePadLayout) =>
   cn(
-    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border bg-surface px-3 text-base font-medium tabular-nums text-ink transition-[color,background-color,border-color,transform] duration-100 ease-out-soft hover:bg-paper active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
+    "inline-flex items-center justify-center rounded-lg border bg-surface text-base font-medium tabular-nums text-ink transition-[color,background-color,border-color,transform] duration-100 ease-out-soft hover:bg-paper active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
+    layout === "inline"
+      ? "h-9 min-w-9 px-1 lg:min-w-0 lg:flex-1"
+      : "min-h-11 min-w-11 px-3",
     checked
       ? "border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink hover:bg-cobalt-soft"
       : invalid
@@ -134,7 +137,7 @@ export const ScorePad = ({
         onClick={() => pick(option)}
         onKeyDown={(event) => onKeyDown(event, index)}
         aria-label={option === null ? notRatedLabel : String(option)}
-        className={cn(chipClass(checked), wide && "col-span-full w-full min-w-0")}
+        className={cn(chipClass(checked, undefined, layout), wide && "col-span-full w-full min-w-0")}
       >
         {labelFor(option)}
       </button>
@@ -179,7 +182,12 @@ export const ScorePad = ({
       aria-label={aria["aria-label"]}
       aria-disabled={disabled || undefined}
       aria-busy={ariaBusy || undefined}
-      className={cn("inline-flex flex-wrap justify-center gap-0.5", className)}
+      className={cn(
+        layout === "inline"
+          ? "flex flex-wrap gap-0.5 lg:flex-nowrap lg:gap-1"
+          : "inline-flex flex-wrap justify-center gap-0.5",
+        className,
+      )}
     >
       {options.map((option, index) => renderChip(option, index))}
     </div>

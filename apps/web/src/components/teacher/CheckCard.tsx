@@ -60,34 +60,52 @@ export const CheckCard = ({
 
   return (
     <div className="divide-y divide-line">
-      <div className="space-y-2 py-3">
-        <ContentText className="font-medium text-ink">{messages.presentLabel}</ContentText>
-        <SegmentedControl
-          aria-label={messages.presentLabel}
-          className="grid w-full grid-cols-2"
-          options={[
-            { value: "yes", label: messages.presentYes },
-            { value: "no", label: messages.presentNo },
-          ]}
-          value={presentValue}
-          onValueChange={(next) => onPresentChange(next === "yes")}
-          disabled={disabled}
-          invalid={Boolean(presentError)}
-        />
-        {presentError ? <AlertText>{presentError}</AlertText> : null}
-        <ContentText tone="secondary" className="text-xs">{messages.presentHint}</ContentText>
-      </div>
-      <div className="flex flex-wrap items-center gap-3 py-3">
-        <ContentText className="font-medium text-ink">{messages.singingLabel}</ContentText>
-        <Switch
-          checked={pupil.singing}
-          onCheckedChange={onSingingChange}
-          disabled={disabled}
-          aria-label={messages.singingLabel}
-        />
-        {isReview ? (
-          <ContentText tone="secondary" className="text-sm">{messages.reviewHint}</ContentText>
-        ) : null}
+      <div className="py-3">
+        <div className="flex flex-col divide-y divide-line lg:flex-row lg:flex-wrap lg:divide-y-0 lg:items-center lg:gap-x-8 lg:gap-y-3">
+          <div className="space-y-1 py-3 lg:py-0">
+            <div className="flex flex-wrap items-center gap-3">
+              <ContentText className="font-medium text-ink">{messages.presentLabel}</ContentText>
+              <SegmentedControl
+                fit
+                aria-label={messages.presentLabel}
+                options={[
+                  { value: "yes", label: messages.presentYes },
+                  { value: "no", label: messages.presentNo },
+                ]}
+                value={presentValue}
+                onValueChange={(next) => onPresentChange(next === "yes")}
+                disabled={disabled}
+                invalid={Boolean(presentError)}
+              />
+            </div>
+            <div className="space-y-1 lg:hidden">
+              {presentError ? <AlertText>{presentError}</AlertText> : null}
+              <ContentText tone="secondary" className="text-sm">
+                {messages.presentHint}
+              </ContentText>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 py-3 lg:py-0">
+            <ContentText className="font-medium text-ink">{messages.singingLabel}</ContentText>
+            <Switch
+              checked={pupil.singing}
+              onCheckedChange={onSingingChange}
+              disabled={disabled}
+              aria-label={messages.singingLabel}
+            />
+            {isReview ? (
+              <ContentText tone="secondary" className="text-sm">
+                {messages.reviewHint}
+              </ContentText>
+            ) : null}
+          </div>
+          <div className="hidden space-y-1 lg:block lg:basis-full">
+            {presentError ? <AlertText>{presentError}</AlertText> : null}
+            <ContentText tone="secondary" className="text-sm">
+              {messages.presentHint}
+            </ContentText>
+          </div>
+        </div>
       </div>
       <CheckScoresSection
         pupil={pupil}
