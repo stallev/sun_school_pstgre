@@ -37,6 +37,8 @@ export const LAB_TEXT = {
   disclosureTitle: "Подробности урока",
   disclosureBody: "Тема, стихи для заучивания и домашнее задание.",
   toast: "Сохранено",
+  toastError: "Не удалось сохранить",
+  toastNeutral: "Готово",
   tableEmpty: "Нет записей",
   drawerTitle: "Меню",
   homeworkItem: "Заучивание стиха",

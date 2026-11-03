@@ -52,9 +52,17 @@ export const FeedbackMatrix = () => (
       </div>
     </MatrixCell>
     <MatrixCell label="Toast (Sonner)">
-      <Button variant="outline" onClick={() => toast(LAB_TEXT.toast)}>
-        {LAB_TEXT.toast}
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" onClick={() => toast.success(LAB_TEXT.toast)}>
+          Success
+        </Button>
+        <Button variant="outline" onClick={() => toast.error(LAB_TEXT.toastError)}>
+          Error
+        </Button>
+        <Button variant="outline" onClick={() => toast(LAB_TEXT.toastNeutral)}>
+          Neutral
+        </Button>
+      </div>
     </MatrixCell>
   </div>
 );

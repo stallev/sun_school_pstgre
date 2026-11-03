@@ -61,8 +61,8 @@ Tier T2: смена API примитивов (`Button` `size`, `SegmentedControl
 
 Review `diff-only`: профиль `lean` D6 (не T3, без `Paths: S`, вне sensitive zones).
 
-- [ ] P24-T4 · T1 · Spec: [shell §6.5, R-12](../specs/global_shell_spec.md) · [UX-03 D-15, §8 Toast](../../../design/visual_identity_contract.md) · Lab: [§5.3 `Toast`](../specs/design_system_lab_spec.md) · ADR-017 §4 п. 3
-      Files: `apps/web/src/components/shell/product-toaster.client.tsx`, `apps/web/src/components/shell/product-toaster.test.tsx`, `apps/web/src/lib/ui/product-toast.ts`, `apps/web/src/components/design-lab/FeedbackMatrix.tsx`
+- [x] P24-T4 · T1 · Spec: [shell §6.5, R-12](../specs/global_shell_spec.md) · [UX-03 D-15, §8 Toast](../../../design/visual_identity_contract.md) · Lab: [§5.3 `Toast`](../specs/design_system_lab_spec.md) · ADR-017 §4 п. 3
+      Files: `apps/web/src/components/shell/product-toaster.client.tsx`, `apps/web/src/components/shell/product-toaster.test.tsx`, `apps/web/src/lib/ui/product-toast.ts`, `apps/web/src/components/design-lab/FeedbackMatrix.tsx`, `apps/web/src/components/design-lab/ChoiceMatrix.tsx` (хвост CU3 — Lab после снятия `size="compact"`)
       Acceptance: ≥ `lg` — `position="bottom-right"` с отступом `bottom-6 right-6`; < `lg` — сверху по центру; `toastOptions.classNames`: `success` — `bg-ok-soft border-ok text-ink`, `error` — `bg-danger-soft border-danger text-ink`, нейтральный — `bg-surface border-line`, `shadow-float`, ширина `min(24rem, 100vw - 2rem)`; `icons`: `success` — `CircleCheck` `text-ok`, `error` — `CircleAlert` `text-danger` (`aria-hidden`); `duration` = `PRODUCT_TOAST_DURATION_MS` (2000); без hex и `style`; Lab — кнопки success / error / нейтральный; тест рендера классов и позиции
       Paths: H [§6.5: success и error различаются цветом и иконкой] · N [длинный текст переносится; `motion-reduce` без анимации; одновременно два toast — стек] · S n/a — presentational
 

@@ -34,23 +34,14 @@ export const ChoiceMatrix = () => {
           onValueChange={setSegment}
         />
       </MatrixCell>
-      <MatrixCell label="SegmentedControl — toggle / compact">
-        <div className="space-y-2">
-          <SegmentedControl
-            aria-label="Toggle chips"
-            mode="toggle"
-            options={LAB_SEGMENTS}
-            value={segment}
-            onValueChange={(next) => setSegment(next ?? "all")}
-          />
-          <SegmentedControl
-            aria-label="Compact"
-            size="compact"
-            options={LAB_SEGMENTS}
-            value="all"
-            onValueChange={() => undefined}
-          />
-        </div>
+      <MatrixCell label="SegmentedControl — toggle">
+        <SegmentedControl
+          aria-label="Toggle chips"
+          mode="toggle"
+          options={LAB_SEGMENTS}
+          value={segment}
+          onValueChange={(next) => setSegment(next ?? "all")}
+        />
       </MatrixCell>
       <MatrixCell label="SegmentedControl — fit (P24, default)">
         <SegmentedControl
