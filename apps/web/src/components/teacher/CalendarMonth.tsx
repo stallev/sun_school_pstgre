@@ -1,17 +1,20 @@
-import { BookOpen, Bus, CircleX } from "lucide-react";
+import { BookOpen, Bus, Cake, CircleX } from "lucide-react";
 import { GRADE_EVENT_TYPE, type GradeEventType } from "@sunschool/domain";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
+import { CalendarBirthdayRow } from "@/components/teacher/CalendarBirthdayRow";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
-import type { CalendarEventRow } from "@/data/calendar/load-calendar-page.server";
+import type { CalendarBirthdayRow as CalendarBirthdayDto, CalendarEventRow } from "@/data/calendar/load-calendar-page.server";
 import type { TeacherCalendarMessages } from "@/lib/messages/teacher-calendar-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
 
 type CalendarMonthProps = {
   monthKey: string;
   gradeId: string;
   events: CalendarEventRow[];
+  birthdays: CalendarBirthdayDto[];
   canMutate: boolean;
   messages: TeacherCalendarMessages;
   openEventId: string | null;
@@ -61,10 +64,19 @@ const todayIsoLocal = (): string => {
   return `${year}-${month}-${day}`;
 };
 
+const birthdayLegendLabel = (template: string): string =>
+  template.replace(/\s*\{name\}\s*$/, "").replace(/:\s*$/, "");
+
+const birthdaysForDay = (
+  birthdaysByDay: Map<number, CalendarBirthdayDto[]>,
+  day: number,
+): CalendarBirthdayDto[] => birthdaysByDay.get(day) ?? [];
+
 export const CalendarMonth = ({
   monthKey,
   gradeId,
   events,
+  birthdays,
   canMutate,
   messages,
   openEventId,
@@ -72,7 +84,14 @@ export const CalendarMonth = ({
 }: CalendarMonthProps) => {
   const cells = monthCells(monthKey);
   const eventByDay = new Map(events.map((event) => [event.dayOfMonth, event]));
+  const birthdaysByDay = birthdays.reduce<Map<number, CalendarBirthdayDto[]>>((map, row) => {
+    const list = map.get(row.dayOfMonth) ?? [];
+    list.push(row);
+    map.set(row.dayOfMonth, list);
+    return map;
+  }, new Map());
   const todayIso = todayIsoLocal();
+  const birthdayLabel = (name: string) => fillMessage(messages.birthday, { name });
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
@@ -88,6 +107,7 @@ export const CalendarMonth = ({
               return <div key={`empty-${index}`} className="min-h-14 bg-paper p-1 sm:min-h-24 sm:p-2" />;
             }
             const event = eventByDay.get(day);
+            const dayBirthdays = birthdaysForDay(birthdaysByDay, day);
             const meta = event ? typeMeta(event.type, messages) : null;
             const dateIso = isoForDay(monthKey, day);
             const isOpen = openDate === dateIso || (event && openEventId === event.eventId);
@@ -108,9 +128,17 @@ export const CalendarMonth = ({
                     <span className="hidden truncate text-xs sm:inline">{meta.label}</span>
                   </span>
                 ) : null}
+                {dayBirthdays.map((row) => (
+                  <CalendarBirthdayRow
+                    key={row.pupilId}
+                    label={birthdayLabel(row.displayName)}
+                    compact
+                  />
+                ))}
               </>
             );
-            if (canMutate || event) {
+            const openEventForm = event || (canMutate && dayBirthdays.length === 0);
+            if (openEventForm) {
               const href = event
                 ? buildHref(gradeId, monthKey, { eventId: event.eventId })
                 : buildHref(gradeId, monthKey, { date: dateIso });
@@ -150,39 +178,58 @@ export const CalendarMonth = ({
               </span>
             );
           })}
+          {birthdays.length > 0 ? (
+            <span className="inline-flex items-center gap-1.5 text-amber-ink">
+              <Cake className="size-4" aria-hidden />
+              {birthdayLegendLabel(messages.birthday)}
+            </span>
+          ) : null}
         </div>
       </Card>
       <section className="min-w-0">
         <SectionTitle className="mb-3">{messages.monthEventsTitle}</SectionTitle>
         <Card className="divide-y divide-line">
-          {events.length === 0 ? (
+          {events.length === 0 && birthdays.length === 0 ? (
             <ContentText className="px-5 py-4 text-sm text-muted">{messages.emptyMonth}</ContentText>
           ) : (
-            events.map((event) => {
-              const meta = typeMeta(event.type, messages);
-              return (
-                <CustomLink
-                  key={event.eventId}
-                  href={buildHref(gradeId, monthKey, { eventId: event.eventId })}
-                  className={cn(
-                    "flex w-full items-center gap-4 px-5 py-3.5 text-left hover:bg-paper/70",
-                    openEventId === event.eventId && "bg-paper/70",
-                  )}
+            <>
+              {events.map((event) => {
+                const meta = typeMeta(event.type, messages);
+                return (
+                  <CustomLink
+                    key={event.eventId}
+                    href={buildHref(gradeId, monthKey, { eventId: event.eventId })}
+                    className={cn(
+                      "flex w-full items-center gap-4 px-5 py-3.5 text-left hover:bg-paper/70",
+                      openEventId === event.eventId && "bg-paper/70",
+                    )}
+                  >
+                    <span className="w-10 shrink-0 font-display text-xl tabular-nums">
+                      {event.dayOfMonth}
+                    </span>
+                    <meta.icon className={cn("size-5 shrink-0", meta.className)} aria-hidden />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-ink">{event.title}</span>
+                      <span className="block text-sm text-muted">
+                        {meta.label}
+                        {event.description ? ` · ${event.description}` : ""}
+                      </span>
+                    </span>
+                  </CustomLink>
+                );
+              })}
+              {birthdays.map((row) => (
+                <div
+                  key={row.pupilId}
+                  className="flex w-full items-center gap-4 px-5 py-3.5 text-left"
                 >
                   <span className="w-10 shrink-0 font-display text-xl tabular-nums">
-                    {event.dayOfMonth}
+                    {row.dayOfMonth}
                   </span>
-                  <meta.icon className={cn("size-5 shrink-0", meta.className)} aria-hidden />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-ink">{event.title}</span>
-                    <span className="block text-sm text-muted">
-                      {meta.label}
-                      {event.description ? ` · ${event.description}` : ""}
-                    </span>
-                  </span>
-                </CustomLink>
-              );
-            })
+                  <CalendarBirthdayRow label={birthdayLabel(row.displayName)} />
+                </div>
+              ))}
+            </>
           )}
         </Card>
       </section>

@@ -30,5 +30,6 @@ export type TeacherCalendarMessages = {
   toastCreated: string;
   toastUpdated: string;
   toastDeleted: string;
+  birthday: string;
   locale: AppLocale;
 };

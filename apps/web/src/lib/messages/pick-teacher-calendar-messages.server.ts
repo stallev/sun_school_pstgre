@@ -46,5 +46,6 @@ export const pickTeacherCalendarMessages = (
   toastCreated: getMessage(teacher, "calendar.toast_created"),
   toastUpdated: getMessage(teacher, "calendar.toast_updated"),
   toastDeleted: getMessage(teacher, "calendar.toast_deleted"),
+  birthday: getMessage(teacher, "calendar.birthday"),
   locale,
 });

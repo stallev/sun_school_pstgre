@@ -373,6 +373,7 @@
     "delete_confirm_description": "The event will be removed from the group calendar.",
     "toast_created": "Event created",
     "toast_updated": "Event saved",
+    "birthday": "Birthday: {name}",
     "toast_deleted": "Event deleted",
     "date_invalid": "Enter a valid date",
     "lesson_link_invalid": "Only lesson events can link to a lesson"

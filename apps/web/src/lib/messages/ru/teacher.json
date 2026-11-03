@@ -373,6 +373,7 @@
     "delete_confirm_description": "Событие исчезнет из календаря группы.",
     "toast_created": "Событие создано",
     "toast_updated": "Событие сохранено",
+    "birthday": "День рождения: {name}",
     "toast_deleted": "Событие удалено",
     "date_invalid": "Укажите корректную дату",
     "lesson_link_invalid": "С уроком можно связать только событие типа «урок»"
