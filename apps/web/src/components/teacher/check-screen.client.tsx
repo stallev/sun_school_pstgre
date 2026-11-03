@@ -1,7 +1,7 @@
 "use client";
 
 import { LESSON_KIND } from "@sunschool/domain";
-import { ChevronDownIcon, LayoutGridIcon } from "lucide-react";
+import { ChevronDownIcon, ExternalLinkIcon, FileSpreadsheetIcon, LayoutGridIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Banner } from "@/components/patterns/Banner";
 import { EmptyState } from "@/components/patterns/EmptyState";
@@ -17,6 +17,7 @@ import { CheckFinishedCard } from "@/components/teacher/CheckFinishedCard";
 import { CheckProgress } from "@/components/teacher/CheckProgress";
 import { CheckPupilList } from "@/components/teacher/CheckPupilList";
 import { countFilledCheckFields } from "@/components/teacher/check-filled-count";
+import { findLessonTopScorerIds } from "@/lib/check/lesson-top-scorers";
 import { useSequentialCheck } from "@/components/teacher/use-sequential-check";
 import type { SequentialCheckPageData } from "@/data/checks/sequential-check-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -90,10 +91,19 @@ export const CheckScreen = ({
     notebookScore: pupil.notebookScore,
     includeVersesAndTest: data.lessonKind !== LESSON_KIND.REVIEW,
   });
+  const topScorerIds = findLessonTopScorerIds(
+    screen.pupils.map((item) => ({
+      pupilId: item.pupilId,
+      homeworkChecked: item.homeworkChecked,
+      total: item.pointsTotal,
+    })),
+  );
   const listStatus = {
     statusChecked: messages.statusChecked,
     statusUnchecked: messages.statusUnchecked,
     statusPartial: messages.statusPartial,
+    topScorerIds,
+    topScorerLabel: messages.topScorer,
   };
 
   const lessonMeta = `${fillMessage(messages.lessonSubtitle, {
@@ -112,10 +122,21 @@ export const CheckScreen = ({
         title={screen.isCorrection ? messages.pageTitleCorrection : messages.pageTitleCheck}
         description={lessonMeta}
         actions={
-          <Button variant="outline" render={<CustomLink href={`/lessons/${data.lessonId}/table`} />}>
-            <LayoutGridIcon className="size-4" aria-hidden />
-            {messages.linkTable}
-          </Button>
+          <>
+            <Button variant="outline" render={<CustomLink href={`/lessons/${data.lessonId}/table`} />}>
+              <LayoutGridIcon className="size-4" aria-hidden />
+              {messages.linkTable}
+            </Button>
+            <Button
+        variant="outline"
+        aria-label={messages.sheetOpenAria}
+        render={<CustomLink href={`/lessons/${data.lessonId}/sheet`} target="_blank" rel="noopener noreferrer" />}
+      >
+        <FileSpreadsheetIcon className="size-4" aria-hidden />
+        {messages.sheetOpen}
+        <ExternalLinkIcon className="size-4 text-muted-foreground" aria-hidden />
+      </Button>
+          </>
         }
       />
 

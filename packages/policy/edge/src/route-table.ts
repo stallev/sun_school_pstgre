@@ -42,7 +42,7 @@ export const ROUTE_RULES: readonly RouteRule[] = [
   { pattern: /^\/today$/, audience: "app", roles: TEACHER },
   { pattern: /^\/lessons$/, audience: "app", roles: TEACHER },
   { pattern: /^\/lessons\/new$/, audience: "app", roles: ADMIN_OR_TEACHER },
-  { pattern: /^\/lessons\/[^/]+(\/(edit|table|check))?$/, audience: "app", roles: ADMIN_OR_TEACHER },
+  { pattern: /^\/lessons\/[^/]+(\/(edit|table|check|sheet))?$/, audience: "app", roles: ADMIN_OR_TEACHER },
   { pattern: /^\/check$/, audience: "app", roles: TEACHER },
   { pattern: /^\/group$/, audience: "app", roles: TEACHER },
   { pattern: /^\/group\/points$/, audience: "app", roles: TEACHER },

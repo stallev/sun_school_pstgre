@@ -13,7 +13,7 @@ export const LessonVersesAccordion = ({ title, verses, missingLabel }: LessonVer
   if (verses.length === 0) return null;
 
   return (
-    <details className="group rounded-xl border border-line bg-surface">
+    <details className="group rounded-xl border border-line bg-surface open:sticky open:top-14 open:z-30">
       <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-xl px-3 hover:bg-paper focus-visible:outline-2 focus-visible:outline-ring lg:min-h-9 [&::-webkit-details-marker]:hidden">
         <BookOpenTextIcon className="size-4 shrink-0 text-muted" aria-hidden />
         <span className="shrink-0 text-sm font-medium text-ink">{title}</span>
@@ -25,7 +25,7 @@ export const LessonVersesAccordion = ({ title, verses, missingLabel }: LessonVer
           aria-hidden
         />
       </summary>
-      <ol className="space-y-2 border-t border-line px-3 py-2.5">
+      <ol className="max-h-[min(45dvh,22rem)] space-y-2 overflow-y-auto border-t border-line px-3 py-2.5">
         {verses.map((verse) => (
           <li key={verse.refLabel}>
             <span className="text-sm font-medium text-ink">{verse.refLabel}</span>

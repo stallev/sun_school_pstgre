@@ -134,6 +134,28 @@ Tier T1: чтение текстов стихов на сервере (посл�
 
 > Владелец (2026-11-03) попросил один коммит на CU8–CU10.
 
+### P24-CU11 — feat(web): highlight the lesson top scorer in gold · Review: reviewer · Commit: auto
+
+Tier T1: presentational; выбор лидера — чистая функция по уже загруженным итогам.
+
+- [x] P24-T11 · T1 · Spec: [check flow §5.2в, §7.1, R-16](../specs/homework_check_flow_spec.md) · [UX-03 D-16, §4, §5](../../../design/visual_identity_contract.md) · Lab: [§6 токены, секция «Лидер урока»](../specs/design_system_lab_spec.md)
+      Files: `apps/web/src/lib/check/lesson-top-scorers.ts` (+ test), `apps/web/src/app/globals.css`, `apps/web/src/lib/design-lab/tokens.ts`, `apps/web/src/components/design-lab/*` (секция «Лидер урока»), `apps/web/src/components/teacher/{CheckPupilList,check-screen.client,LessonCheckTable,LessonCheckTableRow,LessonCheckTableCards}.tsx`, `apps/web/src/lib/messages/{ru,en}/teacher.json`, `apps/web/src/lib/messages/{teacher-check-messages,pick-teacher-check-messages.server}.ts`
+      Acceptance: `findLessonTopScorerIds` возвращает id всех проверенных учеников с максимальным итогом > 0; золотой фон (`bg-gold-soft`) у элемента списка проверки и у строки/карточки таблицы (включая липкие ячейки), иконка `Trophy` и `sr-only` текст; активный лидер в списке сохраняет кольцо `ring-cobalt-ink`; токены в `:root`, `@theme inline`, `tokens.ts` и Lab; без hex в компонентах
+      Paths: H [§5.2в: лидер виден на проверке и таблице] · N [ничья — все; нет проверенных / все по 0 — подсветки нет; непроверенные не участвуют; лидер меняется после правки балла] · S n/a — presentational, данные не меняются
+
+**CU DoD:** `node scripts/cu-verify.mjs` · тест `lesson-top-scorers` · рендер-тесты списка и строки таблицы
+
+### P24-CU12 — feat(web): add lesson sheet opened in a new tab · Review: reviewer · Commit: auto
+
+Tier T3: новый маршрут с role-scoped данными учеников (S — чтение данных урока, новая публичная для роли страница); свой CU.
+
+- [x] P24-T12 · T3 · Spec: [check flow §7.4, R-17](../specs/homework_check_flow_spec.md) · [canonical routes `/lessons/[lessonId]/sheet`](../../../design/canonical_routes.md) · AZ-32, AZ-D3, AZ-D4, AZ-P5, AZ-P6 · Prototype: `lessonSheet`
+      Files: `apps/web/src/app/(sheet)/layout.tsx`, `apps/web/src/app/(sheet)/lessons/[lessonId]/sheet/page.tsx`, `apps/web/src/components/teacher/{LessonSheetContent.server,LessonSheet,SheetPrintButton.client}.tsx` (+ тест рендера), `apps/web/src/components/teacher/{check-screen.client,LessonCheckTable}.tsx` (кнопка «Ведомость»), `packages/policy/edge/src/route-table.ts` (+ test), `apps/web/src/lib/messages/{ru,en}/teacher.json` и типы/pick
+      Acceptance: кнопка «Ведомость» на проверке и таблице открывает `/lessons/[id]/sheet` с `target="_blank"` и `rel="noopener noreferrer"`; маршрут без оболочки (нет сайдбара), `requireRole(TEACHER, ADMIN)` + существующий `loadLessonTablePage`; чужой урок → 404; таблица §7.4 (колонки по `hasTest` и обзорному), лидеры подсвечены, легенда; на ≥ 1024 px при ≤ ~30 учеников без прокрутки (`--sheet-rows`, `table-fixed`); печать; `route-table` пропускает `/lessons/42/sheet` для admin и teacher
+      Paths: H [§7.4: учитель открывает ведомость в новой вкладке и видит всех учеников урока] · N [нет учеников — `EmptyState`; обзорный урок; непроверенные строки; > ~40 учеников — прокрутка; урок без стихов] · S [AZ-32: чужой урок → `NOT_FOUND` без раскрытия данных (тест загрузчика/страницы); parent → отказ по `route-table`; данные только через `assertLessonReadAccess`]
+
+**CU DoD:** `node scripts/cu-verify.mjs --full` · тест `route-table` · тест рендера `LessonSheet`
+
 ## Verification (phase)
 
 - [ ] Все CU закоммичены; у каждого trace `Review: …`
@@ -158,5 +180,6 @@ Tier T1: чтение текстов стихов на сервере (посл�
 | Date | Change |
 |------|--------|
 | 2026-11-03 | v1.0 — Canonical (подготовка P24): CU1–CU7, Phase DoR audit; документы, прототип и parity обновлены до CU1 |
+| 2026-11-03 | v1.3 — CU11 золотая подсветка лидера урока, CU12 ведомость урока в новой вкладке |
 | 2026-11-03 | v1.2 — CU9 аккордеон стихов на проверке и таблице, CU10 компактный верх страниц |
 | 2026-11-03 | v1.1 — CU8: оценки за стихи вносятся на странице проверки урока, где стихи заданы (БП-2 уточнено) |
