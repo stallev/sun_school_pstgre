@@ -43,10 +43,12 @@ export type TeacherCheckMessages = {
   scoreNotRated: string;
   lateSubmitted: string;
   unsavedIndicator: string;
-  unsavedConfirmTitle: string;
-  unsavedConfirmSave: string;
-  unsavedConfirmDiscard: string;
-  unsavedConfirmCancel: string;
+  unsavedDialogTitle: string;
+  unsavedDialogBody: string;
+  unsavedSave: string;
+  unsavedDiscard: string;
+  unsavedStay: string;
+  unsavedDiscarded: string;
   previousPupil: string;
   nextPupil: string;
   keyboardHint: string;

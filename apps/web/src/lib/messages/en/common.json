@@ -14,7 +14,8 @@
     "internal": "Something went wrong. Please try again",
     "forbidden_title": "Access denied",
     "form": "Could not complete the action. Check the form and try again.",
-    "year_closed": "The school year is closed — changes are not allowed"
+    "year_closed": "The school year is closed — changes are not allowed",
+    "birth_date_in_future": "Birth date must be in the past"
   },
   "states": {
     "page_loading": "Loading page",
@@ -58,6 +59,8 @@
     "display_name_fallback": "User",
     "forbidden_home": "Go to home",
     "badge_in_queue": "{count} in queue",
+    "sidebar_collapse": "Collapse menu",
+    "sidebar_expand": "Expand menu",
     "document_suffix": "Sunday School",
     "document_description": "Sunday school application",
     "dev_view_as": "View as",

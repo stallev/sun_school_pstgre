@@ -18,7 +18,8 @@ type SegmentedControlProps<T extends string, M extends "radio" | "toggle" = "rad
   disabled?: boolean;
   invalid?: boolean;
   mode?: M;
-  size?: "default" | "compact";
+  /** Content width by default (P24); `false` allows full-width / grid via `className`. */
+  fit?: boolean;
   className?: string;
 };
 
@@ -32,7 +33,7 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
   disabled = false,
   invalid = false,
   mode,
-  size = "default",
+  fit = true,
   className,
   ...aria
 }: SegmentedControlProps<T, M>) => {
@@ -76,7 +77,7 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
   };
 
   const chipClass = (checked: boolean) =>
-    segmentedChipClassName(checked, { size, invalid });
+    segmentedChipClassName(checked, { invalid });
 
   const handleSelect = (optionValue: T, checked: boolean) => {
     if (resolvedMode === "toggle" && checked) {
@@ -92,7 +93,12 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
       aria-label={aria["aria-label"]}
       aria-invalid={invalid || undefined}
       aria-disabled={disabled || undefined}
-      className={cn("flex flex-wrap gap-2", className)}
+      className={cn(
+        fit
+          ? "inline-flex max-w-full flex-wrap gap-1.5"
+          : "flex w-full flex-wrap gap-2 [&>button]:min-w-0 [&>button]:flex-1",
+        className,
+      )}
     >
       {options.map((option, index) => {
         const checked = option.value === value;
@@ -112,7 +118,7 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
             tabIndex={resolvedMode === "radio" ? (index === tabStop ? 0 : -1) : undefined}
             onClick={() => handleSelect(option.value, checked)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className={chipClass(checked)}
+            className={cn(chipClass(checked), fit && "min-w-14")}
           >
             {option.label}
           </button>

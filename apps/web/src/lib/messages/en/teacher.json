@@ -22,7 +22,16 @@
     "no_year_title": "The school year has not started",
     "no_year_description": "The roster will appear after the school year is activated.",
     "year_closed_title": "Year closed — read only",
-    "year_closed_description": "You cannot change the group roster."
+    "year_closed_description": "You cannot change the group roster.",
+    "birth_date": {
+      "button": "Date of birth",
+      "dialog_title": "Date of birth",
+      "dialog_description": "Enter the pupil's date of birth.",
+      "label": "Date of birth",
+      "submit": "Save",
+      "saving": "Saving…",
+      "toast_saved": "Date of birth saved"
+    }
   },
   "lesson": {
     "translation_rst": "Russian Synodal",
@@ -224,9 +233,12 @@
     "score_not_rated": "Not graded",
     "late_submitted": "submitted later",
     "unsaved_indicator": "Unsaved changes",
-    "unsaved_confirm_title": "Save changes before switching pupils?",
-    "unsaved_confirm_save": "Save and continue",
-    "unsaved_confirm_discard": "Discard and continue",
+    "unsaved_dialog_title": "Unsaved changes",
+    "unsaved_dialog_body": "Save {name}'s scores before switching?",
+    "unsaved_save": "Save and continue",
+    "unsaved_discard": "Discard changes",
+    "unsaved_stay": "Stay",
+    "unsaved_discarded": "Changes discarded",
     "previous_pupil": "Previous",
     "next_pupil": "Next",
     "keyboard_hint": "Enter — save · ← → — pupils",
@@ -361,6 +373,7 @@
     "delete_confirm_description": "The event will be removed from the group calendar.",
     "toast_created": "Event created",
     "toast_updated": "Event saved",
+    "birthday": "Birthday: {name}",
     "toast_deleted": "Event deleted",
     "date_invalid": "Enter a valid date",
     "lesson_link_invalid": "Only lesson events can link to a lesson"

@@ -28,4 +28,11 @@ export const pickTeacherRosterMessages = (teacher: Dictionary): TeacherRosterMes
   yearClosedDescription: getMessage(teacher, "group.year_closed_description"),
   pageTitle: getMessage(teacher, "group.page_title"),
   pageSubtitle: getMessage(teacher, "group.page_subtitle"),
+  birthDateButton: getMessage(teacher, "group.birth_date.button"),
+  birthDateDialogTitle: getMessage(teacher, "group.birth_date.dialog_title"),
+  birthDateDialogDescription: getMessage(teacher, "group.birth_date.dialog_description"),
+  birthDateLabel: getMessage(teacher, "group.birth_date.label"),
+  birthDateSubmit: getMessage(teacher, "group.birth_date.submit"),
+  birthDateSaving: getMessage(teacher, "group.birth_date.saving"),
+  birthDateToastSaved: getMessage(teacher, "group.birth_date.toast_saved"),
 });

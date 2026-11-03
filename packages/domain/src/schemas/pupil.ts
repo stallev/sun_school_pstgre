@@ -24,3 +24,12 @@ export type UpdatePupilInput = z.infer<typeof updatePupilInputSchema>;
 
 export const deactivatePupilInputSchema = z.object({ pupilId: z.uuid() }).strict();
 export type DeactivatePupilInput = z.infer<typeof deactivatePupilInputSchema>;
+
+export const updatePupilBirthDateInputSchema = z
+  .object({
+    pupilId: z.uuid(),
+    birthDate: isoDateSchema,
+  })
+  .strict();
+
+export type UpdatePupilBirthDateInput = z.infer<typeof updatePupilBirthDateInputSchema>;

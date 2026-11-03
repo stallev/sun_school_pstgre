@@ -6,6 +6,7 @@ import { SkipToMainLink } from "@/components/shell/skip-to-main-link";
 import type { ShellNavPayload } from "@/data/shell/build-shell-nav.server";
 import type { ShellMessages } from "@/lib/messages/shell-messages";
 import type { NavBadgeCounts } from "@/components/shell/shell-nav-types";
+import { shellViewContainerClassName } from "@/lib/shell/shell-layout-classes";
 
 type AppShellProps = {
   shellMessages: ShellMessages;
@@ -13,6 +14,7 @@ type AppShellProps = {
   displayName: string;
   nav: ShellNavPayload;
   badgeCounts: NavBadgeCounts;
+  sidebarCollapsed: boolean;
   children: ReactNode;
 };
 
@@ -22,17 +24,26 @@ export const AppShell = ({
   displayName,
   nav,
   badgeCounts,
+  sidebarCollapsed,
   children,
 }: AppShellProps) => (
   <ShellMessagesProvider messages={shellMessages}>
     <SkipToMainLink label={shellMessages.skipToContent} />
-    <ShellHeader homeHref={homeHref} displayName={displayName} nav={nav} badgeCounts={badgeCounts}>
+    <ShellHeader
+      homeHref={homeHref}
+      displayName={displayName}
+      nav={nav}
+      badgeCounts={badgeCounts}
+      initialSidebarCollapsed={sidebarCollapsed}
+    >
       <main
         id="main"
         tabIndex={-1}
-        className="min-w-0 px-4 pb-28 pt-4 outline-none sm:px-6 lg:px-8 lg:pb-16 lg:pt-7"
+        className="min-w-0 pb-28 pt-4 outline-none lg:pb-16 lg:pt-7"
       >
-        <div className="max-w-[1400px]">{children}</div>
+        <div id="view" className={shellViewContainerClassName}>
+          {children}
+        </div>
       </main>
     </ShellHeader>
     <ShellRouteAnnouncer />

@@ -155,8 +155,32 @@ export function extractCvaClasses(source, { variant, size } = {}) {
   const pickVariant = (key, name) => {
     if (!name) return "";
     const block = new RegExp(`${key}:\\s*\\{([\\s\\S]*?)\\}`, "m").exec(variantsBody)?.[1] ?? "";
-    const entry = new RegExp(`${name}:\\s*"([^"]+)"`).exec(block);
-    return entry?.[1] ?? "";
+    const quoted = new RegExp(`${name}:\\s*"([^"]+)"`).exec(block);
+    if (quoted?.[1]) return quoted[1];
+    const cnHead = new RegExp(`${name}:\\s*cn\\(`).exec(block);
+    if (!cnHead) return "";
+    const openParen = block.indexOf("(", cnHead.index + cnHead[0].length - 1);
+    let depth = 0;
+    for (let i = openParen; i < block.length; i += 1) {
+      const ch = block[i];
+      if (ch === "(") depth += 1;
+      else if (ch === ")") {
+        depth -= 1;
+        if (depth === 0) {
+          const cnBody = block.slice(openParen + 1, i);
+          const parts = [];
+          for (let j = 0; j < cnBody.length; ) {
+            const q = cnBody.indexOf('"', j);
+            if (q < 0) break;
+            const { value, end } = readStringLiteralAt(cnBody, q);
+            if (value) parts.push(value);
+            j = end;
+          }
+          return parts.join(" ");
+        }
+      }
+    }
+    return "";
   };
   const variantClasses = pickVariant("variant", variant);
   const sizeClasses = pickVariant("size", size);

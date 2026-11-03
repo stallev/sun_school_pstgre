@@ -22,7 +22,16 @@
     "no_year_title": "Учебный год ещё не начат",
     "no_year_description": "Состав группы появится после активации учебного года.",
     "year_closed_title": "Год закрыт — только чтение",
-    "year_closed_description": "Изменять состав группы нельзя."
+    "year_closed_description": "Изменять состав группы нельзя.",
+    "birth_date": {
+      "button": "Дата рождения",
+      "dialog_title": "Дата рождения",
+      "dialog_description": "Укажите дату рождения ученика.",
+      "label": "Дата рождения",
+      "submit": "Сохранить",
+      "saving": "Сохраняем…",
+      "toast_saved": "Дата рождения сохранена"
+    }
   },
   "lesson": {
     "translation_rst": "Синодальный перевод",
@@ -224,9 +233,12 @@
     "score_not_rated": "Не оценивалось",
     "late_submitted": "сдано позже",
     "unsaved_indicator": "Есть несохранённые изменения",
-    "unsaved_confirm_title": "Сохранить изменения перед переходом?",
-    "unsaved_confirm_save": "Сохранить и перейти",
-    "unsaved_confirm_discard": "Перейти без сохранения",
+    "unsaved_dialog_title": "Есть несохранённые изменения",
+    "unsaved_dialog_body": "Сохранить оценки ученика {name} перед переходом?",
+    "unsaved_save": "Сохранить и перейти",
+    "unsaved_discard": "Не сохранять",
+    "unsaved_stay": "Остаться",
+    "unsaved_discarded": "Изменения сброшены",
     "previous_pupil": "Предыдущий",
     "next_pupil": "Следующий",
     "keyboard_hint": "Enter — сохранить · ← → — ученики",
@@ -361,6 +373,7 @@
     "delete_confirm_description": "Событие исчезнет из календаря группы.",
     "toast_created": "Событие создано",
     "toast_updated": "Событие сохранено",
+    "birthday": "День рождения: {name}",
     "toast_deleted": "Событие удалено",
     "date_invalid": "Укажите корректную дату",
     "lesson_link_invalid": "С уроком можно связать только событие типа «урок»"

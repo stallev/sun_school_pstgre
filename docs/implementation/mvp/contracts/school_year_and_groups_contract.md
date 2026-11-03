@@ -2,8 +2,8 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.2  
+**Дата:** 2026-11-03  
 **Волна:** W8-04  
 **Зависит от:** [`monorepo_boundaries_contract.md`](./monorepo_boundaries_contract.md), [`lifecycle_models.md`](../../../prds/02_domain_model/lifecycle_models.md) §5.3–§5.5, [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) INV-01, INV-02, INV-07…INV-10, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-10…AZ-14, AZ-20…AZ-23, AZ-P5, AZ-P6), [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.2–§5.3, §7, [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) (БП-6, БП-7, ЯГ-1…ЯГ-4, СО-3…СО-7, §3.3–§3.8)  
 **Связанные документы:** [`adr_009_bible_translations_and_verse_numbering.md`](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -30,6 +30,7 @@
 | `assignTeacher`, `unassignTeacher` | `ADMIN` | AZ-11 |
 | `updateGradeSettings` | `ADMIN` | AZ-10 |
 | `createPupil`, `updatePupil`, `deactivatePupil` | `ADMIN` | AZ-20 |
+| `updatePupilBirthDate` | `ADMIN`, `TEACHER` (ученик с активным зачислением в своей группе активного года) | AZ-20a (P24) |
 | `recordPaperConsent`, `revokeConsent`, `extendLegacyDeadline` | `ADMIN` | AZ-22 |
 | `enrollPupil`, `unenrollPupil` | `ADMIN`, `TEACHER` (своя группа) | AZ-23 |
 | `transferPupil` | `ADMIN` | AZ-23 (Q-03 матрицы) |
@@ -46,6 +47,7 @@
 | `assignTeacher` | `userId`, `gradeId`, `yearId` | пользователь `ACTIVE` с ролью `TEACHER`; год `DRAFT` или `ACTIVE` |
 | `updateGradeSettings` | `gradeId`, `yearId`, `useVerses`, `useTest`, `useNotebook`, `useSinging`, `maxVersesPerLesson`, `labels`, `weights`, `recitationDaysN` | `maxVersesPerLesson` 0–10; веса — целые ≥ 0; год не `CLOSED` |
 | `createPupil`, `updatePupil` | `lastName`, `firstName`, `middleName`, `birthDate`, `isActive` | как РГ-3; дата рождения в прошлом |
+| `updatePupilBirthDate` | `pupilId`, `birthDate` (`YYYY-MM-DD`) | только эти два поля; дата в прошлом относительно «сегодня» в поясе школы (тот же `validateBirthDateInPast`); прочие поля карточки не принимаются (strict-схема Zod) |
 | `recordPaperConsent` | `pupilId`, `signerName`, `signedOn`, `textVersion`, `storageNote` | подписант и дата обязательны; версия текста существует |
 | `revokeConsent` | `consentId`, `reason` | согласие `ACTIVE` или `LEGACY_PENDING` |
 | `extendLegacyDeadline` | `newDeadlineOn`, `reason` | `newDeadlineOn` позже текущего срока; причина обязательна ([ADR-011](../../../prds/07_governance/adr_011_transitional_child_consent.md)) |
@@ -84,6 +86,15 @@
 ### 5.6 `createPupil` / `updatePupil` / `deactivatePupil`
 
 - Карточку можно создать без согласия (СО-4); зачислить — нельзя. Карточка без группы — в списке «неназначенные». `deactivatePupil` закрывает активное зачисление. Журнал `school.pupil_created` / `school.pupil_updated` / `school.pupil_deactivated`.
+- `updatePupil` (P24): если `birthDate` изменилась, кроме `school.pupil_updated` пишется `school.pupil_birth_date_updated`; в `school.pupil_updated` `new_value` дополняется списком изменённых полей `fields` (имена полей, без значений ФИО и даты — S-5). До P24 журнал фиксировал только `isActive` — пробел закрыт.
+
+### 5.6a `updatePupilBirthDate` (P24)
+
+- **Зачем:** учитель вносит дату рождения ученика своей группы с `/group` (диалог «Дата рождения»), admin — также с `/people` через `updatePupil`. Дата нужна для дней рождения в календаре ([`canonical_routes.md`](../../../design/canonical_routes.md) `/calendar`).
+- **Предусловия:** `ADMIN` — ученик в своей организации; `TEACHER` — у ученика есть активное зачисление (`ends_on IS NULL`) в группу, где актор назначен в `ACTIVE` году (`requireAssignedTeacher`, AZ-P6); год `CLOSED` → `FORBIDDEN` (AZ-P5).
+- **Транзакция:** проверка доступа по БД → валидация даты → `UPDATE pupil SET birth_date` (только это поле) → журнал `school.pupil_birth_date_updated` (`entity_type = pupil`, `new_value = { fields: ["birthDate"] }`, без самой даты). Повтор той же даты — успех без записи журнала (идемпотентно).
+- **Результат:** `MutationResult`; UI — toast «Дата рождения сохранена» 2000 мс, `revalidate` `/group` и `/calendar`.
+- **Слои:** Server Action `updatePupilBirthDateAction` в `apps/web/src/actions/school-pupils.ts` — тонкий адаптер (`requireActiveUser` → DAL), `MutationResult`; DAL `apps/web/src/data/school/update-pupil-birth-date.ts` (транзакция, журнал); факты доступа `apps/web/src/data/school/pupil-birth-date-access.server.ts` (организация ученика, активное зачисление в группу назначения актора в `ACTIVE` году, статус года); решение — чистая функция `canEditPupilBirthDate(context, facts)` в `packages/policy/server/src/pupil-birth-date.ts` (по образцу `canAwardManually`: не та роль → `FORBIDDEN`, нет ученика или не своя группа → `NOT_FOUND`). Транспорт — Server Action без Route Handler fallback (не входит в список `ios-safari-mutation-transport`; повтор идемпотентен).
 
 ### 5.7 `recordPaperConsent`
 
@@ -110,6 +121,14 @@
 
 - Только `ADMIN`. Транзакция: блокировка ученика → закрыть активное зачисление датой `onDate − 1` (если `onDate` позже `startsOn`) → создать новое в `toGradeId`. Отметки ДЗ и кирпичики не меняются (INV-09, INV-10). Журнал `school.pupil_transferred` (из группы → в группу).
 
+### 5.12 Дни рождения в календаре (read-model, P24)
+
+- **Не мутация и не данные календаря:** день рождения — **не** тип `GRADE_EVENT_TYPE` и **не** строка `grade_event`; новой таблицы и миграции нет ([`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.3). Это производная от `pupil.birth_date`.
+- **Состав:** ученики с активным на месяц просмотра зачислением в выбранную группу (`enrollment.grade_id`, интервал `starts_on…ends_on` пересекает месяц) и непустой `birth_date`; совпадение по месяцу и дню. 29 февраля в невисокосный год показывается **28 февраля**.
+- **Поле DTO:** `birthdays: { pupilId, dayOfMonth, eventDateIso, displayName }[]` рядом с `events` в `loadCalendarPage`; `displayName` — «Имя Фамилия»; год рождения и возраст **не** отдаются.
+- **Кто видит:** `TEACHER` (группа своего назначения, AZ-43) и `ADMIN`. Для `PARENT` загрузчик возвращает пустой список без запроса к `pupil.birth_date` (AZ-20a, AZ-60, S-7).
+- **Отрисовка:** в ячейке дня — отдельная строка с иконкой торта и именем (текст + иконка, не только цвет); не кликается как событие, не редактируется, не попадает в форму события; в списке (мобильный) — строка «День рождения: <имя>».
+
 ## 6. Negative paths (business)
 
 | Случай | Условие | Код | Ключ сообщения | Исход |
@@ -127,6 +146,9 @@
 | Чужая группа | teacher вне назначения | `NOT_FOUND` | `common.errors.not_found` | AZ-D4 |
 | Дубликат имени группы | совпадает с активной | `VALIDATION` (`fields.name`) | `admin.group.name_taken` | форма сохранена |
 | Параллельное изменение | зачисление изменено между чтением и записью | `CONFLICT` | `common.errors.conflict` | обновить |
+| Дата рождения не в прошлом | `updatePupilBirthDate` / `updatePupil`: дата ≥ сегодня или некорректна | `VALIDATION` (`fields.birthDate`) | `updatePupil` — `admin.people.birth_date_in_future` (как сейчас); `updatePupilBirthDate` — `common.errors.birth_date_in_future` (новый ключ в срезе `common`, ru и en: доступен и teacher, и admin) | форма сохранена, ошибка у поля |
+| Ученик не своей группы | teacher вызывает `updatePupilBirthDate` для ученика без активного зачисления в своей группе | `NOT_FOUND` | `common.errors.not_found` | AZ-D4, существование не раскрывается |
+| Лишние поля | `updatePupilBirthDate` с ФИО / `isActive` | `VALIDATION` | `common.errors.validation` | без изменений |
 
 ## 7. Security paths
 
@@ -137,6 +159,8 @@
 | S-3 | Teacher видит о согласии только «есть / нет» (СО-7); подписант и место хранения — admin | AZ-21 |
 | S-4 | Идентификаторы группы и ученика не доказывают права: принадлежность — по `teacher_assignment` в БД | AZ-D4 |
 | S-5 | Данные ребёнка (ФИО, дата рождения) не попадают в журнал текстом; в журнале — ссылки (INV-23) | — |
+| S-6 | `updatePupilBirthDate` у teacher меняет **только** `birth_date` ученика своей группы активного года; принадлежность — по `enrollment` + `teacher_assignment` в БД, не по `gradeId` с клиента | AZ-20a, AZ-D4, AZ-P5 |
+| S-7 | Дата рождения не показывается родителю в календаре (дни рождения — только teacher и admin) | AZ-20a |
 
 ## 8. Concurrency & idempotency
 
@@ -163,7 +187,7 @@
 | Слой | Роль |
 |------|------|
 | `domain` | `canActivateYear`, `validateYearDates`, `canEnroll`, схемы входов |
-| `policy-server` | `requireRole(ADMIN)`, `requireAssignedTeacher(gradeId, yearId)` |
+| `policy-server` | `requireRole(ADMIN)`, `requireAssignedTeacher(gradeId, yearId)`; P24: `canEditPupilBirthDate` (admin — организация; teacher — активное зачисление в свою группу активного года) |
 | DAL (`src/data/school/**`) | транзакции §5, журнал |
 | Запрещено | прямой `UPDATE academic_year.status`; логика согласий в компонентах |
 
@@ -176,6 +200,8 @@
 - [ ] `EN` недоступен, пока перевод не `READY` — исход: тест.
 - [ ] Teacher не зачисляет в чужую группу — исход: тест policy.
 - [ ] Каждая операция пишет журнал — исход: тест.
+- [ ] `updatePupilBirthDate`: teacher своей группы — успех и `school.pupil_birth_date_updated`; чужая группа — `NOT_FOUND`; закрытый год — `FORBIDDEN`; дата в будущем — `VALIDATION`; parent — `FORBIDDEN` — исход: тесты policy и DAL (P24).
+- [ ] `updatePupil` со сменой даты пишет `school.pupil_birth_date_updated`; в журнале нет значения даты — исход: тест (P24).
 
 ## 12. Open questions
 
@@ -211,3 +237,4 @@
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W8-04) |
 | 2026-10-19 | v1.1 — §5.1: `closeYear` создаёт снимки итогов года в той же транзакции; аналитика открывает последний закрытый год (P08) |
+| 2026-11-03 | v1.2 — P24: `updatePupilBirthDate` (§3, §4, §5.6a, §6, S-6, S-7); `updatePupil` журналирует смену даты рождения; §5.12 дни рождения в календаре (read-model, без схемы) |

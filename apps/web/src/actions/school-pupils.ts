@@ -10,6 +10,7 @@ import { recordPaperConsent } from "@/data/school/record-paper-consent";
 import { transferPupil } from "@/data/school/transfer-pupil";
 import { unenrollPupil } from "@/data/school/unenroll-pupil";
 import { updatePupil } from "@/data/school/update-pupil";
+import { updatePupilBirthDate } from "@/data/school/update-pupil-birth-date";
 import { uuidFromForm } from "@/lib/auth/admin-access-form";
 import { requireActiveUser, requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
@@ -18,6 +19,7 @@ const revalidatePeople = () => {
   revalidatePath("/people");
   revalidatePath("/group");
   revalidatePath("/school");
+  revalidatePath("/calendar");
   revalidatePath("/", "layout");
 };
 
@@ -51,6 +53,22 @@ export async function updatePupilAction(
     isActive: formData.get("isActive") === "on",
   });
   if (result.ok) revalidatePeople();
+  return result;
+}
+
+export async function updatePupilBirthDateAction(
+  _prev: MutationResult | null,
+  formData: FormData,
+): Promise<MutationResult> {
+  const actor = await requireActiveUser();
+  const result = await updatePupilBirthDate(await getPrisma(), actor.userId, {
+    pupilId: uuidFromForm(formData, "pupilId"),
+    birthDate: String(formData.get("birthDate") ?? "").trim(),
+  });
+  if (result.ok) {
+    revalidatePath("/group");
+    revalidatePath("/calendar");
+  }
   return result;
 }
 

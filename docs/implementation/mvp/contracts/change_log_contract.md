@@ -62,6 +62,7 @@
 | `school.teacher_assigned` / `school.teacher_unassigned` | назначение | `teacher_assignment` | W8-04 |
 | `school.settings_changed` | настройки оценивания | `grade_settings` | W8-04 |
 | `school.pupil_created` / `school.pupil_updated` / `school.pupil_deactivated` | ученик | `pupil` | W8-04 |
+| `school.pupil_birth_date_updated` | дата рождения изменена (teacher своей группы или admin); в `new_value` — `{ fields: ["birthDate"] }`, сама дата не пишется (S-5, INV-23) | `pupil` | P24, school_year_and_groups_contract §5.6a |
 | `school.consent_recorded` / `school.consent_revoked` | согласие по ребёнку | `child_data_consent` | W8-04 |
 | `school.pupil_enrolled` / `school.pupil_unenrolled` / `school.pupil_transferred` | зачисление | `enrollment` | W8-04 |
 | `lesson.created` / `lesson.updated` / `lesson.deleted` | урок | `lesson` | W8-05 |
@@ -213,3 +214,4 @@
 | 2026-10-22 | v1.4 — §4: action-коды достижений и штрафов (P12) |
 | 2026-10-23 | v1.5 — §4: action-коды семьи, согласия и дайджеста (P13) |
 | 2026-11-02 | v1.6 — §4: `achievement.suggested`, `achievement.suggestion_confirmed`, `achievement.suggestion_deferred`, `achievement.suggestion_dismissed`; событие `EVENT` пишет существующий `achievement.awarded` (P23, ADR-016) |
+| 2026-11-03 | v1.7 — §4: `school.pupil_birth_date_updated` (P24, `updatePupilBirthDate`) |

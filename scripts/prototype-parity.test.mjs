@@ -44,21 +44,35 @@ describe("parity normalization", () => {
       path.join(REPO_ROOT, "apps/web/src/components/ui/button.tsx"),
       "utf8",
     );
-    const merged = extractCvaClasses(buttonSource, { variant: "default", size: "default" });
-    expect(merged).toContain("bg-cobalt-ink");
-    expect(merged).toContain("h-10");
+    const mergedDefault = extractCvaClasses(buttonSource, {
+      variant: "default",
+      size: "default",
+    });
+    expect(mergedDefault).toContain("bg-cobalt-ink");
+    expect(mergedDefault).toContain("h-9");
+    const mergedField = extractCvaClasses(buttonSource, {
+      variant: "default",
+      size: "field",
+    });
+    expect(mergedField).toContain("h-10");
   });
 });
 
 describe("parity real rows", () => {
   const rows = loadParityRows();
 
-  it("BTN (P-01) resolves prototype const and reports component drift before CU2", () => {
+  it("BTN (P-01) resolves prototype const and matches button default after P24-CU3", () => {
     const row = rows.find((r) => r.id === "P-01");
     const proto = resolveProtoConst(prototypeHtml, "BTN");
     expect(proto).toContain("text-base");
     const result = compareRow(row, { prototypeHtml, rootDir: REPO_ROOT });
-    expect(result.status).toBe("drift");
+    expect(result.status).toBe("ok");
+  });
+
+  it("CHIP (P-16) matches segmented-chip base with P24 touch padding", () => {
+    const row = rows.find((r) => r.id === "P-16");
+    const result = compareRow(row, { prototypeHtml, rootDir: REPO_ROOT });
+    expect(result.status).toBe("ok");
   });
 
   it("SEG_ON (P-14) resolves prototype const and matches segmented-control (P14-CU3)", () => {

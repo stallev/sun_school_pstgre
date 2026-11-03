@@ -78,4 +78,24 @@ describe("CheckScoresSection absent collapse", () => {
     expect(container.textContent).toContain(messages.showScores);
     expect(container.textContent).not.toContain(messages.testLabel);
   });
+
+  it("uses dense two-column grid wrapper on regular lessons", async () => {
+    await act(async () => {
+      root.render(
+        <CheckScoresSection
+          pupil={pupil(true)}
+          lessonKind={LESSON_KIND.REGULAR}
+          hasTest
+          versesToRecite={[{ lessonVerseId: "verse-1", position: 1 }]}
+          previousLessonOrdinal={1}
+          disabled={false}
+          messages={messages}
+          onVerseScoreChange={vi.fn()}
+          onTestScoreChange={vi.fn()}
+          onNotebookScoreChange={vi.fn()}
+        />,
+      );
+    });
+    expect(container.querySelector(".lg\\:grid-cols-2")).toBeTruthy();
+  });
 });

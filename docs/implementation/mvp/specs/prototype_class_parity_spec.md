@@ -2,12 +2,12 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-24  
-**Волна:** W12-01 (P14)  
-**Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03 v2.0), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md) (UX-02 v2.0), [`design_system_lab_spec.md`](./design_system_lab_spec.md) §5.3 и §8, [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md)  
+**Версия:** 1.1  
+**Дата:** 2026-11-03  
+**Волна:** W12-01 (P14); правки P24 (ADR-017)  
+**Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03 v2.0), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md) (UX-02 v2.0), [`design_system_lab_spec.md`](./design_system_lab_spec.md) §5.3 и §8, [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_017_shell_container_toast_buttons.md`](../../../prds/07_governance/adr_017_shell_container_toast_buttons.md)  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html), [`prototype_route_mapping.md`](../../../design/prototype_route_mapping.md), [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md), [`ai_code_review_protocol.md`](../../../guidelines/ai_code_review_protocol.md), [`P14_phase_description.md`](../phases_tasks_descriptions/P14_phase_description.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
-**Проверено по:** Tailwind CSS v4.3 — порядок классов не влияет на результат, одинаковые утилиты дают одинаковый CSS; `cva` (class-variance-authority) — итоговая строка класса = база + вариант + размер; shadcn семантические алиасы — по `apps/web/src/app/globals.css` (`:root`, `@theme inline`). Размеры в px посчитаны от `html { font-size: 112.5% }` (18 px). Номера строк прототипа сняты 2026-10-24 после правок P14. Context7 недоступен.
+**Проверено по:** Tailwind CSS v4.3 — порядок классов не влияет на результат, одинаковые утилиты дают одинаковый CSS; `cva` (class-variance-authority) — итоговая строка класса = база + вариант + размер; shadcn семантические алиасы — по `apps/web/src/app/globals.css` (`:root`, `@theme inline`). Размеры в px посчитаны от `html { font-size: 112.5% }` (18 px). Номера строк прототипа сняты 2026-11-03 после правок P24 (кнопки h-9, rail-сайдбар, контейнер 1600, toast, диалог несохранённых изменений, дни рождения). Context7 недоступен.
 
 ---
 
@@ -82,52 +82,57 @@
 
 ## 7. Таблица соответствия
 
-Номера строк прототипа — на 2026-10-24.
+Номера строк прототипа — на 2026-11-03 (после P24). Переходные `allowed_diff` помечены «P24»: код `apps/web` приводится к прототипу в CU фазы P24, после чего запись удаляется.
 
 ### 7.1 Читаемая таблица (`check`: `auto` — скрипт, `manual` — по §4 шаг 5)
 
 | ID | Прототип (символ · строка) | Компонент | Ожидаемые классы (v2.0, после N-1…N-8) | `allowed_diff` | `check` |
 |----|----------------------------|-----------|-----------------------------------------|----------------|---------|
-| P-01 | `BTN` · ~691 | `components/ui/button.tsx` (база + `size=default`) | `inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3.5 text-base font-medium whitespace-nowrap select-none active:scale-[0.97] motion-reduce:active:scale-100 disabled:opacity-45` | `border border-transparent`, `focus-visible:outline-*` (в app задаётся глобально), `transition-*` | auto |
-| P-02 | `B_PRIMARY` · ~692 | `button.tsx` `variant=default` | `bg-cobalt-ink text-surface hover:bg-cobalt-deep` | — | auto |
-| P-03 | `B_OUTLINE` · ~693 | `button.tsx` `variant=outline` | `border-line-strong bg-surface text-ink hover:bg-paper` | `border` (в базе) | auto |
-| P-04 | `B_GHOST` · ~694 | `button.tsx` `variant=ghost` | `text-ink hover:bg-line/60` | `aria-expanded:bg-line/60` | auto |
-| P-05 | `B_DANGER` · ~695 | `button.tsx` `variant=destructive` | `border-danger/60 bg-surface text-danger hover:bg-danger-soft` | `bg-surface` (в прототипе прозрачный) | auto |
-| P-06 | `B_DANGER_FILL` · ~696 | `button.tsx` `variant=destructive-solid` | `bg-danger text-surface` | hover: `hover:opacity-90` (прототип) и `hover:bg-danger/90` (app) считаются равными | auto |
-| P-07 | размер `compact` (таблицы) | `button.tsx` `size=sm` → переименовать в `compact` | `h-9 px-3 text-base` | — | auto |
+| P-01 | `BTN` · ~701 | `components/ui/button.tsx` (база + `size=default`) | `inline-flex h-9 items-center justify-center gap-2 rounded-lg px-3 text-base font-medium whitespace-nowrap select-none active:scale-[0.97] motion-reduce:active:scale-100 disabled:opacity-45` — единый компактный размер (как «Выдать»): `h-9 px-3`, ширина по содержимому; P24 (ADR-017) | `border border-transparent`, `focus-visible:outline-*` (в app задаётся глобально), `transition-*`; **P24:** `h-10 px-3.5` (текущий код, до CU кнопок) | auto |
+| P-02 | `B_PRIMARY` · ~702 | `button.tsx` `variant=default` | `bg-cobalt-ink text-surface hover:bg-cobalt-deep` | — | auto |
+| P-03 | `B_OUTLINE` · ~703 | `button.tsx` `variant=outline` | `border-line-strong bg-surface text-ink hover:bg-paper` | `border` (в базе) | auto |
+| P-04 | `B_GHOST` · ~704 | `button.tsx` `variant=ghost` | `text-ink hover:bg-line/60` | `aria-expanded:bg-line/60` | auto |
+| P-05 | `B_DANGER` · ~705 | `button.tsx` `variant=destructive` | `border-danger/60 bg-surface text-danger hover:bg-danger-soft` | `bg-surface` (в прототипе прозрачный) | auto |
+| P-06 | `B_DANGER_FILL` · ~706 | `button.tsx` `variant=destructive-solid` | `bg-danger text-surface` | hover: `hover:opacity-90` (прототип) и `hover:bg-danger/90` (app) считаются равными | auto |
+| P-07 | `SUBMIT` · ~713 (touch) | `button.tsx` `size=touch` (размеры `compact` и `sm` удалены: единый `default` = `h-9 px-3`) | `h-11 px-3`; на экране входа дополнительно `w-full justify-center`. Крупнее `h-9` кнопка бывает только как mobile touch (`h-11`: вход, нижняя панель проверки, диалог несохранённых изменений `h-11 sm:h-9`) | `px-5` (текущий код) — P24 | manual |
 | P-08 | `CARD` · ~699 | `components/ui/card.tsx` | `rounded-xl border border-line bg-surface` | `p-4 sm:p-5` (padding в компоненте), `text-base` | auto |
 | P-09 | `H2` · ~700 | `components/atoms/Heading.tsx` (`level` 2) | `font-display text-[1.25rem] font-medium leading-snug` | — | auto |
 | P-10 | `FIELD` · ~701 | `components/ui/input.tsx` | `h-10 w-full max-w-sm rounded-lg border border-muted bg-surface px-3 text-base focus:border-cobalt-ink` | `focus:border-cobalt-ink` ≡ `focus-visible:border-cobalt-ink`; `py-1`, `min-w-0`, `file:*`, `placeholder:*`, `aria-invalid:*` | auto |
 | P-11 | `SEL` · ~702 | `components/ui/select.tsx` `SelectTrigger` | `h-10 w-full rounded-lg border border-muted bg-surface px-3 text-base` + шеврон `size-4 text-muted` | `max-w-sm` задаёт потребитель; `justify-between`, `gap-1.5`, `data-placeholder:*` | auto |
 | P-12 | `SEL` панель, пункт · `DD_PANEL` ~1178 | `select.tsx` `SelectContent` / `SelectItem` | панель `rounded-xl border border-line bg-surface shadow-float`; пункт `min-h-10 rounded-lg px-2.5 text-base`; выбранный `bg-cobalt-soft text-cobalt-ink` | `animate-*`, `z-50`, `max-h-*` | manual |
 | P-13 | `LABEL` · ~704 | `components/ui/label.tsx`, `field.tsx` (`FieldLabel`) | `mb-1.5 block text-base font-medium` | `mb-1.5` может задаваться `Field` | auto |
-| P-14 | `SEG_ON` · ~706 | `lib/ui/segmented-chip-classes.ts` (выбранный) | `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink` | `hover:bg-cobalt-soft` | auto |
-| P-15 | `SEG_OFF` · ~707 | `segmented-chip-classes.ts` (невыбранный) | `border-muted bg-surface text-ink hover:border-ink-2` | — (`hover:bg-paper` в `SegmentedControl` v1 — расхождение, в P14-CU3 приводится к `hover:border-ink-2`) | auto |
-| P-16 | `CHIP` · ~708 | `segmented-chip-classes.ts` (общая часть) | `h-10 rounded-lg border px-3 text-base transition-[background-color,border-color,color] duration-100`; `size=compact`: `h-9` | `min-w-11`, `font-medium`, `active:scale-[0.97]`, `transform` в transition (N-5), `no-underline` (link chips) | auto |
+| P-14 | `SEG_ON` · ~716 | `lib/ui/segmented-chip-classes.ts` (выбранный) | `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink` | `hover:bg-cobalt-soft` | auto |
+| P-15 | `SEG_OFF` · ~717 | `segmented-chip-classes.ts` (невыбранный) | `border-muted bg-surface text-ink hover:border-ink-2` | — | auto |
+| P-16 | `CHIP` · ~718, `seg(…, fit)` · ~750 | `segmented-chip-classes.ts` (общая часть), `components/ui/segmented-control.tsx` | `h-9 rounded-lg border px-3 text-base transition-[background-color,border-color,color] duration-100` — единый компактный размер чипа/сегмента (`size=compact` удалён; touch `h-11` только mobile). Опция `fit` (`SegmentedControl fit`): `inline-flex flex-wrap gap-1.5` и `min-w-14` вместо `grid grid-cols-N` — «Присутствие» Да/Нет по ширине содержимого | `min-w-11`, `font-medium`, `active:scale-[0.97]`, `transform` в transition (N-5), `no-underline` (link chips); **P24:** `h-9` и `h-10` (код до CU кнопок: `h-10`, compact `h-9`) | auto |
 | P-17 | чекбокс (`<input type="checkbox" class="size-5 accent-cobalt-ink">`) · ~1356, ~2623 | `components/ui/checkbox.tsx` | `size-5 rounded border border-muted`; выбран `border-cobalt-ink bg-cobalt-ink text-surface` | область касания `after:-inset-*` | auto |
 | P-18 | `toggle` · ~744 | `components/ui/switch.tsx` | трек `h-8 w-14 rounded-full`, включён `bg-ink`, выключен `bg-line-strong`; бегунок `size-6` | Base UI-атрибуты | manual |
 | P-19 | поле даты (`FIELD` на `type=date`) · ~1343 | `components/ui/date-field.tsx` (новый) | как P-10 + кнопка календаря `size-10` | нативный глиф календаря в прототипе заменяется кнопкой | manual |
-| P-20 | `SIDE_ROW` · ~1185 | `components/shell/nav-link-row.tsx` `density="sidebar"` | `flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight` | `no-underline hover:no-underline` | auto |
-| P-21 | `SIDE_ROW_ON` / `SIDE_ROW_OFF` · ~1186–1187 | `nav-link-row.tsx` | активный `bg-cobalt-soft font-bold text-cobalt-ink`; неактивный `text-ink hover:bg-line/60` | — | auto |
-| P-22 | `sidebarHTML` · ~1188 | `components/shell/sidebar-nav.tsx` | группа: заголовок `px-3 pb-1 text-sm font-medium text-muted`, список `space-y-0.5`, интервал групп `mt-5` | — | manual |
-| P-23 | `#sidebar` (aside) · 194 | `components/shell/app-shell.tsx` | `sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface px-3 py-4 lg:block` | — | manual |
-| P-24 | `#shellGrid`, `#main`, `#view` · 193–198 | `app-shell.tsx` | сетка `lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]`; `main` `min-w-0 px-4 pt-4 pb-28 sm:px-6 lg:px-8 lg:pt-7 lg:pb-16`; контейнер `max-w-[1400px]` без `mx-auto` | `w-full` | manual |
-| P-25 | `header` · 183 | `components/shell/shell-header.client.tsx` | `sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md`; внутри `flex h-14 items-center gap-2 px-2 sm:px-4 lg:gap-0 lg:px-0`; бренд на `lg+` `w-64 border-r border-line px-5` | — | manual |
-| P-26 | `DD_PANEL` · ~1178 | `lib/shell/nav-chrome-classes.ts` `SHELL_NAV_DROPDOWN_PANEL` (оставить только для user-menu) | `absolute top-full z-50 mt-1.5 min-w-64 origin-top rounded-xl border border-line bg-surface p-1.5 shadow-float` | `shadow-float` ≡ `shadow-[0_10px_30px_rgba(15,23,42,0.12)]` | auto |
-| P-27 | `rightHTML` · ~1195 | `components/shell/user-menu.tsx` | триггер `h-10 rounded-lg px-1.5 text-base`; пункты `h-10 rounded-lg px-2.5 text-base`; группа «Смотреть как» — только `APP_ENV=dev` | `max-w-[12rem]`, `truncate` | manual |
-| P-28 | `badge` · ~1177 | `components/shell/nav-badge.tsx`, `ui/count-badge.tsx` | `ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-cobalt-ink px-1.5 text-xs font-bold tabular-nums text-surface` | — | auto |
+| P-20 | `SIDE_ROW` · ~1196 | `components/shell/nav-link-row.tsx` `density="sidebar"` | `flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight` | `no-underline hover:no-underline` | auto |
+| P-21 | `SIDE_ROW_ON` / `SIDE_ROW_OFF` · ~1197–1198 | `nav-link-row.tsx` | активный `bg-cobalt-soft font-bold text-cobalt-ink`; неактивный `text-ink hover:bg-line/60` | — | auto |
+| P-22 | `sidebarHTML` · ~1203 | `components/shell/sidebar-nav.tsx` | развёрнут: группа — заголовок `px-3 pb-1 text-sm font-medium text-muted`, список `space-y-0.5`, интервал групп `mt-5`. **Rail (P24):** без заголовков групп; группы разделены `mt-3 border-t border-line pt-3`; строка — только иконка (см. P-41) | — | manual |
+| P-23 | `#sidebar` (aside) · 199 | `components/shell/app-shell.tsx` | `sticky top-14 hidden h-[calc(100dvh-3.5rem)] overflow-y-auto border-r border-line bg-surface px-3 py-4 lg:block`; в rail `lg:group-data-[rail=collapsed]/shell:px-2` (ширину задаёт колонка сетки P-24) | — | manual |
+| P-24 | `#shell`, `#shellGrid`, `#main`, `#view` · 183–203 | `app-shell.tsx` | корень `group/shell` + `data-rail=expanded\|collapsed` (серверное состояние из cookie `sidebar_collapsed`); сетка `mx-auto w-full max-w-[1600px] lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]`, в rail `lg:group-data-[rail=collapsed]/shell:grid-cols-[4rem_minmax(0,1fr)]`; `main` `min-w-0 px-4 pt-4 pb-28 sm:px-6 lg:px-8 lg:pt-7 lg:pb-16`; контейнер контента `mx-auto max-w-[1600px]` (ADR-017: центрирован; отменяет «прижат влево» ADR-014 R-4) | `w-full` | manual |
+| P-25 | `header` · 184 | `components/shell/shell-header.client.tsx` | `sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md`; внутри `mx-auto flex h-14 w-full max-w-[1600px] items-center gap-2 px-2 sm:px-4 lg:gap-0 lg:px-0` (шапка в том же контейнере, что и контент); бренд на `lg+` `w-64 border-r border-line px-5`, в rail `w-16 justify-center px-0` без текста; за брендом — кнопка rail (P-42) | — | manual |
+| P-26 | `DD_PANEL` · ~1189 | `lib/shell/nav-chrome-classes.ts` `SHELL_NAV_DROPDOWN_PANEL` (оставить только для user-menu) | `absolute top-full z-50 mt-1.5 min-w-64 origin-top rounded-xl border border-line bg-surface p-1.5 shadow-float` | `shadow-float` ≡ `shadow-[0_10px_30px_rgba(15,23,42,0.12)]` | auto |
+| P-27 | `rightHTML` · ~1214 | `components/shell/user-menu.tsx` | триггер `h-10 rounded-lg px-1.5 text-base`; пункты `h-10 rounded-lg px-2.5 text-base`; группа «Смотреть как» — только `APP_ENV=dev` | `max-w-[12rem]`, `truncate` | manual |
+| P-28 | `badge` · ~1188 | `components/shell/nav-badge.tsx`, `ui/count-badge.tsx` | `ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-cobalt-ink px-1.5 text-xs font-bold tabular-nums text-surface`; в rail вместо числа — точка `absolute top-1.5 right-2 size-2.5 rounded-full bg-cobalt-ink ring-2 ring-surface` (`railDot`) | — | auto |
 | P-29 | `ref` · ~717 | `components/ui/badge.tsx` (ссылка на стих) | `inline-flex items-center rounded-md bg-paper px-1.5 py-px text-sm font-medium text-ink ring-1 ring-line` | `h-5` (в app) снять | auto |
 | P-30 | `pageHead` · ~719 | `components/patterns/PageHeader.tsx` | `mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between lg:mb-6`; `h1` `font-display text-[1.75rem] sm:text-[2.125rem] font-medium leading-[1.1] tracking-[-0.01em]`; подзаголовок `mt-1 text-ink-2` | — | auto |
 | P-31 | таблица (`<table class="w-full text-left text-base">`, `thead … text-sm text-muted`, `td … px-3 py-3`) · ~960 и др. | `components/ui/table.tsx` | таблица `text-base`; заголовок колонки `text-sm text-muted font-normal px-3 py-3`; ячейка `px-3 py-3 tabular-nums` для чисел | `min-w-*` задаёт экран | auto |
 | P-32 | `status` · 729 | `components/ui/status-text.tsx` | `inline-flex items-center gap-1.5 text-sm`; цвет по виду | — | manual |
 | P-33 | `groupChips`, `yearChips`, `periodChips` · ~1775, ~943, ~1836 | `components/analytics/AnalyticsGradeChips.tsx`, `years/YearStrip.tsx`, `AnalyticsPeriodChips.tsx` | оболочка `flex flex-wrap gap-2` + `SegmentedControl` (P-14…P-16); собственных классов кнопок нет | — | manual |
 | P-34 | `vRating` · ~1750 | `components/analytics/RatingTable.tsx` | место `px-5 py-3 font-display text-lg tabular-nums` (одинаково во всех строках), имя `font-medium text-ink hover:text-cobalt-ink focus-visible:text-cobalt-ink`, числа `tabular-nums` | цвет места первых трёх: `text-ink`, остальных `text-muted` | manual |
-| P-35 | `vCalendar` · ~1782 | `components/calendar/CalendarMonth.tsx` | число дня `text-base tabular-nums text-ink`, сегодня `bg-ink text-surface rounded-full size-7`; ячейка `min-h-14 sm:min-h-24 p-1 sm:p-2` | — | manual |
-| P-36 | `SUBMIT` · ~703 | кнопка отправки экрана `/login` (`components/auth/*`) | `BTN` + `h-11 w-full justify-center` | — | manual |
+| P-35 | `vCalendar` · ~1795 | `components/calendar/CalendarMonth.tsx` | число дня `text-base tabular-nums text-ink`, сегодня `bg-ink text-surface rounded-full size-7`; ячейка `min-h-14 sm:min-h-24 p-1 sm:p-2`. **День рождения (P24, только teacher/admin):** `mt-0.5 flex min-w-0 items-center gap-1 text-amber-ink` — иконка торта `size-4` + имя ученика (`hidden truncate text-sm sm:inline`); запись в легенде «День рождения»; не тип события, производная от `birth_date`; 29 февраля → 28 | — | manual |
+| P-36 | `SUBMIT` · ~713 | кнопка отправки экрана `/login` (`components/auth/*`) | `BTN` + `h-11 w-full justify-center` (touch, только узкий экран входа) | — | manual |
 | P-37 | `main:focus` · 122 (`@layer base`) | `app/globals.css` | `main:focus:not(:focus-visible) { outline: none }` | — | auto (css) |
 | P-38 | `html { font-size }` · 120 | `app/globals.css` | `html { font-size: 112.5% }` | — | auto (css) |
 | P-39 | `--font-body`, `--font-display` · 109–110 | `app/globals.css`, `app/layout.tsx` | `--font-body` = Source Sans 3; `--font-display` = Alegreya | `fallback` в `next/font` | auto (css) |
 | P-40 | `--control-h*` · 112–114 | `app/globals.css` | `--control-h: 2.5rem; --control-h-compact: 2.25rem; --control-h-touch: 2.75rem` | — | auto (css) |
+| P-41 | `SIDE_ROW_RAIL` · ~1200 | `components/shell/nav-link-row.tsx` `density="rail"` | `relative flex h-10 w-full items-center justify-center rounded-lg text-base transition-[background-color,color] duration-100` + активный/неактивный как P-21; только иконка, `title` и `aria-label` = название раздела; бейдж — точка (P-28) | — | manual |
+| P-42 | `#railBtn` · 191 | `components/shell/rail-toggle.client.tsx` (новый) | `ml-2 hidden size-10 items-center justify-center rounded-lg text-ink transition-[background-color,transform] duration-100 hover:bg-paper active:scale-[0.96] lg:inline-flex`; `aria-controls=sidebar`, `aria-expanded`, `aria-label`/`title` «Свернуть меню до значков» ↔ «Развернуть меню»; состояние — cookie `sidebar_collapsed` | — | manual |
+| P-43 | `TOAST_BASE`, `TOAST_OK`, `TOAST_ERR`, `toast()` · ~3569–3573; контейнер `#toast` · 224–226 | `components/ui/sonner.tsx` (`Toaster`) | база `flex max-w-md items-start gap-2 rounded-lg px-4 py-3 text-base shadow-float`; success `bg-ok-soft text-ok` + иконка `i-ok`, error `bg-danger-soft text-danger` + иконка `i-alert`; длительность 2000 мс (`TOAST_MS`); позиция: `lg+` — снизу справа (`fixed right-6 bottom-6`), mobile — сверху (`fixed inset-x-0 top-16`); `role=status` / `role=alert` | `shadow-float` ≡ `shadow-[0_10px_30px_rgba(15,23,42,0.12)]`; Sonner-атрибуты `data-*` | manual |
+| P-44 | `unsavedDialog()` · ~3648 (на базе `openDialog` / `dlgHead`) | `components/patterns/ConfirmDialog.tsx` (вариант с тремя действиями) или `components/check/UnsavedChangesDialog.tsx` (новый) | заголовок «Есть несохранённые изменения»; кнопки по порядку фокуса: «Остаться» `ghost`, «Не сохранять» `outline` (сброс записи ученика + toast «Изменения сброшены»), «Сохранить и перейти» `default`; контейнер `flex flex-col-reverse gap-2 sm:flex-row sm:justify-end`; кнопки `h-11 sm:h-9`; заменяет `window.confirm` при pick / prev / next / стрелках | — | manual |
+| P-45 | `scaleField()` · ~1610 (`vCheck`) | `components/check/ScaleKeypad.tsx` (новый) | строка 0–10 в один ряд без карточки с тенью и крупного числа: `grid grid-cols-6 gap-1 lg:flex`; кнопка `h-11 min-w-0 rounded-lg border px-1 text-base tabular-nums lg:h-9 lg:flex-1` + `SEG_ON` / `SEG_OFF` (P-14, P-15); `role=radiogroup`, пункт «—» с `aria-label` «Не оценивалось» | — | manual |
 
 ### 7.2 Машиночитаемый блок (для `scripts/check-prototype-parity.mjs`)
 
@@ -136,8 +141,8 @@
 ```json parity
 [
   { "id": "P-01", "proto": { "kind": "const", "symbol": "BTN" }, "component": { "path": "apps/web/src/components/ui/button.tsx", "kind": "cva", "size": "default" },
-    "expect": "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3.5 text-base font-medium whitespace-nowrap select-none active:scale-[0.97] motion-reduce:active:scale-100 disabled:opacity-45",
-    "allowed_diff": ["border", "border-transparent", "transition-[background-color,transform]", "duration-150", "ease-out-soft", "outline-none", "group/button", "shrink-0"], "check": "auto" },
+    "expect": "inline-flex h-9 items-center justify-center gap-2 rounded-lg px-3 text-base font-medium whitespace-nowrap select-none active:scale-[0.97] motion-reduce:active:scale-100 disabled:opacity-45",
+    "allowed_diff": ["border", "border-transparent", "transition-[background-color,transform]", "transition-[background-color,border-color,color,transform]", "duration-100", "duration-150", "ease-out-soft", "outline-none", "group/button", "shrink-0", "focus-visible:outline-2", "focus-visible:outline-offset-2", "focus-visible:outline-cobalt", "disabled:active:scale-100", "motion-reduce:transition-none", "disabled:pointer-events-none", "aria-busy:pointer-events-none", "aria-busy:opacity-70", "aria-invalid:border-destructive", "[&_svg]:pointer-events-none", "[&_svg]:shrink-0", "[&_svg:not([class*='size-'])]:size-4", "has-data-[icon=inline-end]:pr-2.5", "has-data-[icon=inline-start]:pl-2.5", "max-md:relative", "max-md:after:absolute", "max-md:after:-inset-y-1", "max-md:after:inset-x-0"], "check": "auto" },
   { "id": "P-02", "proto": { "kind": "const", "symbol": "B_PRIMARY" }, "component": { "path": "apps/web/src/components/ui/button.tsx", "kind": "cva", "variant": "default" },
     "expect": "bg-cobalt-ink text-surface hover:bg-cobalt-deep", "allowed_diff": [], "check": "auto" },
   { "id": "P-03", "proto": { "kind": "const", "symbol": "B_OUTLINE" }, "component": { "path": "apps/web/src/components/ui/button.tsx", "kind": "cva", "variant": "outline" },
@@ -148,8 +153,6 @@
     "expect": "border border-danger/60 text-danger hover:bg-danger-soft", "allowed_diff": ["bg-surface", "border"], "check": "auto" },
   { "id": "P-06", "proto": { "kind": "const", "symbol": "B_DANGER_FILL" }, "component": { "path": "apps/web/src/components/ui/button.tsx", "kind": "cva", "variant": "destructive-solid" },
     "expect": "bg-danger text-surface", "allowed_diff": ["hover:opacity-90", "hover:bg-danger/90"], "check": "auto" },
-  { "id": "P-07", "proto": { "kind": "const", "symbol": "BTN" }, "component": { "path": "apps/web/src/components/ui/button.tsx", "kind": "cva", "size": "compact" },
-    "expect": "h-9 px-3 text-base", "allowed_diff": ["h-10", "px-3.5"], "check": "auto" },
   { "id": "P-08", "proto": { "kind": "const", "symbol": "CARD" }, "component": { "path": "apps/web/src/components/ui/card.tsx", "kind": "cn", "pick": "Card" },
     "expect": "rounded-xl border border-line bg-surface", "allowed_diff": ["p-4", "sm:p-5", "text-base", "flex", "flex-col", "gap-4"], "check": "auto" },
   { "id": "P-10", "proto": { "kind": "const", "symbol": "FIELD" }, "component": { "path": "apps/web/src/components/ui/input.tsx", "kind": "cn", "pick": "Input" },
@@ -163,7 +166,7 @@
   { "id": "P-15", "proto": { "kind": "const", "symbol": "SEG_OFF" }, "component": { "path": "apps/web/src/lib/ui/segmented-chip-classes.ts", "kind": "cn", "pick": "unchecked" },
     "expect": "border-muted bg-surface text-ink hover:border-ink-2", "allowed_diff": [], "check": "auto" },
   { "id": "P-16", "proto": { "kind": "const", "symbol": "CHIP" }, "component": { "path": "apps/web/src/lib/ui/segmented-chip-classes.ts", "kind": "cn", "pick": "base" },
-    "expect": "h-10 rounded-lg border px-3 text-base transition-[background-color,border-color,color] duration-100", "allowed_diff": ["inline-flex", "items-center", "justify-center", "min-h-11", "min-w-11", "font-medium", "active:scale-[0.97]", "motion-reduce:*", "disabled:*", "ease-out-soft", "no-underline", "hover:no-underline", "transition-[background-color,border-color,color]", "transition-[color,background-color,border-color,transform]", "transition-[background-color,border-color,color,transform]", "hover:bg-paper", "bg-surface", "text-ink"], "check": "auto" },
+    "expect": "h-9 rounded-lg border px-3 text-base transition-[background-color,border-color,color] duration-100", "allowed_diff": ["h-9", "h-10", "inline-flex", "items-center", "justify-center", "min-h-11", "min-w-9", "min-w-11", "font-medium", "active:scale-[0.97]", "motion-reduce:*", "disabled:*", "ease-out-soft", "no-underline", "hover:no-underline", "transition-[background-color,border-color,color]", "transition-[color,background-color,border-color,transform]", "transition-[background-color,border-color,color,transform]", "hover:bg-paper", "bg-surface", "text-ink", "max-md:relative", "max-md:after:absolute", "max-md:after:-inset-y-1", "max-md:after:inset-x-0"], "check": "auto" },
   { "id": "P-20", "proto": { "kind": "const", "symbol": "SIDE_ROW" }, "component": { "path": "apps/web/src/components/shell/nav-link-row.tsx", "kind": "cn", "pick": "sidebar" },
     "expect": "flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight", "allowed_diff": ["no-underline", "hover:no-underline", "transition-[background-color,color]", "duration-100"], "check": "auto" },
   { "id": "P-21", "proto": { "kind": "const", "symbol": "SIDE_ROW_ON" }, "component": { "path": "apps/web/src/components/shell/nav-link-row.tsx", "kind": "cn", "pick": "sidebar-active" },
@@ -181,7 +184,7 @@
 ]
 ```
 
-Строки P-09, P-12, P-17…P-19, P-22…P-25, P-27, P-29…P-36, P-39 — `check: "manual"` или `css`; они остаются в §7.1 и проверяются по протоколу §4 шаг 5, пока скрипт их не поддерживает.
+Строки P-07, P-09, P-12, P-17…P-19, P-22…P-25, P-27, P-29…P-36, P-39, P-41…P-45 — `check: "manual"` или `css`; они остаются в §7.1 и проверяются по протоколу §4 шаг 5, пока скрипт их не поддерживает.
 
 ## 8. Open questions
 
@@ -214,3 +217,4 @@
 | Date | Change |
 |------|--------|
 | 2026-10-24 | v1.0 — Canonical (W12-01, P14): правила нормализации, протокол, таблица P-01…P-40, требования к скрипту |
+| 2026-11-03 | v1.1 — P24 (ADR-017): единый размер кнопки/чипа `h-9 px-3` (P-01, P-07, P-16, опция `fit`), shell: rail-сайдбар и контейнер `max-w-[1600px] mx-auto` (P-22…P-25), дни рождения в календаре (P-35), новые строки P-41…P-45 (rail-строка, переключатель rail, toast, диалог несохранённых изменений, inline-keypad); номера строк прототипа обновлены |

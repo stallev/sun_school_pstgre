@@ -6,26 +6,43 @@ import { useMemo, useState, type ReactNode } from "react";
 import { BrandMark } from "@/components/patterns/BrandMark";
 import { CustomLink } from "@/components/ui/custom-link";
 import { NavDrawer } from "@/components/shell/nav-drawer";
+import { ShellSidebarToggle } from "@/components/shell/shell-sidebar-toggle.client";
 import { SidebarNav } from "@/components/shell/sidebar-nav";
 import { UserMenu } from "@/components/shell/user-menu";
 import type { NavBadgeCounts } from "@/components/shell/shell-nav-types";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
 import type { ShellNavPayload } from "@/data/shell/build-shell-nav.server";
 import { resolveActiveGroupKey, resolveActiveNavKey } from "@/lib/shell/nav-resolver";
+import {
+  shellGridClassName,
+  shellRailDataAttribute,
+} from "@/lib/shell/shell-layout-classes";
 import { resolveShellScreenTitle } from "@/lib/shell/shell-screen-title";
+import { cn } from "@/lib/utils";
+
+const SIDEBAR_NAV_ID = "sidebar";
 
 type ShellHeaderProps = {
   homeHref: string;
   displayName: string;
   nav: ShellNavPayload;
   badgeCounts: NavBadgeCounts;
+  initialSidebarCollapsed: boolean;
   children: ReactNode;
 };
 
-export const ShellHeader = ({ homeHref, displayName, nav, badgeCounts, children }: ShellHeaderProps) => {
+export const ShellHeader = ({
+  homeHref,
+  displayName,
+  nav,
+  badgeCounts,
+  initialSidebarCollapsed,
+  children,
+}: ShellHeaderProps) => {
   const messages = useShellMessages();
   const pathname = usePathname();
   const [previewRole, setPreviewRole] = useState<UserRole>(nav.shellRole);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
 
   const screenTitle =
     resolveShellScreenTitle(pathname, messages.screenTitles) ?? messages.brand;
@@ -50,31 +67,49 @@ export const ShellHeader = ({ homeHref, displayName, nav, badgeCounts, children 
   };
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div
+      className="group/shell flex min-h-dvh flex-col"
+      data-rail={shellRailDataAttribute(sidebarCollapsed)}
+    >
       <header className="sticky top-0 z-40 overflow-visible border-b border-line bg-surface/90 backdrop-blur-md reduce-transparency:bg-surface reduce-transparency:backdrop-blur-none">
-        <div className="flex h-14 items-center gap-2 px-2 sm:px-4 lg:gap-0 lg:px-0">
+        <div className="mx-auto flex h-14 w-full max-w-[1600px] items-center gap-2 px-4 sm:px-6 lg:gap-0 lg:px-0">
           <NavDrawer
             {...navProps}
             displayName={resolvedName}
             roleName={roleName}
           />
-          <CustomLink
-            href={homeHref}
-            className="flex min-w-0 flex-1 items-center gap-2.5 no-underline lg:h-full lg:w-64 lg:shrink-0 lg:border-r lg:border-line lg:px-5 lg:flex-none"
+          <div
+            className={cn(
+              "flex min-w-0 items-center gap-2.5 lg:h-full lg:shrink-0 lg:border-r lg:border-line lg:px-5",
+              sidebarCollapsed ? "lg:w-16 lg:justify-center lg:px-0" : "lg:w-64",
+            )}
           >
-            <span className="min-w-0 lg:hidden">
-              <span className="block truncate font-display text-lg font-medium leading-tight text-ink">
-                {screenTitle}
+            <CustomLink
+              href={homeHref}
+              className={cn(
+                "flex min-w-0 flex-1 items-center gap-2.5 no-underline lg:flex-none",
+                sidebarCollapsed && "lg:justify-center",
+              )}
+            >
+              <span className="min-w-0 lg:hidden">
+                <span className="block truncate font-display text-lg font-medium leading-tight text-ink">
+                  {screenTitle}
+                </span>
+                <span className="block truncate text-sm text-muted">
+                  {resolvedName} · {roleName}
+                </span>
               </span>
-              <span className="block truncate text-sm text-muted">
-                {resolvedName} · {roleName}
+              <span className="hidden lg:inline-flex">
+                <BrandMark brandName={sidebarCollapsed ? undefined : messages.brand} />
               </span>
-            </span>
-            <span className="hidden lg:inline-flex">
-              <BrandMark brandName={messages.brand} />
-            </span>
-          </CustomLink>
-          <div className="ms-auto flex shrink-0 items-center gap-1.5 lg:px-8">
+            </CustomLink>
+          </div>
+          <ShellSidebarToggle
+            sidebarCollapsed={sidebarCollapsed}
+            onSidebarCollapsedChange={setSidebarCollapsed}
+            controlsId={SIDEBAR_NAV_ID}
+          />
+          <div className="ms-auto flex min-w-0 flex-1 items-center justify-end gap-1.5 lg:px-8">
             <UserMenu
               displayName={resolvedName}
               roleSubtitle={roleName}
@@ -86,8 +121,14 @@ export const ShellHeader = ({ homeHref, displayName, nav, badgeCounts, children 
           </div>
         </div>
       </header>
-      <div className="flex min-h-0 flex-1 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
-        <SidebarNav items={displayItems} activeKey={activeKey} badgeCounts={badgeCounts} />
+      <div className={shellGridClassName(sidebarCollapsed)}>
+        <SidebarNav
+          id={SIDEBAR_NAV_ID}
+          items={displayItems}
+          activeKey={activeKey}
+          badgeCounts={badgeCounts}
+          collapsed={sidebarCollapsed}
+        />
         {children}
       </div>
     </div>

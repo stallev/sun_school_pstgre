@@ -2,9 +2,9 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 2.0  
-**Дата:** 2026-10-24  
-**Волна:** W15-01 (v2.0 — W12, P14)  
+**Версия:** 2.1  
+**Дата:** 2026-11-03  
+**Волна:** W15-01 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) (UX-06), [`global_shell_spec.md`](./global_shell_spec.md), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md), [`canonical_routes.md`](../../../design/canonical_routes.md), [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D10), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`<head>`: token dump, gap-список; хелперы и константы), [`prototype_class_parity_spec.md`](./prototype_class_parity_spec.md) (сопоставление классов прототипа и компонентов), [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md), [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
 **Проверено по:** shadcn/ui — ui.shadcn.com через WebFetch, 2026-10-11: `components.json` — `style` и `tailwind.cssVariables` **не меняются после init**; документация перечисляет только стиль `new-york`; страница установки для Next.js упоминает выбор «base» в мастере и команду `shadcn@latest init`, но **не документирует** флаг `-b base` и стиль `base-vega`, которые указаны в правиле `ui-design-system-shadcn.mdc`. Эти значения не были в документации — **подтверждены на preflight P6 (2026-10-11)** через CLI `shadcn@4.21.4`: `init -b base -p vega` → `"style": "base-vega"` (Q-01 закрыт). Токены, `@theme inline`, контраст — по [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (Tailwind v4, WebFetch 2026-10-10). Route groups и `notFound()` — Next.js App Router (nextjs.org; по [`ui_states_contract.md`](../../../design/ui_states_contract.md)). Context7 недоступен.
@@ -79,28 +79,28 @@
 
 | Компонент | Варианты / состояния | Рецепт | Прототип |
 |-----------|----------------------|--------|----------|
-| `Button` | `default` (cobalt-ink, hover cobalt-deep, D-6), `outline`, `ghost`, `destructive` (контур), `destructive-solid` (только `ConfirmDialog`); размеры `default` (`h-10`, D-9), `compact` (`h-9`, таблицы), `touch` (`h-11`), `icon` (`size-10`); текст `text-base font-medium`; `pending` (spinner + `aria-busy`), `disabled` | UX-03 §8 | `BTN`, `B_PRIMARY`, `B_OUTLINE`, `B_GHOST`, `B_DANGER` |
+| `Button` | `default` (cobalt-ink, hover cobalt-deep, D-6), `outline`, `ghost`, `destructive` (контур), `destructive-solid` (только `ConfirmDialog`); размеры (P24, UX-03 D-14): `default` — компактный `h-9 px-3`, ширина по содержимому (как «Выдать»); `field` (`h-10`, только рядом с полем, F14); `touch` (`h-11`, главное действие и нижняя панель на < `md`); `icon` (`size-9`), `icon-touch` (`size-11`); размер `compact` удалён (стал `default`); текст `text-base font-medium`; `pending` (spinner + `aria-busy`), `disabled` | UX-03 §8 | `BTN`, `B_PRIMARY`, `B_OUTLINE`, `B_GHOST`, `B_DANGER` |
 | `Card` | `p-4 sm:p-5`; без тени | UX-03 §7–§8 | `CARD` |
 | `Input`, `Textarea` | границы `muted` (D-7), `h-10`, `text-base`; состояния `invalid`, `disabled` | UX-03 §8; UX-06 F3, F9 | `FIELD` |
 | `Select` (Base UI; уже в `components/ui/select.tsx`) | триггер как `Input` (`w-full`, `h-10`, `text-base`), шеврон справа, панель `DD_PANEL`, пункт `min-h-10 text-base`; **нативный `<select>` запрещён** (UX-03 D-13). Для form-submit — проп `name` на `Select.Root` (Base UI рендерит скрытый input); размеры `default` и `compact` (`h-9`) | UX-03 §8; UX-06 F3, F9 | `FIELD`, `SEL` |
 | `DateField` (v2.0) | поле + кнопка-календарь (`Popover`), ввод в формате локали из `lib/i18n/format.ts`, значение — ISO `YYYY-MM-DD` в `name`-input; **нативный `type=date` запрещён** | UX-03 §8 | `FIELD`, `type=date` |
 | `Field`/`Label` | подпись над полем (`text-base font-medium`), ошибка, подсказка (`text-sm`) | UX-06 F1, F3 | `LABEL` |
 | `Checkbox`, `Switch` | `Checkbox` `size-5`, подпись `text-base`, зона касания ≥ 44 px; `Switch` как есть | — | `toggle`, чекбокс согласия |
-| Чип выбора (v2.0) = `SegmentedControl` | единый чип (UX-03 D-10): невыбранный `border-input`, выбранный `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`; высота `h-10` (`size="compact"` — `h-9`); режим `radio` (по умолчанию, `role="radiogroup"`) и `toggle` (`aria-pressed`, независимые чипы-фильтры); заменяет ручные кнопки в `AnalyticsGradeChips`, `AnalyticsPeriodChips`, `YearStrip` | UX-03 §8 | `CHIP`, `yearChips`, `groupChips`, `periodChips` |
-| `PageSection` (v2.0) | ширина страницы: `full` (по умолчанию, контейнер 1400), `form` (`max-w-3xl`, 48rem), `wide` (`max-w-5xl`, 64rem); всегда влево; `(auth)` — `AuthScreen` | UX-03 §7 | `#view` |
-| `SegmentedControl` | `role="radiogroup"`; 2–4 опции; выбранный по D-10 | UX-06 §5 | `seg()` |
+| Чип выбора (v2.0) = `SegmentedControl` | единый чип (UX-03 D-10): невыбранный `border-input`, выбранный `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`; высота `h-9` (P24, D-14; проп `size` удалён), ширина по содержимому; режим `radio` (по умолчанию, `role="radiogroup"`) и `toggle` (`aria-pressed`, независимые чипы-фильтры); заменяет ручные кнопки в `AnalyticsGradeChips`, `AnalyticsPeriodChips`, `YearStrip` | UX-03 §8 | `CHIP`, `yearChips`, `groupChips`, `periodChips` |
+| `PageSection` (v2.0) | ширина страницы: `full` (по умолчанию, контейнер оболочки `max-w-[1600px] mx-auto`, P24), `form` (`max-w-3xl`, 48rem), `wide` (`max-w-5xl`, 64rem) — по левому краю контейнера; `(auth)` — `AuthScreen` | UX-03 §7 | `#view` |
+| `SegmentedControl` | `role="radiogroup"`; 2–4 опции; выбранный по D-10; кнопки `h-9 px-3`; проп `fit` (по умолчанию, P24) — по ширине содержимого, без растягивания на контейнер; секция Lab показывает `fit` и `fit={false}` на 390 / 1280 | UX-06 §5; UX-03 D-14 | `seg()` (опция `fit`) |
 | `ScoreSelector` | «— / 0…N», `radiogroup`, 4 или 12 кнопок, сетка 6 колонок на мобильном | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §5.3 | `scoreRow()` |
-| `ScorePad` | тихая ячейка сводной таблицы: стихи — сразу `— 0 1 2`; тест/тетрадь — цифра/`—` + панель «Не оценивалось» и сетка `0…5`/`6…10`; md+ — `Popover` (`@base-ui/react` 1.9.0, flip вверх); <md — разворот под полем; одна открытая панель. Состав: `score-pad`, `score-cell`, `ChoiceMatrix`. **Не** заменяет `ScoreSelector` / `ScoreGroup` | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §7.1–§7.3 | `vLessonTable` (`data-tbl`) |
+| `ScorePad` | тихая ячейка сводной таблицы: стихи — сразу `— 0 1 2`; тест/тетрадь — цифра/`—` + панель «Не оценивалось» и сетка `0…5`/`6…10`; md+ — `Popover` (`@base-ui/react` 1.9.0, flip вверх); <md — разворот под полем; одна открытая панель. **P24:** кнопки `h-9 min-w-9`; `layout="inline"` для шкалы 0–10 — «— 0 … 10» одной линией без панели (карточка проверки на ≥ `lg`, `radiogroup`, ←/→); секция Lab — inline 0–2, inline 0–10, keypad. Состав: `score-pad`, `score-cell`, `ChoiceMatrix`. **Не** заменяет `ScoreSelector` / `ScoreGroup` | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §5.2а, §7.1–§7.3 | `vLessonTable` (`data-tbl`), `scaleField` в `vCheck` |
 | `Badge` | ссылка на стих (`RefBadge`), статус | — | `ref()` |
 | `CountBadge` | число у пункта меню; скрывается при нуле | — | `badge()` |
 | `Progress` | трек `line`, заливка `cobalt`, подпись числом | — | `meter()` |
 | `StatusText` | иконка + текст (ok / warn / danger) | UX-03 §9.5 | `status()` |
 | `Skeleton` | повторяет геометрию (S1.2) | — | — |
 | `Table` | `th scope="col"`, горизонтальная прокрутка, фикс. первый столбец | — | `vLessonTable` |
-| `Dialog` | bottom-sheet; фокус по APG; `confirm` с danger | [`global_shell_spec.md`](./global_shell_spec.md) §6.5 | `openDialog`, `confirmDialog` |
+| `Dialog` | bottom-sheet; фокус по APG; `confirm` с danger; P24 — вариант «несохранённые изменения» с тремя действиями (через `ConfirmDialog`, §5.4) | [`global_shell_spec.md`](./global_shell_spec.md) §6.5 | `openDialog`, `confirmDialog` |
 | `Sheet` | drawer слева | UX-03 §8 | `#drawer` |
 | `Disclosure` | кнопка `aria-expanded` + панель (меню пользователя); навигацию не строит (v2.0) | [`global_shell_spec.md`](./global_shell_spec.md) §6.3 | `DD_PANEL` |
-| `Toast` | Sonner, 2000 ms, позиции | [`global_shell_spec.md`](./global_shell_spec.md) §6.5 | `toast()` |
+| `Toast` | Sonner, 2000 ms; варианты success (`ok-soft` + `CircleCheck`), error (`danger-soft` + `CircleAlert`), нейтральный (UX-03 D-15); позиции: ≥ `lg` справа снизу, < `lg` сверху (P24); секция Lab — кнопки вызова каждого варианта | [`global_shell_spec.md`](./global_shell_spec.md) §6.5 | `toast()` (вариант `ok` / `error`) |
 
 Подсистема shadcn/Base UI подтверждается на preflight (Q-01); при расхождении имён — `components.json` и этот список корректируются вместе.
 
@@ -114,11 +114,11 @@
 | `ForbiddenState` | 403 внутри оболочки (S4.3) | UX-05 |
 | `Banner` | `info` / `warn` / `danger` (D-8: иконка `danger`, текст `ink` на `danger-soft`) | UX-03 D-8; D1, D3, D13 |
 | `FormSection` | карточка с `h2`, полями, ошибкой формы, кнопками (F7, F8) | `vRegister` |
-| `ConfirmDialog` | заголовок, что произойдёт, `danger`, фокус «Отмена»; вариант со словом подтверждения | UX-06 §7.1 |
+| `ConfirmDialog` | заголовок, что произойдёт, `danger`, фокус «Отмена»; вариант со словом подтверждения; P24 — вариант `unsaved` из трёх действий: «Сохранить и перейти» (primary, фокус), «Не сохранять» (outline), «Остаться» (ghost), pending у первой | UX-06 §7.1 |
 | `ScoreGroup` | подпись + `ScoreSelector` + метка «сдано позже» + раскрытие текста стиха | `vCheck` |
 | `CheckCardHeader` | ФИО, «N из M», итог баллов | `vCheck` |
 | `TableRowStates` | «не проверен» / «не был» / «позже» (текст + фон) | `vLessonTable` |
-| `NavDrawer`, `SidebarNav`, `UserMenu` | см. global_shell_spec (v2.0: `SidebarNav` вместо `TopNav`) | `#shell`, `sidebarHTML` |
+| `NavDrawer`, `SidebarNav`, `UserMenu` | см. global_shell_spec (v2.0: `SidebarNav` вместо `TopNav`; v2.1 / P24: `SidebarNav` в состояниях «развёрнут» и «rail» — иконки, tooltip, бейдж-точка; секция Lab показывает оба) | `#shell`, `sidebarHTML` (rail) |
 
 ### 5.5 Иконки (lucide)
 
@@ -291,4 +291,5 @@ apps/web/src/
 |------|--------|
 | 2026-10-11 | v1.0 — Canonical (W15-01) |
 | 2026-10-21 | v1.1 — P11: строка `ScorePad` (§5.3); `ScoreSelector` без изменений |
+| 2026-11-03 | v2.1 — P24 (ADR-017): `Button` компактный `default` `h-9`, размер `field`; `SegmentedControl` `h-9` и `fit`; `ScorePad` inline 0–10; `Toast` варианты и позиции; `ConfirmDialog` `unsaved`; `SidebarNav` rail; `PageSection` в контейнере 1600 |
 | 2026-10-24 | v2.0 — ADR-014 (P14): Source Sans 3, 18 px, высоты контролов; `Select` (Base UI) приведён к шкале v2; новые примитивы `DateField`, `PageSection`; `SegmentedControl` получил режим `toggle` и размер `compact` (вместо отдельного `Chip`); `SidebarNav` вместо `TopNav`; ширина Lab 1024; шаг 6 fidelity (parity-spec) |

@@ -94,7 +94,7 @@ export const LessonCheckTableRow = ({
           label={`${messages.presentLabel}: ${row.displayName}`}
           disabled={readOnly}
           busy={busyCells.has(`${row.pupilId}:present`)}
-          size="compact"
+         
           onPressedChange={onPresentChange}
         />
       </TableCell>
@@ -156,7 +156,7 @@ export const LessonCheckTableRow = ({
           label={`${messages.singingLabel}: ${row.displayName}`}
           disabled={readOnly}
           busy={busyCells.has(`${row.pupilId}:singing`)}
-          size="compact"
+         
           onPressedChange={onSingingChange}
         />
       </TableCell>

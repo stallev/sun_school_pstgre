@@ -3,6 +3,7 @@ import { ACADEMIC_YEAR_STATUS, type ConsentStatus } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { getDefaultOrganizationId } from "@/data/access/get-organization-id.server";
 import { formatDisplayName } from "@/lib/person/format-display-name";
+import { isoFromCalendarDate } from "./calendar-date";
 import { toTeacherPupilConsentView } from "./pupil-consent-view.server";
 import { isoTodayUtc } from "./school-pupil-shared.server";
 
@@ -10,6 +11,7 @@ export type TeacherRosterRow = {
   pupilId: string;
   displayName: string;
   enrolledSinceIso: string;
+  birthDateIso: string | null;
   hasConsent: boolean;
   isLegacyPending: boolean;
 };
@@ -75,6 +77,7 @@ export async function loadTeacherGroupPage(
           lastName: true,
           firstName: true,
           middleName: true,
+          birthDate: true,
           consents: { select: { status: true }, take: 1, orderBy: { createdAt: "desc" } },
         },
       },
@@ -88,6 +91,7 @@ export async function loadTeacherGroupPage(
       pupilId: row.pupil.id,
       displayName: formatDisplayName(row.pupil),
       enrolledSinceIso: row.startsOn.toISOString().slice(0, 10),
+      birthDateIso: row.pupil.birthDate ? isoFromCalendarDate(row.pupil.birthDate) : null,
       hasConsent: consent.hasConsent,
       isLegacyPending: consent.isLegacyPending,
     };

@@ -7,6 +7,7 @@ import { userHasAdminRole, userHasParentRole } from "@/data/access/access-admin-
 import { readFeaturesParentsEnabled } from "@/data/families/family-feature.server";
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { lessonDateToIso } from "@/data/lessons/lesson-shared.server";
+import { loadCalendarBirthdays } from "./calendar-birthdays.server";
 
 export type CalendarGradeOption = { gradeId: string; name: string };
 
@@ -18,6 +19,13 @@ export type CalendarEventRow = {
   title: string;
   description: string | null;
   lessonId: string | null;
+};
+
+export type CalendarBirthdayRow = {
+  pupilId: string;
+  dayOfMonth: number;
+  eventDateIso: string;
+  displayName: string;
 };
 
 export type CalendarPageData =
@@ -34,6 +42,7 @@ export type CalendarPageData =
       canMutate: boolean;
       monthKey: string;
       events: CalendarEventRow[];
+      birthdays: CalendarBirthdayRow[];
       lessonsForLink: { lessonId: string; label: string }[];
     };
 
@@ -152,7 +161,7 @@ export async function loadCalendarPage(
     monthKey && /^\d{4}-\d{2}$/.test(monthKey) ? monthKey : new Date().toISOString().slice(0, 7);
   const { start, end } = monthBounds(resolvedMonth);
 
-  const [rows, lessons] = await Promise.all([
+  const [rows, lessons, birthdays] = await Promise.all([
     db.gradeEvent.findMany({
       where: {
         gradeId,
@@ -173,6 +182,7 @@ export async function loadCalendarPage(
       orderBy: [{ lessonDate: "asc" }, { ordinal: "asc" }],
       select: { id: true, title: true, ordinal: true, lessonDate: true },
     }),
+    loadCalendarBirthdays(db, gradeId, year.id, resolvedMonth, isParent),
   ]);
 
   const events: CalendarEventRow[] = rows.map((row) => {
@@ -204,6 +214,7 @@ export async function loadCalendarPage(
     canMutate,
     monthKey: resolvedMonth,
     events,
+    birthdays,
     lessonsForLink,
   };
 }

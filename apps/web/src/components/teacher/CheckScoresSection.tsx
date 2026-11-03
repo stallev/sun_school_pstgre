@@ -9,6 +9,7 @@ import { CheckVerseField } from "@/components/teacher/CheckVerseField";
 import { LateBadge } from "@/components/teacher/LateBadge";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
+import { cn } from "@/lib/utils";
 
 type CheckScoresPupil = {
   pupilId: string;
@@ -62,6 +63,7 @@ export const CheckScoresSection = ({
   const late = pupil.late ? <LateBadge label={messages.lateSubmitted} /> : null;
   const testBand = bandOf(pupil.testScore, messages);
   const notebookBand = bandOf(pupil.notebookScore, messages);
+  const denseGrid = !isReview;
 
   if (collapsed) {
     return (
@@ -73,33 +75,34 @@ export const CheckScoresSection = ({
     );
   }
 
-  return (
+  const versesColumn = isReview ? null : versesToRecite.length > 0 ? (
     <div className="divide-y divide-line">
-      {isReview ? null : versesToRecite.length > 0 ? (
-        <div>
-          {previousLessonOrdinal !== null ? (
-            <ContentText tone="secondary" className="pt-3 text-sm">
-              {fillMessage(messages.versesIntro, { lessonOrdinal: previousLessonOrdinal })}
-            </ContentText>
-          ) : null}
-          {versesToRecite.map((verse) => (
-            <CheckVerseField
-              key={verse.lessonVerseId}
-              label={fillMessage(messages.verseLabel, { position: verse.position })}
-              value={pupil.verseScores[verse.lessonVerseId] ?? null}
-              unsetLabel={messages.scoreUnset}
-              notRatedLabel={messages.scoreNotRated}
-              disabled={disabled}
-              trailing={late}
-              onValueChange={(value) => onVerseScoreChange(verse.lessonVerseId, value)}
-            />
-          ))}
-        </div>
-      ) : (
-        <ContentText tone="secondary" className="py-3 text-sm">
-          {messages.noVersesFirstLesson}
+      {previousLessonOrdinal !== null ? (
+        <ContentText tone="secondary" className="pt-3 text-sm">
+          {fillMessage(messages.versesIntro, { lessonOrdinal: previousLessonOrdinal })}
         </ContentText>
-      )}
+      ) : null}
+      {versesToRecite.map((verse) => (
+        <CheckVerseField
+          key={verse.lessonVerseId}
+          label={fillMessage(messages.verseLabel, { position: verse.position })}
+          value={pupil.verseScores[verse.lessonVerseId] ?? null}
+          unsetLabel={messages.scoreUnset}
+          notRatedLabel={messages.scoreNotRated}
+          disabled={disabled}
+          trailing={late}
+          onValueChange={(value) => onVerseScoreChange(verse.lessonVerseId, value)}
+        />
+      ))}
+    </div>
+  ) : (
+    <ContentText tone="secondary" className="py-3 text-sm">
+      {messages.noVersesFirstLesson}
+    </ContentText>
+  );
+
+  const scalesColumn = (
+    <div className="divide-y divide-line">
       {isReview ? null : hasTest ? (
         <CheckScaleField
           label={messages.testLabel}
@@ -111,7 +114,7 @@ export const CheckScoresSection = ({
           trailing={late}
           onValueChange={onTestScoreChange}
         />
-      ) : isReview ? null : (
+      ) : (
         <ContentText tone="secondary" className="py-3 text-sm">{messages.noTestOnLesson}</ContentText>
       )}
       <CheckScaleField
@@ -124,6 +127,17 @@ export const CheckScoresSection = ({
         trailing={late}
         onValueChange={onNotebookScoreChange}
       />
+    </div>
+  );
+
+  if (!denseGrid) {
+    return scalesColumn;
+  }
+
+  return (
+    <div className={cn("lg:grid lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5")}>
+      <div>{versesColumn}</div>
+      <div>{scalesColumn}</div>
     </div>
   );
 };

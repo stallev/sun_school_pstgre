@@ -146,13 +146,14 @@ export const CalendarPageContent = async ({
           hiddenFields={{ month: data.monthKey }}
         />
       ) : null}
-      {data.events.length === 0 && !params.date && !params.eventId ? (
+      {data.events.length === 0 && data.birthdays.length === 0 && !params.date && !params.eventId ? (
         <EmptyState title={messages.emptyMonth} description={messages.emptyMonthCta} />
       ) : null}
       <CalendarMonth
         monthKey={data.monthKey}
         gradeId={data.gradeId}
         events={data.events}
+        birthdays={data.birthdays}
         canMutate={data.canMutate}
         messages={messages}
         openEventId={params.eventId ?? null}

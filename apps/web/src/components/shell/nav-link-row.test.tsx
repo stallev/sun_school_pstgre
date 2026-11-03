@@ -1,5 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
+import { NAV_BADGE_SLOT } from "@/components/shell/nav-config";
 import { NavLinkRow } from "./nav-link-row";
 
 vi.mock("@/components/shell/shell-messages-provider.client", () => ({
@@ -40,5 +41,34 @@ describe("NavLinkRow sidebar density", () => {
     expect(html).toContain("hover:bg-line/60");
     expect(html).toContain("min-h-10");
     expect(html).toContain("text-base");
+  });
+
+  it("rail row uses icon-only metrics and accessible label with badge", () => {
+    const html = renderToStaticMarkup(
+      <NavLinkRow
+        leaf={{
+          ...leaf,
+          label: "People",
+          badgeSlotId: NAV_BADGE_SLOT.APPROVALS,
+        }}
+        isActive={false}
+        density="sidebar"
+        collapsed
+        badgeCount={3}
+      />,
+    );
+    expect(html).toContain('aria-label="People, 3 in queue"');
+    expect(html).toContain('title="People"');
+    expect(html).toContain("h-10 w-10");
+    expect(html).toContain("size-2.5 rounded-full bg-cobalt-ink");
+  });
+
+  it("rail row shows visible label on focus-visible", () => {
+    const html = renderToStaticMarkup(
+      <NavLinkRow leaf={leaf} isActive={false} density="sidebar" collapsed />,
+    );
+    expect(html).toContain("rail-label");
+    expect(html).toMatch(/focus-visible_.rail-label\]:block/);
+    expect(html).toContain(">Today<");
   });
 });

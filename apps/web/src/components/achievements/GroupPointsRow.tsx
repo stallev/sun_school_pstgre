@@ -102,7 +102,7 @@ export const GroupPointsRow = ({
                 </span>
               ) : null}
               {differs && canEdit ? (
-                <Button type="button" variant="outline" size="compact" onClick={onReset}>
+                <Button type="button" variant="outline" onClick={onReset}>
                   {messages.resetRow}
                 </Button>
               ) : null}

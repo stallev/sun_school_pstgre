@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ScoreCell } from "@/components/ui/score-cell";
+import { ScorePad } from "@/components/ui/score-pad";
 import { ScoreSelector } from "@/components/ui/score-selector";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Switch } from "@/components/ui/switch";
@@ -19,6 +20,7 @@ export const ChoiceMatrix = () => {
   const [verseScore, setVerseScore] = useState<number | null>(null);
   const [testScore, setTestScore] = useState<number | null>(7);
   const [notebookScore, setNotebookScore] = useState<number | null>(null);
+  const [inlineTen, setInlineTen] = useState<number | null>(5);
   const [openPadKey, setOpenPadKey] = useState<string | null>(null);
   const [flag, setFlag] = useState(true);
 
@@ -32,23 +34,35 @@ export const ChoiceMatrix = () => {
           onValueChange={setSegment}
         />
       </MatrixCell>
-      <MatrixCell label="SegmentedControl — toggle / compact">
-        <div className="space-y-2">
-          <SegmentedControl
-            aria-label="Toggle chips"
-            mode="toggle"
-            options={LAB_SEGMENTS}
-            value={segment}
-            onValueChange={(next) => setSegment(next ?? "all")}
-          />
-          <SegmentedControl
-            aria-label="Compact"
-            size="compact"
-            options={LAB_SEGMENTS}
-            value="all"
-            onValueChange={() => undefined}
-          />
-        </div>
+      <MatrixCell label="SegmentedControl — toggle">
+        <SegmentedControl
+          aria-label="Toggle chips"
+          mode="toggle"
+          options={LAB_SEGMENTS}
+          value={segment}
+          onValueChange={(next) => setSegment(next ?? "all")}
+        />
+      </MatrixCell>
+      <MatrixCell label="SegmentedControl — fit (P24, default)">
+        <SegmentedControl
+          aria-label="Fit width"
+          options={LAB_SEGMENTS.slice(0, 2)}
+          value="all"
+          onValueChange={() => undefined}
+        />
+      </MatrixCell>
+      <MatrixCell label="SegmentedControl — fit={false}">
+        <SegmentedControl
+          fit={false}
+          aria-label="Full width"
+          className="grid grid-cols-2"
+          options={[
+            { value: "all", label: "Да" },
+            { value: "done", label: "Нет" },
+          ]}
+          value="all"
+          onValueChange={() => undefined}
+        />
       </MatrixCell>
       <MatrixCell label="SegmentedControl — disabled / invalid">
         <div className="space-y-2">
@@ -61,6 +75,16 @@ export const ChoiceMatrix = () => {
       </MatrixCell>
       <MatrixCell label="ScoreSelector — disabled">
         <ScoreSelector aria-label={LAB_TEXT.homeworkItem} max={SCORE_MAX} value={2} onValueChange={() => undefined} disabled />
+      </MatrixCell>
+      <MatrixCell label="ScorePad · inline 0–10 (P24 check card lg+)">
+        <ScorePad
+          layout="inline"
+          max={SCORE_MAX}
+          value={inlineTen}
+          onValueChange={setInlineTen}
+          notRatedLabel={LAB_TEXT.scoreNotRated}
+          aria-label="Тест"
+        />
       </MatrixCell>
       <MatrixCell label="ScorePad · стих inline 0–2">
         <ScoreCell

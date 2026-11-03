@@ -32,6 +32,7 @@ export const AUDIT_ACTION = {
   SCHOOL_SETTINGS_CHANGED: "school.settings_changed",
   SCHOOL_PUPIL_CREATED: "school.pupil_created",
   SCHOOL_PUPIL_UPDATED: "school.pupil_updated",
+  SCHOOL_PUPIL_BIRTHDATE_UPDATED: "school.pupil_birth_date_updated",
   SCHOOL_PUPIL_DEACTIVATED: "school.pupil_deactivated",
   SCHOOL_CONSENT_RECORDED: "school.consent_recorded",
   SCHOOL_CONSENT_REVOKED: "school.consent_revoked",

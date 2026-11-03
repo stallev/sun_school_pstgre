@@ -12,10 +12,9 @@ export const BUTTON_VARIANTS = [
 
 export const BUTTON_SIZES = [
   "default",
-  "compact",
+  "field",
   "touch",
   "icon",
-  "icon-compact",
   "icon-touch",
 ] as const;
 
@@ -38,5 +37,4 @@ export const BANNER_TONES = ["info", "success", "warning", "error"] as const;
 export const SCORE_MAX = 5;
 
 export const SEGMENTED_MODES = ["radio", "toggle"] as const;
-export const SEGMENTED_SIZES = ["default", "compact"] as const;
 export const PAGE_SECTION_WIDTHS = ["full", "wide", "form"] as const;

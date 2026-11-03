@@ -50,6 +50,8 @@ export type ShellMessages = {
   displayNameFallback: string;
   forbiddenHome: string;
   badgeInQueue: string;
+  sidebarCollapse: string;
+  sidebarExpand: string;
   devViewAs: string;
   devRoleAdmin: string;
   devRoleTeacher: string;
@@ -72,6 +74,8 @@ export const pickShellMessages = (common: Dictionary): ShellMessages => ({
   displayNameFallback: getMessage(common, "shell.display_name_fallback"),
   forbiddenHome: getMessage(common, "shell.forbidden_home"),
   badgeInQueue: getMessage(common, "shell.badge_in_queue"),
+  sidebarCollapse: getMessage(common, "shell.sidebar_collapse"),
+  sidebarExpand: getMessage(common, "shell.sidebar_expand"),
   devViewAs: getMessage(common, "shell.dev_view_as"),
   devRoleAdmin: getMessage(common, "shell.dev_role_admin"),
   devRoleTeacher: getMessage(common, "shell.dev_role_teacher"),
