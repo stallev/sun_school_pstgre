@@ -2,7 +2,7 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.1  
+**Версия:** 1.2  
 **Дата:** 2026-11-03  
 **Волна:** W12-01 (P14); правки P24 (ADR-017)  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03 v2.0), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md) (UX-02 v2.0), [`design_system_lab_spec.md`](./design_system_lab_spec.md) §5.3 и §8, [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_017_shell_container_toast_buttons.md`](../../../prds/07_governance/adr_017_shell_container_toast_buttons.md)  
@@ -218,3 +218,4 @@
 |------|--------|
 | 2026-10-24 | v1.0 — Canonical (W12-01, P14): правила нормализации, протокол, таблица P-01…P-40, требования к скрипту |
 | 2026-11-03 | v1.1 — P24 (ADR-017): единый размер кнопки/чипа `h-9 px-3` (P-01, P-07, P-16, опция `fit`), shell: rail-сайдбар и контейнер `max-w-[1600px] mx-auto` (P-22…P-25), дни рождения в календаре (P-35), новые строки P-41…P-45 (rail-строка, переключатель rail, toast, диалог несохранённых изменений, inline-keypad); номера строк прототипа обновлены |
+| 2026-11-03 | v1.2 — P25 (ADR-018): прототип получил `termHint()` и `kids()`; parity-строки не менялись (нового класса-контракта нет, `TermHint` проверяется в Lab) |

@@ -2,8 +2,8 @@
 
 **Тип:** UX-контракт (UX-05)  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.6  
+**Дата:** 2026-11-03  
 **Волна:** W7-02  
 **Зависит от:** [`canonical_routes.md`](./canonical_routes.md), [`responsive_navigation_contract.md`](./responsive_navigation_contract.md) §7–§8, [`visual_identity_contract.md`](./visual_identity_contract.md), [`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md) §5–§6, [`auth_runtime_spec.md`](../prds/05_runtime/auth_runtime_spec.md) §8, [`ai_agent_ui_ux_guideline.md`](../general/ai_agent_ui_ux_guideline.md) (FX-4, FX-8), [`ai_loading_patterns.md`](../guidelines/nextjs/ai_loading_patterns.md), [`adr_008_i18n_ru_en_dictionary_slices.md`](../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md)  
 **Связанные документы:** [`forms_and_validation_ux.md`](./forms_and_validation_ux.md), [`lifecycle_models.md`](../prds/02_domain_model/lifecycle_models.md), [`domain_invariants.md`](../prds/02_domain_model/domain_invariants.md), [`architecture_master_index.md`](../prds/architecture_master_index.md)  
@@ -106,6 +106,7 @@
 | D19 | Мало данных для сравнения лет: в основной выборке любого из двух лет меньше N детей или проверено меньше M уроков (INV-27) | `/analytics`, `/school`, `/group`, строки лет | Вместо разницы текст «мало данных для сравнения»; значения показаны; ученик: «—» и «мало уроков: k» |
 | D20 | Нет доступных учебных лет у пользователя | `/analytics*`, `/school` | Заглушка «учебный год не начался»; **только** при отсутствии лет: при наличии закрытого года открывается он (год по умолчанию) |
 | D21 | Закрытый год посчитан по другой версии методологии | `/analytics`, `/school`, карточка года ученика | Пометка «Год посчитан по методологии vX, сейчас действует vY»; итоги не пересчитываются |
+| D22 | Ошибка загрузки страницы (P25, ADR-018 §4 п. 7) | `app/(app)/error.tsx` | Текст «Не удалось открыть страницу» человеческими словами, кнопки «Повторить» и «На главную», короткий код (digest) только у admin; событие — в Sentry; без технических слов |
 
 ## 6. Матрица «тип экрана × состояние»
 
@@ -193,3 +194,4 @@
 | 2026-10-18 | v1.3 — D16–D18: удаление и журнал (P06) |
 | 2026-10-19 | v1.4 — D19–D21: аналитика по годам (мало данных, нет лет, методология); D1/D2 — аналитика после закрытия года открывает последний закрытый год (P08) |
 | 2026-11-03 | v1.5 — D14: модальный диалог из трёх действий вместо подтверждения браузера (P24) |
+| 2026-11-03 | v1.6 — P25 (ADR-018): D22 страница ошибки с действием и кодом |

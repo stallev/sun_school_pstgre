@@ -2,7 +2,7 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 2.1  
+**Версия:** 2.3  
 **Дата:** 2026-11-03  
 **Волна:** W15-01 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) (UX-06), [`global_shell_spec.md`](./global_shell_spec.md), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md), [`canonical_routes.md`](../../../design/canonical_routes.md), [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D10), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8  
@@ -101,6 +101,7 @@
 | `Sheet` | drawer слева | UX-03 §8 | `#drawer` |
 | `Disclosure` | кнопка `aria-expanded` + панель (меню пользователя); навигацию не строит (v2.0) | [`global_shell_spec.md`](./global_shell_spec.md) §6.3 | `DD_PANEL` |
 | `Toast` | Sonner, 2000 ms; варианты success (`ok-soft` + `CircleCheck`), error (`danger-soft` + `CircleAlert`), нейтральный (UX-03 D-15); позиции: ≥ `lg` справа снизу, < `lg` сверху (P24); секция Lab — кнопки вызова каждого варианта | [`global_shell_spec.md`](./global_shell_spec.md) §6.5 | `toast()` (вариант `ok` / `error`) |
+| `TermHint` | кнопка «?» + popover на `@base-ui/react/popover` (P25, UX-03 D-17); Lab: состояния «закрыт / открыт / длинный текст / фокус / на касании» и список терминов глоссария | [`adr_018_ui_terminology_and_term_hints.md`](../../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md) §4 п. 2 | `termHint` |
 
 Подсистема shadcn/Base UI подтверждается на preflight (Q-01); при расхождении имён — `components.json` и этот список корректируются вместе.
 
@@ -295,3 +296,4 @@ apps/web/src/
 | 2026-11-03 | v2.2 — P24: токены `gold-soft`, `gold-ink` и секция Lab «Лидер урока» (D-16); `LessonSheet` в каталоге доменных компонентов |
 | 2026-11-03 | v2.1 — P24 (ADR-017): `Button` компактный `default` `h-9`, размер `field`; `SegmentedControl` `h-9` и `fit`; `ScorePad` inline 0–10; `Toast` варианты и позиции; `ConfirmDialog` `unsaved`; `SidebarNav` rail; `PageSection` в контейнере 1600 |
 | 2026-10-24 | v2.0 — ADR-014 (P14): Source Sans 3, 18 px, высоты контролов; `Select` (Base UI) приведён к шкале v2; новые примитивы `DateField`, `PageSection`; `SegmentedControl` получил режим `toggle` и размер `compact` (вместо отдельного `Chip`); `SidebarNav` вместо `TopNav`; ширина Lab 1024; шаг 6 fidelity (parity-spec) |
+| 2026-11-03 | v2.3 — P25 (ADR-018): §5.3 `TermHint` — секция Lab до использования на экранах (C-2) |
