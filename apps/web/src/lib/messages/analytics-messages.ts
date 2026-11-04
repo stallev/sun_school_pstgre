@@ -98,8 +98,14 @@ export type AnalyticsMessages = {
   kpiChildrenCount: PluralForms;
   kpiLessonsObserved: PluralForms;
   kpiMetricWithBase: string;
+  kpiMetricAverageSuffix: string;
   kpiEmpty: string;
   formatLocale: MessageLocale;
+  sampleCompositionLead: string;
+  sampleLayerRegularly: string;
+  sampleLayerRarely: string;
+  sampleLayerInactive: string;
+  sampleLayerNoChecks: string;
   sampleComposition: string;
   charts: AnalyticsChartSeriesMessages;
   tables: {
@@ -124,6 +130,8 @@ export type AnalyticsMessages = {
     columnTest: string;
     columnNotebook: string;
     columnEnrolledSince: string;
+    rowLowAttendance: string;
+    rowLowScore: string;
     emptyPupilsTitle: string;
     emptyPupilsDescription: string;
     noCheckedLessonsTitle: string;
@@ -150,6 +158,9 @@ export type AnalyticsMessages = {
   dataQuality: {
     title: string;
     missingRecords: string;
+    missingChecked: string;
+    lessonsLinkLabel: string;
+    migrationDuplicates: string;
     adminSummary: string;
   };
   deletedData: {

@@ -36,9 +36,15 @@
       "other": "over {count} lessons"
     },
     "metric_with_base": "{value} · {base}",
+    "average_suffix": "on average",
     "empty": "—"
   },
   "sample": {
+    "composition_lead": "Breakdown:",
+    "layer_regularly": "attend regularly",
+    "layer_rarely": "attend rarely",
+    "layer_inactive": "inactive",
+    "layer_no_checks": "no checked lessons",
     "composition": "Breakdown: attend regularly {a} · attend rarely {b} · inactive {c} · no checked lessons {d}",
     "included": "Attendance is at least 50% of checked lessons since enrollment.",
     "excluded_b": "Attendance is below 50% of checked lessons since enrollment.",
@@ -129,7 +135,9 @@
     "column_verses": "Verses",
     "column_test": "Test",
     "column_notebook": "Notebook",
-    "column_enrolled_since": "Enrolled since"
+    "column_enrolled_since": "Enrolled since",
+    "row_low_attendance": "low attendance",
+    "row_low_score": "low score"
   },
   "empty": {
     "no_pupils_title": "No pupils in this group",
@@ -166,6 +174,9 @@
   "data_quality": {
     "title": "Data quality",
     "missing_records": "Missing records on checked lessons: {count}",
+    "missing_checked": "No mark in {count} checked-lesson records —",
+    "lessons_link_label": "open the lesson journal",
+    "migration_duplicates": "migration duplicates removed: {count}",
     "admin_summary": "Data quality: missing records on checked lessons — {missing} · migration duplicates removed — {duplicates}"
   },
   "deleted_data": {

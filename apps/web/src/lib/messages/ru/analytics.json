@@ -36,9 +36,15 @@
       "other": "по {count} урокам"
     },
     "metric_with_base": "{value} · {base}",
+    "average_suffix": "в среднем",
     "empty": "—"
   },
   "sample": {
+    "composition_lead": "Состав:",
+    "layer_regularly": "регулярно ходят",
+    "layer_rarely": "ходят редко",
+    "layer_inactive": "неактивные",
+    "layer_no_checks": "без проверенных уроков",
     "composition": "Состав: регулярно ходят {a} · ходят редко {b} · неактивные {c} · без проверенных уроков {d}",
     "included": "Явка не ниже 50% проверенных уроков после зачисления.",
     "excluded_b": "Явка ниже 50% проверенных уроков после зачисления.",
@@ -129,7 +135,9 @@
     "column_verses": "Стихи",
     "column_test": "Тест",
     "column_notebook": "Тетрадь",
-    "column_enrolled_since": "В группе с"
+    "column_enrolled_since": "В группе с",
+    "row_low_attendance": "низкая явка",
+    "row_low_score": "низкий балл"
   },
   "empty": {
     "no_pupils_title": "В группе нет учеников",
@@ -166,6 +174,9 @@
   "data_quality": {
     "title": "Качество данных",
     "missing_records": "Пропущенные записи на проверенных уроках: {count}",
+    "missing_checked": "Нет отметки в {count} записях проверенных уроков —",
+    "lessons_link_label": "откройте журнал уроков",
+    "migration_duplicates": "при переносе убрано дублей: {count}",
     "admin_summary": "Качество данных: пропущенных записей на проверенных уроках — {missing} · удалено дублей при переносе — {duplicates}"
   },
   "deleted_data": {

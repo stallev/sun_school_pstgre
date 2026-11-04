@@ -2,16 +2,16 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { ACADEMIC_YEAR_STATUS, USER_ROLE } from "@sunschool/domain";
-import { AnalyticsAdminDataQualityRow } from "@/components/analytics/AnalyticsAdminDataQualityRow";
 import { AnalyticsGradeChips } from "@/components/analytics/AnalyticsGradeChips";
 import { AnalyticsPeriodChips } from "@/components/analytics/AnalyticsPeriodChips";
 import { AnalyticsPeriodKpiSection } from "@/components/analytics/AnalyticsPeriodKpiSection";
 import { ChartTableToggle } from "@/components/analytics/ChartTableToggle";
+import { CompositionLine } from "@/components/analytics/CompositionLine";
 import { ConductedLessonsTable } from "@/components/analytics/ConductedLessonsTable";
+import { DataQualityLine } from "@/components/analytics/DataQualityLine";
 import { DeletedDataNote } from "@/components/analytics/DeletedDataNote";
 import { GroupAnalyticsTables } from "@/components/analytics/GroupAnalyticsTables";
 import { MethodologyNote } from "@/components/analytics/MethodologyNote";
-import { SampleCompositionRow } from "@/components/analytics/SampleCompositionRow";
 import { buildGroupYearTableRows } from "@/components/analytics/years/build-group-year-table-rows";
 import { AnalyticsYearDetail } from "@/components/analytics/years/AnalyticsYearDetail.client";
 import { AnalyticsYearScope } from "@/components/analytics/years/AnalyticsYearScope.client";
@@ -31,6 +31,7 @@ import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { formatAnalyticsShortDate } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { pickGlossaryMessages } from "@/lib/messages/pick-glossary-messages";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { formatPlural, getPluralForms } from "@/lib/messages/plural";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
@@ -69,6 +70,7 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
   const messageLocale = locale as MessageLocale;
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickAnalyticsMessages(analyticsDict, messageLocale);
+  const glossary = pickGlossaryMessages(commonDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
   const yearMessages = messages.years;
 
@@ -174,16 +176,16 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
         ) : (
           <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
           {analytics.hasCheckedLessonsInPeriod ? (
-            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} />
+            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} glossary={glossary} />
           ) : null}
-          {isActiveYear && data.isAdmin ? (
-            <div className="mt-3">
-              <AnalyticsAdminDataQualityRow
-                missingRecords={data.dataQuality?.missingPupilRecordsOnCheckedLessons ?? 0}
-                migrationDuplicates={0}
-                messages={messages}
-              />
-            </div>
+          {isActiveYear ? (
+            <DataQualityLine
+              missingRecords={data.dataQuality?.missingPupilRecordsOnCheckedLessons ?? 0}
+              migrationDuplicates={0}
+              isAdmin={data.isAdmin}
+              lessonsHref={`/lessons?gradeId=${data.gradeId}`}
+              messages={messages}
+            />
           ) : null}
           {isActiveYear &&
           data.isAdmin &&
@@ -210,7 +212,7 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
             />
           ) : (
             <>
-              <SampleCompositionRow snapshot={analytics} messages={messages} />
+              <CompositionLine snapshot={analytics} messages={messages} />
               <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 lg:grid-cols-2 lg:gap-6">
                 <ChartTableToggle
                   chartId="attendance"

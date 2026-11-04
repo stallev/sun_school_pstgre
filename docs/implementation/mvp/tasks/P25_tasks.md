@@ -70,7 +70,7 @@ Tier T2: новый примитив каталога (Lab раньше экра
 
 ### P25-CU5 — feat(web): make analytics screens readable at first glance · Review: reviewer · Commit: auto
 
-- [ ] P25-T5 · T1 · Spec: [analytics §3.1, §5, §8, R-17, R-19, R-20](../specs/analytics_screens_spec.md) · Prototype: `vAnalytics`, `vSchool`, `vPupil` · Lab: `TermHint`
+- [x] P25-T5 · T1 · Spec: [analytics §3.1, §5, §8, R-17, R-19, R-20](../specs/analytics_screens_spec.md) · Prototype: `vAnalytics`, `vSchool`, `vPupil` · Lab: `TermHint`
       Files: `apps/web/src/components/analytics/{AnalyticsPeriodKpiSection,PupilAnalyticsKpiSection,GroupAnalyticsTables,MethodologyNote,DataQualityLine,CompositionLine}.tsx`, `apps/web/src/components/admin/SchoolAnalyticsTable.tsx`, `apps/web/src/lib/messages/{ru,en}/analytics.json` и pick/типы, `apps/web/src/components/analytics/*.test.tsx`
       Acceptance: три крупных числа с подписью («Явка 86%», «Стихов за урок», «Тест из 10», «Тетрадь из 10») и базой («26 детей»); `TermHint` у «Средняя явка», «Стихов за урок», «Тест», «Тетрадь»; «Как мы считали цифры» — свёрнутый `details`; строка состава — «Регулярно ходят 26 · Ходят редко 4 · …»; «Качество данных» — «Нет отметки в N записях проверенных уроков» + ссылка к уроку, диагностика переноса только admin; таблица `/school`: «Регулярно ходят / всего», «Проверка последнего урока»; блок «По году рождения» скрыт при одной строке; таблица учеников сортируется по колонке, строки «явка < 50%» и «оценка < 4» отмечены текстом и цветом
       Paths: H [R-17, R-20: экран понятен без чтения сносок] · N [нет данных → «—»; один год рождения; нет тестов; admin и teacher видят разный блок качества данных] · S n/a — presentational, DTO не меняются

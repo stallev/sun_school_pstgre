@@ -17,11 +17,11 @@ import {
   formatAnalyticsAttendanceRate,
   formatAnalyticsShortDate,
 } from "@/lib/analytics/format-analytics-display";
-import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import { BirthYearCohortCards } from "./BirthYearCohortCards";
-import { formatCohortAverage, formatCohortPercent, formatGroupScore } from "./format-group-score";
+import { formatCohortAverage, formatCohortPercent } from "./format-group-score";
 import { PupilLayerCards } from "./PupilLayerCards";
+import { PupilLayerSortableTable } from "./PupilLayerSortableTable.client";
 
 type GroupAnalyticsTablesProps = {
   snapshot: GroupAnalyticsSnapshot;
@@ -64,6 +64,9 @@ const PupilLayerTable = ({
     ) : (
       <>
       <PupilLayerCards rows={rows} messages={messages} variant={variant} locale={locale} />
+      {variant === "layer-a" ? (
+        <PupilLayerSortableTable rows={rows} messages={messages} />
+      ) : (
       <Card className="hidden p-0 lg:block">
         <Table className="text-base">
           <TableHeader className="border-b border-line text-sm text-muted">
@@ -75,25 +78,6 @@ const PupilLayerTable = ({
                 <TableHead scope="col" className="px-3 py-3 font-normal">
                   {messages.tables.columnBirthYear}
                 </TableHead>
-              ) : null}
-              {variant === "layer-a" ? (
-                <>
-                  <TableHead scope="col" className="px-3 py-3 font-normal">
-                    {messages.tables.columnAttendance}
-                  </TableHead>
-                  <TableHead scope="col" className="px-3 py-3 font-normal">
-                    {messages.tables.columnAttendedChecked}
-                  </TableHead>
-                  <TableHead scope="col" className="px-3 py-3 font-normal">
-                    {messages.tables.columnVerses}
-                  </TableHead>
-                  <TableHead scope="col" className="px-3 py-3 font-normal">
-                    {messages.tables.columnTest}
-                  </TableHead>
-                  <TableHead scope="col" className="px-5 py-3 font-normal">
-                    {messages.tables.columnNotebook}
-                  </TableHead>
-                </>
               ) : null}
               {variant === "layer-b" ? (
                 <>
@@ -129,32 +113,6 @@ const PupilLayerTable = ({
                 {variant !== "layer-d" ? (
                   <TableCell className="px-3 py-3">{row.birthYear ?? messages.kpiEmpty}</TableCell>
                 ) : null}
-                {variant === "layer-a" ? (
-                  <>
-                    <TableCell className="px-3 py-3">
-                      {formatAnalyticsAttendanceRate(
-                        messages.formatPercent,
-                        row.attendanceRate,
-                        messages.kpiEmpty,
-                      )}
-                    </TableCell>
-                    <TableCell className="px-3 py-3">
-                      {fillMessage(messages.tables.attendedCheckedValue, {
-                        attended: row.attendedLessonCount,
-                        checked: row.checkedLessonCount,
-                      })}
-                    </TableCell>
-                    <TableCell className="px-3 py-3">
-                      {formatGroupScore(row.versesAverage.average, row.versesAverage.observationCount, messages)}
-                    </TableCell>
-                    <TableCell className="px-3 py-3">
-                      {formatGroupScore(row.testAverage.average, row.testAverage.observationCount, messages)}
-                    </TableCell>
-                    <TableCell className="px-5 py-3">
-                      {formatGroupScore(row.notebookAverage.average, row.notebookAverage.observationCount, messages)}
-                    </TableCell>
-                  </>
-                ) : null}
                 {variant === "layer-b" ? (
                   <>
                     <TableCell className="px-3 py-3">{row.attendedLessonCount}</TableCell>
@@ -178,6 +136,7 @@ const PupilLayerTable = ({
           </TableBody>
         </Table>
       </Card>
+      )}
       </>
     )}
   </section>
@@ -224,6 +183,7 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
           locale={locale}
         />
       </div>
+      {birthYearRows.length === 1 ? null : (
       <section className="min-w-0">
         <SectionTitle as="h2" className="mt-8 mb-3 text-[1.25rem] font-medium leading-snug">
           {messages.tables.layerBirthYearTitle}
@@ -283,6 +243,7 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
           </>
         )}
       </section>
+      )}
     </div>
   );
 };

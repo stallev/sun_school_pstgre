@@ -30,8 +30,14 @@ export const pickAnalyticsMessages = (
   kpiChildrenCount: getPluralForms(analytics, "kpi.children_count"),
   kpiLessonsObserved: getPluralForms(analytics, "kpi.lessons_observed"),
   kpiMetricWithBase: getMessage(analytics, "kpi.metric_with_base"),
+  kpiMetricAverageSuffix: getMessage(analytics, "kpi.average_suffix"),
   kpiEmpty: getMessage(analytics, "kpi.empty"),
   formatLocale: locale,
+  sampleCompositionLead: getMessage(analytics, "sample.composition_lead"),
+  sampleLayerRegularly: getMessage(analytics, "sample.layer_regularly"),
+  sampleLayerRarely: getMessage(analytics, "sample.layer_rarely"),
+  sampleLayerInactive: getMessage(analytics, "sample.layer_inactive"),
+  sampleLayerNoChecks: getMessage(analytics, "sample.layer_no_checks"),
   sampleComposition: getMessage(analytics, "sample.composition"),
   charts: {
     attendanceTitle: getMessage(analytics, "charts.attendance_title"),
@@ -72,6 +78,8 @@ export const pickAnalyticsMessages = (
     columnTest: getMessage(analytics, "tables.column_test"),
     columnNotebook: getMessage(analytics, "tables.column_notebook"),
     columnEnrolledSince: getMessage(analytics, "tables.column_enrolled_since"),
+    rowLowAttendance: getMessage(analytics, "tables.row_low_attendance"),
+    rowLowScore: getMessage(analytics, "tables.row_low_score"),
     emptyPupilsTitle: getMessage(analytics, "empty.no_pupils_title"),
     emptyPupilsDescription: getMessage(analytics, "empty.no_pupils_description"),
     noCheckedLessonsTitle: getMessage(analytics, "empty.no_checked_lessons_title"),
@@ -104,6 +112,9 @@ export const pickAnalyticsMessages = (
   dataQuality: {
     title: getMessage(analytics, "data_quality.title"),
     missingRecords: getMessage(analytics, "data_quality.missing_records"),
+    missingChecked: getMessage(analytics, "data_quality.missing_checked"),
+    lessonsLinkLabel: getMessage(analytics, "data_quality.lessons_link_label"),
+    migrationDuplicates: getMessage(analytics, "data_quality.migration_duplicates"),
     adminSummary: getMessage(analytics, "data_quality.admin_summary"),
   },
   deletedData: {
