@@ -9,19 +9,79 @@ import { getServerEnv } from "@/lib/env.server";
  */
 let client: PrismaClient | undefined;
 let guarded: Promise<void> | undefined;
+/** One connect retry per process (ADR-019); parallel callers share the same attempt. */
+let connectionRetryConsumed = false;
+let terminalConnectionError: unknown;
+let cachedPrisma: Promise<PrismaClient> | undefined;
+let inflightConnect: Promise<PrismaClient> | undefined;
 
-export async function getPrisma(): Promise<PrismaClient> {
+export function isRetryablePrismaConnectionError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  if (error.message.includes("timeout exceeded when trying to connect")) return true;
+  const code = (error as NodeJS.ErrnoException).code;
+  return code === "ECONNRESET";
+}
+
+const resetPrismaClient = (): void => {
+  client = undefined;
+  guarded = undefined;
+};
+
+const connectPrisma = async (): Promise<PrismaClient> => {
   const env = getServerEnv();
   client ??= createPrismaClient(env.DATABASE_URL);
   const db = client;
   guarded ??= assertDbEnvironment(db, env.APP_ENV, { allowMarkerWrite: false }).then(
     () => undefined,
     (error: unknown) => {
-      // Allow a retry after the operator fixes the environment, but never serve a guarded-out client.
       guarded = undefined;
       throw error;
     },
   );
   await guarded;
   return db;
+};
+
+const connectWithAtMostOneRetry = async (): Promise<PrismaClient> => {
+  try {
+    return await connectPrisma();
+  } catch (error) {
+    if (!isRetryablePrismaConnectionError(error) || connectionRetryConsumed) {
+      resetPrismaClient();
+      throw error;
+    }
+    connectionRetryConsumed = true;
+    resetPrismaClient();
+    try {
+      return await connectPrisma();
+    } catch (retryError) {
+      resetPrismaClient();
+      terminalConnectionError = retryError;
+      throw retryError;
+    }
+  }
+};
+
+export function getPrisma(): Promise<PrismaClient> {
+  if (cachedPrisma) {
+    return cachedPrisma;
+  }
+
+  if (inflightConnect) {
+    return inflightConnect;
+  }
+
+  if (connectionRetryConsumed && client === undefined) {
+    return Promise.reject(terminalConnectionError);
+  }
+
+  inflightConnect = connectWithAtMostOneRetry()
+    .then((connectedClient) => {
+      cachedPrisma = Promise.resolve(connectedClient);
+      return connectedClient;
+    })
+    .finally(() => {
+      inflightConnect = undefined;
+    });
+  return inflightConnect;
 }

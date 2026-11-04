@@ -1,7 +1,6 @@
 import "server-only";
 import { USER_ROLE, type UserRole } from "@sunschool/domain";
-import { readFeaturesAchievementsEnabled } from "@/data/achievements/achievement-feature.server";
-import { readFeaturesParentsEnabled } from "@/data/families/family-feature.server";
+import { readProductFeatureFlags } from "@/data/shell/read-product-feature-flags.server";
 import { getPrisma } from "@/lib/db.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/get-dictionary";
@@ -48,10 +47,7 @@ export const buildShellNav = async (
 
   const shellRole = resolveShellRole(context.roles);
   const prisma = await getPrisma();
-  const [achievementsEnabled, parentsEnabled] = await Promise.all([
-    readFeaturesAchievementsEnabled(prisma),
-    readFeaturesParentsEnabled(prisma),
-  ]);
+  const { achievementsEnabled, parentsEnabled } = await readProductFeatureFlags(prisma);
   const stripKeys: string[] = [];
   if (!achievementsEnabled) stripKeys.push("achievements");
   if (!parentsEnabled) stripKeys.push("family", "child", "child-data");

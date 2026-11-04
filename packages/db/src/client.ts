@@ -16,9 +16,10 @@ const INTERACTIVE_TRANSACTION_OPTIONS = {
   timeout: INTERACTIVE_TRANSACTION_TIMEOUT_MS,
 } as const;
 
-const POOL_MAX = 10;
-const POOL_IDLE_TIMEOUT_MS = 30_000;
-const POOL_CONNECTION_TIMEOUT_MS = 15_000;
+/** ADR-019 Q-3: cap concurrent connections per serverless instance (Neon pooler). */
+export const PRISMA_POOL_MAX = 4;
+export const PRISMA_POOL_IDLE_TIMEOUT_MS = 10_000;
+export const PRISMA_POOL_CONNECTION_TIMEOUT_MS = 5_000;
 
 export type DbReader = PrismaClient | Prisma.TransactionClient;
 
@@ -36,9 +37,9 @@ export function createPrismaClient(connectionString: string): PrismaClient {
   }
   const adapter = new PrismaPg({
     connectionString,
-    max: POOL_MAX,
-    idleTimeoutMillis: POOL_IDLE_TIMEOUT_MS,
-    connectionTimeoutMillis: POOL_CONNECTION_TIMEOUT_MS,
+    max: PRISMA_POOL_MAX,
+    idleTimeoutMillis: PRISMA_POOL_IDLE_TIMEOUT_MS,
+    connectionTimeoutMillis: PRISMA_POOL_CONNECTION_TIMEOUT_MS,
   });
   const baseOptions = {
     adapter,

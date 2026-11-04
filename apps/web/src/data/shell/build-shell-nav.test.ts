@@ -4,12 +4,11 @@ import { buildShellNav } from "@/data/shell/build-shell-nav.server";
 import { listNavLeafHrefs } from "@/lib/shell/filter-nav-by-route-access";
 import { resolveNavItems } from "@/lib/shell/nav-resolver";
 
-vi.mock("@/data/achievements/achievement-feature.server", () => ({
-  readFeaturesAchievementsEnabled: vi.fn(async () => true),
-}));
-
-vi.mock("@/data/families/family-feature.server", () => ({
-  readFeaturesParentsEnabled: vi.fn(async () => false),
+vi.mock("@/data/shell/read-product-feature-flags.server", () => ({
+  readProductFeatureFlags: vi.fn(async () => ({
+    achievementsEnabled: true,
+    parentsEnabled: false,
+  })),
 }));
 
 vi.mock("@/lib/db.server", () => ({
