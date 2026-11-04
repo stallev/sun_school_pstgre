@@ -149,6 +149,7 @@ describe("analytics readability components", () => {
       );
     });
     expect(container.querySelector('button[aria-label="Что значит «К выдаче»?"]')).not.toBeNull();
+    expect(container.textContent).toContain("К выдаче");
     expect(container.textContent).toContain(": 5");
   });
 });

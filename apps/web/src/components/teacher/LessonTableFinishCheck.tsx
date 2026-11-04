@@ -2,7 +2,7 @@
 
 import { ContentText } from "@/components/atoms/ContentText";
 import { LessonTableFinishCheckButton } from "@/components/teacher/LessonTableFinishCheckButton";
-import { TermHint } from "@/components/ui/term-hint";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 
 type LessonTableFinishCheckProps = {
   label: string;
@@ -36,6 +36,6 @@ export const LessonTableFinishCheck = ({
       onFinish={onFinish}
     />
     <ContentText tone="muted">{note}</ContentText>
-    <TermHint term={hintTerm} hint={hint} ariaLabel={hintAriaLabel} />
+    <TermLabel term={nonEmptyTerm(hintTerm)} hint={hint} ariaLabel={hintAriaLabel} />
   </div>
 );

@@ -1,5 +1,5 @@
 import { ContentText } from "@/components/atoms/ContentText";
-import { TermHint } from "@/components/ui/term-hint";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
 
@@ -17,16 +17,14 @@ export const AnalyticsKpiMetricHeading = ({
   className,
 }: AnalyticsKpiMetricHeadingProps) => (
   <ContentText className={className ?? "text-sm text-muted"}>
-    {label}
     {glossary && termHintAriaLabel ? (
-      <>
-        {" "}
-        <TermHint
-          term={glossary.term}
-          hint={glossary.hint}
-          ariaLabel={fillMessage(termHintAriaLabel, { term: glossary.term })}
-        />
-      </>
-    ) : null}
+      <TermLabel
+        term={nonEmptyTerm(label)}
+        hint={glossary.hint}
+        ariaLabel={fillMessage(termHintAriaLabel, { term: glossary.term })}
+      />
+    ) : (
+      label
+    )}
   </ContentText>
 );

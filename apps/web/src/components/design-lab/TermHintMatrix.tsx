@@ -1,11 +1,15 @@
 "use client";
 
+import { ContentText } from "@/components/atoms/ContentText";
 import commonRu from "@/lib/messages/ru/common.json";
 import { pickGlossaryUiMessages, GLOSSARY_TERM_KEYS } from "@/lib/messages/pick-glossary-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { TermHint } from "@/components/ui/term-hint";
+import { TermHeader } from "@/components/ui/term-header";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { termHintLabSection } from "@/lib/design-lab/sections";
 import { MatrixCell } from "./MatrixCell";
+import { Table, TableBody, TableHeader, TableRow } from "@/components/ui/table";
 
 const glossary = pickGlossaryUiMessages(commonRu);
 const aria = (term: string) => fillMessage(glossary.termHintAriaLabel, { term });
@@ -15,65 +19,67 @@ const longHint =
 
 export const TermHintMatrix = () => (
   <div className="grid gap-4 md:grid-cols-2">
-    <MatrixCell label="Closed (default)">
-      <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-        Средняя явка
-        <TermHint
-          term={glossary.attendance.term}
+    <MatrixCell label="TermLabel · в абзаце">
+      <ContentText className="text-sm text-muted-foreground">
+        <TermLabel
+          term={nonEmptyTerm(glossary.attendance.term)}
           hint={glossary.attendance.hint}
           ariaLabel={aria(glossary.attendance.term)}
         />
-      </span>
+      </ContentText>
     </MatrixCell>
-    <MatrixCell label="Open (click trigger in preview)">
-      <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-        Стихов за урок
-        <TermHint
-          term={glossary.verses_per_lesson.term}
-          hint={glossary.verses_per_lesson.hint}
-          ariaLabel={aria(glossary.verses_per_lesson.term)}
+    <MatrixCell label="TermLabel · в таблице (popover вверх)">
+      <Table className="text-sm">
+        <TableHeader>
+          <TableRow>
+            <TermHeader
+              className="px-3 py-2 text-right"
+              term={nonEmptyTerm(glossary.verses_per_lesson.term)}
+              hint={glossary.verses_per_lesson.hint}
+              ariaLabel={aria(glossary.verses_per_lesson.term)}
+            />
+          </TableRow>
+        </TableHeader>
+        <TableBody />
+      </Table>
+    </MatrixCell>
+    <MatrixCell label="TermLabel · длинный текст">
+      <TermLabel
+        term={nonEmptyTerm("Длинный термин")}
+        hint={longHint}
+        ariaLabel={aria("Длинный термин")}
+      />
+    </MatrixCell>
+    <MatrixCell label="TermLabel · у правого края">
+      <div className="flex w-full justify-end">
+        <TermLabel
+          term={nonEmptyTerm(glossary.lesson_points.term)}
+          hint={glossary.lesson_points.hint}
+          ariaLabel={aria(glossary.lesson_points.term)}
         />
-      </span>
+      </div>
     </MatrixCell>
-    <MatrixCell label="Long hint text">
-      <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-        Длинный термин
-        <TermHint term="Длинный термин" hint={longHint} ariaLabel={aria("Длинный термин")} />
-      </span>
+    <MatrixCell label="TermLabel · reason (неактивный)">
+      <TermLabel
+        variant="reason"
+        term={nonEmptyTerm("Только для учителей")}
+        hint="Рейтинг видят учителя и администратор."
+        ariaLabel="Почему пункт недоступен"
+      />
     </MatrixCell>
-    <MatrixCell label="Focus visible (Tab to ?)">
+    <MatrixCell label="TermHint · low-level (Lab only)">
       <TermHint
         term={glossary.test.term}
         hint={glossary.test.hint}
         ariaLabel={aria(glossary.test.term)}
       />
     </MatrixCell>
-    <MatrixCell label="Touch target (< md, 44 px)">
-      <TermHint
-        term={glossary.bricks.term}
-        hint={glossary.bricks.hint}
-        ariaLabel={aria(glossary.bricks.term)}
-      />
-    </MatrixCell>
-    <MatrixCell label="У правого края (align end)">
-      <div className="flex w-full justify-end">
-        <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-          {glossary.lesson_points.term}
-          <TermHint
-            term={glossary.lesson_points.term}
-            hint={glossary.lesson_points.hint}
-            ariaLabel={aria(glossary.lesson_points.term)}
-          />
-        </span>
-      </div>
-    </MatrixCell>
     <MatrixCell label={`Glossary (${termHintLabSection.id})`}>
       <ul className="grid gap-2 sm:grid-cols-2">
         {GLOSSARY_TERM_KEYS.map((key) => (
-          <li key={key} className="flex items-start gap-1 text-sm text-muted-foreground">
-            <span>{glossary[key].term}</span>
-            <TermHint
-              term={glossary[key].term}
+          <li key={key}>
+            <TermLabel
+              term={nonEmptyTerm(glossary[key].term)}
               hint={glossary[key].hint}
               ariaLabel={aria(glossary[key].term)}
             />

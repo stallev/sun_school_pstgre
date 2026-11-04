@@ -16,15 +16,24 @@ const dismissOtherHints = (except: (() => void) | null) => {
   if (activeDismiss && activeDismiss !== except) activeDismiss();
 };
 
+export type TermHintSide = "top" | "bottom";
+
 type TermHintProps = {
   term: string;
   hint: string;
   ariaLabel: string;
   className?: string;
+  side?: TermHintSide;
 };
 
 /** UX-03 D-17 · ADR-018: «?» popover beside a domain term. */
-export const TermHint = ({ term: _term, hint, ariaLabel, className }: TermHintProps) => {
+export const TermHint = ({
+  term: _term,
+  hint,
+  ariaLabel,
+  className,
+  side = "bottom",
+}: TermHintProps) => {
   const popupId = useId();
   const anchorRef = useRef<HTMLSpanElement>(null);
   const [open, setOpen] = useState(false);
@@ -70,7 +79,7 @@ export const TermHint = ({ term: _term, hint, ariaLabel, className }: TermHintPr
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Positioner
-            side="bottom"
+            side={side}
             align={align}
             sideOffset={8}
             collisionAvoidance={{ side: "flip", align: "shift" }}

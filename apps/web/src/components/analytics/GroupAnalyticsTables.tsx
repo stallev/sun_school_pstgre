@@ -1,7 +1,7 @@
 import { SAMPLE_LAYER } from "@sunschool/domain";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
-import { TermHint } from "@/components/ui/term-hint";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -68,8 +68,8 @@ const PupilLayerTable = ({
       <span className="inline-flex flex-wrap items-center gap-1">
         {title}
         {variant === "layer-a" && regularlyAttendGlossary && termHintAriaLabel ? (
-          <TermHint
-            term={regularlyAttendGlossary.term}
+          <TermLabel
+            term={nonEmptyTerm(regularlyAttendGlossary.term)}
             hint={regularlyAttendGlossary.hint}
             ariaLabel={fillMessage(termHintAriaLabel, { term: regularlyAttendGlossary.term })}
           />
