@@ -47,6 +47,48 @@
       "other": "{count} lessons"
     }
   },
+  "glossary": {
+    "regularly_attend": {
+      "term": "attend regularly",
+      "hint": "Pupils who attended at least half of checked lessons. Occasional absences do not skew the group picture."
+    },
+    "attendance": {
+      "term": "attendance",
+      "hint": "Share of lessons the pupil attended. Based on checked lessons in the selected period."
+    },
+    "verses_per_lesson": {
+      "term": "verses per lesson",
+      "hint": "Average golden verses recited per lesson. Counted for pupils who attend regularly."
+    },
+    "test": {
+      "term": "test",
+      "hint": "Average test score on a 0–10 scale. Lessons without a test are excluded from the average."
+    },
+    "notebook": {
+      "term": "notebook",
+      "hint": "Average notebook score on a 0–10 scale. “Not graded” is not treated as zero."
+    },
+    "review_lesson": {
+      "term": "review lesson",
+      "hint": "On a review lesson we check the notebook and singing, not regular homework."
+    },
+    "bricks": {
+      "term": "bricks",
+      "hint": "An internal pupil reward: earned from lesson points and achievements; penalties reduce the total. Teachers issue bricks."
+    },
+    "choir_singing": {
+      "term": "sang with the choir",
+      "hint": "Mark if the pupil joined group singing in class. It does not change homework scores."
+    },
+    "bonus": {
+      "term": "bonus",
+      "hint": "Extra points for special success. May affect bricks according to group rules."
+    },
+    "streak": {
+      "term": "streak",
+      "hint": "Consecutive lessons with the same achievement. Each streak level grants its reward once."
+    }
+  },
   "shell": {
     "skip_to_content": "Skip to content",
     "brand": "Sunday School",

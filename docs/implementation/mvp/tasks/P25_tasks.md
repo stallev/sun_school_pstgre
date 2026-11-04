@@ -61,7 +61,7 @@ Tier T2: словари ru/en во всех срезах, захардкожен
 
 Tier T2: новый примитив каталога (Lab раньше экранов, C-2).
 
-- [ ] P25-T4 · T2 · Spec: [UX-03 D-17](../../../design/visual_identity_contract.md) · [Lab §5.3 `TermHint`](../specs/design_system_lab_spec.md) · ADR-018 §4 п. 2 · Prototype: `termHint()`
+- [x] P25-T4 · T2 · Spec: [UX-03 D-17](../../../design/visual_identity_contract.md) · [Lab §5.3 `TermHint`](../specs/design_system_lab_spec.md) · ADR-018 §4 п. 2 · Prototype: `termHint()`
       Files: `apps/web/src/components/ui/term-hint.tsx`, `apps/web/src/components/ui/term-hint.test.tsx`, `apps/web/src/lib/messages/{ru,en}/common.json` (`glossary.*`), `apps/web/src/lib/messages/pick-glossary-messages.ts`, `apps/web/src/components/design-lab/TermHintMatrix.tsx`, `apps/web/src/lib/design-lab/sections.ts`
       Acceptance: кнопка `CircleHelp` с `aria-label` = термин, `aria-expanded`, `aria-controls`; popover на `@base-ui/react/popover`: открытие по клику / Enter / Space, закрытие Esc и кликом вне, фокус возвращается на кнопку; область касания ≥ 44 px на < `md`; текст ≤ 200 знаков (тест длины словаря глоссария); `motion-reduce` без анимации; без hex; глоссарий: «регулярно ходят», «явка», «стихи за урок», «тест», «тетрадь», «обзорный урок», «кирпичики», «спевка / пел вместе с хором», «бонус», «серия»; секция Lab: закрыт / открыт / длинный текст / фокус; один компонент на файл, ≤ 140 строк
       Paths: H [D-17: «?» раскрывает определение клавиатурой и мышью] · N [Esc; клик вне; длинный термин переносится; два подсказки подряд — открыта одна; касание] · S n/a — presentational, тексты без ПД
