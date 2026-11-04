@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
-import { parsePeopleSearchParam } from "@/lib/people/parse-people-search";
 
 const DEBOUNCE_MS = 300;
 
@@ -31,6 +30,7 @@ export const PeopleSearch = ({ initialQuery }: PeopleSearchProps) => {
       } else {
         params.set("q", trimmed);
       }
+      params.delete("page");
       const query = params.toString();
       router.replace(query ? `${pathname}?${query}` : pathname);
     }, DEBOUNCE_MS);
@@ -38,7 +38,9 @@ export const PeopleSearch = ({ initialQuery }: PeopleSearchProps) => {
     return () => window.clearTimeout(timeout);
   }, [value, pathname, router, searchParams]);
 
-  const hintId = "people-search-hint";
+  const trimmedValue = value.trim();
+  const showMinHint = trimmedValue.length === 1;
+  const hintId = showMinHint ? "people-search-min-hint" : undefined;
 
   return (
     <div className="space-y-1">
@@ -55,11 +57,11 @@ export const PeopleSearch = ({ initialQuery }: PeopleSearchProps) => {
         aria-describedby={hintId}
         className="max-w-md"
       />
-      <p id={hintId} className="sr-only">
-        {parsePeopleSearchParam(value).searchTerm
-          ? messages.people.searchActiveHint
-          : messages.people.searchMinHint}
-      </p>
+      {showMinHint ? (
+        <p id={hintId} className="text-sm text-muted-foreground">
+          {messages.people.searchMinHint}
+        </p>
+      ) : null}
     </div>
   );
 };

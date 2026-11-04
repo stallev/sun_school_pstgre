@@ -5,11 +5,13 @@ import {
   DELETION_PLAN_WARNING,
   DELETION_REQUEST_STATUS,
   DELETION_REQUEST_TYPE,
+  USER_ROLE,
   type DeletionPlan,
   type DeletionRequestStatus,
+  type UserRole,
 } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
-import { formatDisplayName } from "@/lib/person/format-display-name";
+import { formatAppUserDisplayName, formatDisplayName } from "@/lib/person/format-display-name";
 import { calendarDateFromIso, isoFromCalendarDate } from "@/data/school/calendar-date";
 import { isoTodayUtc } from "@/data/school/school-pupil-shared.server";
 import { OPEN_DELETION_STATUSES } from "./deletion-shared.server";
@@ -38,6 +40,7 @@ export type DeletionAdminRow = {
   requestedAtIso: string;
   requestedByUserId: string;
   requestedByDisplayName: string;
+  requestedByRoleLabel: string | null;
   requestedBySelf: boolean;
   reason: string | null;
   dueOnIso: string;
@@ -62,6 +65,57 @@ const statusFilterForTab = (tab: DeletionListTab): DeletionRequestStatus[] => {
   return OPEN_STATUSES;
 };
 
+export type DeletionAdminListLabels = {
+  deletedUserTemplate: string;
+  requesterNameFallback: string;
+  roleAdmin: string;
+  roleTeacher: string;
+  roleParent: string;
+};
+
+const pickRequesterRoleLabel = (
+  roles: readonly { role: UserRole }[],
+  labels: Pick<DeletionAdminListLabels, "roleAdmin" | "roleTeacher" | "roleParent">,
+): string | null => {
+  if (roles.some((entry) => entry.role === USER_ROLE.ADMIN)) return labels.roleAdmin;
+  if (roles.some((entry) => entry.role === USER_ROLE.TEACHER)) return labels.roleTeacher;
+  if (roles.some((entry) => entry.role === USER_ROLE.PARENT)) return labels.roleParent;
+  return null;
+};
+
+export const resolveDeletionRequesterRoleLabel = (
+  requestedById: string,
+  subjectUserId: string | null,
+  roles: readonly { role: UserRole }[],
+  labels: Pick<DeletionAdminListLabels, "roleAdmin" | "roleTeacher" | "roleParent">,
+): string | null => {
+  if (subjectUserId !== null && requestedById === subjectUserId) {
+    return null;
+  }
+  return pickRequesterRoleLabel(roles, labels);
+};
+
+export const isDeletionRequestedBySubject = (
+  requestedById: string,
+  subjectUserId: string | null,
+): boolean => subjectUserId !== null && requestedById === subjectUserId;
+
+export const resolveDeletionRequesterDisplayName = (
+  user: Parameters<typeof formatAppUserDisplayName>[0],
+  labels: Pick<DeletionAdminListLabels, "deletedUserTemplate" | "requesterNameFallback">,
+): string => {
+  const formatted = formatAppUserDisplayName(user, labels.deletedUserTemplate).trim();
+  return formatted.length > 0 ? formatted : labels.requesterNameFallback;
+};
+
+export const sortDeletionRowsByDue = (rows: DeletionAdminRow[]): DeletionAdminRow[] =>
+  [...rows].sort((left, right) => {
+    if (left.dueOnIso !== right.dueOnIso) {
+      return left.dueOnIso.localeCompare(right.dueOnIso);
+    }
+    return left.requestedAtIso.localeCompare(right.requestedAtIso);
+  });
+
 const diffCalendarDays = (dueIso: string, todayIso: string): number => {
   const due = calendarDateFromIso(dueIso).getTime();
   const today = calendarDateFromIso(todayIso).getTime();
@@ -72,6 +126,7 @@ export async function loadDeletionAdminList(
   db: PrismaClient,
   actorUserId: string,
   tab: DeletionListTab,
+  labels: DeletionAdminListLabels,
 ): Promise<DeletionAdminRow[]> {
   const todayIso = isoTodayUtc();
   const statuses = statusFilterForTab(tab);
@@ -98,7 +153,14 @@ export async function loadDeletionAdminList(
         select: { lastName: true, firstName: true, middleName: true },
       },
       requestedBy: {
-        select: { lastName: true, firstName: true, middleName: true, deletedOrdinal: true },
+        select: {
+          lastName: true,
+          firstName: true,
+          middleName: true,
+          deletedOrdinal: true,
+          status: true,
+          roles: { select: { role: true } },
+        },
       },
       takenBy: {
         select: { lastName: true, firstName: true, middleName: true, deletedOrdinal: true },
@@ -142,8 +204,14 @@ export async function loadDeletionAdminList(
       subjectPupilId: row.subjectPupilId,
       requestedAtIso: row.requestedAt.toISOString(),
       requestedByUserId: row.requestedById,
-      requestedByDisplayName: formatDisplayName(row.requestedBy),
-      requestedBySelf: row.requestedById === row.subjectUserId,
+      requestedByDisplayName: resolveDeletionRequesterDisplayName(row.requestedBy, labels),
+      requestedByRoleLabel: resolveDeletionRequesterRoleLabel(
+        row.requestedById,
+        row.subjectUserId,
+        row.requestedBy.roles,
+        labels,
+      ),
+      requestedBySelf: isDeletionRequestedBySubject(row.requestedById, row.subjectUserId),
       reason: row.reason,
       dueOnIso,
       daysRemaining,
@@ -157,7 +225,7 @@ export async function loadDeletionAdminList(
     });
   }
 
-  return mapped;
+  return sortDeletionRowsByDue(mapped);
 }
 
 export const countDeletionPlanTotals = (plan: DeletionPlan | null): { deleteCount: number; anonymizeCount: number } => {

@@ -59,6 +59,7 @@ export type AdminMessages = {
     groupsLabel: string;
     roleAdmin: string;
     roleTeacher: string;
+    roleParent: string;
     submitApprove: string;
     submitReject: string;
     submitPending: string;
@@ -190,6 +191,11 @@ export type AdminMessages = {
     filterAll: string;
     filterUnassigned: string;
     filterInactive: string;
+    filterLegacy: string;
+    groupFilterLabel: string;
+    groupFilterAll: string;
+    legacyCountLink: string;
+    showMore: string;
     searchLabel: string;
     searchPlaceholder: string;
     searchMinHint: string;
@@ -286,6 +292,9 @@ export type AdminMessages = {
     requestedOn: string;
     requestedBySelf: string;
     requestedBy: string;
+    requestedByWithRole: string;
+    requesterNameFallback: string;
+    statusOverdue: string;
     reasonPrefix: string;
     daysLeft: string;
     daysOverdue: string;

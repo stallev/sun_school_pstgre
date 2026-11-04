@@ -1,32 +1,30 @@
 import { CustomLink } from "@/components/ui/custom-link";
-import { PEOPLE_LIST_FILTER, type PeopleListFilter } from "@/data/school/load-people-admin-list.server";
+import { PEOPLE_LIST_FILTER, type PeopleListFilter } from "@/data/people/people-list-filters";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
-import { appendPeopleSearchToHref } from "@/lib/people/parse-people-search";
+import { buildPeopleListHref } from "@/lib/people/parse-people-filter";
 import { cn } from "@/lib/utils";
 
 type PeopleListFilterNavProps = {
   activeFilter: PeopleListFilter;
-  searchQuery: string;
+  displayQuery: string;
+  activeGroupId: string | undefined;
   messages: AdminMessages;
 };
 
-const filterTabs: { key: PeopleListFilter; baseHref: string; label: (m: AdminMessages) => string }[] = [
-  { key: PEOPLE_LIST_FILTER.ALL, baseHref: "/people", label: (m) => m.people.filterAll },
-  {
-    key: PEOPLE_LIST_FILTER.UNASSIGNED,
-    baseHref: `/people?filter=${PEOPLE_LIST_FILTER.UNASSIGNED}`,
-    label: (m) => m.people.filterUnassigned,
-  },
-  {
-    key: PEOPLE_LIST_FILTER.INACTIVE,
-    baseHref: `/people?filter=${PEOPLE_LIST_FILTER.INACTIVE}`,
-    label: (m) => m.people.filterInactive,
-  },
+const filterTabs: {
+  key: PeopleListFilter;
+  label: (messages: AdminMessages) => string;
+}[] = [
+  { key: PEOPLE_LIST_FILTER.ALL, label: (messages) => messages.people.filterAll },
+  { key: PEOPLE_LIST_FILTER.UNASSIGNED, label: (messages) => messages.people.filterUnassigned },
+  { key: PEOPLE_LIST_FILTER.INACTIVE, label: (messages) => messages.people.filterInactive },
+  { key: PEOPLE_LIST_FILTER.LEGACY, label: (messages) => messages.people.filterLegacy },
 ];
 
 export const PeopleListFilterNav = ({
   activeFilter,
-  searchQuery,
+  displayQuery,
+  activeGroupId,
   messages,
 }: PeopleListFilterNavProps) => (
   <nav
@@ -36,7 +34,12 @@ export const PeopleListFilterNav = ({
   >
     {filterTabs.map((tab) => {
       const isActive = activeFilter === tab.key;
-      const href = appendPeopleSearchToHref(tab.baseHref, searchQuery);
+      const href = buildPeopleListHref({
+        filter: tab.key,
+        groupId: activeGroupId,
+        displayQuery,
+        page: 1,
+      });
       return (
         <CustomLink
           key={tab.key}
