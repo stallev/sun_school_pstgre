@@ -11,7 +11,7 @@ export const formatPupilYearMetric = (
   messages: AnalyticsMessages,
 ): string => {
   if (metric === "attendance") {
-    return formatAnalyticsPercent(messages.formatPercent, Number((value * 100).toFixed(0)));
+    return formatAnalyticsPercent(messages.formatPercent, value);
   }
   return formatAnalyticsAverage(messages.formatAverage, Number(value.toFixed(1)));
 };

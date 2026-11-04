@@ -5,6 +5,7 @@ import type { PrismaClient } from "@sunschool/db";
 import { formatAppUserDisplayName, formatDisplayName } from "@/lib/person/format-display-name";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import { safeAdminMessage } from "@/lib/messages/safe-admin-message";
 import type { RawAuditRow } from "./audit-shared.server";
 import { isKnownEntityType } from "./audit-shared.server";
 
@@ -78,14 +79,6 @@ export async function resolveAuditEntryLabels(
     result.set(row.id, { actorLabel, entityLabel: entity.label, entityHref: entity.href });
   }
   return result;
-}
-
-function safeAdminMessage(adminDict: Dictionary, path: string): string | null {
-  try {
-    return getMessage(adminDict, path);
-  } catch {
-    return null;
-  }
 }
 
 function groupEntityIds(rows: RawAuditRow[]): Map<string, Set<string>> {

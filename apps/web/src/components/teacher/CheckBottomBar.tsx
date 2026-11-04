@@ -14,6 +14,7 @@ type CheckBottomBarProps = {
   onPrimary: () => void;
   onNext: () => void;
   keyboardHint?: string;
+  saveStatusLabel?: string;
   variant: "inline" | "fixed";
 };
 
@@ -28,6 +29,7 @@ export const CheckBottomBar = ({
   onPrimary,
   onNext,
   keyboardHint,
+  saveStatusLabel,
   variant,
 }: CheckBottomBarProps) => {
   const barClass =
@@ -38,7 +40,11 @@ export const CheckBottomBar = ({
   return (
     <div className={barClass}>
       {variant === "fixed" ? (
-        <div className="flex gap-2">
+        <>
+          {saveStatusLabel ? (
+            <p className="mb-1.5 text-center text-sm tabular-nums text-ink-2">{saveStatusLabel}</p>
+          ) : null}
+          <div className="flex gap-2">
           <Button
             type="button"
             variant="outline"
@@ -74,6 +80,7 @@ export const CheckBottomBar = ({
             </Button>
           ) : null}
         </div>
+        </>
       ) : (
         <>
           <Button type="button" variant="ghost" disabled={!canPrevious || pending} onClick={onPrevious}>
@@ -83,9 +90,14 @@ export const CheckBottomBar = ({
           {keyboardHint ? (
             <span className="hidden text-sm text-muted xl:inline">{keyboardHint}</span>
           ) : null}
-          <Button type="button" disabled={pending} aria-busy={pending} onClick={onPrimary}>
-            {primaryLabel}
-          </Button>
+          <div className="flex items-center gap-3">
+            {saveStatusLabel ? (
+              <span className="text-sm tabular-nums text-ink-2">{saveStatusLabel}</span>
+            ) : null}
+            <Button type="button" disabled={pending} aria-busy={pending} onClick={onPrimary}>
+              {primaryLabel}
+            </Button>
+          </div>
         </>
       )}
     </div>

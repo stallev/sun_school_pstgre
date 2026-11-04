@@ -16,10 +16,12 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary } from "@/lib/messages/get-dictionary";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
+import { resolveShellRole } from "@/lib/shell/nav-resolver";
 import {
   parseSidebarCollapsedCookie,
   SIDEBAR_COLLAPSED_COOKIE_NAME,
 } from "@/lib/shell/sidebar-collapsed-cookie";
+import { resolveViewAsRole, VIEW_AS_COOKIE_NAME } from "@/lib/shell/view-as-cookie";
 
 export const instant = false;
 
@@ -53,9 +55,13 @@ const ProfileLayout = async ({ children }: ProfileLayoutProps) => {
 
   if (policy.status === ACCOUNT_STATUS.ACTIVE) {
     const { APP_ENV } = getServerEnv();
+    const viewAsRole = resolveViewAsRole(
+      cookieStore.get(VIEW_AS_COOKIE_NAME)?.value,
+      resolveShellRole(policy.roles),
+    );
     const [shellUser, nav, badgeCounts] = await Promise.all([
       getShellUser(policy.userId),
-      buildShellNav(policy, locale, { appEnv: APP_ENV }),
+      buildShellNav(policy, locale, { appEnv: APP_ENV, viewAsRole }),
       loadShellBadgeCounts(policy),
     ]);
     const homeHref = homeRouteFor(policy.status, policy.roles);

@@ -1,7 +1,7 @@
 "use client";
 
 import { USER_ROLE, type UserRole } from "@sunschool/domain";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
 import { BrandMark } from "@/components/patterns/BrandMark";
 import { CustomLink } from "@/components/ui/custom-link";
@@ -9,6 +9,7 @@ import { NavDrawer } from "@/components/shell/nav-drawer";
 import { ShellSidebarToggle } from "@/components/shell/shell-sidebar-toggle.client";
 import { SidebarNav } from "@/components/shell/sidebar-nav";
 import { UserMenu } from "@/components/shell/user-menu";
+import { ViewAsBadge } from "@/components/shell/ViewAsBadge";
 import type { NavBadgeCounts } from "@/components/shell/shell-nav-types";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
 import type { ShellNavPayload } from "@/data/shell/build-shell-nav.server";
@@ -31,6 +32,16 @@ type ShellHeaderProps = {
   children: ReactNode;
 };
 
+const formatViewModeLabel = (
+  template: string,
+  viewAsRole: UserRole,
+  roleNameAdmin: string,
+  roleNameTeacher: string,
+): string => {
+  const roleName = viewAsRole === USER_ROLE.ADMIN ? roleNameAdmin : roleNameTeacher;
+  return template.replace("{role}", roleName);
+};
+
 export const ShellHeader = ({
   homeHref,
   displayName,
@@ -41,22 +52,35 @@ export const ShellHeader = ({
 }: ShellHeaderProps) => {
   const messages = useShellMessages();
   const pathname = usePathname();
-  const [previewRole, setPreviewRole] = useState<UserRole>(nav.shellRole);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
+  const router = useRouter();
 
   const screenTitle =
     resolveShellScreenTitle(pathname, messages.screenTitles) ?? messages.brand;
   const roleName =
     nav.shellRole === USER_ROLE.ADMIN ? messages.roleNameAdmin : messages.roleNameTeacher;
   const resolvedName = displayName || messages.displayNameFallback;
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
+  const showViewAsBadge = nav.viewAsRole !== nav.shellRole;
+  const viewModeLabel = showViewAsBadge
+    ? formatViewModeLabel(
+        messages.viewModeTemplate,
+        nav.viewAsRole,
+        messages.roleNameAdmin,
+        messages.roleNameTeacher,
+      )
+    : "";
 
   const displayItems = useMemo(() => {
-    if (!nav.showDevSwitcher || !nav.previewNavItems) return nav.navItems;
-    return previewRole === USER_ROLE.TEACHER ? nav.previewNavItems : nav.navItems;
-  }, [nav.navItems, nav.previewNavItems, nav.showDevSwitcher, previewRole]);
+    if (nav.viewAsRole !== nav.shellRole && nav.previewNavItems) return nav.previewNavItems;
+    return nav.navItems;
+  }, [nav.navItems, nav.previewNavItems, nav.shellRole, nav.viewAsRole]);
 
-  const activeKey = resolveActiveNavKey(pathname, nav.shellRole);
+  const activeKey = resolveActiveNavKey(pathname, nav.viewAsRole);
   const activeGroupKey = resolveActiveGroupKey(displayItems, activeKey);
+
+  const handlePreviewRoleChange = (_role: UserRole) => {
+    router.refresh();
+  };
 
   const navProps = {
     items: displayItems,
@@ -64,6 +88,7 @@ export const ShellHeader = ({
     activeKey,
     activeGroupKey,
     badgeCounts,
+    emptyHint: nav.previewNavEmptyHint,
   };
 
   return (
@@ -110,13 +135,14 @@ export const ShellHeader = ({
             controlsId={SIDEBAR_NAV_ID}
           />
           <div className="ms-auto flex min-w-0 flex-1 items-center justify-end gap-1.5 lg:px-8">
+            {showViewAsBadge ? <ViewAsBadge label={viewModeLabel} /> : null}
             <UserMenu
               displayName={resolvedName}
               roleSubtitle={roleName}
-              showDevSwitcher={nav.showDevSwitcher && Boolean(nav.previewNavItems)}
+              showDevSwitcher={nav.showDevSwitcher}
               shellRole={nav.shellRole}
-              previewRole={previewRole}
-              onPreviewRoleChange={setPreviewRole}
+              previewRole={nav.viewAsRole}
+              onPreviewRoleChange={handlePreviewRoleChange}
             />
           </div>
         </div>
@@ -128,6 +154,7 @@ export const ShellHeader = ({
           activeKey={activeKey}
           badgeCounts={badgeCounts}
           collapsed={sidebarCollapsed}
+          emptyHint={nav.previewNavEmptyHint}
         />
         {children}
       </div>

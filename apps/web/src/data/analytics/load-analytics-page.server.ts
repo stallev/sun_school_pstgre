@@ -224,11 +224,11 @@ export async function loadAnalyticsPage(
 
   let dataQuality: DataQualitySnapshot | null = null;
   let deletedDataInPeriod: DeletedDataInPeriodSnapshot | null = null;
+  const qualityResult = await getDataQuality(db, actorUserId, gradeId, periodFilter);
+  if (!isMutationErr(qualityResult)) {
+    dataQuality = qualityResult.data;
+  }
   if (isAdmin) {
-    const qualityResult = await getDataQuality(db, actorUserId, gradeId, periodFilter);
-    if (!isMutationErr(qualityResult)) {
-      dataQuality = qualityResult.data;
-    }
     const deletedResult = await getDeletedDataInPeriod(db, actorUserId, gradeId, periodFilter);
     if (!isMutationErr(deletedResult)) {
       deletedDataInPeriod = deletedResult.data;

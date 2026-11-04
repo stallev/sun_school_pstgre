@@ -2,7 +2,9 @@ import "server-only";
 import {
   ACCESS_REQUEST_STATUS,
   LOGIN_PROVIDER,
+  USER_ROLE,
   type LoginProvider,
+  type UserRole,
 } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { formatDisplayName } from "@/lib/person/format-display-name";
@@ -16,6 +18,7 @@ export type PendingApprovalRow = {
   consentVersion: string;
   submittedAtIso: string;
   waitingDays: number;
+  requestedRoles: UserRole[];
 };
 
 export async function loadPendingApprovals(
@@ -60,6 +63,7 @@ export async function loadPendingApprovals(
       consentVersion: row.consent.textVersion,
       submittedAtIso: row.createdAt.toISOString(),
       waitingDays,
+      requestedRoles: [USER_ROLE.TEACHER],
     };
   });
 }

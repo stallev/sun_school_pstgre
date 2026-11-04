@@ -5,6 +5,7 @@ import { readFeaturesParentsEnabled } from "@/data/families/family-feature.serve
 import { getPrisma } from "@/lib/db.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/get-dictionary";
+import { filterNavItemsByRealAccess } from "@/lib/shell/filter-nav-by-route-access";
 import {
   isResolvedNavGroup,
   resolveNavItems,
@@ -27,15 +28,17 @@ const stripFeatureNavItems = (
 
 export type ShellNavPayload = {
   shellRole: UserRole;
+  viewAsRole: UserRole;
   navItems: ResolvedNavItem[];
   previewNavItems?: ResolvedNavItem[];
+  previewNavEmptyHint?: string;
   showDevSwitcher: boolean;
 };
 
 export const buildShellNav = async (
   context: PolicySessionContext,
   locale: MessageLocale,
-  options: { appEnv: "dev" | "prod" },
+  options: { appEnv: "dev" | "prod"; viewAsRole: UserRole },
 ): Promise<ShellNavPayload> => {
   const common = await getDictionary(locale, "common");
   const getLabel = (messageKey: string) => getMessage(common, messageKey);
@@ -55,8 +58,31 @@ export const buildShellNav = async (
 
   const isAdmin = context.roles.includes(USER_ROLE.ADMIN);
   const showDevSwitcher = options.appEnv === "dev" && isAdmin;
-  const previewNavItems =
-    showDevSwitcher ? resolveNavItems(USER_ROLE.TEACHER, getLabel) : undefined;
+  const viewAsRole = options.viewAsRole;
 
-  return { shellRole, navItems, previewNavItems, showDevSwitcher };
+  let previewNavItems: ResolvedNavItem[] | undefined;
+  let previewNavEmptyHint: string | undefined;
+  if (viewAsRole !== shellRole) {
+    const previewRole = viewAsRole === USER_ROLE.TEACHER ? USER_ROLE.TEACHER : USER_ROLE.ADMIN;
+    let previewItems = resolveNavItems(previewRole, getLabel);
+    if (stripKeys.length > 0) previewItems = stripFeatureNavItems(previewItems, stripKeys);
+    previewItems = filterNavItemsByRealAccess(previewItems, context.roles);
+    previewNavItems = previewItems;
+    if (previewItems.length === 0 && previewRole === USER_ROLE.TEACHER) {
+      previewNavEmptyHint = getMessage(common, "shell.preview_nav_empty_teacher");
+    }
+  } else if (showDevSwitcher) {
+    let teacherPreview = resolveNavItems(USER_ROLE.TEACHER, getLabel);
+    if (stripKeys.length > 0) teacherPreview = stripFeatureNavItems(teacherPreview, stripKeys);
+    previewNavItems = filterNavItemsByRealAccess(teacherPreview, context.roles);
+  }
+
+  return {
+    shellRole,
+    viewAsRole,
+    navItems,
+    previewNavItems,
+    previewNavEmptyHint,
+    showDevSwitcher,
+  };
 };

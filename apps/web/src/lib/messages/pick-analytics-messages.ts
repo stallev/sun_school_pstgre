@@ -1,10 +1,13 @@
 import { TREND_LABEL } from "@sunschool/domain";
-import type { Dictionary } from "@/lib/messages/dictionary-types";
+import type { Dictionary, MessageLocale } from "@/lib/messages/dictionary-types";
 import { getMessage } from "@/lib/messages/get-message";
 import { getPluralForms } from "@/lib/messages/plural";
 import type { AnalyticsMessages, PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
-export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages => ({
+export const pickAnalyticsMessages = (
+  analytics: Dictionary,
+  locale: MessageLocale,
+): AnalyticsMessages => ({
   pageTitle: getMessage(analytics, "page.title"),
   pageSubtitle: getMessage(analytics, "page.subtitle"),
   pageSubtitleWithLessons: getMessage(analytics, "page.subtitle_with_lessons"),
@@ -24,8 +27,17 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   kpiVersesLabel: getMessage(analytics, "kpi.verses_label"),
   kpiTestLabel: getMessage(analytics, "kpi.test_label"),
   kpiNotebookLabel: getMessage(analytics, "kpi.notebook_label"),
-  kpiWithN: getMessage(analytics, "kpi.with_n"),
+  kpiChildrenCount: getPluralForms(analytics, "kpi.children_count"),
+  kpiLessonsObserved: getPluralForms(analytics, "kpi.lessons_observed"),
+  kpiMetricWithBase: getMessage(analytics, "kpi.metric_with_base"),
+  kpiMetricAverageSuffix: getMessage(analytics, "kpi.average_suffix"),
   kpiEmpty: getMessage(analytics, "kpi.empty"),
+  formatLocale: locale,
+  sampleCompositionLead: getMessage(analytics, "sample.composition_lead"),
+  sampleLayerRegularly: getMessage(analytics, "sample.layer_regularly"),
+  sampleLayerRarely: getMessage(analytics, "sample.layer_rarely"),
+  sampleLayerInactive: getMessage(analytics, "sample.layer_inactive"),
+  sampleLayerNoChecks: getMessage(analytics, "sample.layer_no_checks"),
   sampleComposition: getMessage(analytics, "sample.composition"),
   charts: {
     attendanceTitle: getMessage(analytics, "charts.attendance_title"),
@@ -66,6 +78,8 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnTest: getMessage(analytics, "tables.column_test"),
     columnNotebook: getMessage(analytics, "tables.column_notebook"),
     columnEnrolledSince: getMessage(analytics, "tables.column_enrolled_since"),
+    rowLowAttendance: getMessage(analytics, "tables.row_low_attendance"),
+    rowLowScore: getMessage(analytics, "tables.row_low_score"),
     emptyPupilsTitle: getMessage(analytics, "empty.no_pupils_title"),
     emptyPupilsDescription: getMessage(analytics, "empty.no_pupils_description"),
     noCheckedLessonsTitle: getMessage(analytics, "empty.no_checked_lessons_title"),
@@ -98,6 +112,9 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   dataQuality: {
     title: getMessage(analytics, "data_quality.title"),
     missingRecords: getMessage(analytics, "data_quality.missing_records"),
+    missingChecked: getMessage(analytics, "data_quality.missing_checked"),
+    lessonsLinkLabel: getMessage(analytics, "data_quality.lessons_link_label"),
+    migrationDuplicates: getMessage(analytics, "data_quality.migration_duplicates"),
     adminSummary: getMessage(analytics, "data_quality.admin_summary"),
   },
   deletedData: {
@@ -116,8 +133,10 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     insufficientForComparison: getMessage(analytics, "years.insufficient_for_comparison"),
     diffHigher: getMessage(analytics, "years.diff_higher"),
     diffLower: getMessage(analytics, "years.diff_lower"),
+    diffHigherAttendance: getMessage(analytics, "years.diff_higher_attendance"),
+    diffLowerAttendance: getMessage(analytics, "years.diff_lower_attendance"),
     diffSame: getMessage(analytics, "years.diff_same"),
-    diffPointsUnit: getMessage(analytics, "years.diff_points_unit"),
+    formatLocale: locale,
     none: getMessage(analytics, "years.none"),
     readonlyNote: getMessage(analytics, "years.readonly_note"),
     methodologyNote: getMessage(analytics, "years.methodology_note"),
@@ -169,6 +188,7 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
     columnPlace: getMessage(analytics, "rating.column_place"),
     columnPupil: getMessage(analytics, "rating.column_pupil"),
     columnMetric: getMessage(analytics, "rating.column_metric"),
+    columnGroup: getMessage(analytics, "rating.column_group"),
     tableCaption: getMessage(analytics, "rating.table_caption"),
     empty: getMessage(analytics, "rating.empty"),
     scopeGroup: getMessage(analytics, "rating.scope_group"),
@@ -214,8 +234,11 @@ export const pickAnalyticsMessages = (analytics: Dictionary): AnalyticsMessages 
   },
 });
 
-export const pickPupilAnalyticsMessages = (analytics: Dictionary): PupilAnalyticsMessages => ({
-  ...pickAnalyticsMessages(analytics),
+export const pickPupilAnalyticsMessages = (
+  analytics: Dictionary,
+  locale: MessageLocale,
+): PupilAnalyticsMessages => ({
+  ...pickAnalyticsMessages(analytics, locale),
   kpiAttendanceLabel: getMessage(analytics, "pupil.kpi_attendance_label"),
   kpiVersesLabel: getMessage(analytics, "pupil.kpi_verses_label"),
   kpiTestLabel: getMessage(analytics, "pupil.kpi_test_label"),

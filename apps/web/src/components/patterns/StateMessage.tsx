@@ -8,12 +8,13 @@ export type StateMessageProps = {
   title: string;
   description?: string;
   action?: ReactNode;
+  footer?: ReactNode;
 };
 
 type BaseProps = StateMessageProps & { icon: LucideIcon };
 
 /** Shared centered layout for empty / error / forbidden states (UX-05). */
-export const StateMessage = ({ icon, title, description, action }: BaseProps) => (
+export const StateMessage = ({ icon, title, description, action, footer }: BaseProps) => (
   <div className="flex flex-col items-center gap-3 rounded-xl border border-line bg-surface px-4 py-10 text-center">
     <Icon icon={icon} className="size-8 text-muted" />
     <SectionTitle>{title}</SectionTitle>
@@ -23,5 +24,6 @@ export const StateMessage = ({ icon, title, description, action }: BaseProps) =>
       </ContentText>
     ) : null}
     {action ? <div className="pt-1">{action}</div> : null}
+    {footer ? <div className="pt-1">{footer}</div> : null}
   </div>
 );

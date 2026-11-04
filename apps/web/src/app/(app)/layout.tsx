@@ -21,10 +21,12 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { getPrisma } from "@/lib/db.server";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
+import { resolveShellRole } from "@/lib/shell/nav-resolver";
 import {
   parseSidebarCollapsedCookie,
   SIDEBAR_COLLAPSED_COOKIE_NAME,
 } from "@/lib/shell/sidebar-collapsed-cookie";
+import { resolveViewAsRole, VIEW_AS_COOKIE_NAME } from "@/lib/shell/view-as-cookie";
 import {
   readRequestPathname,
   resolveShellRouteDocumentTitle,
@@ -59,19 +61,23 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
   const context = await requireActiveUser();
   const locale = await getUiLocale();
   const { APP_ENV } = getServerEnv();
+  const cookieStore = await cookies();
+  const sidebarCollapsed = parseSidebarCollapsedCookie(
+    cookieStore.get(SIDEBAR_COLLAPSED_COOKIE_NAME)?.value,
+  );
+  const viewAsRole = resolveViewAsRole(
+    cookieStore.get(VIEW_AS_COOKIE_NAME)?.value,
+    resolveShellRole(context.roles),
+  );
 
   const [shellUser, nav, badgeCounts, common] = await Promise.all([
     getShellUser(context.userId),
-    buildShellNav(context, locale, { appEnv: APP_ENV }),
+    buildShellNav(context, locale, { appEnv: APP_ENV, viewAsRole }),
     loadShellBadgeCounts(context),
     getDictionary(locale, "common"),
   ]);
 
   const shellMessages = pickShellMessages(common);
-  const cookieStore = await cookies();
-  const sidebarCollapsed = parseSidebarCollapsedCookie(
-    cookieStore.get(SIDEBAR_COLLAPSED_COOKIE_NAME)?.value,
-  );
   const homeHref = homeRouteFor(context.status, context.roles);
   const bannerCopy: ShellBannerCopy = {
     noActiveYearTitle: getMessage(common, "states.no_active_year_title"),

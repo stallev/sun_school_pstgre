@@ -5,7 +5,9 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import { formatPlural } from "@/lib/messages/plural";
+import { assertSerializableMessages } from "@/lib/messages/assert-serializable-messages";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
+import { PUPIL_GRAMMATICAL_GENDER } from "@/lib/person/resolve-pupil-grammatical-gender";
 
 const fill = (template: string, values: Record<string, string | number>): string =>
   Object.entries(values).reduce(
@@ -15,6 +17,15 @@ const fill = (template: string, values: Record<string, string | number>): string
 
 const appLocaleToMessageLocale = (locale: AppLocale): MessageLocale =>
   locale === APP_LOCALE.EN ? "en" : "ru";
+
+export const pickLessonsGradeFilterMessages = (teacher: Dictionary) => {
+  const slice = {
+    gradeFilterLabel: getMessage(teacher, "lesson.list.grade_filter"),
+    gradeFilterApply: getMessage(teacher, "lesson.list.grade_apply"),
+  };
+  assertSerializableMessages(slice, "lessonsGradeFilter");
+  return slice;
+};
 
 export const pickTeacherLessonScreensMessages = (
   teacher: Dictionary,
@@ -120,14 +131,30 @@ export const pickTeacherLessonScreensMessages = (
   todayPageSubtitle: (group, year) =>
     fill(getMessage(teacher, "lesson.today.page_subtitle"), { group, year }),
   todayGreeting: (name, part) => {
+    const useName = name.trim().length > 0;
     const key =
       part === "morning"
-        ? "lesson.today.greeting_morning"
+        ? useName
+          ? "lesson.today.greeting_morning"
+          : "lesson.today.greeting_morning_only"
         : part === "afternoon"
-          ? "lesson.today.greeting_afternoon"
-          : "lesson.today.greeting_evening";
-    return fill(getMessage(teacher, key), { name });
+          ? useName
+            ? "lesson.today.greeting_afternoon"
+            : "lesson.today.greeting_afternoon_only"
+          : useName
+            ? "lesson.today.greeting_evening"
+            : "lesson.today.greeting_evening_only";
+    return useName ? fill(getMessage(teacher, key), { name }) : getMessage(teacher, key);
   },
+  todayLessonHeading: (ordinal, dateLabel) =>
+    fill(getMessage(teacher, "lesson.today.card_heading"), { n: ordinal, date: dateLabel }),
+  todayLessonSubline: (title, verseRefsLabel) =>
+    verseRefsLabel
+      ? fill(getMessage(teacher, "lesson.today.card_subline_with_verses"), {
+          title,
+          verses: verseRefsLabel,
+        })
+      : fill(getMessage(teacher, "lesson.today.card_subline"), { title }),
   todayIncompleteLabel: getMessage(teacher, "lesson.today.incomplete_label"),
   todayContinueCheck: getMessage(teacher, "lesson.today.continue_check"),
   todayCheckedStudentsLabel: getMessage(teacher, "lesson.today.checked_students_label"),
@@ -142,11 +169,19 @@ export const pickTeacherLessonScreensMessages = (
       title,
     }),
   todayWeekLate: getMessage(teacher, "lesson.today.week_late"),
-  todayWeekLateValue: (pupilName, lessonDate) =>
-    fill(getMessage(teacher, "lesson.today.week_late_value"), {
+  todayWeekLateValue: (pupilName, lessonDate, gender) => {
+    const templateKey =
+      gender === PUPIL_GRAMMATICAL_GENDER.MALE
+        ? "lesson.today.week_late_value_male"
+        : gender === PUPIL_GRAMMATICAL_GENDER.FEMALE
+          ? "lesson.today.week_late_value_female"
+          : "lesson.today.week_late_value_unknown";
+    return fill(getMessage(teacher, templateKey), {
       pupil: pupilName,
       date: lessonDate,
-    }),
+    });
+  },
+  todayWeekLateAction: getMessage(teacher, "lesson.today.week_late_action"),
   todayWeekBricks: getMessage(teacher, "lesson.today.week_bricks"),
   todayWeekBricksValue: (count) =>
     formatPlural(

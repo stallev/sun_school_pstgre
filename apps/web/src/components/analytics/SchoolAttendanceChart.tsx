@@ -42,7 +42,7 @@ export const SchoolAttendanceChart = ({
   ariaLabel,
 }: SchoolAttendanceChartProps) => {
   const formatLabel = (dateIso: string) => formatAnalyticsShortDate(dateIso, locale);
-  const formatPercent = (value: number) => formatAnalyticsPercent(percentTemplate, value);
+  const formatPercent = (value: number) => formatAnalyticsPercent(percentTemplate, value / 100);
   const rows = labels.map((date) => {
     const row: Record<string, string | number | null> = { date };
     for (const item of series) {

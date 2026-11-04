@@ -58,6 +58,7 @@ export const ApprovalsPageContent = async () => {
                   row={row}
                   grades={grades}
                   submittedLabel={adminMessages.approvals.submitted}
+                  uiLocale={locale}
                   dictionaries={dictionaries}
                   formError={formError}
                   closeLabel={closeLabel}

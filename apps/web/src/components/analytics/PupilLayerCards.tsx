@@ -2,7 +2,7 @@ import { CustomLink } from "@/components/ui/custom-link";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { GroupAnalyticsPupilRow } from "@/data/analytics/analytics-compute.server";
 import {
-  formatAnalyticsPercent,
+  formatAnalyticsAttendanceRate,
   formatAnalyticsShortDate,
 } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
@@ -19,9 +19,7 @@ type PupilLayerCardsProps = {
 };
 
 const attendanceValue = (row: GroupAnalyticsPupilRow, messages: AnalyticsMessages): string =>
-  row.attendanceRate === null
-    ? messages.kpiEmpty
-    : formatAnalyticsPercent(messages.formatPercent, Number(row.attendanceRate.toFixed(1)));
+  formatAnalyticsAttendanceRate(messages.formatPercent, row.attendanceRate, messages.kpiEmpty);
 
 const pupilFields = (
   row: GroupAnalyticsPupilRow,

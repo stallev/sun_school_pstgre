@@ -55,6 +55,8 @@ export type ShellMessages = {
   devViewAs: string;
   devRoleAdmin: string;
   devRoleTeacher: string;
+  viewModeTemplate: string;
+  previewNavEmptyTeacher: string;
   roleNameAdmin: string;
   roleNameTeacher: string;
   screenTitles: ShellScreenTitles;
@@ -79,6 +81,8 @@ export const pickShellMessages = (common: Dictionary): ShellMessages => ({
   devViewAs: getMessage(common, "shell.dev_view_as"),
   devRoleAdmin: getMessage(common, "shell.dev_role_admin"),
   devRoleTeacher: getMessage(common, "shell.dev_role_teacher"),
+  viewModeTemplate: getMessage(common, "shell.view_mode"),
+  previewNavEmptyTeacher: getMessage(common, "shell.preview_nav_empty_teacher"),
   roleNameAdmin: getMessage(common, "shell.role_names.admin"),
   roleNameTeacher: getMessage(common, "shell.role_names.teacher"),
   screenTitles: SHELL_SCREEN_TITLE_KEYS.reduce<ShellScreenTitles>((titles, key) => {

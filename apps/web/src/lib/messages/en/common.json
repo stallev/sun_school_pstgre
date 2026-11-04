@@ -21,14 +21,16 @@
     "page_loading": "Loading page",
     "not_found_title": "Page not found",
     "not_found_description": "Check the address or go back to the home screen.",
-    "error_title": "Could not load this page",
+    "error_title": "Could not open this page",
     "error_retry": "Try again",
+    "error_home": "Go to home",
+    "error_digest_label": "Support code",
     "no_active_year_title": "The school year has not started yet",
     "no_active_year_admin": "Create and activate a school year to manage groups and lessons.",
     "no_active_year_teacher": "Wait until an administrator activates the school year.",
     "create_year_action": "Create school year",
     "timezone_unset_title": "School time zone is not set",
-    "timezone_unset_description": "UTC is used for now. Pick an IANA time zone in settings for accurate schedules and dates.",
+    "timezone_unset_description": "UTC is used for now. Choose the school time zone in settings for accurate schedules and dates.",
     "choose_timezone_action": "Choose time zone",
     "legacy_consent_banner_title": "Transitional consent period",
     "legacy_consent_banner_active": "{count} migrated students without consent. Deadline {date}. {days} days left.",
@@ -43,6 +45,52 @@
       "few": "{count} lessons",
       "many": "{count} lessons",
       "other": "{count} lessons"
+    }
+  },
+  "glossary": {
+    "regularly_attend": {
+      "term": "attend regularly",
+      "hint": "Pupils who attended at least half of checked lessons. Occasional absences do not skew the group picture."
+    },
+    "attendance": {
+      "term": "attendance",
+      "hint": "Share of lessons the pupil attended. Based on checked lessons in the selected period."
+    },
+    "verses_per_lesson": {
+      "term": "verses per lesson",
+      "hint": "Average golden verses recited per lesson. Counted for pupils who attend regularly."
+    },
+    "test": {
+      "term": "test",
+      "hint": "Average test score on a 0–10 scale. Lessons without a test are excluded from the average."
+    },
+    "notebook": {
+      "term": "notebook",
+      "hint": "Average notebook score on a 0–10 scale. “Not graded” is not treated as zero."
+    },
+    "review_lesson": {
+      "term": "review lesson",
+      "hint": "On a review lesson we check the notebook and singing, not regular homework."
+    },
+    "bricks": {
+      "term": "bricks",
+      "hint": "An internal pupil reward: earned from lesson points and achievements; penalties reduce the total. Teachers issue bricks."
+    },
+    "choir_singing": {
+      "term": "sang with the choir",
+      "hint": "Mark if the pupil joined group singing in class. It does not change homework scores."
+    },
+    "bonus": {
+      "term": "bonus",
+      "hint": "Extra points for special success. May affect bricks according to group rules."
+    },
+    "streak": {
+      "term": "streak",
+      "hint": "Consecutive lessons with the same achievement. Each streak level grants its reward once."
+    },
+    "lesson_points": {
+      "term": "lesson points",
+      "hint": "Total points from checked lessons this year. Ranking place uses only these points."
     }
   },
   "shell": {
@@ -66,6 +114,8 @@
     "dev_view_as": "View as",
     "dev_role_admin": "Administrator",
     "dev_role_teacher": "Teacher",
+    "view_mode": "Mode: {role}",
+    "preview_nav_empty_teacher": "To preview as a teacher, assign yourself to a group",
     "role_names": {
       "admin": "administrator",
       "teacher": "teacher"
@@ -134,7 +184,7 @@
         "bricks": "Issue and history",
         "rating": "Teachers only",
         "calendar": "Lessons, trips, cancellations",
-        "analytics_groups": "Charts and samples",
+        "analytics_groups": "Charts and breakdowns",
         "rating_admin": "By group",
         "audit": "Who changed what and when",
         "approvals": "New users",

@@ -1,5 +1,6 @@
 import { NumberDisplay } from "@/components/atoms/NumberDisplay";
 import { ContentText } from "@/components/atoms/ContentText";
+import { RatingTableMetricHeader } from "@/components/analytics/RatingTableMetricHeader";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
 import { RecordCard } from "@/components/patterns/RecordCard";
@@ -14,12 +15,15 @@ import {
 } from "@/components/ui/table";
 import type { RatingTableRow } from "@/data/analytics/get-group-rating";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
+import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
 import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 import { cn } from "@/lib/utils";
 
 type RatingTableProps = {
   rows: RatingTableRow[];
   messages: AnalyticsMessages["rating"];
+  showGroupColumn?: boolean;
+  metricGlossary: GlossaryTerm;
   achievementsUiEnabled?: boolean;
   achievementMessages?: TeacherAchievementsMessages;
 };
@@ -29,6 +33,8 @@ const dash = "—";
 export const RatingTable = ({
   rows,
   messages,
+  showGroupColumn = false,
+  metricGlossary,
   achievementsUiEnabled = false,
   achievementMessages,
 }: RatingTableProps) => {
@@ -57,6 +63,9 @@ export const RatingTable = ({
               </span>
             }
             fields={[
+              ...(showGroupColumn && row.groupName
+                ? [{ label: messages.columnGroup, value: row.groupName }]
+                : []),
               { label: messages.columnMetric, value: row.metric },
               ...(achievementsUiEnabled && achievementMessages
                 ? [
@@ -79,74 +88,86 @@ export const RatingTable = ({
         ))}
       </ul>
       <Card className="hidden p-0 lg:block">
-      <Table className="text-base">
-        <TableCaption className="sr-only">{messages.tableCaption}</TableCaption>
-        <TableHeader className="border-line text-sm text-muted">
-          <TableRow className="hover:bg-transparent">
-            <TableHead scope="col" className="w-14 px-5 py-3 font-normal">
-              {messages.columnPlace}
-            </TableHead>
-            <TableHead scope="col" className="px-3 py-3 font-normal">
-              {messages.columnPupil}
-            </TableHead>
-            <TableHead scope="col" className="px-3 py-3 text-right font-normal">
-              {messages.columnMetric}
-            </TableHead>
-            {achievementsUiEnabled && achievementMessages ? (
-              <>
-                <TableHead scope="col" className="px-3 py-3 text-right font-normal">
-                  {achievementMessages.ratingColumnBonus}
+        <Table className="text-base">
+          <TableCaption className="sr-only">{messages.tableCaption}</TableCaption>
+          <TableHeader className="border-line text-sm text-muted">
+            <TableRow className="hover:bg-transparent">
+              <TableHead scope="col" className="w-14 px-5 py-3 font-normal">
+                {messages.columnPlace}
+              </TableHead>
+              <TableHead scope="col" className="px-3 py-3 font-normal">
+                {messages.columnPupil}
+              </TableHead>
+              {showGroupColumn ? (
+                <TableHead scope="col" className="px-3 py-3 font-normal">
+                  {messages.columnGroup}
                 </TableHead>
-                <TableHead scope="col" className="px-3 py-3 text-right font-normal">
-                  {achievementMessages.ratingColumnAwards}
-                </TableHead>
-                <TableHead scope="col" className="px-5 py-3 text-right font-normal">
-                  {achievementMessages.ratingColumnPenalties}
-                </TableHead>
-              </>
-            ) : null}
-          </TableRow>
-        </TableHeader>
-        <TableBody className="divide-y divide-line">
-          {rows.map((row) => (
-            <TableRow key={row.pupilId} className="h-14 hover:bg-transparent">
-              <TableCell className="px-5 py-3">
-                <NumberDisplay className="font-display text-lg tabular-nums">
-                  {row.place}
-                </NumberDisplay>
-              </TableCell>
-              <TableCell className="px-3 py-3">
-                <CustomLink
-                  href={`/analytics/pupils/${row.pupilId}`}
-                  className="text-ink font-medium hover:text-cobalt-ink focus-visible:text-cobalt-ink"
-                >
-                  {row.displayName}
-                </CustomLink>
-              </TableCell>
-              <TableCell className="px-3 py-3 text-right tabular-nums">{row.metric}</TableCell>
+              ) : null}
+              <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                <RatingTableMetricHeader
+                  label={messages.columnMetric}
+                  term={metricGlossary.term}
+                  hint={metricGlossary.hint}
+                />
+              </TableHead>
               {achievementsUiEnabled && achievementMessages ? (
                 <>
-                  <TableCell className="px-3 py-3 text-right tabular-nums text-muted">
-                    {row.achievementBonus ? `+${row.achievementBonus}` : dash}
-                  </TableCell>
-                  <TableCell className="px-3 py-3 text-right tabular-nums">
-                    {row.awardsCount ? row.awardsCount : dash}
-                  </TableCell>
-                  <TableCell
-                    className={cn(
-                      "px-5 py-3 text-right tabular-nums",
-                      row.penaltiesCount ? "font-bold text-penalty" : "text-muted",
-                    )}
-                  >
-                    {row.penaltiesCount ? row.penaltiesCount : dash}
-                  </TableCell>
+                  <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                    {achievementMessages.ratingColumnBonus}
+                  </TableHead>
+                  <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                    {achievementMessages.ratingColumnAwards}
+                  </TableHead>
+                  <TableHead scope="col" className="px-5 py-3 text-right font-normal">
+                    {achievementMessages.ratingColumnPenalties}
+                  </TableHead>
                 </>
               ) : null}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Card>
+          </TableHeader>
+          <TableBody className="divide-y divide-line">
+            {rows.map((row) => (
+              <TableRow key={row.pupilId} className="h-14 hover:bg-transparent">
+                <TableCell className="px-5 py-3">
+                  <NumberDisplay className="font-display text-lg tabular-nums">
+                    {row.place}
+                  </NumberDisplay>
+                </TableCell>
+                <TableCell className="px-3 py-3">
+                  <CustomLink
+                    href={`/analytics/pupils/${row.pupilId}`}
+                    className="text-ink font-medium hover:text-cobalt-ink focus-visible:text-cobalt-ink"
+                  >
+                    {row.displayName}
+                  </CustomLink>
+                </TableCell>
+                {showGroupColumn ? (
+                  <TableCell className="px-3 py-3 text-sm text-ink-2">{row.groupName ?? dash}</TableCell>
+                ) : null}
+                <TableCell className="px-3 py-3 text-right tabular-nums">{row.metric}</TableCell>
+                {achievementsUiEnabled && achievementMessages ? (
+                  <>
+                    <TableCell className="px-3 py-3 text-right tabular-nums text-muted">
+                      {row.achievementBonus ? `+${row.achievementBonus}` : dash}
+                    </TableCell>
+                    <TableCell className="px-3 py-3 text-right tabular-nums">
+                      {row.awardsCount ? row.awardsCount : dash}
+                    </TableCell>
+                    <TableCell
+                      className={cn(
+                        "px-5 py-3 text-right tabular-nums",
+                        row.penaltiesCount ? "font-bold text-penalty" : "text-muted",
+                      )}
+                    >
+                      {row.penaltiesCount ? row.penaltiesCount : dash}
+                    </TableCell>
+                  </>
+                ) : null}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
     </>
   );
 };

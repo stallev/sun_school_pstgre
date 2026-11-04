@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Icon } from "@/components/atoms/Icon";
+import { formatNumber } from "@/lib/i18n/format";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
 
@@ -14,10 +15,19 @@ type DiffBadgeProps = {
   messages: AnalyticsYearMessages;
 };
 
-const formatAmount = (metric: YearDiffMetric, delta: number): string => {
+const formatDiffAmount = (
+  metric: YearDiffMetric,
+  delta: number,
+  messages: AnalyticsYearMessages,
+): string => {
   const abs = Math.abs(delta);
-  if (metric === "attendance") return String(abs);
-  return abs.toFixed(1).replace(".", ",");
+  if (metric === "attendance") {
+    return formatNumber(abs, messages.formatLocale, { maximumFractionDigits: 0 });
+  }
+  return formatNumber(abs, messages.formatLocale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
 };
 
 export const DiffBadge = ({
@@ -45,10 +55,13 @@ export const DiffBadge = ({
     );
   }
   const higher = delta > 0;
-  const amount = formatAmount(metric, delta);
-  const unit =
-    metric === "attendance" ? ` ${messages.diffPointsUnit}` : "";
-  const text = fillMessage(higher ? messages.diffHigher : messages.diffLower, { amount, unit });
+  const amount = formatDiffAmount(metric, delta, messages);
+  const text =
+    metric === "attendance"
+      ? fillMessage(higher ? messages.diffHigherAttendance : messages.diffLowerAttendance, {
+          amount,
+        })
+      : fillMessage(higher ? messages.diffHigher : messages.diffLower, { amount });
   return (
     <span
       className="inline-flex items-center gap-1 text-sm text-ink-2"

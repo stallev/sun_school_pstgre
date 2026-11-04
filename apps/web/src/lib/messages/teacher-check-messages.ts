@@ -55,6 +55,11 @@ export type TeacherCheckMessages = {
   reasonInputError: string;
   reasonOther: string;
   scoreNotRated: string;
+  willSubmitLater: string;
+  verseScaleHint: string;
+  choirSingingHint: string;
+  saveStatusSaved: string;
+  saveStatusUnsaved: string;
   lateSubmitted: string;
   unsavedIndicator: string;
   unsavedDialogTitle: string;

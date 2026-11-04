@@ -82,7 +82,8 @@ export const BricksPageContent = async ({ searchParams }: BricksPageContentProps
         <LessonsGradeFilter
           grades={data.grades}
           gradeId={data.gradeId}
-          messages={lessonMessages}
+          gradeFilterLabel={lessonMessages.gradeFilterLabel}
+          gradeFilterApply={lessonMessages.gradeFilterApply}
           actionPath="/bricks"
         />
       ) : null}

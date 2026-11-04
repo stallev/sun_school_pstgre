@@ -20,9 +20,9 @@ export function formatIsoDateForLocale(
   const date = parseIsoDateOnlyToLocalDate(iso);
   if (!date) return "";
   return new Intl.DateTimeFormat(resolveIntlLocale(locale), {
+    day: "numeric",
+    month: "short",
     year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
   }).format(date);
 }
 

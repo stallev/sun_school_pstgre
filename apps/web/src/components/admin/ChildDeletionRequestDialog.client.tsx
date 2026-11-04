@@ -28,6 +28,9 @@ type ChildDeletionRequestDialogProps = {
   dictionaries: Record<string, Dictionary>;
   formError: string;
   closeLabel: string;
+  showTrigger?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export const ChildDeletionRequestDialog = ({
@@ -36,10 +39,15 @@ export const ChildDeletionRequestDialog = ({
   dictionaries,
   formError,
   closeLabel,
+  showTrigger = true,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: ChildDeletionRequestDialogProps) => {
   const messages = useAdminMessages();
   const d = messages.deletions;
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = controlledOnOpenChange ?? setInternalOpen;
   const [note, setNote] = useState("");
   const [state, formAction, pending] = useActionState<
     MutationResult<{ requestId: string }> | null,
@@ -59,9 +67,11 @@ export const ChildDeletionRequestDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button type="button" variant="destructive" className="min-h-11" />}>
-        {d.childRequestAction}
-      </DialogTrigger>
+      {showTrigger ? (
+        <DialogTrigger render={<Button type="button" variant="destructive" className="min-h-11" />}>
+          {d.childRequestAction}
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{d.childRequestTitle}</DialogTitle>

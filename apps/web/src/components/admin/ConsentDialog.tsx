@@ -33,6 +33,10 @@ type ConsentDialogProps = {
   uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
+  showTrigger?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  triggerLabel?: string;
 };
 
 export const ConsentDialog = ({
@@ -44,10 +48,16 @@ export const ConsentDialog = ({
   uiLocale,
   formError,
   closeLabel,
+  showTrigger = true,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  triggerLabel,
 }: ConsentDialogProps) => {
   const messages = useAdminMessages();
   const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = controlledOnOpenChange ?? setInternalOpen;
   const [consentState, formAction, pending] = useActionState(recordPaperConsentAction, null);
   const state: MutationResult | null = consentState;
 
@@ -61,9 +71,11 @@ export const ConsentDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button type="button" variant="outline" className="min-h-11" />}>
-        {messages.people.consentAction}
-      </DialogTrigger>
+      {showTrigger ? (
+        <DialogTrigger render={<Button type="button" variant="outline" className="min-h-11" />}>
+          {triggerLabel ?? messages.people.consentAction}
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{messages.people.consentTitle}</DialogTitle>

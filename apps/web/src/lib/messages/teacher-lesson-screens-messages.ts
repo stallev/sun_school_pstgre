@@ -1,4 +1,10 @@
 import type { AppLocale } from "@sunschool/domain";
+import type { PupilGrammaticalGender } from "@/lib/person/resolve-pupil-grammatical-gender";
+
+export type LessonsGradeFilterMessages = Pick<
+  TeacherLessonScreensMessages,
+  "gradeFilterLabel" | "gradeFilterApply"
+>;
 
 export type TeacherLessonScreensMessages = {
   listTitle: string;
@@ -70,6 +76,8 @@ export type TeacherLessonScreensMessages = {
   yearClosedDescription: string;
   todayPageSubtitle: (group: string, year: string) => string;
   todayGreeting: (name: string, part: "morning" | "afternoon" | "evening") => string;
+  todayLessonHeading: (ordinal: number, dateLabel: string) => string;
+  todayLessonSubline: (title: string, verseRefsLabel: string | null) => string;
   todayIncompleteLabel: string;
   todayContinueCheck: string;
   todayCheckedStudentsLabel: string;
@@ -79,7 +87,12 @@ export type TeacherLessonScreensMessages = {
   todayWeekNextLesson: string;
   todayWeekNextLessonValue: (date: string, ordinal: number, title: string) => string;
   todayWeekLate: string;
-  todayWeekLateValue: (pupilName: string, lessonDate: string) => string;
+  todayWeekLateValue: (
+    pupilName: string,
+    lessonDate: string,
+    gender: PupilGrammaticalGender,
+  ) => string;
+  todayWeekLateAction: string;
   todayWeekBricks: string;
   todayWeekBricksValue: (count: number) => string;
   todayWeekBricksNegativeHint: string;

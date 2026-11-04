@@ -14,6 +14,6 @@ describe("AnalyticsYearsLab RSC props", () => {
 
     expect(labSource).toMatch(/analyticsDictionary=\{analyticsDictionary\}/);
     expect(labSource).not.toMatch(/pickAnalyticsMessages/);
-    expect(matrixSource).toMatch(/pickAnalyticsMessages\(analyticsDictionary\)/);
+    expect(matrixSource).toMatch(/pickAnalyticsMessages\(analyticsDictionary, "ru"\)/);
   });
 });

@@ -41,7 +41,7 @@ export const GroupPageContent = async ({ searchParams }: GroupPageProps) => {
     getDictionary(locale, "analytics"),
   ]);
   const messages = pickTeacherRosterMessages(teacherDict);
-  const analyticsMessages = pickAnalyticsMessages(analyticsDict);
+  const analyticsMessages = pickAnalyticsMessages(analyticsDict, locale);
   const dictionaries = { teacher: teacherDict, common: commonDict, admin: adminDict };
   const formError = getMessage(commonDict, "errors.form");
   const defaultDate = isoTodayUtc();

@@ -39,7 +39,7 @@ export const YearPageContent = async ({ messages, dictionaries, uiLocale, formEr
           <ul className="grid items-stretch gap-4 lg:grid-cols-2">
             {years.map((row) => (
               <li key={row.yearId} className="h-full">
-                <YearCard row={row} dictionaries={dictionaries} formError={formError} />
+                <YearCard row={row} dictionaries={dictionaries} formError={formError} uiLocale={uiLocale} />
               </li>
             ))}
           </ul>

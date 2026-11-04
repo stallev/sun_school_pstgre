@@ -1,10 +1,10 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { APP_LOCALE, type MutationResult } from "@sunschool/domain";
 import { setGroupLanguageAction, updateGradeSettingsAction } from "@/actions/school-groups";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
-import { SectionTitle } from "@/components/atoms";
+import { ContentText, SectionTitle } from "@/components/atoms";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { FormSelect } from "@/components/ui/form-select";
@@ -31,6 +31,12 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
     null,
   );
   const [nextLanguage, setNextLanguage] = useState(detail.language);
+  const [useVerses, setUseVerses] = useState(detail.settings.useVerses);
+  const [useTest, setUseTest] = useState(detail.settings.useTest);
+  const [useNotebook, setUseNotebook] = useState(detail.settings.useNotebook);
+  const [useSinging, setUseSinging] = useState(detail.settings.useSinging);
+  const [maxVersesPerLesson, setMaxVersesPerLesson] = useState(String(detail.settings.maxVersesPerLesson));
+  const [recitationDaysN, setRecitationDaysN] = useState(String(detail.settings.recitationDaysN));
 
   useAdminFormMutation({
     state: languageState,
@@ -47,6 +53,24 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
 
   const pending = languagePending || settingsPending;
   const languageChanged = nextLanguage !== detail.language;
+  const settingsDirty = useMemo(
+    () =>
+      useVerses !== detail.settings.useVerses ||
+      useTest !== detail.settings.useTest ||
+      useNotebook !== detail.settings.useNotebook ||
+      useSinging !== detail.settings.useSinging ||
+      maxVersesPerLesson !== String(detail.settings.maxVersesPerLesson) ||
+      recitationDaysN !== String(detail.settings.recitationDaysN),
+    [
+      detail.settings,
+      maxVersesPerLesson,
+      recitationDaysN,
+      useNotebook,
+      useSinging,
+      useTest,
+      useVerses,
+    ],
+  );
   const weightsJson = JSON.stringify(detail.settings.weights);
   const labelsJson = JSON.stringify(detail.settings.labels);
 
@@ -101,14 +125,19 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
         <div className="grid gap-3 sm:grid-cols-2">
           {(
             [
-              ["useVerses", messages.group.settingsVerses, detail.settings.useVerses],
-              ["useTest", messages.group.settingsTest, detail.settings.useTest],
-              ["useNotebook", messages.group.settingsNotebook, detail.settings.useNotebook],
-              ["useSinging", messages.group.settingsSinging, detail.settings.useSinging],
+              ["useVerses", messages.group.settingsVerses, useVerses, setUseVerses],
+              ["useTest", messages.group.settingsTest, useTest, setUseTest],
+              ["useNotebook", messages.group.settingsNotebook, useNotebook, setUseNotebook],
+              ["useSinging", messages.group.settingsSinging, useSinging, setUseSinging],
             ] as const
-          ).map(([name, label, checked]) => (
+          ).map(([name, label, checked, setChecked]) => (
             <label key={name} className="flex min-h-11 items-center gap-2 text-sm">
-              <FormCheckbox name={name} defaultChecked={checked} disabled={pending} />
+              <FormCheckbox
+                name={name}
+                checked={checked}
+                onCheckedChange={setChecked}
+                disabled={pending}
+              />
               {label}
             </label>
           ))}
@@ -120,9 +149,14 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
             type="number"
             min={0}
             max={10}
-            defaultValue={detail.settings.maxVersesPerLesson}
+            value={maxVersesPerLesson}
+            onChange={(event) => setMaxVersesPerLesson(event.target.value)}
             disabled={pending}
+            aria-describedby={`max-verses-hint-${detail.gradeId}`}
           />
+          <ContentText tone="secondary" id={`max-verses-hint-${detail.gradeId}`} className="text-sm font-normal">
+            {messages.group.settingsMaxVersesHint}
+          </ContentText>
         </label>
         <label className="grid max-w-24 gap-1 text-base font-medium">
           <span>{messages.group.settingsRecitationDays}</span>
@@ -131,11 +165,21 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
             type="number"
             min={1}
             max={30}
-            defaultValue={detail.settings.recitationDaysN}
+            value={recitationDaysN}
+            onChange={(event) => setRecitationDaysN(event.target.value)}
             disabled={pending}
+            aria-describedby={`recitation-hint-${detail.gradeId}`}
           />
+          <ContentText tone="secondary" id={`recitation-hint-${detail.gradeId}`} className="text-sm font-normal">
+            {messages.group.settingsRecitationDaysHint}
+          </ContentText>
         </label>
-        <Button type="submit" className="w-full sm:w-auto" disabled={pending} aria-busy={pending}>
+        <Button
+          type="submit"
+          className="w-full sm:w-auto"
+          disabled={pending || !settingsDirty}
+          aria-busy={pending}
+        >
           {settingsPending ? messages.group.submitPending : messages.group.settingsSave}
         </Button>
       </form>

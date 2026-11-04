@@ -15,6 +15,9 @@ import { ShapeMotion } from "@/components/design-lab/ShapeMotion";
 import { TableMatrix } from "@/components/design-lab/TableMatrix";
 import { TypeScale } from "@/components/design-lab/TypeScale";
 import { WidthFrame } from "@/components/design-lab/WidthFrame";
+import { TermHintMatrix } from "@/components/design-lab/TermHintMatrix";
+import { RowActionsMenuMatrix } from "@/components/design-lab/RowActionsMenuMatrix";
+import { termHintLabSection, rowActionsMenuLabSection } from "@/lib/design-lab/sections";
 import { SuggestionConfirmLab } from "@/components/design-lab/SuggestionConfirmLab";
 import { AchievementsCatalogLab } from "@/components/design-lab/AchievementsCatalogLab";
 import { FamilyAdminLab } from "@/components/design-lab/FamilyAdminLab";
@@ -31,6 +34,8 @@ const ANCHORS = [
   { id: "fields", label: "Fields" },
   { id: "choices", label: "Choices" },
   { id: "feedback", label: "Feedback" },
+  { id: termHintLabSection.id, label: termHintLabSection.anchorLabel },
+  { id: rowActionsMenuLabSection.id, label: rowActionsMenuLabSection.anchorLabel },
   { id: "overlays", label: "Overlays" },
   { id: "tables", label: "Tables" },
   { id: "patterns", label: "Patterns" },
@@ -79,6 +84,20 @@ const DesignSystemPage = () => (
       </LabSection>
       <LabSection id="feedback" title="L2 · Badge, Progress, Status, Skeleton, Toast">
         <FeedbackMatrix />
+      </LabSection>
+      <LabSection
+        id={termHintLabSection.id}
+        title={termHintLabSection.title}
+        hint={termHintLabSection.hint}
+      >
+        <TermHintMatrix />
+      </LabSection>
+      <LabSection
+        id={rowActionsMenuLabSection.id}
+        title={rowActionsMenuLabSection.title}
+        hint={rowActionsMenuLabSection.hint}
+      >
+        <RowActionsMenuMatrix />
       </LabSection>
       <LabSection id="overlays" title="L2 · Dialog, Sheet, Disclosure, Select">
         <OverlayMatrix />

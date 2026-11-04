@@ -9,6 +9,7 @@ import { useShellMessages } from "@/components/shell/shell-messages-provider.cli
 import { CustomLink } from "@/components/ui/custom-link";
 import { SignOutButton } from "@/components/shell/sign-out-button.client";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ContentText } from "@/components/atoms";
 import {
   isNavLeafActive,
   isResolvedNavGroup,
@@ -30,6 +31,7 @@ export const NavDrawer = ({
   badgeCounts,
   displayName,
   roleName,
+  emptyHint,
 }: NavDrawerProps) => {
   const messages = useShellMessages();
   const [open, setOpen] = useState(false);
@@ -84,6 +86,9 @@ export const NavDrawer = ({
           className="flex min-h-0 flex-1 flex-col space-y-3 overflow-y-auto px-3 pt-4"
           aria-label={messages.mainNav}
         >
+          {items.length === 0 && emptyHint ? (
+            <ContentText className="px-3 text-sm text-muted">{emptyHint}</ContentText>
+          ) : null}
           {items.map((item) => {
             if (isResolvedNavGroup(item)) {
               return (

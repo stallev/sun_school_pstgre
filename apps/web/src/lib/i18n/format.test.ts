@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { APP_LOCALE } from "@sunschool/domain";
 
 import ruAnalytics from "@/lib/messages/ru/analytics.json";
-import { formatDateTime, formatNumber, getPluralForms, plural } from "./format";
+import { formatDateTime, formatNumber, formatDate, getPluralForms, plural } from "./format";
 
 describe("format", () => {
   it("formats dates with locale and school time zone", () => {
@@ -30,6 +30,17 @@ describe("format", () => {
   it("formats numbers per UI locale", () => {
     expect(formatNumber(1234.5, "ru", { maximumFractionDigits: 1 })).toMatch(/1/);
     expect(formatNumber(1234.5, "en", { maximumFractionDigits: 1 })).toMatch(/1/);
+    expect(formatNumber(6.3, "ru", { minimumFractionDigits: 1, maximumFractionDigits: 1 })).toBe(
+      "6,3",
+    );
+    expect(formatNumber(6.3, "en", { minimumFractionDigits: 1, maximumFractionDigits: 1 })).toBe(
+      "6.3",
+    );
+  });
+
+  it("formats ISO dates for display locale", () => {
+    expect(formatDate("2026-10-04", "ru")).toMatch(/4.*2026/);
+    expect(formatDate("2026-10-04", "en")).toMatch(/4.*2026/);
   });
 
   it("pluralizes school attention pending users (ru)", () => {

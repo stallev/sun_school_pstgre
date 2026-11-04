@@ -141,7 +141,8 @@ export const CalendarPageContent = async ({
         <LessonsGradeFilter
           grades={data.grades}
           gradeId={data.gradeId}
-          messages={listMessages}
+          gradeFilterLabel={listMessages.gradeFilterLabel}
+          gradeFilterApply={listMessages.gradeFilterApply}
           actionPath="/calendar"
           hiddenFields={{ month: data.monthKey }}
         />

@@ -59,8 +59,7 @@ export const TodayPageContent = async () => {
   }
 
   const greetingPart = resolveTodayGreetingPart(hourInTimeZone(timeZone));
-  const greetingName = data.teacherFirstName || "…";
-  const pageTitle = messages.todayGreeting(greetingName, greetingPart);
+  const pageTitle = messages.todayGreeting(data.teacherFirstName, greetingPart);
   const pageSubtitle = messages.todayPageSubtitle(data.gradeName, data.yearName);
 
   return (

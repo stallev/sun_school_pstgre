@@ -1,5 +1,6 @@
 import type { TrendLabel } from "@sunschool/domain";
 
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { PluralForms } from "@/lib/messages/plural";
 
 export type AnalyticsYearMessages = {
@@ -10,8 +11,10 @@ export type AnalyticsYearMessages = {
   insufficientForComparison: string;
   diffHigher: string;
   diffLower: string;
+  diffHigherAttendance: string;
+  diffLowerAttendance: string;
   diffSame: string;
-  diffPointsUnit: string;
+  formatLocale: MessageLocale;
   none: string;
   readonlyNote: string;
   methodologyNote: string;
@@ -92,8 +95,17 @@ export type AnalyticsMessages = {
   kpiVersesLabel: string;
   kpiTestLabel: string;
   kpiNotebookLabel: string;
-  kpiWithN: string;
+  kpiChildrenCount: PluralForms;
+  kpiLessonsObserved: PluralForms;
+  kpiMetricWithBase: string;
+  kpiMetricAverageSuffix: string;
   kpiEmpty: string;
+  formatLocale: MessageLocale;
+  sampleCompositionLead: string;
+  sampleLayerRegularly: string;
+  sampleLayerRarely: string;
+  sampleLayerInactive: string;
+  sampleLayerNoChecks: string;
   sampleComposition: string;
   charts: AnalyticsChartSeriesMessages;
   tables: {
@@ -118,6 +130,8 @@ export type AnalyticsMessages = {
     columnTest: string;
     columnNotebook: string;
     columnEnrolledSince: string;
+    rowLowAttendance: string;
+    rowLowScore: string;
     emptyPupilsTitle: string;
     emptyPupilsDescription: string;
     noCheckedLessonsTitle: string;
@@ -144,6 +158,9 @@ export type AnalyticsMessages = {
   dataQuality: {
     title: string;
     missingRecords: string;
+    missingChecked: string;
+    lessonsLinkLabel: string;
+    migrationDuplicates: string;
     adminSummary: string;
   };
   deletedData: {
@@ -165,6 +182,7 @@ export type AnalyticsMessages = {
     columnPlace: string;
     columnPupil: string;
     columnMetric: string;
+    columnGroup: string;
     tableCaption: string;
     empty: string;
     scopeGroup: string;

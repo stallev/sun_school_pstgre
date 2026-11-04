@@ -38,6 +38,16 @@ vi.mock("./get-group-analytics", () => ({
 vi.mock("./get-conducted-lessons", () => ({
   getConductedLessons: vi.fn().mockResolvedValue({ ok: true, data: { rows: [] } }),
 }));
+vi.mock("./get-data-quality", () => ({
+  getDataQuality: vi.fn().mockResolvedValue({
+    ok: true,
+    data: {
+      gradeId: "44444444-4444-4444-8444-444444444444",
+      period: {},
+      missingPupilRecordsOnCheckedLessons: 0,
+    },
+  }),
+}));
 
 const orgId = "22222222-2222-4222-8222-222222222222";
 const actorTeacherId = "33333333-3333-4333-8333-333333333333";
