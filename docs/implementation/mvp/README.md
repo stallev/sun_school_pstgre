@@ -11,7 +11,8 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
-**P25 (2026-11-03)** — понятный интерфейс по аудиту юзабилити: [`P25_tasks.md`](./tasks/P25_tasks.md); документы и прототип готовы, реализация не начата.  
+**P26 (2026-11-04)** — по повторному аудиту и Sentry: [`P26_tasks.md`](./tasks/P26_tasks.md); документы и прототип готовы, реализация не начата.  
+**P25 (2026-11-03)** — понятный интерфейс по аудиту юзабилити: [`P25_tasks.md`](./tasks/P25_tasks.md); реализована (CU1–CU9 в `dev`, `d8bfab0`, 2026-11-04).  
 **Статус (2026-10-23):** фазы P01…P08 реализованы; P09 (фиксы соответствия прототипу) — закрыт. **P10** — проход 3 визуального дрейфа по матрице экранов: [`P10_tasks.md`](./tasks/P10_tasks.md), журнал [`ui_prototype_fidelity_2026-10-21.md`](./audits/ui_prototype_fidelity_2026-10-21.md). **P11** — панель оценок сводной таблицы и тип карточки аналитики: [`P11_tasks.md`](./tasks/P11_tasks.md). **P12** — волна 1, достижения и штрафы: реализована за флагом `features.achievements` ([`P12_tasks.md`](./tasks/P12_tasks.md)); включение флага в prod — действие владельца. **P13** — волна 2, семьи и родители: реализована за флагом `features.parents` ([`P13_tasks.md`](./tasks/P13_tasks.md)); дайджест без почты; включение флага в prod — действие владельца. **P14** — редизайн v2: Source Sans 3, база 18 px, левый сайдбар, `Select` / `Checkbox` / `DateField` вместо нативных ([`P14_tasks.md`](./tasks/P14_tasks.md), [ADR-014](../../prds/07_governance/adr_014_app_redesign_v2.md)): реализована (2026-10-24), повторный замер — [`ui_redesign_audit_2026-10-24.md`](./audits/ui_redesign_audit_2026-10-24.md) §5. **P15** — баллы достижений и штрафов по группам ([`P15_tasks.md`](./tasks/P15_tasks.md), [ADR-015](../../prds/07_governance/adr_015_group_achievement_points.md)): реализована (2026-10-24), флаг `features.achievements`; smoke — [`P15_tasks.md`](./tasks/P15_tasks.md) (CU7). **P23** — подтверждаемые достижения и разовые события ([`P23_tasks.md`](./tasks/P23_tasks.md), [ADR-016](../../prds/07_governance/adr_016_confirmable_achievements_and_events.md)): реализована (2026-11-02), флаг `features.achievements`. **P24** — UX-правки проверки ДЗ (сброс ошибки присутствия, Enter, модальный диалог несохранённых изменений, плотная раскладка), компактные кнопки, toast справа снизу, сворачиваемый сайдбар и контейнер 1600 по центру, дата рождения у учителя и дни рождения в календаре ([`P24_tasks.md`](./tasks/P24_tasks.md), [ADR-017](../../prds/07_governance/adr_017_shell_container_toast_buttons.md)): документы и прототип готовы, реализация не начата. Номера P23 и P24 совпадают с рабочими ветками; фаз P16…P22 в документах нет. Импорт данных из старого приложения — вне проекта (владелец).
 
 ## Порядок чтения для фазы
@@ -43,8 +44,9 @@
 | P23 | Подтверждаемые достижения и разовые события ([ADR-016](../../prds/07_governance/adr_016_confirmable_achievements_and_events.md)) | [P23](./phases_tasks_descriptions/P23_phase_description.md) | [P23](./tasks/P23_tasks.md) |
 | P24 | UX-правки проверки ДЗ, оболочка, кнопки, toast, дни рождения ([ADR-017](../../prds/07_governance/adr_017_shell_container_toast_buttons.md)) | [P24](./phases_tasks_descriptions/P24_phase_description.md) | [P24](./tasks/P24_tasks.md) |
 | P25 | Понятный интерфейс: термины, подсказки, форматы, устойчивые страницы, «Смотреть как» ([ADR-018](../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md)) | [P25](./phases_tasks_descriptions/P25_phase_description.md) | [P25](./tasks/P25_tasks.md) |
+| P26 | Меню предпросмотра, журнал на языке пользователя, единые форматы, остатки экранов, пул БД ([ADR-019](../../prds/07_governance/adr_019_view_as_menu_and_db_pool.md)) | [P26](./phases_tasks_descriptions/P26_phase_description.md) | [P26](./tasks/P26_tasks.md) |
 
-Нумерация фаз реализации (P01…P15, P23…P25) не совпадает с промптами bootstrap (P0…P6).
+Нумерация фаз реализации (P01…P15, P23…P26) не совпадает с промптами bootstrap (P0…P6).
 
 ## Контракты
 

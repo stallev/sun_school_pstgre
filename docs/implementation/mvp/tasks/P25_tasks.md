@@ -2,8 +2,8 @@
 
 **Тип:** Tasks  
 **Статус:** Canonical  
-**Версия:** 1.1  
-**Дата:** 2026-11-03  
+**Версия:** 1.2  
+**Дата:** 2026-11-04  
 **Волна:** P25  
 **Зависит от:** [`sentry_issues_2026-11-03_30m.md`](../../../reports/sentry_issues_2026-11-03_30m.md), [`P25_phase_description.md`](../phases_tasks_descriptions/P25_phase_description.md), [`adr_018_ui_terminology_and_term_hints.md`](../../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md), [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) §3.1, R-17…R-20, [`homework_check_flow_spec.md`](../specs/homework_check_flow_spec.md) R-18, [`global_shell_spec.md`](../specs/global_shell_spec.md) §8, R-14, [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) D-17, D-18, [`ui_states_contract.md`](../../../design/ui_states_contract.md) D22  
 **Связанные документы:** [`usability_audit_2026-11-03.md`](../../../reports/usability_audit_2026-11-03.md), [`design_system_lab_spec.md`](../specs/design_system_lab_spec.md) §5.3, [`copy_and_messages.md`](../../../guidelines/react/copy_and_messages.md), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md), [`prototype_class_parity_spec.md`](../specs/prototype_class_parity_spec.md) §7
@@ -21,7 +21,7 @@
 - [x] ADR-018; analytics spec §3.1, R-17…R-20; check flow R-18; shell §8, R-14; UX-03 D-17, D-18; UI states D22; Lab §5.3 (`TermHint`); copy guideline (стоп-слова) — существуют — 2026-11-03 · подготовка P25
 - [x] Задачи ниже ссылаются на `§`-якоря, называют Files, Acceptance и Paths; T3 — свой CU; CU ≤ ~400 строк
 - [x] `Проверено по`: `@base-ui/react` (`Popover`, используется в `ui/score-cell.tsx`) — версия по `apps/web/package.json`; Next.js `16.4.4` (`cookies()`); Context7 не вызывался: новых зависимостей нет
-- [x] Open questions: Q-1 (причина падений) закрыт по Sentry 2026-11-03; Q-2, Q-3 — не блокируют (предложения по умолчанию в фазе); Q-4 — выборка Sentry после CU1
+- [x] Open questions: Q-1 (причина падений) закрыт по Sentry 2026-11-03; Q-2, Q-3 — не блокируют (предложения по умолчанию в фазе); Q-4 закрыт 2026-11-04 ([`sentry_issues_2026-11-04_30m.md`](../../../reports/sentry_issues_2026-11-04_30m.md)): `-1Y`, `-2C`, `-Q`, `-3` не растут; повтор `-2D` — вне CU
 - [x] Прототип обновлён: `termHint()`, «регулярно ходят», «из 10», «% к прошлому году», сворачиваемый «Как мы считали», поиск учеников, подписи проверки ДЗ
 
 ## Commit plan
@@ -146,3 +146,5 @@ Tier T3: cookie режима предпросмотра и фильтрация 
 |------|--------|
 | 2026-11-03 | v1.0 — Canonical (подготовка P25): CU1–CU9, Phase DoR audit; документы, ADR-018 и прототип обновлены до CU1 |
 | 2026-11-03 | v1.1 — отчёт Sentry ([`sentry_issues_2026-11-03_30m.md`](../../../reports/sentry_issues_2026-11-03_30m.md)): CU1 переписан по установленным причинам (функции в props `LessonsGradeFilter`, нет ключей `audit.entity_types.*`), добавлены стражи и повторная выборка Sentry; DoR: Q-1 закрыт |
+| 2026-11-04 | v1.2 — Q-4: выборка `lastSeen:-30m` после выката `d8bfab0` ([`sentry_issues_2026-11-04_30m.md`](../../../reports/sentry_issues_2026-11-04_30m.md)). `-1Y`, `-2C`, `-Q`, `-3` не растут. Повтор `-2D` (таймаут пула, `POST /profile`, 10:59 МСК) — отдельное наблюдение, не задача этого CU |
+| 2026-11-04 | v1.3 — остатки повторного аудита ([`usability_audit_2026-11-04.md`](../../../reports/usability_audit_2026-11-04.md)) и повтор `-2D` перенесены в [`P26_tasks.md`](./P26_tasks.md) (ADR-019) |

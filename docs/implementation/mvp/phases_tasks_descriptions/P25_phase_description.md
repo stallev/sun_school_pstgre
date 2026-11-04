@@ -2,9 +2,9 @@
 
 **Тип:** Phase Description  
 **Статус:** Canonical  
-**Прогресс фазы:** документы, прототип готовы (подготовка), реализация не начата  
-**Версия:** 1.1  
-**Дата:** 2026-11-03  
+**Прогресс фазы:** CU1–CU9 в `dev` (`d8bfab0`, 2026-11-04); Q-4 закрыт выборкой Sentry  
+**Версия:** 1.2  
+**Дата:** 2026-11-04  
 **Волна:** P25  
 **Зависит от:** [`sentry_issues_2026-11-03_30m.md`](../../../reports/sentry_issues_2026-11-03_30m.md), [`adr_018_ui_terminology_and_term_hints.md`](../../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md), [`usability_audit_2026-11-03.md`](../../../reports/usability_audit_2026-11-03.md), [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) §3.1, R-17…R-20, [`homework_check_flow_spec.md`](../specs/homework_check_flow_spec.md) R-18, [`global_shell_spec.md`](../specs/global_shell_spec.md) §8, R-14, [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) D-17, D-18, [`ui_states_contract.md`](../../../design/ui_states_contract.md) D22, [`design_system_lab_spec.md`](../specs/design_system_lab_spec.md) §5.3  
 **Связанные документы:** [`P25_tasks.md`](../tasks/P25_tasks.md), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`copy_and_messages.md`](../../../guidelines/react/copy_and_messages.md), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md), [`prototype_class_parity_spec.md`](../specs/prototype_class_parity_spec.md)
@@ -144,7 +144,7 @@
 | ID | Вопрос | Предложение | Блокирует |
 |----|--------|-------------|-----------|
 | Q-1 | Причина падений CU1 | **Закрыт 2026-11-03** по Sentry: `-1Y`/`-2C` — функции в props `LessonsGradeFilter`; `-Q` — нет ключей `audit.entity_types.*`; `-3` — эхо | — |
-| Q-4 | Повторить выборку Sentry за 30 мин после CU1 (проверить, что 1Y/2C/Q/3 не растут и нет новых таймаутов `-2D`) | Выполнить по завершении CU1 и записать в Change log | нет |
+| Q-4 | Повторить выборку Sentry за 30 мин после CU1 | **Закрыт 2026-11-04** ([`sentry_issues_2026-11-04_30m.md`](../../../reports/sentry_issues_2026-11-04_30m.md)): `-1Y`, `-2C`, `-Q`, `-3` не растут. Повтор `-2D` (одно событие, `POST /profile`) — вне CU P25 | — |
 | Q-2 | Название слоя A и подпись шкалы стиха 0/1/2 (ADR-018 Q-1, Q-2) | «Регулярно ходят»; «0 — не знает, 1 — с подсказкой, 2 — наизусть» | нет |
 | Q-3 | Показывать ли предупреждение «нет отметки у N учеников» учителю | Да, с действием «Показать, кого» (R-19) | CU5 |
 
@@ -173,3 +173,5 @@
 |------|--------|
 | 2026-11-03 | v1.0 — Canonical (подготовка P25): документы и прототип; реализация не начата |
 | 2026-11-03 | v1.1 — отчёт Sentry ([`sentry_issues_2026-11-03_30m.md`](../../../reports/sentry_issues_2026-11-03_30m.md)): точные причины падений (функции в props `LessonsGradeFilter`, нет ключей `audit.entity_types.*`), Q-1 закрыт, Q-4, наблюдение `-2D`, стражи в Drift risks |
+| 2026-11-04 | v1.2 — Q-4 закрыт: после выката `d8bfab0` `-1Y`, `-2C`, `-Q`, `-3` не растут; повтор `-2D` записан отдельно ([`sentry_issues_2026-11-04_30m.md`](../../../reports/sentry_issues_2026-11-04_30m.md)) |
+| 2026-11-04 | v1.3 — остатки аудита и таймаут пула `-2D` продолжены в фазе [P26](./P26_phase_description.md) ([ADR-019](../../../prds/07_governance/adr_019_view_as_menu_and_db_pool.md)) |

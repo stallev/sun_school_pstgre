@@ -2,8 +2,8 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 1.6  
-**Дата:** 2026-11-03  
+**Версия:** 1.7  
+**Дата:** 2026-11-04  
 **Волна:** W9-07  
 **Migrated from:** [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) §5, §9.1–§9.6; [`multi_year_analytics.md`](../../../prds/01_product_scope/multi_year_analytics.md) (v1.2: годы)  
 **Зависит от:** [`homework_check_contract.md`](../contracts/homework_check_contract.md) §6–§7, [`school_year_and_groups_contract.md`](../contracts/school_year_and_groups_contract.md), [`analytics_year_snapshots_contract.md`](../contracts/analytics_year_snapshots_contract.md), [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (D3, D12, D19–D21), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-44…AZ-46, AZ-48…AZ-50, AZ-D4), [`canonical_routes.md`](../../../design/canonical_routes.md), [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §5 (`use cache`)  
@@ -323,6 +323,10 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 | R-18 | MUST (P25): доля 0–1 из домена показывается процентом одним форматтером (`80%`); значение без данных — «—», не `NaN%` и не `0%`; в колонке «Явка» учеников, групп и когорт по году рождения один формат |
 | R-19 | MUST (P25): метрика объясняется `TermHint` у метрики; «Как мы считали цифры» — свёрнутый `details`; строка «Качество данных» для teacher — предупреждение с действием, диагностика без действия — только admin |
 | R-20 | SHOULD (P25): над таблицей — три крупных числа («Явка», «Стихи», «Тест», «Тетрадь») с подписью «из максимума» и базой; таблица учеников сортируется по любой колонке, строки «явка &lt; 50%» и «оценка &lt; 4» выделены цветом и текстом, не только цветом |
+| R-21 | MUST (P26, ADR-019): под «Средняя явка» — «Регулярно ходят: 26 из 30» (одна строка; не «26 детей с явкой от 50%»); у заголовка колонки «Регулярно ходят» в итогах по годам — `TermHint` |
+| R-22 | SHOULD (P26): фильтр периода — один контрол «Период» (год / месяц / выбрать даты) вместо пяти; применение без отдельной кнопки или с явным статусом «Фильтр применён» |
+| R-23 | MUST (P26): оси графиков явки — проценты (`0%…100%`, на карточке ученика тоже); дробные значения осей — запятая; сравнение лет — один шаблон для всех метрик («+0,1 к прошлому году») |
+| R-24 | SHOULD (P26): строка «Нет отметки в N записях» ведёт к конкретным урокам и ученикам (фильтр журнала уроков), а не в общий список; заголовки «Обычных / Обзорных / Запланировано» — с `TermHint` |
 
 ## 16. Acceptance criteria
 
@@ -385,3 +389,4 @@ N/A на уровне UI (read-only). Кэш `'use cache'` и инвалидац
 | 2026-10-21 | v1.4 — P11: §4.1 тип карточки аналитики (`1.3125rem`, `p-3` / `gap-3`); R-16 |
 | 2026-10-24 | v1.5 — ADR-014 (P14): §4.1 тело карточки `1.25rem` под базу 18 px, мета `text-base` 18 px; `YearStrip` и фильтры — `SegmentedControl` с выбранным `cobalt-soft`; поля диапазона — `DateField`; рейтинг (§R-12, цвет имён R-10) — см. [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md) §3.5 |
 | 2026-11-03 | v1.6 — ADR-018 (P25): §3.1 названия в интерфейсе («регулярно ходят», «ходят редко», «26 детей», «+1% к прошлому году»), `TermHint`; R-17…R-20 (формат процента, подсказки, три крупных числа) |
+| 2026-11-04 | v1.7 — P26 (ADR-019): R-21…R-24 «Регулярно ходят: N из M», один контрол периода, оси в процентах, один шаблон сравнения, ссылки «Нет отметки» |

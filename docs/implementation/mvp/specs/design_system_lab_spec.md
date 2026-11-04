@@ -2,8 +2,8 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 2.3  
-**Дата:** 2026-11-03  
+**Версия:** 2.4  
+**Дата:** 2026-11-04  
 **Волна:** W15-01 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) (UX-06), [`global_shell_spec.md`](./global_shell_spec.md), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md), [`canonical_routes.md`](../../../design/canonical_routes.md), [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D10), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`<head>`: token dump, gap-список; хелперы и константы), [`prototype_class_parity_spec.md`](./prototype_class_parity_spec.md) (сопоставление классов прототипа и компонентов), [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md), [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -297,3 +297,4 @@ apps/web/src/
 | 2026-11-03 | v2.1 — P24 (ADR-017): `Button` компактный `default` `h-9`, размер `field`; `SegmentedControl` `h-9` и `fit`; `ScorePad` inline 0–10; `Toast` варианты и позиции; `ConfirmDialog` `unsaved`; `SidebarNav` rail; `PageSection` в контейнере 1600 |
 | 2026-10-24 | v2.0 — ADR-014 (P14): Source Sans 3, 18 px, высоты контролов; `Select` (Base UI) приведён к шкале v2; новые примитивы `DateField`, `PageSection`; `SegmentedControl` получил режим `toggle` и размер `compact` (вместо отдельного `Chip`); `SidebarNav` вместо `TopNav`; ширина Lab 1024; шаг 6 fidelity (parity-spec) |
 | 2026-11-03 | v2.3 — P25 (ADR-018): §5.3 `TermHint` — секция Lab до использования на экранах (C-2) |
+| 2026-11-04 | v2.4 — P26 (ADR-019): `TermHint` — состояние «у правого края» и `aria-label` «Что значит «…»?»; `RowActionsMenu` — секция Lab (если ещё нет) и пример «Исправить» в `/bricks` |

@@ -2,8 +2,8 @@
 
 **Тип:** UX Contract  
 **Статус:** Canonical  
-**Версия:** 2.3  
-**Дата:** 2026-11-03  
+**Версия:** 2.4  
+**Дата:** 2026-11-04  
 **Волна:** W2-03 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html) (token dump и `@theme static` в `<head>`), [`typography_text_guidelines.md`](../guidelines/typography_text_guidelines.md), [`ai_semantics_a11y_guidelines.md`](../guidelines/react/ai_semantics_a11y_guidelines.md), [`canonical_routes.md`](./canonical_routes.md), [`adr_014_app_redesign_v2.md`](../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_017_shell_container_toast_buttons.md`](../prds/07_governance/adr_017_shell_container_toast_buttons.md)  
 **Связанные документы:** [`responsive_navigation_contract.md`](./responsive_navigation_contract.md), [`prototype_route_mapping.md`](./prototype_route_mapping.md), [`redesign_v2_ui_spec.md`](./redesign_v2_ui_spec.md), [`prototype_class_parity_spec.md`](../implementation/mvp/specs/prototype_class_parity_spec.md), [`architecture_master_index.md`](../prds/architecture_master_index.md)  
@@ -40,8 +40,8 @@
 | D-14 | **Единый компактный размер кнопок** (P24, ADR-017): `Button` (`default`, `outline`, `ghost`, `destructive`), чипы, сегменты `SegmentedControl` и кнопки `ScorePad` / `ScoreSelector` — `h-9 px-3 text-base rounded-lg`, ширина по содержимому (`w-auto`), как кнопка «Выдать» в списке выдачи кирпичиков. Крупнее — только `touch` (`h-11`, ≥ 44 px) на < `md` для главного действия формы и кнопок нижней панели. Кнопка в одной строке с полем ввода выравнивается по полю (`size="field"`, `h-10`, F14 UX-06). Иконка — `size="icon"` `size-9` | Аудит P24: кнопки 40–50 px и сегменты на всю ширину карточки занимали экран проверки ДЗ; одна кнопка «Выдать» читалась лучше |
 | D-15 | **Toast** (P24, ADR-017): success — `bg-ok-soft border border-ok text-ink` + иконка `CircleCheck` `text-ok`; error — `bg-danger-soft border border-danger text-ink` + иконка `CircleAlert` `text-danger`; нейтральный — `bg-surface border-line`; 2000 мс; ≥ `lg` справа снизу, < `lg` сверху | Пользователь не отличал успех от ошибки; тёмный toast по центру снизу перекрывал полосу действий |
 | D-16 | **Лидер урока** (P24): ученик(и) с наибольшим итогом за урок — строка/элемент списка `bg-gold-soft`, иконка `Trophy` `text-gold-ink`, левая граница `border-l-4 border-gold`, `sr-only` «Лучший результат урока»; цвет никогда не единственный признак; `ink`/`ink-2` на `gold-soft` ≥ 6.6, а `ok` / `danger` / `muted` / `amber-ink` на `gold-soft` дают 4.15–4.38 (< 4.5), поэтому внутри строки лидера не используются; применяется на проверке, сводной таблице и ведомости | Учителю нужно сразу видеть лучший результат урока, не сравнивая числа |
-| D-17 | **Подсказка термина `TermHint`** (P25, ADR-018): иконка `CircleHelp` `size-4` `text-muted` в кнопке `h-9 w-9` (область касания ≥ 44 px на < `md` через `after:`), `aria-label` = название термина; по клику / Enter — popover `bg-surface border border-line shadow-float rounded-lg p-3 text-base`, ширина `min(20rem, 100vw - 2rem)`, 1–2 предложения (≤ 200 знаков), Esc и клик вне закрывают; фокус возвращается на кнопку; без анимации при `motion-reduce`. Не заменяет подпись и не несёт единственный смысл |
-| D-18 | **Форматы** (P25, ADR-018): процент — целое с `%`; дробные — запятая по локали (`@/lib/i18n/format`); баллы — «значение из максимума»; дата — «4 окт. 2026»; сравнение — «+1% к прошлому году» |
+| D-17 | **Подсказка термина `TermHint`** (P25, ADR-018): иконка `CircleHelp` `size-4` `text-muted` в кнопке `h-9 w-9` (область касания ≥ 44 px на < `md` через `after:`), `aria-label` = «Что значит «термин»?» (P26); по клику / Enter — popover (у правого края окна раскрывается влево — `align="end"`, P26) `bg-surface border border-line shadow-float rounded-lg p-3 text-base`, ширина `min(20rem, 100vw - 2rem)`, 1–2 предложения (≤ 200 знаков), Esc и клик вне закрывают; фокус возвращается на кнопку; без анимации при `motion-reduce`. Не заменяет подпись и не несёт единственный смысл |
+| D-18 | **Форматы** (P25, ADR-018): процент — целое с `%`; дробные — запятая по локали (`@/lib/i18n/format`); баллы — «значение из максимума»; дата — «4 окт. 2026»; сравнение — «+1% к прошлому году» и «+0,1 к прошлому году» (один шаблон для всех метрик, P26); прогресс — «10 из 30»; ISO-даты и `toFixed` в UI запрещены |
 
 ## 4. Токены цвета
 
@@ -275,3 +275,4 @@
 | 2026-11-03 | v2.2 — P24: D-16 лидер урока (токены `gold-soft`, `gold-ink`, контраст §5) |
 | 2026-11-03 | v2.1 — ADR-017 (P24): D-14 единый компактный размер кнопок, чипов и сегментов (`h-9 px-3`, ширина по содержимому, `touch` только на мобильном); D-15 toast с цветами `ok` / `danger` и иконкой, 2000 мс (исправлен дрейф «2.8 с»), справа снизу на `lg`; §7 контейнер `max-w-[1600px] mx-auto` и rail-сайдбар `w-16`; §8 Button, Chip, Toast, пункт сайдбара; §9 п. 4; §10, §12 |
 | 2026-11-03 | v2.3 — P25 (ADR-018): D-17 `TermHint`, D-18 форматы процентов, чисел и дат |
+| 2026-11-04 | v2.4 — P26 (ADR-019): D-17 `aria-label` «Что значит «…»?», выравнивание у правого края; D-18 один шаблон сравнения, «10 из 30», запрет ISO-дат и `toFixed` |
