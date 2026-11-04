@@ -7,6 +7,8 @@ import { RejectRequestDialog } from "@/components/admin/RejectRequestDialog.clie
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import type { ActiveGradeOption } from "@/data/access/load-active-grades.server";
 import type { PendingApprovalRow } from "@/data/access/load-pending-approvals.server";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { formatDate } from "@/lib/i18n/format";
 import { formatWaitingDays } from "@/lib/messages/admin-messages";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
@@ -14,6 +16,7 @@ type ApprovalRowProps = {
   row: PendingApprovalRow;
   grades: readonly ActiveGradeOption[];
   submittedLabel: string;
+  uiLocale: MessageLocale;
   dictionaries: Record<string, Dictionary>;
   formError: string;
   closeLabel: string;
@@ -31,6 +34,7 @@ export const ApprovalRow = ({
   row,
   grades,
   submittedLabel,
+  uiLocale,
   dictionaries,
   formError,
   closeLabel,
@@ -38,7 +42,8 @@ export const ApprovalRow = ({
   const messages = useAdminMessages();
 
   const loginMethods = row.loginProviders.map((provider) => loginLabel(provider, messages)).join(" · ");
-  const metaLine = `${submittedLabel}: ${new Date(row.submittedAtIso).toLocaleDateString()} · ${messages.approvals.consentVersion}: ${row.consentVersion} · ${formatWaitingDays(messages.approvals.waitingDays, row.waitingDays)}`;
+  const submittedDate = formatDate(row.submittedAtIso.slice(0, 10), uiLocale);
+  const metaLine = `${submittedLabel}: ${submittedDate} · ${messages.approvals.consentVersion}: ${row.consentVersion} · ${formatWaitingDays(messages.approvals.waitingDays, row.waitingDays)}`;
 
   return (
     <article className="rounded-xl border border-line bg-surface">

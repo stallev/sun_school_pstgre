@@ -68,7 +68,7 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
   const commonDict = await getDictionary(locale, "common");
   const messageLocale = locale as MessageLocale;
   const teacherDict = await getDictionary(locale, "teacher");
-  const messages = pickAnalyticsMessages(analyticsDict);
+  const messages = pickAnalyticsMessages(analyticsDict, messageLocale);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
   const yearMessages = messages.years;
 
@@ -222,6 +222,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                   valueKind="percent"
                   percentTemplate={messages.formatPercent}
                   chartValueTemplate={messages.formatChartValue}
+                  lessonsObservedForms={messages.kpiLessonsObserved}
+                  formatLocale={messageLocale}
                   emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 100]}
                 />
@@ -235,6 +237,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                   valueKind="chart"
                   percentTemplate={messages.formatPercent}
                   chartValueTemplate={messages.formatChartValue}
+                  lessonsObservedForms={messages.kpiLessonsObserved}
+                  formatLocale={messageLocale}
                   emptyLabel={messages.kpiEmpty}
                 />
                 <ChartTableToggle
@@ -247,6 +251,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                   valueKind="chart"
                   percentTemplate={messages.formatPercent}
                   chartValueTemplate={messages.formatChartValue}
+                  lessonsObservedForms={messages.kpiLessonsObserved}
+                  formatLocale={messageLocale}
                   emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 10]}
                 />
@@ -260,6 +266,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                   valueKind="chart"
                   percentTemplate={messages.formatPercent}
                   chartValueTemplate={messages.formatChartValue}
+                  lessonsObservedForms={messages.kpiLessonsObserved}
+                  formatLocale={messageLocale}
                   emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 10]}
                 />

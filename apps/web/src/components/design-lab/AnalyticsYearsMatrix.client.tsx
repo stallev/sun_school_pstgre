@@ -52,7 +52,7 @@ const GROUP_ROWS: YearTotalsTableRow[] = [
 ];
 
 export const AnalyticsYearsMatrix = ({ analyticsDictionary }: AnalyticsYearsMatrixProps) => {
-  const messages = pickAnalyticsMessages(analyticsDictionary);
+  const messages = pickAnalyticsMessages(analyticsDictionary, "ru");
   const [yearId, setYearId] = useState("2025");
   const [pupilYearId, setPupilYearId] = useState("2025");
   const [metric, setMetric] = useState<PupilYearMetric>("attendance");

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatAnalyticsAttendanceRate,
+  formatAnalyticsDelta,
   formatAnalyticsPercent,
 } from "./format-analytics-display";
 
@@ -13,6 +14,14 @@ describe("formatAnalyticsPercent", () => {
     expect(formatAnalyticsPercent(template, 0.5)).toBe("50%");
     expect(formatAnalyticsPercent(template, 0.256)).toBe("26%");
     expect(formatAnalyticsPercent(template, 0)).toBe("0%");
+  });
+});
+
+describe("formatAnalyticsDelta", () => {
+  it("formats signed decimals with locale decimal separator (ADR-018 §4.3)", () => {
+    expect(formatAnalyticsDelta(1.2, "ru")).toBe("+1,2");
+    expect(formatAnalyticsDelta(1.2, "en")).toBe("+1.2");
+    expect(formatAnalyticsDelta(-0.5, "ru")).toBe("−0,5");
   });
 });
 

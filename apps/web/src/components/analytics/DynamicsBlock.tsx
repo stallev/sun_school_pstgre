@@ -16,6 +16,7 @@ import {
 } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 
 const MIN_DYNAMICS_POINTS = 2;
 
@@ -44,9 +45,11 @@ export const DynamicsBlock = ({
   messages,
   locale,
 }: DynamicsBlockProps) => {
+  const messageLocale = locale as MessageLocale;
   const formatDate = (iso: string) => formatAnalyticsShortDate(iso, locale);
   const formatPercent = (value: number) =>
     formatAnalyticsPercent(messages.formatPercent, value / 100);
+  const formatDelta = (value: number) => formatAnalyticsDelta(value, messageLocale);
   const chartPoints = dynamics.smoothed.filter((point) => point.value !== null);
   const hasChart = chartPoints.length >= MIN_DYNAMICS_POINTS;
   const trendStyle = messages.dynamicsTrendLabels[dynamics.trendLabel];
@@ -71,7 +74,7 @@ export const DynamicsBlock = ({
           </p>
           {dynamics.trendSlope !== null && dynamics.trendLabel !== TREND_LABEL.INSUFFICIENT_DATA ? (
             <ContentText className="text-base tabular-nums text-ink-2">
-              {fillMessage(messages.dynamicsSlope, { delta: formatAnalyticsDelta(dynamics.trendSlope) })}
+              {fillMessage(messages.dynamicsSlope, { delta: formatDelta(dynamics.trendSlope) })}
             </ContentText>
           ) : null}
         </div>
@@ -109,7 +112,7 @@ export const DynamicsBlock = ({
                   labels={dynamics.deltaLabels}
                   values={dynamics.deltaValues}
                   formatLabel={formatDate}
-                  formatValue={formatAnalyticsDelta}
+                  formatValue={formatDelta}
                   yDomain={[-deltaLimit, deltaLimit]}
                   ariaLabel={messages.dynamicsDeltaAria}
                 />

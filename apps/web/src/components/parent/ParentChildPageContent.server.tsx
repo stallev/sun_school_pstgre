@@ -41,7 +41,7 @@ export const ParentChildPageContent = async ({ searchParams }: ParentChildPagePr
     getDictionary(locale, "common"),
   ]);
   const messages = pickParentMessagesFromDictionary(parentDict);
-  const analyticsMessages = pickPupilAnalyticsMessages(analyticsDict);
+  const analyticsMessages = pickPupilAnalyticsMessages(analyticsDict, locale);
   const attendanceTemplate = analyticsMessages.attendanceChecked;
   const timeZone = await getSchoolTimezone();
 

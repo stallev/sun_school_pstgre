@@ -21,6 +21,8 @@ import {
   formatAnalyticsShortDate,
 } from "@/lib/analytics/format-analytics-display";
 import type { AnalyticsChartSeriesMessages } from "@/lib/messages/analytics-messages";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import type { PluralForms } from "@/lib/messages/plural";
 import { LineChart } from "@/components/analytics/LineChart";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +38,8 @@ type ChartTableToggleProps = {
   valueKind: "percent" | "chart";
   percentTemplate: string;
   chartValueTemplate: string;
+  lessonsObservedForms: PluralForms;
+  formatLocale: MessageLocale;
   emptyLabel: string;
   yDomain?: [number, number];
   /** When set (e.g. year axis), replaces the date column header in table mode. */
@@ -54,6 +58,8 @@ export const ChartTableToggle = ({
   valueKind,
   percentTemplate,
   chartValueTemplate,
+  lessonsObservedForms,
+  formatLocale,
   emptyLabel,
   yDomain,
   xLabel,
@@ -76,6 +82,8 @@ export const ChartTableToggle = ({
           emptyLabel,
           point.value,
           point.observationCount,
+          lessonsObservedForms,
+          formatLocale,
         );
 
   const validPoints = points.filter((point) => point.value !== null);

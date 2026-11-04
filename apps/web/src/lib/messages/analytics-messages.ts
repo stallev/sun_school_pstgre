@@ -1,5 +1,6 @@
 import type { TrendLabel } from "@sunschool/domain";
 
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { PluralForms } from "@/lib/messages/plural";
 
 export type AnalyticsYearMessages = {
@@ -10,8 +11,10 @@ export type AnalyticsYearMessages = {
   insufficientForComparison: string;
   diffHigher: string;
   diffLower: string;
+  diffHigherAttendance: string;
+  diffLowerAttendance: string;
   diffSame: string;
-  diffPointsUnit: string;
+  formatLocale: MessageLocale;
   none: string;
   readonlyNote: string;
   methodologyNote: string;
@@ -92,8 +95,11 @@ export type AnalyticsMessages = {
   kpiVersesLabel: string;
   kpiTestLabel: string;
   kpiNotebookLabel: string;
-  kpiWithN: string;
+  kpiChildrenCount: PluralForms;
+  kpiLessonsObserved: PluralForms;
+  kpiMetricWithBase: string;
   kpiEmpty: string;
+  formatLocale: MessageLocale;
   sampleComposition: string;
   charts: AnalyticsChartSeriesMessages;
   tables: {

@@ -29,7 +29,7 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
   const locale = await getUiLocale();
   const analyticsDict = await getDictionary(locale, "analytics");
   const teacherDict = await getDictionary(locale, "teacher");
-  const messages = pickAnalyticsMessages(analyticsDict);
+  const messages = pickAnalyticsMessages(analyticsDict, locale);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
   const achievementMessages = pickTeacherAchievementsMessages(teacherDict);
   const ratingPageTitle =

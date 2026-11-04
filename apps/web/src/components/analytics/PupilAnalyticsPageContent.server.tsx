@@ -91,7 +91,7 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
   const analyticsDict = await getDictionary(locale, "analytics");
   const commonDict = await getDictionary(locale, "common");
   const teacherDict = await getDictionary(locale, "teacher");
-  const messages = pickPupilAnalyticsMessages(analyticsDict);
+  const messages = pickPupilAnalyticsMessages(analyticsDict, locale);
   const yearMessages = messages.years;
   const data = await loadPupilAnalyticsPage(
     await getPrisma(),
@@ -159,6 +159,8 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
     valueKind: "chart" as const,
     percentTemplate: messages.formatPercent,
     chartValueTemplate: messages.formatChartValue,
+    lessonsObservedForms: messages.kpiLessonsObserved,
+    formatLocale: locale,
     emptyLabel: messages.kpiEmpty,
     minChartPoints: 1,
   };

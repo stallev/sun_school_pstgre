@@ -1,3 +1,6 @@
+import type { PluralForms } from "@/lib/messages/plural";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import { formatNumber, plural } from "@/lib/i18n/format";
 import { fillMessage } from "@/lib/messages/fill-message";
 
 /** Domain attendance rate 0–1 → display percent (e.g. 0.8 → `80%`). */
@@ -15,7 +18,7 @@ export const formatAnalyticsAttendanceRate = (
   return formatAnalyticsPercent(template, rate);
 };
 
-export const formatAnalyticsAverage = (template: string, value: number): string =>
+export const formatAnalyticsAverage = (template: string, value: number | string): string =>
   fillMessage(template, { value });
 
 export const formatAnalyticsChartValue = (
@@ -23,9 +26,17 @@ export const formatAnalyticsChartValue = (
   empty: string,
   value: number | null,
   observationCount: number,
+  lessonsObservedForms: PluralForms,
+  locale: MessageLocale,
 ): string => {
   if (value === null) return empty;
-  return fillMessage(template, { value, n: observationCount });
+  const formattedValue = formatNumber(
+    Number(value.toFixed(1)),
+    locale,
+    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
+  );
+  const base = plural(lessonsObservedForms, observationCount, locale);
+  return fillMessage(template, { value: formattedValue, base });
 };
 
 export const formatAnalyticsShortDate = (iso: string, locale: string): string =>
@@ -33,7 +44,11 @@ export const formatAnalyticsShortDate = (iso: string, locale: string): string =>
     new Date(`${iso}T12:00:00Z`),
   );
 
-export const formatAnalyticsDelta = (value: number): string => {
+export const formatAnalyticsDelta = (value: number, locale: MessageLocale): string => {
   const sign = value > 0 ? "+" : value < 0 ? "−" : "";
-  return `${sign}${Math.abs(value).toFixed(1)}`;
+  const formatted = formatNumber(Math.abs(value), locale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  return `${sign}${formatted}`;
 };

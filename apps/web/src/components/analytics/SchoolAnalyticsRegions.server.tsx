@@ -56,7 +56,7 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
   const analyticsDict = await getDictionary(locale, "analytics");
   const commonDict = await getDictionary(locale, "common");
   const teacherDict = await getDictionary(locale, "teacher");
-  const messages = pickAnalyticsMessages(analyticsDict);
+  const messages = pickAnalyticsMessages(analyticsDict, locale);
   const yearMessages = messages.years;
   const schoolMessages = messages.school;
 

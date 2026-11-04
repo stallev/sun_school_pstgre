@@ -1,7 +1,9 @@
 import { NumberDisplay } from "@/components/atoms/NumberDisplay";
 import { Card } from "@/components/ui/card";
 import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
+import { formatAnalyticsLessonsObserved } from "@/lib/analytics/analytics-metric-copy";
 import { formatAnalyticsAverage } from "@/lib/analytics/format-analytics-display";
+import { formatNumber } from "@/lib/i18n/format";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type PupilAnalyticsKpiSectionProps = {
@@ -15,7 +17,12 @@ const formatAverageValue = (
   messages: PupilAnalyticsMessages,
 ): string | null => {
   if (average === null || n === 0) return null;
-  return formatAnalyticsAverage(messages.formatAverage, Number(average.toFixed(1)));
+  const formattedAverage = formatNumber(
+    Number(average.toFixed(1)),
+    messages.formatLocale,
+    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
+  );
+  return formatAnalyticsAverage(messages.formatAverage, formattedAverage);
 };
 
 export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSectionProps) => {
@@ -57,7 +64,9 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
           <span className="tabular-nums">{versesValue ?? messages.kpiEmpty}</span>
           {versesValue !== null ? (
-            <span className="text-sm text-muted">N={view.versesAverage.observationCount}</span>
+            <span className="text-sm text-muted">
+              {formatAnalyticsLessonsObserved(messages, view.versesAverage.observationCount)}
+            </span>
           ) : null}
         </dd>
       </Card>
@@ -69,7 +78,10 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
           <span className="tabular-nums">{testValue ?? messages.kpiEmpty}</span>
           {testValue !== null ? (
-            <span className="text-sm text-muted">N={view.testAverage.observationCount}</span>
+            <span className="text-sm text-muted">
+              {messages.kpiOutOfTen} ·{" "}
+              {formatAnalyticsLessonsObserved(messages, view.testAverage.observationCount)}
+            </span>
           ) : null}
         </dd>
       </Card>
@@ -81,7 +93,10 @@ export const PupilAnalyticsKpiSection = ({ view, messages }: PupilAnalyticsKpiSe
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
           <span className="tabular-nums">{notebookValue ?? messages.kpiEmpty}</span>
           {notebookValue !== null ? (
-            <span className="text-sm text-muted">N={view.notebookAverage.observationCount}</span>
+            <span className="text-sm text-muted">
+              {messages.kpiOutOfTen} ·{" "}
+              {formatAnalyticsLessonsObserved(messages, view.notebookAverage.observationCount)}
+            </span>
           ) : null}
         </dd>
       </Card>
