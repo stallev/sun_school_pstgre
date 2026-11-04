@@ -8,9 +8,14 @@ import { loadLessonVerseTexts } from "@/data/lessons/load-lesson-verse-texts.ser
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
+import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
 import { getDictionary } from "@/lib/messages/get-dictionary";
-import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-messages.server";
+import {
+  buildLessonCheckDescription,
+  pickTeacherCheckMessages,
+} from "@/lib/messages/pick-teacher-check-messages.server";
 import { fillMessage } from "@/lib/messages/fill-message";
 
 export type LessonCheckPageProps = {
@@ -25,6 +30,8 @@ export const LessonCheckPageContent = async ({ params, searchParams }: LessonChe
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
   const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);
   const locale = await getUiLocale();
+  const appLocale = messageLocaleToAppLocale(locale);
+  const timeZone = await getSchoolTimezone();
   const db = await getPrisma();
   const data = await loadSequentialCheckPage(db, actor.userId, lessonId, isAdmin);
   const [teacherDict, commonDict] = await Promise.all([
@@ -38,12 +45,22 @@ export const LessonCheckPageContent = async ({ params, searchParams }: LessonChe
     notFound();
   }
 
+  const lessonDateLabel = formatLessonDisplayDate(data.lessonDateIso, { locale, timeZone });
+  const lessonDescription = buildLessonCheckDescription(
+    teacherDict,
+    appLocale,
+    data.lessonOrdinal,
+    data.lessonTitle,
+    lessonDateLabel,
+  );
+
   const verses = await loadLessonVerseTexts(db, { id: data.lessonId, kind: data.lessonKind }, messageLocaleToAppLocale(locale));
 
   return (
     <CheckScreen
       data={data}
       initialPupilId={pupilParam ?? null}
+      lessonDescription={lessonDescription}
       messages={messages}
       dictionaries={dictionaries}
       versesAccordion={

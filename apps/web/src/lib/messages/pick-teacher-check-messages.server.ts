@@ -1,7 +1,9 @@
 import "server-only";
 
+import type { AppLocale } from "@sunschool/domain";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import { formatLessonDisplaySubtitle } from "@/lib/lesson/format-lesson-display-title";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 
 export const pickTeacherCheckMessages = (
@@ -124,3 +126,23 @@ export const pickTeacherCheckMessages = (
   tableOpenPupilAria: getMessage(teacher, "check.table.open_pupil_aria"),
   tableProgressHeader: getMessage(teacher, "check.table.progress_header"),
 });
+
+export const buildLessonCheckDescription = (
+  teacher: Dictionary,
+  locale: AppLocale,
+  ordinal: number,
+  title: string,
+  dateLabel: string,
+): string =>
+  formatLessonDisplaySubtitle(
+    ordinal,
+    title,
+    dateLabel,
+    locale,
+    {
+      withDate: getMessage(teacher, "lesson.detail.subtitle_with_date"),
+      withTitle: getMessage(teacher, "lesson.detail.subtitle_with_title"),
+      ordinalOnly: getMessage(teacher, "lesson.detail.subtitle_ordinal"),
+    },
+    getMessage(teacher, "lesson.list.ordinal_short"),
+  );

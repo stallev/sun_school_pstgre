@@ -30,6 +30,7 @@ const hourInTimeZone = (timeZone: string): number => {
 export const TodayPageContent = async () => {
   await connection();
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);
   const locale = await getUiLocale();
   const appLocale = messageLocaleToAppLocale(locale);
   const teacherDict = await getDictionary(locale, "teacher");
@@ -74,7 +75,11 @@ export const TodayPageContent = async () => {
             canMutate={data.canMutate}
             messages={messages}
           />
-          <TodayAchievementMarkSection gradeId={data.gradeId} academicYearId={data.yearId} />
+          <TodayAchievementMarkSection
+            gradeId={data.gradeId}
+            academicYearId={data.yearId}
+            isAdmin={isAdmin}
+          />
         </div>
       ) : (
         <EmptyState

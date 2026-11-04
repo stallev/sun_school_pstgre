@@ -1,9 +1,9 @@
 import { ChevronRightIcon, PlusIcon } from "lucide-react";
-import { ContentText, NumberDisplay, SectionTitle } from "@/components/atoms";
+import { ContentText, SectionTitle } from "@/components/atoms";
 import { Banner } from "@/components/patterns/Banner";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
-import { Progress } from "@/components/ui/progress";
+import { LessonInlineProgress } from "@/components/teacher/LessonInlineProgress";
 import type { TodayFocalLesson } from "@/data/lessons/load-today-page.server";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
@@ -23,10 +23,13 @@ export const TodayLessonCard = ({
   messages,
 }: TodayLessonCardProps) => {
   const checkedCount = Math.min(lesson.checkedCount, lesson.totalPupils);
-  const progressValue =
-    lesson.totalPupils > 0 ? Math.round((checkedCount / lesson.totalPupils) * 100) : 0;
-  const heading = messages.todayLessonHeading(lesson.ordinal, lesson.lessonDateLabel);
-  const subline = messages.todayLessonSubline(lesson.title, lesson.verseRefsLabel);
+  const heading = messages.lessonDisplaySubtitle(
+    lesson.ordinal,
+    lesson.title,
+    lesson.lessonDateLabel,
+  );
+  const subline = messages.todayLessonSubline(lesson.ordinal, lesson.title, lesson.verseRefsLabel);
+  const progressLabel = messages.checkPartial(checkedCount, lesson.totalPupils);
 
   return (
     <article className="rounded-xl border border-line bg-surface p-4 sm:p-5">
@@ -37,21 +40,17 @@ export const TodayLessonCard = ({
       ) : null}
       <p className="text-sm text-muted">{messages.todayIncompleteLabel}</p>
       <SectionTitle className="mt-1">{heading}</SectionTitle>
-      <ContentText tone="secondary" className="mt-1 text-sm">
-        {subline}
-      </ContentText>
-      <div className="mt-5 flex items-baseline justify-between gap-3">
-        <ContentText className="text-sm text-ink-2">{messages.todayCheckedStudentsLabel}</ContentText>
-        <NumberDisplay className="text-3xl tabular-nums">
-          {checkedCount}
-          <span className="text-base text-muted">
-            {" "}
-            {messages.todayCheckedOfWord} {lesson.totalPupils}
-          </span>
-        </NumberDisplay>
-      </div>
-      <div className="mt-2">
-        <Progress value={progressValue} />
+      {subline ? (
+        <ContentText tone="secondary" className="mt-1 text-sm">
+          {subline}
+        </ContentText>
+      ) : null}
+      <div className="mt-5">
+        <LessonInlineProgress
+          checked={checkedCount}
+          total={lesson.totalPupils}
+          label={progressLabel}
+        />
       </div>
       <div className="mt-5 flex flex-wrap gap-2">
         <Button render={<CustomLink href={`/lessons/${lesson.lessonId}/check`} />}>

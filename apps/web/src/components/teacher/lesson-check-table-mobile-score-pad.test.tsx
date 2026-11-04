@@ -121,7 +121,7 @@ describe("LessonCheckTable mobile score pad", () => {
   it("choosing a digit on the cards test pad calls mutateTestScore (not closed before click)", async () => {
     await act(async () => {
       root.render(
-        <LessonCheckTable data={pageData} lessonDateLabel="1 January" messages={messages} dictionaries={{}} />,
+        <LessonCheckTable data={pageData} lessonDescription="1 January" messages={messages} dictionaries={{}} />,
       );
     });
 
@@ -153,7 +153,7 @@ describe("LessonCheckTable mobile score pad", () => {
     harness.conflictIds = new Set(["pupil-1"]);
     await act(async () => {
       root.render(
-        <LessonCheckTable data={pageData} lessonDateLabel="1 January" messages={messages} dictionaries={{}} />,
+        <LessonCheckTable data={pageData} lessonDescription="1 January" messages={messages} dictionaries={{}} />,
       );
     });
 
