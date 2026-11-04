@@ -66,6 +66,7 @@ const resolveAdminConsentFlags = (
 export async function loadPeopleAdminList(
   db: PrismaClient,
   filter: PeopleListFilter,
+  searchTerm?: string,
 ): Promise<PeopleAdminListData> {
   const organizationId = await getDefaultOrganizationId(db);
   const todayIso = isoTodayUtc();
@@ -118,8 +119,19 @@ export async function loadPeopleAdminList(
     },
   } as const;
 
+  const nameFilter =
+    searchTerm && searchTerm.length > 0
+      ? {
+          OR: [
+            { lastName: { contains: searchTerm, mode: "insensitive" as const } },
+            { firstName: { contains: searchTerm, mode: "insensitive" as const } },
+            { middleName: { contains: searchTerm, mode: "insensitive" as const } },
+          ],
+        }
+      : {};
+
   const pupilsRaw = await db.pupil.findMany({
-    where: { organizationId },
+    where: { organizationId, ...nameFilter },
     orderBy: [{ isActive: "desc" }, { lastName: "asc" }, { firstName: "asc" }],
     select: pupilSelect,
   });

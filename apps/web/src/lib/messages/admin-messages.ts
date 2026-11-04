@@ -179,6 +179,16 @@ export type AdminMessages = {
     filterAll: string;
     filterUnassigned: string;
     filterInactive: string;
+    searchLabel: string;
+    searchPlaceholder: string;
+    searchMinHint: string;
+    searchActiveHint: string;
+    searchEmptyTitle: string;
+    searchEmptyDescription: string;
+    addPupilAction: string;
+    rowActionsMenuLabel: string;
+    unenrollConfirmTitle: string;
+    unenrollConfirmDescription: string;
     emptyTitle: string;
     emptyDescription: string;
     createTitle: string;

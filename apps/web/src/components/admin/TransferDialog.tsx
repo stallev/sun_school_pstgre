@@ -35,6 +35,9 @@ type TransferDialogProps = {
   uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
+  showTrigger?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export const TransferDialog = ({
@@ -47,10 +50,15 @@ export const TransferDialog = ({
   uiLocale,
   formError,
   closeLabel,
+  showTrigger = true,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
 }: TransferDialogProps) => {
   const messages = useAdminMessages();
   const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = controlledOnOpenChange ?? setInternalOpen;
   const [state, formAction, pending] = useActionState<MutationResult | null, FormData>(
     transferPupilAction,
     null,
@@ -70,9 +78,11 @@ export const TransferDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button type="button" variant="outline" className="min-h-11" />}>
-        {messages.people.transferAction}
-      </DialogTrigger>
+      {showTrigger ? (
+        <DialogTrigger render={<Button type="button" variant="outline" className="min-h-11" />}>
+          {messages.people.transferAction}
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{messages.people.transferTitle}</DialogTitle>

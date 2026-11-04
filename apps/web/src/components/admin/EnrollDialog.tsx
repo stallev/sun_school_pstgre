@@ -35,6 +35,10 @@ type EnrollDialogProps = {
   uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
+  showTrigger?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  triggerClassName?: string;
 };
 
 export const EnrollDialog = ({
@@ -47,10 +51,16 @@ export const EnrollDialog = ({
   uiLocale,
   formError,
   closeLabel,
+  showTrigger = true,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  triggerClassName,
 }: EnrollDialogProps) => {
   const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const messages = useAdminMessages();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = controlledOnOpenChange ?? setInternalOpen;
   const action = mode === "enroll" ? enrollPupilAction : unenrollPupilAction;
   const [state, formAction, pending] = useActionState<MutationResult | null, FormData>(action, null);
 
@@ -70,17 +80,19 @@ export const EnrollDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          <Button
-            type="button"
-            variant={mode === "unenroll" ? "outline" : "default"}
-            className="min-h-11"
-          />
-        }
-      >
-        {triggerLabel}
-      </DialogTrigger>
+      {showTrigger ? (
+        <DialogTrigger
+          render={
+            <Button
+              type="button"
+              variant={mode === "unenroll" ? "outline" : "default"}
+              className={triggerClassName ?? "min-h-11"}
+            />
+          }
+        >
+          {triggerLabel}
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
