@@ -198,7 +198,7 @@
     "page_subtitle_group": "{group} · {year}",
     "page_subtitle_school": "Whole school · {year}",
     "privacy_note": "Visible to teachers and administrators only. Not shown to parents or pupils and not for display mode.",
-    "footnote": "Place is by lesson points for the year. Achievements and penalties are not included in place (penalties post-MVP).",
+    "footnote": "Place is by lesson points for the year. Achievements and penalties are not included in place.",
     "column_place": "Place",
     "column_pupil": "Pupil",
     "column_metric": "Lesson points",

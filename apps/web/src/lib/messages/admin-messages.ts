@@ -24,6 +24,7 @@ export type AdminMessages = {
     timezoneHint: string;
     timezoneSearchLabel: string;
     timezoneSearchPlaceholder: string;
+    timezoneEmpty: string;
     timezoneSave: string;
     submitPending: string;
     toastLanguageSaved: string;
@@ -46,6 +47,9 @@ export type AdminMessages = {
     submitted: string;
     consentVersion: string;
     waitingDays: string;
+    submittedToday: string;
+    approveAsTeacher: string;
+    approveAsAdmin: string;
     loginTelegram: string;
     loginCredentials: string;
     approve: string;
@@ -136,6 +140,8 @@ export type AdminMessages = {
     summaryPupils: PluralForms;
     dangerZoneTitle: string;
     dangerZoneCloseLead: string;
+    createNextToggle: string;
+    archiveSummary: string;
     toastCreated: string;
     toastActivated: string;
     toastClosed: string;
@@ -341,6 +347,32 @@ export type AdminMessages = {
 
 export const formatWaitingDays = (template: string, count: number): string =>
   template.replace("{count}", String(count));
+
+export const formatApprovalWaitingLabel = (
+  submittedToday: string,
+  waitingDaysTemplate: string,
+  count: number,
+): string => (count === 0 ? submittedToday : formatWaitingDays(waitingDaysTemplate, count));
+
+export type ApprovalSubmitSelection = {
+  adminSelected: boolean;
+  teacherSelected: boolean;
+  selectedGradeNames: readonly string[];
+};
+
+export const formatApprovalSubmitLabel = (
+  messages: Pick<AdminMessages["approvals"], "approve" | "approveAsTeacher" | "approveAsAdmin">,
+  selection: ApprovalSubmitSelection,
+): string => {
+  const { adminSelected, teacherSelected, selectedGradeNames } = selection;
+  if (adminSelected && !teacherSelected) {
+    return messages.approveAsAdmin;
+  }
+  if (teacherSelected && !adminSelected && selectedGradeNames.length === 1) {
+    return messages.approveAsTeacher.replace("{group}", selectedGradeNames[0]!);
+  }
+  return messages.approve;
+};
 
 export const formatTeacherCount = (template: string, count: number): string =>
   template.replace("{count}", String(count));

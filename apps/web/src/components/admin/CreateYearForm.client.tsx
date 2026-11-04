@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import type { MutationResult } from "@sunschool/domain";
 import { createYearAction } from "@/actions/school-year";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
@@ -21,6 +21,7 @@ type CreateYearFormProps = {
 
 export const CreateYearForm = ({ dictionaries, uiLocale, formError }: CreateYearFormProps) => {
   const messages = useAdminMessages();
+  const [expanded, setExpanded] = useState(false);
   const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const [state, formAction, pending] = useActionState<MutationResult<{ yearId: string }> | null, FormData>(
     createYearAction,
@@ -33,6 +34,14 @@ export const CreateYearForm = ({ dictionaries, uiLocale, formError }: CreateYear
     successMessage: messages.year.toastCreated,
     formErrorFallback: formError,
   });
+
+  if (!expanded) {
+    return (
+      <Button type="button" variant="outline" onClick={() => setExpanded(true)}>
+        {messages.year.createNextToggle}
+      </Button>
+    );
+  }
 
   return (
     <form

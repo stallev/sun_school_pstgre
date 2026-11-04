@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { AcademicYearListRow } from "@/data/school/load-academic-years-list.server";
 import { formatAcademicYearStatusLabel } from "@/lib/admin/format-academic-year-status-label";
-import { formatYearSummaryLine } from "@/lib/admin/format-year-summary-line";
+import { resolveYearCardSummaryLine } from "@/lib/admin/format-year-summary-line";
 import { formatDate } from "@/lib/i18n/format";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -51,7 +51,7 @@ export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardPro
 
   const pending = activatePending || closePending;
   const statusLabel = formatAcademicYearStatusLabel(row.status, messages);
-  const summaryLine = formatYearSummaryLine({
+  const summaryLine = resolveYearCardSummaryLine({
     locale: uiLocale,
     template: messages.year.summaryTemplate,
     lessonCount: row.lessonCount,
@@ -60,6 +60,8 @@ export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardPro
     lessonForms: messages.year.summaryLessons,
     groupForms: messages.year.summaryGroups,
     pupilForms: messages.year.summaryPupils,
+    status: row.status,
+    archiveSummary: messages.year.archiveSummary,
   });
 
   return (
@@ -99,9 +101,6 @@ export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardPro
         <section className="mt-auto space-y-3 border-t border-line pt-4">
           <SectionTitle>{messages.year.dangerZoneTitle}</SectionTitle>
           <ContentText className="text-sm text-ink-2">{messages.year.dangerZoneCloseLead}</ContentText>
-          <ContentText tone="secondary" className="text-sm">
-            {messages.year.closeConfirmDescription}
-          </ContentText>
           <form action={closeAction} id={`close-year-${row.yearId}`} className="flex flex-wrap items-end gap-2">
             <input type="hidden" name="yearId" value={row.yearId} />
             <label className="grid gap-1 text-sm">

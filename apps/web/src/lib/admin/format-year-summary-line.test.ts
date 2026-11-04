@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { formatYearSummaryLine } from "@/lib/admin/format-year-summary-line";
+import { ACADEMIC_YEAR_STATUS } from "@sunschool/domain";
+import { formatYearSummaryLine, resolveYearCardSummaryLine } from "@/lib/admin/format-year-summary-line";
 
 describe("formatYearSummaryLine", () => {
   it("formats summary with plural segments", () => {
@@ -29,5 +30,21 @@ describe("formatYearSummaryLine", () => {
       },
     });
     expect(line).toBe("5 уроков · 3 группы · 100 учеников");
+  });
+
+  it("shows archive copy for closed year without counts", () => {
+    const line = resolveYearCardSummaryLine({
+      locale: "ru",
+      template: "{lessons} · {groups} · {pupils}",
+      lessonCount: 0,
+      groupCount: 0,
+      pupilCount: 0,
+      lessonForms: { one: "{count}", few: "{count}", many: "{count}", other: "{count}" },
+      groupForms: { one: "{count}", few: "{count}", many: "{count}", other: "{count}" },
+      pupilForms: { one: "{count}", few: "{count}", many: "{count}", other: "{count}" },
+      status: ACADEMIC_YEAR_STATUS.CLOSED,
+      archiveSummary: "Данные года в архиве",
+    });
+    expect(line).toBe("Данные года в архиве");
   });
 });

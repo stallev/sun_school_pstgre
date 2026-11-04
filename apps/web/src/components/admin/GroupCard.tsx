@@ -15,7 +15,10 @@ type GroupCardProps = {
 };
 
 export const GroupCard = ({ row, messages, uiLocale }: GroupCardProps) => {
-  const languageLabel = formatGroupLanguageLabel(row.language);
+  const languageLabel = formatGroupLanguageLabel(row.language, {
+    ru: messages.group.languageRu,
+    en: messages.group.languageEn,
+  });
   const teacherLabel = formatPlural(messages.group.teacherCountForms, row.teacherCount, uiLocale, {
     count: row.teacherCount,
   });
