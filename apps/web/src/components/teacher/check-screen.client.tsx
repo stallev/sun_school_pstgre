@@ -27,6 +27,7 @@ import { fillMessage } from "@/lib/messages/fill-message";
 type CheckScreenProps = {
   data: Extract<SequentialCheckPageData, { kind: "page" }>;
   initialPupilId: string | null;
+  lessonDescription: string;
   messages: TeacherCheckMessages;
   dictionaries: Record<string, Dictionary>;
   /** Server-rendered verse texts accordion (check flow spec §5.2б). */
@@ -36,6 +37,7 @@ type CheckScreenProps = {
 export const CheckScreen = ({
   data,
   initialPupilId,
+  lessonDescription,
   messages,
   dictionaries,
   versesAccordion = null,
@@ -107,10 +109,7 @@ export const CheckScreen = ({
   };
   const saveStatusLabel = screen.dirty ? messages.saveStatusUnsaved : messages.saveStatusSaved;
 
-  const lessonMeta = `${fillMessage(messages.lessonSubtitle, {
-    ordinal: data.lessonOrdinal,
-    title: data.lessonTitle,
-  })} · ${data.lessonDateIso}`;
+  const lessonMeta = lessonDescription;
 
   return (
     <div className="space-y-4 pb-24 lg:pb-6">
@@ -167,6 +166,7 @@ export const CheckScreen = ({
             checked: screen.checkedCount,
             total: data.pupils.length,
           })}
+          fractionTemplate={messages.progressFraction}
         />
       )}
 

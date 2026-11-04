@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/table";
 import { BarChart } from "@/components/analytics/BarChart";
 import { cn } from "@/lib/utils";
+import { formatAnalyticsChartAxisTick } from "@/lib/analytics/format-analytics-display";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { AnalyticsMessages, AnalyticsPupilYearMessages } from "@/lib/messages/analytics-messages";
 import type { PupilYearMetric, PupilYearTableRow } from "./PupilYearsSection";
 import { formatPupilYearMetric, pupilYearChartAria } from "./format-pupil-year-metric";
@@ -36,10 +38,24 @@ const METRIC_OPTIONS = (pupilYearMessages: AnalyticsPupilYearMessages) =>
   ] as const;
 
 const metricDomain = (metric: PupilYearMetric): [number, number] => {
-  if (metric === "attendance") return [0, 1];
+  if (metric === "attendance") return [0, 100];
   if (metric === "verses") return [0, 3];
   return [0, 10];
 };
+
+const chartMetricValue = (metric: PupilYearMetric, value: number): number =>
+  metric === "attendance" ? value * 100 : value;
+
+const formatChartMetricValue = (
+  metric: PupilYearMetric,
+  value: number,
+  messages: AnalyticsMessages,
+): string =>
+  formatPupilYearMetric(
+    metric,
+    metric === "attendance" ? value / 100 : value,
+    messages,
+  );
 
 export const PupilYearsMetricPanel = ({
   rows,
@@ -51,9 +67,17 @@ export const PupilYearsMetricPanel = ({
 }: PupilYearsMetricPanelProps) => {
   const [showTable, setShowTable] = useState(false);
   const chartLabels = rows.map((row) => row.yearName);
-  const chartValues = rows.map((row) =>
-    row.insufficientLessons || row[selectedMetric] === null ? null : row[selectedMetric],
-  );
+  const chartValues = rows.map((row) => {
+    const raw = row.insufficientLessons || row[selectedMetric] === null ? null : row[selectedMetric];
+    return raw === null ? null : chartMetricValue(selectedMetric, raw);
+  });
+  const messageLocale = messages.formatLocale as MessageLocale;
+  const yAxisTickFormatter =
+    selectedMetric === "attendance"
+      ? (value: number) =>
+          formatAnalyticsChartAxisTick(messages.formatPercent, value, messageLocale, "percent")
+      : (value: number) =>
+          formatAnalyticsChartAxisTick(messages.formatPercent, value, messageLocale, "score");
 
   return (
     <Card className="mt-4 flex flex-col gap-3 overflow-visible p-3">
@@ -104,7 +128,7 @@ export const PupilYearsMetricPanel = ({
                 <TableCell>
                   {row.insufficientLessons || chartValues[index] === null
                     ? pupilYearMessages.chartInsufficient
-                    : formatPupilYearMetric(
+                    : formatChartMetricValue(
                         selectedMetric,
                         chartValues[index] as number,
                         messages,
@@ -119,8 +143,9 @@ export const PupilYearsMetricPanel = ({
           labels={chartLabels}
           values={chartValues}
           formatLabel={(label) => label}
-          formatValue={(value) => formatPupilYearMetric(selectedMetric, value, messages)}
+          formatValue={(value) => formatChartMetricValue(selectedMetric, value, messages)}
           yDomain={metricDomain(selectedMetric)}
+          yAxisTickFormatter={yAxisTickFormatter}
           xLabel={pupilYearMessages.chartColumnYear}
           ariaLabel={pupilYearChartAria(pupilYearMessages, selectedMetric)}
         />

@@ -18,15 +18,18 @@ import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 
 export type LessonsPageProps = {
-  searchParams: Promise<{ gradeId?: string }>;
+  searchParams: Promise<{ gradeId?: string; journalGap?: string }>;
 };
 
 export const LessonsPageContent = async ({ searchParams }: LessonsPageProps) => {
   await connection();
   const params = await searchParams;
+  const journalGapOnly = params.journalGap === "1";
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
   const db = await getPrisma();
-  const data = await loadLessonsListPage(db, actor.userId, params.gradeId ?? null);
+  const data = await loadLessonsListPage(db, actor.userId, params.gradeId ?? null, {
+    journalGapOnly,
+  });
   const locale = await getUiLocale();
   const appLocale = messageLocaleToAppLocale(locale);
   const timeZone = await getSchoolTimezone();
@@ -83,6 +86,7 @@ export const LessonsPageContent = async ({ searchParams }: LessonsPageProps) => 
           gradeId={data.gradeId}
           gradeFilterLabel={messages.gradeFilterLabel}
           gradeFilterApply={messages.gradeFilterApply}
+          hiddenFields={journalGapOnly ? { journalGap: "1" } : undefined}
         />
       ) : null}
       {lessonRows.length === 0 ? (

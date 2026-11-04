@@ -17,11 +17,13 @@ import { formatTierLabel } from "@/lib/achievements/format-tier-label";
 type TodayAchievementMarkSectionProps = {
   gradeId: string;
   academicYearId: string;
+  isAdmin: boolean;
 };
 
 export const TodayAchievementMarkSection = async ({
   gradeId,
   academicYearId,
+  isAdmin,
 }: TodayAchievementMarkSectionProps) => {
   const locale = await getUiLocale();
   const timeZone = await getSchoolTimezone();
@@ -47,10 +49,16 @@ export const TodayAchievementMarkSection = async ({
     return (
       <Card className="p-4 sm:p-5">
         <SectionTitle>{messages.todayMarkTitle}</SectionTitle>
-        <ContentText className="mt-2 text-ink-2">{messages.todayMarkOffText}</ContentText>
-        <Button variant="outline" className="mt-3 min-h-11" render={<CustomLink href="/group" />}>
-          {messages.todayMarkGroupSettings}
-        </Button>
+        {isAdmin ? (
+          <>
+            <ContentText className="mt-2 text-ink-2">{messages.todayMarkOffAdminLead}</ContentText>
+            <Button variant="outline" className="mt-3 min-h-11" render={<CustomLink href={`/groups/${gradeId}`} />}>
+              {messages.todayMarkEnableInSettings}
+            </Button>
+          </>
+        ) : (
+          <ContentText className="mt-2 text-ink-2">{messages.todayMarkOffText}</ContentText>
+        )}
       </Card>
     );
   }

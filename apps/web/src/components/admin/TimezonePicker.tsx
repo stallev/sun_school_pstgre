@@ -74,23 +74,27 @@ export const TimezonePicker = ({
       </label>
       <input type="hidden" name="timeZone" value={selected} />
       <ul className="max-h-48 overflow-y-auto rounded-lg border border-line bg-paper" role="listbox">
-        {filtered.map((option) => (
-          <li key={option.value}>
-            <button
-              type="button"
-              role="option"
-              aria-selected={selected === option.value}
-              className={cn(
-                "flex min-h-11 w-full items-center px-3 text-left text-sm hover:bg-cobalt-soft",
-                selected === option.value && "bg-cobalt-soft font-medium",
-              )}
-              onClick={() => setSelected(option.value)}
-              disabled={pending}
-            >
-              {option.label}
-            </button>
-          </li>
-        ))}
+        {filtered.length === 0 ? (
+          <li className="px-3 py-3 text-sm text-muted">{messages.settings.timezoneEmpty}</li>
+        ) : (
+          filtered.map((option) => (
+            <li key={option.value}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={selected === option.value}
+                className={cn(
+                  "flex min-h-11 w-full items-center px-3 text-left text-sm hover:bg-cobalt-soft",
+                  selected === option.value && "bg-cobalt-soft font-medium",
+                )}
+                onClick={() => setSelected(option.value)}
+                disabled={pending}
+              >
+                {option.label}
+              </button>
+            </li>
+          ))
+        )}
       </ul>
       <Button
         type="submit"

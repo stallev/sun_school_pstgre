@@ -58,4 +58,29 @@ describe("audit page entity type labels", () => {
       expect(resolveAuditActionLabel(adminEn, action)).not.toBe("");
     }
   });
+
+  it("keeps Russian audit action labels free of English namespace prefixes", () => {
+    const englishLead = /^(Access|Achievement|Analytics|Auth|Bible|Bricks|Calendar|Check|Consent|Deletion|Digest|Family|Lesson|Penalty|School|Seed|Settings)\s*[—-]/;
+    for (const action of Object.values(AUDIT_ACTION)) {
+      const label = readAuditLabel(adminRu, "actions", action)!;
+      expect(label, action).not.toMatch(englishLead);
+    }
+  });
+
+  it("uses ADR-019 Russian labels for seed entity type and seed.run action", () => {
+    const seedEntityLabel = readAuditLabel(adminRu, "entity_types", AUDIT_ENTITY_TYPE.SEED)!;
+    const seedRunLabel = readAuditLabel(adminRu, "actions", AUDIT_ACTION.SEED_RUN)!;
+    expect(seedEntityLabel).toBe("Начальные данные");
+    expect(seedRunLabel).toBe("запущены начальные данные");
+    for (const label of [seedEntityLabel, seedRunLabel]) {
+      expect(label).not.toMatch(/seed/i);
+    }
+  });
+
+  it("keeps Russian audit entity type labels in Cyrillic", () => {
+    for (const type of Object.values(AUDIT_ENTITY_TYPE)) {
+      const label = readAuditLabel(adminRu, "entity_types", type)!;
+      expect(label, type).toMatch(/[А-Яа-яЁё]/);
+    }
+  });
 });

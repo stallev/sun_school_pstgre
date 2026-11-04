@@ -4,13 +4,13 @@ import { Card } from "@/components/ui/card";
 import { AnalyticsKpiMetricHeading } from "@/components/analytics/AnalyticsKpiMetricHeading";
 import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.server";
 import {
-  formatAnalyticsChildrenHint,
+  formatAnalyticsMetricAverage,
+  formatAnalyticsRegularlyAttendLine,
 } from "@/lib/analytics/analytics-metric-copy";
 import {
-  formatAnalyticsAverage,
   formatAnalyticsPercent,
 } from "@/lib/analytics/format-analytics-display";
-import { formatNumber, plural } from "@/lib/i18n/format";
+import { plural } from "@/lib/i18n/format";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
 
@@ -18,26 +18,21 @@ type AnalyticsPeriodKpiSectionProps = {
   snapshot: GroupAnalyticsSnapshot;
   messages: AnalyticsMessages;
   glossary: Pick<GlossaryMessages, "attendance" | "verses_per_lesson" | "test" | "notebook">;
+  termHintAriaLabel: string;
 };
 
 const formatMetricValue = (
   average: number | null,
   observationCount: number,
   messages: AnalyticsMessages,
-): string => {
-  if (average === null || observationCount === 0) return messages.kpiEmpty;
-  const formattedAverage = formatNumber(
-    Number(average.toFixed(1)),
-    messages.formatLocale,
-    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
-  );
-  return formatAnalyticsAverage(messages.formatAverage, formattedAverage);
-};
+): string =>
+  formatAnalyticsMetricAverage(average, observationCount, messages) ?? messages.kpiEmpty;
 
 export const AnalyticsPeriodKpiSection = ({
   snapshot,
   messages,
   glossary,
+  termHintAriaLabel,
 }: AnalyticsPeriodKpiSectionProps) => {
   const { kpi, sampleCounts } = snapshot;
   const mainCount = sampleCounts.A;
@@ -49,6 +44,7 @@ export const AnalyticsPeriodKpiSection = ({
         <AnalyticsKpiMetricHeading
           label={messages.kpiAttendanceLabel}
           glossary={glossary.attendance}
+          termHintAriaLabel={termHintAriaLabel}
         />
         <NumberDisplay size="kpi" className="mt-1">
           {kpi.attendancePercent === null
@@ -56,7 +52,7 @@ export const AnalyticsPeriodKpiSection = ({
             : formatAnalyticsPercent(messages.formatPercent, kpi.attendancePercent / 100)}
         </NumberDisplay>
         <ContentText className="mt-2 text-base text-ink-2">
-          {formatAnalyticsChildrenHint(messages, mainCount)}
+          {formatAnalyticsRegularlyAttendLine(messages, sampleCounts)}
         </ContentText>
       </div>
       <dl className="grid min-w-0 grid-cols-3 gap-4 border-t border-line pt-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
@@ -65,6 +61,7 @@ export const AnalyticsPeriodKpiSection = ({
             <AnalyticsKpiMetricHeading
               label={messages.kpiVersesLabel}
               glossary={glossary.verses_per_lesson}
+              termHintAriaLabel={termHintAriaLabel}
             />
           </dt>
           <dd className="mt-1">
@@ -78,7 +75,11 @@ export const AnalyticsPeriodKpiSection = ({
         </div>
         <div>
           <dt>
-            <AnalyticsKpiMetricHeading label={messages.kpiTestLabel} glossary={glossary.test} />
+            <AnalyticsKpiMetricHeading
+              label={messages.kpiTestLabel}
+              glossary={glossary.test}
+              termHintAriaLabel={termHintAriaLabel}
+            />
           </dt>
           <dd className="mt-1">
             <NumberDisplay size="kpi">
@@ -94,6 +95,7 @@ export const AnalyticsPeriodKpiSection = ({
             <AnalyticsKpiMetricHeading
               label={messages.kpiNotebookLabel}
               glossary={glossary.notebook}
+              termHintAriaLabel={termHintAriaLabel}
             />
           </dt>
           <dd className="mt-1">

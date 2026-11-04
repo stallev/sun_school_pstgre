@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 
 type LessonCheckTableProps = {
   data: Extract<LessonTablePageData, { kind: "page" }>;
-  lessonDateLabel: string;
+  lessonDescription: string;
   messages: TeacherCheckMessages;
   dictionaries: Record<string, Dictionary>;
   /** Server-rendered verse texts accordion (check flow spec §5.2б). */
@@ -40,7 +40,7 @@ type LessonCheckTableProps = {
 
 export const LessonCheckTable = ({
   data,
-  lessonDateLabel,
+  lessonDescription,
   messages,
   dictionaries,
   versesAccordion = null,
@@ -87,10 +87,7 @@ export const LessonCheckTable = ({
     );
   }
 
-  const subtitle = fillMessage(messages.lessonSubtitle, {
-    ordinal: data.lessonOrdinal,
-    title: data.lessonTitle,
-  });
+  const subtitle = lessonDescription;
   const counts = `${fillMessage(messages.tableCountPresent, { count: table.stats.present })} · ${fillMessage(messages.tableCountUnchecked, { count: table.stats.unchecked })} · ${fillMessage(messages.tableProgressHeader, { checked: table.stats.checked, total: table.stats.total })}`;
   const workSpan = (data.hasTest ? 1 : 0) + 2;
   const topScorerIds = findLessonTopScorerIds(
@@ -110,7 +107,7 @@ export const LessonCheckTable = ({
       </header>
       <PageHeader
         title={messages.tablePageTitle}
-        description={`${subtitle} · ${lessonDateLabel}`}
+        description={subtitle}
         actions={
           <>
             <Button render={<CustomLink href={`/lessons/${data.lessonId}/check`} />}>
@@ -144,6 +141,7 @@ export const LessonCheckTable = ({
         checked={table.stats.checked}
         total={table.stats.total}
         label={counts}
+        fractionTemplate={messages.progressFraction}
       />
 
       {versesAccordion}

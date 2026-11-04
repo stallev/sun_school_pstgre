@@ -12,10 +12,14 @@ import {
 } from "@/components/ui/table";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
 import {
-  formatAnalyticsAverage,
   formatAnalyticsPercent,
 } from "@/lib/analytics/format-analytics-display";
+import {
+  formatSchoolGroupScoreAverage,
+  formatSchoolLastLessonLabel,
+} from "@/lib/analytics/analytics-metric-copy";
 import { fillMessage } from "@/lib/messages/fill-message";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type SchoolAnalyticsTableProps = {
@@ -23,6 +27,7 @@ type SchoolAnalyticsTableProps = {
   messages: AnalyticsMessages["school"];
   percentTemplate: string;
   averageTemplate: string;
+  formatLocale: MessageLocale;
 };
 
 export const SchoolAnalyticsTable = ({
@@ -30,6 +35,7 @@ export const SchoolAnalyticsTable = ({
   messages,
   percentTemplate,
   averageTemplate,
+  formatLocale,
 }: SchoolAnalyticsTableProps) => (
   <section className="min-w-0 space-y-3">
     <SchoolGroupCards
@@ -37,6 +43,7 @@ export const SchoolAnalyticsTable = ({
       messages={messages}
       percentTemplate={percentTemplate}
       averageTemplate={averageTemplate}
+      formatLocale={formatLocale}
     />
     <Card className="hidden p-0 lg:block">
       <Table className="text-left text-base">
@@ -65,15 +72,7 @@ export const SchoolAnalyticsTable = ({
         </TableHeader>
         <TableBody className="divide-y divide-line">
           {rows.map((row) => {
-            const lastLabel =
-              row.lastLessonStatus === "ok"
-                ? fillMessage(messages.lastLessonOk, { label: row.lastLessonLabel })
-                : row.lastLessonStatus === "warn"
-                  ? fillMessage(messages.lastLessonWarn, {
-                      checked: row.lastLessonChecked,
-                      total: row.lastLessonTotal,
-                    })
-                  : messages.lastLessonIdle;
+            const lastLabel = formatSchoolLastLessonLabel(row, messages);
             const lastTone =
               row.lastLessonStatus === "ok" ? "ok" : row.lastLessonStatus === "warn" ? "warn" : "neutral";
             const attendanceRounded =
@@ -87,8 +86,10 @@ export const SchoolAnalyticsTable = ({
                 <TableCell className="px-5 py-4 font-medium">{row.gradeName}</TableCell>
                 <TableCell className="px-3 py-4 text-base text-ink-2">{row.teacherNames}</TableCell>
                 <TableCell className="px-3 py-4 text-right tabular-nums">
-                  {row.layerACount}
-                  <span className="text-muted-foreground"> / {row.totalPupils}</span>
+                  {fillMessage(messages.pupilsSampleValue, {
+                    current: row.layerACount,
+                    total: row.totalPupils,
+                  })}
                 </TableCell>
                 <TableCell className="px-3 py-4">
                   {attendanceRounded === null ? (
@@ -115,9 +116,12 @@ export const SchoolAnalyticsTable = ({
                   )}
                 </TableCell>
                 <TableCell className="px-3 py-4 text-right tabular-nums">
-                  {row.scoreAverage === "—"
-                    ? row.scoreAverage
-                    : formatAnalyticsAverage(averageTemplate, Number(row.scoreAverage))}
+                  {formatSchoolGroupScoreAverage(
+                    row.scoreAverage,
+                    averageTemplate,
+                    formatLocale,
+                    "—",
+                  )}
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <StatusText tone={lastTone}>{lastLabel}</StatusText>

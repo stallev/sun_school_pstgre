@@ -1,49 +1,40 @@
-import { ContentText } from "@/components/atoms/ContentText";
 import { CustomLink } from "@/components/ui/custom-link";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { AuditChangeList } from "@/components/admin/AuditChangeList";
+import { AuditTechnicalRecord } from "@/components/admin/AuditTechnicalRecord";
 import type { AuditLogEntryDto } from "@/data/audit/audit-shared.server";
 
 type AuditEntryRowProps = {
   entry: AuditLogEntryDto;
   occurredLabel: string;
-  actionLabel: string;
+  technicalRecordLabel: string;
+  reasonPrefix: string;
 };
 
-export const AuditEntryRow = ({ entry, occurredLabel, actionLabel }: AuditEntryRowProps) => (
+export const AuditEntryRow = ({
+  entry,
+  occurredLabel,
+  technicalRecordLabel,
+  reasonPrefix,
+}: AuditEntryRowProps) => (
   <TableRow>
-    <TableCell className="px-5 py-4 whitespace-nowrap tabular-nums text-sm text-muted">
+    <TableCell className="px-5 py-4 align-top whitespace-nowrap tabular-nums text-sm text-muted">
       {occurredLabel}
     </TableCell>
-    <TableCell className="px-5 py-4 text-sm font-medium">{entry.actorLabel}</TableCell>
-    <TableCell className="px-5 py-4 text-sm">{actionLabel}</TableCell>
-    <TableCell className="px-5 py-4 text-sm">
+    <TableCell className="px-5 py-4 align-top text-sm font-medium">{entry.actorLabel}</TableCell>
+    <TableCell className="px-5 py-4 align-top text-sm">{entry.actionPhrase}</TableCell>
+    <TableCell className="px-5 py-4 align-top text-sm" title={entry.entityIdTitle}>
       {entry.entityHref ? (
-        <CustomLink href={entry.entityHref} className="text-cobalt-ink">
-          {entry.entityLabel}
+        <CustomLink href={entry.entityHref} className="text-cobalt-ink" title={entry.entityIdTitle}>
+          {entry.entityDisplay}
         </CustomLink>
       ) : (
-        entry.entityLabel
+        <span title={entry.entityIdTitle}>{entry.entityDisplay}</span>
       )}
     </TableCell>
-    <TableCell className="max-w-[12rem] truncate px-5 py-4 text-sm text-ink-2">
-      {entry.reason ?? entry.newValueText ?? entry.oldValueText ?? "—"}
+    <TableCell className="min-w-0 px-5 py-4 align-top">
+      <AuditChangeList lines={entry.changeLines} reason={entry.reason} reasonPrefix={reasonPrefix} />
+      <AuditTechnicalRecord summaryLabel={technicalRecordLabel} json={entry.technicalRecordJson} />
     </TableCell>
   </TableRow>
-);
-
-type AuditHistoryItemProps = {
-  entry: AuditLogEntryDto;
-  occurredLabel: string;
-  actionLabel: string;
-};
-
-export const AuditHistoryItem = ({ entry, occurredLabel, actionLabel }: AuditHistoryItemProps) => (
-  <li className="space-y-1 border-b border-line py-3 last:border-b-0">
-    <ContentText className="text-sm tabular-nums text-muted-foreground">{occurredLabel}</ContentText>
-    <ContentText className="text-sm font-medium text-ink">{actionLabel}</ContentText>
-    <ContentText tone="secondary" className="text-sm">
-      {entry.actorLabel}
-      {entry.reason ? ` · ${entry.reason}` : null}
-    </ContentText>
-  </li>
 );

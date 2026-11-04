@@ -26,6 +26,8 @@ export const pickTeacherAchievementsMessages = (
   toastModeOff: getMessage(teacher, "achievements.toast_mode_off"),
   todayMarkTitle: getMessage(teacher, "achievements.today_mark_title"),
   todayMarkOffText: getMessage(teacher, "achievements.today_mark_off_text"),
+  todayMarkOffAdminLead: getMessage(teacher, "achievements.today_mark_off_admin_lead"),
+  todayMarkEnableInSettings: getMessage(teacher, "achievements.today_mark_enable_in_settings"),
   todayMarkHint: getMessage(teacher, "achievements.today_mark_hint"),
   todayMarkGroupSettings: getMessage(teacher, "achievements.today_mark_group_settings"),
   manualAwardButton: getMessage(teacher, "achievements.manual_award_button"),

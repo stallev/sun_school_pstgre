@@ -13,6 +13,7 @@ export type TeacherCalendarMessages = {
   weekdays: string[];
   prevMonth: string;
   nextMonth: string;
+  today: string;
   openLesson: string;
   formCreateTitle: string;
   formEditTitle: string;

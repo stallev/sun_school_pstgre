@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { BalancePupilActions } from "@/components/teacher/BalancePupilActions.client";
 import { StatusText } from "@/components/ui/status-text";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
@@ -71,18 +71,11 @@ export const BalanceCards = ({
             </>
           }
           actions={
-            <>
-              <Button type="button" onClick={() => onIssue(row.pupilId)}>
-                {messages.actionIssue}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onCompensate(row.pupilId)}
-              >
-                {messages.actionCompensate}
-              </Button>
-            </>
+            <BalancePupilActions
+              messages={messages}
+              onIssue={() => onIssue(row.pupilId)}
+              onCompensate={() => onCompensate(row.pupilId)}
+            />
           }
         />
       );

@@ -20,6 +20,32 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 let cached: ServerEnv | undefined;
 
+const POOLER_HOST_MARKER = "-pooler";
+
+export function assertPooledDatabaseUrl(appEnv: ServerEnv["APP_ENV"], databaseUrl: string): void {
+  if (process.env.ALLOW_DIRECT_DATABASE_URL === "1") return;
+
+  let hostname: string;
+  try {
+    hostname = new URL(databaseUrl).hostname;
+  } catch {
+    return;
+  }
+
+  if (hostname.includes(POOLER_HOST_MARKER)) return;
+
+  const hint =
+    "DATABASE_URL must use the Neon pooled host (hostname contains -pooler). " +
+    "For Prisma migrate/seed against DIRECT_URL, set ALLOW_DIRECT_DATABASE_URL=1 locally only.";
+
+  if (appEnv === "dev") {
+    console.warn(hint);
+    return;
+  }
+
+  throw new Error(hint);
+}
+
 /** True when the process can open the database. Preview builds often have no secrets. */
 export function hasServerEnv(): boolean {
   return serverEnvSchema.safeParse(process.env).success;
@@ -32,6 +58,7 @@ export function getServerEnv(): ServerEnv {
       const names = parsed.error.issues.map((issue) => issue.path.join(".")).join(", ");
       throw new Error(`Invalid server environment: ${names}`);
     }
+    assertPooledDatabaseUrl(parsed.data.APP_ENV, parsed.data.DATABASE_URL);
     cached = parsed.data;
   }
   return cached;

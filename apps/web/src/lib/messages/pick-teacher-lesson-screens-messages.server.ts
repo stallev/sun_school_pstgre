@@ -7,7 +7,14 @@ import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import { formatPlural } from "@/lib/messages/plural";
 import { assertSerializableMessages } from "@/lib/messages/assert-serializable-messages";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
+import { formatLessonDisplaySubtitle, isDefaultLessonTitle } from "@/lib/lesson/format-lesson-display-title";
 import { PUPIL_GRAMMATICAL_GENDER } from "@/lib/person/resolve-pupil-grammatical-gender";
+
+const lessonSubtitleTemplates = (teacher: Dictionary) => ({
+  withDate: getMessage(teacher, "lesson.detail.subtitle_with_date"),
+  withTitle: getMessage(teacher, "lesson.detail.subtitle_with_title"),
+  ordinalOnly: getMessage(teacher, "lesson.detail.subtitle_ordinal"),
+});
 
 const fill = (template: string, values: Record<string, string | number>): string =>
   Object.entries(values).reduce(
@@ -32,6 +39,8 @@ export const pickTeacherLessonScreensMessages = (
   locale: AppLocale,
 ): TeacherLessonScreensMessages => {
   const messageLocale = appLocaleToMessageLocale(locale);
+  const ordinalShortTemplate = getMessage(teacher, "lesson.list.ordinal_short");
+  const subtitleTemplates = lessonSubtitleTemplates(teacher);
 
   return {
   listTitle: getMessage(teacher, "lesson.list.title"),
@@ -57,12 +66,41 @@ export const pickTeacherLessonScreensMessages = (
     fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal }),
   listCheckFraction: (checked, total) =>
     fill(getMessage(teacher, "lesson.list.check_fraction"), { checked, total }),
+  listProgressFraction: (checked, total) =>
+    fill(getMessage(teacher, "lesson.list.progress_fraction"), { checked, total }),
   listReviewBadge: getMessage(teacher, "lesson.list.review_badge"),
   listReviewSubline: getMessage(teacher, "lesson.list.review_subline"),
   emptyVersesTitle: getMessage(teacher, "lesson.verses_page.empty_title"),
   emptyVersesDescription: getMessage(teacher, "lesson.verses_page.empty_description"),
   lessonCardTitle: (ordinal, title) =>
-    fill(getMessage(teacher, "lesson.detail.card_title"), { n: ordinal, title }),
+    formatLessonDisplaySubtitle(
+      ordinal,
+      title,
+      null,
+      locale,
+      subtitleTemplates,
+      ordinalShortTemplate,
+    ),
+  lessonDisplaySubtitle: (ordinal, title, dateLabel) =>
+    formatLessonDisplaySubtitle(
+      ordinal,
+      title,
+      dateLabel,
+      locale,
+      subtitleTemplates,
+      ordinalShortTemplate,
+    ),
+  lessonLeadLine: (leadName) =>
+    fill(getMessage(teacher, "lesson.detail.lead_line"), { lead: leadName }),
+  listRowTitle: (ordinal, title) =>
+    formatLessonDisplaySubtitle(
+      ordinal,
+      title,
+      null,
+      locale,
+      subtitleTemplates,
+      ordinalShortTemplate,
+    ),
   lessonMetaLine: (ordinal, dateLabel, leadName) =>
     fill(getMessage(teacher, "lesson.detail.meta_line"), {
       n: ordinal,
@@ -110,16 +148,13 @@ export const pickTeacherLessonScreensMessages = (
   checkStubBack: getMessage(teacher, "lesson.form.back_lesson"),
   usedInLessons: getMessage(teacher, "lesson.verses_page.used_in"),
   versesLessonsPrefix: getMessage(teacher, "lesson.verses_page.lessons_prefix"),
+  versesSortLabel: getMessage(teacher, "lesson.verses_page.sort_label"),
+  versesSortByBible: getMessage(teacher, "lesson.verses_page.sort_by_bible"),
+  versesSortByLessons: getMessage(teacher, "lesson.verses_page.sort_by_lessons"),
   versesNotUsed: getMessage(teacher, "lesson.verses_page.not_used"),
   lessonUsageLink: (ordinal, title) => {
     const trimmed = title.trim();
-    const shortOrdinal = fill(getMessage(teacher, "lesson.list.ordinal_short"), { n: ordinal });
-    const normalize = (value: string) => value.trim().toLowerCase();
-    if (
-      normalize(trimmed) === normalize(shortOrdinal) ||
-      normalize(trimmed) === `урок ${ordinal}` ||
-      normalize(trimmed) === `lesson ${ordinal}`
-    ) {
+    if (isDefaultLessonTitle(trimmed, ordinal, locale, ordinalShortTemplate)) {
       return fill(getMessage(teacher, "lesson.verses_page.usage_link_only"), { n: ordinal });
     }
     return fill(getMessage(teacher, "lesson.verses_page.usage_link"), { n: ordinal, title: trimmed });
@@ -148,13 +183,15 @@ export const pickTeacherLessonScreensMessages = (
   },
   todayLessonHeading: (ordinal, dateLabel) =>
     fill(getMessage(teacher, "lesson.today.card_heading"), { n: ordinal, date: dateLabel }),
-  todayLessonSubline: (title, verseRefsLabel) =>
-    verseRefsLabel
-      ? fill(getMessage(teacher, "lesson.today.card_subline_with_verses"), {
-          title,
-          verses: verseRefsLabel,
-        })
-      : fill(getMessage(teacher, "lesson.today.card_subline"), { title }),
+  todayLessonSubline: (ordinal, title, verseRefsLabel) => {
+    if (verseRefsLabel) {
+      return verseRefsLabel;
+    }
+    if (isDefaultLessonTitle(title, ordinal, locale, ordinalShortTemplate)) {
+      return "";
+    }
+    return title.trim();
+  },
   todayIncompleteLabel: getMessage(teacher, "lesson.today.incomplete_label"),
   todayContinueCheck: getMessage(teacher, "lesson.today.continue_check"),
   todayCheckedStudentsLabel: getMessage(teacher, "lesson.today.checked_students_label"),

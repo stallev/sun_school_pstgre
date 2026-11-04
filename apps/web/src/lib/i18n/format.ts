@@ -62,6 +62,18 @@ export function formatNumber(
   return new Intl.NumberFormat(resolveIntlLocale(locale), options).format(value);
 }
 
+/** One decimal place via `formatNumber` (ADR-019 §4 п. 3 — no `toFixed` in UI). */
+export function formatDecimalOne(
+  value: number,
+  locale: MessageLocale | AppLocale,
+): string {
+  const rounded = Math.round(value * 10) / 10;
+  return formatNumber(rounded, locale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+}
+
 export function formatPercent(
   value: number,
   locale: MessageLocale | AppLocale,

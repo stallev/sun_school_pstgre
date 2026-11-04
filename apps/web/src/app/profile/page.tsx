@@ -56,8 +56,10 @@ const ProfilePage = async () => {
   const { uid } = await requireSession();
   const policy = await loadSessionPolicyContext();
   const prisma = await getPrisma();
-  const profile = await loadOwnProfile(prisma, uid);
-  const openDeletionRequest = await loadOwnDeletionRequest(prisma, uid);
+  const [profile, openDeletionRequest] = await Promise.all([
+    loadOwnProfile(prisma, uid),
+    loadOwnDeletionRequest(prisma, uid),
+  ]);
 
   const locale = await getUiLocale();
   const [authDict, common] = await Promise.all([getDictionary(locale, "auth"), getDictionary(locale, "common")]);

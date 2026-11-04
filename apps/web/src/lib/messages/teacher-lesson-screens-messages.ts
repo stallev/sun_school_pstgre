@@ -26,11 +26,15 @@ export type TeacherLessonScreensMessages = {
   emptyLessonsAction: string;
   listOrdinalShort: (ordinal: number) => string;
   listCheckFraction: (checked: number, total: number) => string;
+  listProgressFraction: (checked: number, total: number) => string;
   listReviewBadge: string;
   listReviewSubline: string;
   emptyVersesTitle: string;
   emptyVersesDescription: string;
   lessonCardTitle: (ordinal: number, title: string) => string;
+  lessonDisplaySubtitle: (ordinal: number, title: string, dateLabel: string) => string;
+  lessonLeadLine: (leadName: string) => string;
+  listRowTitle: (ordinal: number, title: string) => string;
   lessonMetaLine: (ordinal: number, dateLabel: string, leadName: string) => string;
   checkSectionTitle: string;
   actionContinueCheck: string;
@@ -68,6 +72,9 @@ export type TeacherLessonScreensMessages = {
   checkStubBack: string;
   usedInLessons: string;
   versesLessonsPrefix: string;
+  versesSortLabel: string;
+  versesSortByBible: string;
+  versesSortByLessons: string;
   versesNotUsed: string;
   lessonUsageLink: (ordinal: number, title: string) => string;
   unassignedTitle: string;
@@ -77,7 +84,7 @@ export type TeacherLessonScreensMessages = {
   todayPageSubtitle: (group: string, year: string) => string;
   todayGreeting: (name: string, part: "morning" | "afternoon" | "evening") => string;
   todayLessonHeading: (ordinal: number, dateLabel: string) => string;
-  todayLessonSubline: (title: string, verseRefsLabel: string | null) => string;
+  todayLessonSubline: (ordinal: number, title: string, verseRefsLabel: string | null) => string;
   todayIncompleteLabel: string;
   todayContinueCheck: string;
   todayCheckedStudentsLabel: string;

@@ -143,12 +143,14 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
                 actionPath="/school"
                 hiddenFields={periodHiddenFields}
                 dateFieldCopy={getFormDateFieldCopy(commonDict, locale)}
+                isPeriodApplied={data.periodFilter.mode !== "year"}
               />
               <SchoolGroupsTable
                 rows={data.groupRows}
                 messages={schoolMessages}
                 percentTemplate={messages.formatPercent}
                 averageTemplate={messages.formatAverage}
+                formatLocale={messages.formatLocale}
               />
               <section className="mt-8 space-y-2">
                 <SectionTitle as="h2" className="text-lg">

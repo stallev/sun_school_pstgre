@@ -1,9 +1,8 @@
 import { AUDIT_ENTITY_TYPE, USER_ROLE, type AuditEntityType } from "@sunschool/domain";
 import { ContentText } from "@/components/atoms/ContentText";
-import { AuditHistoryItem } from "@/components/admin/AuditEntryRow";
+import { AuditHistoryItem } from "@/components/admin/AuditHistoryItem";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { getEntityHistory } from "@/data/audit/get-entity-history";
-import { resolveAuditActionLabel } from "@/data/audit/audit-resolve-labels.server";
 import { requireActiveUser, requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
@@ -63,7 +62,6 @@ export const EntityHistoryList = async ({
               key={entry.id}
               entry={entry}
               occurredLabel={formatOccurred(entry.occurredAtIso)}
-              actionLabel={resolveAuditActionLabel(adminDict, entry.action)}
             />
           ))}
         </ul>

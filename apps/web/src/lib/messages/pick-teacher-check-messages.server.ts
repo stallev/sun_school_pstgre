@@ -1,7 +1,9 @@
 import "server-only";
 
+import type { AppLocale } from "@sunschool/domain";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import { formatLessonDisplaySubtitle } from "@/lib/lesson/format-lesson-display-title";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 
 export const pickTeacherCheckMessages = (
@@ -15,6 +17,7 @@ export const pickTeacherCheckMessages = (
   linkLesson: getMessage(teacher, "lesson.form.back_lesson"),
   correctionBanner: getMessage(teacher, "check.correction_banner"),
   progressLabel: getMessage(teacher, "check.progress"),
+  progressFraction: getMessage(teacher, "check.progress_fraction"),
   pupilsToggle: getMessage(teacher, "check.pupils_toggle"),
   pupilsListLabel: getMessage(teacher, "check.pupils_list"),
   pupilIndex: getMessage(teacher, "check.pupil_index"),
@@ -65,6 +68,7 @@ export const pickTeacherCheckMessages = (
   scoreNotRated: getMessage(teacher, "check.score_not_rated"),
   willSubmitLater: getMessage(teacher, "check.will_submit_later"),
   verseScaleHint: getMessage(teacher, "check.verse_scale_hint"),
+  termHintAriaLabel: getMessage(common, "term_hint.aria_label"),
   choirSingingHint: getMessage(common, "glossary.choir_singing.hint"),
   saveStatusSaved: getMessage(teacher, "check.save_status_saved"),
   saveStatusUnsaved: getMessage(teacher, "check.save_status_unsaved"),
@@ -123,3 +127,23 @@ export const pickTeacherCheckMessages = (
   tableOpenPupilAria: getMessage(teacher, "check.table.open_pupil_aria"),
   tableProgressHeader: getMessage(teacher, "check.table.progress_header"),
 });
+
+export const buildLessonCheckDescription = (
+  teacher: Dictionary,
+  locale: AppLocale,
+  ordinal: number,
+  title: string,
+  dateLabel: string,
+): string =>
+  formatLessonDisplaySubtitle(
+    ordinal,
+    title,
+    dateLabel,
+    locale,
+    {
+      withDate: getMessage(teacher, "lesson.detail.subtitle_with_date"),
+      withTitle: getMessage(teacher, "lesson.detail.subtitle_with_title"),
+      ordinalOnly: getMessage(teacher, "lesson.detail.subtitle_ordinal"),
+    },
+    getMessage(teacher, "lesson.list.ordinal_short"),
+  );

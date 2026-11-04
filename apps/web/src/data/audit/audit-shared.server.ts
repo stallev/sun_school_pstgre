@@ -1,6 +1,7 @@
 import "server-only";
 
 import {
+  AUDIT_ACTION,
   AUDIT_ENTITY_TYPE,
   type AuditAction,
   type AuditEntityType,
@@ -18,7 +19,17 @@ export type AuditLogFilter = {
   entityType?: AuditEntityType;
   action?: AuditAction;
   entityId?: string;
+  /** When false (default), hide seed.run and analytics.snapshot_created. */
+  showSystem?: boolean;
 };
+
+export const AUDIT_SYSTEM_HIDDEN_ACTIONS: readonly AuditAction[] = [
+  AUDIT_ACTION.SEED_RUN,
+  AUDIT_ACTION.ANALYTICS_SNAPSHOT_CREATED,
+];
+
+export const isHiddenSystemAuditAction = (action: string): boolean =>
+  (AUDIT_SYSTEM_HIDDEN_ACTIONS as readonly string[]).includes(action);
 
 export type AuditLogPage = {
   cursor?: string;
@@ -34,6 +45,12 @@ export type AuditLogEntryDto = {
   actorLabel: string;
   entityLabel: string;
   entityHref: string | null;
+  actionPhrase: string;
+  entityDisplay: string;
+  entityIdTitle: string;
+  changeLines: string[];
+  isSystemEntry: boolean;
+  technicalRecordJson: string | null;
   reason: string | null;
   oldValueText: string | null;
   newValueText: string | null;
@@ -75,6 +92,9 @@ export function buildAuditWhere(filter: AuditLogFilter): Prisma.AuditLogWhereInp
   if (filter.actorUserId) where.actorUserId = filter.actorUserId;
   if (filter.entityType) where.entityType = filter.entityType;
   if (filter.action) where.action = filter.action;
+  else if (filter.showSystem !== true) {
+    where.action = { notIn: [...AUDIT_SYSTEM_HIDDEN_ACTIONS] };
+  }
   if (filter.entityId) where.entityId = filter.entityId;
   return where;
 }

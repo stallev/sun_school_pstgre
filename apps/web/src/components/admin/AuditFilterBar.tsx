@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { AUDIT_ACTION, AUDIT_ENTITY_TYPE } from "@sunschool/domain";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { CustomLink } from "@/components/ui/custom-link";
 import { FormDateField } from "@/components/ui/form-date-field";
 import { FormSelect } from "@/components/ui/form-select";
@@ -17,6 +19,7 @@ type AuditFilterBarProps = {
     actor: string;
     entityType: string;
     action: string;
+    showSystem: boolean;
   };
   actorOptions: ActorOption[];
   dateFieldCopy: FormDateFieldCopy;
@@ -29,12 +32,16 @@ type AuditFilterBarProps = {
     all: string;
     submit: string;
     reset: string;
+    showSystem: string;
     entityTypeLabels: Record<string, string>;
     actionLabels: Record<string, string>;
   };
 };
 
-export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: AuditFilterBarProps) => (
+export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: AuditFilterBarProps) => {
+  const [showSystem, setShowSystem] = useState(values.showSystem);
+
+  return (
   <form
     method="get"
     action="/audit"
@@ -101,6 +108,17 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         triggerClassName="max-w-none"
       />
     </div>
+    <div className="flex items-center gap-2 md:col-span-2 lg:col-span-3">
+      <Checkbox
+        id="audit-show-system"
+        checked={showSystem}
+        onCheckedChange={(checked) => setShowSystem(checked === true)}
+      />
+      {showSystem ? <input type="hidden" name="showSystem" value="1" /> : null}
+      <Label htmlFor="audit-show-system" className="font-normal">
+        {labels.showSystem}
+      </Label>
+    </div>
     <div className="flex flex-wrap items-end gap-2 md:col-span-2 lg:col-span-3">
       <Button type="submit" className="min-h-11">{labels.submit}</Button>
       <CustomLink
@@ -111,4 +129,5 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
       </CustomLink>
     </div>
   </form>
-);
+  );
+};

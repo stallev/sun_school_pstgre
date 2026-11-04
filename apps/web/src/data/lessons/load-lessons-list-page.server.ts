@@ -7,6 +7,7 @@ import { userHasAdminRole } from "@/data/access/access-admin-guards.server";
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { calendarDateFromIso } from "@/data/school/calendar-date";
 import { formatDisplayName } from "@/lib/person/format-display-name";
+import { lessonHasJournalGap } from "./lesson-journal-gap";
 import { lessonDateToIso } from "./lesson-shared.server";
 
 export type LessonsListGradeOption = { gradeId: string; name: string };
@@ -61,27 +62,53 @@ async function loadGradeOptions(
   return assignments.map((row) => ({ gradeId: row.grade.id, name: row.grade.name }));
 }
 
+const enrollmentOnLessonDateWhere = (
+  gradeId: string,
+  academicYearId: string,
+  lessonDate: Date,
+) => {
+  const date = calendarDateFromIso(lessonDateToIso(lessonDate));
+  return {
+    gradeId,
+    academicYearId,
+    startsOn: { lte: date },
+    OR: [{ endsOn: null }, { endsOn: { gte: date } }],
+  };
+};
+
 async function countPupilsOnLesson(
   db: PrismaClient,
   gradeId: string,
   academicYearId: string,
   lessonDate: Date,
 ): Promise<number> {
-  const date = calendarDateFromIso(lessonDateToIso(lessonDate));
   return db.enrollment.count({
-    where: {
-      gradeId,
-      academicYearId,
-      startsOn: { lte: date },
-      OR: [{ endsOn: null }, { endsOn: { gte: date } }],
-    },
+    where: enrollmentOnLessonDateWhere(gradeId, academicYearId, lessonDate),
   });
 }
+
+async function loadPupilIdsOnLesson(
+  db: PrismaClient,
+  gradeId: string,
+  academicYearId: string,
+  lessonDate: Date,
+): Promise<string[]> {
+  const rows = await db.enrollment.findMany({
+    where: enrollmentOnLessonDateWhere(gradeId, academicYearId, lessonDate),
+    select: { pupilId: true },
+  });
+  return rows.map((row) => row.pupilId);
+}
+
+export type LoadLessonsListPageOptions = {
+  journalGapOnly?: boolean;
+};
 
 export async function loadLessonsListPage(
   db: PrismaClient,
   actorUserId: string,
   preferredGradeId: string | null,
+  options: LoadLessonsListPageOptions = {},
 ): Promise<LessonsListPageData> {
   const organizationId = await getDefaultOrganizationId(db);
   const [isAdmin, year] = await Promise.all([
@@ -142,6 +169,40 @@ export async function loadLessonsListPage(
     }),
   );
 
+  let filteredLessons = lessons;
+  if (options.journalGapOnly) {
+    const checkedLessonIds = lessons.filter((row) => row.checkedCount > 0).map((row) => row.lessonId);
+    const checkRows =
+      checkedLessonIds.length > 0
+        ? await db.homeworkCheck.findMany({
+            where: { lessonId: { in: checkedLessonIds } },
+            select: { lessonId: true, pupilId: true },
+          })
+        : [];
+    const checkPupilsByLesson = new Map<string, string[]>();
+    for (const check of checkRows) {
+      const existing = checkPupilsByLesson.get(check.lessonId) ?? [];
+      existing.push(check.pupilId);
+      checkPupilsByLesson.set(check.lessonId, existing);
+    }
+
+    const gapLessonIds = new Set<string>();
+    await Promise.all(
+      lessons
+        .filter((row) => row.checkedCount > 0)
+        .map(async (row) => {
+          const lessonRow = lessonRows.find((candidate) => candidate.id === row.lessonId);
+          if (!lessonRow) return;
+          const enrolledPupilIds = await loadPupilIdsOnLesson(db, gradeId, year.id, lessonRow.lessonDate);
+          const checkPupilIds = checkPupilsByLesson.get(row.lessonId) ?? [];
+          if (lessonHasJournalGap(enrolledPupilIds, checkPupilIds, row.checkedCount)) {
+            gapLessonIds.add(row.lessonId);
+          }
+        }),
+    );
+    filteredLessons = lessons.filter((row) => gapLessonIds.has(row.lessonId));
+  }
+
   const yearClosed = year.status !== ACADEMIC_YEAR_STATUS.ACTIVE;
 
   return {
@@ -153,6 +214,6 @@ export async function loadLessonsListPage(
     yearClosed,
     isAdmin,
     canMutate: !yearClosed,
-    lessons,
+    lessons: filteredLessons,
   };
 }

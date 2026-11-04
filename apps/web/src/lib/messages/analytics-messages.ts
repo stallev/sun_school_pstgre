@@ -11,8 +11,6 @@ export type AnalyticsYearMessages = {
   insufficientForComparison: string;
   diffHigher: string;
   diffLower: string;
-  diffHigherAttendance: string;
-  diffLowerAttendance: string;
   diffSame: string;
   formatLocale: MessageLocale;
   none: string;
@@ -88,7 +86,9 @@ export type AnalyticsMessages = {
   rangeFrom: string;
   rangeTo: string;
   periodApply: string;
+  periodApplied: string;
   periodChipsLabel: string;
+  periodControlLabel: string;
   kpiAttendanceLabel: string;
   kpiAttendanceHint: string;
   kpiOutOfTen: string;
@@ -202,6 +202,7 @@ export type AnalyticsMessages = {
     columnGroup: string;
     columnTeachers: string;
     columnPupils: string;
+    pupilsSampleValue: string;
     columnAttendance: string;
     columnAverage: string;
     columnLastLesson: string;

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { APP_LOCALE } from "@sunschool/domain";
 
 import ruAnalytics from "@/lib/messages/ru/analytics.json";
-import { formatDateTime, formatNumber, formatDate, getPluralForms, plural } from "./format";
+import { formatDateTime, formatNumber, formatDate, formatDecimalOne, getPluralForms, plural } from "./format";
 
 describe("format", () => {
   it("formats dates with locale and school time zone", () => {
@@ -36,6 +36,11 @@ describe("format", () => {
     expect(formatNumber(6.3, "en", { minimumFractionDigits: 1, maximumFractionDigits: 1 })).toBe(
       "6.3",
     );
+  });
+
+  it("formatDecimalOne uses locale decimal separator", () => {
+    expect(formatDecimalOne(6.34, "ru")).toBe("6,3");
+    expect(formatDecimalOne(-0.1, "en")).toBe("-0.1");
   });
 
   it("formats ISO dates for display locale", () => {

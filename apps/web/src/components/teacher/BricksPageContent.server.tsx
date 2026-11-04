@@ -14,6 +14,7 @@ import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { pickTeacherBricksMessages } from "@/lib/messages/pick-teacher-bricks-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 
@@ -35,6 +36,7 @@ export const BricksPageContent = async ({ searchParams }: BricksPageContentProps
   const teacherDict = await getDictionary(locale, "teacher");
   const commonDict = await getDictionary(locale, "common");
   const messages = pickTeacherBricksMessages(teacherDict);
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
   const achievementMessages = pickTeacherAchievementsMessages(teacherDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
   const formError = getMessage(commonDict, "errors.form");
@@ -97,6 +99,8 @@ export const BricksPageContent = async ({ searchParams }: BricksPageContentProps
             totalToIssue={totalToIssue}
             negativeBalanceCount={negativeBalanceCount}
             messages={messages}
+            toIssueGlossary={glossaryUi.bricks_to_issue}
+            termHintAriaLabel={glossaryUi.termHintAriaLabel}
           />
           <BalanceTable
             gradeId={data.gradeId}

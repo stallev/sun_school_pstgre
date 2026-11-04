@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { CustomLink } from "@/components/ui/custom-link";
 import { NavBadge } from "@/components/shell/nav-badge";
 import { NavIcon } from "@/components/shell/NavIcon";
@@ -23,21 +24,48 @@ const badgeLabel = (template: string, count: number) => template.replace("{count
 const buildAccessibleLabel = (label: string, count: number, template: string) =>
   count > 0 ? `${label}, ${badgeLabel(template, count)}` : label;
 
-const sidebarRowClass = (isActive: boolean) =>
+const sidebarRowClass = (isActive: boolean, isDisabled: boolean) =>
   cn(
-    "flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight no-underline transition-[background-color,color] duration-100 hover:no-underline",
-    isActive
-      ? "bg-cobalt-soft font-bold text-cobalt-ink"
-      : "text-ink hover:bg-line/60",
+    "flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight no-underline transition-[background-color,color] duration-100",
+    isDisabled
+      ? "cursor-not-allowed text-muted"
+      : cn(
+          "hover:no-underline",
+          isActive
+            ? "bg-cobalt-soft font-bold text-cobalt-ink"
+            : "text-ink hover:bg-line/60",
+        ),
   );
 
-const railRowClass = (isActive: boolean) =>
+const railRowClass = (isActive: boolean, isDisabled: boolean) =>
   cn(
-    "relative mx-auto flex h-10 w-10 items-center justify-center rounded-lg text-base no-underline transition-[background-color,color] duration-100 hover:no-underline",
-    isActive
-      ? "bg-cobalt-soft text-cobalt-ink"
-      : "text-ink hover:bg-line/60",
+    "relative mx-auto flex h-10 w-10 items-center justify-center rounded-lg text-base no-underline transition-[background-color,color] duration-100",
+    isDisabled
+      ? "cursor-not-allowed text-muted"
+      : cn(
+          "hover:no-underline",
+          isActive
+            ? "bg-cobalt-soft text-cobalt-ink"
+            : "text-ink hover:bg-line/60",
+        ),
   );
+
+const DisabledNavRow = ({
+  className,
+  label,
+  title,
+  children,
+}: {
+  className: string;
+  label: string;
+  title: string;
+  children: ReactNode;
+}) => (
+  <span className={className} aria-disabled="true" title={title} role="link">
+    {children}
+    <span className="min-w-0 flex-1">{label}</span>
+  </span>
+);
 
 export const NavLinkRow = ({
   leaf,
@@ -48,8 +76,39 @@ export const NavLinkRow = ({
   collapsed = false,
 }: NavLinkRowProps) => {
   const messages = useShellMessages();
+  const isDisabled = leaf.navDisabled === true;
+  const disabledReason = messages.navDisabledReason;
   const slotId: NavBadgeSlotId | undefined = leaf.badgeSlotId;
   const count = slotId ? badgeCount : 0;
+
+  if (isDisabled) {
+    if (density === "sidebar" && collapsed) {
+      return (
+        <span
+          className={railRowClass(false, true)}
+          aria-disabled="true"
+          aria-label={`${leaf.label}. ${disabledReason}`}
+          title={disabledReason}
+          role="link"
+        >
+          <NavIcon navKey={leaf.key} className="size-5 text-muted" />
+        </span>
+      );
+    }
+    return (
+      <DisabledNavRow
+        className={cn(
+          density === "sidebar" ? sidebarRowClass(false, true) : cn(
+            "flex h-11 min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-base text-muted",
+          ),
+        )}
+        label={leaf.label}
+        title={disabledReason}
+      >
+        <NavIcon navKey={leaf.key} className="text-muted" />
+      </DisabledNavRow>
+    );
+  }
 
   if (density === "sidebar" && collapsed) {
     const accessibleLabel = buildAccessibleLabel(leaf.label, count, messages.badgeInQueue);
@@ -60,7 +119,7 @@ export const NavLinkRow = ({
         aria-label={accessibleLabel}
         title={leaf.label}
         onClick={onNavigate}
-        className={cn(railRowClass(isActive), "[&:focus-visible_.rail-label]:block")}
+        className={cn(railRowClass(isActive, false), "[&:focus-visible_.rail-label]:block")}
       >
         <NavIcon navKey={leaf.key} className={cn("size-5", !isActive && "text-ink-2")} />
         <span className="rail-label pointer-events-none absolute left-full top-1/2 z-10 ml-2 hidden -translate-y-1/2 whitespace-nowrap rounded-lg border border-line bg-surface px-2 py-1 text-sm font-medium text-ink shadow-float">
@@ -82,7 +141,7 @@ export const NavLinkRow = ({
         href={leaf.href}
         aria-current={isActive ? "page" : undefined}
         onClick={onNavigate}
-        className={sidebarRowClass(isActive)}
+        className={sidebarRowClass(isActive, false)}
       >
         <NavIcon navKey={leaf.key} className={!isActive ? "text-ink-2" : undefined} />
         <span className="min-w-0 flex-1">{leaf.label}</span>

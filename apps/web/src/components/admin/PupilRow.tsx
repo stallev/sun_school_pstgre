@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { ContentText } from "@/components/atoms/ContentText";
 import { PupilCardForm } from "@/components/admin/PupilCardForm";
 import { PupilRowActions } from "@/components/admin/PupilRowActions.client";
+import { Badge } from "@/components/ui/badge";
 import { StatusText } from "@/components/ui/status-text";
 import {
   Dialog,
@@ -54,7 +55,10 @@ export const PupilRow = ({
   return (
     <li className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0 space-y-1">
-        <ContentText className="font-medium text-ink hover:text-cobalt-ink">{row.displayName}</ContentText>
+        <div className="flex flex-wrap items-center gap-2">
+          <ContentText className="font-medium text-ink hover:text-cobalt-ink">{row.displayName}</ContentText>
+          {row.groupName ? <Badge variant="outline">{row.groupName}</Badge> : null}
+        </div>
         <ContentText tone="secondary" className="text-sm">{meta}</ContentText>
         <StatusText tone={row.hasEnrollableConsent ? "ok" : "warn"}>{consentLabel}</StatusText>
         {!row.isActive ? (

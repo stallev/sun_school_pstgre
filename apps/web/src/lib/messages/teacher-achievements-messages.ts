@@ -18,6 +18,8 @@ export type TeacherAchievementsMessages = {
   toastModeOff: string;
   todayMarkTitle: string;
   todayMarkOffText: string;
+  todayMarkOffAdminLead: string;
+  todayMarkEnableInSettings: string;
   todayMarkHint: string;
   todayMarkGroupSettings: string;
   manualAwardButton: string;

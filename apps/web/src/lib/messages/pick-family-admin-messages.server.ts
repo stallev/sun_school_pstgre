@@ -11,6 +11,8 @@ export type FamilyAdminMessages = {
   emptyDescription: string;
   createAction: string;
   unassignedNote: string;
+  unassignedExplanation: string;
+  unassignedAssignLink: string;
   noAdults: string;
   noChildren: string;
   listAdultSignedIn: string;
@@ -92,6 +94,8 @@ export const pickFamilyAdminMessages = (
   emptyDescription: getMessage(admin, "family.empty_description"),
   createAction: getMessage(admin, "family.create_action"),
   unassignedNote: getMessage(admin, "family.unassigned_note"),
+  unassignedExplanation: getMessage(admin, "family.unassigned_explanation"),
+  unassignedAssignLink: getMessage(admin, "family.unassigned_assign_link"),
   noAdults: getMessage(admin, "family.no_adults"),
   noChildren: getMessage(admin, "family.no_children"),
   listAdultSignedIn: getMessage(admin, "family.list_adult_signed_in"),

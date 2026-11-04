@@ -11,9 +11,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AnalyticsTableTermHeader } from "@/components/analytics/AnalyticsTableTermHeader";
 import { cn } from "@/lib/utils";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages, AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
+import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
 import { DiffBadge, type YearDiffMetric } from "./DiffBadge";
 import { formatYearMetricValue } from "./format-year-metric-value";
 import { YearTotalsCards } from "./YearTotalsCards";
@@ -37,6 +39,8 @@ type YearTotalsTableProps = {
   onSelectYear: (yearId: string) => void;
   messages: AnalyticsMessages;
   yearMessages: AnalyticsYearMessages;
+  columnKidsGlossary: GlossaryTerm;
+  termHintAriaLabel: string;
 };
 
 const METRIC_COLS: { key: YearDiffMetric; label: (m: AnalyticsYearMessages) => string }[] = [
@@ -53,6 +57,8 @@ export const YearTotalsTable = ({
   onSelectYear,
   messages,
   yearMessages,
+  columnKidsGlossary,
+  termHintAriaLabel,
 }: YearTotalsTableProps) => (
   <section className="mb-6">
     <SectionTitle as="h2" className="mb-1">
@@ -76,7 +82,11 @@ export const YearTotalsTable = ({
               {yearMessages.columnYear}
             </TableHead>
             <TableHead scope="col" className="px-3 py-3 text-right font-normal">
-              {yearMessages.columnKids}
+              <AnalyticsTableTermHeader
+                label={yearMessages.columnKids}
+                glossary={columnKidsGlossary}
+                termHintAriaLabel={termHintAriaLabel}
+              />
             </TableHead>
             <TableHead scope="col" className="px-3 py-3 text-right font-normal">
               {yearMessages.columnLessons}

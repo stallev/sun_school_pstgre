@@ -4,7 +4,10 @@ import { NAV_BADGE_SLOT } from "@/components/shell/nav-config";
 import { NavLinkRow } from "./nav-link-row";
 
 vi.mock("@/components/shell/shell-messages-provider.client", () => ({
-  useShellMessages: () => ({ badgeInQueue: "{count} in queue" }),
+  useShellMessages: () => ({
+    badgeInQueue: "{count} in queue",
+    navDisabledReason: "Teacher role in a group is required",
+  }),
 }));
 
 vi.mock("@/components/ui/custom-link", () => ({
@@ -70,5 +73,19 @@ describe("NavLinkRow sidebar density", () => {
     expect(html).toContain("rail-label");
     expect(html).toMatch(/focus-visible_.rail-label\]:block/);
     expect(html).toContain(">Today<");
+  });
+
+  it("disabled row is not a link and exposes reason", () => {
+    const html = renderToStaticMarkup(
+      <NavLinkRow
+        leaf={{ ...leaf, navDisabled: true }}
+        isActive={false}
+        density="sidebar"
+      />,
+    );
+    expect(html).toContain('aria-disabled="true"');
+    expect(html).toContain("text-muted");
+    expect(html).toContain('title="Teacher role in a group is required"');
+    expect(html).not.toContain('href="/today"');
   });
 });

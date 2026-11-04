@@ -1,13 +1,21 @@
 import { ContentText } from "@/components/atoms";
+import { fillMessage } from "@/lib/messages/fill-message";
 
 type CheckProgressProps = {
   checked: number;
   total: number;
   label: string;
+  fractionTemplate: string;
 };
 
-export const CheckProgress = ({ checked, total, label }: CheckProgressProps) => {
+export const CheckProgress = ({
+  checked,
+  total,
+  label,
+  fractionTemplate,
+}: CheckProgressProps) => {
   const ratio = total > 0 ? Math.round((checked / total) * 100) : 0;
+  const fractionLabel = fillMessage(fractionTemplate, { checked, total });
   return (
     <div className="mb-4 flex items-center gap-3">
       <div className="min-w-0 flex-1 space-y-2">
@@ -27,7 +35,7 @@ export const CheckProgress = ({ checked, total, label }: CheckProgressProps) => 
         </div>
       </div>
       <ContentText className="shrink-0 text-sm tabular-nums text-ink-2">
-        {checked} / {total}
+        {fractionLabel}
       </ContentText>
     </div>
   );

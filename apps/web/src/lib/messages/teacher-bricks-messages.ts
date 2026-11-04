@@ -11,6 +11,7 @@ export type TeacherBricksMessages = {
   needsAttention: string;
   actionIssue: string;
   actionCompensate: string;
+  rowActionsMenuLabel: string;
   emptyPupilsTitle: string;
   emptyPupilsDescription: string;
   emptyEarnedTitle: string;
@@ -38,6 +39,7 @@ export type TeacherBricksMessages = {
   balanceHint: string;
   summaryRule: string;
   summaryToIssue: string;
+  summaryToIssueAmount: string;
   summaryNegative: string;
   closeLabel: string;
 };

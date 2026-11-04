@@ -2,9 +2,7 @@ import { NumberDisplay } from "@/components/atoms/NumberDisplay";
 import { Card } from "@/components/ui/card";
 import { AnalyticsKpiMetricHeading } from "@/components/analytics/AnalyticsKpiMetricHeading";
 import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
-import { formatAnalyticsLessonsObserved } from "@/lib/analytics/analytics-metric-copy";
-import { formatAnalyticsAverage } from "@/lib/analytics/format-analytics-display";
-import { formatNumber } from "@/lib/i18n/format";
+import { formatAnalyticsLessonsObserved, formatAnalyticsMetricAverage } from "@/lib/analytics/analytics-metric-copy";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
 
@@ -12,26 +10,20 @@ type PupilAnalyticsKpiSectionProps = {
   view: PupilAnalyticsView;
   messages: PupilAnalyticsMessages;
   glossary: Pick<GlossaryMessages, "attendance" | "verses_per_lesson" | "test" | "notebook">;
+  termHintAriaLabel: string;
 };
 
 const formatAverageValue = (
   average: number | null,
   n: number,
   messages: PupilAnalyticsMessages,
-): string | null => {
-  if (average === null || n === 0) return null;
-  const formattedAverage = formatNumber(
-    Number(average.toFixed(1)),
-    messages.formatLocale,
-    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
-  );
-  return formatAnalyticsAverage(messages.formatAverage, formattedAverage);
-};
+): string | null => formatAnalyticsMetricAverage(average, n, messages);
 
 export const PupilAnalyticsKpiSection = ({
   view,
   messages,
   glossary,
+  termHintAriaLabel,
 }: PupilAnalyticsKpiSectionProps) => {
   const personalSuffix = view.isInMainSample ? "" : ` ${messages.personalMetricSuffix}`;
   const attendanceValue = view.attendanceCheckedLabel ?? messages.kpiEmpty;
@@ -59,6 +51,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiAttendanceLabel}${personalSuffix}`}
             glossary={glossary.attendance}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1">
@@ -70,6 +63,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiVersesLabel}${personalSuffix}`}
             glossary={glossary.verses_per_lesson}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
@@ -86,6 +80,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiTestLabel}${personalSuffix}`}
             glossary={glossary.test}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
@@ -103,6 +98,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiNotebookLabel}${personalSuffix}`}
             glossary={glossary.notebook}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">

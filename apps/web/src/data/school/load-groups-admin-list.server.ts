@@ -86,5 +86,7 @@ export async function loadGroupsAdminList(db: PrismaClient): Promise<GroupsAdmin
   };
 }
 
-export const formatGroupLanguageLabel = (language: AppLocale): string =>
-  language === APP_LOCALE.EN ? "EN" : "RU";
+export const formatGroupLanguageLabel = (
+  language: AppLocale,
+  labels: { ru: string; en: string },
+): string => (language === APP_LOCALE.EN ? labels.en : labels.ru);

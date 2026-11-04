@@ -207,5 +207,13 @@ async function loadEntityLabels(
 }
 
 export function resolveAuditActionLabel(adminDict: Dictionary, action: string): string {
-  return safeAdminMessage(adminDict, `audit.actions.${action}`) ?? action;
+  const auditSection = adminDict.audit;
+  if (auditSection && typeof auditSection === "object" && "actions" in auditSection) {
+    const actions = auditSection.actions;
+    if (actions && typeof actions === "object") {
+      const label = (actions as Record<string, unknown>)[action];
+      if (typeof label === "string") return label;
+    }
+  }
+  return action;
 }

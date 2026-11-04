@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ACADEMIC_YEAR_STATUS, ANALYTICS_METHODOLOGY_VERSION } from "@sunschool/domain";
 import type { Dictionary } from "@/lib/messages/dictionary-types";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
+import commonRu from "@/lib/messages/ru/common.json";
 import { DiffBadge } from "@/components/analytics/years/DiffBadge";
 import { KpiTiles } from "@/components/analytics/years/KpiTiles";
 import { MethodologyVersionNote } from "@/components/analytics/years/MethodologyVersionNote";
@@ -53,6 +55,7 @@ const GROUP_ROWS: YearTotalsTableRow[] = [
 
 export const AnalyticsYearsMatrix = ({ analyticsDictionary }: AnalyticsYearsMatrixProps) => {
   const messages = pickAnalyticsMessages(analyticsDictionary, "ru");
+  const glossaryUi = pickGlossaryUiMessages(commonRu);
   const [yearId, setYearId] = useState("2025");
   const [pupilYearId, setPupilYearId] = useState("2025");
   const [metric, setMetric] = useState<PupilYearMetric>("attendance");
@@ -93,6 +96,8 @@ export const AnalyticsYearsMatrix = ({ analyticsDictionary }: AnalyticsYearsMatr
         onSelectYear={setYearId}
         messages={messages}
         yearMessages={yearMessages}
+        columnKidsGlossary={glossaryUi.regularly_attend}
+        termHintAriaLabel={glossaryUi.termHintAriaLabel}
       />
       {selectedRow.totals && (
         <KpiTiles

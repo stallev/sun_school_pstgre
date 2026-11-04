@@ -10,6 +10,7 @@ import { DeletionTakeButton } from "@/components/admin/DeletionTakeButton.client
 import { StatusText } from "@/components/ui/status-text";
 import { CustomLink } from "@/components/ui/custom-link";
 import { countDeletionPlanTotals, type DeletionAdminRow } from "@/data/deletions/load-deletion-admin-list.server";
+import { formatDeletionRequestedByLine } from "@/lib/deletions/format-deletion-requested-by-line";
 import { formatDeletionDays, type AdminMessages } from "@/lib/messages/admin-messages";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
@@ -41,9 +42,10 @@ export const DeletionRequestCard = ({
   const executeDisabled =
     row.executeBlocked || row.status === DELETION_REQUEST_STATUS.NEW;
 
-  const requestedByLine = row.requestedBySelf
-    ? d.requestedBySelf
-    : d.requestedBy.replace("{name}", row.requestedByDisplayName);
+  const requestedByLine = formatDeletionRequestedByLine(row, {
+    requestedBy: d.requestedBy,
+    requestedByWithRole: d.requestedByWithRole,
+  });
 
   return (
     <li className="rounded-xl border border-line bg-surface p-4 sm:p-5">
@@ -61,13 +63,18 @@ export const DeletionRequestCard = ({
         <div className="text-right space-y-1">
           <StatusText tone={statusTone(row.status)}>{statusLabel}</StatusText>
           {isOpen ? (
-            <ContentText
-              className={`text-sm tabular-nums ${row.isOverdue ? "font-bold text-danger" : "text-ink-2"}`}
-            >
-              {row.isOverdue
-                ? formatDeletionDays(d.daysOverdue, row.daysRemaining)
-                : formatDeletionDays(d.daysLeft, row.daysRemaining)}
-            </ContentText>
+            row.isOverdue ? (
+              <div className="space-y-1">
+                <StatusText tone="danger">{d.statusOverdue}</StatusText>
+                <ContentText className="text-sm tabular-nums text-danger">
+                  {formatDeletionDays(d.daysOverdue, row.daysRemaining)}
+                </ContentText>
+              </div>
+            ) : (
+              <ContentText className="text-sm tabular-nums text-ink-2">
+                {formatDeletionDays(d.daysLeft, row.daysRemaining)}
+              </ContentText>
+            )
           ) : null}
           {row.takenByDisplayName ? (
             <ContentText tone="muted" className="text-xs">

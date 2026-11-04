@@ -33,9 +33,8 @@ export type SchoolGroupRow = {
   layerACount: number;
   totalPupils: number;
   attendancePercent: number | null;
-  scoreAverage: string;
+  scoreAverage: number | null;
   lastLessonStatus: "ok" | "warn" | "idle";
-  lastLessonLabel: string;
   lastLessonChecked: number;
   lastLessonTotal: number;
 };
@@ -73,13 +72,13 @@ export type SchoolAnalyticsPageData =
       attention: SchoolAttentionItem[];
     };
 
-const formatSchoolScoreAverage = (kpi: GroupAnalyticsSnapshot["kpi"]): string => {
+const computeSchoolScoreAverage = (kpi: GroupAnalyticsSnapshot["kpi"]): number | null => {
   const values = [kpi.versesAverage, kpi.testAverage, kpi.notebookAverage]
     .filter((score) => score.observationCount > 0 && score.average !== null)
     .map((score) => score.average as number);
-  if (values.length === 0) return "—";
+  if (values.length === 0) return null;
   const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
-  return mean.toFixed(1);
+  return Math.round(mean * 10) / 10;
 };
 
 async function countNegativeBrickBalances(
@@ -170,7 +169,7 @@ export async function loadSchoolAnalyticsPage(
       .map((a) => `${a.user.firstName} ${a.user.lastName}`.trim())
       .join(", ");
 
-    const scoreAverage = formatSchoolScoreAverage(snapshot.kpi);
+    const scoreAverage = computeSchoolScoreAverage(snapshot.kpi);
 
     const lastLesson = await db.lesson.findFirst({
       where: {
@@ -193,9 +192,6 @@ export async function loadSchoolAnalyticsPage(
     const checkedOnLast = lastLesson?.checks.length ?? 0;
     const lastLessonStatus =
       !lastLesson ? "idle" : checkedOnLast >= enrolled ? "ok" : "warn";
-    const lastLessonLabel = lastLesson
-      ? `${checkedOnLast}/${enrolled}`
-      : "—";
 
     groupRows.push({
       gradeId: grade.id,
@@ -210,7 +206,6 @@ export async function loadSchoolAnalyticsPage(
       attendancePercent: snapshot.kpi.attendancePercent,
       scoreAverage,
       lastLessonStatus,
-      lastLessonLabel,
       lastLessonChecked: checkedOnLast,
       lastLessonTotal: enrolled,
     });

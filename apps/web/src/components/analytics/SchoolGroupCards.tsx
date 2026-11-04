@@ -2,10 +2,14 @@ import { StatusText } from "@/components/ui/status-text";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
 import {
-  formatAnalyticsAverage,
   formatAnalyticsPercent,
 } from "@/lib/analytics/format-analytics-display";
+import {
+  formatSchoolGroupScoreAverage,
+  formatSchoolLastLessonLabel,
+} from "@/lib/analytics/analytics-metric-copy";
 import { fillMessage } from "@/lib/messages/fill-message";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 type SchoolGroupCardsProps = {
@@ -13,6 +17,7 @@ type SchoolGroupCardsProps = {
   messages: AnalyticsMessages["school"];
   percentTemplate: string;
   averageTemplate: string;
+  formatLocale: MessageLocale;
 };
 
 const attendanceLabel = (row: SchoolGroupRow, percentTemplate: string): string | null => {
@@ -25,18 +30,11 @@ export const SchoolGroupCards = ({
   messages,
   percentTemplate,
   averageTemplate,
+  formatLocale,
 }: SchoolGroupCardsProps) => (
   <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.groupsTableTitle}>
     {rows.map((row) => {
-      const lastLabel =
-        row.lastLessonStatus === "ok"
-          ? fillMessage(messages.lastLessonOk, { label: row.lastLessonLabel })
-          : row.lastLessonStatus === "warn"
-            ? fillMessage(messages.lastLessonWarn, {
-                checked: row.lastLessonChecked,
-                total: row.lastLessonTotal,
-              })
-            : messages.lastLessonIdle;
+      const lastLabel = formatSchoolLastLessonLabel(row, messages);
       const lastTone =
         row.lastLessonStatus === "ok" ? "ok" : row.lastLessonStatus === "warn" ? "warn" : "neutral";
       const rounded = row.attendancePercent === null ? null : Math.round(row.attendancePercent);
@@ -52,17 +50,21 @@ export const SchoolGroupCards = ({
               label: messages.columnPupils,
               value: (
                 <span className="tabular-nums">
-                  {row.layerACount}
-                  <span className="text-muted-foreground"> / {row.totalPupils}</span>
+                  {fillMessage(messages.pupilsSampleValue, {
+                    current: row.layerACount,
+                    total: row.totalPupils,
+                  })}
                 </span>
               ),
             },
             {
               label: messages.columnAverage,
-              value:
-                row.scoreAverage === "—"
-                  ? row.scoreAverage
-                  : formatAnalyticsAverage(averageTemplate, Number(row.scoreAverage)),
+              value: formatSchoolGroupScoreAverage(
+                row.scoreAverage,
+                averageTemplate,
+                formatLocale,
+                "—",
+              ),
             },
             {
               label: messages.columnAttendance,

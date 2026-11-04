@@ -40,7 +40,7 @@ import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-local
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickPupilAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
-import { pickGlossaryMessages } from "@/lib/messages/pick-glossary-messages";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 export type PupilAnalyticsPageProps = {
@@ -93,7 +93,9 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
   const commonDict = await getDictionary(locale, "common");
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickPupilAnalyticsMessages(analyticsDict, locale);
-  const glossary = pickGlossaryMessages(commonDict);
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
+  const glossary = glossaryUi;
+  const termHintAriaLabel = glossaryUi.termHintAriaLabel;
   const yearMessages = messages.years;
   const data = await loadPupilAnalyticsPage(
     await getPrisma(),
@@ -249,6 +251,7 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
           actionPath={`/analytics/pupils/${pupilId}`}
           hiddenFields={periodHiddenFields}
           dateFieldCopy={getFormDateFieldCopy(commonDict, locale)}
+          isPeriodApplied={data.periodFilter.mode !== "year"}
         />
       ) : null}
       {view ? (
@@ -277,7 +280,12 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
       {isActiveYear && view ? (
         <>
           <div className="mb-6">
-            <PupilAnalyticsKpiSection view={view} messages={messages} glossary={glossary} />
+            <PupilAnalyticsKpiSection
+              view={view}
+              messages={messages}
+              glossary={glossary}
+              termHintAriaLabel={termHintAriaLabel}
+            />
           </div>
           <PupilAchievementPanel
             actorUserId={actor.userId}

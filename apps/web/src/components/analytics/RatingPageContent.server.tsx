@@ -11,7 +11,7 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
-import { pickGlossaryMessages } from "@/lib/messages/pick-glossary-messages";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
@@ -34,7 +34,7 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
     getDictionary(locale, "common"),
   ]);
   const messages = pickAnalyticsMessages(analyticsDict, locale);
-  const glossary = pickGlossaryMessages(commonDict);
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
   const achievementMessages = pickTeacherAchievementsMessages(teacherDict);
   const ratingPageTitle =
@@ -76,6 +76,7 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
       <RatingPrivacyNote
         badgeLabel={getMessage(commonDict, "shell.nav.desc.rating")}
         hint={messages.rating.privacyNote}
+        termHintAriaLabel={glossaryUi.termHintAriaLabel}
       />
       {data.isAdmin ? (
         <SegmentedControlLinks
@@ -110,7 +111,8 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
         rows={data.rows}
         messages={messages.rating}
         showGroupColumn={data.scope === "school"}
-        metricGlossary={glossary.lesson_points}
+        metricGlossary={glossaryUi.lesson_points}
+        termHintAriaLabel={glossaryUi.termHintAriaLabel}
         achievementsUiEnabled={data.achievementsUiEnabled}
         achievementMessages={achievementMessages}
       />

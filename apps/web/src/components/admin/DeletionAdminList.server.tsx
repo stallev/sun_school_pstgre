@@ -14,6 +14,7 @@ import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { Dictionary, MessageLocale } from "@/lib/messages/get-dictionary";
+import { getMessage } from "@/lib/messages/get-dictionary";
 import { cn } from "@/lib/utils";
 
 type DeletionAdminListProps = {
@@ -36,7 +37,17 @@ export const DeletionAdminList = async ({
   const { tab: tabRaw } = await searchParams;
   const tab = parseDeletionListTab(tabRaw);
   const prisma = await getPrisma();
-  const rows = await loadDeletionAdminList(prisma, actor.userId, tab);
+  const commonDict = dictionaries.common;
+  if (!commonDict) {
+    throw new Error("Missing common dictionary for deletion list");
+  }
+  const rows = await loadDeletionAdminList(prisma, actor.userId, tab, {
+    deletedUserTemplate: getMessage(commonDict, "person.deleted_user"),
+    requesterNameFallback: messages.deletions.requesterNameFallback,
+    roleAdmin: messages.approvals.roleAdmin,
+    roleTeacher: messages.approvals.roleTeacher,
+    roleParent: messages.approvals.roleParent,
+  });
   const closeLabel = messages.form.cancel;
   const d = messages.deletions;
   const tabs = [

@@ -17,6 +17,7 @@ export const pickTeacherBricksMessages = (teacher: Dictionary): TeacherBricksMes
   needsAttention: getMessage(teacher, "bricks.needs_attention"),
   actionIssue: getMessage(teacher, "bricks.action_issue"),
   actionCompensate: getMessage(teacher, "bricks.action_compensate"),
+  rowActionsMenuLabel: getMessage(teacher, "bricks.row_actions_menu"),
   emptyPupilsTitle: getMessage(teacher, "bricks.empty_pupils_title"),
   emptyPupilsDescription: getMessage(teacher, "bricks.empty_pupils_description"),
   emptyEarnedTitle: getMessage(teacher, "bricks.empty_earned_title"),
@@ -44,6 +45,7 @@ export const pickTeacherBricksMessages = (teacher: Dictionary): TeacherBricksMes
   balanceHint: getMessage(teacher, "bricks.balance_hint"),
   summaryRule: getMessage(teacher, "bricks.summary_rule"),
   summaryToIssue: getMessage(teacher, "bricks.summary_to_issue"),
+  summaryToIssueAmount: getMessage(teacher, "bricks.summary_to_issue_amount"),
   summaryNegative: getMessage(teacher, "bricks.summary_negative"),
   closeLabel: getMessage(teacher, "bricks.close"),
 });

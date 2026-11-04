@@ -2,11 +2,13 @@
 
 import { Popover } from "@base-ui/react/popover";
 import { CircleHelp } from "lucide-react";
-import { useId, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const touchHitPadding =
   "relative after:absolute after:-inset-y-1 after:-inset-x-1";
+
+const POPUP_EDGE_THRESHOLD_PX = 160;
 
 let activeDismiss: (() => void) | null = null;
 
@@ -17,13 +19,16 @@ const dismissOtherHints = (except: (() => void) | null) => {
 type TermHintProps = {
   term: string;
   hint: string;
+  ariaLabel: string;
   className?: string;
 };
 
 /** UX-03 D-17 · ADR-018: «?» popover beside a domain term. */
-export const TermHint = ({ term, hint, className }: TermHintProps) => {
+export const TermHint = ({ term: _term, hint, ariaLabel, className }: TermHintProps) => {
   const popupId = useId();
+  const anchorRef = useRef<HTMLSpanElement>(null);
   const [open, setOpen] = useState(false);
+  const [align, setAlign] = useState<"start" | "end">("start");
 
   const close = () => setOpen(false);
 
@@ -37,13 +42,22 @@ export const TermHint = ({ term, hint, className }: TermHintProps) => {
     setOpen(next);
   };
 
+  useLayoutEffect(() => {
+    if (!open) return;
+    const anchor = anchorRef.current;
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    const spaceRight = window.innerWidth - rect.right;
+    setAlign(spaceRight < POPUP_EDGE_THRESHOLD_PX ? "end" : "start");
+  }, [open]);
+
   return (
-    <span className="relative inline-flex align-middle">
+    <span ref={anchorRef} className="relative inline-flex align-middle">
       <Popover.Root open={open} onOpenChange={handleOpenChange}>
         <Popover.Trigger
           nativeButton
           type="button"
-          aria-label={term}
+          aria-label={ariaLabel}
           aria-expanded={open}
           aria-controls={open ? popupId : undefined}
           className={cn(
@@ -55,7 +69,12 @@ export const TermHint = ({ term, hint, className }: TermHintProps) => {
           <CircleHelp className="size-4" aria-hidden />
         </Popover.Trigger>
         <Popover.Portal>
-          <Popover.Positioner side="bottom" align="start" sideOffset={8} collisionAvoidance={{ side: "flip" }}>
+          <Popover.Positioner
+            side="bottom"
+            align={align}
+            sideOffset={8}
+            collisionAvoidance={{ side: "flip", align: "shift" }}
+          >
             <Popover.Popup
               id={popupId}
               role="note"

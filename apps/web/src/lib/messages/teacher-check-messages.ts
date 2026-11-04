@@ -7,6 +7,7 @@ export type TeacherCheckMessages = {
   linkLesson: string;
   correctionBanner: string;
   progressLabel: string;
+  progressFraction: string;
   pupilsToggle: string;
   pupilsListLabel: string;
   pupilIndex: string;
@@ -57,6 +58,7 @@ export type TeacherCheckMessages = {
   scoreNotRated: string;
   willSubmitLater: string;
   verseScaleHint: string;
+  termHintAriaLabel: string;
   choirSingingHint: string;
   saveStatusSaved: string;
   saveStatusUnsaved: string;

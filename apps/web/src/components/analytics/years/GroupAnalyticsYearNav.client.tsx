@@ -4,6 +4,7 @@ import { ACADEMIC_YEAR_STATUS } from "@sunschool/domain";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
+import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
 import { useAnalyticsYearScope } from "./AnalyticsYearScope.client";
 import { YearStrip } from "./YearStrip";
 import { YearTotalsTable, type YearTotalsTableRow } from "./YearTotalsTable";
@@ -12,12 +13,16 @@ type GroupAnalyticsYearNavProps = {
   groupLabel: string;
   tableRows: readonly YearTotalsTableRow[];
   messages: AnalyticsMessages;
+  columnKidsGlossary: GlossaryTerm;
+  termHintAriaLabel: string;
 };
 
 export const GroupAnalyticsYearNav = ({
   groupLabel,
   tableRows,
   messages,
+  columnKidsGlossary,
+  termHintAriaLabel,
 }: GroupAnalyticsYearNavProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -63,6 +68,8 @@ export const GroupAnalyticsYearNav = ({
         onSelectYear={handleSelectYear}
         messages={messages}
         yearMessages={yearMessages}
+        columnKidsGlossary={columnKidsGlossary}
+        termHintAriaLabel={termHintAriaLabel}
       />
     </>
   );

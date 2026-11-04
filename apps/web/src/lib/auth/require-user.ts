@@ -16,16 +16,36 @@ import { getPrisma } from "@/lib/db.server";
  *   never with `'use cache'` (user data, ADR-002 §5).
  */
 
-/** Authoritative context of a user id, or `null` when the user no longer exists. */
-const loadPolicyContext = cache(async (userId: string): Promise<PolicySessionContext | null> => {
+/** Authoritative app_user row for policy + shell (one SELECT per request via `cache`). */
+export const loadAppUserPolicyRow = cache(async (userId: string) => {
   const db = await getPrisma();
-  const user = await db.appUser.findUnique({
+  return db.appUser.findUnique({
     where: { id: userId },
-    select: { id: true, status: true, roles: { select: { role: true } } },
+    select: {
+      id: true,
+      status: true,
+      firstName: true,
+      lastName: true,
+      middleName: true,
+      roles: { select: { role: true } },
+    },
   });
-  if (!user) return null;
-  return { userId: user.id, status: user.status, roles: user.roles.map((entry) => entry.role) };
 });
+
+const toPolicyContext = (
+  user: NonNullable<Awaited<ReturnType<typeof loadAppUserPolicyRow>>>,
+): PolicySessionContext => ({
+  userId: user.id,
+  status: user.status,
+  roles: user.roles.map((entry) => entry.role),
+});
+
+/** Authoritative context of a user id, or `null` when the user no longer exists. */
+export async function loadPolicyContext(userId: string): Promise<PolicySessionContext | null> {
+  const user = await loadAppUserPolicyRow(userId);
+  if (!user) return null;
+  return toPolicyContext(user);
+}
 
 /** AZ-D1: no session → `/login`. */
 export async function requireSession(): Promise<{ uid: string }> {

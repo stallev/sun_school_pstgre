@@ -2,6 +2,7 @@ import "server-only";
 
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import { getPluralForms, type PluralForms } from "@/lib/messages/plural";
 
 export type AchievementsCatalogMessages = {
   pageTitle: string;
@@ -21,6 +22,9 @@ export type AchievementsCatalogMessages = {
   activePenalties: string;
   tierLabels: [string, string, string];
   tierLengthPoints: string;
+  tierAfterLessons: string;
+  tierLessonsPlural: PluralForms;
+  ruleHowCounted: string;
   toastSaved: string;
   toastRecalculated: string;
   toastToggled: string;
@@ -75,6 +79,9 @@ export const pickAchievementsCatalogMessages = (
     getMessage(admin, "achievements.tier_gold"),
   ],
   tierLengthPoints: getMessage(admin, "achievements.tier_length_points"),
+  tierAfterLessons: getMessage(admin, "achievements.tier_after_lessons"),
+  tierLessonsPlural: getPluralForms(admin, "achievements.tier_lessons"),
+  ruleHowCounted: getMessage(admin, "achievements.rule_how_counted"),
   toastSaved: getMessage(admin, "achievements.toast_saved"),
   toastRecalculated: getMessage(admin, "achievements.toast_recalculated"),
   toastToggled: getMessage(admin, "achievements.toast_toggled"),

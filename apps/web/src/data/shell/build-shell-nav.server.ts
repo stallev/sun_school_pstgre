@@ -1,11 +1,13 @@
 import "server-only";
 import { USER_ROLE, type UserRole } from "@sunschool/domain";
-import { readFeaturesAchievementsEnabled } from "@/data/achievements/achievement-feature.server";
-import { readFeaturesParentsEnabled } from "@/data/families/family-feature.server";
+import { readProductFeatureFlags } from "@/data/shell/read-product-feature-flags.server";
 import { getPrisma } from "@/lib/db.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/get-dictionary";
-import { filterNavItemsByRealAccess } from "@/lib/shell/filter-nav-by-route-access";
+import {
+  applyPreviewNavAccess,
+  countReachableNavLeaves,
+} from "@/lib/shell/filter-nav-by-route-access";
 import {
   isResolvedNavGroup,
   resolveNavItems,
@@ -45,10 +47,7 @@ export const buildShellNav = async (
 
   const shellRole = resolveShellRole(context.roles);
   const prisma = await getPrisma();
-  const [achievementsEnabled, parentsEnabled] = await Promise.all([
-    readFeaturesAchievementsEnabled(prisma),
-    readFeaturesParentsEnabled(prisma),
-  ]);
+  const { achievementsEnabled, parentsEnabled } = await readProductFeatureFlags(prisma);
   const stripKeys: string[] = [];
   if (!achievementsEnabled) stripKeys.push("achievements");
   if (!parentsEnabled) stripKeys.push("family", "child", "child-data");
@@ -66,15 +65,15 @@ export const buildShellNav = async (
     const previewRole = viewAsRole === USER_ROLE.TEACHER ? USER_ROLE.TEACHER : USER_ROLE.ADMIN;
     let previewItems = resolveNavItems(previewRole, getLabel);
     if (stripKeys.length > 0) previewItems = stripFeatureNavItems(previewItems, stripKeys);
-    previewItems = filterNavItemsByRealAccess(previewItems, context.roles);
+    previewItems = applyPreviewNavAccess(previewItems, context.roles);
     previewNavItems = previewItems;
-    if (previewItems.length === 0 && previewRole === USER_ROLE.TEACHER) {
+    if (countReachableNavLeaves(previewItems) === 0 && previewRole === USER_ROLE.TEACHER) {
       previewNavEmptyHint = getMessage(common, "shell.preview_nav_empty_teacher");
     }
   } else if (showDevSwitcher) {
     let teacherPreview = resolveNavItems(USER_ROLE.TEACHER, getLabel);
     if (stripKeys.length > 0) teacherPreview = stripFeatureNavItems(teacherPreview, stripKeys);
-    previewNavItems = filterNavItemsByRealAccess(teacherPreview, context.roles);
+    previewNavItems = applyPreviewNavAccess(teacherPreview, context.roles);
   }
 
   return {

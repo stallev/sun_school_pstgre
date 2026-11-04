@@ -12,6 +12,7 @@ import { parseAuditLogFilter } from "@/data/audit/parse-audit-filters.server";
 import { resolveAuditActionLabel } from "@/data/audit/audit-resolve-labels.server";
 import { requireActiveUser, requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { formatDateTime } from "@/lib/i18n/format";
 import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
@@ -26,11 +27,11 @@ export type AuditPageProps = {
     entityType?: string;
     action?: string;
     cursor?: string;
+    showSystem?: string;
   }>;
 };
 
-export const AuditPageContent = async ({
-  searchParams }: AuditPageProps) => {
+export const AuditPageContent = async ({ searchParams }: AuditPageProps) => {
   await connection();
   await requireRole(USER_ROLE.ADMIN);
   const actor = await requireActiveUser();
@@ -58,13 +59,14 @@ export const AuditPageContent = async ({
   const actorOptions = await loadAuditActorOptions(prisma, deletedUserTemplate);
 
   const formatOccurred = (iso: string) =>
-    new Intl.DateTimeFormat(locale, {
+    formatDateTime(iso, {
+      locale,
       day: "numeric",
       month: "short",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    }).format(new Date(iso));
+    });
 
   const entityTypeLabels = Object.fromEntries(
     Object.values(AUDIT_ENTITY_TYPE).map((type) => [
@@ -85,6 +87,7 @@ export const AuditPageContent = async ({
   if (params.actor) query.set("actor", params.actor);
   if (params.entityType) query.set("entityType", params.entityType);
   if (params.action) query.set("action", params.action);
+  if (params.showSystem === "1") query.set("showSystem", "1");
   if (nextCursor) query.set("cursor", nextCursor);
   const nextHref = nextCursor ? `/audit?${query.toString()}` : null;
 
@@ -102,6 +105,7 @@ export const AuditPageContent = async ({
             actor: params.actor ?? "",
             entityType: params.entityType ?? "",
             action: params.action ?? "",
+            showSystem: params.showSystem === "1",
           }}
           actorOptions={actorOptions}
           dateFieldCopy={getFormDateFieldCopy(commonDict, locale)}
@@ -114,6 +118,7 @@ export const AuditPageContent = async ({
             all: getMessage(adminDict, "audit.filter_all"),
             submit: getMessage(adminDict, "audit.filter_submit"),
             reset: getMessage(adminDict, "audit.filter_reset"),
+            showSystem: getMessage(adminDict, "audit.filter_show_system"),
             entityTypeLabels,
             actionLabels,
           }}
@@ -127,12 +132,13 @@ export const AuditPageContent = async ({
           <AuditTable
             entries={entries}
             formatOccurred={formatOccurred}
-            formatAction={(action) => resolveAuditActionLabel(adminDict, action)}
             columnOccurred={getMessage(adminDict, "audit.column_occurred")}
             columnActor={getMessage(adminDict, "audit.column_actor")}
             columnAction={getMessage(adminDict, "audit.column_action")}
             columnEntity={getMessage(adminDict, "audit.column_entity")}
             columnDetails={getMessage(adminDict, "audit.column_details")}
+            technicalRecordLabel={getMessage(adminDict, "audit.technical_record")}
+            reasonPrefix={getMessage(adminDict, "audit.reason_prefix")}
           />
         )}
         {nextHref ? (
@@ -144,4 +150,3 @@ export const AuditPageContent = async ({
     </AdminMessagesProvider>
   );
 };
-

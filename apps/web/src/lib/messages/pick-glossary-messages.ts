@@ -8,6 +8,9 @@ export const GLOSSARY_TERM_KEYS = [
   "test",
   "notebook",
   "review_lesson",
+  "regular_lesson",
+  "planned_lesson",
+  "bricks_to_issue",
   "bricks",
   "choir_singing",
   "bonus",
@@ -24,6 +27,10 @@ export type GlossaryTerm = {
 
 export type GlossaryMessages = Record<GlossaryTermKey, GlossaryTerm>;
 
+export type GlossaryUiMessages = GlossaryMessages & {
+  termHintAriaLabel: string;
+};
+
 export const pickGlossaryMessages = (common: Dictionary): GlossaryMessages => {
   const pickTerm = (key: GlossaryTermKey): GlossaryTerm => ({
     term: getMessage(common, `glossary.${key}.term`),
@@ -37,6 +44,9 @@ export const pickGlossaryMessages = (common: Dictionary): GlossaryMessages => {
     test: pickTerm("test"),
     notebook: pickTerm("notebook"),
     review_lesson: pickTerm("review_lesson"),
+    regular_lesson: pickTerm("regular_lesson"),
+    planned_lesson: pickTerm("planned_lesson"),
+    bricks_to_issue: pickTerm("bricks_to_issue"),
     bricks: pickTerm("bricks"),
     choir_singing: pickTerm("choir_singing"),
     bonus: pickTerm("bonus"),
@@ -44,3 +54,8 @@ export const pickGlossaryMessages = (common: Dictionary): GlossaryMessages => {
     lesson_points: pickTerm("lesson_points"),
   };
 };
+
+export const pickGlossaryUiMessages = (common: Dictionary): GlossaryUiMessages => ({
+  ...pickGlossaryMessages(common),
+  termHintAriaLabel: getMessage(common, "term_hint.aria_label"),
+});

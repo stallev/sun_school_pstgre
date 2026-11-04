@@ -55,6 +55,7 @@ export const AchievementsCatalogLab = async () => {
       penalties={SAMPLE_PENALTIES}
       messages={messages}
       dictionaries={{ admin, common }}
+      messageLocale="ru"
     />
   );
 };
