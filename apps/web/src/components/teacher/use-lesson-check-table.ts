@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { correctCheckAction, savePartialCheckAction } from "@/actions/checks";
+import { correctCheckAction, finishLessonTableCheckAction, savePartialCheckAction } from "@/actions/checks";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
 import { isCorrectionMode } from "@/data/checks/sequential-check-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -93,6 +93,7 @@ export const useLessonCheckTable = ({
   const [conflictIds, setConflictIds] = useState<ReadonlySet<string>>(() => new Set());
   const [busyCells, setBusyCells] = useState<ReadonlySet<string>>(() => new Set());
   const [pending, startTransition] = useTransition();
+  const [finishing, startFinish] = useTransition();
 
   const updatedAtRef = useRef<Map<string, string | null>>(new Map());
   const mutationTailRef = useRef<Map<string, Promise<void>>>(new Map());
@@ -105,6 +106,8 @@ export const useLessonCheckTable = ({
 
   const readOnly = !canMutate && !(yearClosed && isAdmin);
   const lessonCorrection = lessonStatus === LESSON_STATUS.CHECK_COMPLETED;
+  const canFinish = !readOnly && lessonStatus === LESSON_STATUS.HELD;
+  const cellsBusy = pending || busyCells.size > 0;
 
   const stats = useMemo(() => {
     let present = 0;
@@ -259,6 +262,35 @@ export const useLessonCheckTable = ({
     [lessonCorrection, lessonStatus, patchRow, readOnly, recomputePoints, rows, runQueuedMutation],
   );
 
+  const finishCheck = useCallback(() => {
+    if (!canFinish || cellsBusy || finishing) return;
+    startFinish(async () => {
+      try {
+        const result = await finishLessonTableCheckAction({ lessonId });
+        if (!result.ok) {
+          toast.error(
+            result.message ? resolveMessageKey(dictionaries, result.message) : messages.formError,
+            { duration: PRODUCT_TOAST_DURATION_MS },
+          );
+          return;
+        }
+        toast.success(messages.finishedTitle, { duration: PRODUCT_TOAST_DURATION_MS });
+        router.refresh();
+      } catch {
+        toast.error(messages.formError, { duration: PRODUCT_TOAST_DURATION_MS });
+      }
+    });
+  }, [
+    canFinish,
+    cellsBusy,
+    dictionaries,
+    finishing,
+    lessonId,
+    messages.finishedTitle,
+    messages.formError,
+    router,
+  ]);
+
   return {
     rows: filteredRows,
     stats,
@@ -271,6 +303,10 @@ export const useLessonCheckTable = ({
     busyCells,
     readOnly,
     lessonCorrection,
+    canFinish,
+    finishing,
+    cellsBusy,
+    finishCheck,
     pending,
     mutatePresent: (pupilId: string, present: boolean) =>
       mutateField(pupilId, `${pupilId}:present`, () => ({ present }), { present }),

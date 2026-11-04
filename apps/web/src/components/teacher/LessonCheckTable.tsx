@@ -19,6 +19,7 @@ import { CheckProgress } from "@/components/teacher/CheckProgress";
 import { LessonCheckTableCards } from "@/components/teacher/LessonCheckTableCards";
 import { LessonCheckTableFilters } from "@/components/teacher/LessonCheckTableFilters";
 import { LessonCheckTableRow } from "@/components/teacher/LessonCheckTableRow";
+import { LessonTableFinishCheck } from "@/components/teacher/LessonTableFinishCheck";
 import { findLessonTopScorerIds } from "@/lib/check/lesson-top-scorers";
 import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-display";
 import { useLessonCheckTable } from "@/components/teacher/use-lesson-check-table";
@@ -110,7 +111,25 @@ export const LessonCheckTable = ({
         description={subtitle}
         actions={
           <>
-            <Button render={<CustomLink href={`/lessons/${data.lessonId}/check`} />}>
+            {table.canFinish ? (
+              <LessonTableFinishCheck
+                label={messages.completeCheck}
+                pendingLabel={messages.tableFinishing}
+                finishing={table.finishing}
+                disabled={table.cellsBusy}
+                onFinish={table.finishCheck}
+                note={messages.tableAchievementsNote}
+                hintTerm={messages.tableAchievementsTerm}
+                hint={messages.tableAchievementsHint}
+                hintAriaLabel={fillMessage(messages.termHintAriaLabel, {
+                  term: messages.tableAchievementsTerm,
+                })}
+              />
+            ) : null}
+            <Button
+              variant={table.canFinish ? "outline" : "default"}
+              render={<CustomLink href={`/lessons/${data.lessonId}/check`} />}
+            >
               <CheckIcon className="size-4" aria-hidden />
               {messages.tableLinkSequential}
             </Button>

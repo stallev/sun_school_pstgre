@@ -5,6 +5,8 @@ import { LessonCheckTable } from "@/components/teacher/LessonCheckTable";
 import type { LessonTablePageData } from "@/data/checks/load-lesson-table-page.server";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 
+const tableHarness = vi.hoisted(() => ({ canFinish: false }));
+
 vi.mock("@/components/teacher/use-lesson-check-table", () => ({
   useLessonCheckTable: () => ({
     stats: { present: 1, unchecked: 0, checked: 1, total: 1 },
@@ -19,6 +21,10 @@ vi.mock("@/components/teacher/use-lesson-check-table", () => ({
     busyCells: new Set<string>(),
     conflictIds: new Set<string>(),
     lessonCorrection: false,
+    canFinish: tableHarness.canFinish,
+    finishing: false,
+    cellsBusy: false,
+    finishCheck: () => {},
   }),
 }));
 
@@ -33,6 +39,12 @@ const messages = {
   tableGroupTotal: "Баллы",
   linkLesson: "К уроку",
   tableLinkSequential: "Последовательная проверка",
+  completeCheck: "Завершить проверку",
+  tableFinishing: "Завершаем…",
+  tableAchievementsNote: "Достижения начислятся после завершения",
+  tableAchievementsTerm: "достижения",
+  tableAchievementsHint: "Подробнее про начисление.",
+  termHintAriaLabel: "Что значит «{term}»?",
   sheetOpen: "Печатная ведомость",
   sheetOpenAria: "Ведомость",
   emptyRosterTitle: "empty",
@@ -101,5 +113,22 @@ describe("LessonCheckTable (P26-T6)", () => {
     expect(html).toContain("Таблица всех оценок");
     expect(html).toContain("Урок 5 · 4 октября");
     expect(html).not.toContain("Урок 5 · Урок 5");
+    expect(html).not.toContain("Завершить проверку");
+  });
+
+  it("shows finish check while the lesson is still open", () => {
+    tableHarness.canFinish = true;
+    const html = renderToStaticMarkup(
+      <LessonCheckTable
+        data={pageData}
+        lessonDescription="Урок 5 · 4 октября"
+        messages={messages}
+        dictionaries={{ teacher: {}, common: {} }}
+      />,
+    );
+    expect(html).toContain("Завершить проверку");
+    expect(html).toContain("Достижения начислятся после завершения");
+    expect(html).toContain("Что значит «достижения»?");
+    tableHarness.canFinish = false;
   });
 });
