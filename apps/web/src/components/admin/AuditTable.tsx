@@ -12,71 +12,75 @@ import type { AuditLogEntryDto } from "@/data/audit/audit-shared.server";
 type AuditTableProps = {
   entries: AuditLogEntryDto[];
   formatOccurred: (iso: string) => string;
-  formatAction: (action: string) => string;
   columnOccurred: string;
   columnActor: string;
   columnAction: string;
   columnEntity: string;
   columnDetails: string;
+  technicalRecordLabel: string;
+  reasonPrefix: string;
 };
 
 export const AuditTable = ({
   entries,
   formatOccurred,
-  formatAction,
   columnOccurred,
   columnActor,
   columnAction,
   columnEntity,
   columnDetails,
+  technicalRecordLabel,
+  reasonPrefix,
 }: AuditTableProps) => (
   <>
-  <ul className="space-y-3 lg:hidden">
-    {entries.map((entry) => (
-      <AuditEntryCard
-        key={entry.id}
-        entry={entry}
-        occurredLabel={formatOccurred(entry.occurredAtIso)}
-        actionLabel={formatAction(entry.action)}
-        columnOccurred={columnOccurred}
-        columnActor={columnActor}
-        columnEntity={columnEntity}
-        columnDetails={columnDetails}
-      />
-    ))}
-  </ul>
-  <div className="hidden overflow-hidden rounded-xl border border-line bg-surface lg:block">
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
-            {columnOccurred}
-          </TableHead>
-          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
-            {columnActor}
-          </TableHead>
-          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
-            {columnAction}
-          </TableHead>
-          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
-            {columnEntity}
-          </TableHead>
-          <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
-            {columnDetails}
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {entries.map((entry) => (
-          <AuditEntryRow
-            key={entry.id}
-            entry={entry}
-            occurredLabel={formatOccurred(entry.occurredAtIso)}
-            actionLabel={formatAction(entry.action)}
-          />
-        ))}
-      </TableBody>
-    </Table>
-  </div>
+    <ul className="space-y-3 lg:hidden">
+      {entries.map((entry) => (
+        <AuditEntryCard
+          key={entry.id}
+          entry={entry}
+          occurredLabel={formatOccurred(entry.occurredAtIso)}
+          columnOccurred={columnOccurred}
+          columnActor={columnActor}
+          columnEntity={columnEntity}
+          columnDetails={columnDetails}
+          technicalRecordLabel={technicalRecordLabel}
+          reasonPrefix={reasonPrefix}
+        />
+      ))}
+    </ul>
+    <div className="hidden overflow-hidden rounded-xl border border-line bg-surface lg:block">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+              {columnOccurred}
+            </TableHead>
+            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+              {columnActor}
+            </TableHead>
+            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+              {columnAction}
+            </TableHead>
+            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+              {columnEntity}
+            </TableHead>
+            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+              {columnDetails}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {entries.map((entry) => (
+            <AuditEntryRow
+              key={entry.id}
+              entry={entry}
+              occurredLabel={formatOccurred(entry.occurredAtIso)}
+              technicalRecordLabel={technicalRecordLabel}
+              reasonPrefix={reasonPrefix}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   </>
 );

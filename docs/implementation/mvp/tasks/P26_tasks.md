@@ -2,7 +2,7 @@
 
 **Тип:** Tasks  
 **Статус:** Canonical  
-**Версия:** 1.0  
+**Версия:** 1.1  
 **Дата:** 2026-11-04  
 **Волна:** P26  
 **Зависит от:** [`P26_phase_description.md`](../phases_tasks_descriptions/P26_phase_description.md), [`adr_019_view_as_menu_and_db_pool.md`](../../../prds/07_governance/adr_019_view_as_menu_and_db_pool.md), [`usability_audit_2026-11-04.md`](../../../reports/usability_audit_2026-11-04.md), [`sentry_issues_2026-11-04_30m.md`](../../../reports/sentry_issues_2026-11-04_30m.md), [`global_shell_spec.md`](../specs/global_shell_spec.md) §8, R-15, [`change_log_contract.md`](../contracts/change_log_contract.md) §4.1, [`analytics_screens_spec.md`](../specs/analytics_screens_spec.md) R-21…R-24, [`homework_check_flow_spec.md`](../specs/homework_check_flow_spec.md) R-19, [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) D-17, D-18, [`ui_states_contract.md`](../../../design/ui_states_contract.md) D23  
@@ -41,9 +41,9 @@ Tier T3: логика навигации по ролям в оболочке (S 
 
 Tier T2: чтение журнала (admin-only), форматирование записей; хранение и состав записи не меняются.
 
-- [ ] P26-T2 · T2 · Contract: [change log §4, §4.1](../contracts/change_log_contract.md) · ADR-019 §4 п. 2 · AZ журнала (admin)
+- [x] P26-T2 · T2 · Contract: [change log §4, §4.1](../contracts/change_log_contract.md) · ADR-019 §4 п. 2 · AZ журнала (admin)
       Files: `apps/web/src/components/admin/{AuditPageContent.server,AuditTable,AuditEntryRow,AuditEntryCard,AuditTechnicalRecord}.tsx`, `apps/web/src/data/audit/{audit-shared.server,audit-resolve-labels.server,map-audit-rows.server}.ts` (+ тесты), `apps/web/src/lib/messages/{ru,en}/admin.json` (`audit.actions.*`, `audit.entity_types.*`, `audit.details.*`), `apps/web/src/lib/messages/audit-dictionary-parity.test.ts`
-      Acceptance: действие — фраза из словаря («Исправил проверку ДЗ», «Подал заявку на доступ», «Система: сохранён снимок аналитики»); значения `audit.actions.*` и `audit.entity_types.*` в `ru` на русском, тест «нет английских значений в `ru`» и паритет с enum сохраняется; сущность — «тип · имя · контекст» (для проверки ДЗ — ученик и урок: «Проверка ДЗ · Иванов Артём · урок 5»), идентификатор — в подсказке/раскрытии, не в основном тексте; детали — список «что изменилось» («Присутствие: да», «Стих 1: 1», «Тетрадь: 9») из `old/new` с подписями полей из словаря, неизвестное поле — код как есть; полный JSON — в `<details>` «Техническая запись» (только admin; в мобильной карточке тоже); записи системы (`seed.run`, `analytics.snapshot_created`) помечены «Система» и скрыты фильтром «Показать системные» по умолчанию; даты — `formatDate`/`formatDateTime`; один компонент на файл, ≤ 140 строк
+      Acceptance: действие — фраза из словаря («Исправил проверку ДЗ», «Подал заявку на доступ», «Система: сохранён снимок аналитики»); значения `audit.actions.*` и `audit.entity_types.*` в `ru` на русском, тест «нет английских значений в `ru`» и паритет с enum сохраняется; инвариант ADR-019 §4 п. 2: `entity_types.seed` — «Начальные данные», `seed.run` — «запущены начальные данные»; сущность — «тип · имя · контекст» (для проверки ДЗ — ученик и урок: «Проверка ДЗ · Иванов Артём · урок 5»), идентификатор — в подсказке/раскрытии, не в основном тексте; детали — список «что изменилось» («Присутствие: да», «Стих 1: 1», «Тетрадь: 9») из `old/new` с подписями полей из словаря, неизвестное поле — код как есть; полный JSON — в `<details>` «Техническая запись» (только admin; в мобильной карточке тоже); записи системы (`seed.run`, `analytics.snapshot_created`) помечены «Система» и скрыты фильтром «Показать системные» по умолчанию; даты — `formatDate`/`formatDateTime`; один компонент на файл, ≤ 140 строк
       Paths: H [читаемый журнал: фраза, имя, список изменений] · N [неизвестное действие / поле → код как есть, страница не падает; нет имени (удалённый ученик) → «Удалённый ученик»; пустые детали → «—»; длинный JSON не ломает вёрстку] · S [журнал и «Техническая запись» — только admin (AZ без изменений); имена резолвятся после проверки прав; в человеческом виде нет данных, которых admin не видит сейчас]
 
 **CU DoD:** `node scripts/cu-verify.mjs` · тесты `audit-resolve-labels`, `map-audit-rows`, `audit-dictionary-parity`, рендер журнала
@@ -159,4 +159,5 @@ Tier T3: `packages/db` и `lib/auth` — sensitive zones; чтение прав 
 | Date | Change |
 |------|--------|
 | 2026-11-04 | v1.0 — Canonical (подготовка P26): CU1–CU10, Phase DoR audit; документы, ADR-019 и прототип обновлены до CU1 |
+| 2026-11-04 | v1.1 — P26-T2: инвариант русских подписей `seed` / `seed.run` (ADR-019 §4 п. 2) |
 | 2026-11-04 | CU1 Q-2: доступ к `/today`, `/lessons`, `/check` у admin — страничный `requireRole(TEACHER, ADMIN)` в `*PageContent.server.tsx`; `canVisitRoutePrefix` для `ACTIVE` не режет по роли; меню — карта page-guard в `filter-nav-by-route-access.ts`, не `route-table.ts` |

@@ -16,6 +16,7 @@ export function parseAuditLogFilter(params: {
   entityType?: string;
   action?: string;
   entityId?: string;
+  showSystem?: string;
 }): AuditLogFilter {
   const filter: AuditLogFilter = {};
   if (params.from) {
@@ -30,5 +31,6 @@ export function parseAuditLogFilter(params: {
   if (params.entityType && isAuditEntityType(params.entityType)) filter.entityType = params.entityType;
   if (params.action && isAuditAction(params.action)) filter.action = params.action;
   if (params.entityId) filter.entityId = params.entityId;
+  if (params.showSystem === "1") filter.showSystem = true;
   return filter;
 }

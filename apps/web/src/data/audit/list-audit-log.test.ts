@@ -12,8 +12,23 @@ const adminDict = {
   audit: {
     system_actor: "System",
     entity_pupil_erased: "Child (data erased)",
-    entity_types: { app_user: "User", pupil: "Pupil" },
+    deleted_pupil: "Deleted pupil",
+    system_action_phrase: "System: {action}",
+    entity_types: { app_user: "User", pupil: "Pupil", access_request: "Access request" },
     actions: { "access.request_approved": "Request approved" },
+    details: {
+      empty: "—",
+      present: "Attendance",
+      present_yes: "yes",
+      present_no: "no",
+      testScore: "Test",
+      notebookScore: "Notebook",
+      singing: "Singing",
+      comment: "Comment",
+      verse_line: "Verse {n}",
+      lesson_context: "lesson {n}",
+      score: "Score",
+    },
   },
 };
 const commonDict = { person: { deleted_user: "Deleted user #{ordinal}" } };
