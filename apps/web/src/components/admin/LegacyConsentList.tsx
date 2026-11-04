@@ -2,10 +2,12 @@ import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
 import { ExtendLegacyDeadlineDialog } from "@/components/admin/ExtendLegacyDeadlineDialog.client";
 import { LegacyConsentBadge } from "@/components/admin/LegacyConsentBadge";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { LegacyPendingRow } from "@/data/school/list-legacy-pending";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type LegacyConsentListProps = {
   deadlineOn: string | null;
@@ -16,6 +18,7 @@ type LegacyConsentListProps = {
   formError: string;
   closeLabel: string;
   messages: AdminMessages;
+  migratedHint: HintTerm;
 };
 
 export const LegacyConsentList = ({
@@ -27,6 +30,7 @@ export const LegacyConsentList = ({
   formError,
   closeLabel,
   messages,
+  migratedHint,
 }: LegacyConsentListProps) => {
   if (rows.length === 0) return null;
 
@@ -34,7 +38,14 @@ export const LegacyConsentList = ({
     <section className="space-y-3 rounded-xl border border-line bg-surface p-4" aria-labelledby="legacy-consent-list">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div className="space-y-1">
-          <SectionTitle id="legacy-consent-list">{messages.people.legacyListTitle}</SectionTitle>
+          <SectionTitle id="legacy-consent-list">
+            <TermLabel
+              term={nonEmptyTerm(migratedHint.term)}
+              hint={migratedHint.hint}
+              ariaLabel={migratedHint.term}
+              popoverSide="top"
+            />
+          </SectionTitle>
           <ContentText tone="secondary" className="text-sm">
             {messages.people.legacyListDescription}
           </ContentText>

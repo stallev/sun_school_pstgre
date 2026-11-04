@@ -2,7 +2,7 @@
 
 import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
 import { ContentText } from "@/components/atoms";
-import { TermHint } from "@/components/ui/term-hint";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
 
@@ -70,14 +70,15 @@ export const CheckVerseField = ({
     <div className="space-y-2 py-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1">
-          <ContentText className="font-medium text-ink">{label}</ContentText>
           {showVerseScaleHint && verseScaleHint && termHintAriaLabel ? (
-            <TermHint
-              term={label}
+            <TermLabel
+              term={nonEmptyTerm(label)}
               hint={verseScaleHint}
               ariaLabel={fillMessage(termHintAriaLabel, { term: label })}
             />
-          ) : null}
+          ) : (
+            <ContentText className="font-medium text-ink">{label}</ContentText>
+          )}
         </div>
         {trailing}
       </div>

@@ -13,6 +13,7 @@ import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { formatYearContext } from "@/lib/messages/admin-messages";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
@@ -26,6 +27,7 @@ export const GroupsPageContent = async () => {
     getDictionary(locale, "common"),
   ]);
   const adminMessages = pickAdminMessages(adminDict);
+  const groupLanguageHint = pickAdminHintsSubset(adminDict, ["group_language"] as const).group_language;
   const list = await loadGroupsAdminList(prisma);
   const dictionaries = { admin: adminDict, common: commonDict };
   const formError = getMessage(commonDict, "errors.form");
@@ -57,7 +59,13 @@ export const GroupsPageContent = async () => {
         ) : (
           <div className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
             {list.groups.map((row) => (
-              <GroupCard key={row.gradeId} row={row} messages={adminMessages} uiLocale={locale} />
+              <GroupCard
+                key={row.gradeId}
+                row={row}
+                messages={adminMessages}
+                uiLocale={locale}
+                groupLanguageHint={groupLanguageHint}
+              />
             ))}
           </div>
         )}

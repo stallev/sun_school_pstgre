@@ -40,7 +40,6 @@
       "many": "lessons",
       "other": "lessons"
     },
-    "tier_after_lessons": "{prefix}after {count} {lessons} → +{points} bricks",
     "rule_how_counted": "How it is counted",
     "reward_dialog_create": "New achievement",
     "reward_dialog_edit": "Edit achievement",
@@ -98,7 +97,24 @@
     "group_points_condition_series": "{length} in a row",
     "group_points_condition_accumulation": "{length} in total",
     "group_points_condition_event": "Each recital",
-    "group_points_condition_once": "Once"
+    "group_points_condition_once": "Once",
+    "tier_after_condition": "{prefix}after {condition} → {bricks}",
+    "tier_points": {
+      "one": "point",
+      "few": "points",
+      "many": "points",
+      "other": "points"
+    },
+    "tier_bricks": {
+      "one": "brick",
+      "few": "bricks",
+      "many": "bricks",
+      "other": "bricks"
+    },
+    "rules_note_series_lead": "one streak awards each tier once; after a break, tiers can be earned again.",
+    "rules_note_overview_in_series": "do not count in verse and test streaks.",
+    "rules_note_tail": "Point changes apply only to future awards. Achievement bonuses do not feed rules — One hundred bricks counts lesson points only.",
+    "rules_note_overview_term": "Review lessons"
   },
   "settings": {
     "page_subtitle": "Shared for the whole school: interface language and time zone.",
@@ -137,6 +153,8 @@
     "consent_version": "Consent version",
     "waiting_days": "Waiting {count} days",
     "submitted_today": "Submitted today",
+    "submitted_yesterday": "Submitted yesterday",
+    "submitted_on": "Submitted {date}",
     "approve_as_teacher": "Approve as teacher · {group}",
     "approve_as_admin": "Approve as administrator",
     "login_telegram": "Telegram",
@@ -174,7 +192,7 @@
     "registration_footer_note": "Signed in but did not give consent or submit a request. Removed automatically 30 days after first sign-in.",
     "filter_all": "All",
     "filter_active": "Active",
-    "filter_pending": "Pending",
+    "filter_pending": "Awaiting decision",
     "filter_registration": "Registration",
     "filter_rejected": "Rejected",
     "filter_disabled": "Disabled",
@@ -487,7 +505,9 @@
       "access.roles_changed": "Roles changed",
       "access.users_merged": "Access — Users merged",
       "achievement.awarded": "Achievement — Awarded",
-      "achievement.catalog_toggled": "Achievement — Catalog toggled",
+      "achievement.catalog_toggled": "Achievement catalog toggled",
+      "achievement.catalog_toggled_on": "Achievement enabled",
+      "achievement.catalog_toggled_off": "Achievement disabled",
       "achievement.catalog_upserted": "Achievement — Catalog upserted",
       "achievement.evaluated": "Achievement — Evaluated",
       "achievement.group_points_changed": "Achievement — Group points changed",
@@ -559,6 +579,7 @@
       "settings.timezone_changed": "Settings — Timezone changed"
     },
     "deleted_pupil": "Deleted pupil",
+    "admin_without_name": "Administrator (no name)",
     "system_action_phrase": "System: {action}",
     "technical_record": "Technical record",
     "reason_prefix": "Reason",
@@ -574,6 +595,8 @@
       "comment": "Comment",
       "verse_line": "Verse {n}",
       "lesson_context": "lesson {n}",
+      "lesson_unspecified": "lesson not specified",
+      "pupil_context": "Pupil: {name}",
       "score": "Score"
     }
   },
@@ -588,6 +611,9 @@
     "type_account": "User account",
     "type_child": "Child data",
     "requested_on": "requested on {date}",
+    "requested_today": "requested today",
+    "requested_yesterday": "requested yesterday",
+    "requested_by_role_email": "Requested by: {role} · {email}",
     "requested_by_self": "Requested by: the user",
     "requested_by": "Requested by: {name}",
     "requested_by_with_role": "Requested by: {name} · {role}",
@@ -670,8 +696,8 @@
     "unassigned_assign_link": "Assign a family",
     "no_adults": "No adults",
     "no_children": "No children",
-    "list_adult_signed_in": "signed in",
-    "list_adult_no_account": "no account",
+    "list_adult_signed_in": "can sign in",
+    "list_adult_no_account": "no sign-in",
     "list_no_consent": "no consent",
     "back_to_list": "All families",
     "created_label": "Created {date}",
@@ -747,5 +773,111 @@
     "first_name": "First name",
     "middle_name": "Middle name",
     "cancel": "Cancel"
+  },
+  "hints": {
+    "audit_system": {
+      "term": "System entries",
+      "hint": "Automatic actions: Bible translation load, password set. No person performed them"
+    },
+    "audit_entity_type": {
+      "term": "Object type",
+      "hint": "What was affected: pupil, lesson, request, achievement"
+    },
+    "audit_technical": {
+      "term": "Technical record",
+      "hint": "Full service payload for debugging. Visible to administrators only"
+    },
+    "consent_migrated": {
+      "term": "No consent (migrated)",
+      "hint": "Pupils from the legacy app without confirmed data consent. Consent must be collected"
+    },
+    "consent_paper": {
+      "term": "Paper consent",
+      "hint": "Consent was collected on paper, not via the electronic form"
+    },
+    "pupil_transfer": {
+      "term": "Transfer",
+      "hint": "Moves the pupil to another group. Grade history is kept"
+    },
+    "pupil_states": {
+      "term": "No group / Inactive",
+      "hint": "No group — not enrolled in the active year. Inactive — removed or not participating"
+    },
+    "approval_roles": {
+      "term": "Roles",
+      "hint": "Administrator runs the school. Teacher leads groups: lessons, homework checks, bricks"
+    },
+    "approval_groups": {
+      "term": "Groups (active year)",
+      "hint": "Groups a teacher can be assigned to after approval"
+    },
+    "consent_version": {
+      "term": "Consent version",
+      "hint": "Which consent text version was accepted at registration"
+    },
+    "user_statuses": {
+      "term": "Statuses",
+      "hint": "Registered — signed in, no request yet. Pending — request sent. Active — role granted"
+    },
+    "need_role": {
+      "term": "Needs: assign role",
+      "hint": "User approved but role not set yet — assign teacher or administrator"
+    },
+    "deletion_delete": {
+      "term": "Will delete",
+      "hint": "Data will be removed under school rules without recovery"
+    },
+    "deletion_anonymize": {
+      "term": "Will anonymize",
+      "hint": "Name becomes “Removed pupil”; records stay in school history"
+    },
+    "deletion_actions": {
+      "term": "Request actions",
+      "hint": "Take in progress — start handling. Execute — finish deletion or anonymization"
+    },
+    "family_login": {
+      "term": "Family login",
+      "hint": "Can log in — parent may use the app. No account — contact only"
+    },
+    "year_close": {
+      "term": "Close year",
+      "hint": "Teachers get read-only data for that year. Closing cannot be undone"
+    },
+    "year_close_reason": {
+      "term": "Reason (optional)",
+      "hint": "Will be recorded in the change log"
+    },
+    "year_totals_line": {
+      "term": "Year summary",
+      "hint": "Short totals: lessons, groups, and pupils in this school year"
+    },
+    "timezone": {
+      "term": "Time zone",
+      "hint": "Affects lesson times and timestamps. Past records are not recalculated"
+    },
+    "link_logins": {
+      "term": "Sign-in methods",
+      "hint": "Link Telegram and email to sign in either way. Otherwise you get two separate accounts"
+    },
+    "group_language": {
+      "term": "Group language",
+      "hint": "Bible translation and UI labels for this group"
+    },
+    "ach_cumulative": {
+      "term": "Cumulative",
+      "hint": "Counts all matching lessons, consecutive or not"
+    },
+    "ach_series": {
+      "term": "Streak",
+      "hint": "Matching lessons must be consecutive; a gap breaks the streak"
+    },
+    "ach_recalc": {
+      "term": "Recalculate achievements",
+      "hint": "Run after backdated edits. Does not create duplicates"
+    },
+    "ach_levels": {
+      "term": "Bronze / Silver / Gold",
+      "hint": "Reward tiers for the same achievement at different completion counts"
+    }
   }
 }

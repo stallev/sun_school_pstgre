@@ -12,6 +12,7 @@ import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-local
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickTeacherLessonFormMessages } from "@/lib/messages/pick-teacher-lesson-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
+import { pickTeacherHintsSubset } from "@/lib/messages/pick-teacher-hints-messages.server";
 
 export type VersesPageProps = {
   searchParams: Promise<{ gradeId?: string }>;
@@ -32,6 +33,7 @@ export const VersesPageContent = async ({ searchParams }: VersesPageProps) => {
   const teacherDict = await getDictionary(locale, "teacher");
   const commonDict = await getDictionary(locale, "common");
   const messages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
+  const versesOrderHint = pickTeacherHintsSubset(teacherDict, ["verses_order"] as const).verses_order;
   const pickerMessages = pickTeacherLessonFormMessages(teacherDict, appLocale);
 
   if (data.kind === "no_active_year") {
@@ -103,6 +105,8 @@ export const VersesPageContent = async ({ searchParams }: VersesPageProps) => {
           notUsed: messages.versesNotUsed,
           emptyTitle: messages.emptyVersesTitle,
           emptyDescription: messages.emptyVersesDescription,
+          versesOrderHint,
+          termHintAriaLabel: getMessage(commonDict, "term_hint.aria_label"),
         }}
       />
     </div>

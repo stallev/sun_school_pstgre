@@ -22,14 +22,9 @@ export const formatLessonDisplayDate = (
     month: "long",
   });
 
-/** Compact day·month for lesson list rows (prototype `l.d`). */
+/** Day + month name for lesson list rows (audit D-19, e.g. «4 октября»). */
 export const formatLessonListShortDate = (
   lessonDateIso: string,
   { locale, timeZone }: FormatLessonDisplayDateOptions,
 ): string =>
-  formatDateTime(`${lessonDateIso}T12:00:00.000Z`, {
-    locale,
-    timeZone,
-    day: "2-digit",
-    month: "2-digit",
-  });
+  formatLessonDisplayDate(lessonDateIso, { locale, timeZone });

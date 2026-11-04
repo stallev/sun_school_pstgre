@@ -1,5 +1,9 @@
 import type { PluralForms } from "@/lib/messages/plural";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import {
+  formatAnalyticsAxisNumber,
+  formatPercentAxisTick,
+} from "@/lib/analytics/chart-scale";
 import { formatDecimalOne, formatNumber, plural } from "@/lib/i18n/format";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
@@ -12,7 +16,7 @@ export const formatAnalyticsPercent = (template: string, rate: number): string =
   return fillMessage(template, { value: percent });
 };
 
-/** R-23: chart Y-axis — attendance 0–100 as `{value}%`; score axes use decimal comma. */
+/** R-23 / R-25: chart Y-axis — `formatNumber` only (comma in ru); percent via template. */
 export const formatAnalyticsChartAxisTick = (
   percentTemplate: string,
   rawValue: number,
@@ -20,9 +24,9 @@ export const formatAnalyticsChartAxisTick = (
   kind: "percent" | "score",
 ): string => {
   if (kind === "percent") {
-    return formatAnalyticsPercent(percentTemplate, rawValue / 100);
+    return formatPercentAxisTick(percentTemplate, rawValue, locale);
   }
-  return formatDecimalOne(rawValue, locale);
+  return formatAnalyticsAxisNumber(rawValue, locale);
 };
 
 export const formatAnalyticsAttendanceRate = (

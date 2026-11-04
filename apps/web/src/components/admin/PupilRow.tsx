@@ -17,6 +17,7 @@ import { formatPupilMeta } from "@/lib/admin/format-pupil-meta";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type PupilRowProps = {
   row: PupilListRow;
@@ -28,8 +29,12 @@ type PupilRowProps = {
   formError: string;
   closeLabel: string;
   messages: AdminMessages;
+  pupilTransferHint: HintTerm;
   historySlot?: ReactNode;
 };
+
+const shouldShowConsentStatus = (row: PupilListRow): boolean =>
+  !row.hasEnrollableConsent || (row.hasEnrollableConsent && !row.consentPaperActive);
 
 export const PupilRow = ({
   row,
@@ -41,14 +46,13 @@ export const PupilRow = ({
   formError,
   closeLabel,
   messages,
+  pupilTransferHint,
   historySlot,
 }: PupilRowProps) => {
   const [editOpen, setEditOpen] = useState(false);
-  const consentLabel = row.hasEnrollableConsent
-    ? row.consentPaperActive
-      ? messages.people.consentPaper
-      : messages.people.consentLegacy
-    : messages.people.consentMissing;
+  const consentLabel = !row.hasEnrollableConsent
+    ? messages.people.consentMissing
+    : messages.people.consentLegacy;
 
   const meta = formatPupilMeta(messages, row);
 
@@ -60,7 +64,9 @@ export const PupilRow = ({
           {row.groupName ? <Badge variant="outline">{row.groupName}</Badge> : null}
         </div>
         <ContentText tone="secondary" className="text-sm">{meta}</ContentText>
-        <StatusText tone={row.hasEnrollableConsent ? "ok" : "warn"}>{consentLabel}</StatusText>
+        {shouldShowConsentStatus(row) ? (
+          <StatusText tone={row.hasEnrollableConsent ? "warn" : "warn"}>{consentLabel}</StatusText>
+        ) : null}
         {!row.isActive ? (
           <StatusText tone="neutral">{messages.people.statusInactive}</StatusText>
         ) : null}
@@ -74,6 +80,7 @@ export const PupilRow = ({
         uiLocale={uiLocale}
         formError={formError}
         closeLabel={closeLabel}
+        pupilTransferHint={pupilTransferHint}
         onEdit={() => setEditOpen(true)}
       />
       <Dialog open={editOpen} onOpenChange={setEditOpen}>

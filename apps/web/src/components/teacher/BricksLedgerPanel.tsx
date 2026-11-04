@@ -1,4 +1,3 @@
-import { ContentText } from "@/components/atoms/ContentText";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { LedgerList } from "@/components/teacher/LedgerList";
 import type { BrickLedgerEntryDto } from "@/data/bricks/bricks-shared.server";
@@ -16,10 +15,6 @@ export const BricksLedgerPanel = ({ pupilName, ledger, messages }: BricksLedgerP
     <SectionTitle>
       {pupilName ? fillMessage(messages.ledgerTitle, { name: pupilName }) : messages.ledgerSelectPupil}
     </SectionTitle>
-    {pupilName ? (
-      <LedgerList entries={ledger} messages={messages} />
-    ) : (
-      <ContentText className="text-muted-foreground">{messages.ledgerSelectPupil}</ContentText>
-    )}
+    {pupilName ? <LedgerList entries={ledger} messages={messages} /> : null}
   </section>
 );

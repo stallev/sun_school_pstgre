@@ -28,6 +28,8 @@ import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-local
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
+import { pickTeacherHintsSubset } from "@/lib/messages/pick-teacher-hints-messages.server";
 
 type SchoolAnalyticsRegionsProps = {
   searchParams: {
@@ -59,6 +61,12 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
   const messages = pickAnalyticsMessages(analyticsDict, locale);
   const yearMessages = messages.years;
   const schoolMessages = messages.school;
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
+  const schoolTableHints = pickTeacherHintsSubset(teacherDict, [
+    "regular_attendance",
+    "attendance_rate",
+    "average_score",
+  ] as const);
 
   if (data.kind === "forbidden" || data.kind === "not_found") notFound();
 
@@ -151,6 +159,12 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
                 percentTemplate={messages.formatPercent}
                 averageTemplate={messages.formatAverage}
                 formatLocale={messages.formatLocale}
+                tableHints={{
+                  regularAttendance: schoolTableHints.regular_attendance,
+                  attendanceRate: schoolTableHints.attendance_rate,
+                  averageScore: schoolTableHints.average_score,
+                }}
+                termHintAriaLabel={glossaryUi.termHintAriaLabel}
               />
               <section className="mt-8 space-y-2">
                 <SectionTitle as="h2" className="text-lg">

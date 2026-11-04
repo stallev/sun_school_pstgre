@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { ContentText } from "@/components/atoms/ContentText";
 import { EmptyState } from "@/components/patterns/EmptyState";
@@ -14,7 +14,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AnalyticsChartValueCell } from "@/components/analytics/AnalyticsChartValueCell";
+import { LineChart } from "@/components/analytics/LineChart";
 import type { AnalyticsChartPoint } from "@/data/analytics/analytics-compute.server";
+import {
+  computeVersesChartScale,
+  PERCENT_CHART_SCALE,
+  SCORE_0_10_CHART_SCALE,
+} from "@/lib/analytics/chart-scale";
 import {
   formatAnalyticsChartAxisTick,
   formatAnalyticsChartValue,
@@ -24,7 +31,7 @@ import {
 import type { AnalyticsChartSeriesMessages } from "@/lib/messages/analytics-messages";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { PluralForms } from "@/lib/messages/plural";
-import { LineChart } from "@/components/analytics/LineChart";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_MIN_CHART_POINTS = 2;
@@ -43,10 +50,26 @@ type ChartTableToggleProps = {
   formatLocale: MessageLocale;
   emptyLabel: string;
   yDomain?: [number, number];
-  /** When set (e.g. year axis), replaces the date column header in table mode. */
+  averagedOverHint?: HintTerm;
+  termHintAriaLabel?: string;
   xLabel?: string;
   minChartPoints?: number;
   className?: string;
+};
+
+const resolveChartScale = (
+  chartId: string,
+  valueKind: ChartTableToggleProps["valueKind"],
+  yDomain: [number, number] | undefined,
+  numericValues: number[],
+) => {
+  if (valueKind === "percent") return PERCENT_CHART_SCALE;
+  if (yDomain?.[1] === 10) return SCORE_0_10_CHART_SCALE;
+  if (chartId.includes("verses")) return computeVersesChartScale(numericValues);
+  if (yDomain) {
+    return { domain: yDomain, ticks: undefined as number[] | undefined };
+  }
+  return computeVersesChartScale(numericValues);
 };
 
 export const ChartTableToggle = ({
@@ -63,6 +86,8 @@ export const ChartTableToggle = ({
   formatLocale,
   emptyLabel,
   yDomain,
+  averagedOverHint,
+  termHintAriaLabel,
   xLabel,
   minChartPoints = DEFAULT_MIN_CHART_POINTS,
   className,
@@ -73,6 +98,18 @@ export const ChartTableToggle = ({
   );
 
   const formatDate = (iso: string) => formatAnalyticsShortDate(iso, locale);
+  const numericValues = useMemo(
+    () =>
+      points
+        .map((point) => point.value)
+        .filter((value): value is number => value !== null && Number.isFinite(value)),
+    [points],
+  );
+  const scale = useMemo(
+    () => resolveChartScale(chartId, valueKind, yDomain, numericValues),
+    [chartId, numericValues, valueKind, yDomain],
+  );
+
   const formatValue = (point: AnalyticsChartPoint) =>
     valueKind === "percent"
       ? point.value === null
@@ -89,17 +126,21 @@ export const ChartTableToggle = ({
 
   const validPoints = points.filter((point) => point.value !== null);
   const hasChart = validPoints.length >= minChartPoints;
-  const yAxisTickFormatter =
-    valueKind === "percent"
-      ? (value: number) => formatAnalyticsChartAxisTick(percentTemplate, value, formatLocale, "percent")
-      : yDomain
-        ? (value: number) => formatAnalyticsChartAxisTick(percentTemplate, value, formatLocale, "score")
-        : undefined;
+  const yAxisTickFormatter = (value: number) =>
+    formatAnalyticsChartAxisTick(
+      percentTemplate,
+      value,
+      formatLocale,
+      valueKind === "percent" ? "percent" : "score",
+    );
 
   const handleToggle = (table: boolean) => {
     setShowTable(table);
     sessionStorage.setItem(storageKey, table ? "table" : "chart");
   };
+
+  const showAveragedHint =
+    valueKind === "chart" && averagedOverHint && termHintAriaLabel && validPoints.length > 0;
 
   return (
     <Card className={cn("flex h-full min-w-0 flex-col gap-3 overflow-visible p-3", className)}>
@@ -110,7 +151,6 @@ export const ChartTableToggle = ({
         <div className="flex gap-1">
           <Button
             type="button"
-           
             variant="outline"
             className={showTable ? undefined : "border-line-strong bg-surface font-medium"}
             aria-pressed={!showTable}
@@ -120,7 +160,6 @@ export const ChartTableToggle = ({
           </Button>
           <Button
             type="button"
-           
             variant="outline"
             className={showTable ? "border-line-strong bg-surface font-medium" : undefined}
             aria-pressed={showTable}
@@ -131,40 +170,55 @@ export const ChartTableToggle = ({
         </div>
       </div>
       <div className="mt-4 min-h-0 flex-1">
-      {!hasChart ? (
-        <EmptyState
-          title={messages.insufficientDataTitle}
-          description={messages.insufficientDataDescription}
-        />
-      ) : showTable ? (
-        <Table className="text-base">
-          <TableHeader>
-            <TableRow>
-              <TableHead scope="col">{xLabel ?? messages.columnDate}</TableHead>
-              <TableHead scope="col">{messages.columnValue}</TableHead>
-              <TableHead scope="col">{messages.columnObservations}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {validPoints.map((point) => (
-              <TableRow key={point.lessonId}>
-                <TableCell>{formatDate(point.lessonDate)}</TableCell>
-                <TableCell>{formatValue(point)}</TableCell>
-                <TableCell>{point.observationCount}</TableCell>
+        {!hasChart ? (
+          <EmptyState
+            title={messages.insufficientDataTitle}
+            description={messages.insufficientDataDescription}
+          />
+        ) : showTable ? (
+          <Table className="text-base">
+            <TableHeader>
+              <TableRow>
+                <TableHead scope="col">{xLabel ?? messages.columnDate}</TableHead>
+                <TableHead scope="col">{messages.columnValue}</TableHead>
+                <TableHead scope="col">{messages.columnObservations}</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <LineChart
-          points={points}
-          formatLabel={formatDate}
-          formatValue={formatValue}
-          yDomain={yDomain}
-          yAxisTickFormatter={yAxisTickFormatter}
-          ariaLabel={title}
-        />
-      )}
+            </TableHeader>
+            <TableBody>
+              {validPoints.map((point) => (
+                <TableRow key={point.lessonId}>
+                  <TableCell>{formatDate(point.lessonDate)}</TableCell>
+                  <TableCell>
+                    {showAveragedHint ? (
+                      <AnalyticsChartValueCell
+                        point={point}
+                        chartValueTemplate={chartValueTemplate}
+                        emptyLabel={emptyLabel}
+                        lessonsObservedForms={lessonsObservedForms}
+                        formatLocale={formatLocale}
+                        averagedOverHint={averagedOverHint}
+                        termHintAriaLabel={termHintAriaLabel}
+                      />
+                    ) : (
+                      formatValue(point)
+                    )}
+                  </TableCell>
+                  <TableCell>{point.observationCount}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <LineChart
+            points={points}
+            formatLabel={formatDate}
+            formatValue={formatValue}
+            yDomain={scale.domain}
+            yTicks={scale.ticks}
+            yAxisTickFormatter={yAxisTickFormatter}
+            ariaLabel={title}
+          />
+        )}
       </div>
       <ContentText className="mt-1 text-base text-muted">{methodology}</ContentText>
     </Card>

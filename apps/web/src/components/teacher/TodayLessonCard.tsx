@@ -3,8 +3,10 @@ import { ContentText, SectionTitle } from "@/components/atoms";
 import { Banner } from "@/components/patterns/Banner";
 import { Button } from "@/components/ui/button";
 import { CustomLink } from "@/components/ui/custom-link";
+import { CheckedStateProgressLabel } from "@/components/teacher/CheckedStateProgressLabel";
 import { LessonInlineProgress } from "@/components/teacher/LessonInlineProgress";
 import type { TodayFocalLesson } from "@/data/lessons/load-today-page.server";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
 type TodayLessonCardProps = {
@@ -13,6 +15,9 @@ type TodayLessonCardProps = {
   yearClosed: boolean;
   canMutate: boolean;
   messages: TeacherLessonScreensMessages;
+  checkedStateHint: HintTerm;
+  termHintAriaLabel: string;
+  progressCountsTemplate: string;
 };
 
 export const TodayLessonCard = ({
@@ -21,6 +26,9 @@ export const TodayLessonCard = ({
   yearClosed,
   canMutate,
   messages,
+  checkedStateHint,
+  termHintAriaLabel,
+  progressCountsTemplate,
 }: TodayLessonCardProps) => {
   const checkedCount = Math.min(lesson.checkedCount, lesson.totalPupils);
   const heading = messages.lessonDisplaySubtitle(
@@ -29,7 +37,7 @@ export const TodayLessonCard = ({
     lesson.lessonDateLabel,
   );
   const subline = messages.todayLessonSubline(lesson.ordinal, lesson.title, lesson.verseRefsLabel);
-  const progressLabel = messages.checkPartial(checkedCount, lesson.totalPupils);
+  const progressAriaLabel = messages.checkPartial(checkedCount, lesson.totalPupils);
 
   return (
     <article className="rounded-xl border border-line bg-surface p-4 sm:p-5">
@@ -45,11 +53,18 @@ export const TodayLessonCard = ({
           {subline}
         </ContentText>
       ) : null}
-      <div className="mt-5">
+      <div className="mt-5 space-y-2">
+        <CheckedStateProgressLabel
+          hint={checkedStateHint}
+          countsTemplate={progressCountsTemplate}
+          checked={checkedCount}
+          total={lesson.totalPupils}
+          termHintAriaLabel={termHintAriaLabel}
+        />
         <LessonInlineProgress
           checked={checkedCount}
           total={lesson.totalPupils}
-          label={progressLabel}
+          label={progressAriaLabel}
         />
       </div>
       <div className="mt-5 flex flex-wrap gap-2">

@@ -11,7 +11,9 @@ type AuditEntryCardProps = {
   columnActor: string;
   columnEntity: string;
   columnDetails: string;
-  technicalRecordLabel: string;
+  technicalRecordTerm: string;
+  technicalRecordHint: string;
+  technicalRecordHintAria: string;
   reasonPrefix: string;
 };
 
@@ -22,7 +24,9 @@ export const AuditEntryCard = ({
   columnActor,
   columnEntity,
   columnDetails,
-  technicalRecordLabel,
+  technicalRecordTerm,
+  technicalRecordHint,
+  technicalRecordHintAria,
   reasonPrefix,
 }: AuditEntryCardProps) => (
   <RecordCard
@@ -50,7 +54,9 @@ export const AuditEntryCard = ({
               reasonPrefix={reasonPrefix}
             />
             <AuditTechnicalRecord
-              summaryLabel={technicalRecordLabel}
+              term={technicalRecordTerm}
+              hint={technicalRecordHint}
+              hintAriaLabel={technicalRecordHintAria}
               json={entry.technicalRecordJson}
             />
           </>

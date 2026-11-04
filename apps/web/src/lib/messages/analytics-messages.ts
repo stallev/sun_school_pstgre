@@ -159,6 +159,7 @@ export type AnalyticsMessages = {
     title: string;
     missingRecords: string;
     missingChecked: string;
+    missingCheckedTail: string;
     lessonsLinkLabel: string;
     migrationDuplicates: string;
     adminSummary: string;

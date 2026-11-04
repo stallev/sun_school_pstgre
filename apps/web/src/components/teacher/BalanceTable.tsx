@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BricksLedgerPanel } from "@/components/teacher/BricksLedgerPanel";
+import { TeacherHintTableHead } from "@/components/teacher/TeacherHintTableHead";
 import { StatusText } from "@/components/ui/status-text";
 import {
   Table,
@@ -23,7 +24,14 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { BricksEarnedBonusLine } from "@/lib/achievements/format-bricks-bonus-line";
 import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { cn } from "@/lib/utils";
+
+type BricksColumnHints = {
+  collected: HintTerm;
+  issued: HintTerm;
+  left: HintTerm;
+};
 
 type BalanceTableProps = {
   gradeId: string;
@@ -33,6 +41,8 @@ type BalanceTableProps = {
   ledger: readonly BrickLedgerEntryDto[];
   defaultDate: string;
   messages: TeacherBricksMessages;
+  columnHints: BricksColumnHints;
+  termHintAriaLabel: string;
   achievementMessages?: TeacherAchievementsMessages;
   dictionaries: Record<string, Dictionary>;
   uiLocale: MessageLocale;
@@ -53,6 +63,8 @@ export const BalanceTable = ({
   ledger,
   defaultDate,
   messages,
+  columnHints,
+  termHintAriaLabel,
   achievementMessages,
   dictionaries,
   uiLocale,
@@ -78,6 +90,8 @@ export const BalanceTable = ({
         rows={rows}
         selectedPupilId={selectedPupilId}
         messages={messages}
+        columnHints={columnHints}
+        termHintAriaLabel={termHintAriaLabel}
         achievementMessages={achievementMessages}
         onSelectPupil={selectPupil}
         onIssue={(pupilId) => openDialog("issue", pupilId)}
@@ -88,9 +102,15 @@ export const BalanceTable = ({
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{messages.columnPupil}</TableHead>
-              <TableHead scope="col" className="text-right">{messages.columnEarned}</TableHead>
-              <TableHead scope="col" className="text-right">{messages.columnIssued}</TableHead>
-              <TableHead scope="col" className="text-right">{messages.columnBalance}</TableHead>
+              <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                <TeacherHintTableHead hint={columnHints.collected} termHintAriaLabel={termHintAriaLabel} />
+              </TableHead>
+              <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                <TeacherHintTableHead hint={columnHints.issued} termHintAriaLabel={termHintAriaLabel} />
+              </TableHead>
+              <TableHead scope="col" className="px-3 py-3 text-right font-normal">
+                <TeacherHintTableHead hint={columnHints.left} termHintAriaLabel={termHintAriaLabel} />
+              </TableHead>
               <TableHead scope="col">{messages.columnActions}</TableHead>
             </TableRow>
           </TableHeader>

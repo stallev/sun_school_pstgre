@@ -48,6 +48,8 @@ export type AdminMessages = {
     consentVersion: string;
     waitingDays: string;
     submittedToday: string;
+    submittedYesterday: string;
+    submittedOn: string;
     approveAsTeacher: string;
     approveAsAdmin: string;
     loginTelegram: string;
@@ -299,6 +301,9 @@ export type AdminMessages = {
     typeAccount: string;
     typeChild: string;
     requestedOn: string;
+    requestedToday: string;
+    requestedYesterday: string;
+    requestedByRoleEmail: string;
     requestedBySelf: string;
     requestedBy: string;
     requestedByWithRole: string;
@@ -345,6 +350,9 @@ export type AdminMessages = {
     pupilLink: string;
     categoryLabels: Record<string, string>;
     warningLabels: Record<string, string>;
+  };
+  audit: {
+    adminWithoutName: string;
   };
 };
 

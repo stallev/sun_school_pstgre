@@ -1,69 +1,10 @@
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import {
+  getIanaTimeZoneLocaleLabels,
+  hasIanaTimeZoneTranslation,
+} from "@/lib/i18n/timezone-ru-labels";
 
-type LocaleLabels = { city: string; region: string };
-
-const TIMEZONE_LABELS: Partial<
-  Record<string, { ru: LocaleLabels; en: LocaleLabels }>
-> = {
-  "Europe/Moscow": {
-    ru: { city: "Москва", region: "Россия" },
-    en: { city: "Moscow", region: "Russia" },
-  },
-  "Europe/Kyiv": {
-    ru: { city: "Киев", region: "Украина" },
-    en: { city: "Kyiv", region: "Ukraine" },
-  },
-  "Europe/Minsk": {
-    ru: { city: "Минск", region: "Беларусь" },
-    en: { city: "Minsk", region: "Belarus" },
-  },
-  "Asia/Almaty": {
-    ru: { city: "Алматы", region: "Казахстан" },
-    en: { city: "Almaty", region: "Kazakhstan" },
-  },
-  "Asia/Tashkent": {
-    ru: { city: "Ташкент", region: "Узбекистан" },
-    en: { city: "Tashkent", region: "Uzbekistan" },
-  },
-  "Asia/Tbilisi": {
-    ru: { city: "Тбилиси", region: "Грузия" },
-    en: { city: "Tbilisi", region: "Georgia" },
-  },
-  "Asia/Yerevan": {
-    ru: { city: "Ереван", region: "Армения" },
-    en: { city: "Yerevan", region: "Armenia" },
-  },
-  "Asia/Baku": {
-    ru: { city: "Баку", region: "Азербайджан" },
-    en: { city: "Baku", region: "Azerbaijan" },
-  },
-  "Europe/Kaliningrad": {
-    ru: { city: "Калининград", region: "Россия" },
-    en: { city: "Kaliningrad", region: "Russia" },
-  },
-  "Asia/Yekaterinburg": {
-    ru: { city: "Екатеринбург", region: "Россия" },
-    en: { city: "Yekaterinburg", region: "Russia" },
-  },
-  "Asia/Novosibirsk": {
-    ru: { city: "Новосибирск", region: "Россия" },
-    en: { city: "Novosibirsk", region: "Russia" },
-  },
-  "Asia/Vladivostok": {
-    ru: { city: "Владивосток", region: "Россия" },
-    en: { city: "Vladivostok", region: "Russia" },
-  },
-  "Europe/London": {
-    ru: { city: "Лондон", region: "Великобритания" },
-    en: { city: "London", region: "United Kingdom" },
-  },
-  "America/New_York": {
-    ru: { city: "Нью-Йорк", region: "США" },
-    en: { city: "New York", region: "United States" },
-  },
-};
-
-const formatUtcOffset = (timeZone: string): string => {
+export const formatUtcOffset = (timeZone: string): string => {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone,
     timeZoneName: "shortOffset",
@@ -72,26 +13,42 @@ const formatUtcOffset = (timeZone: string): string => {
   return raw.replace(/^GMT(?=$)/, "UTC").replace(/^GMT/, "UTC");
 };
 
-const fallbackCityLabel = (timeZone: string): string =>
-  timeZone.split("/").pop()?.replace(/_/g, " ") ?? timeZone;
-
-const resolveLabels = (timeZone: string, locale: MessageLocale): LocaleLabels => {
-  const mapped = TIMEZONE_LABELS[timeZone];
-  if (mapped) return locale === "ru" ? mapped.ru : mapped.en;
-  return { city: fallbackCityLabel(timeZone), region: timeZone.split("/")[0]?.replace(/_/g, " ") ?? timeZone };
+type FormatLabelOptions = {
+  /** Saved zone outside translated catalog — show offset only (P27 N-path). */
+  orphan?: boolean;
 };
 
-const buildPrimaryLabel = (timeZone: string, locale: MessageLocale): string => {
-  const { city, region } = resolveLabels(timeZone, locale);
+const buildPrimaryLabel = (
+  timeZone: string,
+  locale: MessageLocale,
+  options?: FormatLabelOptions,
+): string => {
+  if (options?.orphan && !hasIanaTimeZoneTranslation(timeZone)) {
+    return formatUtcOffset(timeZone);
+  }
+
+  const mapped = getIanaTimeZoneLocaleLabels(timeZone, locale);
+  if (!mapped) {
+    if (locale === "ru") {
+      return formatUtcOffset(timeZone);
+    }
+    const fallbackCity = timeZone.split("/").pop()?.replace(/_/g, " ") ?? timeZone;
+    const region = timeZone.split("/")[0]?.replace(/_/g, " ") ?? timeZone;
+    const offset = formatUtcOffset(timeZone);
+    return region ? `${fallbackCity}, ${region} (${offset})` : `${fallbackCity} (${offset})`;
+  }
+
+  const { city, region } = mapped;
   const offset = formatUtcOffset(timeZone);
   return region ? `${city}, ${region} (${offset})` : `${city} (${offset})`;
 };
 
-/** Human label for admin timezone picker (ADR-018 P25-T8, P26-T8). */
+/** Human label for admin timezone picker (ADR-018 P25-T8, P26-T8, P27 D-2). */
 export const formatIanaTimeZoneOptionLabel = (
   timeZone: string,
   locale: MessageLocale,
-): string => buildPrimaryLabel(timeZone, locale);
+  options?: FormatLabelOptions,
+): string => buildPrimaryLabel(timeZone, locale, options);
 
 /** Disambiguate duplicate primary labels (same city + offset). */
 export const disambiguateIanaTimeZoneOptionLabels = (

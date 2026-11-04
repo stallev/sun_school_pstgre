@@ -1,4 +1,4 @@
-import { TermHint } from "@/components/ui/term-hint";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { fillMessage } from "@/lib/messages/fill-message";
 
 type RatingTableMetricHeaderProps = {
@@ -14,12 +14,11 @@ export const RatingTableMetricHeader = ({
   hint,
   termHintAriaLabel,
 }: RatingTableMetricHeaderProps) => (
-  <span className="inline-flex items-center justify-end gap-1">
-    {label}
-    <TermHint
-      term={term}
-      hint={hint}
-      ariaLabel={fillMessage(termHintAriaLabel, { term })}
-    />
-  </span>
+  <TermLabel
+    className="inline-flex items-center justify-end gap-1"
+    term={nonEmptyTerm(label)}
+    hint={hint}
+    ariaLabel={fillMessage(termHintAriaLabel, { term })}
+    popoverSide="top"
+  />
 );

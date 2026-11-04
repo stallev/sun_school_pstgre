@@ -1,6 +1,6 @@
 import "server-only";
 
-import { AUDIT_ENTITY_TYPE, AUDIT_SOURCE } from "@sunschool/domain";
+import { AUDIT_ENTITY_TYPE, AUDIT_SOURCE, USER_ROLE } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { formatAppUserDisplayName, formatDisplayName } from "@/lib/person/format-display-name";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
@@ -13,6 +13,7 @@ type LabelContext = {
   deletedUserTemplate: string;
   systemActorLabel: string;
   pupilErasedLabel: string;
+  adminWithoutNameLabel: string;
   entityTypeLabels: Record<string, string>;
 };
 
@@ -32,6 +33,7 @@ export async function resolveAuditEntryLabels(
     deletedUserTemplate: getMessage(commonDict, "person.deleted_user"),
     systemActorLabel: getMessage(adminDict, "audit.system_actor"),
     pupilErasedLabel: getMessage(adminDict, "audit.entity_pupil_erased"),
+    adminWithoutNameLabel: getMessage(adminDict, "audit.admin_without_name"),
     entityTypeLabels: Object.fromEntries(
       Object.values(AUDIT_ENTITY_TYPE).map((type) => [
         type,
@@ -51,15 +53,21 @@ export async function resolveAuditEntryLabels(
           firstName: true,
           lastName: true,
           middleName: true,
+          roleAssignments: {
+            select: { role: true },
+          },
         },
       })
     : [];
   const actorMap = new Map(
-    actors.map((user) => [
-      user.id,
-      formatAppUserDisplayName(user, ctx.deletedUserTemplate) ||
-        entityTypeLabel(ctx, AUDIT_ENTITY_TYPE.APP_USER),
-    ]),
+    actors.map((user) => {
+      const displayName = formatAppUserDisplayName(user, ctx.deletedUserTemplate);
+      if (displayName.length > 0) return [user.id, displayName] as const;
+      const assignments = user.roleAssignments as { role: string }[];
+      const isAdmin = assignments.some((assignment) => assignment.role === USER_ROLE.ADMIN);
+      if (isAdmin) return [user.id, ctx.adminWithoutNameLabel] as const;
+      return [user.id, entityTypeLabel(ctx, AUDIT_ENTITY_TYPE.APP_USER)] as const;
+    }),
   );
 
   const byType = groupEntityIds(rows);
@@ -187,13 +195,26 @@ async function loadEntityLabels(
     }
   }
 
+  const achievementIds = byType.get(AUDIT_ENTITY_TYPE.ACHIEVEMENT);
+  if (achievementIds?.size) {
+    const achievements = await db.achievement.findMany({
+      where: { id: { in: [...achievementIds] } },
+      select: { id: true, nameRu: true, nameEn: true },
+    });
+    for (const achievement of achievements) {
+      const label = achievement.nameRu || achievement.nameEn || entityTypeLabel(ctx, AUDIT_ENTITY_TYPE.ACHIEVEMENT);
+      out.set(`${AUDIT_ENTITY_TYPE.ACHIEVEMENT}:${achievement.id}`, { label, href: null });
+    }
+  }
+
   for (const [type, ids] of byType) {
     if (
       type === AUDIT_ENTITY_TYPE.APP_USER ||
       type === AUDIT_ENTITY_TYPE.PUPIL ||
       type === AUDIT_ENTITY_TYPE.GRADE ||
       type === AUDIT_ENTITY_TYPE.ACADEMIC_YEAR ||
-      type === AUDIT_ENTITY_TYPE.LESSON
+      type === AUDIT_ENTITY_TYPE.LESSON ||
+      type === AUDIT_ENTITY_TYPE.ACHIEVEMENT
     ) {
       continue;
     }

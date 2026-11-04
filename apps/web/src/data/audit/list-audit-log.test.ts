@@ -11,6 +11,7 @@ const actorUserId = "55555555-5555-4555-8555-555555555555";
 const adminDict = {
   audit: {
     system_actor: "System",
+    admin_without_name: "Administrator (no name)",
     entity_pupil_erased: "Child (data erased)",
     deleted_pupil: "Deleted pupil",
     system_action_phrase: "System: {action}",
@@ -27,6 +28,8 @@ const adminDict = {
       comment: "Comment",
       verse_line: "Verse {n}",
       lesson_context: "lesson {n}",
+      lesson_unspecified: "lesson not specified",
+      pupil_context: "Pupil: {name}",
       score: "Score",
     },
   },
@@ -92,9 +95,15 @@ describe("listAuditLog", () => {
             firstName: "A",
             lastName: "Admin",
             middleName: null,
+            roleAssignments: [{ role: USER_ROLE.ADMIN }],
           },
         ]),
       },
+      pupil: { findMany: vi.fn().mockResolvedValue([]) },
+      lesson: { findMany: vi.fn().mockResolvedValue([]) },
+      grade: { findMany: vi.fn().mockResolvedValue([]) },
+      achievement: { findMany: vi.fn().mockResolvedValue([]) },
+      homeworkCheck: { findMany: vi.fn().mockResolvedValue([]) },
     };
 
     const result = await listAuditLog(

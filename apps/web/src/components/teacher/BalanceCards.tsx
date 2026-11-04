@@ -1,26 +1,48 @@
 import { BalancePupilActions } from "@/components/teacher/BalancePupilActions.client";
 import { StatusText } from "@/components/ui/status-text";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
 import { BricksEarnedBonusLine } from "@/lib/achievements/format-bricks-bonus-line";
 import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
+
+type BricksColumnHints = {
+  collected: HintTerm;
+  issued: HintTerm;
+  left: HintTerm;
+};
 
 type BalanceCardsProps = {
   rows: readonly BricksBalanceRow[];
   selectedPupilId: string | null;
   messages: TeacherBricksMessages;
+  columnHints: BricksColumnHints;
+  termHintAriaLabel: string;
   achievementMessages?: TeacherAchievementsMessages;
   onSelectPupil: (pupilId: string) => void;
   onIssue: (pupilId: string) => void;
   onCompensate: (pupilId: string) => void;
 };
 
+const brickColumnLabel = (hint: HintTerm, termHintAriaLabel: string) => (
+  <TermLabel
+    className="inline-flex items-center gap-1 font-normal"
+    term={nonEmptyTerm(hint.term)}
+    hint={hint.hint}
+    ariaLabel={fillMessage(termHintAriaLabel, { term: hint.term })}
+  />
+);
+
 export const BalanceCards = ({
   rows,
   selectedPupilId,
   messages,
+  columnHints,
+  termHintAriaLabel,
   achievementMessages,
   onSelectPupil,
   onIssue,
@@ -45,10 +67,16 @@ export const BalanceCards = ({
             </button>
           }
           fields={[
-            { label: messages.columnEarned, value: <span className="font-bold tabular-nums">{row.earned}</span> },
-            { label: messages.columnIssued, value: <span className="font-bold tabular-nums">{row.issued}</span> },
             {
-              label: messages.columnBalance,
+              label: brickColumnLabel(columnHints.collected, termHintAriaLabel),
+              value: <span className="font-bold tabular-nums">{row.earned}</span>,
+            },
+            {
+              label: brickColumnLabel(columnHints.issued, termHintAriaLabel),
+              value: <span className="font-bold tabular-nums">{row.issued}</span>,
+            },
+            {
+              label: brickColumnLabel(columnHints.left, termHintAriaLabel),
               value: (
                 <span className={cn("font-bold tabular-nums", row.balance < 0 && "text-danger")}>
                   {row.balance}

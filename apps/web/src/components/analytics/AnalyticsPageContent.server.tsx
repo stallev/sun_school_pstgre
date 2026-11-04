@@ -31,6 +31,7 @@ import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { formatAnalyticsShortDate } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { pickAnalyticsHintsMessages } from "@/lib/messages/pick-analytics-hints-messages";
 import { buildLessonsJournalHref } from "@/lib/analytics/build-lessons-journal-href";
 import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
@@ -71,6 +72,7 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
   const messageLocale = locale as MessageLocale;
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickAnalyticsMessages(analyticsDict, messageLocale);
+  const analyticsHints = pickAnalyticsHintsMessages(analyticsDict);
   const glossaryUi = pickGlossaryUiMessages(commonDict);
   const glossary = glossaryUi;
   const termHintAriaLabel = glossaryUi.termHintAriaLabel;
@@ -157,6 +159,7 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
               messages={messages}
               columnKidsGlossary={glossaryUi.regularly_attend}
               termHintAriaLabel={termHintAriaLabel}
+              yearTotalsHint={analyticsHints.year_totals}
             />
           </Suspense>
           <GroupYearSelection rows={tableRows} messages={messages} />
@@ -195,6 +198,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
               isAdmin={data.isAdmin}
               lessonsHref={buildLessonsJournalHref(data.gradeId)}
               messages={messages}
+              recordWithoutMarkHint={analyticsHints.record_without_mark}
+              termHintAriaLabel={termHintAriaLabel}
             />
           ) : null}
           {isActiveYear &&
@@ -222,7 +227,12 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
             />
           ) : (
             <>
-              <CompositionLine snapshot={analytics} messages={messages} />
+              <CompositionLine
+                snapshot={analytics}
+                messages={messages}
+                compositionHint={analyticsHints.composition}
+                termHintAriaLabel={termHintAriaLabel}
+              />
               <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 lg:grid-cols-2 lg:gap-6">
                 <ChartTableToggle
                   chartId="attendance"
@@ -252,6 +262,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                   lessonsObservedForms={messages.kpiLessonsObserved}
                   formatLocale={messageLocale}
                   emptyLabel={messages.kpiEmpty}
+                  averagedOverHint={analyticsHints.averaged_over}
+                  termHintAriaLabel={termHintAriaLabel}
                 />
                 <ChartTableToggle
                   chartId="test"
@@ -267,6 +279,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                   formatLocale={messageLocale}
                   emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 10]}
+                  averagedOverHint={analyticsHints.averaged_over}
+                  termHintAriaLabel={termHintAriaLabel}
                 />
                 <ChartTableToggle
                   chartId="notebook"
@@ -282,6 +296,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                   formatLocale={messageLocale}
                   emptyLabel={messages.kpiEmpty}
                   yDomain={[0, 10]}
+                  averagedOverHint={analyticsHints.averaged_over}
+                  termHintAriaLabel={termHintAriaLabel}
                 />
               </div>
               {isActiveYear ? (
@@ -298,6 +314,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                 locale={appLocale}
                 regularlyAttendGlossary={glossaryUi.regularly_attend}
                 termHintAriaLabel={termHintAriaLabel}
+                notInAverageHint={analyticsHints.not_in_average}
+                lowScoreHint={analyticsHints.low_score}
               />
               <MethodologyNote messages={messages} />
             </>

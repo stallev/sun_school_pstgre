@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { BarChart } from "@/components/analytics/BarChart";
 import { LineChart } from "@/components/analytics/LineChart";
 import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
+import { PERCENT_CHART_SCALE } from "@/lib/analytics/chart-scale";
 import {
   formatAnalyticsChartAxisTick,
   formatAnalyticsDelta,
@@ -99,7 +100,8 @@ export const DynamicsBlock = ({
               points={dynamics.smoothed}
               formatLabel={formatDate}
               formatValue={(point) => formatPercent(point.value as number)}
-              yDomain={[0, 100]}
+              yDomain={PERCENT_CHART_SCALE.domain}
+              yTicks={PERCENT_CHART_SCALE.ticks}
               yAxisTickFormatter={(value) =>
                 formatAnalyticsChartAxisTick(messages.formatPercent, value, messageLocale, "percent")
               }

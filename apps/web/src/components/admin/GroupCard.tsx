@@ -1,20 +1,24 @@
 import { ChevronRight } from "lucide-react";
 import { ContentText } from "@/components/atoms/ContentText";
 import { CustomLink } from "@/components/ui/custom-link";
-import { formatGroupListMeta } from "@/lib/admin/format-group-list-meta";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { formatGroupAgeRange } from "@/lib/admin/format-group-age-range";
 import type { GroupListRow } from "@/data/school/load-groups-admin-list.server";
 import { formatGroupLanguageLabel } from "@/data/school/load-groups-admin-list.server";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { formatPlural } from "@/lib/messages/plural";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type GroupCardProps = {
   row: GroupListRow;
   messages: AdminMessages;
   uiLocale: MessageLocale;
+  groupLanguageHint: HintTerm;
 };
 
-export const GroupCard = ({ row, messages, uiLocale }: GroupCardProps) => {
+export const GroupCard = ({ row, messages, uiLocale, groupLanguageHint }: GroupCardProps) => {
   const languageLabel = formatGroupLanguageLabel(row.language, {
     ru: messages.group.languageRu,
     en: messages.group.languageEn,
@@ -22,13 +26,8 @@ export const GroupCard = ({ row, messages, uiLocale }: GroupCardProps) => {
   const teacherLabel = formatPlural(messages.group.teacherCountForms, row.teacherCount, uiLocale, {
     count: row.teacherCount,
   });
-  const metaLine = formatGroupListMeta({
-    languageLabel,
-    ageMin: row.ageMin,
-    ageMax: row.ageMax,
-    teacherLabel,
-    ageRangeTemplate: messages.group.ageRangeLabel,
-  });
+  const range = formatGroupAgeRange(row.ageMin, row.ageMax);
+  const ageLabel = range ? fillMessage(messages.group.ageRangeLabel, { range }) : null;
 
   return (
     <CustomLink
@@ -37,8 +36,14 @@ export const GroupCard = ({ row, messages, uiLocale }: GroupCardProps) => {
     >
       <span className="min-w-0 flex-1">
         <ContentText className="font-display text-xl font-medium text-ink">{row.name}</ContentText>
-        <ContentText tone="secondary" className="mt-0.5 block text-sm">
-          {metaLine}
+        <ContentText tone="secondary" className="mt-0.5 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sm">
+          <TermLabel
+            term={nonEmptyTerm(languageLabel)}
+            hint={groupLanguageHint.hint}
+            ariaLabel={groupLanguageHint.term}
+          />
+          {ageLabel ? <span>· {ageLabel}</span> : null}
+          {teacherLabel ? <span>· {teacherLabel}</span> : null}
         </ContentText>
         {!row.isActive ? (
           <ContentText tone="secondary" className="mt-0.5 block text-sm">

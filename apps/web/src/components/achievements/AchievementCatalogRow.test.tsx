@@ -22,11 +22,11 @@ describe("splitAchievementRuleText (P26-CU9)", () => {
 describe("AchievementCatalogRow messages (P26-CU9)", () => {
   it("expects human tier and practice status keys in admin dictionary shape", () => {
     const ru = {
-      tier_after_lessons: "{prefix}после {count} {lessons} → +{points} кирпичиков",
+      tier_after_condition: "{prefix}после {condition} → {bricks}",
       status_practice_pending: "Появится вместе с голосовой проверкой",
       rule_how_counted: "Как считается",
     };
     expect(ru.status_practice_pending).not.toContain("Ждёт");
-    expect(ru.tier_after_lessons).toContain("{prefix}");
+    expect(ru.tier_after_condition).toContain("{prefix}");
   });
 });

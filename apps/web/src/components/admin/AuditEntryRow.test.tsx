@@ -31,13 +31,15 @@ describe("AuditEntryRow", () => {
                 entityIdTitle: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
                 changeLines: ["Присутствие: да", "Тетрадь: 9"],
                 isSystemEntry: false,
-                technicalRecordJson: '{"id":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"}',
+                technicalRecordJson: '{"quantity":1}',
                 reason: null,
                 oldValueText: null,
                 newValueText: null,
               }}
               occurredLabel="15 янв. 2026, 15:00"
-              technicalRecordLabel={adminRu.audit.technical_record}
+              technicalRecordTerm={adminRu.audit.technical_record}
+              technicalRecordHint={adminRu.hints.audit_technical.hint}
+              technicalRecordHintAria={adminRu.hints.audit_technical.term}
               reasonPrefix={adminRu.audit.reason_prefix}
             />
           </tbody>
@@ -50,6 +52,10 @@ describe("AuditEntryRow", () => {
     expect(container.textContent).toContain("Присутствие: да");
     expect(container.textContent).toContain("Техническая запись");
     expect(container.textContent).not.toContain("check.corrected");
+
+    expect(container.textContent).not.toMatch(
+      /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i,
+    );
 
     act(() => root.unmount());
     container.remove();

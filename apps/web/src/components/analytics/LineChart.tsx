@@ -16,6 +16,7 @@ export type AnalyticsLineChartProps = {
   formatLabel: (dateIso: string) => string;
   formatValue: (point: AnalyticsChartPoint) => string;
   yDomain?: [number, number];
+  yTicks?: number[];
   yAxisTickFormatter?: (value: number) => string;
   ariaLabel: string;
 };
@@ -34,6 +35,7 @@ export const LineChart = ({
   formatLabel,
   formatValue,
   yDomain,
+  yTicks,
   yAxisTickFormatter,
   ariaLabel,
 }: AnalyticsLineChartProps) => {
@@ -59,6 +61,7 @@ export const LineChart = ({
           />
           <YAxis
             domain={yDomain ?? ["auto", "auto"]}
+            ticks={yTicks}
             tick={CHART_TICK}
             tickFormatter={yAxisTickFormatter}
             tickLine={false}

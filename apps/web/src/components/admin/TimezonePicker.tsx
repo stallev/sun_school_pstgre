@@ -5,13 +5,13 @@ import { Loader2Icon } from "lucide-react";
 import type { MutationResult } from "@sunschool/domain";
 import { updateSchoolTimezoneAction } from "@/actions/app-settings";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
-import { SectionTitle } from "@/components/atoms";
-import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { IanaTimeZoneOption } from "@/lib/i18n/iana-timezone-options.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/dictionary-types";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { cn } from "@/lib/utils";
 
 type TimezonePickerProps = {
@@ -19,6 +19,7 @@ type TimezonePickerProps = {
   timeZoneOptions: readonly IanaTimeZoneOption[];
   dictionaries: Record<string, Dictionary>;
   formError: string;
+  timezoneHint: HintTerm;
 };
 
 export const TimezonePicker = ({
@@ -26,6 +27,7 @@ export const TimezonePicker = ({
   timeZoneOptions,
   dictionaries,
   formError,
+  timezoneHint,
 }: TimezonePickerProps) => {
   const messages = useAdminMessages();
   const [query, setQuery] = useState("");
@@ -46,13 +48,11 @@ export const TimezonePicker = ({
     const normalized = query.trim().toLowerCase();
     if (!normalized) return timeZoneOptions.slice(0, 80);
     return timeZoneOptions
-      .filter(
-        (option) =>
-          option.value.toLowerCase().includes(normalized) ||
-          option.label.toLowerCase().includes(normalized),
-      )
+      .filter((option) => option.label.toLowerCase().includes(normalized))
       .slice(0, 80);
   }, [query, timeZoneOptions]);
+
+  const timezoneTitle = messages.settings.timezoneTitle;
 
   return (
     <form
@@ -60,8 +60,12 @@ export const TimezonePicker = ({
       id="school-timezone"
       className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5"
     >
-      <SectionTitle>{messages.settings.timezoneTitle}</SectionTitle>
-      <ContentText tone="secondary">{messages.settings.timezoneHint}</ContentText>
+      <TermLabel
+        term={nonEmptyTerm(timezoneTitle)}
+        hint={timezoneHint.hint}
+        ariaLabel={timezoneHint.term}
+        className="font-display text-lg font-medium text-ink"
+      />
       <label className="grid gap-1 text-sm">
         <span>{messages.settings.timezoneSearchLabel}</span>
         <Input

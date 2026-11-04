@@ -6,6 +6,7 @@ import { formatDisplayName } from "@/lib/person/format-display-name";
 export type UserListRow = {
   userId: string;
   displayName: string;
+  contactEmail: string | null;
   status: AccountStatus;
   roles: UserRole[];
 };
@@ -61,12 +62,14 @@ export async function loadUsersList(
       firstName: true,
       middleName: true,
       roles: { select: { role: true } },
+      identities: { select: { email: true }, orderBy: { createdAt: "asc" }, take: 1 },
     },
   });
 
   return users.map((user) => ({
     userId: user.id,
     displayName: formatDisplayName(user),
+    contactEmail: user.identities[0]?.email?.trim() || null,
     status: user.status,
     roles: user.roles
       .map((assignment) => assignment.role)

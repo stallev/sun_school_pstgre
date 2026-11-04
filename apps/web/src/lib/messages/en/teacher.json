@@ -562,5 +562,75 @@
     "relation_mother": "Mother",
     "relation_father": "Father",
     "relation_guardian": "Guardian"
+  },
+  "hints": {
+    "regular_attendance": {
+      "term": "Regular attendees",
+      "hint": "Children who attended at least half of checked lessons. Averages use only these pupils"
+    },
+    "attendance_rate": {
+      "term": "Attendance",
+      "hint": "Share present among regular attendees on checked lessons in the year"
+    },
+    "average_score": {
+      "term": "Average score",
+      "hint": "Mean lesson score: verses, test, notebook. Counted for regular attendees only"
+    },
+    "checked_state": {
+      "term": "Checked",
+      "hint": "A pupil is fully checked when every field is filled. Partially — only some fields"
+    },
+    "lesson_type": {
+      "term": "Lesson type",
+      "hint": "Regular: verses, test, notebook. Review: revision only; no verses or test; not in verse averages"
+    },
+    "lesson_leader": {
+      "term": "Led by",
+      "hint": "Teacher who ran the lesson and entered marks. May differ from the group’s main teacher"
+    },
+    "score_threshold": {
+      "term": "up to 4 / from 8",
+      "hint": "Red “up to 4” flags a weak result. “From 8” is the threshold for the Neat notebook achievement"
+    },
+    "verse_scale": {
+      "term": "Verse score",
+      "hint": "2 — recited alone, 1 — with help, 0 — could not. Did not answer — not called; no points"
+    },
+    "check_status": {
+      "term": "Check status",
+      "hint": "Checked — all fields filled. Partial — some empty. Not checked — nothing filled yet"
+    },
+    "filled_fields": {
+      "term": "Fields filled",
+      "hint": "How many check fields are filled out of the total for this lesson"
+    },
+    "all_scores_table": {
+      "term": "All scores table",
+      "hint": "Summary of every pupil’s marks for the lesson. Printable sheet — for paper printout"
+    },
+    "bricks_collected": {
+      "term": "Earned",
+      "hint": "Lesson points plus achievement bonuses minus penalties for the year"
+    },
+    "bricks_issued": {
+      "term": "Issued",
+      "hint": "How many bricks were already handed to the pupil"
+    },
+    "bricks_left": {
+      "term": "Remaining",
+      "hint": "Still available to issue: earned minus issued"
+    },
+    "bricks_issue": {
+      "term": "Issue",
+      "hint": "Records a handout in the log. Fix mistakes with a new entry; deletion is not allowed"
+    },
+    "calendar_event_kinds": {
+      "term": "Trip / Cancelled",
+      "hint": "Trip — lesson away from the classroom. Cancelled — lesson did not happen; no marks"
+    },
+    "verses_order": {
+      "term": "By books / By lessons",
+      "hint": "By books — biblical order. By lessons — order of lessons in the school year"
+    }
   }
 }

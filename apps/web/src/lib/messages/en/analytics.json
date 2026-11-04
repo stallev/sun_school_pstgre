@@ -177,6 +177,7 @@
     "title": "Data quality",
     "missing_records": "Missing records on checked lessons: {count}",
     "missing_checked": "No mark in {count} checked-lesson records —",
+    "missing_checked_tail": "in {count} checked-lesson records —",
     "lessons_link_label": "open the lesson journal",
     "migration_duplicates": "migration duplicates removed: {count}",
     "admin_summary": "Data quality: missing records on checked lessons — {missing} · migration duplicates removed — {duplicates}"
@@ -300,5 +301,35 @@
     "column_group": "Group",
     "column_bricks": "Bricks: earned / issued",
     "bricks_ratio": "{earned} of {issued}"
+  },
+  "hints": {
+    "rating_place": {
+      "term": "Rank",
+      "hint": "Pupil’s position in the group rating for the selected period"
+    },
+    "record_without_mark": {
+      "term": "No mark",
+      "hint": "A record is a pupil on a lesson. No mark — lesson checked but score missing. Open the lesson log and fill in"
+    },
+    "low_score": {
+      "term": "Low score",
+      "hint": "Average test or notebook score is below the threshold. Needs teacher attention"
+    },
+    "not_in_average": {
+      "term": "Excluded from averages",
+      "hint": "Children below 50% attendance do not change group averages. Personal stats stay on the pupil card"
+    },
+    "year_totals": {
+      "term": "Totals by year",
+      "hint": "Summary metrics for each school year"
+    },
+    "averaged_over": {
+      "term": "Averaged",
+      "hint": "Metric computed across several lessons and smoothed for the chart"
+    },
+    "composition": {
+      "term": "Composition",
+      "hint": "How many pupils attend regularly, rarely, are inactive, or have no checked lessons"
+    }
   }
 }

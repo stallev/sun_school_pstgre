@@ -27,6 +27,8 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { buildPeopleListHref, parsePeopleListQuery } from "@/lib/people/parse-people-filter";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 
 export type PeoplePageProps = {
   searchParams: Promise<{ filter?: string; q?: string; group?: string; page?: string }>;
@@ -45,6 +47,12 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
     getDictionary(locale, "common"),
   ]);
   const adminMessages = pickAdminMessages(adminDict);
+  const hints = pickAdminHintsSubset(adminDict, [
+    "consent_paper",
+    "consent_migrated",
+    "pupil_states",
+    "pupil_transfer",
+  ] as const);
   const defaultDate = isoTodayUtc();
   const [list, legacyPending] = await Promise.all([
     loadPeopleAdminList(prisma, query),
@@ -81,6 +89,8 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               displayQuery={query.displayQuery}
               activeGroupId={list.activeGroupId}
               messages={adminMessages}
+              pupilStatesHint={hints.pupil_states}
+              migratedHint={hints.consent_migrated}
             />
             {query.filter === PEOPLE_LIST_FILTER.ALL && legacyPending.rows.length > 0 ? (
               <p className="text-sm">
@@ -119,6 +129,13 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               />
             ) : (
               <>
+                <TermLabel
+                  term={nonEmptyTerm(hints.consent_paper.term)}
+                  hint={hints.consent_paper.hint}
+                  ariaLabel={hints.consent_paper.term}
+                  className="text-sm text-ink-2"
+                  popoverSide="top"
+                />
                 <ul className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
                   {list.pupils.map((row) => (
                     <PupilRow
@@ -132,6 +149,7 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
                       formError={formError}
                       closeLabel={closeLabel}
                       messages={adminMessages}
+                      pupilTransferHint={hints.pupil_transfer}
                       historySlot={<PupilEntityHistoryList pupilId={row.pupilId} />}
                     />
                   ))}
@@ -151,6 +169,8 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               displayQuery={query.displayQuery}
               activeGroupId={list.activeGroupId}
               messages={adminMessages}
+              pupilStatesHint={hints.pupil_states}
+              migratedHint={hints.consent_migrated}
             />
             <LegacyConsentList
               deadlineOn={legacyPending.deadlineOn}
@@ -161,6 +181,7 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               formError={formError}
               closeLabel={closeLabel}
               messages={adminMessages}
+              migratedHint={hints.consent_migrated}
             />
           </>
         )}

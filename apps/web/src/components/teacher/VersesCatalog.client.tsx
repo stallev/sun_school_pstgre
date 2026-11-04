@@ -7,6 +7,8 @@ import { EmptyState } from "@/components/patterns/EmptyState";
 import { CustomLink } from "@/components/ui/custom-link";
 import { Input } from "@/components/ui/input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { normalizeVerseText } from "@/data/bible/normalize-verse-text";
 import {
   compareVersesCatalogByBible,
   compareVersesCatalogByLessons,
@@ -34,6 +36,8 @@ type VersesCatalogMessages = {
   notUsed: string;
   emptyTitle: string;
   emptyDescription: string;
+  versesOrderHint: { term: string; hint: string };
+  termHintAriaLabel: string;
 };
 
 type VersesCatalogProps = {
@@ -67,6 +71,12 @@ export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
 
   return (
     <div className="space-y-4">
+      <TermLabel
+        term={nonEmptyTerm(messages.versesOrderHint.term)}
+        hint={messages.versesOrderHint.hint}
+        ariaLabel={messages.termHintAriaLabel}
+        className="text-sm"
+      />
       <SegmentedControl
         aria-label={messages.sortLabel}
         value={sortMode}
@@ -104,7 +114,7 @@ export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
                 <AlertText>{messages.verseMissing}</AlertText>
               ) : (
                 <ContentText className="font-display text-[1.0625rem] leading-relaxed italic text-ink-2 whitespace-pre-wrap">
-                  {row.text}
+                  {row.text ? normalizeVerseText(row.text) : null}
                 </ContentText>
               )}
               <ContentText className="text-sm text-muted md:text-right">

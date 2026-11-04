@@ -11,7 +11,9 @@ import { loadActiveGrades } from "@/data/access/load-active-grades.server";
 import { loadPendingApprovals } from "@/data/access/load-pending-approvals.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
@@ -23,11 +25,17 @@ export const ApprovalsPageContent = async () => {
   await runAdminLazyPurge(prisma, now);
 
   const locale = await getUiLocale();
+  const schoolTimeZone = await getSchoolTimezone();
   const [adminDict, commonDict] = await Promise.all([
     getDictionary(locale, "admin"),
     getDictionary(locale, "common"),
   ]);
   const adminMessages = pickAdminMessages(adminDict);
+  const hints = pickAdminHintsSubset(adminDict, [
+    "approval_roles",
+    "approval_groups",
+    "consent_version",
+  ] as const);
   const organizationId = await getDefaultOrganizationId(prisma);
   const [rows, grades] = await Promise.all([
     loadPendingApprovals(prisma, now),
@@ -57,11 +65,14 @@ export const ApprovalsPageContent = async () => {
                 <ApprovalRow
                   row={row}
                   grades={grades}
-                  submittedLabel={adminMessages.approvals.submitted}
                   uiLocale={locale}
+                  schoolTimeZone={schoolTimeZone}
                   dictionaries={dictionaries}
                   formError={formError}
                   closeLabel={closeLabel}
+                  rolesHint={hints.approval_roles}
+                  groupsHint={hints.approval_groups}
+                  consentVersionHint={hints.consent_version}
                 />
               </li>
             ))}
@@ -74,4 +85,3 @@ export const ApprovalsPageContent = async () => {
     </AdminMessagesProvider>
   );
 };
-

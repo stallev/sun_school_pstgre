@@ -19,6 +19,7 @@ export type AnalyticsBarChartProps = {
   positiveClassName?: string;
   negativeClassName?: string;
   yDomain: [number, number];
+  yTicks?: number[];
   yAxisTickFormatter?: (value: number) => string;
   xLabel?: string;
   ariaLabel: string;
@@ -40,6 +41,7 @@ export const BarChart = ({
   positiveClassName = "fill-cobalt-ink",
   negativeClassName = "fill-danger",
   yDomain,
+  yTicks,
   yAxisTickFormatter,
   xLabel,
   ariaLabel,
@@ -65,6 +67,7 @@ export const BarChart = ({
           <XAxis dataKey="date" tickFormatter={formatLabel} tick={CHART_TICK} tickLine={false} axisLine={false} />
           <YAxis
             domain={yDomain}
+            ticks={yTicks}
             tick={CHART_TICK}
             tickFormatter={yAxisTickFormatter}
             tickLine={false}

@@ -10,6 +10,8 @@ import { CompositionLine } from "@/components/analytics/CompositionLine";
 import { DataQualityLine } from "@/components/analytics/DataQualityLine";
 import { MethodologyNote } from "@/components/analytics/MethodologyNote";
 import { BricksPageSummary } from "@/components/teacher/BricksPageSummary";
+import { GroupAnalyticsTables } from "@/components/analytics/GroupAnalyticsTables";
+import { SAMPLE_LAYER } from "@sunschool/domain";
 import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.server";
 import type { AnalyticsMessages, PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
@@ -23,6 +25,7 @@ const messages = {
   methodology: { title: "Как мы считали цифры", body: "", items: ["Правило 1"] },
   dataQuality: {
     missingChecked: "Нет отметки в {count} записях проверенных уроков —",
+    missingCheckedTail: "в {count} записях проверенных уроков —",
     lessonsLinkLabel: "откройте журнал уроков",
     migrationDuplicates: "при переносе убрано дублей: {count}",
   },
@@ -36,6 +39,10 @@ const messages = {
   | "methodology"
   | "dataQuality"
 >;
+
+const compositionHint = { term: "Состав", hint: "Подсказка состава." };
+const recordHint = { term: "Нет отметки", hint: "Подсказка записи." };
+const termHintAriaLabel = "Что значит «{term}»?";
 
 const snapshot = {
   sampleCounts: { A: 26, B: 4, C: 1, D: 0 },
@@ -58,7 +65,14 @@ describe("analytics readability components", () => {
 
   it("renders composition counts", () => {
     act(() => {
-      root.render(<CompositionLine snapshot={snapshot} messages={messages as AnalyticsMessages} />);
+      root.render(
+        <CompositionLine
+          snapshot={snapshot}
+          messages={messages as AnalyticsMessages}
+          compositionHint={compositionHint}
+          termHintAriaLabel={termHintAriaLabel}
+        />,
+      );
     });
     expect(container.textContent).toContain("26");
     expect(container.textContent).toContain("4");
@@ -122,12 +136,60 @@ describe("analytics readability components", () => {
           isAdmin={false}
           lessonsHref="/lessons?gradeId=g1&journalGap=1"
           messages={messages as AnalyticsMessages}
+          recordWithoutMarkHint={recordHint}
+          termHintAriaLabel={termHintAriaLabel}
         />,
       );
     });
     const link = container.querySelector("a");
     expect(link?.getAttribute("href")).toBe("/lessons?gradeId=g1&journalGap=1");
     expect(container.textContent).not.toContain("дублей");
+  });
+
+  it("renders layer-a heading once via TermLabel without duplicating layerATitle", () => {
+    const regularlyAttendGlossary = {
+      term: "регулярно ходят",
+      hint: "Подсказка регулярной явки.",
+    };
+    const tableMessages = {
+      tables: {
+        layerATitle: "Регулярно ходят",
+        layerBTitle: "Не в среднем: редко",
+        layerCTitle: "Неактивные",
+        layerDTitle: "Без проверок",
+        layerBIntro: "",
+        emptySection: "Пусто",
+        columnName: "Имя",
+        columnBirthYear: "Год",
+      },
+      kpiEmpty: "—",
+    } as AnalyticsMessages;
+    const analyticsSnapshot = {
+      pupilsByLayer: {
+        [SAMPLE_LAYER.A]: [],
+        [SAMPLE_LAYER.B]: [],
+        [SAMPLE_LAYER.C]: [],
+        [SAMPLE_LAYER.D]: [],
+      },
+    } as unknown as GroupAnalyticsSnapshot;
+
+    act(() => {
+      root.render(
+        <GroupAnalyticsTables
+          snapshot={analyticsSnapshot}
+          messages={tableMessages}
+          locale="ru"
+          regularlyAttendGlossary={regularlyAttendGlossary}
+          termHintAriaLabel={termHintAriaLabel}
+          notInAverageHint={{ term: "Не в среднем", hint: "Подсказка." }}
+          lowScoreHint={{ term: "Низкий балл", hint: "Подсказка." }}
+        />,
+      );
+    });
+
+    const layerAHeading = container.querySelector("section h2");
+    expect(layerAHeading?.textContent?.match(/регулярно ходят/gi)?.length).toBe(1);
+    expect(layerAHeading?.querySelector('button[aria-label="Что значит «регулярно ходят»?"]')).not.toBeNull();
   });
 
   it("renders TermHint for bricks to issue summary", () => {
@@ -149,6 +211,7 @@ describe("analytics readability components", () => {
       );
     });
     expect(container.querySelector('button[aria-label="Что значит «К выдаче»?"]')).not.toBeNull();
+    expect(container.textContent).toContain("К выдаче");
     expect(container.textContent).toContain(": 5");
   });
 });

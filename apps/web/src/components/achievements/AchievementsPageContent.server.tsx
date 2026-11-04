@@ -11,6 +11,8 @@ import { requireActiveUser } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAchievementsCatalogMessages } from "@/lib/messages/pick-achievements-catalog-messages.server";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
 export const AchievementsPageContent = async () => {
@@ -23,6 +25,13 @@ export const AchievementsPageContent = async () => {
   ]);
   const messages = pickAchievementsCatalogMessages(adminDict, commonDict);
   const dictionaries = { admin: adminDict, common: commonDict };
+  const hints = pickAdminHintsSubset(adminDict, [
+    "ach_series",
+    "ach_cumulative",
+    "ach_recalc",
+    "ach_levels",
+  ] as const);
+  const glossary = pickGlossaryUiMessages(commonDict);
 
   if (!context.roles.includes(USER_ROLE.ADMIN)) {
     return (
@@ -50,6 +59,9 @@ export const AchievementsPageContent = async () => {
         messages={messages}
         dictionaries={dictionaries}
         messageLocale={locale}
+        hints={hints}
+        reviewLesson={glossary.review_lesson}
+        termHintAriaLabel={glossary.termHintAriaLabel}
       />
     </PageSection>
   );

@@ -154,6 +154,32 @@ export default tseslint.config(
     },
   },
   {
+    files: [
+      "apps/web/src/components/**/*.{ts,tsx}",
+      "apps/web/src/app/**/*.{ts,tsx}",
+    ],
+    ignores: [
+      "apps/web/src/components/ui/term-*.tsx",
+      "apps/web/src/components/design-lab/**",
+      "apps/web/src/app/(dev)/**",
+      "apps/web/src/**/*.test.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/components/ui/term-hint",
+              message:
+                "Import TermLabel or TermHeader instead; TermHint is internal to term-* and design-lab (ADR-020).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ["apps/web/src/**/*.{tsx,jsx}"],
     ignores: [...DESIGN_LAB_FILES, "apps/web/src/components/ui/**", "apps/web/src/**/*.test.{tsx,jsx}"],
     rules: { "no-restricted-syntax": ["error", ...CYRILLIC_IN_JSX] },

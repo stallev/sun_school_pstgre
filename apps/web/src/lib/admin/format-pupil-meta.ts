@@ -6,6 +6,6 @@ export const formatPupilMeta = (messages: AdminMessages, row: PupilListRow): str
     row.birthDateIso
       ? messages.people.bornYear.replace("{year}", row.birthDateIso.slice(0, 4))
       : messages.people.birthUnknown;
-  const group = row.groupName ?? messages.people.noGroup;
-  return `${born} · ${group}`;
+  if (row.groupName) return born;
+  return `${born} · ${messages.people.noGroup}`;
 };

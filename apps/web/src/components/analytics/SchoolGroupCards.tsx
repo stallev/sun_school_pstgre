@@ -1,6 +1,7 @@
 import { StatusText } from "@/components/ui/status-text";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import {
   formatAnalyticsPercent,
 } from "@/lib/analytics/format-analytics-display";
@@ -12,12 +13,19 @@ import { fillMessage } from "@/lib/messages/fill-message";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
+type SchoolTableHints = {
+  regularAttendance: HintTerm;
+  attendanceRate: HintTerm;
+  averageScore: HintTerm;
+};
+
 type SchoolGroupCardsProps = {
   rows: SchoolGroupRow[];
   messages: AnalyticsMessages["school"];
   percentTemplate: string;
   averageTemplate: string;
   formatLocale: MessageLocale;
+  tableHints: SchoolTableHints;
 };
 
 const attendanceLabel = (row: SchoolGroupRow, percentTemplate: string): string | null => {
@@ -31,6 +39,7 @@ export const SchoolGroupCards = ({
   percentTemplate,
   averageTemplate,
   formatLocale,
+  tableHints,
 }: SchoolGroupCardsProps) => (
   <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.groupsTableTitle}>
     {rows.map((row) => {
@@ -47,7 +56,7 @@ export const SchoolGroupCards = ({
           fields={[
             { label: messages.columnTeachers, value: row.teacherNames, wide: true },
             {
-              label: messages.columnPupils,
+              label: tableHints.regularAttendance.term,
               value: (
                 <span className="tabular-nums">
                   {fillMessage(messages.pupilsSampleValue, {
@@ -58,7 +67,7 @@ export const SchoolGroupCards = ({
               ),
             },
             {
-              label: messages.columnAverage,
+              label: tableHints.averageScore.term,
               value: formatSchoolGroupScoreAverage(
                 row.scoreAverage,
                 averageTemplate,
@@ -67,7 +76,7 @@ export const SchoolGroupCards = ({
               ),
             },
             {
-              label: messages.columnAttendance,
+              label: tableHints.attendanceRate.term,
               value:
                 rounded === null || percent === null ? (
                   "—"

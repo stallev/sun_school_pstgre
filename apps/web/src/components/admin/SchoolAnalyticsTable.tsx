@@ -2,6 +2,7 @@ import { ContentText } from "@/components/atoms/ContentText";
 import { StatusText } from "@/components/ui/status-text";
 import { Card } from "@/components/ui/card";
 import { SchoolGroupCards } from "@/components/analytics/SchoolGroupCards";
+import { TeacherHintTableHead } from "@/components/teacher/TeacherHintTableHead";
 import {
   Table,
   TableBody,
@@ -11,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import {
   formatAnalyticsPercent,
 } from "@/lib/analytics/format-analytics-display";
@@ -22,12 +24,20 @@ import { fillMessage } from "@/lib/messages/fill-message";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
+type SchoolTableHints = {
+  regularAttendance: HintTerm;
+  attendanceRate: HintTerm;
+  averageScore: HintTerm;
+};
+
 type SchoolAnalyticsTableProps = {
   rows: SchoolGroupRow[];
   messages: AnalyticsMessages["school"];
   percentTemplate: string;
   averageTemplate: string;
   formatLocale: MessageLocale;
+  tableHints: SchoolTableHints;
+  termHintAriaLabel: string;
 };
 
 export const SchoolAnalyticsTable = ({
@@ -36,6 +46,8 @@ export const SchoolAnalyticsTable = ({
   percentTemplate,
   averageTemplate,
   formatLocale,
+  tableHints,
+  termHintAriaLabel,
 }: SchoolAnalyticsTableProps) => (
   <section className="min-w-0 space-y-3">
     <SchoolGroupCards
@@ -44,6 +56,7 @@ export const SchoolAnalyticsTable = ({
       percentTemplate={percentTemplate}
       averageTemplate={averageTemplate}
       formatLocale={formatLocale}
+      tableHints={tableHints}
     />
     <Card className="hidden p-0 lg:block">
       <Table className="text-left text-base">
@@ -57,13 +70,16 @@ export const SchoolAnalyticsTable = ({
               {messages.columnTeachers}
             </TableHead>
             <TableHead scope="col" className="px-3 py-3 text-right font-normal">
-              {messages.columnKidsSample}
+              <TeacherHintTableHead
+                hint={tableHints.regularAttendance}
+                termHintAriaLabel={termHintAriaLabel}
+              />
             </TableHead>
             <TableHead scope="col" className="w-48 px-3 py-3 font-normal">
-              {messages.columnAttendance}
+              <TeacherHintTableHead hint={tableHints.attendanceRate} termHintAriaLabel={termHintAriaLabel} />
             </TableHead>
             <TableHead scope="col" className="px-3 py-3 text-right font-normal">
-              {messages.columnAverage}
+              <TeacherHintTableHead hint={tableHints.averageScore} termHintAriaLabel={termHintAriaLabel} />
             </TableHead>
             <TableHead scope="col" className="px-5 py-3 font-normal">
               {messages.columnLastLesson}

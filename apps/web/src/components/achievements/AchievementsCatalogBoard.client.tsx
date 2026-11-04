@@ -6,6 +6,7 @@ import { ContentText, SectionTitle } from "@/components/atoms";
 import { AchievementCatalogRow } from "@/components/achievements/AchievementCatalogRow";
 import { AchievementsPageHeaderActions } from "@/components/achievements/AchievementsPageHeaderActions.client";
 import { AchievementsRecalcBar } from "@/components/achievements/AchievementsRecalcBar.client";
+import { AchievementsRulesNote } from "@/components/achievements/AchievementsRulesNote.client";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { PenaltyCatalogDialog } from "@/components/achievements/PenaltyCatalogDialog.client";
 import { RewardCatalogDialog } from "@/components/achievements/RewardCatalogDialog.client";
@@ -15,6 +16,8 @@ import { REWARD_CATEGORY_ORDER } from "@/lib/achievements/catalog-display";
 import type { AchievementsCatalogMessages } from "@/lib/messages/pick-achievements-catalog-messages.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type AchievementsCatalogBoardProps = {
   rewards: CatalogRowDto[];
@@ -22,6 +25,14 @@ type AchievementsCatalogBoardProps = {
   messages: AchievementsCatalogMessages;
   dictionaries: Record<string, Dictionary>;
   messageLocale: MessageLocale;
+  hints: {
+    ach_series: HintTerm;
+    ach_cumulative: HintTerm;
+    ach_recalc: HintTerm;
+    ach_levels: HintTerm;
+  };
+  reviewLesson: GlossaryTerm;
+  termHintAriaLabel: string;
 };
 
 export const AchievementsCatalogBoard = ({
@@ -30,6 +41,9 @@ export const AchievementsCatalogBoard = ({
   messages,
   dictionaries,
   messageLocale,
+  hints,
+  reviewLesson,
+  termHintAriaLabel,
 }: AchievementsCatalogBoardProps) => {
   const [rewardEdit, setRewardEdit] = useState<CatalogRowDto | null>(null);
   const [penaltyEdit, setPenaltyEdit] = useState<CatalogRowDto | null>(null);
@@ -63,10 +77,19 @@ export const AchievementsCatalogBoard = ({
           />
         }
       />
-      <AchievementsRecalcBar messages={messages} dictionaries={dictionaries} />
-      <ContentText tone="secondary" className="mb-6 max-w-3xl text-sm">
-        {messages.rulesNote}
-      </ContentText>
+      <AchievementsRecalcBar
+        messages={messages}
+        dictionaries={dictionaries}
+        recalcHint={hints.ach_recalc}
+        termHintAriaLabel={termHintAriaLabel}
+      />
+      <AchievementsRulesNote
+        messages={messages}
+        seriesHint={hints.ach_series}
+        cumulativeHint={hints.ach_cumulative}
+        reviewLesson={reviewLesson}
+        termHintAriaLabel={termHintAriaLabel}
+      />
       <div className="space-y-8">
         {REWARD_CATEGORY_ORDER.map((category) => {
           const rows = rewardsByCategory.get(category) ?? [];
@@ -81,6 +104,8 @@ export const AchievementsCatalogBoard = ({
                     messages={messages}
                     dictionaries={dictionaries}
                     messageLocale={messageLocale}
+                    tierLevelsHint={hints.ach_levels}
+                    termHintAriaLabel={termHintAriaLabel}
                     onEdit={() => {
                       setRewardEdit(row);
                       setRewardOpen(true);
@@ -120,6 +145,8 @@ export const AchievementsCatalogBoard = ({
                 messages={messages}
                 dictionaries={dictionaries}
                 messageLocale={messageLocale}
+                tierLevelsHint={hints.ach_levels}
+                termHintAriaLabel={termHintAriaLabel}
                 onEdit={() => {
                   setPenaltyEdit(row);
                   setPenaltyOpen(true);
