@@ -70,7 +70,7 @@ export const ChartTableToggle = ({
     valueKind === "percent"
       ? point.value === null
         ? emptyLabel
-        : formatAnalyticsPercent(percentTemplate, Number(point.value.toFixed(1)))
+        : formatAnalyticsPercent(percentTemplate, point.value / 100)
       : formatAnalyticsChartValue(
           chartValueTemplate,
           emptyLabel,

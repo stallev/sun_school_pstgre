@@ -79,9 +79,9 @@ export const SchoolGroupsTable = ({
             const attendanceRounded =
               row.attendancePercent === null ? null : Math.round(row.attendancePercent);
             const attendanceLabel =
-              attendanceRounded === null
+              row.attendancePercent === null
                 ? "—"
-                : formatAnalyticsPercent(percentTemplate, attendanceRounded);
+                : formatAnalyticsPercent(percentTemplate, row.attendancePercent / 100);
             return (
               <TableRow key={row.gradeId}>
                 <TableCell className="px-5 py-4 font-medium">{row.gradeName}</TableCell>

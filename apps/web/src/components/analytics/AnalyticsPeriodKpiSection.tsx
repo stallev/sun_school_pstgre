@@ -37,10 +37,7 @@ export const AnalyticsPeriodKpiSection = ({
         <NumberDisplay size="kpi" className="mt-1">
           {kpi.attendancePercent === null
             ? messages.kpiEmpty
-            : formatAnalyticsPercent(
-                messages.formatPercent,
-                Number(kpi.attendancePercent.toFixed(1)),
-              )}
+            : formatAnalyticsPercent(messages.formatPercent, kpi.attendancePercent / 100)}
         </NumberDisplay>
         <ContentText className="mt-2 text-base text-ink-2">
           {fillMessage(messages.kpiAttendanceHint, { count: mainCount })}

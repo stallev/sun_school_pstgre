@@ -1,7 +1,19 @@
 import { fillMessage } from "@/lib/messages/fill-message";
 
-export const formatAnalyticsPercent = (template: string, value: number): string =>
-  fillMessage(template, { value });
+/** Domain attendance rate 0–1 → display percent (e.g. 0.8 → `80%`). */
+export const formatAnalyticsPercent = (template: string, rate: number): string => {
+  const percent = Math.round(rate * 100);
+  return fillMessage(template, { value: percent });
+};
+
+export const formatAnalyticsAttendanceRate = (
+  template: string,
+  rate: number | null,
+  empty: string,
+): string => {
+  if (rate === null || Number.isNaN(rate)) return empty;
+  return formatAnalyticsPercent(template, rate);
+};
 
 export const formatAnalyticsAverage = (template: string, value: number): string =>
   fillMessage(template, { value });

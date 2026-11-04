@@ -1,6 +1,6 @@
 import {
+  formatAnalyticsAttendanceRate,
   formatAnalyticsAverage,
-  formatAnalyticsPercent,
 } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
@@ -21,9 +21,7 @@ export const formatCohortPercent = (
   value: number | null,
   messages: AnalyticsMessages,
 ): string =>
-  value === null
-    ? messages.kpiEmpty
-    : formatAnalyticsPercent(messages.formatPercent, Number(value.toFixed(1)));
+  formatAnalyticsAttendanceRate(messages.formatPercent, value, messages.kpiEmpty);
 
 export const formatCohortAverage = (
   value: number | null,

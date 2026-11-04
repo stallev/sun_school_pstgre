@@ -17,7 +17,7 @@ type SchoolGroupCardsProps = {
 
 const attendanceLabel = (row: SchoolGroupRow, percentTemplate: string): string | null => {
   if (row.attendancePercent === null) return null;
-  return formatAnalyticsPercent(percentTemplate, Math.round(row.attendancePercent));
+  return formatAnalyticsPercent(percentTemplate, row.attendancePercent / 100);
 };
 
 export const SchoolGroupCards = ({

@@ -42,10 +42,7 @@ export const AnalyticsKpiRow = ({ snapshot, messages }: AnalyticsKpiRowProps) =>
         <NumberDisplay className="text-3xl">
           {kpi.attendancePercent === null
             ? messages.kpiEmpty
-            : formatAnalyticsPercent(
-                messages.formatPercent,
-                Number(kpi.attendancePercent.toFixed(1)),
-              )}
+            : formatAnalyticsPercent(messages.formatPercent, kpi.attendancePercent / 100)}
         </NumberDisplay>
         <ContentText className="text-sm text-muted-foreground">
           {fillMessage(messages.kpiAttendanceHint, { count: mainCount })}

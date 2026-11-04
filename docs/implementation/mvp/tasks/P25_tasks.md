@@ -39,7 +39,7 @@ Tier T2: исправление серверного рендера четырё
 
 ### P25-CU2 — fix(web): show attendance as a percentage in all analytics tables · Review: reviewer · Commit: auto
 
-- [ ] P25-T2 · T1 · Spec: [analytics §3.1, R-18](../specs/analytics_screens_spec.md) · ADR-018 §4 п. 3
+- [x] P25-T2 · T1 · Spec: [analytics §3.1, R-18](../specs/analytics_screens_spec.md) · ADR-018 §4 п. 3
       Files: `apps/web/src/lib/analytics/format-analytics-display.ts` (+ `format-analytics-display.test.ts`), `apps/web/src/components/analytics/{GroupAnalyticsTables,PupilLayerCards}.tsx`, `apps/web/src/lib/analytics/build-birth-year-cohort-rows.ts` (+ тест), `apps/web/src/data/analytics/{analytics-compute,get-pupil-analytics}.server.ts` (только если выбрана конвертация в DAL)
       Acceptance: доля 0–1 из домена выводится одним форматтером как целый процент (`1 → 100%`, `0.8 → 80%`, `0.5 → 50%`, `0.256 → 26%`), `null`/`NaN` → «—»; верхний KPI и таблицы совпадают; колонка «Явка» когорт по году рождения — тот же формат; `attendanceRate` в домене не меняется; тест форматтера и таблиц; другие потребители `formatAnalyticsPercent` проверены grep
       Paths: H [R-18: `80%` в таблицах учеников, групп, когорт] · N [`null` → «—»; 0 → `0%`; 1 → `100%`; округление] · S n/a — presentational

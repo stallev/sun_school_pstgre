@@ -23,7 +23,7 @@ const formatMetric = (
 ): string => {
   if (value === null) return messages.kpiEmpty;
   if (key === "attendance") {
-    return formatAnalyticsPercent(messages.formatPercent, Number((value * 100).toFixed(1)));
+    return formatAnalyticsPercent(messages.formatPercent, value);
   }
   return formatAnalyticsAverage(messages.formatAverage, Number(value.toFixed(1)));
 };

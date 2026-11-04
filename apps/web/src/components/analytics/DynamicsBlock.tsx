@@ -46,7 +46,7 @@ export const DynamicsBlock = ({
 }: DynamicsBlockProps) => {
   const formatDate = (iso: string) => formatAnalyticsShortDate(iso, locale);
   const formatPercent = (value: number) =>
-    formatAnalyticsPercent(messages.formatPercent, Number(value.toFixed(1)));
+    formatAnalyticsPercent(messages.formatPercent, value / 100);
   const chartPoints = dynamics.smoothed.filter((point) => point.value !== null);
   const hasChart = chartPoints.length >= MIN_DYNAMICS_POINTS;
   const trendStyle = messages.dynamicsTrendLabels[dynamics.trendLabel];

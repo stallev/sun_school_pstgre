@@ -14,7 +14,7 @@ import {
 import type { GroupAnalyticsSnapshot, GroupAnalyticsPupilRow } from "@/data/analytics/analytics-compute.server";
 import { buildBirthYearCohortRows } from "@/lib/analytics/build-birth-year-cohort-rows";
 import {
-  formatAnalyticsPercent,
+  formatAnalyticsAttendanceRate,
   formatAnalyticsShortDate,
 } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
@@ -132,12 +132,11 @@ const PupilLayerTable = ({
                 {variant === "layer-a" ? (
                   <>
                     <TableCell className="px-3 py-3">
-                      {row.attendanceRate === null
-                        ? messages.kpiEmpty
-                        : formatAnalyticsPercent(
-                            messages.formatPercent,
-                            Number(row.attendanceRate.toFixed(1)),
-                          )}
+                      {formatAnalyticsAttendanceRate(
+                        messages.formatPercent,
+                        row.attendanceRate,
+                        messages.kpiEmpty,
+                      )}
                     </TableCell>
                     <TableCell className="px-3 py-3">
                       {fillMessage(messages.tables.attendedCheckedValue, {
@@ -161,12 +160,11 @@ const PupilLayerTable = ({
                     <TableCell className="px-3 py-3">{row.attendedLessonCount}</TableCell>
                     <TableCell className="px-3 py-3">{row.checkedLessonCount}</TableCell>
                     <TableCell className="px-5 py-3">
-                      {row.attendanceRate === null
-                        ? messages.kpiEmpty
-                        : formatAnalyticsPercent(
-                            messages.formatPercent,
-                            Number(row.attendanceRate.toFixed(1)),
-                          )}
+                      {formatAnalyticsAttendanceRate(
+                        messages.formatPercent,
+                        row.attendanceRate,
+                        messages.kpiEmpty,
+                      )}
                     </TableCell>
                   </>
                 ) : null}
