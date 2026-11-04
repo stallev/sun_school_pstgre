@@ -5,6 +5,7 @@ import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import { formatPlural } from "@/lib/messages/plural";
+import { assertSerializableMessages } from "@/lib/messages/assert-serializable-messages";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
 const fill = (template: string, values: Record<string, string | number>): string =>
@@ -15,6 +16,15 @@ const fill = (template: string, values: Record<string, string | number>): string
 
 const appLocaleToMessageLocale = (locale: AppLocale): MessageLocale =>
   locale === APP_LOCALE.EN ? "en" : "ru";
+
+export const pickLessonsGradeFilterMessages = (teacher: Dictionary) => {
+  const slice = {
+    gradeFilterLabel: getMessage(teacher, "lesson.list.grade_filter"),
+    gradeFilterApply: getMessage(teacher, "lesson.list.grade_apply"),
+  };
+  assertSerializableMessages(slice, "lessonsGradeFilter");
+  return slice;
+};
 
 export const pickTeacherLessonScreensMessages = (
   teacher: Dictionary,

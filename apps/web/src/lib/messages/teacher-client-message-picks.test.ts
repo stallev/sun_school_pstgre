@@ -11,6 +11,7 @@ import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-mess
 import { pickTeacherLessonFormMessages } from "@/lib/messages/pick-teacher-lesson-messages.server";
 import { pickTeacherRosterMessages } from "@/lib/messages/pick-teacher-roster-messages.server";
 import { pickTeacherFamilyMessages } from "@/lib/messages/pick-teacher-family-messages.server";
+import { pickLessonsGradeFilterMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 
 describe("teacher client message picks", () => {
   it("returns slices without function values for CU1 routes", () => {
@@ -24,6 +25,7 @@ describe("teacher client message picks", () => {
       pickTeacherBricksMessages(teacher),
       pickTeacherCalendarMessages(teacher, APP_LOCALE.RU),
       pickTeacherFamilyMessages(teacher),
+      pickLessonsGradeFilterMessages(teacher),
     ];
 
     for (const slice of slices) {

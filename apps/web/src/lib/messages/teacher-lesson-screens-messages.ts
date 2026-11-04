@@ -1,5 +1,10 @@
 import type { AppLocale } from "@sunschool/domain";
 
+export type LessonsGradeFilterMessages = Pick<
+  TeacherLessonScreensMessages,
+  "gradeFilterLabel" | "gradeFilterApply"
+>;
+
 export type TeacherLessonScreensMessages = {
   listTitle: string;
   listSubtitle: (group: string, year: string) => string;

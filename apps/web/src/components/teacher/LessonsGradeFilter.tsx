@@ -4,12 +4,11 @@ import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
 import { FormSelect } from "@/components/ui/form-select";
 import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-page.server";
-import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
-
 type LessonsGradeFilterProps = {
   grades: LessonsListGradeOption[];
   gradeId: string;
-  messages: TeacherLessonScreensMessages;
+  gradeFilterLabel: string;
+  gradeFilterApply: string;
   actionPath?: string;
   hiddenFields?: Record<string, string>;
 };
@@ -17,7 +16,8 @@ type LessonsGradeFilterProps = {
 export const LessonsGradeFilter = ({
   grades,
   gradeId,
-  messages,
+  gradeFilterLabel,
+  gradeFilterApply,
   actionPath = "/lessons",
   hiddenFields,
 }: LessonsGradeFilterProps) => (
@@ -28,7 +28,7 @@ export const LessonsGradeFilter = ({
         ))
       : null}
     <label className="grid gap-1">
-      <ContentText className="text-sm font-medium text-ink">{messages.gradeFilterLabel}</ContentText>
+      <ContentText className="text-sm font-medium text-ink">{gradeFilterLabel}</ContentText>
       <FormSelect
         name="gradeId"
         defaultValue={gradeId}
@@ -36,6 +36,6 @@ export const LessonsGradeFilter = ({
         triggerClassName="min-w-[12rem]"
       />
     </label>
-    <Button type="submit" variant="outline">{messages.gradeFilterApply}</Button>
+    <Button type="submit" variant="outline">{gradeFilterApply}</Button>
   </form>
 );

@@ -78,7 +78,12 @@ export const LessonsPageContent = async ({ searchParams }: LessonsPageProps) => 
         </Banner>
       ) : null}
       {data.isAdmin && data.grades.length > 1 ? (
-        <LessonsGradeFilter grades={data.grades} gradeId={data.gradeId} messages={messages} />
+        <LessonsGradeFilter
+          grades={data.grades}
+          gradeId={data.gradeId}
+          gradeFilterLabel={messages.gradeFilterLabel}
+          gradeFilterApply={messages.gradeFilterApply}
+        />
       ) : null}
       {lessonRows.length === 0 ? (
         <EmptyState

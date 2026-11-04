@@ -16,6 +16,7 @@ import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
+import { safeAdminMessage } from "@/lib/messages/safe-admin-message";
 
 export type AuditPageProps = {
   searchParams: Promise<{
@@ -68,7 +69,7 @@ export const AuditPageContent = async ({
   const entityTypeLabels = Object.fromEntries(
     Object.values(AUDIT_ENTITY_TYPE).map((type) => [
       type,
-      getMessage(adminDict, `audit.entity_types.${type}`),
+      safeAdminMessage(adminDict, `audit.entity_types.${type}`) ?? type,
     ]),
   );
   const actionLabels = Object.fromEntries(
