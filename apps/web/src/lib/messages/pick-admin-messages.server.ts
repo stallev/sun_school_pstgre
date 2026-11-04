@@ -69,6 +69,8 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     consentVersion: getMessage(admin, "approvals.consent_version"),
     waitingDays: getMessage(admin, "approvals.waiting_days"),
     submittedToday: getMessage(admin, "approvals.submitted_today"),
+    submittedYesterday: getMessage(admin, "approvals.submitted_yesterday"),
+    submittedOn: getMessage(admin, "approvals.submitted_on"),
     approveAsTeacher: getMessage(admin, "approvals.approve_as_teacher"),
     approveAsAdmin: getMessage(admin, "approvals.approve_as_admin"),
     loginTelegram: getMessage(admin, "approvals.login_telegram"),
@@ -325,6 +327,9 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     typeAccount: getMessage(admin, "deletions.type_account"),
     typeChild: getMessage(admin, "deletions.type_child"),
     requestedOn: getMessage(admin, "deletions.requested_on"),
+    requestedToday: getMessage(admin, "deletions.requested_today"),
+    requestedYesterday: getMessage(admin, "deletions.requested_yesterday"),
+    requestedByRoleEmail: getMessage(admin, "deletions.requested_by_role_email"),
     requestedBySelf: getMessage(admin, "deletions.requested_by_self"),
     requestedBy: getMessage(admin, "deletions.requested_by"),
     requestedByWithRole: getMessage(admin, "deletions.requested_by_with_role"),
@@ -371,5 +376,8 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     pupilLink: getMessage(admin, "deletions.pupil_link"),
     categoryLabels: deletionCategoryLabels(admin),
     warningLabels: deletionWarningLabels(admin),
+  },
+  audit: {
+    adminWithoutName: getMessage(admin, "audit.admin_without_name"),
   },
 });

@@ -6,7 +6,9 @@ import { ContentText } from "@/components/atoms/ContentText";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormCheckbox } from "@/components/ui/form-checkbox";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { ActiveGradeOption } from "@/data/access/load-active-grades.server";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 export type RoleSelectorSelection = {
   adminSelected: boolean;
@@ -20,6 +22,8 @@ type RoleSelectorProps = {
   initialGradeIds?: readonly string[];
   disabled?: boolean;
   onSelectionChange?: (selection: RoleSelectorSelection) => void;
+  rolesHint?: HintTerm;
+  groupsHint?: HintTerm;
 };
 
 export const RoleSelector = ({
@@ -28,6 +32,8 @@ export const RoleSelector = ({
   initialGradeIds = [],
   disabled = false,
   onSelectionChange,
+  rolesHint,
+  groupsHint,
 }: RoleSelectorProps) => {
   const messages = useAdminMessages();
   const [adminSelected, setAdminSelected] = useState(initialRoles.includes(USER_ROLE.ADMIN));
@@ -51,7 +57,18 @@ export const RoleSelector = ({
   return (
     <div className="space-y-4">
       <FieldGroup>
-        <FieldLabel>{messages.approvals.rolesLabel}</FieldLabel>
+        <FieldLabel>
+          {rolesHint ? (
+            <TermLabel
+              term={nonEmptyTerm(rolesHint.term)}
+              hint={rolesHint.hint}
+              ariaLabel={rolesHint.term}
+              popoverSide="top"
+            />
+          ) : (
+            messages.approvals.rolesLabel
+          )}
+        </FieldLabel>
         <label className="flex min-h-11 items-center gap-3">
           <FormCheckbox
             name="roles"
@@ -76,7 +93,18 @@ export const RoleSelector = ({
 
       {teacherSelected ? (
         <FieldGroup>
-          <FieldLabel>{messages.approvals.groupsLabel}</FieldLabel>
+          <FieldLabel>
+            {groupsHint ? (
+              <TermLabel
+                term={nonEmptyTerm(groupsHint.term)}
+                hint={groupsHint.hint}
+                ariaLabel={groupsHint.term}
+                popoverSide="top"
+              />
+            ) : (
+              messages.approvals.groupsLabel
+            )}
+          </FieldLabel>
           {grades.length === 0 ? (
             <ContentText tone="secondary">{messages.approvals.groupsLabel}</ContentText>
           ) : (

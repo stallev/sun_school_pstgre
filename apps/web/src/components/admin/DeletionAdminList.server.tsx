@@ -12,9 +12,11 @@ import {
 } from "@/data/deletions/load-deletion-admin-list.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { Dictionary, MessageLocale } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 import { cn } from "@/lib/utils";
 
 type DeletionAdminListProps = {
@@ -37,6 +39,16 @@ export const DeletionAdminList = async ({
   const { tab: tabRaw } = await searchParams;
   const tab = parseDeletionListTab(tabRaw);
   const prisma = await getPrisma();
+  const schoolTimeZone = await getSchoolTimezone();
+  const adminDict = dictionaries.admin;
+  if (!adminDict) {
+    throw new Error("Missing admin dictionary for deletion list");
+  }
+  const hints = pickAdminHintsSubset(adminDict, [
+    "deletion_delete",
+    "deletion_anonymize",
+    "deletion_actions",
+  ] as const);
   const commonDict = dictionaries.common;
   if (!commonDict) {
     throw new Error("Missing common dictionary for deletion list");
@@ -96,9 +108,13 @@ export const DeletionAdminList = async ({
                 row={row}
                 messages={messages}
                 locale={locale}
+                schoolTimeZone={schoolTimeZone}
                 dictionaries={dictionaries}
                 formError={formError}
                 closeLabel={closeLabel}
+                deletionActionHint={hints.deletion_actions}
+                deletePlanHint={hints.deletion_delete}
+                anonymizePlanHint={hints.deletion_anonymize}
               />
             ))}
           </ul>

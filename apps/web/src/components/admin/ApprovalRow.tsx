@@ -9,24 +9,29 @@ import { RejectRequestDialog } from "@/components/admin/RejectRequestDialog.clie
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { SectionTitle } from "@/components/atoms";
 import { Button } from "@/components/ui/button";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { ActiveGradeOption } from "@/data/access/load-active-grades.server";
 import type { PendingApprovalRow } from "@/data/access/load-pending-approvals.server";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
-import { formatDate } from "@/lib/i18n/format";
-import { formatApprovalSubmitLabel, formatApprovalWaitingLabel } from "@/lib/messages/admin-messages";
+import { formatRelativeCalendarDay } from "@/lib/i18n/relative-day";
+import { formatApprovalSubmitLabel, formatWaitingDays } from "@/lib/messages/admin-messages";
 import type { RoleSelectorSelection } from "@/components/admin/RoleSelector";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import { FORM_SUBMIT_BUTTON_CLASS } from "@/lib/ui/form-submit-button-class";
 
 type ApprovalRowProps = {
   row: PendingApprovalRow;
   grades: readonly ActiveGradeOption[];
-  submittedLabel: string;
   uiLocale: MessageLocale;
+  schoolTimeZone: string;
   dictionaries: Record<string, Dictionary>;
   formError: string;
   closeLabel: string;
+  rolesHint: HintTerm;
+  groupsHint: HintTerm;
+  consentVersionHint: HintTerm;
 };
 
 const loginLabel = (
@@ -40,11 +45,14 @@ const loginLabel = (
 export const ApprovalRow = ({
   row,
   grades,
-  submittedLabel,
   uiLocale,
+  schoolTimeZone,
   dictionaries,
   formError,
   closeLabel,
+  rolesHint,
+  groupsHint,
+  consentVersionHint,
 }: ApprovalRowProps) => {
   const messages = useAdminMessages();
   const defaultRoles = resolveDefaultApprovalRoles(row.requestedRoles);
@@ -66,8 +74,21 @@ export const ApprovalRow = ({
   });
 
   const loginMethods = row.loginProviders.map((provider) => loginLabel(provider, messages)).join(" · ");
-  const submittedDate = formatDate(row.submittedAtIso.slice(0, 10), uiLocale);
-  const metaLine = `${submittedLabel}: ${submittedDate} · ${messages.approvals.consentVersion}: ${row.consentVersion} · ${formatApprovalWaitingLabel(messages.approvals.submittedToday, messages.approvals.waitingDays, row.waitingDays)}`;
+  const submittedRelative = formatRelativeCalendarDay({
+    instantIso: row.submittedAtIso,
+    schoolTimeZone,
+    locale: uiLocale,
+    messages: {
+      today: messages.approvals.submittedToday,
+      yesterday: messages.approvals.submittedYesterday,
+      onDate: messages.approvals.submittedOn,
+    },
+  });
+  const waitingPart =
+    row.waitingDays > 0
+      ? formatWaitingDays(messages.approvals.waitingDays, row.waitingDays)
+      : null;
+  const metaLine = [submittedRelative, waitingPart].filter(Boolean).join(" · ");
 
   const approveLabel = useMemo(() => {
     const gradeNameById = new Map(grades.map((grade) => [grade.gradeId, grade.name]));
@@ -89,6 +110,15 @@ export const ApprovalRow = ({
             <SectionTitle className="font-medium text-cobalt-ink">{row.displayName}</SectionTitle>
             <p className="text-sm text-ink-2">{loginMethods}</p>
             <p className="text-sm text-ink-2">{metaLine}</p>
+            <div className="flex flex-wrap items-center gap-1.5 text-sm text-ink-2">
+              <TermLabel
+                term={nonEmptyTerm(consentVersionHint.term)}
+                hint={consentVersionHint.hint}
+                ariaLabel={consentVersionHint.term}
+                popoverSide="top"
+              />
+              <span>{row.consentVersion}</span>
+            </div>
           </div>
           <form action={formAction} className="space-y-4" aria-busy={pending}>
             <input type="hidden" name="requestId" value={row.requestId} />
@@ -97,6 +127,8 @@ export const ApprovalRow = ({
               requestedRoles={row.requestedRoles}
               disabled={pending}
               onSelectionChange={setSelection}
+              rolesHint={rolesHint}
+              groupsHint={groupsHint}
             />
             <div className="flex flex-wrap gap-2">
               <Button type="submit" disabled={pending} aria-busy={pending} className={FORM_SUBMIT_BUTTON_CLASS}>

@@ -5,12 +5,11 @@ import { describe, expect, it } from "vitest";
 
 const adminDir = path.dirname(fileURLToPath(import.meta.url));
 
-describe("PeoplePageContent (P26-CU5)", () => {
-  it("scopes legacy consent panel to the legacy tab", () => {
+describe("PeoplePageContent (P27-CU6)", () => {
+  it("adds consent paper hint above the pupil list", () => {
     const source = fs.readFileSync(path.join(adminDir, "PeoplePageContent.server.tsx"), "utf8");
-    expect(source).toMatch(/isLegacyTab[\s\S]*LegacyConsentList/);
-    expect(source).toMatch(/legacyCountLink/);
-    expect(source).toMatch(/ShowMore/);
-    expect(source).toMatch(/PeopleGroupFilter/);
+    expect(source).toMatch(/consent_paper/);
+    expect(source).toMatch(/TermLabel/);
+    expect(source).toMatch(/pupil_states/);
   });
 });

@@ -1,7 +1,9 @@
 import { CustomLink } from "@/components/ui/custom-link";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { PEOPLE_LIST_FILTER, type PeopleListFilter } from "@/data/people/people-list-filters";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import { buildPeopleListHref } from "@/lib/people/parse-people-filter";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { cn } from "@/lib/utils";
 
 type PeopleListFilterNavProps = {
@@ -9,16 +11,31 @@ type PeopleListFilterNavProps = {
   displayQuery: string;
   activeGroupId: string | undefined;
   messages: AdminMessages;
+  pupilStatesHint: HintTerm;
+  migratedHint: HintTerm;
 };
 
 const filterTabs: {
   key: PeopleListFilter;
   label: (messages: AdminMessages) => string;
+  hint?: (hints: { pupilStatesHint: HintTerm; migratedHint: HintTerm }) => HintTerm | null;
 }[] = [
   { key: PEOPLE_LIST_FILTER.ALL, label: (messages) => messages.people.filterAll },
-  { key: PEOPLE_LIST_FILTER.UNASSIGNED, label: (messages) => messages.people.filterUnassigned },
-  { key: PEOPLE_LIST_FILTER.INACTIVE, label: (messages) => messages.people.filterInactive },
-  { key: PEOPLE_LIST_FILTER.LEGACY, label: (messages) => messages.people.filterLegacy },
+  {
+    key: PEOPLE_LIST_FILTER.UNASSIGNED,
+    label: (messages) => messages.people.filterUnassigned,
+    hint: ({ pupilStatesHint }) => pupilStatesHint,
+  },
+  {
+    key: PEOPLE_LIST_FILTER.INACTIVE,
+    label: (messages) => messages.people.filterInactive,
+    hint: ({ pupilStatesHint }) => pupilStatesHint,
+  },
+  {
+    key: PEOPLE_LIST_FILTER.LEGACY,
+    label: (messages) => messages.people.filterLegacy,
+    hint: ({ migratedHint }) => migratedHint,
+  },
 ];
 
 export const PeopleListFilterNav = ({
@@ -26,6 +43,8 @@ export const PeopleListFilterNav = ({
   displayQuery,
   activeGroupId,
   messages,
+  pupilStatesHint,
+  migratedHint,
 }: PeopleListFilterNavProps) => (
   <nav
     className="-mb-px flex gap-1 overflow-x-auto border-b border-line"
@@ -40,6 +59,8 @@ export const PeopleListFilterNav = ({
         displayQuery,
         page: 1,
       });
+      const hint = tab.hint?.({ pupilStatesHint, migratedHint }) ?? null;
+      const label = tab.label(messages);
       return (
         <CustomLink
           key={tab.key}
@@ -53,7 +74,16 @@ export const PeopleListFilterNav = ({
               : "border-transparent text-ink-2 hover:text-ink",
           )}
         >
-          {tab.label(messages)}
+          {hint ? (
+            <TermLabel
+              term={nonEmptyTerm(label)}
+              hint={hint.hint}
+              ariaLabel={label}
+              popoverSide="top"
+            />
+          ) : (
+            label
+          )}
         </CustomLink>
       );
     })}

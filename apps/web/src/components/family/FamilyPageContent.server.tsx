@@ -23,6 +23,8 @@ import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { pickFamilyAdminMessages } from "@/lib/messages/pick-family-admin-messages.server";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
 export type FamilyPageProps = {
@@ -39,6 +41,7 @@ export const FamilyPageContent = async ({ searchParams }: FamilyPageProps) => {
   ]);
   const messages = pickFamilyAdminMessages(adminDict, commonDict);
   const adminMessages = pickAdminMessages(adminDict);
+  const familyHints = pickAdminHintsSubset(adminDict, ["family_login"] as const);
   const dictionaries = { admin: adminDict, common: commonDict };
   const prisma = await getPrisma();
   const flagOn = await prisma.$transaction((tx) => readFeaturesParentsEnabled(tx));
@@ -111,11 +114,20 @@ export const FamilyPageContent = async ({ searchParams }: FamilyPageProps) => {
       {listResult.data.families.length === 0 ? (
         <EmptyState title={messages.emptyTitle} description={messages.emptyDescription} />
       ) : (
-        <ul className="overflow-hidden rounded-xl border border-line bg-card divide-y divide-line">
-          {listResult.data.families.map((row) => (
-            <FamilyListRow key={row.familyId} row={row} messages={messages} />
-          ))}
-        </ul>
+        <>
+          <TermLabel
+            term={nonEmptyTerm(familyHints.family_login.term)}
+            hint={familyHints.family_login.hint}
+            ariaLabel={familyHints.family_login.term}
+            className="text-sm text-ink-2"
+            popoverSide="top"
+          />
+          <ul className="overflow-hidden rounded-xl border border-line bg-card divide-y divide-line">
+            {listResult.data.families.map((row) => (
+              <FamilyListRow key={row.familyId} row={row} messages={messages} />
+            ))}
+          </ul>
+        </>
       )}
       {listResult.data.unassignedPupilCount > 0 ? (
         <div className="space-y-2 text-sm text-ink-2">

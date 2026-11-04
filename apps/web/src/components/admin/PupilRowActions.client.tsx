@@ -17,9 +17,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { RowActionsMenu, RowActionsMenuItem } from "@/components/ui/row-actions-menu";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { PeopleGroupOption, PupilListRow } from "@/data/school/load-people-admin-list.server";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type PupilRowActionsProps = {
   row: PupilListRow;
@@ -30,6 +32,7 @@ type PupilRowActionsProps = {
   uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
+  pupilTransferHint: HintTerm;
   onEdit: () => void;
 };
 
@@ -50,6 +53,7 @@ export const PupilRowActions = ({
   uiLocale,
   formError,
   closeLabel,
+  pupilTransferHint,
   onEdit,
 }: PupilRowActionsProps) => {
   const messages = useAdminMessages();
@@ -73,17 +77,26 @@ export const PupilRowActions = ({
     showTrigger: false as const,
   };
 
-  const primaryButton = (label: string, onClick: () => void) => (
+  const primaryButton = (label: ReactNode, onClick: () => void) => (
     <Button type="button" className="h-9" onClick={onClick}>
       {label}
     </Button>
+  );
+
+  const transferLabel = (
+    <TermLabel
+      term={nonEmptyTerm(pupilTransferHint.term)}
+      hint={pupilTransferHint.hint}
+      ariaLabel={pupilTransferHint.term}
+      popoverSide="top"
+    />
   );
 
   let primaryAction: ReactNode;
   if (primary === "enroll") {
     primaryAction = primaryButton(messages.people.enrollAction, () => setEnrollOpen(true));
   } else if (primary === "transfer") {
-    primaryAction = primaryButton(messages.people.transferAction, () => setTransferOpen(true));
+    primaryAction = primaryButton(transferLabel, () => setTransferOpen(true));
   } else {
     primaryAction = primaryButton(messages.people.editAction, onEdit);
   }
@@ -106,9 +119,7 @@ export const PupilRowActions = ({
           </RowActionsMenuItem>
         ) : null}
         {primary !== "transfer" && row.isActive && row.groupName ? (
-          <RowActionsMenuItem onClick={() => setTransferOpen(true)}>
-            {messages.people.transferAction}
-          </RowActionsMenuItem>
+          <RowActionsMenuItem onClick={() => setTransferOpen(true)}>{transferLabel}</RowActionsMenuItem>
         ) : null}
         {row.isActive && row.groupName ? (
           <RowActionsMenuItem destructive onClick={() => setUnenrollConfirmOpen(true)}>

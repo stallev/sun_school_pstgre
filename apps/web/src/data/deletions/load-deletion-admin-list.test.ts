@@ -29,7 +29,7 @@ describe("resolveDeletionRequesterDisplayName", () => {
         },
         labels,
       ),
-    ).toBe(labels.requesterNameFallback);
+    ).toEqual({ displayName: labels.requesterNameFallback, usedFallback: true });
   });
 });
 

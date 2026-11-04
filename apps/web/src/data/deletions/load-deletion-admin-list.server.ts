@@ -41,6 +41,8 @@ export type DeletionAdminRow = {
   requestedByUserId: string;
   requestedByDisplayName: string;
   requestedByRoleLabel: string | null;
+  requestedByEmail: string | null;
+  requestedByUsedNameFallback: boolean;
   requestedBySelf: boolean;
   reason: string | null;
   dueOnIso: string;
@@ -103,9 +105,10 @@ export const isDeletionRequestedBySubject = (
 export const resolveDeletionRequesterDisplayName = (
   user: Parameters<typeof formatAppUserDisplayName>[0],
   labels: Pick<DeletionAdminListLabels, "deletedUserTemplate" | "requesterNameFallback">,
-): string => {
+): { displayName: string; usedFallback: boolean } => {
   const formatted = formatAppUserDisplayName(user, labels.deletedUserTemplate).trim();
-  return formatted.length > 0 ? formatted : labels.requesterNameFallback;
+  if (formatted.length > 0) return { displayName: formatted, usedFallback: false };
+  return { displayName: labels.requesterNameFallback, usedFallback: true };
 };
 
 export const sortDeletionRowsByDue = (rows: DeletionAdminRow[]): DeletionAdminRow[] =>
@@ -160,6 +163,7 @@ export async function loadDeletionAdminList(
           deletedOrdinal: true,
           status: true,
           roles: { select: { role: true } },
+          identities: { select: { email: true }, orderBy: { createdAt: "asc" }, take: 1 },
         },
       },
       takenBy: {
@@ -195,6 +199,8 @@ export async function loadDeletionAdminList(
       }
     }
 
+    const requesterName = resolveDeletionRequesterDisplayName(row.requestedBy, labels);
+
     mapped.push({
       requestId: row.id,
       type: row.type,
@@ -204,13 +210,15 @@ export async function loadDeletionAdminList(
       subjectPupilId: row.subjectPupilId,
       requestedAtIso: row.requestedAt.toISOString(),
       requestedByUserId: row.requestedById,
-      requestedByDisplayName: resolveDeletionRequesterDisplayName(row.requestedBy, labels),
+      requestedByDisplayName: requesterName.displayName,
       requestedByRoleLabel: resolveDeletionRequesterRoleLabel(
         row.requestedById,
         row.subjectUserId,
         row.requestedBy.roles,
         labels,
       ),
+      requestedByEmail: row.requestedBy.identities[0]?.email?.trim() || null,
+      requestedByUsedNameFallback: requesterName.usedFallback,
       requestedBySelf: isDeletionRequestedBySubject(row.requestedById, row.subjectUserId),
       reason: row.reason,
       dueOnIso,

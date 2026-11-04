@@ -13,9 +13,11 @@ import {
   loadUsersStatusCounts,
   parseUsersStatusFilter,
 } from "@/data/access/load-users-list.server";
+import { buildUserListDisambiguators } from "@/data/users/format-user-list-display";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary } from "@/lib/messages/get-dictionary";
 
@@ -36,10 +38,15 @@ export const UsersPageContent = async ({
   const locale = await getUiLocale();
   const adminDict = await getDictionary(locale, "admin");
   const adminMessages = pickAdminMessages(adminDict);
+  const hints = pickAdminHintsSubset(adminDict, ["user_statuses", "need_role"] as const);
   const [users, statusCounts] = await Promise.all([
     loadUsersList(prisma, statusFilter),
     loadUsersStatusCounts(prisma),
   ]);
+  const disambiguators = buildUserListDisambiguators(users, adminMessages, {
+    unnamed: adminMessages.users.unnamed,
+    adminWithoutName: adminMessages.audit.adminWithoutName,
+  });
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
@@ -52,6 +59,7 @@ export const UsersPageContent = async ({
           activeStatus={statusFilter}
           counts={statusCounts}
           messages={adminMessages}
+          statusHint={hints.user_statuses}
         />
         {users.length === 0 ? (
           <EmptyState
@@ -65,7 +73,14 @@ export const UsersPageContent = async ({
         ) : (
           <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface">
             {users.map((row) => (
-              <UserRow key={row.userId} row={row} messages={adminMessages} />
+              <UserRow
+                key={row.userId}
+                row={row}
+                messages={adminMessages}
+                disambiguator={disambiguators.get(row.userId) ?? null}
+                statusHint={hints.user_statuses}
+                needRoleHint={hints.need_role}
+              />
             ))}
           </ul>
         )}
@@ -78,4 +93,3 @@ export const UsersPageContent = async ({
     </AdminMessagesProvider>
   );
 };
-
