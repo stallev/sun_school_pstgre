@@ -3,6 +3,8 @@ import type { CatalogRowDto } from "@/lib/achievements/catalog-display";
 import { ACHIEVEMENT_KIND } from "@sunschool/domain";
 import { getDictionary } from "@/lib/messages/get-dictionary";
 import { pickAchievementsCatalogMessages } from "@/lib/messages/pick-achievements-catalog-messages.server";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 
 const SAMPLE_REWARDS: CatalogRowDto[] = [
   {
@@ -48,6 +50,13 @@ export const AchievementsCatalogLab = async () => {
   const admin = await getDictionary("ru", "admin");
   const common = await getDictionary("ru", "common");
   const messages = pickAchievementsCatalogMessages(admin, common);
+  const hints = pickAdminHintsSubset(admin, [
+    "ach_series",
+    "ach_cumulative",
+    "ach_recalc",
+    "ach_levels",
+  ] as const);
+  const glossary = pickGlossaryUiMessages(common);
 
   return (
     <AchievementsCatalogBoard
@@ -56,6 +65,9 @@ export const AchievementsCatalogLab = async () => {
       messages={messages}
       dictionaries={{ admin, common }}
       messageLocale="ru"
+      hints={hints}
+      reviewLesson={glossary.review_lesson}
+      termHintAriaLabel={glossary.termHintAriaLabel}
     />
   );
 };

@@ -40,7 +40,18 @@
       "many": "уроков",
       "other": "уроков"
     },
-    "tier_after_lessons": "{prefix}после {count} {lessons} → +{points} кирпичиков",
+    "tier_points": {
+      "one": "балл",
+      "few": "балла",
+      "many": "баллов",
+      "other": "баллов"
+    },
+    "tier_bricks": {
+      "one": "кирпичик",
+      "few": "кирпичика",
+      "many": "кирпичиков",
+      "other": "кирпичиков"
+    },
     "rule_how_counted": "Как считается",
     "reward_dialog_create": "Новое достижение",
     "reward_dialog_edit": "Редактировать достижение",
@@ -98,7 +109,12 @@
     "group_points_condition_series": "{length} подряд",
     "group_points_condition_accumulation": "Всего {length}",
     "group_points_condition_event": "Каждое выступление",
-    "group_points_condition_once": "Один раз"
+    "group_points_condition_once": "Один раз",
+    "tier_after_condition": "{prefix}после {condition} → {bricks}",
+    "rules_note_series_lead": "одна серия — одна награда каждого уровня, после обрыва уровни можно получить снова.",
+    "rules_note_overview_in_series": "в сериях по стихам и тестам не участвуют.",
+    "rules_note_tail": "Изменение баллов действует только на будущие выдачи. Баллы достижений не участвуют в правилах — «Сто кирпичиков» считает только баллы уроков.",
+    "rules_note_overview_term": "Обзорные уроки"
   },
   "settings": {
     "page_subtitle": "Общие для всей школы: язык интерфейса и часовой пояс.",

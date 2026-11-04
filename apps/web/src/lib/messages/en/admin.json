@@ -40,7 +40,6 @@
       "many": "lessons",
       "other": "lessons"
     },
-    "tier_after_lessons": "{prefix}after {count} {lessons} → +{points} bricks",
     "rule_how_counted": "How it is counted",
     "reward_dialog_create": "New achievement",
     "reward_dialog_edit": "Edit achievement",
@@ -98,7 +97,24 @@
     "group_points_condition_series": "{length} in a row",
     "group_points_condition_accumulation": "{length} in total",
     "group_points_condition_event": "Each recital",
-    "group_points_condition_once": "Once"
+    "group_points_condition_once": "Once",
+    "tier_after_condition": "{prefix}after {condition} → {bricks}",
+    "tier_points": {
+      "one": "point",
+      "few": "points",
+      "many": "points",
+      "other": "points"
+    },
+    "tier_bricks": {
+      "one": "brick",
+      "few": "bricks",
+      "many": "bricks",
+      "other": "bricks"
+    },
+    "rules_note_series_lead": "one streak awards each tier once; after a break, tiers can be earned again.",
+    "rules_note_overview_in_series": "do not count in verse and test streaks.",
+    "rules_note_tail": "Point changes apply only to future awards. Achievement bonuses do not feed rules — One hundred bricks counts lesson points only.",
+    "rules_note_overview_term": "Review lessons"
   },
   "settings": {
     "page_subtitle": "Shared for the whole school: interface language and time zone.",

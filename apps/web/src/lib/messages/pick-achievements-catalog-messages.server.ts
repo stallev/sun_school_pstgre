@@ -10,6 +10,10 @@ export type AchievementsCatalogMessages = {
   recalcHint: string;
   recalcButton: string;
   rulesNote: string;
+  rulesNoteSeriesLead: string;
+  rulesNoteOverviewInSeries: string;
+  rulesNoteOverviewTerm: string;
+  rulesNoteTail: string;
   sectionByCategory: Record<string, string>;
   sectionPenalties: string;
   penaltiesIntro: string;
@@ -22,8 +26,10 @@ export type AchievementsCatalogMessages = {
   activePenalties: string;
   tierLabels: [string, string, string];
   tierLengthPoints: string;
-  tierAfterLessons: string;
+  tierAfterCondition: string;
   tierLessonsPlural: PluralForms;
+  tierPointsPlural: PluralForms;
+  tierBricksPlural: PluralForms;
   ruleHowCounted: string;
   toastSaved: string;
   toastRecalculated: string;
@@ -59,6 +65,10 @@ export const pickAchievementsCatalogMessages = (
   recalcHint: getMessage(admin, "achievements.recalc_hint"),
   recalcButton: getMessage(admin, "achievements.recalc_button"),
   rulesNote: getMessage(admin, "achievements.rules_note"),
+  rulesNoteSeriesLead: getMessage(admin, "achievements.rules_note_series_lead"),
+  rulesNoteOverviewInSeries: getMessage(admin, "achievements.rules_note_overview_in_series"),
+  rulesNoteOverviewTerm: getMessage(admin, "achievements.rules_note_overview_term"),
+  rulesNoteTail: getMessage(admin, "achievements.rules_note_tail"),
   sectionByCategory: {
     CONSISTENCY: getMessage(admin, "achievements.section_consistency"),
     EFFORT: getMessage(admin, "achievements.section_effort"),
@@ -79,8 +89,10 @@ export const pickAchievementsCatalogMessages = (
     getMessage(admin, "achievements.tier_gold"),
   ],
   tierLengthPoints: getMessage(admin, "achievements.tier_length_points"),
-  tierAfterLessons: getMessage(admin, "achievements.tier_after_lessons"),
+  tierAfterCondition: getMessage(admin, "achievements.tier_after_condition"),
   tierLessonsPlural: getPluralForms(admin, "achievements.tier_lessons"),
+  tierPointsPlural: getPluralForms(admin, "achievements.tier_points"),
+  tierBricksPlural: getPluralForms(admin, "achievements.tier_bricks"),
   ruleHowCounted: getMessage(admin, "achievements.rule_how_counted"),
   toastSaved: getMessage(admin, "achievements.toast_saved"),
   toastRecalculated: getMessage(admin, "achievements.toast_recalculated"),

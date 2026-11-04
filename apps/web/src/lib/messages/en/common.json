@@ -15,7 +15,9 @@
     "forbidden_title": "Access denied",
     "form": "Could not complete the action. Check the form and try again.",
     "year_closed": "The school year is closed — changes are not allowed",
-    "birth_date_in_future": "Birth date must be in the past"
+    "birth_date_in_future": "Birth date must be in the past",
+    "forbidden_group_teacher_title": "Page for the group teacher",
+    "forbidden_group_teacher_description": "You are signed in as an administrator."
   },
   "states": {
     "page_loading": "Loading page",
@@ -221,6 +223,7 @@
         "people": "People",
         "study": "Teaching"
       }
-    }
+    },
+    "forbidden_groups_list": "Back to groups list"
   }
 }
