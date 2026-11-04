@@ -15,6 +15,7 @@ import { Banner } from "@/components/patterns/Banner";
 import { CustomLink } from "@/components/ui/custom-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,6 +23,7 @@ import type { LessonFormPageData } from "@/data/lessons/load-lesson-form-page.se
 import type { LessonFormVerseRow } from "@/data/lessons/load-lesson-form-page.server";
 import { formatVerseRefLabel } from "@/lib/lesson/format-verse-ref";
 import type { TeacherLessonFormMessages } from "@/lib/messages/teacher-lesson-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { resolveMessageKey } from "@/lib/messages/resolve-message-key";
@@ -41,6 +43,8 @@ type LessonFormProps = {
   uiLocale: MessageLocale;
   formError: string;
   cancelHref: string;
+  formHints: { lessonType: HintTerm; lessonLeader: HintTerm };
+  termHintAriaLabel: string;
 };
 
 const fieldOrder = ["gradeId", "lessonDate", "title", "leadTeacherId", "verses"] as const;
@@ -53,6 +57,8 @@ export const LessonForm = ({
   uiLocale,
   formError,
   cancelHref,
+  formHints,
+  termHintAriaLabel,
 }: LessonFormProps) => {
   const dateFieldCopy = getFormDateFieldCopy(dictionaries.common!, uiLocale);
   const router = useRouter();
@@ -179,7 +185,13 @@ export const LessonForm = ({
           ) : null}
         </div>
         <div>
-          <p className="mb-2 text-sm font-medium">{messages.kindLabel}</p>
+          <p className="mb-2 text-sm font-medium">
+            <TermLabel
+              term={nonEmptyTerm(formHints.lessonType.term)}
+              hint={formHints.lessonType.hint}
+              ariaLabel={fillMessage(termHintAriaLabel, { term: formHints.lessonType.term })}
+            />
+          </p>
           {data.kindLocked ? (
             <p className="flex h-10 items-center rounded-lg bg-paper px-3 text-sm text-ink-2">
               {messages.kindLockedHint}
@@ -215,7 +227,13 @@ export const LessonForm = ({
           {fieldError("title") ? <AlertText>{fieldError("title")}</AlertText> : null}
         </label>
         <label className="grid gap-1 text-sm" htmlFor={`${formId}-lead`}>
-          <span>{messages.leadLabel}</span>
+          <span>
+            <TermLabel
+              term={nonEmptyTerm(formHints.lessonLeader.term)}
+              hint={formHints.lessonLeader.hint}
+              ariaLabel={fillMessage(termHintAriaLabel, { term: formHints.lessonLeader.term })}
+            />
+          </span>
           <FormSelect
             id={`${formId}-lead`}
             name="leadTeacherId"

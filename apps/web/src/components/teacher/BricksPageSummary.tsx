@@ -20,7 +20,6 @@ export const BricksPageSummary = ({
   termHintAriaLabel,
 }: BricksPageSummaryProps) => (
   <ContentText className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-2">
-    <span>{messages.summaryRule}</span>
     <span className="inline-flex flex-wrap items-center gap-1 font-medium text-ink">
       <TermLabel
         term={nonEmptyTerm(toIssueGlossary.term)}

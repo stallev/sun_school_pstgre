@@ -3,9 +3,14 @@ import { APP_LOCALE, LESSON_KIND, LESSON_STATUS } from "@sunschool/domain";
 import { describe, expect, it } from "vitest";
 import teacherRu from "@/lib/messages/ru/teacher.json";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
+import { pickTeacherHintsMessages } from "@/lib/messages/pick-teacher-hints-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
+import commonRu from "@/lib/messages/ru/common.json";
 import { TodayLessonCard } from "@/components/teacher/TodayLessonCard";
 
 const messages = pickTeacherLessonScreensMessages(teacherRu, APP_LOCALE.RU);
+const hints = pickTeacherHintsMessages(teacherRu);
+const glossaryUi = pickGlossaryUiMessages(commonRu);
 
 describe("TodayLessonCard (P26-T6)", () => {
   it("renders lesson heading without duplicate title and without stray progress marker", () => {
@@ -28,6 +33,9 @@ describe("TodayLessonCard (P26-T6)", () => {
         yearClosed={false}
         canMutate
         messages={messages}
+        checkedStateHint={hints.checked_state}
+        termHintAriaLabel={glossaryUi.termHintAriaLabel}
+        progressCountsTemplate={teacherRu.lesson.list.progress_fraction}
       />,
     );
 

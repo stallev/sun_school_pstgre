@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export type RecordField = {
-  label: string;
+  label: ReactNode;
   value: ReactNode;
   wide?: boolean;
 };
@@ -66,7 +66,7 @@ export const RecordCard = ({
           )}
         >
           {fields.map((field, index) => (
-            <div key={`${field.label}-${index}`} className={cn("min-w-0", field.wide && "col-span-2")}>
+            <div key={index} className={cn("min-w-0", field.wide && "col-span-2")}>
               <dt className={cn("text-muted", isAnalytics && "text-base")}>{field.label}</dt>
               <dd className={cn("break-words text-ink", isAnalytics ? "mt-1" : "mt-0.5")}>
                 {field.value}

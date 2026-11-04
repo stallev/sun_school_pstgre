@@ -16,6 +16,8 @@ import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
+import { pickTeacherHintsSubset } from "@/lib/messages/pick-teacher-hints-messages.server";
 
 export type LessonsPageProps = {
   searchParams: Promise<{ gradeId?: string; journalGap?: string }>;
@@ -34,7 +36,11 @@ export const LessonsPageContent = async ({ searchParams }: LessonsPageProps) => 
   const appLocale = messageLocaleToAppLocale(locale);
   const timeZone = await getSchoolTimezone();
   const teacherDict = await getDictionary(locale, "teacher");
+  const commonDict = await getDictionary(locale, "common");
   const messages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
+  const checkedStateHint = pickTeacherHintsSubset(teacherDict, ["checked_state"] as const).checked_state;
+  const progressCountsTemplate = getMessage(teacherDict, "lesson.list.progress_fraction");
 
   if (data.kind === "no_active_year") {
     return (
@@ -105,7 +111,13 @@ export const LessonsPageContent = async ({ searchParams }: LessonsPageProps) => 
         <ol className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
           {lessonRows.map((row) => (
             <li key={row.lessonId}>
-              <LessonListRow row={row} messages={messages} />
+              <LessonListRow
+                row={row}
+                messages={messages}
+                checkedStateHint={checkedStateHint}
+                termHintAriaLabel={glossaryUi.termHintAriaLabel}
+                progressCountsTemplate={progressCountsTemplate}
+              />
             </li>
           ))}
         </ol>

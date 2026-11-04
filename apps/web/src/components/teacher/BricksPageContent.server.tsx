@@ -15,6 +15,7 @@ import { fillMessage } from "@/lib/messages/fill-message";
 import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { pickTeacherBricksMessages } from "@/lib/messages/pick-teacher-bricks-messages.server";
 import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
+import { pickTeacherHintsSubset } from "@/lib/messages/pick-teacher-hints-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 
@@ -37,6 +38,11 @@ export const BricksPageContent = async ({ searchParams }: BricksPageContentProps
   const commonDict = await getDictionary(locale, "common");
   const messages = pickTeacherBricksMessages(teacherDict);
   const glossaryUi = pickGlossaryUiMessages(commonDict);
+  const brickHints = pickTeacherHintsSubset(teacherDict, [
+    "bricks_collected",
+    "bricks_issued",
+    "bricks_left",
+  ] as const);
   const achievementMessages = pickTeacherAchievementsMessages(teacherDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
   const formError = getMessage(commonDict, "errors.form");
@@ -110,6 +116,12 @@ export const BricksPageContent = async ({ searchParams }: BricksPageContentProps
             ledger={data.ledger}
             defaultDate={defaultDate}
             messages={messages}
+            columnHints={{
+              collected: brickHints.bricks_collected,
+              issued: brickHints.bricks_issued,
+              left: brickHints.bricks_left,
+            }}
+            termHintAriaLabel={glossaryUi.termHintAriaLabel}
             achievementMessages={data.rows.some((row) => row.achievementsUiEnabled) ? achievementMessages : undefined}
             dictionaries={dictionaries}
             uiLocale={locale}

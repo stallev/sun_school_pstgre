@@ -1,29 +1,30 @@
 import { LESSON_KIND } from "@sunschool/domain";
 import { ChevronRightIcon } from "lucide-react";
 import { ContentText, NumberDisplay } from "@/components/atoms";
+import { CheckedStateProgressLabel } from "@/components/teacher/CheckedStateProgressLabel";
 import { StatusText } from "@/components/ui/status-text";
 import { CustomLink } from "@/components/ui/custom-link";
 import type { LessonListRowView } from "@/data/lessons/build-lesson-list-row-views.server";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 
 type LessonListRowProps = {
   row: LessonListRowView;
   messages: TeacherLessonScreensMessages;
+  checkedStateHint: HintTerm;
+  termHintAriaLabel: string;
+  progressCountsTemplate: string;
 };
 
-export const LessonListRow = ({ row, messages }: LessonListRowProps) => {
+export const LessonListRow = ({
+  row,
+  messages,
+  checkedStateHint,
+  termHintAriaLabel,
+  progressCountsTemplate,
+}: LessonListRowProps) => {
   const checkedCount = Math.min(row.checkedCount, row.totalPupils);
   const isReview = row.kind === LESSON_KIND.REVIEW;
-  const checkLabel =
-    row.totalPupils > 0
-      ? messages.listProgressFraction(checkedCount, row.totalPupils)
-      : messages.checkNotStarted;
-  const checkTone =
-    row.totalPupils === 0
-      ? "neutral"
-      : checkedCount >= row.totalPupils
-        ? "ok"
-        : "warn";
 
   const secondaryLine = isReview ? messages.listReviewSubline : row.verseRefsLabel;
 
@@ -53,9 +54,20 @@ export const LessonListRow = ({ row, messages }: LessonListRowProps) => {
         ) : null}
       </span>
       <span className="flex items-center justify-between gap-4 sm:justify-end">
-        <StatusText tone={checkTone} className="shrink-0 text-sm">
-          {checkLabel}
-        </StatusText>
+        {row.totalPupils > 0 ? (
+          <CheckedStateProgressLabel
+            hint={checkedStateHint}
+            countsTemplate={progressCountsTemplate}
+            checked={checkedCount}
+            total={row.totalPupils}
+            termHintAriaLabel={termHintAriaLabel}
+            className="shrink-0 text-sm tabular-nums text-ink-2"
+          />
+        ) : (
+          <StatusText tone="neutral" className="shrink-0 text-sm">
+            {messages.checkNotStarted}
+          </StatusText>
+        )}
         <ChevronRightIcon aria-hidden className="size-5 shrink-0 text-muted" />
       </span>
     </CustomLink>

@@ -14,4 +14,9 @@ describe("CheckCard present/singing layout (§5.2 P24-CU2)", () => {
     expect(source).toMatch(/space-y-1 lg:hidden[\s\S]*presentHint/);
     expect(source).toMatch(/hidden space-y-1 lg:block lg:basis-full[\s\S]*presentHint/);
   });
+
+  it("uses TermLabel for choir singing (P27-T3)", () => {
+    const source = fs.readFileSync(path.join(teacherDir, "CheckCard.tsx"), "utf8");
+    expect(source).toMatch(/TermLabel[\s\S]*singingLabel/);
+  });
 });

@@ -11,6 +11,8 @@ import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-local
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickTeacherLessonFormMessages } from "@/lib/messages/pick-teacher-lesson-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
+import { pickTeacherHintsSubset } from "@/lib/messages/pick-teacher-hints-messages.server";
 
 export const instant = false;
 
@@ -28,6 +30,8 @@ const EditLessonPage = async ({ params }: EditLessonPageProps) => {
     getDictionary(locale, "common"),
   ]);
   const messages = pickTeacherLessonFormMessages(teacherDict, messageLocaleToAppLocale(locale));
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
+  const formHints = pickTeacherHintsSubset(teacherDict, ["lesson_type", "lesson_leader"] as const);
   const dictionaries = { teacher: teacherDict, common: commonDict };
   const formError = getMessage(commonDict, "errors.form");
 
@@ -63,6 +67,11 @@ const EditLessonPage = async ({ params }: EditLessonPageProps) => {
         uiLocale={locale}
         formError={formError}
         cancelHref={`/lessons/${lessonId}`}
+        formHints={{
+          lessonType: formHints.lesson_type,
+          lessonLeader: formHints.lesson_leader,
+        }}
+        termHintAriaLabel={glossaryUi.termHintAriaLabel}
       />
     </div>
   );

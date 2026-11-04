@@ -15,6 +15,8 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
+import { pickTeacherHintsSubset } from "@/lib/messages/pick-teacher-hints-messages.server";
 import { resolveTodayGreetingPart } from "@/lib/teacher/resolve-today-greeting-part";
 
 const hourInTimeZone = (timeZone: string): number => {
@@ -34,7 +36,11 @@ export const TodayPageContent = async () => {
   const locale = await getUiLocale();
   const appLocale = messageLocaleToAppLocale(locale);
   const teacherDict = await getDictionary(locale, "teacher");
+  const commonDict = await getDictionary(locale, "common");
   const messages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
+  const checkedStateHint = pickTeacherHintsSubset(teacherDict, ["checked_state"] as const).checked_state;
+  const progressCountsTemplate = getMessage(teacherDict, "lesson.list.progress_fraction");
   const timeZone = await getSchoolTimezone();
   const data = await loadTodayPage(await getPrisma(), actor.userId, appLocale, timeZone, messages);
 
@@ -74,6 +80,9 @@ export const TodayPageContent = async () => {
             yearClosed={data.yearClosed}
             canMutate={data.canMutate}
             messages={messages}
+            checkedStateHint={checkedStateHint}
+            termHintAriaLabel={glossaryUi.termHintAriaLabel}
+            progressCountsTemplate={progressCountsTemplate}
           />
           <TodayAchievementMarkSection
             gradeId={data.gradeId}
