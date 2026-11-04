@@ -2,7 +2,7 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 2.4  
+**Версия:** 2.5  
 **Дата:** 2026-11-04  
 **Волна:** W9-01 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md) (UX-02), [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`canonical_routes.md`](../../../design/canonical_routes.md), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) §6, [`auth_runtime_spec.md`](../../../prds/05_runtime/auth_runtime_spec.md) §10, [`monorepo_boundaries_contract.md`](../contracts/monorepo_boundaries_contract.md) §5, [`adr_002_nextjs_vercel_runtime_policy.md`](../../../prds/07_governance/adr_002_nextjs_vercel_runtime_policy.md) §3–§5.2, [`adr_008_i18n_ru_en_dictionary_slices.md`](../../../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md), [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md)  
@@ -231,6 +231,7 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | R-13 | MUST (P24): компактный верх страницы — `main` с `pt-2` (< `lg`) и `lg:pt-3`; заголовок страницы (`PageHeader`) отделён от контента `mb-3` / `lg:mb-4`; ссылка «назад» над заголовком `h-9` и `mb-1`. Пустое место между шапкой оболочки и первым содержательным блоком не больше ~24 px на `lg` |
 | R-14 | MUST (P25, ADR-018): режим «Смотреть как» хранится в cookie `view_as`, переживает перезагрузку, в шапке виден бейдж «Режим: …»; пункты предпросмотра без доступа реальной роли не показываются; права не меняются |
 | R-15 | MUST (P26, ADR-019): в режиме «Учитель» видны все пункты teacher-меню, которые реально открываются у текущей роли; пункты, закрытые реальной ролью (`/group`), — неактивные (`aria-disabled`) с подсказкой «Нужна роль учителя в группе», а не скрытые; предикат «доступен» — тот же, что решает доступ к странице; `route-table.ts` и права не меняются; тест соответствия меню фактическому доступу |
+| R-16 | MUST (P27, ADR-020): причина неактивного пункта меню — через `TermLabel` вариант `reason` (по нажатию, Enter; работает на касании); `title` — дополнение; права и `route-table.ts` не меняются |
 | R-12 | MUST (P24): toast справа снизу на `lg+`, сверху на < `lg`; success / error различаются цветом **и** иконкой; 2000 мс |
 
 ## 16. Acceptance criteria
@@ -288,3 +289,4 @@ Disclosure-кнопка с `aria-label` (имя пользователя — т�
 | 2026-11-03 | v2.1 — P24, ADR-017: §4 контейнер `max-w-[1600px] mx-auto` для шапки и `#view`, `shell-header.client.tsx`, cookie-модуль; §5 шаг 4а; §6.1а rail-сайдбар; §6.5 toast справа снизу с цветом и иконкой; R-9, R-11, R-12; §16 |
 | 2026-11-03 | v2.3 — P25 (ADR-018): §8 режим «Смотреть как» — cookie `view_as`, бейдж «Режим: …», фильтр пунктов по реальным правам; R-14 |
 | 2026-11-04 | v2.4 — P26 (ADR-019): §8 фильтр меню предпросмотра с учётом режима, неактивные пункты с причиной; R-15 |
+| 2026-11-04 | v2.5 — P27 (ADR-020): R-16 причина неактивного пункта по нажатию |

@@ -2,7 +2,7 @@
 
 **Тип:** UX-контракт (UX-05)  
 **Статус:** Canonical  
-**Версия:** 1.7  
+**Версия:** 1.8  
 **Дата:** 2026-11-04  
 **Волна:** W7-02  
 **Зависит от:** [`canonical_routes.md`](./canonical_routes.md), [`responsive_navigation_contract.md`](./responsive_navigation_contract.md) §7–§8, [`visual_identity_contract.md`](./visual_identity_contract.md), [`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md) §5–§6, [`auth_runtime_spec.md`](../prds/05_runtime/auth_runtime_spec.md) §8, [`ai_agent_ui_ux_guideline.md`](../general/ai_agent_ui_ux_guideline.md) (FX-4, FX-8), [`ai_loading_patterns.md`](../guidelines/nextjs/ai_loading_patterns.md), [`adr_008_i18n_ru_en_dictionary_slices.md`](../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md)  
@@ -108,6 +108,7 @@
 | D21 | Закрытый год посчитан по другой версии методологии | `/analytics`, `/school`, карточка года ученика | Пометка «Год посчитан по методологии vX, сейчас действует vY»; итоги не пересчитываются |
 | D22 | Ошибка загрузки страницы (P25, ADR-018 §4 п. 7) | `app/(app)/error.tsx` | Текст «Не удалось открыть страницу» человеческими словами, кнопки «Повторить» и «На главную», короткий код (digest) только у admin; событие — в Sentry; без технических слов |
 | D23 | Пункт меню недоступен реальной роли в режиме «Смотреть как» (P26, ADR-019 §4 п. 1) | боковое меню | Пункт виден, `aria-disabled`, серый текст и подсказка «Нужна роль учителя в группе»; по клику — ничего или popover с причиной; не скрывается |
+| D24 | Отказ в доступе называет нужную роль (P27, ADR-020 §4 п. 9) | `ForbiddenState` на `/group`, `/group/points` | «Страница для учителя группы. Вы вошли как администратор»; ссылки «К списку групп», «На главную»; права не меняются |
 
 ## 6. Матрица «тип экрана × состояние»
 
@@ -197,3 +198,4 @@
 | 2026-11-03 | v1.5 — D14: модальный диалог из трёх действий вместо подтверждения браузера (P24) |
 | 2026-11-03 | v1.6 — P25 (ADR-018): D22 страница ошибки с действием и кодом |
 | 2026-11-04 | v1.7 — P26 (ADR-019): D23 неактивный пункт меню предпросмотра |
+| 2026-11-04 | v1.8 — P27 (ADR-020): D24 отказ называет нужную роль |

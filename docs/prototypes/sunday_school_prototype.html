@@ -57,6 +57,7 @@
   Проверка ДЗ          [+] check, lessonTable (сдано позже, корректировка проверенных уроков)
   Кирпичики, рейтинг   [+] bricks, rating
   P26 (ADR-019): «Сегодня» в календаре, «Техническая запись» в журнале, фильтр по группе и «Показать ещё» в «Ученики», «Регулярно ходят: N из M», «Уроки 1, 3», термин-подсказка у правого края. Прототип не моделирует права реальной роли: неактивные пункты меню предпросмотра (D23) — только в приложении
+  P27 (ADR-020): termLabel()/termHeader() — слово всегда видно рядом со значком «?»; подсказки в «Кирпичики» (Набрано, Выдано, Остаток, К выдаче), «Проверка ДЗ» (до 4 / от 8), «Журнал» (системные записи), «Ученики» (согласие), «Учебный год» (последствия закрытия)
   P25 (ADR-018): понятные названия («регулярно ходят», «из 10», «% к прошлому году»), termHint() «?», поиск учеников, «Как мы считали» свёрнуто
   Аналитика по годам   [+] полоса лет и таблица итогов на analytics, school, pupil; итоги года и «Все годы» на group; разница с прошлым годом, пороги N=10 / M=4 (не утверждены), год по умолчанию, снимки закрытых лет (multi_year_analytics.md)
   Аналитика            [+] analytics, school; [~] «кто какие уроки провёл» (9.1.4), динамика успеваемости (9.1.3), строка качества данных (9.1) — присутствуют фрагментарно
@@ -737,6 +738,8 @@ const f1 = x => x==null || isNaN(x) ? '—' : (Math.round(x*10)/10).toString().r
 const pct = x => x==null || isNaN(x) ? '—' : (Math.round(x*1000)/10).toString().replace('.',',')+'%';
 /* TermHint (P25, ADR-018, UX-03 D-17): «?» у термина; popover по клику / Enter, Esc и клик вне закрывают; текст ≤ 200 знаков */
 const termHint = (term, text) => `<span class="relative inline-flex align-middle"><button type="button" data-term-hint aria-expanded="false" aria-label="Что значит «${term}»?" class="-my-2.5 inline-flex size-9 items-center justify-center rounded-md text-muted hover:text-cobalt-ink">${ic('i-help','size-4')}</button><span role="note" hidden class="absolute left-0 top-8 z-20 w-[min(20rem,calc(100vw-2rem))] rounded-lg border border-line bg-surface p-3 text-left text-base font-normal normal-case text-ink shadow-float">${text}</span></span>`;
+const termLabel = (term, text) => `<span class="inline-flex items-center">${term}${termHint(term, text)}</span>`;
+const termHeader = (term, text) => termHint(term, text).replace('top-8','bottom-8');
 const kids = n => `${n} ${plural(n,'ребёнок','ребёнка','детей')}`;
 function closeTermHints(except){ document.querySelectorAll('[data-term-hint][aria-expanded=true]').forEach(b=>{ if (b!==except){ b.setAttribute('aria-expanded','false'); b.nextElementSibling.hidden = true; } }); }
 document.addEventListener('click', e=>{ const b = e.target.closest('[data-term-hint]'); closeTermHints(b); if (!b) return;
@@ -1693,7 +1696,7 @@ function vCheck(){
   /* P24: inline-клавиатура 0–10 в одну строку на desktop, без карточки с тенью и крупного числа */
   const scaleField = (key, val, label, late) => {
     const btn = (v, text, aria) => `<button type="button" role="radio" aria-checked="${val===v}" data-act="score" data-k="${key}" data-val="${v===null?'null':v}" ${aria?`aria-label="${aria}" title="${aria}"`:''} class="h-11 min-w-0 rounded-lg border px-1 text-base tabular-nums lg:h-9 lg:flex-1 ${val===v ? SEG_ON : SEG_OFF}">${text}</button>`;
-    return `<div class="py-3"><div class="mb-2 flex flex-wrap items-center gap-2"><span class="font-medium">${label}</span>${val==null ? '' : `<span class="text-sm ${bandCls(val)}">${band(val)}</span>`}${late}</div>
+    return `<div class="py-3"><div class="mb-2 flex flex-wrap items-center gap-2"><span class="font-medium">${label}</span>${val==null ? '' : `<span class="inline-flex items-center text-sm ${bandCls(val)}">${band(val)}${termHint('до 4 / от 8','Красное «до 4» — слабый результат, на него стоит обратить внимание. «От 8» — порог для достижений «Аккуратная тетрадь» и «Внимательный читатель».')}</span>`}${late}</div>
       <div class="grid grid-cols-6 gap-1 lg:flex" role="radiogroup" aria-label="${label}, 0–10">${btn(null,'—','Не оценивалось')}${Array.from({length:11},(_,v)=>btn(v,v)).join('')}</div></div>`; };
   const verseRows = rv.map((r,k)=>{ const voice = c.vs[k]==='voice';
     return `<div class="py-3"><div class="mb-2 flex flex-wrap items-center gap-2">${ref(r)}${voice ? `<span class="inline-flex items-center gap-1 text-sm text-ink-2">${ic('i-mic','size-4')} голос: 3 дня</span>` : ''}${lateTag('v'+k)}</div>
@@ -1804,9 +1807,9 @@ function vBricks(){
         ${bal<0 ? status('danger','выдано больше') : bal===0 ? status('ok','всё выдано') : ''}
       </div>
       <dl class="mt-1.5 grid grid-cols-3 gap-2 text-sm">
-        <div class="sm:flex sm:gap-1"><dt class="text-muted">Набрано:</dt><dd class="font-bold tabular-nums">${e}</dd></div>
-        <div class="sm:flex sm:gap-1"><dt class="text-muted">Выдано:</dt><dd class="font-bold tabular-nums">${i}</dd></div>
-        <div class="sm:flex sm:gap-1"><dt class="text-muted">Остаток:</dt><dd class="font-bold tabular-nums ${bal<0?'text-danger':''}">${bal}</dd></div>
+        <div class="sm:flex sm:gap-1"><dt class="text-muted">${termLabel('Набрано','Баллы уроков плюс бонус за достижения минус штрафы за год.')}:</dt><dd class="font-bold tabular-nums">${e}</dd></div>
+        <div class="sm:flex sm:gap-1"><dt class="text-muted">${termLabel('Выдано','Сколько кирпичиков уже отдано ученику. Выдачи записываются в журнал.')}:</dt><dd class="font-bold tabular-nums">${i}</dd></div>
+        <div class="sm:flex sm:gap-1"><dt class="text-muted">${termLabel('Остаток','Сколько ещё можно выдать: набрано минус выдано.')}:</dt><dd class="font-bold tabular-nums ${bal<0?'text-danger':''}">${bal}</dd></div>
       </dl>
       ${bp || pp ? `<p class="mt-1 text-sm text-muted">в том числе${bp ? ` бонус +${bp}` : ''}${bp && pp ? ',' : ''}${pp ? ` <span class="text-penalty">штрафы ${sgnInt(pp)}</span>` : ''}</p>` : ''}
       ${bal<0 ? `<p class="mt-2 text-sm text-danger">Остаток ушёл в минус после выдачи: исправили оценку или выдали штраф. Разница погасится будущими баллами — у ребёнка ничего не забираем.</p>` : ''}
@@ -1840,7 +1843,7 @@ function vBricks(){
     </li>`;
   }).join('');
   return pageHead('Выдача кирпичиков', `Средняя группа · учебный год ${YEAR}`, `<button type="button" data-act="go" data-view="rating" class="${B_OUTLINE}">${ic('i-rank','size-4')} Рейтинг</button>`) + `
-  <p class="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-2"><span>1 балл = 1 кирпичик. Набрано = баллы уроков + бонус за достижения − штрафы.</span><span class="font-medium text-ink">К выдаче: ${total}</span>${neg ? `<span class="text-danger">Отрицательный остаток: ${neg}</span>` : ''}</p>
+  <p class="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-2"><span>1 балл = 1 кирпичик.</span><span class="font-medium text-ink">${termLabel('К выдаче','Сколько кирпичиков ученики группы ещё могут получить: набрано минус уже выдано.')}: ${total}</span>${neg ? `<span class="text-danger">Отрицательный остаток: ${neg}</span>` : ''}</p>
   <ul class="grid grid-cols-1 gap-3 xl:grid-cols-2">${cards}</ul>`;
 }
 
@@ -2497,6 +2500,7 @@ function vPeople(){
         <p class="mt-0.5 text-sm">${hasKidConsent(u.id) ? status('ok', 'Согласие опекуна: '+(KID_CONSENT[u.id].how==='paper'?'на бумаге':'в приложении')+', '+KID_CONSENT[u.id].at) : status('warn','Нет согласия опекуна — зачислить нельзя')}</p></div>
       ${hasKidConsent(u.id) ? `<button type="button" data-act="enroll" data-id="${u.id}" class="${B_OUTLINE}">Зачислить в группу</button>` : `<button type="button" data-act="paper-consent" data-id="${u.id}" class="${B_OUTLINE}">Отметить бумажное согласие</button>`}</li>`).join('') || '<li class="px-5 py-4 text-ink-2">Все ученики распределены</li>'}</ul>`;
   return pageHead(t('common.titles.people'), '', action) + `
+  <p class="mb-3 flex items-center text-sm text-muted">Без согласия опекуна ученика нельзя зачислить в группу${termHint('Согласие','Согласие на обработку данных ребёнка. Опекун даёт его в приложении или на бумаге; администратор отмечает бумажное согласие.')}</p>
   <div class="mb-4 flex gap-1 overflow-x-auto border-b border-line" role="tablist">
     ${tabs.map(([k,l])=>`<button type="button" role="tab" aria-selected="${S.peopleTab===k}" data-act="ptab" data-tab="${k}"
       class="-mb-px h-11 shrink-0 border-b-2 px-3 text-base transition-[color,border-color] duration-100 ${S.peopleTab===k ? 'border-ink font-bold text-ink' : 'border-transparent text-ink-2 hover:text-ink'}">${l}</button>`).join('')}
@@ -2519,7 +2523,7 @@ function vYear(){
       </dl>
       <div class="mt-6 flex flex-col gap-2 border-t border-line pt-5 sm:flex-row">
         <button type="button" data-act="${S.yearClosed?'year-new':'toast'}" data-msg="Сначала завершите текущий год" class="${S.yearClosed ? B_PRIMARY : B_OUTLINE}">${ic('i-plus','size-4')} Следующий год</button>
-        ${S.yearClosed ? '' : `<button type="button" data-act="close-year" class="${B_DANGER} sm:ml-auto">Завершить год…</button>`}
+        ${S.yearClosed ? '' : `<span class="inline-flex items-center sm:ml-auto"><button type="button" data-act="close-year" class="${B_DANGER}">Завершить год…</button>${termHint('Завершить год','Для учителей данные года станут только для чтения. Завершение нельзя отменить.')}</span>`}
       </div>
     </section>
     <section>
@@ -2573,6 +2577,7 @@ function vAchievements(){
 
 function vAudit(){
   return pageHead('Журнал изменений', 'Записи не редактируются и не удаляются.') + `
+  <p class="mb-3 flex items-center text-sm text-muted">Системные записи скрыты${termHint('Системные записи','Автоматические действия: загрузка перевода Библии, установка пароля. Люди их не совершали.')}</p>
   <ol class="${CARD} divide-y divide-line">
     ${S.audit.map(([t,who,what,chg,why],i)=>`<li class="grid grid-cols-1 gap-1 px-5 py-4 md:grid-cols-[8rem_10rem_minmax(0,1fr)] md:gap-6">
       <p class="text-sm tabular-nums text-muted">${t}</p><p class="text-sm font-medium">${who}</p>
