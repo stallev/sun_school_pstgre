@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { BricksLedgerPanel } from "@/components/teacher/BricksLedgerPanel";
 import { StatusText } from "@/components/ui/status-text";
 import {
@@ -16,6 +15,7 @@ import {
 import { CompensateBricksDialog } from "@/components/teacher/CompensateBricksDialog";
 import { IssueBricksDialog } from "@/components/teacher/IssueBricksDialog";
 import { BalanceCards } from "@/components/teacher/BalanceCards";
+import { BalancePupilActions } from "@/components/teacher/BalancePupilActions.client";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
 import type { BrickLedgerEntryDto } from "@/data/bricks/bricks-shared.server";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
@@ -137,29 +137,11 @@ export const BalanceTable = ({
                     {row.balance}
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        type="button"
-                       
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          openDialog("issue", row.pupilId);
-                        }}
-                      >
-                        {messages.actionIssue}
-                      </Button>
-                      <Button
-                        type="button"
-                       
-                        variant="outline"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          openDialog("compensate", row.pupilId);
-                        }}
-                      >
-                        {messages.actionCompensate}
-                      </Button>
-                    </div>
+                    <BalancePupilActions
+                      messages={messages}
+                      onIssue={() => openDialog("issue", row.pupilId)}
+                      onCompensate={() => openDialog("compensate", row.pupilId)}
+                    />
                   </TableCell>
                 </TableRow>
               );

@@ -20,6 +20,12 @@ export type VersesCatalogRow = {
   refLabel: string;
   text: string | null;
   hasMissing: boolean;
+  bookId: string;
+  bookSortOrder: number;
+  bookLabel: string;
+  startChapter: number;
+  startVerse: number;
+  minLessonOrdinal: number | null;
   usages: VersesCatalogUsage[];
 };
 
@@ -113,6 +119,8 @@ export async function loadVersesCatalogPage(
     const key = `${range.bookId}:${range.startChapter}:${range.startVerse}:${range.endChapter}:${range.endVerse}`;
     const book = bookById.get(range.bookId);
     const refLabel = book ? formatVerseRefLabel(book, locale, range) : key;
+    const bookSortOrder = book?.sortOrder ?? -1;
+    const bookLabel = book?.shortRu ?? range.bookId;
     let row = byVerse.get(key);
     if (!row) {
       const built = await buildVerseTextForRange(translation.code, range);
@@ -120,6 +128,12 @@ export async function loadVersesCatalogPage(
         refLabel,
         text: built.ok ? stripEditorialVerseMarkup(built.text) : null,
         hasMissing: !built.ok,
+        bookId: range.bookId,
+        bookSortOrder,
+        bookLabel,
+        startChapter: range.startChapter,
+        startVerse: range.startVerse,
+        minLessonOrdinal: null,
         usages: [],
       };
       byVerse.set(key, row);
@@ -129,6 +143,15 @@ export async function loadVersesCatalogPage(
       ordinal: link.lesson.ordinal,
       title: link.lesson.title,
     });
+    const minOrdinal = Math.min(
+      row.minLessonOrdinal ?? link.lesson.ordinal,
+      link.lesson.ordinal,
+    );
+    row.minLessonOrdinal = minOrdinal;
+  }
+
+  for (const row of byVerse.values()) {
+    row.usages.sort((left, right) => left.ordinal - right.ordinal);
   }
 
   return {
@@ -136,7 +159,7 @@ export async function loadVersesCatalogPage(
     pickerGradeId,
     books,
     yearName: year.name,
-    rows: [...byVerse.values()].sort((a, b) => a.refLabel.localeCompare(b.refLabel, locale)),
+    rows: [...byVerse.values()],
     locale,
   };
 }

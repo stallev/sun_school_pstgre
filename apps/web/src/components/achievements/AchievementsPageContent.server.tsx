@@ -49,6 +49,7 @@ export const AchievementsPageContent = async () => {
         penalties={catalog.penalties}
         messages={messages}
         dictionaries={dictionaries}
+        messageLocale={locale}
       />
     </PageSection>
   );

@@ -59,9 +59,16 @@ export const VersesPageContent = async ({ searchParams }: VersesPageProps) => {
     refLabel: row.refLabel,
     text: row.text,
     hasMissing: row.hasMissing,
+    bookId: row.bookId,
+    bookSortOrder: row.bookSortOrder,
+    bookLabel: row.bookLabel,
+    startChapter: row.startChapter,
+    startVerse: row.startVerse,
+    minLessonOrdinal: row.minLessonOrdinal,
     usages: row.usages.map((usage) => ({
       lessonId: usage.lessonId,
-      linkLabel: messages.lessonUsageLink(usage.ordinal, usage.title),
+      ordinal: usage.ordinal,
+      linkLabel: String(usage.ordinal),
     })),
   }));
 
@@ -90,6 +97,9 @@ export const VersesPageContent = async ({ searchParams }: VersesPageProps) => {
           searchEmpty: messages.versesSearchEmpty,
           verseMissing: messages.verseMissing,
           lessonsPrefix: messages.versesLessonsPrefix,
+          sortLabel: messages.versesSortLabel,
+          sortByBible: messages.versesSortByBible,
+          sortByLessons: messages.versesSortByLessons,
           notUsed: messages.versesNotUsed,
           emptyTitle: messages.emptyVersesTitle,
           emptyDescription: messages.emptyVersesDescription,

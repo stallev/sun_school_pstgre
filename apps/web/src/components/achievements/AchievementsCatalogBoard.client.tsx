@@ -14,12 +14,14 @@ import type { CatalogRowDto } from "@/lib/achievements/catalog-display";
 import { REWARD_CATEGORY_ORDER } from "@/lib/achievements/catalog-display";
 import type { AchievementsCatalogMessages } from "@/lib/messages/pick-achievements-catalog-messages.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 
 type AchievementsCatalogBoardProps = {
   rewards: CatalogRowDto[];
   penalties: CatalogRowDto[];
   messages: AchievementsCatalogMessages;
   dictionaries: Record<string, Dictionary>;
+  messageLocale: MessageLocale;
 };
 
 export const AchievementsCatalogBoard = ({
@@ -27,6 +29,7 @@ export const AchievementsCatalogBoard = ({
   penalties,
   messages,
   dictionaries,
+  messageLocale,
 }: AchievementsCatalogBoardProps) => {
   const [rewardEdit, setRewardEdit] = useState<CatalogRowDto | null>(null);
   const [penaltyEdit, setPenaltyEdit] = useState<CatalogRowDto | null>(null);
@@ -77,6 +80,7 @@ export const AchievementsCatalogBoard = ({
                     row={row}
                     messages={messages}
                     dictionaries={dictionaries}
+                    messageLocale={messageLocale}
                     onEdit={() => {
                       setRewardEdit(row);
                       setRewardOpen(true);
@@ -115,6 +119,7 @@ export const AchievementsCatalogBoard = ({
                 row={row}
                 messages={messages}
                 dictionaries={dictionaries}
+                messageLocale={messageLocale}
                 onEdit={() => {
                   setPenaltyEdit(row);
                   setPenaltyOpen(true);

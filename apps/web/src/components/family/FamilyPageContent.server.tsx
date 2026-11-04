@@ -118,9 +118,18 @@ export const FamilyPageContent = async ({ searchParams }: FamilyPageProps) => {
         </ul>
       )}
       {listResult.data.unassignedPupilCount > 0 ? (
-        <p className="text-sm text-ink-2">
-          {messages.unassignedNote.replace("{count}", String(listResult.data.unassignedPupilCount))}
-        </p>
+        <div className="space-y-2 text-sm text-ink-2">
+          <p>
+            {messages.unassignedNote.replace(
+              "{count}",
+              String(listResult.data.unassignedPupilCount),
+            )}{" "}
+            {messages.unassignedExplanation}
+          </p>
+          <CustomLink href="/people" className="font-medium text-cobalt-ink hover:underline">
+            {messages.unassignedAssignLink}
+          </CustomLink>
+        </div>
       ) : null}
       </div>
     </AdminMessagesProvider>

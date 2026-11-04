@@ -148,6 +148,9 @@ export const pickTeacherLessonScreensMessages = (
   checkStubBack: getMessage(teacher, "lesson.form.back_lesson"),
   usedInLessons: getMessage(teacher, "lesson.verses_page.used_in"),
   versesLessonsPrefix: getMessage(teacher, "lesson.verses_page.lessons_prefix"),
+  versesSortLabel: getMessage(teacher, "lesson.verses_page.sort_label"),
+  versesSortByBible: getMessage(teacher, "lesson.verses_page.sort_by_bible"),
+  versesSortByLessons: getMessage(teacher, "lesson.verses_page.sort_by_lessons"),
   versesNotUsed: getMessage(teacher, "lesson.verses_page.not_used"),
   lessonUsageLink: (ordinal, title) => {
     const trimmed = title.trim();

@@ -21,7 +21,7 @@
 - [x] ADR-019; shell §8, R-15; change log §4.1; analytics R-21…R-24; check flow R-19; UX-03 D-17, D-18; UI states D23; Lab §5.3 — существуют — 2026-11-04 · подготовка P26
 - [x] Задачи ниже ссылаются на `§`-якоря, называют Files, Acceptance и Paths; T3 — свой CU; CU ≤ ~400 строк
 - [x] `Проверено по`: `@base-ui/react` (`Popover`) — версия по `apps/web/package.json`; Next.js `16.4.4` (`cookies()`, `cache()`); `@prisma/adapter-pg` / `pg-pool` — по `package.json`; Context7 не вызывался: новых зависимостей нет
-- [ ] Open questions: Q-1 (порядок стихов) нужен к CU9, по умолчанию «по книгам Библии»; Q-2 закрыт в CU1 (Change log); Q-3, Q-4 — не блокируют
+- [ ] Open questions: Q-1 (порядок стихов) закрыт в CU9 (по книгам + «по урокам»); Q-2 закрыт в CU1 (Change log); Q-3, Q-4 — не блокируют
 - [x] Прототип обновлён: «Сегодня» в календаре, «Техническая запись» в журнале, фильтр по группе и «Показать ещё» в «Ученики», «Регулярно ходят: N из M», «Уроки 1, 3», подсказка у правого края
 
 ## Commit plan
@@ -114,7 +114,7 @@ Review `diff-only`: профиль `lean` D6 (не T3, без `Paths: S`, вне
 
 Review `diff-only`: профиль `lean` D6 (presentational, вне sensitive zones; действия строк используют существующие мутации).
 
-- [ ] P26-T9 · T1 · Spec: [forms UX](../../../design/forms_and_validation_ux.md) · ADR-019 Q-1 · Prototype: `vAchievements`, `vVerses`, `vBricks`, `vUsers`, `vFamily`
+- [x] P26-T9 · T1 · Spec: [forms UX](../../../design/forms_and_validation_ux.md) · ADR-019 Q-1 · Prototype: `vAchievements`, `vVerses`, `vBricks`, `vUsers`, `vFamily`
       Files: `apps/web/src/components/admin/{AchievementsPageContent.server,AchievementRuleCard,UsersPageContent.server,UserRow,FamilyPageContent.server}.tsx`, `apps/web/src/components/teacher/{VersesPageContent.server,VersesCatalog.client,BalanceTable,BalanceRow}.tsx`, `apps/web/src/data/bible/bible-data.server.ts`, `apps/web/src/lib/messages/{ru,en}/{admin,teacher}.json`, тесты
       Acceptance: `/achievements`: правило каждого достижения — один короткий абзац, подробности в `details` «Как считается»; уровни «Бронза: после 5 уроков → +5 кирпичиков» (человеческая фраза вместо «Бронза — 5 · +5»); «Ждёт голосовой проверки» → «Появится вместе с голосовой проверкой»; `/verses`: порядок по книгам Библии (Быт, Мф, Мк, Лк, Ин, Рим, Пс, Притч …) + переключатель «по урокам» (Q-1), подпись «Уроки 1, 3» по возрастанию; `/bricks`: «Исправить» в меню «⋯» (`RowActionsMenu`), у «К выдаче: N» — `TermHint`; `/users`: подсказка статуса («Нужно: выдать роль») и основное действие в строке; `/family`: «Учеников без семьи: 97» + пояснение и ссылка «Назначить семью» (массовое действие — вне фазы)
       Paths: H [F-14: страницы короче и понятнее; порядок стихов по Библии] · N [книга вне списка → в конец по алфавиту; пустые уровни; ученик без семьи] · S n/a — presentational; мутации и права не меняются

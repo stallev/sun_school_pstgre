@@ -91,6 +91,9 @@ export type AdminMessages = {
     rolesTeacher: string;
     rolesAdminTeacher: string;
     rolesNone: string;
+    statusNeedsRole: string;
+    rowAssignRoles: string;
+    rowOpenProfile: string;
     profileRoles: string;
     profileStatus: string;
     profileLoginMethods: string;

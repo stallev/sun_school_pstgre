@@ -17,6 +17,7 @@ export const pickTeacherBricksMessages = (teacher: Dictionary): TeacherBricksMes
   needsAttention: getMessage(teacher, "bricks.needs_attention"),
   actionIssue: getMessage(teacher, "bricks.action_issue"),
   actionCompensate: getMessage(teacher, "bricks.action_compensate"),
+  rowActionsMenuLabel: getMessage(teacher, "bricks.row_actions_menu"),
   emptyPupilsTitle: getMessage(teacher, "bricks.empty_pupils_title"),
   emptyPupilsDescription: getMessage(teacher, "bricks.empty_pupils_description"),
   emptyEarnedTitle: getMessage(teacher, "bricks.empty_earned_title"),

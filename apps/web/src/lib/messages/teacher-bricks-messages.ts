@@ -11,6 +11,7 @@ export type TeacherBricksMessages = {
   needsAttention: string;
   actionIssue: string;
   actionCompensate: string;
+  rowActionsMenuLabel: string;
   emptyPupilsTitle: string;
   emptyPupilsDescription: string;
   emptyEarnedTitle: string;

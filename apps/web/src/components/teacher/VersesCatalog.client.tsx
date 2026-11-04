@@ -6,13 +6,21 @@ import { AlertText, ContentText } from "@/components/atoms";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { CustomLink } from "@/components/ui/custom-link";
 import { Input } from "@/components/ui/input";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import {
+  compareVersesCatalogByBible,
+  compareVersesCatalogByLessons,
+  type VersesCatalogSortRow,
+} from "@/lib/bible/sort-verses-catalog-rows";
 
-export type VersesCatalogViewRow = {
+export type VersesCatalogViewRow = VersesCatalogSortRow & {
   refLabel: string;
   text: string | null;
   hasMissing: boolean;
-  usages: { lessonId: string; linkLabel: string }[];
+  usages: { lessonId: string; ordinal: number; linkLabel: string }[];
 };
+
+type VersesCatalogSortMode = "bible" | "lessons";
 
 type VersesCatalogMessages = {
   searchLabel: string;
@@ -20,6 +28,9 @@ type VersesCatalogMessages = {
   searchEmpty: string;
   verseMissing: string;
   lessonsPrefix: string;
+  sortLabel: string;
+  sortByBible: string;
+  sortByLessons: string;
   notUsed: string;
   emptyTitle: string;
   emptyDescription: string;
@@ -32,16 +43,23 @@ type VersesCatalogProps = {
 
 export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
   const [query, setQuery] = useState("");
+  const [sortMode, setSortMode] = useState<VersesCatalogSortMode>("bible");
   const normalizedQuery = query.trim().toLowerCase();
 
+  const sortedRows = useMemo(() => {
+    const compare =
+      sortMode === "lessons" ? compareVersesCatalogByLessons : compareVersesCatalogByBible;
+    return [...rows].sort(compare);
+  }, [rows, sortMode]);
+
   const filteredRows = useMemo(() => {
-    if (!normalizedQuery) return rows;
-    return rows.filter(
+    if (!normalizedQuery) return sortedRows;
+    return sortedRows.filter(
       (row) =>
         row.refLabel.toLowerCase().includes(normalizedQuery) ||
         (row.text?.toLowerCase().includes(normalizedQuery) ?? false),
     );
-  }, [normalizedQuery, rows]);
+  }, [normalizedQuery, sortedRows]);
 
   if (rows.length === 0) {
     return <EmptyState title={messages.emptyTitle} description={messages.emptyDescription} />;
@@ -49,6 +67,15 @@ export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
 
   return (
     <div className="space-y-4">
+      <SegmentedControl
+        aria-label={messages.sortLabel}
+        value={sortMode}
+        onValueChange={setSortMode}
+        options={[
+          { value: "bible", label: messages.sortByBible },
+          { value: "lessons", label: messages.sortByLessons },
+        ]}
+      />
       <div className="relative max-w-xl">
         <SearchIcon
           className="pointer-events-none absolute top-3 left-3 size-4 text-muted"
@@ -69,7 +96,7 @@ export const VersesCatalog = ({ rows, messages }: VersesCatalogProps) => {
         <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
           {filteredRows.map((row) => (
             <li
-              key={row.refLabel}
+              key={`${row.bookId}:${row.startChapter}:${row.startVerse}`}
               className="grid grid-cols-1 gap-2 px-5 py-4 md:grid-cols-[8rem_minmax(0,1fr)_12rem] md:gap-6"
             >
               <ContentText>{row.refLabel}</ContentText>
