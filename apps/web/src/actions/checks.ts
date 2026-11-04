@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { USER_ROLE, type MutationResult } from "@sunschool/domain";
 import { completeLessonCheck } from "@/data/checks/complete-lesson-check";
+import { finishLessonTableCheck } from "@/data/checks/finish-lesson-table-check";
 import { correctCheck } from "@/data/checks/correct-check";
 import { saveChecked } from "@/data/checks/save-checked";
 import { savePartialCheck } from "@/data/checks/save-partial-check";
@@ -55,6 +56,17 @@ export async function correctCheckAction(
   if (result.ok) {
     const lessonId = lessonIdFromPayload(raw);
     if (lessonId) revalidateCheckSurfaces(lessonId);
+  }
+  return result;
+}
+
+export async function finishLessonTableCheckAction(
+  raw: unknown,
+): Promise<MutationResult<{ lessonId: string }>> {
+  const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
+  const result = await finishLessonTableCheck(await getPrisma(), actor.userId, raw);
+  if (result.ok) {
+    revalidateCheckSurfaces(result.data.lessonId);
   }
   return result;
 }

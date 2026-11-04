@@ -96,6 +96,10 @@ export type TeacherCheckMessages = {
   formError: string;
   tablePageTitle: string;
   tableLinkSequential: string;
+  tableFinishing: string;
+  tableAchievementsNote: string;
+  tableAchievementsTerm: string;
+  tableAchievementsHint: string;
   tableFilterAll: string;
   tableFilterPresent: string;
   tableFilterUnchecked: string;

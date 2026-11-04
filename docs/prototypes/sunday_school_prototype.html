@@ -1524,7 +1524,7 @@ function vLessonTable(){
     <div class="min-w-0 flex-1"><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1>
       <p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t}</p><p class="text-sm text-muted">${L.d} · были ${presentN} · не проверены ${uncheckedN} · проверено ${checked} из ${all.length}</p>
       <div class="mt-2 max-w-md">${meter(checked, all.length || 1, 'Проверено')}</div></div>
-    <div class="flex flex-wrap gap-2"><button type="button" data-act="check-open" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-check','size-4')} Последовательная проверка</button>${sheetLink(L.id)}</div>
+    <div class="flex flex-wrap items-center gap-2">${corr ? '' : `<button type="button" data-act="tbl-finish" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-ok','size-4')} Завершить проверку</button><span class="inline-flex items-center text-sm text-muted">Достижения начислятся после завершения${termHint('достижения','Завершение отмечает сохранённых учеников проверенными и пересчитывает достижения за год. Кого в таблице не заполняли, тот не учитывается. Длинная серия стихов сначала предлагается учителю.')}</span>`}<button type="button" data-act="check-open" data-lid="${L.id}" class="${corr ? B_PRIMARY : B_OUTLINE}">${ic('i-check','size-4')} Последовательная проверка</button>${sheetLink(L.id)}</div>
   </div>
   ${corr ? `<p class="mb-3 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок проверен. Правки пересчитают баллы и попадут в журнал, новые оценки получат отметку «сдано ${TODAY}».</p>` : ''}
   ${verseAccordion(L)}
@@ -3695,6 +3695,21 @@ function openCheck(lid, pid){
   snapCur(); go('check');
 }
 function snapCur(){ const R = roster(S.checkLesson); const p = R[S.cur]; S.snap = p ? JSON.parse(JSON.stringify(S.hc[S.checkLesson][p.id])) : null; }
+function rowTouched(r){
+  return r.present || r.sing || r.nb!=null || r.test!=null || r.v.some(v=>v!=null);
+}
+function finishTableCheck(lid){
+  if (isCorrection(lid)) return;
+  const recs = S.hc[lid] || {};
+  const pending = Object.keys(recs).filter(id => !recs[id].done && rowTouched(recs[id]));
+  const anyDone = Object.values(recs).some(r => r.done);
+  if (!pending.length && !anyDone){ toast('Проверьте хотя бы одного ученика', 'error'); return; }
+  pending.forEach(id => { recs[id].done = true; });
+  const doneIds = Object.keys(recs).filter(id => recs[id].done).map(Number);
+  const fresh = S.achMode.on ? recalc(doneIds) : [];
+  toast(S.achMode.on ? `Проверка завершена. Новых достижений: ${fresh.length}` : 'Проверка завершена');
+  render();
+}
 function savePupil(){
   const lid = S.checkLesson, R = roster(lid), p = R[S.cur], c = S.hc[lid][p.id];
   if (isCorrection(lid)){
@@ -3796,6 +3811,7 @@ document.addEventListener('click', e=>{
     case 'bricks-hist': S.bricksOpen = el.parentElement.open ? null : +el.dataset.pid; break;
 
     /* проверка */
+    case 'tbl-finish': finishTableCheck(+el.dataset.lid); break;
     case 'check-open': openCheck(+el.dataset.lid); break;
     case 'fix-pupil': openCheck(+el.dataset.lid, +el.dataset.pid); break;
     case 'pick': navCheck(+el.dataset.i, true); break;

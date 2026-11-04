@@ -278,6 +278,7 @@
     "keyboard_hint": "Enter — save · ← → — pupils",
     "save_next": "Save and next",
     "complete": "Finish check",
+    "nothing_checked": "Check at least one pupil",
     "save_correction": "Save correction",
     "saved_toast": "Saved: {name}",
     "conflict_title": "Record changed elsewhere",
@@ -299,6 +300,10 @@
     "table": {
       "page_title": "All scores table",
       "link_sequential": "Sequential check",
+      "finishing": "Finishing…",
+      "achievements_note": "Achievements are awarded after you finish",
+      "achievements_term": "achievements",
+      "achievements_hint": "Finishing marks saved pupils as checked and recalculates achievements for the year. Pupils left blank are not included. A long verse series is offered to the teacher first.",
       "filter_all": "All",
       "filter_present": "Present",
       "filter_unchecked": "Unchecked",
