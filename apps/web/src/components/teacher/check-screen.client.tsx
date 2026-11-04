@@ -105,6 +105,7 @@ export const CheckScreen = ({
     topScorerIds,
     topScorerLabel: messages.topScorer,
   };
+  const saveStatusLabel = screen.dirty ? messages.saveStatusUnsaved : messages.saveStatusSaved;
 
   const lessonMeta = `${fillMessage(messages.lessonSubtitle, {
     ordinal: data.lessonOrdinal,
@@ -168,10 +169,6 @@ export const CheckScreen = ({
           })}
         />
       )}
-
-      {screen.dirty ? (
-        <p className="text-sm font-medium text-warn">{messages.unsavedIndicator}</p>
-      ) : null}
 
       <p className="sr-only" aria-live="polite">{screen.liveMessage}</p>
 
@@ -272,6 +269,7 @@ export const CheckScreen = ({
                   if (next) screen.moveTo(next.pupilId);
                 }}
                 keyboardHint={messages.keyboardHint}
+                saveStatusLabel={saveStatusLabel}
               />
             </>
           ) : null}
@@ -296,6 +294,7 @@ export const CheckScreen = ({
             const next = screen.pupils[screen.activeIndex + 1];
             if (next) screen.moveTo(next.pupilId);
           }}
+          saveStatusLabel={saveStatusLabel}
         />
       ) : null}
 

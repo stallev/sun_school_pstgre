@@ -10,6 +10,7 @@ import type { LessonsListRow } from "@/data/lessons/load-lessons-list-page.serve
 import { formatLessonDisplayDate } from "@/lib/lesson/format-lesson-display-date";
 import type { TeacherLessonScreensMessages } from "@/lib/messages/teacher-lesson-screens-messages";
 import { formatDisplayName } from "@/lib/person/format-display-name";
+import { resolvePupilGrammaticalGender } from "@/lib/person/resolve-pupil-grammatical-gender";
 import { lessonDateToIso } from "./lesson-shared.server";
 
 export type TodayWeekRow = {
@@ -18,6 +19,7 @@ export type TodayWeekRow = {
   description: string;
   href: string;
   openLabel: string;
+  inlineActionLabel?: string;
 };
 
 type BuildTodayWeekRowsInput = {
@@ -81,9 +83,14 @@ export async function buildTodayWeekRows({
     rows.push({
       id: "late-submission",
       label: messages.todayWeekLate,
-      description: messages.todayWeekLateValue(formatDisplayName(lateCheck.pupil), dateLabel),
+      description: messages.todayWeekLateValue(
+        formatDisplayName(lateCheck.pupil),
+        dateLabel,
+        resolvePupilGrammaticalGender(lateCheck.pupil),
+      ),
       href: `/lessons/${lateCheck.lesson.id}/check`,
       openLabel: messages.todayWeekOpen(messages.todayWeekLate),
+      inlineActionLabel: messages.todayWeekLateAction,
     });
   }
 

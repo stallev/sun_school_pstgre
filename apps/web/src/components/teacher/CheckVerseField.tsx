@@ -2,6 +2,7 @@
 
 import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
 import { ContentText } from "@/components/atoms";
+import { TermHint } from "@/components/ui/term-hint";
 import { cn } from "@/lib/utils";
 
 const UNSET = "unset";
@@ -13,6 +14,8 @@ type CheckVerseFieldProps = {
   notRatedLabel: string;
   disabled?: boolean;
   trailing?: ReactNode;
+  verseScaleHint?: string;
+  showVerseScaleHint?: boolean;
   onValueChange: (value: number | null) => void;
 };
 
@@ -34,6 +37,8 @@ export const CheckVerseField = ({
   notRatedLabel,
   disabled = false,
   trailing,
+  verseScaleHint,
+  showVerseScaleHint = false,
   onValueChange,
 }: CheckVerseFieldProps) => {
   const groupId = useId();
@@ -61,7 +66,12 @@ export const CheckVerseField = ({
   return (
     <div className="space-y-2 py-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <ContentText className="font-medium text-ink">{label}</ContentText>
+        <div className="flex flex-wrap items-center gap-1">
+          <ContentText className="font-medium text-ink">{label}</ContentText>
+          {showVerseScaleHint && verseScaleHint ? (
+            <TermHint term={label} hint={verseScaleHint} />
+          ) : null}
+        </div>
         {trailing}
       </div>
       <div role="radiogroup" aria-label={label} className="flex flex-wrap items-center gap-1">

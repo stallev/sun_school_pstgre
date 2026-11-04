@@ -58,6 +58,9 @@ export const CheckScoresSection = ({
   }
   const isReview = lessonKind === LESSON_KIND.REVIEW;
   const collapsed = pupil.presentChoice === false && !pupil.late && revealedPupilId !== pupil.pupilId;
+  const absentScoreLabels = pupil.presentChoice === false && !pupil.late;
+  const fieldLabel = (defaultLabel: string) =>
+    absentScoreLabels ? messages.willSubmitLater : defaultLabel;
   const late = pupil.late ? <LateBadge label={messages.lateSubmitted} /> : null;
   const testBand = bandOf(pupil.testScore, messages);
   const notebookBand = bandOf(pupil.notebookScore, messages);
@@ -75,13 +78,15 @@ export const CheckScoresSection = ({
 
   const versesColumn = isReview ? null : versesToRecite.length > 0 ? (
     <div className="divide-y divide-line">
-      {versesToRecite.map((verse) => (
+      {versesToRecite.map((verse, index) => (
         <CheckVerseField
           key={verse.lessonVerseId}
-          label={fillMessage(messages.verseLabel, { position: verse.position })}
+          label={fieldLabel(fillMessage(messages.verseLabel, { position: verse.position }))}
           value={pupil.verseScores[verse.lessonVerseId] ?? null}
           unsetLabel={messages.scoreUnset}
           notRatedLabel={messages.scoreNotRated}
+          verseScaleHint={messages.verseScaleHint}
+          showVerseScaleHint={index === 0}
           disabled={disabled}
           trailing={late}
           onValueChange={(value) => onVerseScoreChange(verse.lessonVerseId, value)}
@@ -98,7 +103,7 @@ export const CheckScoresSection = ({
     <div className="divide-y divide-line">
       {isReview ? null : hasTest ? (
         <CheckScaleField
-          label={messages.testLabel}
+          label={fieldLabel(messages.testLabel)}
           value={pupil.testScore}
           notRatedLabel={messages.scoreNotRated}
           bandLabel={testBand.label}
@@ -111,7 +116,7 @@ export const CheckScoresSection = ({
         <ContentText tone="secondary" className="py-3 text-sm">{messages.noTestOnLesson}</ContentText>
       )}
       <CheckScaleField
-        label={messages.notebookLabel}
+        label={fieldLabel(messages.notebookLabel)}
         value={pupil.notebookScore}
         notRatedLabel={messages.scoreNotRated}
         bandLabel={notebookBand.label}

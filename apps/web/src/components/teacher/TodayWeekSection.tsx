@@ -21,7 +21,17 @@ export const TodayWeekSection = ({ title, rows, className }: TodayWeekSectionPro
         >
           <dt className="w-full shrink-0 text-sm text-muted sm:w-48">{row.label}</dt>
           <dd className="flex flex-1 items-center justify-between gap-3">
-            <ContentText className="text-sm text-ink-2">{row.description}</ContentText>
+            <ContentText className="text-sm text-ink-2">
+              {row.description}
+              {row.inlineActionLabel ? (
+                <>
+                  {" "}
+                  <CustomLink href={row.href} className="font-medium text-cobalt-ink">
+                    {row.inlineActionLabel}
+                  </CustomLink>
+                </>
+              ) : null}
+            </ContentText>
             <CustomLink
               href={row.href}
               aria-label={row.openLabel}

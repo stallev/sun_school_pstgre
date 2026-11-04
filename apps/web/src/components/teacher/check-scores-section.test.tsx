@@ -65,16 +65,43 @@ describe("CheckScoresSection absent collapse", () => {
     await act(async () => {
       showScores!.click();
     });
-    expect(container.textContent).toContain(messages.testLabel);
+    expect(container.textContent).toContain(messages.willSubmitLater);
 
     await act(async () => {
       render(true);
     });
+    expect(container.textContent).toContain(messages.testLabel);
     await act(async () => {
       render(false);
     });
 
     expect(container.textContent).toContain(messages.showScores);
+    expect(container.textContent).not.toContain(messages.testLabel);
+  });
+
+  it("labels score fields when pupil was absent", async () => {
+    await act(async () => {
+      root.render(
+        <CheckScoresSection
+          pupil={{ ...pupil(false), presentChoice: false }}
+          lessonKind={LESSON_KIND.REGULAR}
+          hasTest
+          versesToRecite={[{ lessonVerseId: "verse-1", position: 1 }]}
+          disabled={false}
+          messages={messages}
+          onVerseScoreChange={vi.fn()}
+          onTestScoreChange={vi.fn()}
+          onNotebookScoreChange={vi.fn()}
+        />,
+      );
+    });
+    const reveal = [...container.querySelectorAll("button")].find(
+      (button) => button.textContent === messages.showScores,
+    );
+    await act(async () => {
+      reveal!.click();
+    });
+    expect(container.textContent).toContain(messages.willSubmitLater);
     expect(container.textContent).not.toContain(messages.testLabel);
   });
 

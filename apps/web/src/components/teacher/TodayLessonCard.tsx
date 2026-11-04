@@ -25,9 +25,8 @@ export const TodayLessonCard = ({
   const checkedCount = Math.min(lesson.checkedCount, lesson.totalPupils);
   const progressValue =
     lesson.totalPupils > 0 ? Math.round((checkedCount / lesson.totalPupils) * 100) : 0;
-  const dateLine = lesson.verseRefsLabel
-    ? `${lesson.lessonDateLabel} · ${lesson.verseRefsLabel}`
-    : lesson.lessonDateLabel;
+  const heading = messages.todayLessonHeading(lesson.ordinal, lesson.lessonDateLabel);
+  const subline = messages.todayLessonSubline(lesson.title, lesson.verseRefsLabel);
 
   return (
     <article className="rounded-xl border border-line bg-surface p-4 sm:p-5">
@@ -37,9 +36,9 @@ export const TodayLessonCard = ({
         </Banner>
       ) : null}
       <p className="text-sm text-muted">{messages.todayIncompleteLabel}</p>
-      <SectionTitle className="mt-1">{messages.lessonCardTitle(lesson.ordinal, lesson.title)}</SectionTitle>
+      <SectionTitle className="mt-1">{heading}</SectionTitle>
       <ContentText tone="secondary" className="mt-1 text-sm">
-        {dateLine}
+        {subline}
       </ContentText>
       <div className="mt-5 flex items-baseline justify-between gap-3">
         <ContentText className="text-sm text-ink-2">{messages.todayCheckedStudentsLabel}</ContentText>
