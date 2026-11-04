@@ -381,6 +381,7 @@
     "weekday_sun": "Sun",
     "prev_month": "Previous month",
     "next_month": "Next month",
+    "today": "Today",
     "open_lesson": "Open lesson",
     "form_create_title": "New event",
     "form_edit_title": "Edit event",

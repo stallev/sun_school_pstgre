@@ -1,8 +1,9 @@
 import { connection } from "next/server";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { USER_ROLE } from "@sunschool/domain";
 import { CalendarEventForm } from "@/components/teacher/CalendarEventForm";
 import { CalendarMonth } from "@/components/teacher/CalendarMonth";
+import { CalendarMonthHeader } from "@/components/teacher/CalendarMonthHeader";
 import { LessonsGradeFilter } from "@/components/teacher/LessonsGradeFilter";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { Banner } from "@/components/patterns/Banner";
@@ -12,6 +13,12 @@ import { CustomLink } from "@/components/ui/custom-link";
 import { loadCalendarPage } from "@/data/calendar/load-calendar-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import {
+  resolveCalendarMonthKey,
+  todayIsoInTimeZone,
+  todayMonthKeyInTimeZone,
+} from "@/lib/calendar/calendar-month-key";
+import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
@@ -21,14 +28,6 @@ import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-le
 
 export type CalendarPageProps = {
   searchParams: Promise<{ gradeId?: string; month?: string; eventId?: string; date?: string }>;
-};
-
-const shiftMonth = (monthKey: string, delta: number): string => {
-  const [yearPart, monthPart] = monthKey.split("-");
-  const year = Number(yearPart);
-  const month = Number(monthPart);
-  const date = new Date(Date.UTC(year, month - 1 + delta, 1));
-  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
 };
 
 const calendarHref = (gradeId: string, month: string, extra?: Record<string, string>) => {
@@ -41,11 +40,13 @@ export const CalendarPageContent = async ({
   await connection();
   const params = await searchParams;
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN, USER_ROLE.PARENT);
+  const timeZone = await getSchoolTimezone();
+  const resolvedMonthParam = resolveCalendarMonthKey(params.month ?? null, timeZone);
   const data = await loadCalendarPage(
     await getPrisma(),
     actor.userId,
     params.gradeId ?? null,
-    params.month ?? null,
+    resolvedMonthParam,
   );
   const locale = await getUiLocale();
   const appLocale = messageLocaleToAppLocale(locale);
@@ -82,8 +83,8 @@ export const CalendarPageContent = async ({
     ? data.events.find((event) => event.eventId === params.eventId) ?? null
     : null;
   const closeHref = calendarHref(data.gradeId, data.monthKey);
-  const prevMonth = shiftMonth(data.monthKey, -1);
-  const nextMonth = shiftMonth(data.monthKey, 1);
+  const todayMonthKey = todayMonthKeyInTimeZone(timeZone);
+  const todayIso = todayIsoInTimeZone(timeZone);
 
   const isParentViewer =
     actor.roles.includes(USER_ROLE.PARENT) &&
@@ -103,22 +104,13 @@ export const CalendarPageContent = async ({
         description={pageDescription}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                render={<CustomLink href={calendarHref(data.gradeId, prevMonth)} aria-label={messages.prevMonth} />}
-              >
-                <ChevronLeft className="size-4" aria-hidden />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                render={<CustomLink href={calendarHref(data.gradeId, nextMonth)} aria-label={messages.nextMonth} />}
-              >
-                <ChevronRight className="size-4" aria-hidden />
-              </Button>
-            </div>
+            <CalendarMonthHeader
+              gradeId={data.gradeId}
+              monthKey={data.monthKey}
+              todayMonthKey={todayMonthKey}
+              calendarHref={(gradeId, month) => calendarHref(gradeId, month)}
+              messages={messages}
+            />
             {data.canMutate ? (
               <Button
                 render={
@@ -157,6 +149,7 @@ export const CalendarPageContent = async ({
         birthdays={data.birthdays}
         canMutate={data.canMutate}
         messages={messages}
+        todayIso={todayIso}
         openEventId={params.eventId ?? null}
         openDate={params.date ?? null}
       />

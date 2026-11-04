@@ -52,7 +52,7 @@ Tier T2: чтение журнала (admin-only), форматирование 
 
 Review `diff-only`: профиль `lean` D6 (не T3, без `Paths: S`, вне sensitive zones).
 
-- [ ] P26-T3 · T1 · Spec: [teacher flow §4.6](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · [canonical routes](../../../design/canonical_routes.md) `/calendar` · Prototype: `vCalendar`
+- [x] P26-T3 · T1 · Spec: [teacher flow §4.6](../../../prds/01_product_scope/user_flows/users_mvp/teacher_flow.md) · [canonical routes](../../../design/canonical_routes.md) `/calendar` · Prototype: `vCalendar`
       Files: `apps/web/src/components/teacher/{CalendarPageContent.server,CalendarMonth,CalendarMonthHeader}.tsx`, `apps/web/src/lib/messages/{ru,en}/teacher.json` и pick/типы, тесты
       Acceptance: между стрелками — заголовок месяца «Ноябрь 2026» (`aria-live="polite"`, `h2`); кнопка «Сегодня» ведёт к текущему месяцу (`aria-current` когда уже на нём); стрелки получают `aria-label` с названием месяца («Октябрь», «Декабрь»); месяц — по поясу школы (`getSchoolTimezone`), а не серверному `new Date()`; дни рождения и события не меняются
       Paths: H [заголовок месяца и «Сегодня»] · N [первый и последний месяц года; пустой месяц; невалидный `?month=` → текущий] · S n/a — presentational

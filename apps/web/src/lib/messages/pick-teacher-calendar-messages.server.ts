@@ -29,6 +29,7 @@ export const pickTeacherCalendarMessages = (
   ],
   prevMonth: getMessage(teacher, "calendar.prev_month"),
   nextMonth: getMessage(teacher, "calendar.next_month"),
+  today: getMessage(teacher, "calendar.today"),
   openLesson: getMessage(teacher, "calendar.open_lesson"),
   formCreateTitle: getMessage(teacher, "calendar.form_create_title"),
   formEditTitle: getMessage(teacher, "calendar.form_edit_title"),

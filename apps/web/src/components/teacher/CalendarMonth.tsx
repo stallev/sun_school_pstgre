@@ -17,6 +17,7 @@ type CalendarMonthProps = {
   birthdays: CalendarBirthdayDto[];
   canMutate: boolean;
   messages: TeacherCalendarMessages;
+  todayIso: string;
   openEventId: string | null;
   openDate: string | null;
 };
@@ -56,14 +57,6 @@ const monthCells = (monthKey: string): (number | null)[] => {
 const isoForDay = (monthKey: string, day: number): string =>
   `${monthKey}-${String(day).padStart(2, "0")}`;
 
-const todayIsoLocal = (): string => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
 const birthdayLegendLabel = (template: string): string =>
   template.replace(/\s*\{name\}\s*$/, "").replace(/:\s*$/, "");
 
@@ -79,6 +72,7 @@ export const CalendarMonth = ({
   birthdays,
   canMutate,
   messages,
+  todayIso,
   openEventId,
   openDate,
 }: CalendarMonthProps) => {
@@ -90,7 +84,6 @@ export const CalendarMonth = ({
     map.set(row.dayOfMonth, list);
     return map;
   }, new Map());
-  const todayIso = todayIsoLocal();
   const birthdayLabel = (name: string) => fillMessage(messages.birthday, { name });
 
   return (
