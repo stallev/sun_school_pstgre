@@ -143,6 +143,7 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
                 actionPath="/school"
                 hiddenFields={periodHiddenFields}
                 dateFieldCopy={getFormDateFieldCopy(commonDict, locale)}
+                isPeriodApplied={data.periodFilter.mode !== "year"}
               />
               <SchoolGroupsTable
                 rows={data.groupRows}

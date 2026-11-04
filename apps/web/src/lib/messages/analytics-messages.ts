@@ -86,7 +86,9 @@ export type AnalyticsMessages = {
   rangeFrom: string;
   rangeTo: string;
   periodApply: string;
+  periodApplied: string;
   periodChipsLabel: string;
+  periodControlLabel: string;
   kpiAttendanceLabel: string;
   kpiAttendanceHint: string;
   kpiOutOfTen: string;

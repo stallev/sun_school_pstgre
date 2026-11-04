@@ -31,7 +31,8 @@ import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { formatAnalyticsShortDate } from "@/lib/analytics/format-analytics-display";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
-import { pickGlossaryMessages } from "@/lib/messages/pick-glossary-messages";
+import { buildLessonsJournalHref } from "@/lib/analytics/build-lessons-journal-href";
+import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { formatPlural, getPluralForms } from "@/lib/messages/plural";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
@@ -70,7 +71,9 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
   const messageLocale = locale as MessageLocale;
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickAnalyticsMessages(analyticsDict, messageLocale);
-  const glossary = pickGlossaryMessages(commonDict);
+  const glossaryUi = pickGlossaryUiMessages(commonDict);
+  const glossary = glossaryUi;
+  const termHintAriaLabel = glossaryUi.termHintAriaLabel;
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, appLocale);
   const yearMessages = messages.years;
 
@@ -152,6 +155,8 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
               groupLabel={data.gradeName}
               tableRows={tableRows}
               messages={messages}
+              columnKidsGlossary={glossaryUi.regularly_attend}
+              termHintAriaLabel={termHintAriaLabel}
             />
           </Suspense>
           <GroupYearSelection rows={tableRows} messages={messages} />
@@ -176,14 +181,19 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
         ) : (
           <AnalyticsYearDetail pendingLabel={yearMessages.detailPending}>
           {analytics.hasCheckedLessonsInPeriod ? (
-            <AnalyticsPeriodKpiSection snapshot={analytics} messages={messages} glossary={glossary} />
+            <AnalyticsPeriodKpiSection
+              snapshot={analytics}
+              messages={messages}
+              glossary={glossary}
+              termHintAriaLabel={termHintAriaLabel}
+            />
           ) : null}
           {isActiveYear ? (
             <DataQualityLine
               missingRecords={data.dataQuality?.missingPupilRecordsOnCheckedLessons ?? 0}
               migrationDuplicates={0}
               isAdmin={data.isAdmin}
-              lessonsHref={`/lessons?gradeId=${data.gradeId}`}
+              lessonsHref={buildLessonsJournalHref(data.gradeId)}
               messages={messages}
             />
           ) : null}
@@ -275,9 +285,20 @@ export const AnalyticsPageContent = async ({ searchParams }: AnalyticsPageConten
                 />
               </div>
               {isActiveYear ? (
-                <ConductedLessonsTable snapshot={data.conducted} messages={messages} />
+                <ConductedLessonsTable
+                  snapshot={data.conducted}
+                  messages={messages}
+                  glossary={glossaryUi}
+                  termHintAriaLabel={termHintAriaLabel}
+                />
               ) : null}
-              <GroupAnalyticsTables snapshot={analytics} messages={messages} locale={appLocale} />
+              <GroupAnalyticsTables
+                snapshot={analytics}
+                messages={messages}
+                locale={appLocale}
+                regularlyAttendGlossary={glossaryUi.regularly_attend}
+                termHintAriaLabel={termHintAriaLabel}
+              />
               <MethodologyNote messages={messages} />
             </>
           )}

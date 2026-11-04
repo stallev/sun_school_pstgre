@@ -3,6 +3,7 @@
 import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
 import { ContentText } from "@/components/atoms";
 import { TermHint } from "@/components/ui/term-hint";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { cn } from "@/lib/utils";
 
 const UNSET = "unset";
@@ -16,6 +17,7 @@ type CheckVerseFieldProps = {
   trailing?: ReactNode;
   verseScaleHint?: string;
   showVerseScaleHint?: boolean;
+  termHintAriaLabel?: string;
   onValueChange: (value: number | null) => void;
 };
 
@@ -39,6 +41,7 @@ export const CheckVerseField = ({
   trailing,
   verseScaleHint,
   showVerseScaleHint = false,
+  termHintAriaLabel,
   onValueChange,
 }: CheckVerseFieldProps) => {
   const groupId = useId();
@@ -68,8 +71,12 @@ export const CheckVerseField = ({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1">
           <ContentText className="font-medium text-ink">{label}</ContentText>
-          {showVerseScaleHint && verseScaleHint ? (
-            <TermHint term={label} hint={verseScaleHint} />
+          {showVerseScaleHint && verseScaleHint && termHintAriaLabel ? (
+            <TermHint
+              term={label}
+              hint={verseScaleHint}
+              ariaLabel={fillMessage(termHintAriaLabel, { term: label })}
+            />
           ) : null}
         </div>
         {trailing}

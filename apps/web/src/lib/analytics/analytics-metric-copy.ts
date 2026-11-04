@@ -1,3 +1,4 @@
+import { SAMPLE_LAYER, type SampleLayer } from "@sunschool/domain";
 import {
   formatAnalyticsAverage,
 } from "@/lib/analytics/format-analytics-display";
@@ -6,13 +7,29 @@ import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
 
+export const formatAnalyticsRegularlyAttendLine = (
+  messages: AnalyticsMessages,
+  sampleCounts: Record<SampleLayer, number>,
+): string => {
+  const regular = sampleCounts[SAMPLE_LAYER.A];
+  const total =
+    sampleCounts[SAMPLE_LAYER.A] +
+    sampleCounts[SAMPLE_LAYER.B] +
+    sampleCounts[SAMPLE_LAYER.C] +
+    sampleCounts[SAMPLE_LAYER.D];
+  return fillMessage(messages.kpiAttendanceHint, { regular, total });
+};
+
+/** @deprecated Use formatAnalyticsRegularlyAttendLine */
 export const formatAnalyticsChildrenHint = (
   messages: AnalyticsMessages,
   count: number,
-): string => {
-  const children = plural(messages.kpiChildrenCount, count, messages.formatLocale);
-  return fillMessage(messages.kpiAttendanceHint, { children });
-};
+): string => formatAnalyticsRegularlyAttendLine(messages, {
+  [SAMPLE_LAYER.A]: count,
+  [SAMPLE_LAYER.B]: 0,
+  [SAMPLE_LAYER.C]: 0,
+  [SAMPLE_LAYER.D]: 0,
+});
 
 export const formatAnalyticsLessonsObserved = (
   messages: AnalyticsMessages,

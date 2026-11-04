@@ -1,7 +1,7 @@
 import { SAMPLE_LAYER } from "@sunschool/domain";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
-import { CustomLink } from "@/components/ui/custom-link";
+import { TermHint } from "@/components/ui/term-hint";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -18,6 +18,9 @@ import {
   formatAnalyticsShortDate,
 } from "@/lib/analytics/format-analytics-display";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
+import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
+import { CustomLink } from "@/components/ui/custom-link";
 import { BirthYearCohortCards } from "./BirthYearCohortCards";
 import { formatCohortAverage, formatCohortPercent } from "./format-group-score";
 import { PupilLayerCards } from "./PupilLayerCards";
@@ -27,6 +30,8 @@ type GroupAnalyticsTablesProps = {
   snapshot: GroupAnalyticsSnapshot;
   messages: AnalyticsMessages;
   locale: string;
+  regularlyAttendGlossary: GlossaryMessages["regularly_attend"];
+  termHintAriaLabel: string;
 };
 
 type TableVariant = "layer-a" | "layer-b" | "layer-c" | "layer-d";
@@ -38,6 +43,8 @@ const PupilLayerTable = ({
   messages,
   variant,
   locale,
+  regularlyAttendGlossary,
+  termHintAriaLabel,
 }: {
   title: string;
   intro?: string;
@@ -45,6 +52,8 @@ const PupilLayerTable = ({
   messages: AnalyticsMessages;
   variant: TableVariant;
   locale: string;
+  regularlyAttendGlossary?: GlossaryMessages["regularly_attend"];
+  termHintAriaLabel?: string;
 }) => {
   const titleClassName =
     variant === "layer-b"
@@ -56,7 +65,16 @@ const PupilLayerTable = ({
   return (
   <section className="min-w-0">
     <SectionTitle as="h2" className={titleClassName}>
-      {title}
+      <span className="inline-flex flex-wrap items-center gap-1">
+        {title}
+        {variant === "layer-a" && regularlyAttendGlossary && termHintAriaLabel ? (
+          <TermHint
+            term={regularlyAttendGlossary.term}
+            hint={regularlyAttendGlossary.hint}
+            ariaLabel={fillMessage(termHintAriaLabel, { term: regularlyAttendGlossary.term })}
+          />
+        ) : null}
+      </span>
     </SectionTitle>
     {intro ? <ContentText className="mb-3 text-sm text-ink-2">{intro}</ContentText> : null}
     {rows.length === 0 ? (
@@ -143,7 +161,13 @@ const PupilLayerTable = ({
   );
 };
 
-export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyticsTablesProps) => {
+export const GroupAnalyticsTables = ({
+  snapshot,
+  messages,
+  locale,
+  regularlyAttendGlossary,
+  termHintAriaLabel,
+}: GroupAnalyticsTablesProps) => {
   const layerA = snapshot.pupilsByLayer[SAMPLE_LAYER.A];
   const layerB = snapshot.pupilsByLayer[SAMPLE_LAYER.B];
   const layerC = snapshot.pupilsByLayer[SAMPLE_LAYER.C];
@@ -158,6 +182,8 @@ export const GroupAnalyticsTables = ({ snapshot, messages, locale }: GroupAnalyt
         messages={messages}
         variant="layer-a"
         locale={locale}
+        regularlyAttendGlossary={regularlyAttendGlossary}
+        termHintAriaLabel={termHintAriaLabel}
       />
       <PupilLayerTable
         title={messages.tables.layerBTitle}

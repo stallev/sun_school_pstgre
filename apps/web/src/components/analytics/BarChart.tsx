@@ -19,6 +19,7 @@ export type AnalyticsBarChartProps = {
   positiveClassName?: string;
   negativeClassName?: string;
   yDomain: [number, number];
+  yAxisTickFormatter?: (value: number) => string;
   xLabel?: string;
   ariaLabel: string;
 };
@@ -39,6 +40,7 @@ export const BarChart = ({
   positiveClassName = "fill-cobalt-ink",
   negativeClassName = "fill-danger",
   yDomain,
+  yAxisTickFormatter,
   xLabel,
   ariaLabel,
 }: AnalyticsBarChartProps) => {
@@ -61,7 +63,14 @@ export const BarChart = ({
         <RechartsBarChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" className="stroke-line" vertical={false} />
           <XAxis dataKey="date" tickFormatter={formatLabel} tick={CHART_TICK} tickLine={false} axisLine={false} />
-          <YAxis domain={yDomain} tick={CHART_TICK} tickLine={false} axisLine={false} width={40} />
+          <YAxis
+            domain={yDomain}
+            tick={CHART_TICK}
+            tickFormatter={yAxisTickFormatter}
+            tickLine={false}
+            axisLine={false}
+            width={48}
+          />
           <Tooltip
             formatter={(value) => formatValue(typeof value === "number" ? value : Number(value ?? 0))}
             labelFormatter={(label) => formatLabel(String(label))}

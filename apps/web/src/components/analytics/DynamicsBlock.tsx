@@ -10,6 +10,7 @@ import { BarChart } from "@/components/analytics/BarChart";
 import { LineChart } from "@/components/analytics/LineChart";
 import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
 import {
+  formatAnalyticsChartAxisTick,
   formatAnalyticsDelta,
   formatAnalyticsPercent,
   formatAnalyticsShortDate,
@@ -99,6 +100,9 @@ export const DynamicsBlock = ({
               formatLabel={formatDate}
               formatValue={(point) => formatPercent(point.value as number)}
               yDomain={[0, 100]}
+              yAxisTickFormatter={(value) =>
+                formatAnalyticsChartAxisTick(messages.formatPercent, value, messageLocale, "percent")
+              }
               ariaLabel={messages.dynamicsNormalizedAria}
             />
           </div>

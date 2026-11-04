@@ -16,6 +16,7 @@ export type AnalyticsLineChartProps = {
   formatLabel: (dateIso: string) => string;
   formatValue: (point: AnalyticsChartPoint) => string;
   yDomain?: [number, number];
+  yAxisTickFormatter?: (value: number) => string;
   ariaLabel: string;
 };
 
@@ -33,6 +34,7 @@ export const LineChart = ({
   formatLabel,
   formatValue,
   yDomain,
+  yAxisTickFormatter,
   ariaLabel,
 }: AnalyticsLineChartProps) => {
   const rows: ChartRow[] = points
@@ -58,9 +60,10 @@ export const LineChart = ({
           <YAxis
             domain={yDomain ?? ["auto", "auto"]}
             tick={CHART_TICK}
+            tickFormatter={yAxisTickFormatter}
             tickLine={false}
             axisLine={false}
-            width={40}
+            width={48}
           />
           <Tooltip
             formatter={(value, _name, item) => {

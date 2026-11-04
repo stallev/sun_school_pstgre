@@ -9,6 +9,7 @@ import { PupilAnalyticsKpiSection } from "@/components/analytics/PupilAnalyticsK
 import { CompositionLine } from "@/components/analytics/CompositionLine";
 import { DataQualityLine } from "@/components/analytics/DataQualityLine";
 import { MethodologyNote } from "@/components/analytics/MethodologyNote";
+import { BricksPageSummary } from "@/components/teacher/BricksPageSummary";
 import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.server";
 import type { AnalyticsMessages, PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
@@ -89,6 +90,7 @@ describe("analytics readability components", () => {
       test: { term: "Тест", hint: "Подсказка теста." },
       notebook: { term: "Тетрадь", hint: "Подсказка тетради." },
     } as Pick<GlossaryMessages, "attendance" | "verses_per_lesson" | "test" | "notebook">;
+    const termHintAriaLabel = "Что значит «{term}»?";
     const view = {
       attendanceCheckedLabel: "5 из 6",
       versesAverage: { average: null, observationCount: 0 },
@@ -99,11 +101,16 @@ describe("analytics readability components", () => {
 
     act(() => {
       root.render(
-        <PupilAnalyticsKpiSection view={view} messages={pupilMessages} glossary={glossary} />,
+        <PupilAnalyticsKpiSection
+          view={view}
+          messages={pupilMessages}
+          glossary={glossary}
+          termHintAriaLabel={termHintAriaLabel}
+        />,
       );
     });
 
-    expect(container.querySelector('button[aria-label="Явка"]')).not.toBeNull();
+    expect(container.querySelector('button[aria-label="Что значит «Явка»?"]')).not.toBeNull();
   });
 
   it("shows teacher data quality link without admin migration text", () => {
@@ -113,13 +120,35 @@ describe("analytics readability components", () => {
           missingRecords={3}
           migrationDuplicates={2}
           isAdmin={false}
-          lessonsHref="/lessons?gradeId=g1"
+          lessonsHref="/lessons?gradeId=g1&journalGap=1"
           messages={messages as AnalyticsMessages}
         />,
       );
     });
     const link = container.querySelector("a");
-    expect(link?.getAttribute("href")).toBe("/lessons?gradeId=g1");
+    expect(link?.getAttribute("href")).toBe("/lessons?gradeId=g1&journalGap=1");
     expect(container.textContent).not.toContain("дублей");
+  });
+
+  it("renders TermHint for bricks to issue summary", () => {
+    act(() => {
+      root.render(
+        <BricksPageSummary
+          totalToIssue={5}
+          negativeBalanceCount={0}
+          messages={
+            {
+              summaryRule: "rule",
+              summaryToIssueAmount: ": {total}",
+              summaryNegative: "neg {count}",
+            } as Parameters<typeof BricksPageSummary>[0]["messages"]
+          }
+          toIssueGlossary={{ term: "К выдаче", hint: "Подсказка." }}
+          termHintAriaLabel="Что значит «{term}»?"
+        />,
+      );
+    });
+    expect(container.querySelector('button[aria-label="Что значит «К выдаче»?"]')).not.toBeNull();
+    expect(container.textContent).toContain(": 5");
   });
 });

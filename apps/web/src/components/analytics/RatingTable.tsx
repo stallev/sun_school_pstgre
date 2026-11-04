@@ -24,6 +24,7 @@ type RatingTableProps = {
   messages: AnalyticsMessages["rating"];
   showGroupColumn?: boolean;
   metricGlossary: GlossaryTerm;
+  termHintAriaLabel: string;
   achievementsUiEnabled?: boolean;
   achievementMessages?: TeacherAchievementsMessages;
 };
@@ -35,6 +36,7 @@ export const RatingTable = ({
   messages,
   showGroupColumn = false,
   metricGlossary,
+  termHintAriaLabel,
   achievementsUiEnabled = false,
   achievementMessages,
 }: RatingTableProps) => {
@@ -108,6 +110,7 @@ export const RatingTable = ({
                   label={messages.columnMetric}
                   term={metricGlossary.term}
                   hint={metricGlossary.hint}
+                  termHintAriaLabel={termHintAriaLabel}
                 />
               </TableHead>
               {achievementsUiEnabled && achievementMessages ? (

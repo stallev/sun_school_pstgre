@@ -13,7 +13,10 @@ import {
   GLOSSARY_TERM_KEYS,
   pickGlossaryMessages,
 } from "@/lib/messages/pick-glossary-messages";
+import { fillMessage } from "@/lib/messages/fill-message";
 import { TermHint } from "@/components/ui/term-hint";
+
+const termHintAria = (term: string) => fillMessage(commonRu.term_hint.aria_label, { term });
 
 const uiDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -56,6 +59,12 @@ describe("TermHint source (UX-03 D-17)", () => {
     expect(source).not.toContain("after:inset-x-0");
     expect(source).not.toContain("max-md:after:-inset-y-1");
   });
+
+  it("uses collision-aware align from viewport edge", () => {
+    const source = fs.readFileSync(path.join(uiDir, "term-hint.tsx"), "utf8");
+    expect(source).toContain("POPUP_EDGE_THRESHOLD_PX");
+    expect(source).toContain('align={align}');
+  });
 });
 
 describe("TermHint interaction", () => {
@@ -75,13 +84,19 @@ describe("TermHint interaction", () => {
 
   it("opens on click and closes on Escape", async () => {
     await act(async () => {
-      root.render(<TermHint term="тест" hint="Подсказка для теста." />);
+      root.render(
+        <TermHint
+          term="тест"
+          hint="Подсказка для теста."
+          ariaLabel={termHintAria("тест")}
+        />,
+      );
     });
 
     const trigger = container.querySelector("button");
     expect(trigger).not.toBeNull();
     expect(trigger?.getAttribute("aria-expanded")).toBe("false");
-    expect(trigger?.getAttribute("aria-label")).toBe("тест");
+    expect(trigger?.getAttribute("aria-label")).toBe(termHintAria("тест"));
 
     await act(async () => {
       trigger?.click();
@@ -99,8 +114,8 @@ describe("TermHint interaction", () => {
     await act(async () => {
       root.render(
         <div>
-          <TermHint term="А" hint="Первая." />
-          <TermHint term="Б" hint="Вторая." />
+          <TermHint term="А" hint="Первая." ariaLabel={termHintAria("А")} />
+          <TermHint term="Б" hint="Вторая." ariaLabel={termHintAria("Б")} />
         </div>,
       );
     });

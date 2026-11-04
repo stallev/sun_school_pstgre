@@ -359,6 +359,7 @@
     "balance_hint": "Доступно к выдаче: {balance}",
     "summary_rule": "1 балл = 1 кирпичик. Набрано = баллы уроков + бонус за достижения − штрафы.",
     "summary_to_issue": "К выдаче: {total}",
+    "summary_to_issue_amount": ": {total}",
     "summary_negative": "Отрицательный остаток: {count}",
     "quantity_integer": "Укажите целое число",
     "quantity_nonzero": "Количество должно быть больше нуля",

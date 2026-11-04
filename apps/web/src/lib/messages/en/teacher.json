@@ -359,6 +359,7 @@
     "balance_hint": "Available to issue: {balance}",
     "summary_rule": "1 point = 1 brick. Earned = lesson points + achievement bonus − penalties.",
     "summary_to_issue": "To issue: {total}",
+    "summary_to_issue_amount": ": {total}",
     "summary_negative": "Negative balance: {count}",
     "quantity_integer": "Enter a whole number",
     "quantity_nonzero": "Quantity must be greater than zero",

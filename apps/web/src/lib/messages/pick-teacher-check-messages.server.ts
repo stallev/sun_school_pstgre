@@ -68,6 +68,7 @@ export const pickTeacherCheckMessages = (
   scoreNotRated: getMessage(teacher, "check.score_not_rated"),
   willSubmitLater: getMessage(teacher, "check.will_submit_later"),
   verseScaleHint: getMessage(teacher, "check.verse_scale_hint"),
+  termHintAriaLabel: getMessage(common, "term_hint.aria_label"),
   choirSingingHint: getMessage(common, "glossary.choir_singing.hint"),
   saveStatusSaved: getMessage(teacher, "check.save_status_saved"),
   saveStatusUnsaved: getMessage(teacher, "check.save_status_unsaved"),

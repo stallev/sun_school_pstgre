@@ -14,11 +14,13 @@
     "range_from": "From",
     "range_to": "To",
     "period_apply": "Apply",
-    "period_chips_label": "Period"
+    "period_applied": "Filter applied",
+    "period_chips_label": "Period",
+    "period_control_label": "Period"
   },
   "kpi": {
     "attendance_label": "Average attendance",
-    "attendance_hint": "{children} at or above 50% attendance",
+    "attendance_hint": "Attend regularly: {regular} of {total}",
     "out_of_ten": "out of 10",
     "verses_label": "Verses per lesson",
     "test_label": "Test",

@@ -12,6 +12,19 @@ export const formatAnalyticsPercent = (template: string, rate: number): string =
   return fillMessage(template, { value: percent });
 };
 
+/** R-23: chart Y-axis — attendance 0–100 as `{value}%`; score axes use decimal comma. */
+export const formatAnalyticsChartAxisTick = (
+  percentTemplate: string,
+  rawValue: number,
+  locale: MessageLocale,
+  kind: "percent" | "score",
+): string => {
+  if (kind === "percent") {
+    return formatAnalyticsPercent(percentTemplate, rawValue / 100);
+  }
+  return formatDecimalOne(rawValue, locale);
+};
+
 export const formatAnalyticsAttendanceRate = (
   template: string,
   rate: number | null,

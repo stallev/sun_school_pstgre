@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import type { AnalyticsChartPoint } from "@/data/analytics/analytics-compute.server";
 import {
+  formatAnalyticsChartAxisTick,
   formatAnalyticsChartValue,
   formatAnalyticsPercent,
   formatAnalyticsShortDate,
@@ -88,6 +89,12 @@ export const ChartTableToggle = ({
 
   const validPoints = points.filter((point) => point.value !== null);
   const hasChart = validPoints.length >= minChartPoints;
+  const yAxisTickFormatter =
+    valueKind === "percent"
+      ? (value: number) => formatAnalyticsChartAxisTick(percentTemplate, value, formatLocale, "percent")
+      : yDomain
+        ? (value: number) => formatAnalyticsChartAxisTick(percentTemplate, value, formatLocale, "score")
+        : undefined;
 
   const handleToggle = (table: boolean) => {
     setShowTable(table);
@@ -154,6 +161,7 @@ export const ChartTableToggle = ({
           formatLabel={formatDate}
           formatValue={formatValue}
           yDomain={yDomain}
+          yAxisTickFormatter={yAxisTickFormatter}
           ariaLabel={title}
         />
       )}

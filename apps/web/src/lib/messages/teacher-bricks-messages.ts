@@ -38,6 +38,7 @@ export type TeacherBricksMessages = {
   balanceHint: string;
   summaryRule: string;
   summaryToIssue: string;
+  summaryToIssueAmount: string;
   summaryNegative: string;
   closeLabel: string;
 };

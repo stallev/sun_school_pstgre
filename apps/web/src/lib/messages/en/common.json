@@ -47,6 +47,9 @@
       "other": "{count} lessons"
     }
   },
+  "term_hint": {
+    "aria_label": "What does “{term}” mean?"
+  },
   "glossary": {
     "regularly_attend": {
       "term": "attend regularly",
@@ -71,6 +74,18 @@
     "review_lesson": {
       "term": "review lesson",
       "hint": "On a review lesson we check the notebook and singing, not regular homework."
+    },
+    "regular_lesson": {
+      "term": "Regular",
+      "hint": "Regular lessons — not review lessons. Counted for the selected period."
+    },
+    "planned_lesson": {
+      "term": "Planned",
+      "hint": "Lessons marked as planned but not yet held in the selected period."
+    },
+    "bricks_to_issue": {
+      "term": "To issue",
+      "hint": "Bricks the pupil can still receive: earned minus already issued."
     },
     "bricks": {
       "term": "bricks",

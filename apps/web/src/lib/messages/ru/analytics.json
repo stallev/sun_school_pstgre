@@ -14,11 +14,13 @@
     "range_from": "С",
     "range_to": "По",
     "period_apply": "Применить",
-    "period_chips_label": "Период"
+    "period_applied": "Фильтр применён",
+    "period_chips_label": "Период",
+    "period_control_label": "Период"
   },
   "kpi": {
     "attendance_label": "Средняя явка",
-    "attendance_hint": "{children} с явкой от 50%",
+    "attendance_hint": "Регулярно ходят: {regular} из {total}",
     "out_of_ten": "из 10",
     "verses_label": "Стихов за урок",
     "test_label": "Тест",

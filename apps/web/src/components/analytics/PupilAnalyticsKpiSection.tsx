@@ -10,6 +10,7 @@ type PupilAnalyticsKpiSectionProps = {
   view: PupilAnalyticsView;
   messages: PupilAnalyticsMessages;
   glossary: Pick<GlossaryMessages, "attendance" | "verses_per_lesson" | "test" | "notebook">;
+  termHintAriaLabel: string;
 };
 
 const formatAverageValue = (
@@ -22,6 +23,7 @@ export const PupilAnalyticsKpiSection = ({
   view,
   messages,
   glossary,
+  termHintAriaLabel,
 }: PupilAnalyticsKpiSectionProps) => {
   const personalSuffix = view.isInMainSample ? "" : ` ${messages.personalMetricSuffix}`;
   const attendanceValue = view.attendanceCheckedLabel ?? messages.kpiEmpty;
@@ -49,6 +51,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiAttendanceLabel}${personalSuffix}`}
             glossary={glossary.attendance}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1">
@@ -60,6 +63,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiVersesLabel}${personalSuffix}`}
             glossary={glossary.verses_per_lesson}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
@@ -76,6 +80,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiTestLabel}${personalSuffix}`}
             glossary={glossary.test}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">
@@ -93,6 +98,7 @@ export const PupilAnalyticsKpiSection = ({
           <AnalyticsKpiMetricHeading
             label={`${messages.kpiNotebookLabel}${personalSuffix}`}
             glossary={glossary.notebook}
+            termHintAriaLabel={termHintAriaLabel}
           />
         </dt>
         <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 text-base">

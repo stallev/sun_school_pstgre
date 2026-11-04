@@ -58,6 +58,7 @@ export type TeacherCheckMessages = {
   scoreNotRated: string;
   willSubmitLater: string;
   verseScaleHint: string;
+  termHintAriaLabel: string;
   choirSingingHint: string;
   saveStatusSaved: string;
   saveStatusUnsaved: string;

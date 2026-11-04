@@ -86,6 +86,7 @@ export const CheckScoresSection = ({
           unsetLabel={messages.scoreUnset}
           notRatedLabel={messages.scoreNotRated}
           verseScaleHint={messages.verseScaleHint}
+          termHintAriaLabel={messages.termHintAriaLabel}
           showVerseScaleHint={index === 0}
           disabled={disabled}
           trailing={late}

@@ -9,6 +9,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Switch } from "@/components/ui/switch";
 import { TermHint } from "@/components/ui/term-hint";
 import { CheckScoresSection } from "@/components/teacher/CheckScoresSection";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import type { SequentialCheckPupil } from "@/data/checks/sequential-check-types";
 
@@ -87,7 +88,11 @@ export const CheckCard = ({
           <div className="flex flex-wrap items-center gap-3 py-3 lg:py-0">
             <div className="flex flex-wrap items-center gap-1">
               <ContentText className="font-medium text-ink">{messages.singingLabel}</ContentText>
-              <TermHint term={messages.singingLabel} hint={messages.choirSingingHint} />
+              <TermHint
+                term={messages.singingLabel}
+                hint={messages.choirSingingHint}
+                ariaLabel={fillMessage(messages.termHintAriaLabel, { term: messages.singingLabel })}
+              />
             </div>
             <Switch
               checked={pupil.singing}

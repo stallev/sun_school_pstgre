@@ -44,6 +44,7 @@ export const pickTeacherBricksMessages = (teacher: Dictionary): TeacherBricksMes
   balanceHint: getMessage(teacher, "bricks.balance_hint"),
   summaryRule: getMessage(teacher, "bricks.summary_rule"),
   summaryToIssue: getMessage(teacher, "bricks.summary_to_issue"),
+  summaryToIssueAmount: getMessage(teacher, "bricks.summary_to_issue_amount"),
   summaryNegative: getMessage(teacher, "bricks.summary_negative"),
   closeLabel: getMessage(teacher, "bricks.close"),
 });
