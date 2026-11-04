@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { useAnalyticsYearScope } from "./AnalyticsYearScope.client";
 import { YearStrip } from "./YearStrip";
 import { YearTotalsTable, type YearTotalsTableRow } from "./YearTotalsTable";
@@ -15,6 +16,7 @@ type GroupAnalyticsYearNavProps = {
   messages: AnalyticsMessages;
   columnKidsGlossary: GlossaryTerm;
   termHintAriaLabel: string;
+  yearTotalsHint: HintTerm;
 };
 
 export const GroupAnalyticsYearNav = ({
@@ -23,6 +25,7 @@ export const GroupAnalyticsYearNav = ({
   messages,
   columnKidsGlossary,
   termHintAriaLabel,
+  yearTotalsHint,
 }: GroupAnalyticsYearNavProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -70,6 +73,7 @@ export const GroupAnalyticsYearNav = ({
         yearMessages={yearMessages}
         columnKidsGlossary={columnKidsGlossary}
         termHintAriaLabel={termHintAriaLabel}
+        yearTotalsHint={yearTotalsHint}
       />
     </>
   );

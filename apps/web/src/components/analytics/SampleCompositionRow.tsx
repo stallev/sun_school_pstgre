@@ -2,9 +2,13 @@ import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import { CompositionLine } from "./CompositionLine";
 
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
+
 type SampleCompositionRowProps = {
   snapshot: GroupAnalyticsSnapshot;
   messages: AnalyticsMessages;
+  compositionHint: HintTerm;
+  termHintAriaLabel: string;
 };
 
 export const SampleCompositionRow = (props: SampleCompositionRowProps) => (

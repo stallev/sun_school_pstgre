@@ -17,7 +17,9 @@ import { getPupilRowAttentionFlags } from "@/lib/analytics/pupil-row-attention";
 import {
   formatAnalyticsAttendanceRate,
 } from "@/lib/analytics/format-analytics-display";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { fillMessage } from "@/lib/messages/fill-message";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import { formatGroupScore } from "./format-group-score";
 
@@ -33,6 +35,8 @@ type SortKey =
 type PupilLayerSortableTableProps = {
   rows: GroupAnalyticsPupilRow[];
   messages: AnalyticsMessages;
+  lowScoreHint?: HintTerm;
+  termHintAriaLabel?: string;
 };
 
 const compareNullableNumber = (left: number | null, right: number | null): number => {
@@ -78,6 +82,8 @@ const sortRows = (rows: GroupAnalyticsPupilRow[], sortKey: SortKey, ascending: b
 export const PupilLayerSortableTable = ({
   rows,
   messages,
+  lowScoreHint,
+  termHintAriaLabel,
 }: PupilLayerSortableTableProps) => {
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [ascending, setAscending] = useState(true);
@@ -146,13 +152,18 @@ export const PupilLayerSortableTable = ({
                     {row.displayName}
                   </CustomLink>
                   {isLowAttendance || isLowScore ? (
-                    <ContentText className="mt-1 text-sm text-danger">
-                      {[
-                        isLowAttendance ? messages.tables.rowLowAttendance : null,
-                        isLowScore ? messages.tables.rowLowScore : null,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
+                    <ContentText className="mt-1 flex flex-wrap items-center gap-x-1 text-sm text-danger">
+                      {isLowAttendance ? messages.tables.rowLowAttendance : null}
+                      {isLowAttendance && isLowScore ? " · " : null}
+                      {isLowScore && lowScoreHint && termHintAriaLabel ? (
+                        <TermLabel
+                          term={nonEmptyTerm(lowScoreHint.term)}
+                          hint={lowScoreHint.hint}
+                          ariaLabel={fillMessage(termHintAriaLabel, { term: lowScoreHint.term })}
+                        />
+                      ) : isLowScore ? (
+                        messages.tables.rowLowScore
+                      ) : null}
                     </ContentText>
                   ) : null}
                 </TableCell>

@@ -19,6 +19,7 @@ import {
 } from "@/lib/analytics/format-analytics-display";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { CustomLink } from "@/components/ui/custom-link";
 import { BirthYearCohortCards } from "./BirthYearCohortCards";
@@ -32,6 +33,8 @@ type GroupAnalyticsTablesProps = {
   locale: string;
   regularlyAttendGlossary: GlossaryMessages["regularly_attend"];
   termHintAriaLabel: string;
+  notInAverageHint: HintTerm;
+  lowScoreHint: HintTerm;
 };
 
 type TableVariant = "layer-a" | "layer-b" | "layer-c" | "layer-d";
@@ -45,6 +48,8 @@ const PupilLayerTable = ({
   locale,
   regularlyAttendGlossary,
   termHintAriaLabel,
+  notInAverageHint,
+  lowScoreHint,
 }: {
   title: string;
   intro?: string;
@@ -54,6 +59,8 @@ const PupilLayerTable = ({
   locale: string;
   regularlyAttendGlossary?: GlossaryMessages["regularly_attend"];
   termHintAriaLabel?: string;
+  notInAverageHint?: HintTerm;
+  lowScoreHint?: HintTerm;
 }) => {
   const titleClassName =
     variant === "layer-b"
@@ -62,18 +69,36 @@ const PupilLayerTable = ({
         ? "mb-3 text-[1.25rem] font-medium leading-snug"
         : "mt-8 mb-3 text-[1.25rem] font-medium leading-snug";
 
+  const layerBTitleParts =
+    variant === "layer-b" ? title.split(": ") : null;
+  const layerBRest = layerBTitleParts?.slice(1).join(": ") ?? "";
+
   return (
   <section className="min-w-0">
     <SectionTitle as="h2" className={titleClassName}>
       <span className="inline-flex flex-wrap items-center gap-1">
-        {title}
-        {variant === "layer-a" && regularlyAttendGlossary && termHintAriaLabel ? (
+        {variant === "layer-b" && notInAverageHint && termHintAriaLabel ? (
+          <>
+            <TermLabel
+              term={nonEmptyTerm(notInAverageHint.term)}
+              hint={notInAverageHint.hint}
+              ariaLabel={fillMessage(termHintAriaLabel, { term: notInAverageHint.term })}
+            />
+            {layerBRest ? (
+              <span>
+                : {layerBRest}
+              </span>
+            ) : null}
+          </>
+        ) : variant === "layer-a" && regularlyAttendGlossary && termHintAriaLabel ? (
           <TermLabel
             term={nonEmptyTerm(regularlyAttendGlossary.term)}
             hint={regularlyAttendGlossary.hint}
             ariaLabel={fillMessage(termHintAriaLabel, { term: regularlyAttendGlossary.term })}
           />
-        ) : null}
+        ) : (
+          title
+        )}
       </span>
     </SectionTitle>
     {intro ? <ContentText className="mb-3 text-sm text-ink-2">{intro}</ContentText> : null}
@@ -83,7 +108,12 @@ const PupilLayerTable = ({
       <>
       <PupilLayerCards rows={rows} messages={messages} variant={variant} locale={locale} />
       {variant === "layer-a" ? (
-        <PupilLayerSortableTable rows={rows} messages={messages} />
+        <PupilLayerSortableTable
+          rows={rows}
+          messages={messages}
+          lowScoreHint={lowScoreHint}
+          termHintAriaLabel={termHintAriaLabel}
+        />
       ) : (
       <Card className="hidden p-0 lg:block">
         <Table className="text-base">
@@ -167,6 +197,8 @@ export const GroupAnalyticsTables = ({
   locale,
   regularlyAttendGlossary,
   termHintAriaLabel,
+  notInAverageHint,
+  lowScoreHint,
 }: GroupAnalyticsTablesProps) => {
   const layerA = snapshot.pupilsByLayer[SAMPLE_LAYER.A];
   const layerB = snapshot.pupilsByLayer[SAMPLE_LAYER.B];
@@ -177,13 +209,15 @@ export const GroupAnalyticsTables = ({
   return (
     <div className="min-w-0">
       <PupilLayerTable
-        title={messages.tables.layerATitle}
+        title=""
         rows={layerA}
         messages={messages}
         variant="layer-a"
         locale={locale}
         regularlyAttendGlossary={regularlyAttendGlossary}
         termHintAriaLabel={termHintAriaLabel}
+        notInAverageHint={notInAverageHint}
+        lowScoreHint={lowScoreHint}
       />
       <PupilLayerTable
         title={messages.tables.layerBTitle}
@@ -192,6 +226,8 @@ export const GroupAnalyticsTables = ({
         messages={messages}
         variant="layer-b"
         locale={locale}
+        notInAverageHint={notInAverageHint}
+        termHintAriaLabel={termHintAriaLabel}
       />
       <div className="mt-8 grid min-w-0 grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
         <PupilLayerTable

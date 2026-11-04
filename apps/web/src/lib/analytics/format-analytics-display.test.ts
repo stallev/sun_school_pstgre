@@ -9,4 +9,8 @@ describe("formatAnalyticsChartAxisTick (R-23)", () => {
   it("formats score axis with decimal comma for ru", () => {
     expect(formatAnalyticsChartAxisTick("{value}%", 2.5, "ru", "score")).toBe("2,5");
   });
+
+  it("formats whole score ticks without a decimal separator", () => {
+    expect(formatAnalyticsChartAxisTick("{value}%", 2, "ru", "score")).toBe("2");
+  });
 });

@@ -1,8 +1,10 @@
 import { AlertTriangleIcon } from "lucide-react";
 import { ContentText } from "@/components/atoms/ContentText";
 import { CustomLink } from "@/components/ui/custom-link";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type DataQualityLineProps = {
   missingRecords: number;
@@ -10,6 +12,8 @@ type DataQualityLineProps = {
   isAdmin: boolean;
   lessonsHref: string;
   messages: AnalyticsMessages;
+  recordWithoutMarkHint: HintTerm;
+  termHintAriaLabel: string;
 };
 
 export const DataQualityLine = ({
@@ -18,6 +22,8 @@ export const DataQualityLine = ({
   isAdmin,
   lessonsHref,
   messages,
+  recordWithoutMarkHint,
+  termHintAriaLabel,
 }: DataQualityLineProps) => {
   if (missingRecords <= 0 && (!isAdmin || migrationDuplicates <= 0)) return null;
 
@@ -26,7 +32,12 @@ export const DataQualityLine = ({
       <AlertTriangleIcon className="mt-0.5 size-4 shrink-0 text-warn" aria-hidden />
       {missingRecords > 0 ? (
         <>
-          {fillMessage(messages.dataQuality.missingChecked, { count: missingRecords })}{" "}
+          <TermLabel
+            term={nonEmptyTerm(recordWithoutMarkHint.term)}
+            hint={recordWithoutMarkHint.hint}
+            ariaLabel={fillMessage(termHintAriaLabel, { term: recordWithoutMarkHint.term })}
+          />{" "}
+          {fillMessage(messages.dataQuality.missingCheckedTail, { count: missingRecords })}{" "}
           <CustomLink href={lessonsHref} className="font-medium">
             {messages.dataQuality.lessonsLinkLabel}
           </CustomLink>

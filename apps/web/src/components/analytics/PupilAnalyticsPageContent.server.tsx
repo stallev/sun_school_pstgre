@@ -40,6 +40,7 @@ import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-local
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { pickPupilAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { pickAnalyticsHintsMessages } from "@/lib/messages/pick-analytics-hints-messages";
 import { pickGlossaryUiMessages } from "@/lib/messages/pick-glossary-messages";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 
@@ -93,6 +94,7 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
   const commonDict = await getDictionary(locale, "common");
   const teacherDict = await getDictionary(locale, "teacher");
   const messages = pickPupilAnalyticsMessages(analyticsDict, locale);
+  const analyticsHints = pickAnalyticsHintsMessages(analyticsDict);
   const glossaryUi = pickGlossaryUiMessages(commonDict);
   const glossary = glossaryUi;
   const termHintAriaLabel = glossaryUi.termHintAriaLabel;
@@ -167,6 +169,8 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
     formatLocale: locale,
     emptyLabel: messages.kpiEmpty,
     minChartPoints: 1,
+    averagedOverHint: analyticsHints.averaged_over,
+    termHintAriaLabel,
   };
 
   const lessonCharts = view === null ? null : (
@@ -177,7 +181,6 @@ export const PupilAnalyticsPageContent = async ({ params, searchParams }: PupilA
           title={messages.charts.versesTitle}
           methodology={messages.charts.methodologyVerses}
           points={view.charts.verses}
-          yDomain={[0, 3]}
           {...chartToggleProps}
         />
       </div>

@@ -177,6 +177,7 @@
     "title": "Data quality",
     "missing_records": "Missing records on checked lessons: {count}",
     "missing_checked": "No mark in {count} checked-lesson records —",
+    "missing_checked_tail": "in {count} checked-lesson records —",
     "lessons_link_label": "open the lesson journal",
     "migration_duplicates": "migration duplicates removed: {count}",
     "admin_summary": "Data quality: missing records on checked lessons — {missing} · migration duplicates removed — {duplicates}"

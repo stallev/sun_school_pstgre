@@ -115,6 +115,7 @@ export const pickAnalyticsMessages = (
     title: getMessage(analytics, "data_quality.title"),
     missingRecords: getMessage(analytics, "data_quality.missing_records"),
     missingChecked: getMessage(analytics, "data_quality.missing_checked"),
+    missingCheckedTail: getMessage(analytics, "data_quality.missing_checked_tail"),
     lessonsLinkLabel: getMessage(analytics, "data_quality.lessons_link_label"),
     migrationDuplicates: getMessage(analytics, "data_quality.migration_duplicates"),
     adminSummary: getMessage(analytics, "data_quality.admin_summary"),

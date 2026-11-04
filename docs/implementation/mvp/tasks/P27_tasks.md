@@ -63,7 +63,7 @@ Review `diff-only`: профиль `lean` D6 (presentational; мутации и 
 
 Tier T1: логика шкалы графиков и форматирования; общие компоненты графиков — runtime-код, поэтому `reviewer` (явный выбор плана, `Paths: H/N`).
 
-- [ ] P27-T4 · T1 · Spec: [analytics R-25, R-23](../specs/analytics_screens_spec.md) · ADR-020 §4 п. 7 · [UX-03 D-18](../../../design/visual_identity_contract.md) · Prototype: `vAnalytics`
+- [x] P27-T4 · T1 · Spec: [analytics R-25, R-23](../specs/analytics_screens_spec.md) · ADR-020 §4 п. 7 · [UX-03 D-18](../../../design/visual_identity_contract.md) · Prototype: `vAnalytics`
       Files: `apps/web/src/components/analytics/{LineChart,BarChart,ChartAxis,DataQualityLine,GroupAnalyticsTables,PupilAnalyticsTable,AnalyticsLessonsTable,YearTotalsTable}.tsx` (имена — по факту), `apps/web/src/lib/analytics/{chart-scale,format-analytics-display}.ts` (+ тесты), `apps/web/src/lib/messages/{ru,en}/analytics.json` и pick/типы
       Acceptance: **D-10:** подписи осей — только `formatNumber` (запятая в ru), ось «Стихи за урок» начинается с нуля, шаг «красивый» (0 / 0,5 / 1 / 1,5 / 2); `TermLabel`/`TermHeader` у «Нет отметки в N записях» (+ ссылка на журнал уроков с фильтром — R-24), у бейджа «низкий балл» (критерий порога), у «Не входят в средние: явка ниже 50%», у «Итоги по годам», у «по 5 урокам» («усреднено по N урокам»), у «Состав: регулярно ходят · ходят редко · …»; в `/analytics` у «Регулярно ходят» остаётся один значок; ключи `n.*` из CU2
       Paths: H [R-25: подсказки; оси без точек и без обрезки нуля] · N [все значения равны → шкала не схлопывается; нет данных → «—»; один урок — одна точка без деления на ноль] · S n/a — отображение

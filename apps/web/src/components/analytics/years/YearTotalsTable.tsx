@@ -11,11 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AnalyticsTableTermHeader } from "@/components/analytics/AnalyticsTableTermHeader";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import { cn } from "@/lib/utils";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages, AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
+import { AnalyticsTableTermHeader } from "@/components/analytics/AnalyticsTableTermHeader";
 import { DiffBadge, type YearDiffMetric } from "./DiffBadge";
 import { formatYearMetricValue } from "./format-year-metric-value";
 import { YearTotalsCards } from "./YearTotalsCards";
@@ -41,6 +43,7 @@ type YearTotalsTableProps = {
   yearMessages: AnalyticsYearMessages;
   columnKidsGlossary: GlossaryTerm;
   termHintAriaLabel: string;
+  yearTotalsHint: HintTerm;
 };
 
 const METRIC_COLS: { key: YearDiffMetric; label: (m: AnalyticsYearMessages) => string }[] = [
@@ -59,10 +62,15 @@ export const YearTotalsTable = ({
   yearMessages,
   columnKidsGlossary,
   termHintAriaLabel,
+  yearTotalsHint,
 }: YearTotalsTableProps) => (
   <section className="mb-6">
     <SectionTitle as="h2" className="mb-1">
-      {yearMessages.title}
+      <TermLabel
+        term={nonEmptyTerm(yearTotalsHint.term)}
+        hint={yearTotalsHint.hint}
+        ariaLabel={fillMessage(termHintAriaLabel, { term: yearTotalsHint.term })}
+      />
     </SectionTitle>
     <ContentText className="mb-3 text-sm text-ink-2">{yearMessages.compositionNote}</ContentText>
     <YearTotalsCards
