@@ -7,14 +7,18 @@ import type { AuditLogEntryDto } from "@/data/audit/audit-shared.server";
 type AuditEntryRowProps = {
   entry: AuditLogEntryDto;
   occurredLabel: string;
-  technicalRecordLabel: string;
+  technicalRecordTerm: string;
+  technicalRecordHint: string;
+  technicalRecordHintAria: string;
   reasonPrefix: string;
 };
 
 export const AuditEntryRow = ({
   entry,
   occurredLabel,
-  technicalRecordLabel,
+  technicalRecordTerm,
+  technicalRecordHint,
+  technicalRecordHintAria,
   reasonPrefix,
 }: AuditEntryRowProps) => (
   <TableRow>
@@ -23,18 +27,23 @@ export const AuditEntryRow = ({
     </TableCell>
     <TableCell className="px-5 py-4 align-top text-sm font-medium">{entry.actorLabel}</TableCell>
     <TableCell className="px-5 py-4 align-top text-sm">{entry.actionPhrase}</TableCell>
-    <TableCell className="px-5 py-4 align-top text-sm" title={entry.entityIdTitle}>
+    <TableCell className="px-5 py-4 align-top text-sm" title={entry.entityIdTitle || undefined}>
       {entry.entityHref ? (
-        <CustomLink href={entry.entityHref} className="text-cobalt-ink" title={entry.entityIdTitle}>
+        <CustomLink href={entry.entityHref} className="text-cobalt-ink" title={entry.entityIdTitle || undefined}>
           {entry.entityDisplay}
         </CustomLink>
       ) : (
-        <span title={entry.entityIdTitle}>{entry.entityDisplay}</span>
+        <span title={entry.entityIdTitle || undefined}>{entry.entityDisplay}</span>
       )}
     </TableCell>
     <TableCell className="min-w-0 px-5 py-4 align-top">
       <AuditChangeList lines={entry.changeLines} reason={entry.reason} reasonPrefix={reasonPrefix} />
-      <AuditTechnicalRecord summaryLabel={technicalRecordLabel} json={entry.technicalRecordJson} />
+      <AuditTechnicalRecord
+        term={technicalRecordTerm}
+        hint={technicalRecordHint}
+        hintAriaLabel={technicalRecordHintAria}
+        json={entry.technicalRecordJson}
+      />
     </TableCell>
   </TableRow>
 );

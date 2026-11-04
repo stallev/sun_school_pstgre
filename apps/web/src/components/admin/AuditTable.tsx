@@ -17,7 +17,9 @@ type AuditTableProps = {
   columnAction: string;
   columnEntity: string;
   columnDetails: string;
-  technicalRecordLabel: string;
+  technicalRecordTerm: string;
+  technicalRecordHint: string;
+  technicalRecordHintAria: string;
   reasonPrefix: string;
 };
 
@@ -29,7 +31,9 @@ export const AuditTable = ({
   columnAction,
   columnEntity,
   columnDetails,
-  technicalRecordLabel,
+  technicalRecordTerm,
+  technicalRecordHint,
+  technicalRecordHintAria,
   reasonPrefix,
 }: AuditTableProps) => (
   <>
@@ -43,7 +47,9 @@ export const AuditTable = ({
           columnActor={columnActor}
           columnEntity={columnEntity}
           columnDetails={columnDetails}
-          technicalRecordLabel={technicalRecordLabel}
+          technicalRecordTerm={technicalRecordTerm}
+          technicalRecordHint={technicalRecordHint}
+          technicalRecordHintAria={technicalRecordHintAria}
           reasonPrefix={reasonPrefix}
         />
       ))}
@@ -75,7 +81,9 @@ export const AuditTable = ({
               key={entry.id}
               entry={entry}
               occurredLabel={formatOccurred(entry.occurredAtIso)}
-              technicalRecordLabel={technicalRecordLabel}
+              technicalRecordTerm={technicalRecordTerm}
+              technicalRecordHint={technicalRecordHint}
+              technicalRecordHintAria={technicalRecordHintAria}
               reasonPrefix={reasonPrefix}
             />
           ))}

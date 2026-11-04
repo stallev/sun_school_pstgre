@@ -488,6 +488,8 @@
       "access.users_merged": "Пользователи объединены",
       "achievement.awarded": "Достижение выдано вручную",
       "achievement.catalog_toggled": "Достижение в каталоге включено или выключено",
+      "achievement.catalog_toggled_on": "Достижение включено",
+      "achievement.catalog_toggled_off": "Достижение выключено",
       "achievement.catalog_upserted": "Каталог достижений изменён",
       "achievement.evaluated": "Достижения пересчитаны",
       "achievement.group_points_changed": "Баллы достижений группы изменены",
@@ -559,6 +561,7 @@
       "settings.timezone_changed": "Часовой пояс школы изменён"
     },
     "deleted_pupil": "Удалённый ученик",
+    "admin_without_name": "Администратор (без имени)",
     "system_action_phrase": "Система: {action}",
     "technical_record": "Техническая запись",
     "reason_prefix": "Причина",
@@ -574,6 +577,8 @@
       "comment": "Комментарий",
       "verse_line": "Стих {n}",
       "lesson_context": "урок {n}",
+      "lesson_unspecified": "урок не указан",
+      "pupil_context": "Ученик: {name}",
       "score": "Оценка"
     }
   },

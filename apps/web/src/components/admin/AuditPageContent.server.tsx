@@ -16,6 +16,7 @@ import { formatDateTime } from "@/lib/i18n/format";
 import { getFormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
+import { pickHintsMessages } from "@/lib/messages/pick-hints-messages";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { safeAdminMessage } from "@/lib/messages/safe-admin-message";
 
@@ -44,6 +45,11 @@ export const AuditPageContent = async ({ searchParams }: AuditPageProps) => {
     getDictionary(locale, "common"),
   ]);
   const adminMessages = pickAdminMessages(adminDict);
+  const auditHints = pickHintsMessages(adminDict, [
+    "audit_system",
+    "audit_entity_type",
+    "audit_technical",
+  ] as const);
   const deletedUserTemplate = getMessage(commonDict, "person.deleted_user");
 
   const listResult = await listAuditLog(
@@ -119,6 +125,10 @@ export const AuditPageContent = async ({ searchParams }: AuditPageProps) => {
             submit: getMessage(adminDict, "audit.filter_submit"),
             reset: getMessage(adminDict, "audit.filter_reset"),
             showSystem: getMessage(adminDict, "audit.filter_show_system"),
+            showSystemHint: auditHints.audit_system.hint,
+            showSystemHintAria: auditHints.audit_system.term,
+            entityTypeHint: auditHints.audit_entity_type.hint,
+            entityTypeHintAria: auditHints.audit_entity_type.term,
             entityTypeLabels,
             actionLabels,
           }}
@@ -137,7 +147,9 @@ export const AuditPageContent = async ({ searchParams }: AuditPageProps) => {
             columnAction={getMessage(adminDict, "audit.column_action")}
             columnEntity={getMessage(adminDict, "audit.column_entity")}
             columnDetails={getMessage(adminDict, "audit.column_details")}
-            technicalRecordLabel={getMessage(adminDict, "audit.technical_record")}
+            technicalRecordTerm={getMessage(adminDict, "audit.technical_record")}
+            technicalRecordHint={auditHints.audit_technical.hint}
+            technicalRecordHintAria={auditHints.audit_technical.term}
             reasonPrefix={getMessage(adminDict, "audit.reason_prefix")}
           />
         )}

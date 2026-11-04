@@ -1,7 +1,8 @@
 import { AUDIT_ACTION, AUDIT_ENTITY_TYPE } from "@sunschool/domain";
 import { describe, expect, it, vi } from "vitest";
 import adminRu from "@/lib/messages/ru/admin.json";
-import { buildAuditChangeLines, mapAuditRowsToDto } from "./map-audit-rows.server";
+import { buildAuditChangeLines } from "./audit-details-format";
+import { mapAuditRowsToDto } from "./map-audit-rows.server";
 
 describe("buildAuditChangeLines", () => {
   it("formats scalar field changes with dictionary labels", () => {
@@ -19,18 +20,22 @@ describe("buildAuditChangeLines", () => {
     expect(lines).toEqual(["—"]);
   });
 
-  it("keeps unknown field codes as labels", () => {
+  it("hides unknown field codes from change lines", () => {
     const lines = buildAuditChangeLines(adminRu as never, null, { mystery_field: 1 });
-    expect(lines[0]).toBe("mystery_field: 1");
+    expect(lines).toEqual(["—"]);
   });
 });
 
 describe("mapAuditRowsToDto", () => {
-  it("formats missing homework_check row as deleted pupil and lesson 0 (N)", async () => {
+  it("formats missing homework_check row as deleted pupil and lesson unspecified (D-7)", async () => {
     const entityId = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
     const db = {
       homeworkCheck: { findMany: vi.fn().mockResolvedValue([]) },
       appUser: { findMany: vi.fn().mockResolvedValue([]) },
+      pupil: { findMany: vi.fn().mockResolvedValue([]) },
+      lesson: { findMany: vi.fn().mockResolvedValue([]) },
+      grade: { findMany: vi.fn().mockResolvedValue([]) },
+      achievement: { findMany: vi.fn().mockResolvedValue([]) },
     };
     const entries = await mapAuditRowsToDto(
       db as never,
@@ -51,7 +56,7 @@ describe("mapAuditRowsToDto", () => {
       adminRu as never,
       { person: { deleted_user: "Удалён #{ordinal}" } } as never,
     );
-    expect(entries[0]?.entityDisplay).toBe("Проверка ДЗ · Удалённый ученик · урок 0");
+    expect(entries[0]?.entityDisplay).toBe("Проверка ДЗ · Удалённый ученик · урок не указан");
     expect(db.homeworkCheck.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: { in: [entityId] } } }),
     );

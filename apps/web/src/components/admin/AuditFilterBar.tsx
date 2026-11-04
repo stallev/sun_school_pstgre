@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CustomLink } from "@/components/ui/custom-link";
 import { FormDateField } from "@/components/ui/form-date-field";
 import { FormSelect } from "@/components/ui/form-select";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { FormDateFieldCopy } from "@/lib/i18n/get-form-date-field-copy";
 import { Label } from "@/components/ui/label";
 
@@ -33,6 +34,10 @@ type AuditFilterBarProps = {
     submit: string;
     reset: string;
     showSystem: string;
+    showSystemHint: string;
+    showSystemHintAria: string;
+    entityTypeHint: string;
+    entityTypeHintAria: string;
     entityTypeLabels: Record<string, string>;
     actionLabels: Record<string, string>;
   };
@@ -81,7 +86,14 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
       />
     </div>
     <div className="space-y-2">
-      <Label htmlFor="audit-entity-type">{labels.entityType}</Label>
+      <Label htmlFor="audit-entity-type">
+        <TermLabel
+          term={nonEmptyTerm(labels.entityType)}
+          hint={labels.entityTypeHint}
+          ariaLabel={labels.entityTypeHintAria}
+          popoverSide="top"
+        />
+      </Label>
       <FormSelect
         id="audit-entity-type"
         name="entityType"
@@ -116,7 +128,12 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
       />
       {showSystem ? <input type="hidden" name="showSystem" value="1" /> : null}
       <Label htmlFor="audit-show-system" className="font-normal">
-        {labels.showSystem}
+        <TermLabel
+          term={nonEmptyTerm(labels.showSystem)}
+          hint={labels.showSystemHint}
+          ariaLabel={labels.showSystemHintAria}
+          popoverSide="top"
+        />
       </Label>
     </div>
     <div className="flex flex-wrap items-end gap-2 md:col-span-2 lg:col-span-3">

@@ -487,7 +487,9 @@
       "access.roles_changed": "Roles changed",
       "access.users_merged": "Access — Users merged",
       "achievement.awarded": "Achievement — Awarded",
-      "achievement.catalog_toggled": "Achievement — Catalog toggled",
+      "achievement.catalog_toggled": "Achievement catalog toggled",
+      "achievement.catalog_toggled_on": "Achievement enabled",
+      "achievement.catalog_toggled_off": "Achievement disabled",
       "achievement.catalog_upserted": "Achievement — Catalog upserted",
       "achievement.evaluated": "Achievement — Evaluated",
       "achievement.group_points_changed": "Achievement — Group points changed",
@@ -559,6 +561,7 @@
       "settings.timezone_changed": "Settings — Timezone changed"
     },
     "deleted_pupil": "Deleted pupil",
+    "admin_without_name": "Administrator (no name)",
     "system_action_phrase": "System: {action}",
     "technical_record": "Technical record",
     "reason_prefix": "Reason",
@@ -574,6 +577,8 @@
       "comment": "Comment",
       "verse_line": "Verse {n}",
       "lesson_context": "lesson {n}",
+      "lesson_unspecified": "lesson not specified",
+      "pupil_context": "Pupil: {name}",
       "score": "Score"
     }
   },
