@@ -62,6 +62,7 @@ const LAB_SHELL_MESSAGES: ShellMessages = {
   devRoleTeacher: "Teacher",
   viewModeTemplate: "Mode: {role}",
   previewNavEmptyTeacher: "To preview as a teacher, assign yourself to a group",
+  navDisabledReason: "Teacher role in a group is required",
   roleNameAdmin: "Administrator",
   roleNameTeacher: "Teacher",
   screenTitles: LAB_SCREEN_TITLES,
@@ -79,15 +80,42 @@ const SAMPLE_NAV: ResolvedNavItem[] = [
   },
 ];
 
+const DISABLED_GROUP_NAV: ResolvedNavItem[] = [
+  { key: "today", label: "Today", href: "/today" },
+  {
+    key: "group",
+    label: "My group",
+    children: [
+      {
+        key: "group-roster",
+        label: "Group roster",
+        href: "/group",
+        navDisabled: true,
+      },
+    ],
+  },
+];
+
 export const ShellMatrix = () => (
   <ShellMessagesProvider messages={LAB_SHELL_MESSAGES}>
     <div className="grid gap-3 md:grid-cols-2">
-      <MatrixCell label="SidebarNav — expanded">
+      <MatrixCell label="SidebarNav — active">
         <div className="max-w-xs rounded-xl border border-line bg-surface">
           <SidebarNav
             items={SAMPLE_NAV}
             activeKey="today"
             badgeCounts={{ approvals: 3, peopleGroup: 5 }}
+            asideClassName="static block h-auto"
+            collapsed={false}
+          />
+        </div>
+      </MatrixCell>
+      <MatrixCell label="SidebarNav — disabled with reason">
+        <div className="max-w-xs rounded-xl border border-line bg-surface">
+          <SidebarNav
+            items={DISABLED_GROUP_NAV}
+            activeKey="today"
+            badgeCounts={{}}
             asideClassName="static block h-auto"
             collapsed={false}
           />

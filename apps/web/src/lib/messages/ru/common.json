@@ -116,6 +116,7 @@
     "dev_role_teacher": "Учитель",
     "view_mode": "Режим: {role}",
     "preview_nav_empty_teacher": "Для режима учителя назначьте себя на группу",
+    "nav_disabled_reason": "Нужна роль учителя в группе",
     "role_names": {
       "admin": "администратор",
       "teacher": "учитель"

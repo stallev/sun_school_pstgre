@@ -15,6 +15,8 @@ export type ResolvedNavLeaf = {
   description?: string;
   href: string;
   badgeSlotId?: NavBadgeSlotId;
+  /** Preview menu: real role cannot open the page (global_shell_spec R-15, ui_states D23). */
+  navDisabled?: boolean;
 };
 
 export type ResolvedNavGroup = {

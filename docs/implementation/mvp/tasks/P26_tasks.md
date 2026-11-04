@@ -21,7 +21,7 @@
 - [x] ADR-019; shell §8, R-15; change log §4.1; analytics R-21…R-24; check flow R-19; UX-03 D-17, D-18; UI states D23; Lab §5.3 — существуют — 2026-11-04 · подготовка P26
 - [x] Задачи ниже ссылаются на `§`-якоря, называют Files, Acceptance и Paths; T3 — свой CU; CU ≤ ~400 строк
 - [x] `Проверено по`: `@base-ui/react` (`Popover`) — версия по `apps/web/package.json`; Next.js `16.4.4` (`cookies()`, `cache()`); `@prisma/adapter-pg` / `pg-pool` — по `package.json`; Context7 не вызывался: новых зависимостей нет
-- [ ] Open questions: Q-1 (порядок стихов) нужен к CU9, по умолчанию «по книгам Библии»; Q-2 (источник доступа admin к `/today`, `/lessons`, `/check`) закрывается чтением кода в CU1; Q-3, Q-4 — не блокируют
+- [ ] Open questions: Q-1 (порядок стихов) нужен к CU9, по умолчанию «по книгам Библии»; Q-2 закрыт в CU1 (Change log); Q-3, Q-4 — не блокируют
 - [x] Прототип обновлён: «Сегодня» в календаре, «Техническая запись» в журнале, фильтр по группе и «Показать ещё» в «Ученики», «Регулярно ходят: N из M», «Уроки 1, 3», подсказка у правого края
 
 ## Commit plan
@@ -30,7 +30,7 @@
 
 Tier T3: логика навигации по ролям в оболочке (S — role-scoped; чтение предиката доступа из `@sunschool/policy-edge`); права и `route-table.ts` не меняются.
 
-- [ ] P26-T1 · T3 · Spec: [shell §8, R-15](../specs/global_shell_spec.md) · [UI states D23](../../../design/ui_states_contract.md) · ADR-019 §4 п. 1 · AZ без изменений
+- [x] P26-T1 · T3 · Spec: [shell §8, R-15](../specs/global_shell_spec.md) · [UI states D23](../../../design/ui_states_contract.md) · ADR-019 §4 п. 1 · AZ без изменений
       Files: `apps/web/src/data/shell/build-shell-nav.server.ts` (+ тест), `apps/web/src/lib/shell/filter-nav-by-route-access.ts` (+ тест), `apps/web/src/components/shell/{sidebar-nav,nav-link-row}.tsx`, `apps/web/src/components/shell/nav-link-row.test.tsx`, `apps/web/src/components/design-lab/ShellMatrix.tsx`, `apps/web/src/lib/messages/{ru,en}/common.json`, `apps/web/src/lib/messages/shell-messages.ts`
       Acceptance: **Q-2:** прочитать, какой источник реально пускает admin на `/today`, `/lessons`, `/check` (`route-table.ts` — `TEACHER`; страничный guard — пускает), и записать вывод в Change log; право admin **не расширять**. Фильтр пунктов предпросмотра различает три состояния: достижим (виден), закрыт реальной ролью (виден **неактивным**: `aria-disabled="true"`, серый текст, подсказка «Нужна роль учителя в группе»; клик не навигирует), нет такого пункта у режима (нет). В режиме «Учитель» у admin видны «Сегодня», «Все уроки», «Проверка ДЗ», «Золотые стихи», «Кирпичики», «Рейтинг», «Календарь», «Аналитика»; «Состав группы» (`/group`, только TEACHER) — неактивен; предикат «достижим» один и тот же для меню и страницы; пустой набор → пояснение P25 остаётся; ключи `shell.nav_disabled_reason` в ru и en; секция Lab `SidebarNav`: активный / неактивный / с подсказкой; тест `build-shell-nav`: набор видимых и неактивных пунктов в режимах admin / teacher для ролей `{ADMIN}`, `{TEACHER}`, `{ADMIN,TEACHER}`
       Paths: H [shell R-15: admin в режиме «Учитель» видит «Сегодня», «Все уроки», «Проверка ДЗ»] · N [`/group` неактивен с причиной; режим вне `APP_ENV=dev` — переключателя нет; повреждённая cookie → реальная роль; клик по неактивному пункту не меняет URL] · S [тест: `view_as` не меняет доступ — admin без TEACHER на `/group` получает отказ реальной роли; меню не раскрывает данные; предикат доступа — чтение, не изменение политики]
@@ -159,3 +159,4 @@ Tier T3: `packages/db` и `lib/auth` — sensitive zones; чтение прав 
 | Date | Change |
 |------|--------|
 | 2026-11-04 | v1.0 — Canonical (подготовка P26): CU1–CU10, Phase DoR audit; документы, ADR-019 и прототип обновлены до CU1 |
+| 2026-11-04 | CU1 Q-2: доступ к `/today`, `/lessons`, `/check` у admin — страничный `requireRole(TEACHER, ADMIN)` в `*PageContent.server.tsx`; `canVisitRoutePrefix` для `ACTIVE` не режет по роли; меню — карта page-guard в `filter-nav-by-route-access.ts`, не `route-table.ts` |

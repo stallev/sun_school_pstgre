@@ -116,6 +116,7 @@
     "dev_role_teacher": "Teacher",
     "view_mode": "Mode: {role}",
     "preview_nav_empty_teacher": "To preview as a teacher, assign yourself to a group",
+    "nav_disabled_reason": "Teacher role in a group is required",
     "role_names": {
       "admin": "administrator",
       "teacher": "teacher"
