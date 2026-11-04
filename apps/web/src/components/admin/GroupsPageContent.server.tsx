@@ -57,7 +57,7 @@ export const GroupsPageContent = async () => {
         ) : (
           <div className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
             {list.groups.map((row) => (
-              <GroupCard key={row.gradeId} row={row} messages={adminMessages} />
+              <GroupCard key={row.gradeId} row={row} messages={adminMessages} uiLocale={locale} />
             ))}
           </div>
         )}

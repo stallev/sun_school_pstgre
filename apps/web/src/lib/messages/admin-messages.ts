@@ -1,4 +1,6 @@
 /** Serializable admin-route copy for client components (ui-messages-bundle-splitting). */
+import type { PluralForms } from "@/lib/messages/plural";
+
 export type AdminMessages = {
   page: {
     approvalsTitle: string;
@@ -127,6 +129,12 @@ export type AdminMessages = {
     closeConfirmTitle: string;
     closeConfirmDescription: string;
     closeReasonLabel: string;
+    summaryTemplate: string;
+    summaryLessons: PluralForms;
+    summaryGroups: PluralForms;
+    summaryPupils: PluralForms;
+    dangerZoneTitle: string;
+    dangerZoneCloseLead: string;
     toastCreated: string;
     toastActivated: string;
     toastClosed: string;
@@ -144,7 +152,8 @@ export type AdminMessages = {
     submitPending: string;
     statusActive: string;
     statusInactive: string;
-    teacherCount: string;
+    teacherCountForms: PluralForms;
+    ageRangeLabel: string;
     editSubtitle: string;
     languageTitle: string;
     languageLabel: string;
@@ -159,7 +168,9 @@ export type AdminMessages = {
     settingsNotebook: string;
     settingsSinging: string;
     settingsMaxVerses: string;
+    settingsMaxVersesHint: string;
     settingsRecitationDays: string;
+    settingsRecitationDaysHint: string;
     settingsSave: string;
     teachersTitle: string;
     teachersEmpty: string;

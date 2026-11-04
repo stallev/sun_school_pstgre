@@ -87,6 +87,10 @@
     "streak": {
       "term": "streak",
       "hint": "Consecutive lessons with the same achievement. Each streak level grants its reward once."
+    },
+    "lesson_points": {
+      "term": "lesson points",
+      "hint": "Total points from checked lessons this year. Ranking place uses only these points."
     }
   },
   "shell": {

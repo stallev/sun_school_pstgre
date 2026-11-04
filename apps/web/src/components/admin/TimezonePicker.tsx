@@ -9,13 +9,14 @@ import { SectionTitle } from "@/components/atoms";
 import { ContentText } from "@/components/atoms/ContentText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { IanaTimeZoneOption } from "@/lib/i18n/iana-timezone-options.server";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/dictionary-types";
 import { cn } from "@/lib/utils";
 
 type TimezonePickerProps = {
   currentTimeZone: string;
-  timeZoneOptions: readonly string[];
+  timeZoneOptions: readonly IanaTimeZoneOption[];
   dictionaries: Record<string, Dictionary>;
   formError: string;
 };
@@ -44,7 +45,13 @@ export const TimezonePicker = ({
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return timeZoneOptions.slice(0, 80);
-    return timeZoneOptions.filter((zone) => zone.toLowerCase().includes(normalized)).slice(0, 80);
+    return timeZoneOptions
+      .filter(
+        (option) =>
+          option.value.toLowerCase().includes(normalized) ||
+          option.label.toLowerCase().includes(normalized),
+      )
+      .slice(0, 80);
   }, [query, timeZoneOptions]);
 
   return (
@@ -67,20 +74,20 @@ export const TimezonePicker = ({
       </label>
       <input type="hidden" name="timeZone" value={selected} />
       <ul className="max-h-48 overflow-y-auto rounded-lg border border-line bg-paper" role="listbox">
-        {filtered.map((zone) => (
-          <li key={zone}>
+        {filtered.map((option) => (
+          <li key={option.value}>
             <button
               type="button"
               role="option"
-              aria-selected={selected === zone}
+              aria-selected={selected === option.value}
               className={cn(
                 "flex min-h-11 w-full items-center px-3 text-left text-sm hover:bg-cobalt-soft",
-                selected === zone && "bg-cobalt-soft font-medium",
+                selected === option.value && "bg-cobalt-soft font-medium",
               )}
-              onClick={() => setSelected(zone)}
+              onClick={() => setSelected(option.value)}
               disabled={pending}
             >
-              {zone}
+              {option.label}
             </button>
           </li>
         ))}

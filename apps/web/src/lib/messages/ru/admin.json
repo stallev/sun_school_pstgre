@@ -82,7 +82,7 @@
     "group_points_empty_description": "Сначала добавьте достижения и штрафы в общем каталоге.",
     "group_points_table_caption": "Переопределение баллов достижений и штрафов",
     "group_points_penalty_max": "до −{max}",
-    "group_points_card_link": "Баллы достижений и штрафов",
+    "group_points_card_link": "Настроить баллы для группы",
     "group_points_inactive": "Неактивно",
     "group_points_details_show": "Как зарабатывается",
     "group_points_details_hide": "Скрыть описание",
@@ -221,6 +221,27 @@
     "close_confirm_title": "Закрыть учебный год?",
     "close_confirm_description": "Для учителей данные года станут только для чтения. Это действие нельзя отменить.",
     "close_reason_label": "Причина (необязательно)",
+    "summary": "{lessons} · {groups} · {pupils}",
+    "summary_lessons": {
+      "one": "{count} урок",
+      "few": "{count} урока",
+      "many": "{count} уроков",
+      "other": "{count} уроков"
+    },
+    "summary_groups": {
+      "one": "{count} группа",
+      "few": "{count} группы",
+      "many": "{count} групп",
+      "other": "{count} групп"
+    },
+    "summary_pupils": {
+      "one": "{count} ученик",
+      "few": "{count} ученика",
+      "many": "{count} учеников",
+      "other": "{count} учеников"
+    },
+    "danger_zone_title": "Опасные действия",
+    "danger_zone_close_lead": "Закрытие года нельзя отменить. Для учителей данные года станут только для чтения.",
     "toast_created": "Учебный год создан",
     "toast_activated": "Учебный год активирован",
     "toast_closed": "Учебный год закрыт",
@@ -243,7 +264,13 @@
     "submit_pending": "Сохраняем…",
     "status_active": "Активна",
     "status_inactive": "Неактивна",
-    "teacher_count": "Учителей: {count}",
+    "teacher_count": {
+      "one": "{count} учитель",
+      "few": "{count} учителя",
+      "many": "{count} учителей",
+      "other": "{count} учителей"
+    },
+    "age_range_label": "{range} лет",
     "edit_subtitle": "Год: {year}",
     "language_title": "Язык группы",
     "language_label": "Язык (перевод Библии)",
@@ -257,8 +284,10 @@
     "settings_test": "Тест",
     "settings_notebook": "Тетрадь",
     "settings_singing": "Пение",
-    "settings_max_verses": "Укажите число стихов от 0 до 10",
+    "settings_max_verses": "Стихов за урок",
+    "settings_max_verses_hint": "От 0 до 10",
     "settings_recitation_days": "Дней на заучивание",
+    "settings_recitation_days_hint": "Сколько разных дней ребёнок может рассказывать стих для зачёта",
     "settings_save": "Сохранить настройки",
     "teachers_title": "Учителя на год",
     "teachers_empty": "Учителя пока не назначены",

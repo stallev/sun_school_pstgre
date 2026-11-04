@@ -12,6 +12,7 @@ export const GLOSSARY_TERM_KEYS = [
   "choir_singing",
   "bonus",
   "streak",
+  "lesson_points",
 ] as const;
 
 export type GlossaryTermKey = (typeof GLOSSARY_TERM_KEYS)[number];
@@ -40,5 +41,6 @@ export const pickGlossaryMessages = (common: Dictionary): GlossaryMessages => {
     choir_singing: pickTerm("choir_singing"),
     bonus: pickTerm("bonus"),
     streak: pickTerm("streak"),
+    lesson_points: pickTerm("lesson_points"),
   };
 };

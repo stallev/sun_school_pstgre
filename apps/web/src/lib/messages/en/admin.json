@@ -82,7 +82,7 @@
     "group_points_empty_description": "Add achievements and penalties in the global catalogue first.",
     "group_points_table_caption": "Achievement and penalty point overrides",
     "group_points_penalty_max": "up to −{max}",
-    "group_points_card_link": "Achievement and penalty points",
+    "group_points_card_link": "Configure points for group",
     "group_points_inactive": "Inactive",
     "group_points_details_show": "How it is earned",
     "group_points_details_hide": "Hide description",
@@ -221,6 +221,27 @@
     "close_confirm_title": "Close this school year?",
     "close_confirm_description": "Teachers will have read-only access to this year's data. This cannot be undone.",
     "close_reason_label": "Reason (optional)",
+    "summary": "{lessons} · {groups} · {pupils}",
+    "summary_lessons": {
+      "one": "{count} lesson",
+      "few": "{count} lessons",
+      "many": "{count} lessons",
+      "other": "{count} lessons"
+    },
+    "summary_groups": {
+      "one": "{count} group",
+      "few": "{count} groups",
+      "many": "{count} groups",
+      "other": "{count} groups"
+    },
+    "summary_pupils": {
+      "one": "{count} pupil",
+      "few": "{count} pupils",
+      "many": "{count} pupils",
+      "other": "{count} pupils"
+    },
+    "danger_zone_title": "Dangerous actions",
+    "danger_zone_close_lead": "Closing a year cannot be undone. Teachers will have read-only access to that year's data.",
     "toast_created": "School year created",
     "toast_activated": "School year activated",
     "toast_closed": "School year closed",
@@ -243,7 +264,13 @@
     "submit_pending": "Saving…",
     "status_active": "Active",
     "status_inactive": "Inactive",
-    "teacher_count": "Teachers: {count}",
+    "teacher_count": {
+      "one": "{count} teacher",
+      "few": "{count} teachers",
+      "many": "{count} teachers",
+      "other": "{count} teachers"
+    },
+    "age_range_label": "{range} years",
     "edit_subtitle": "Year: {year}",
     "language_title": "Group language",
     "language_label": "Language (Bible translation)",
@@ -257,8 +284,10 @@
     "settings_test": "Test",
     "settings_notebook": "Notebook",
     "settings_singing": "Singing",
-    "settings_max_verses": "Enter a verse count from 0 to 10",
+    "settings_max_verses": "Verses per lesson",
+    "settings_max_verses_hint": "From 0 to 10",
     "settings_recitation_days": "Recitation days",
+    "settings_recitation_days_hint": "How many different days a child may recite a verse for credit",
     "settings_save": "Save settings",
     "teachers_title": "Teachers for the year",
     "teachers_empty": "No teachers assigned yet",

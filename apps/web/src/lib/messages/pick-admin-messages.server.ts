@@ -4,6 +4,7 @@ import { DELETION_DATA_CATEGORY, DELETION_PLAN_WARNING } from "@sunschool/domain
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import { getMessage } from "@/lib/messages/get-dictionary";
+import { getPluralForms } from "@/lib/messages/plural";
 
 const deletionCategoryLabels = (admin: Dictionary): Record<string, string> =>
   Object.fromEntries(
@@ -149,6 +150,12 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     closeConfirmTitle: getMessage(admin, "year.close_confirm_title"),
     closeConfirmDescription: getMessage(admin, "year.close_confirm_description"),
     closeReasonLabel: getMessage(admin, "year.close_reason_label"),
+    summaryTemplate: getMessage(admin, "year.summary"),
+    summaryLessons: getPluralForms(admin, "year.summary_lessons"),
+    summaryGroups: getPluralForms(admin, "year.summary_groups"),
+    summaryPupils: getPluralForms(admin, "year.summary_pupils"),
+    dangerZoneTitle: getMessage(admin, "year.danger_zone_title"),
+    dangerZoneCloseLead: getMessage(admin, "year.danger_zone_close_lead"),
     toastCreated: getMessage(admin, "year.toast_created"),
     toastActivated: getMessage(admin, "year.toast_activated"),
     toastClosed: getMessage(admin, "year.toast_closed"),
@@ -166,7 +173,8 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     submitPending: getMessage(admin, "group.submit_pending"),
     statusActive: getMessage(admin, "group.status_active"),
     statusInactive: getMessage(admin, "group.status_inactive"),
-    teacherCount: getMessage(admin, "group.teacher_count"),
+    teacherCountForms: getPluralForms(admin, "group.teacher_count"),
+    ageRangeLabel: getMessage(admin, "group.age_range_label"),
     editSubtitle: getMessage(admin, "group.edit_subtitle"),
     languageTitle: getMessage(admin, "group.language_title"),
     languageLabel: getMessage(admin, "group.language_label"),
@@ -181,7 +189,9 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     settingsNotebook: getMessage(admin, "group.settings_notebook"),
     settingsSinging: getMessage(admin, "group.settings_singing"),
     settingsMaxVerses: getMessage(admin, "group.settings_max_verses"),
+    settingsMaxVersesHint: getMessage(admin, "group.settings_max_verses_hint"),
     settingsRecitationDays: getMessage(admin, "group.settings_recitation_days"),
+    settingsRecitationDaysHint: getMessage(admin, "group.settings_recitation_days_hint"),
     settingsSave: getMessage(admin, "group.settings_save"),
     teachersTitle: getMessage(admin, "group.teachers_title"),
     teachersEmpty: getMessage(admin, "group.teachers_empty"),

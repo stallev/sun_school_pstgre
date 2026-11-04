@@ -1,21 +1,22 @@
 import { connection } from "next/server";
 import { notFound } from "next/navigation";
-import { LockIcon } from "lucide-react";
 import { USER_ROLE } from "@sunschool/domain";
+import { RatingPrivacyNote } from "@/components/analytics/RatingPrivacyNote";
 import { RatingTable } from "@/components/analytics/RatingTable";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { ContentText } from "@/components/atoms";
 import { loadRatingPage } from "@/data/analytics/load-rating-page.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { pickAnalyticsMessages } from "@/lib/messages/pick-analytics-messages.server";
+import { pickGlossaryMessages } from "@/lib/messages/pick-glossary-messages";
 import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { pickTeacherLessonScreensMessages } from "@/lib/messages/pick-teacher-lesson-screens-messages.server";
 import { messageLocaleToAppLocale } from "@/lib/i18n/message-locale-to-app-locale";
 import { SegmentedControlLinks } from "@/components/ui/segmented-control-links";
+import { ContentText } from "@/components/atoms";
 
 export type RatingPageProps = {
   searchParams: Promise<{ gradeId?: string; scope?: string }>;
@@ -27,9 +28,13 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
   const actor = await requireRole(USER_ROLE.TEACHER, USER_ROLE.ADMIN);
   const data = await loadRatingPage(await getPrisma(), actor.userId, params);
   const locale = await getUiLocale();
-  const analyticsDict = await getDictionary(locale, "analytics");
-  const teacherDict = await getDictionary(locale, "teacher");
+  const [analyticsDict, teacherDict, commonDict] = await Promise.all([
+    getDictionary(locale, "analytics"),
+    getDictionary(locale, "teacher"),
+    getDictionary(locale, "common"),
+  ]);
   const messages = pickAnalyticsMessages(analyticsDict, locale);
+  const glossary = pickGlossaryMessages(commonDict);
   const lessonMessages = pickTeacherLessonScreensMessages(teacherDict, messageLocaleToAppLocale(locale));
   const achievementMessages = pickTeacherAchievementsMessages(teacherDict);
   const ratingPageTitle =
@@ -68,10 +73,10 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
   return (
     <div className="space-y-6">
       <PageHeader title={ratingPageTitle} description={messages.rating.pageDescription} />
-      <div className="flex max-w-3xl items-start gap-2">
-        <LockIcon className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden />
-        <ContentText className="text-sm text-ink-2">{messages.rating.privacyNote}</ContentText>
-      </div>
+      <RatingPrivacyNote
+        badgeLabel={getMessage(commonDict, "shell.nav.desc.rating")}
+        hint={messages.rating.privacyNote}
+      />
       {data.isAdmin ? (
         <SegmentedControlLinks
           aria-label={messages.rating.pageTitle}
@@ -104,6 +109,8 @@ export const RatingPageContent = async ({ searchParams }: RatingPageProps) => {
       <RatingTable
         rows={data.rows}
         messages={messages.rating}
+        showGroupColumn={data.scope === "school"}
+        metricGlossary={glossary.lesson_points}
         achievementsUiEnabled={data.achievementsUiEnabled}
         achievementMessages={achievementMessages}
       />

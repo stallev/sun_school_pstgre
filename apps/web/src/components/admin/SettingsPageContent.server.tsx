@@ -9,7 +9,7 @@ import { ContentText } from "@/components/atoms/ContentText";
 import { requireRole } from "@/lib/auth/require-user";
 import { getSchoolTimezoneUncached } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale, getUiLocaleUncached } from "@/lib/i18n/get-ui-locale.server";
-import { listIanaTimeZoneOptions } from "@/lib/i18n/iana-timezone-options.server";
+import { listIanaTimeZoneOptionLabels } from "@/lib/i18n/iana-timezone-options.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
@@ -22,7 +22,7 @@ export const SettingsPageContent = async () => {
     getDictionary(locale, "common"),
     getUiLocaleUncached(),
     getSchoolTimezoneUncached(),
-    Promise.resolve(listIanaTimeZoneOptions()),
+    Promise.resolve(listIanaTimeZoneOptionLabels(locale)),
   ]);
   const adminMessages = pickAdminMessages(adminDict);
   const dictionaries = { admin: adminDict, common: commonDict };

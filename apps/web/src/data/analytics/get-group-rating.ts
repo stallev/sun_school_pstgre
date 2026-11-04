@@ -21,6 +21,7 @@ export type RatingTableRow = {
   displayName: string;
   metric: number;
   place: number;
+  groupName?: string;
   achievementBonus?: number;
   awardsCount?: number;
   penaltiesCount?: number;

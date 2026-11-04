@@ -409,7 +409,7 @@
     "already_cancelled": "Penalty already cancelled"
   },
   "achievements": {
-    "mode_card_title": "Achievements and penalties",
+    "mode_card_title": "Enable achievements for group",
     "mode_on_description": "On: after a lesson check achievements are calculated automatically; manual awards and penalties are available.",
     "mode_off_description": "Off. Earned awards and penalties are kept. Lessons in this period will not extend or break streaks.",
     "mode_off_description_with_date": "Off since {from}. Earned awards and penalties are kept. Lessons in this period will not extend or break streaks.",

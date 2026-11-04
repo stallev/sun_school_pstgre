@@ -14,6 +14,9 @@ import type { LessonsListGradeOption } from "@/data/lessons/load-lessons-list-pa
 import { assertTeacherAssignedToGradeInYear } from "@/data/school/school-enrollment-shared.server";
 import { enrichRatingRowsWithAchievements } from "@/data/achievements/enrich-rating-rows-achievements.server";
 import { readFeaturesAchievementsEnabled } from "@/data/achievements/achievement-feature.server";
+import { loadGradeAchievementUi } from "@/data/achievements/load-grade-achievement-ui.server";
+import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
+import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { getGroupRating, type RatingTableRow } from "./get-group-rating";
 
 export type RatingPageScope = "group" | "school";
@@ -66,6 +69,7 @@ async function loadSchoolRatingRows(
   const enrollments = await db.enrollment.findMany({
     where: { academicYearId: yearId, endsOn: null, pupil: { organizationId } },
     select: {
+      grade: { select: { name: true } },
       pupil: {
         select: { id: true, lastName: true, firstName: true, middleName: true },
       },
@@ -86,6 +90,10 @@ async function loadSchoolRatingRows(
     aggregates.map((row) => [row.pupilId, row._sum.pointsTotal ?? 0]),
   );
 
+  const enrollmentByPupil = new Map(
+    enrollments.map((row) => [row.pupil.id, row] as const),
+  );
+
   const ranked = rankRatingRows(
     enrollments.map((row) => ({
       pupilId: row.pupil.id,
@@ -95,16 +103,16 @@ async function loadSchoolRatingRows(
     })),
   );
 
-  const nameById = new Map(
-    enrollments.map((row) => [row.pupil.id, formatDisplayName(row.pupil)]),
-  );
-
-  return ranked.map((row, index) => ({
-    pupilId: row.pupilId,
-    displayName: nameById.get(row.pupilId) ?? "",
-    metric: row.metric,
-    place: index + 1,
-  }));
+  return ranked.map((row, index) => {
+    const enrollment = enrollmentByPupil.get(row.pupilId);
+    return {
+      pupilId: row.pupilId,
+      displayName: enrollment ? formatDisplayName(enrollment.pupil) : "",
+      groupName: enrollment?.grade.name,
+      metric: row.metric,
+      place: index + 1,
+    };
+  });
 }
 
 export async function loadRatingPage(
@@ -161,7 +169,14 @@ export async function loadRatingPage(
       ? ""
       : grades.find((g) => g.gradeId === gradeId)?.name ?? "";
 
-  const achievementsUiEnabled = await readFeaturesAchievementsEnabled(db);
+  const locale = await getUiLocale();
+  const timeZone = await getSchoolTimezone();
+  const achievementsFeatureOn = await readFeaturesAchievementsEnabled(db);
+  let achievementsUiEnabled = achievementsFeatureOn;
+  if (achievementsFeatureOn && scope === "group") {
+    const gradeUi = await loadGradeAchievementUi(db, gradeId, year.id, locale, timeZone);
+    achievementsUiEnabled = gradeUi?.achievementsEnabled ?? false;
+  }
   if (achievementsUiEnabled && rows.length > 0) {
     rows = await enrichRatingRowsWithAchievements(db, year.id, rows);
   }
