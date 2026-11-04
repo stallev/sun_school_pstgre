@@ -15,6 +15,7 @@ export const pickTeacherCheckMessages = (
   linkLesson: getMessage(teacher, "lesson.form.back_lesson"),
   correctionBanner: getMessage(teacher, "check.correction_banner"),
   progressLabel: getMessage(teacher, "check.progress"),
+  progressFraction: getMessage(teacher, "check.progress_fraction"),
   pupilsToggle: getMessage(teacher, "check.pupils_toggle"),
   pupilsListLabel: getMessage(teacher, "check.pupils_list"),
   pupilIndex: getMessage(teacher, "check.pupil_index"),

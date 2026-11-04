@@ -149,6 +149,7 @@ export const SchoolAnalyticsRegions = async ({ searchParams }: SchoolAnalyticsRe
                 messages={schoolMessages}
                 percentTemplate={messages.formatPercent}
                 averageTemplate={messages.formatAverage}
+                formatLocale={messages.formatLocale}
               />
               <section className="mt-8 space-y-2">
                 <SectionTitle as="h2" className="text-lg">

@@ -1,7 +1,10 @@
 import type { PluralForms } from "@/lib/messages/plural";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
-import { formatNumber, plural } from "@/lib/i18n/format";
+import { formatDecimalOne, formatNumber, plural } from "@/lib/i18n/format";
 import { fillMessage } from "@/lib/messages/fill-message";
+import type { AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
+
+export type YearComparisonMetric = "attendance" | "verses" | "test" | "notebook";
 
 /** Domain attendance rate 0–1 → display percent (e.g. 0.8 → `80%`). */
 export const formatAnalyticsPercent = (template: string, rate: number): string => {
@@ -30,11 +33,7 @@ export const formatAnalyticsChartValue = (
   locale: MessageLocale,
 ): string => {
   if (value === null) return empty;
-  const formattedValue = formatNumber(
-    Number(value.toFixed(1)),
-    locale,
-    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
-  );
+  const formattedValue = formatDecimalOne(value, locale);
   const base = plural(lessonsObservedForms, observationCount, locale);
   return fillMessage(template, { value: formattedValue, base });
 };
@@ -46,9 +45,30 @@ export const formatAnalyticsShortDate = (iso: string, locale: string): string =>
 
 export const formatAnalyticsDelta = (value: number, locale: MessageLocale): string => {
   const sign = value > 0 ? "+" : value < 0 ? "−" : "";
-  const formatted = formatNumber(Math.abs(value), locale, {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  });
+  const formatted = formatDecimalOne(Math.abs(value), locale);
   return `${sign}${formatted}`;
+};
+
+export const formatYearComparisonAmount = (
+  metric: YearComparisonMetric,
+  delta: number,
+  locale: MessageLocale,
+): string => {
+  const abs = Math.abs(delta);
+  if (metric === "attendance") {
+    return `${formatNumber(abs, locale, { maximumFractionDigits: 0 })}%`;
+  }
+  return formatDecimalOne(abs, locale);
+};
+
+export const formatYearComparisonDiff = (
+  metric: YearComparisonMetric,
+  delta: number,
+  messages: Pick<AnalyticsYearMessages, "diffHigher" | "diffLower" | "diffSame">,
+  locale: MessageLocale,
+): string => {
+  if (delta === 0) return messages.diffSame;
+  const amount = formatYearComparisonAmount(metric, delta, locale);
+  const template = delta > 0 ? messages.diffHigher : messages.diffLower;
+  return fillMessage(template, { amount });
 };

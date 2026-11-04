@@ -130,7 +130,7 @@
     "column_checked": "Проверено",
     "column_checked_lessons": "Проверено уроков",
     "column_attended_checked": "Был на уроках",
-    "attended_checked_value": "{attended} / {checked}",
+    "attended_checked_value": "{attended} из {checked}",
     "column_birth_year_kids": "Детей",
     "column_verses": "Стихи",
     "column_test": "Тест",
@@ -218,10 +218,11 @@
     "column_group": "Группа",
     "column_teachers": "Учителя",
     "column_pupils": "Ученики",
+    "pupils_sample_value": "{current} из {total}",
     "column_attendance": "Посещаемость",
     "column_average": "Средний балл",
     "column_last_lesson": "Проверка последнего урока",
-    "last_lesson_ok": "{label}",
+    "last_lesson_ok": "Проверено {checked} из {total}",
     "last_lesson_warn": "{checked} из {total} проверено",
     "last_lesson_idle": "Нет проверенных уроков",
     "attendance_chart_title": "Посещаемость групп по урокам",
@@ -255,10 +256,8 @@
     "composition_note": "Годовые итоги для детей, которые регулярно ходят. Строка открывает год. В разные годы в группе могли быть разные дети: это сравнение составов, а не одних и тех же учеников.",
     "table_caption": "Итоги группы {group} по учебным годам",
     "insufficient_for_comparison": "мало данных для сравнения",
-    "diff_higher": "на {amount} выше",
-    "diff_lower": "на {amount} ниже",
-    "diff_higher_attendance": "+{amount}% к прошлому году",
-    "diff_lower_attendance": "−{amount}% к прошлому году",
+    "diff_higher": "+{amount} к прошлому году",
+    "diff_lower": "−{amount} к прошлому году",
     "diff_same": "без изменений",
     "none": "Учебный год ещё не начался",
     "readonly_note": "Закрытый год — только чтение. Итоги зафиксированы при закрытии года.",
@@ -298,6 +297,6 @@
     "chart_aria_notebook": "Тетрадь по учебным годам",
     "column_group": "Группа",
     "column_bricks": "Кирпичики: набрано / выдано",
-    "bricks_ratio": "{earned} / {issued}"
+    "bricks_ratio": "{earned} из {issued}"
   }
 }

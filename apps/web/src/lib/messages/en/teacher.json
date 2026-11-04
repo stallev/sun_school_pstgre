@@ -109,7 +109,7 @@
       "empty_description": "Create the first lesson for this group in the active year.",
       "empty_action": "New lesson",
       "ordinal_short": "lesson {n}",
-      "check_fraction": "Checked {checked}/{total}",
+      "check_fraction": "Checked {checked} of {total}",
       "review_badge": "review",
       "review_subline": "No verses or test — notebook only"
     },
@@ -204,6 +204,7 @@
     "link_table": "All scores table",
     "correction_banner": "This lesson is already checked. Changes will recalculate points and bricks and appear in the journal; new scores will be marked as submitted late. Do not change attendance retroactively.",
     "progress": "Checked {checked} of {total}",
+    "progress_fraction": "{checked} of {total}",
     "pupils_toggle": "Pupils · {checked} of {total}",
     "pupils_list": "Pupils",
     "pupil_index": "{index} of {total}",

@@ -3,6 +3,7 @@ import {
   formatAnalyticsAttendanceRate,
   formatAnalyticsDelta,
   formatAnalyticsPercent,
+  formatYearComparisonDiff,
 } from "./format-analytics-display";
 
 describe("formatAnalyticsPercent", () => {
@@ -32,5 +33,26 @@ describe("formatAnalyticsAttendanceRate", () => {
   it("returns empty for null and NaN", () => {
     expect(formatAnalyticsAttendanceRate(template, null, empty)).toBe(empty);
     expect(formatAnalyticsAttendanceRate(template, Number.NaN, empty)).toBe(empty);
+  });
+});
+
+describe("formatYearComparisonDiff", () => {
+  const ruMessages = {
+    diffHigher: "+{amount} к прошлому году",
+    diffLower: "−{amount} к прошлому году",
+    diffSame: "без изменений",
+  };
+
+  it("uses one template with metric-specific amount (R-23)", () => {
+    expect(formatYearComparisonDiff("attendance", 1, ruMessages, "ru")).toBe(
+      "+1% к прошлому году",
+    );
+    expect(formatYearComparisonDiff("verses", 0.1, ruMessages, "ru")).toBe(
+      "+0,1 к прошлому году",
+    );
+    expect(formatYearComparisonDiff("test", 0, ruMessages, "ru")).toBe("без изменений");
+    expect(formatYearComparisonDiff("notebook", -0.1, ruMessages, "ru")).toBe(
+      "−0,1 к прошлому году",
+    );
   });
 });

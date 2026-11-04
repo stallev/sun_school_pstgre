@@ -1,7 +1,6 @@
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Icon } from "@/components/atoms/Icon";
-import { formatNumber } from "@/lib/i18n/format";
-import { fillMessage } from "@/lib/messages/fill-message";
+import { formatYearComparisonDiff } from "@/lib/analytics/format-analytics-display";
 import type { AnalyticsYearMessages } from "@/lib/messages/analytics-messages";
 
 export type YearDiffMetric = "attendance" | "verses" | "test" | "notebook";
@@ -13,21 +12,6 @@ type DiffBadgeProps = {
   comparisonReliable: boolean;
   previousYearName?: string;
   messages: AnalyticsYearMessages;
-};
-
-const formatDiffAmount = (
-  metric: YearDiffMetric,
-  delta: number,
-  messages: AnalyticsYearMessages,
-): string => {
-  const abs = Math.abs(delta);
-  if (metric === "attendance") {
-    return formatNumber(abs, messages.formatLocale, { maximumFractionDigits: 0 });
-  }
-  return formatNumber(abs, messages.formatLocale, {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  });
 };
 
 export const DiffBadge = ({
@@ -47,27 +31,16 @@ export const DiffBadge = ({
     );
   }
   if (delta === null) return null;
-  if (delta === 0) {
-    return (
-      <span className="text-sm text-ink-2" title={previousYearName}>
-        {messages.diffSame}
-      </span>
-    );
-  }
+  const text = formatYearComparisonDiff(metric, delta, messages, messages.formatLocale);
   const higher = delta > 0;
-  const amount = formatDiffAmount(metric, delta, messages);
-  const text =
-    metric === "attendance"
-      ? fillMessage(higher ? messages.diffHigherAttendance : messages.diffLowerAttendance, {
-          amount,
-        })
-      : fillMessage(higher ? messages.diffHigher : messages.diffLower, { amount });
   return (
     <span
       className="inline-flex items-center gap-1 text-sm text-ink-2"
       title={previousYearName}
     >
-      <Icon icon={higher ? ArrowUp : ArrowDown} className="size-3.5 shrink-0" />
+      {delta !== 0 ? (
+        <Icon icon={higher ? ArrowUp : ArrowDown} className="size-3.5 shrink-0" aria-hidden />
+      ) : null}
       <span>{text}</span>
     </span>
   );

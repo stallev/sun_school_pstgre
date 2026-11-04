@@ -7,6 +7,7 @@ export type TeacherCheckMessages = {
   linkLesson: string;
   correctionBanner: string;
   progressLabel: string;
+  progressFraction: string;
   pupilsToggle: string;
   pupilsListLabel: string;
   pupilIndex: string;

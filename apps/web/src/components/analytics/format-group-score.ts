@@ -1,9 +1,5 @@
 import { formatAnalyticsMetricWithLessons } from "@/lib/analytics/analytics-metric-copy";
-import {
-  formatAnalyticsAttendanceRate,
-  formatAnalyticsAverage,
-} from "@/lib/analytics/format-analytics-display";
-import { formatNumber } from "@/lib/i18n/format";
+import { formatAnalyticsAttendanceRate } from "@/lib/analytics/format-analytics-display";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 
 export const formatGroupScore = (
@@ -18,16 +14,4 @@ export const formatCohortPercent = (
 ): string =>
   formatAnalyticsAttendanceRate(messages.formatPercent, value, messages.kpiEmpty);
 
-export const formatCohortAverage = (
-  value: number | null,
-  messages: AnalyticsMessages,
-): string =>
-  value === null
-    ? messages.kpiEmpty
-    : formatAnalyticsAverage(
-        messages.formatAverage,
-        formatNumber(Number(value.toFixed(1)), messages.formatLocale, {
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1,
-        }),
-      );
+export { formatCohortAverage } from "@/lib/analytics/analytics-metric-copy";

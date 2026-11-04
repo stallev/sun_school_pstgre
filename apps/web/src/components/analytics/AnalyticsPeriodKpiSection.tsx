@@ -5,12 +5,12 @@ import { AnalyticsKpiMetricHeading } from "@/components/analytics/AnalyticsKpiMe
 import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.server";
 import {
   formatAnalyticsChildrenHint,
+  formatAnalyticsMetricAverage,
 } from "@/lib/analytics/analytics-metric-copy";
 import {
-  formatAnalyticsAverage,
   formatAnalyticsPercent,
 } from "@/lib/analytics/format-analytics-display";
-import { formatNumber, plural } from "@/lib/i18n/format";
+import { plural } from "@/lib/i18n/format";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
 
@@ -24,15 +24,8 @@ const formatMetricValue = (
   average: number | null,
   observationCount: number,
   messages: AnalyticsMessages,
-): string => {
-  if (average === null || observationCount === 0) return messages.kpiEmpty;
-  const formattedAverage = formatNumber(
-    Number(average.toFixed(1)),
-    messages.formatLocale,
-    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
-  );
-  return formatAnalyticsAverage(messages.formatAverage, formattedAverage);
-};
+): string =>
+  formatAnalyticsMetricAverage(average, observationCount, messages) ?? messages.kpiEmpty;
 
 export const AnalyticsPeriodKpiSection = ({
   snapshot,

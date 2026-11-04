@@ -2,9 +2,7 @@ import { NumberDisplay } from "@/components/atoms/NumberDisplay";
 import { Card } from "@/components/ui/card";
 import { AnalyticsKpiMetricHeading } from "@/components/analytics/AnalyticsKpiMetricHeading";
 import type { PupilAnalyticsView } from "@/data/analytics/pupil-analytics-present.server";
-import { formatAnalyticsLessonsObserved } from "@/lib/analytics/analytics-metric-copy";
-import { formatAnalyticsAverage } from "@/lib/analytics/format-analytics-display";
-import { formatNumber } from "@/lib/i18n/format";
+import { formatAnalyticsLessonsObserved, formatAnalyticsMetricAverage } from "@/lib/analytics/analytics-metric-copy";
 import type { PupilAnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { GlossaryMessages } from "@/lib/messages/pick-glossary-messages";
 
@@ -18,15 +16,7 @@ const formatAverageValue = (
   average: number | null,
   n: number,
   messages: PupilAnalyticsMessages,
-): string | null => {
-  if (average === null || n === 0) return null;
-  const formattedAverage = formatNumber(
-    Number(average.toFixed(1)),
-    messages.formatLocale,
-    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
-  );
-  return formatAnalyticsAverage(messages.formatAverage, formattedAverage);
-};
+): string | null => formatAnalyticsMetricAverage(average, n, messages);
 
 export const PupilAnalyticsKpiSection = ({
   view,

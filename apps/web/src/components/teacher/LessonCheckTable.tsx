@@ -144,6 +144,7 @@ export const LessonCheckTable = ({
         checked={table.stats.checked}
         total={table.stats.total}
         label={counts}
+        fractionTemplate={messages.progressFraction}
       />
 
       {versesAccordion}

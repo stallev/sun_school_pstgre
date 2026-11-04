@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import type { AcademicYearListRow } from "@/data/school/load-academic-years-list.server";
 import { formatAcademicYearStatusLabel } from "@/lib/admin/format-academic-year-status-label";
 import { formatYearSummaryLine } from "@/lib/admin/format-year-summary-line";
+import { formatDate } from "@/lib/i18n/format";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
@@ -70,7 +71,7 @@ export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardPro
         </StatusText>
       </div>
       <ContentText tone="muted" className="text-sm">
-        {row.startsOn} — {row.endsOn}
+        {formatDate(row.startsOn, uiLocale)} — {formatDate(row.endsOn, uiLocale)}
       </ContentText>
       <ContentText className="text-sm text-ink-2">{summaryLine}</ContentText>
       {row.status === ACADEMIC_YEAR_STATUS.DRAFT ? (

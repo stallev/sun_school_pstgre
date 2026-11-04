@@ -167,6 +167,7 @@ export const CheckScreen = ({
             checked: screen.checkedCount,
             total: data.pupils.length,
           })}
+          fractionTemplate={messages.progressFraction}
         />
       )}
 
