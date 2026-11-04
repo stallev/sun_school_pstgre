@@ -41,7 +41,7 @@ Tier T2: общий UI-компонент (клиентский) и ESLint-пр�
 
 Review `diff-only`: профиль `lean` D6 (словарь и чистые функции выбора, вне sensitive zones).
 
-- [ ] P27-T2 · T1 · Spec: [copy_and_messages](../../../guidelines/react/copy_and_messages.md) §Срезы словаря · ADR-020 §4 п. 4, 5 · phase description § Каталог и «Черновики текстов»
+- [x] P27-T2 · T1 · Spec: [copy_and_messages](../../../guidelines/react/copy_and_messages.md) §Срезы словаря · ADR-020 §4 п. 4, 5 · phase description § Каталог и «Черновики текстов»
       Files: `apps/web/src/lib/messages/{ru,en}/{teacher,admin,analytics}.json` (`hints.*`), `apps/web/src/lib/messages/pick-hints-messages.ts` (+ тест), `apps/web/src/lib/messages/{teacher,admin,analytics}-hints-types.ts`, `apps/web/src/lib/messages/hints-dictionary-parity.test.ts`, `apps/web/src/lib/messages/forbidden-terms.test.ts`
       Acceptance: ключи из каталога phase description (≈ 40) добавлены в срез своей группы (`teacher`: `t.*`, `admin`: `a.*`, `analytics`: `n.*`; в JSON — `hints.<ключ>.term` и `hints.<ключ>.hint`); в `common` новых ключей нет; `pickHintsMessages(slice, keys)` возвращает только нужные ключи, типизированные; тест паритета ru/en (одинаковый набор ключей), `hint` ≤ 200 знаков, `term` непустой, нет повторов `term` в разных ключах без причины; тест покрытия: каждый ключ каталога приоритета A существует; `forbidden-terms` по-прежнему зелёный; тексты — из «Черновиков» (правка владельца в Change log)
       Paths: H [ключи доступны серверным компонентам и приходят пропсами в `TermLabel`] · N [отсутствующий ключ → тест падает, а не пустой UI; длинный текст → тест длины; `en` без перевода → тест паритета] · S n/a — тексты
