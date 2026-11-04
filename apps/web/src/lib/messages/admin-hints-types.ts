@@ -16,6 +16,7 @@ export const ADMIN_HINT_KEYS = [
   "deletion_actions",
   "family_login",
   "year_close",
+  "year_close_reason",
   "year_totals_line",
   "timezone",
   "link_logins",

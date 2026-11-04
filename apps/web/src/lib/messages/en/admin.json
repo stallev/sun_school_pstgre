@@ -827,6 +827,10 @@
       "term": "Close year",
       "hint": "Teachers get read-only data for that year. Closing cannot be undone"
     },
+    "year_close_reason": {
+      "term": "Reason (optional)",
+      "hint": "Will be recorded in the change log"
+    },
     "year_totals_line": {
       "term": "Year summary",
       "hint": "Short totals: lessons, groups, and pupils in this school year"

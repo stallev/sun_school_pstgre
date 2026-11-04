@@ -4,9 +4,13 @@ import {
   disambiguateIanaTimeZoneOptionLabels,
   formatIanaTimeZoneOptionLabel,
 } from "@/lib/i18n/format-iana-timezone-option-label";
+import {
+  hasIanaTimeZoneTranslation,
+  TRANSLATED_IANA_TIME_ZONE_IDS,
+} from "@/lib/i18n/timezone-ru-labels";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 
-/** Popular school time zones first (P26-T8), then alphabetical by label. */
+/** Popular school time zones first (P26-T8), then by UTC offset. */
 export const POPULAR_IANA_TIME_ZONES = [
   "Europe/Moscow",
   "Europe/Kyiv",
@@ -18,29 +22,61 @@ export const POPULAR_IANA_TIME_ZONES = [
   "Asia/Baku",
 ] as const;
 
-/** Full IANA list for admin timezone picker (ADR-004 §4.8). */
-export const listIanaTimeZoneOptions = (): string[] =>
-  [...Intl.supportedValuesOf("timeZone")].sort((left, right) => left.localeCompare(right));
-
 export type IanaTimeZoneOption = {
   value: string;
   label: string;
 };
 
-export const listIanaTimeZoneOptionLabels = (locale: MessageLocale): IanaTimeZoneOption[] => {
-  const allValues = listIanaTimeZoneOptions();
-  const byValue = new Map(
-    allValues.map((value) => [value, formatIanaTimeZoneOptionLabel(value, locale)] as const),
-  );
+export const getUtcOffsetMinutes = (timeZone: string, at = new Date()): number => {
+  const part =
+    new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" })
+      .formatToParts(at)
+      .find((entry) => entry.type === "timeZoneName")?.value ?? "GMT";
+  const match = part.match(/GMT(?:(\+|-)(\d{1,2}))?(?::(\d{2}))?/);
+  if (!match || !match[1]) return 0;
+  const sign = match[1] === "-" ? -1 : 1;
+  const hours = Number(match[2] ?? 0);
+  const minutes = Number(match[3] ?? 0);
+  return sign * (hours * 60 + minutes);
+};
+
+type ListOptions = {
+  /** Keep current DB value selectable even when not in translated catalog. */
+  ensureIncluded?: string;
+};
+
+export const listIanaTimeZoneOptionLabels = (
+  locale: MessageLocale,
+  listOptions?: ListOptions,
+): IanaTimeZoneOption[] => {
   const popularSet = new Set<string>(POPULAR_IANA_TIME_ZONES);
+  const build = (value: string, orphan = false): IanaTimeZoneOption => ({
+    value,
+    label: formatIanaTimeZoneOptionLabel(value, locale, orphan ? { orphan: true } : undefined),
+  });
+
   const popular: IanaTimeZoneOption[] = POPULAR_IANA_TIME_ZONES.filter((value) =>
-    byValue.has(value),
-  ).map((value) => ({ value, label: byValue.get(value)! }));
+    hasIanaTimeZoneTranslation(value),
+  ).map((value) => build(value));
 
-  const rest = allValues
-    .filter((value) => !popularSet.has(value))
-    .map((value) => ({ value, label: byValue.get(value)! }))
-    .sort((left, right) => left.label.localeCompare(right.label, locale));
+  const restIds = TRANSLATED_IANA_TIME_ZONE_IDS.filter((value) => !popularSet.has(value)).sort(
+    (left, right) => {
+      const offsetDiff = getUtcOffsetMinutes(left) - getUtcOffsetMinutes(right);
+      if (offsetDiff !== 0) return offsetDiff;
+      return formatIanaTimeZoneOptionLabel(left, locale).localeCompare(
+        formatIanaTimeZoneOptionLabel(right, locale),
+        locale,
+      );
+    },
+  );
+  const rest = restIds.map((value) => build(value));
 
-  return disambiguateIanaTimeZoneOptionLabels([...popular, ...rest]);
+  let options = disambiguateIanaTimeZoneOptionLabels([...popular, ...rest]);
+
+  const ensure = listOptions?.ensureIncluded;
+  if (ensure && !options.some((option) => option.value === ensure)) {
+    options = [...options, build(ensure, true)];
+  }
+
+  return options;
 };

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { ACCOUNT_STATUS, USER_ROLE } from "@sunschool/domain";
 import { AuthSignOutLink } from "@/components/auth/AuthSignOutLink.client";
 import { LinkedIdentityRow } from "@/components/auth/LinkedIdentityRow";
+import { ProfileLoginMethods } from "@/components/profile/ProfileLoginMethods.client";
 import { ProfileDeletionPanel } from "@/components/auth/ProfileDeletionPanel.client";
 import { ProfileLinkToast } from "@/components/auth/ProfileLinkToast.client";
 import { ProfileNameForm } from "@/components/auth/ProfileNameForm.client";
@@ -17,6 +18,7 @@ import { requireSession } from "@/lib/auth/require-user";
 import { loadSessionPolicyContext } from "@/lib/auth/load-session-policy.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAuthMessages } from "@/lib/messages/auth-messages";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { getPrisma } from "@/lib/db.server";
@@ -62,8 +64,13 @@ const ProfilePage = async () => {
   ]);
 
   const locale = await getUiLocale();
-  const [authDict, common] = await Promise.all([getDictionary(locale, "auth"), getDictionary(locale, "common")]);
+  const [authDict, common, adminDict] = await Promise.all([
+    getDictionary(locale, "auth"),
+    getDictionary(locale, "common"),
+    getDictionary(locale, "admin"),
+  ]);
   const authMessages = pickAuthMessages(authDict);
+  const linkLoginsHint = pickAdminHintsSubset(adminDict, ["link_logins"] as const).link_logins;
   const shellMessages = pickShellMessages(common);
   const dictionaries = { auth: authDict, common };
 
@@ -131,24 +138,23 @@ const ProfilePage = async () => {
         </div>
 
         <div className="h-full [&>section]:flex [&>section]:h-full [&>section]:flex-col">
-          <FormSection title={authMessages.profile.identitiesSection} description={authMessages.profile.identitiesHint}>
+          <ProfileLoginMethods
+            sectionTitle={authMessages.profile.identitiesSection}
+            loginMethodsHint={linkLoginsHint}
+            footer={consentLine}
+          >
             <ul className="divide-y divide-line">
               {profile.identities.map((identity) => (
                 <LinkedIdentityRow key={identity.provider} identity={identity} dictionaries={dictionaries} />
               ))}
             </ul>
-            {consentLine ? (
-              <ContentText tone="secondary" className="text-sm">
-                {consentLine}
-              </ContentText>
-            ) : null}
             {shellProfile ? (
               <AuthSignOutLink
                 signOutLabel={shellMessages.signOut}
                 signOutPendingLabel={shellMessages.signOutPending}
               />
             ) : null}
-          </FormSection>
+          </ProfileLoginMethods>
         </div>
 
         <div className="lg:col-span-2">

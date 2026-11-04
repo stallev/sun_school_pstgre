@@ -10,13 +10,14 @@ import { getDefaultOrganizationId } from "@/data/access/get-organization-id.serv
 import { loadAcademicYearsList } from "@/data/school/load-academic-years-list.server";
 import { requireRole } from "@/lib/auth/require-user";
 import { getPrisma } from "@/lib/db.server";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 
 type YearPageContentProps = {
   messages: AdminMessages;
-  dictionaries: Record<string, Dictionary>;
+  dictionaries: { admin: Dictionary; common: Dictionary };
   uiLocale: MessageLocale;
   formError: string;
 };
@@ -27,6 +28,11 @@ export const YearPageContent = async ({ messages, dictionaries, uiLocale, formEr
   const prisma = await getPrisma();
   const organizationId = await getDefaultOrganizationId(prisma);
   const years = await loadAcademicYearsList(prisma, organizationId);
+  const hints = pickAdminHintsSubset(dictionaries.admin, [
+    "year_close",
+    "year_close_reason",
+    "year_totals_line",
+  ] as const);
 
   return (
     <AdminMessagesProvider messages={messages}>
@@ -39,7 +45,15 @@ export const YearPageContent = async ({ messages, dictionaries, uiLocale, formEr
           <ul className="grid items-stretch gap-4 lg:grid-cols-2">
             {years.map((row) => (
               <li key={row.yearId} className="h-full">
-                <YearCard row={row} dictionaries={dictionaries} formError={formError} uiLocale={uiLocale} />
+                <YearCard
+                  row={row}
+                  dictionaries={dictionaries}
+                  formError={formError}
+                  uiLocale={uiLocale}
+                  yearTotalsHint={hints.year_totals_line}
+                  yearCloseHint={hints.year_close}
+                  yearCloseReasonHint={hints.year_close_reason}
+                />
               </li>
             ))}
           </ul>

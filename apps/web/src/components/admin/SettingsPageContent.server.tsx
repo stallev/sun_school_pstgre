@@ -10,6 +10,7 @@ import { requireRole } from "@/lib/auth/require-user";
 import { getSchoolTimezoneUncached } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale, getUiLocaleUncached } from "@/lib/i18n/get-ui-locale.server";
 import { listIanaTimeZoneOptionLabels } from "@/lib/i18n/iana-timezone-options.server";
+import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
@@ -17,14 +18,15 @@ export const SettingsPageContent = async () => {
   await connection();
   await requireRole(USER_ROLE.ADMIN);
   const locale = await getUiLocale();
-  const [adminDict, commonDict, currentLocale, currentTimeZone, timeZoneOptions] = await Promise.all([
+  const [adminDict, commonDict, currentLocale, currentTimeZone] = await Promise.all([
     getDictionary(locale, "admin"),
     getDictionary(locale, "common"),
     getUiLocaleUncached(),
     getSchoolTimezoneUncached(),
-    Promise.resolve(listIanaTimeZoneOptionLabels(locale)),
   ]);
+  const timeZoneOptions = listIanaTimeZoneOptionLabels(locale, { ensureIncluded: currentTimeZone });
   const adminMessages = pickAdminMessages(adminDict);
+  const timezoneHint = pickAdminHintsSubset(adminDict, ["timezone"] as const).timezone;
   const dictionaries = { admin: adminDict, common: commonDict };
   const formError = getMessage(commonDict, "errors.form");
 
@@ -46,6 +48,7 @@ export const SettingsPageContent = async () => {
             timeZoneOptions={timeZoneOptions}
             dictionaries={dictionaries}
             formError={formError}
+            timezoneHint={timezoneHint}
           />
         </div>
         <ContentText tone="muted" className="text-sm">

@@ -1,14 +1,15 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { ACADEMIC_YEAR_STATUS, type MutationResult } from "@sunschool/domain";
 import { activateYearAction, closeYearAction } from "@/actions/school-year";
+import { YearCloseButton } from "@/components/admin/YearCloseButton";
 import { useAdminMessages } from "@/components/admin/admin-messages-provider.client";
 import { ContentText, SectionTitle } from "@/components/atoms";
 import { StatusText } from "@/components/ui/status-text";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { AcademicYearListRow } from "@/data/school/load-academic-years-list.server";
 import { formatAcademicYearStatusLabel } from "@/lib/admin/format-academic-year-status-label";
 import { resolveYearCardSummaryLine } from "@/lib/admin/format-year-summary-line";
@@ -16,15 +17,27 @@ import { formatDate } from "@/lib/i18n/format";
 import { useAdminFormMutation } from "@/lib/admin/use-admin-form-mutation";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
+import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type YearCardProps = {
   row: AcademicYearListRow;
   dictionaries: Record<string, Dictionary>;
   formError: string;
   uiLocale: MessageLocale;
+  yearTotalsHint: HintTerm;
+  yearCloseHint: HintTerm;
+  yearCloseReasonHint: HintTerm;
 };
 
-export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardProps) => {
+export const YearCard = ({
+  row,
+  dictionaries,
+  formError,
+  uiLocale,
+  yearTotalsHint,
+  yearCloseHint,
+  yearCloseReasonHint,
+}: YearCardProps) => {
   const messages = useAdminMessages();
   const [activateState, activateAction, activatePending] = useActionState<MutationResult | null, FormData>(
     activateYearAction,
@@ -34,7 +47,6 @@ export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardPro
     closeYearAction,
     null,
   );
-  const [closeReason, setCloseReason] = useState("");
 
   useAdminFormMutation({
     state: activateState,
@@ -75,7 +87,12 @@ export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardPro
       <ContentText tone="muted" className="text-sm">
         {formatDate(row.startsOn, uiLocale)} — {formatDate(row.endsOn, uiLocale)}
       </ContentText>
-      <ContentText className="text-sm text-ink-2">{summaryLine}</ContentText>
+      <TermLabel
+        term={nonEmptyTerm(summaryLine)}
+        hint={yearTotalsHint.hint}
+        ariaLabel={yearTotalsHint.term}
+        className="text-sm text-ink-2"
+      />
       {row.status === ACADEMIC_YEAR_STATUS.DRAFT ? (
         <form action={activateAction} id={`activate-year-${row.yearId}`}>
           <input type="hidden" name="yearId" value={row.yearId} />
@@ -98,39 +115,13 @@ export const YearCard = ({ row, dictionaries, formError, uiLocale }: YearCardPro
         </form>
       ) : null}
       {row.status === ACADEMIC_YEAR_STATUS.ACTIVE ? (
-        <section className="mt-auto space-y-3 border-t border-line pt-4">
-          <SectionTitle>{messages.year.dangerZoneTitle}</SectionTitle>
-          <ContentText className="text-sm text-ink-2">{messages.year.dangerZoneCloseLead}</ContentText>
-          <form action={closeAction} id={`close-year-${row.yearId}`} className="flex flex-wrap items-end gap-2">
-            <input type="hidden" name="yearId" value={row.yearId} />
-            <label className="grid gap-1 text-sm">
-              <span>{messages.year.closeReasonLabel}</span>
-              <Input
-                name="reason"
-                value={closeReason}
-                onChange={(event) => setCloseReason(event.target.value)}
-                disabled={pending}
-              />
-            </label>
-            <ConfirmDialog
-              trigger={
-                <Button type="button" variant="destructive" disabled={pending} aria-busy={pending}>
-                  {messages.year.close}
-                </Button>
-              }
-              title={messages.year.closeConfirmTitle}
-              description={messages.year.closeConfirmDescription}
-              confirmLabel={messages.year.close}
-              cancelLabel={messages.form.cancel}
-              pending={pending}
-              destructive
-              onConfirm={() => {
-                const form = document.getElementById(`close-year-${row.yearId}`) as HTMLFormElement | null;
-                form?.requestSubmit();
-              }}
-            />
-          </form>
-        </section>
+        <YearCloseButton
+          yearId={row.yearId}
+          pending={pending}
+          closeAction={closeAction}
+          closeHint={yearCloseHint}
+          closeReasonHint={yearCloseReasonHint}
+        />
       ) : null}
     </article>
   );
