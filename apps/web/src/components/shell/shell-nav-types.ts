@@ -9,4 +9,5 @@ export type ShellNavProps = {
   activeKey: string | null;
   activeGroupKey: string | null;
   badgeCounts: NavBadgeCounts;
+  emptyHint?: string;
 };

@@ -114,6 +114,8 @@
     "dev_view_as": "View as",
     "dev_role_admin": "Administrator",
     "dev_role_teacher": "Teacher",
+    "view_mode": "Mode: {role}",
+    "preview_nav_empty_teacher": "To preview as a teacher, assign yourself to a group",
     "role_names": {
       "admin": "administrator",
       "teacher": "teacher"

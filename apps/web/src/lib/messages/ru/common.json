@@ -114,6 +114,8 @@
     "dev_view_as": "Смотреть как",
     "dev_role_admin": "Администратор",
     "dev_role_teacher": "Учитель",
+    "view_mode": "Режим: {role}",
+    "preview_nav_empty_teacher": "Для режима учителя назначьте себя на группу",
     "role_names": {
       "admin": "администратор",
       "teacher": "учитель"

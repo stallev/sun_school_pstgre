@@ -60,6 +60,8 @@ const LAB_SHELL_MESSAGES: ShellMessages = {
   devViewAs: "View as",
   devRoleAdmin: "Administrator",
   devRoleTeacher: "Teacher",
+  viewModeTemplate: "Mode: {role}",
+  previewNavEmptyTeacher: "To preview as a teacher, assign yourself to a group",
   roleNameAdmin: "Administrator",
   roleNameTeacher: "Teacher",
   screenTitles: LAB_SCREEN_TITLES,

@@ -5,13 +5,14 @@ import { NavLinkRow } from "@/components/shell/nav-link-row";
 import type { ShellNavProps } from "@/components/shell/shell-nav-types";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
 import { Separator } from "@/components/ui/separator";
+import { ContentText } from "@/components/atoms";
 import { isNavLeafActive, isResolvedNavGroup } from "@/lib/shell/nav-resolver";
 import { Fragment, useId } from "react";
 import { cn } from "@/lib/utils";
 
 const badgeLabel = (template: string, count: number) => template.replace("{count}", String(count));
 
-type SidebarNavProps = Pick<ShellNavProps, "items" | "activeKey" | "badgeCounts"> & {
+type SidebarNavProps = Pick<ShellNavProps, "items" | "activeKey" | "badgeCounts" | "emptyHint"> & {
   id?: string;
   asideClassName?: string;
   collapsed?: boolean;
@@ -24,6 +25,7 @@ export const SidebarNav = ({
   badgeCounts,
   asideClassName,
   collapsed = false,
+  emptyHint,
 }: SidebarNavProps) => {
   const messages = useShellMessages();
   const generatedId = useId();
@@ -38,6 +40,9 @@ export const SidebarNav = ({
       )}
     >
       <nav id={navId} aria-label={messages.mainNav}>
+        {items.length === 0 && emptyHint ? (
+          <ContentText className="px-3 text-sm text-muted">{emptyHint}</ContentText>
+        ) : null}
         {items.map((item, index) => {
           if (isResolvedNavGroup(item)) {
             const groupHeadingId = `${navId}-group-${item.key}`;

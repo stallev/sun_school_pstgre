@@ -3,6 +3,7 @@
 import { CheckIcon } from "lucide-react";
 import { USER_ROLE, type UserRole } from "@sunschool/domain";
 import { useShellMessages } from "@/components/shell/shell-messages-provider.client";
+import { writeViewAsCookie } from "@/lib/shell/view-as-cookie";
 import { cn } from "@/lib/utils";
 
 type DevRoleMenuGroupProps = {
@@ -26,6 +27,12 @@ export const DevRoleMenuGroup = ({
     { value: USER_ROLE.TEACHER, label: messages.devRoleTeacher },
   ];
 
+  const handleSelect = (role: UserRole) => {
+    if (role === previewRole) return;
+    writeViewAsCookie(role);
+    onPreviewRoleChange(role);
+  };
+
   return (
     <div
       className="my-1 border-t border-line pt-1.5"
@@ -47,7 +54,7 @@ export const DevRoleMenuGroup = ({
               "flex h-10 w-full items-center gap-2 rounded-lg px-2.5 text-left text-base",
               isSelected ? "bg-cobalt-soft font-bold text-cobalt-ink" : "hover:bg-paper",
             )}
-            onClick={() => onPreviewRoleChange(option.value)}
+            onClick={() => handleSelect(option.value)}
           >
             {isSelected ? (
               <CheckIcon className="size-4 shrink-0" aria-hidden />
