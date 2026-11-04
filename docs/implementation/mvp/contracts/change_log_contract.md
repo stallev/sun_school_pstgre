@@ -2,8 +2,8 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.0  
-**Дата:** 2026-10-11  
+**Версия:** 1.8  
+**Дата:** 2026-11-04  
 **Волна:** W8-07  
 **Зависит от:** [`monorepo_boundaries_contract.md`](./monorepo_boundaries_contract.md) §6, §9, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-08, AZ-P7), [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) INV-16, INV-22, INV-23, [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.6 (`audit_log`), R-6, §9, [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) (§3.16, БП-8, УД-10)  
 **Связанные документы:** [`access_requests_and_roles_contract.md`](./access_requests_and_roles_contract.md), [`school_year_and_groups_contract.md`](./school_year_and_groups_contract.md), [`homework_check_contract.md`](./homework_check_contract.md), [`bricks_ledger_contract.md`](./bricks_ledger_contract.md), [`deletion_requests_contract.md`](./deletion_requests_contract.md), [`bible_seed_contract.md`](./bible_seed_contract.md), [`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -215,3 +215,4 @@
 | 2026-10-23 | v1.5 — §4: action-коды семьи, согласия и дайджеста (P13) |
 | 2026-11-02 | v1.6 — §4: `achievement.suggested`, `achievement.suggestion_confirmed`, `achievement.suggestion_deferred`, `achievement.suggestion_dismissed`; событие `EVENT` пишет существующий `achievement.awarded` (P23, ADR-016) |
 | 2026-11-03 | v1.7 — §4: `school.pupil_birth_date_updated` (P24, `updatePupilBirthDate`) |
+| 2026-11-04 | v1.8 — P26 (ADR-019): человеческое представление записи в UI — действие фразой, сущность «тип · имя · контекст», детали списком «что изменилось», полный JSON только в блоке «Техническая запись» (admin); значения `audit.actions.*` и `audit.entity_types.*` на русском; записи системы помечены «Система»; хранение и состав полей записи не меняются |

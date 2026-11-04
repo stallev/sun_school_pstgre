@@ -105,3 +105,5 @@ Prefer **`lucide-react`** — **ui-icons-lucide** rule and [React README](./READ
 - Один термин — один ключ глоссария (`glossary.*`); подсказка термина — ключ `*.hint`, ≤ 200 знаков.
 - Подпись по значению домена (`AUDIT_ENTITY_TYPE`, `AUDIT_ACTION`, статусы) — через безопасный хелпер (`safeAdminMessage(...) ?? значение`), а не через бросающий `getMessage`; полнота ключей — тест паритета домен ↔ ru/en (Sentry `SUN_SCHOOL_POSTGRES_DEV-Q`, 2026-11-03).
 - В `"use client"`-компонент передаются только нужные строки, не весь объект `pick*Messages` с функциями-форматтерами (Sentry `-1Y`/`-2C`, 135 событий).
+- Значения `audit.actions.*` и `audit.entity_types.*` в `ru` — на русском языке (фразой действия), в `en` — на английском; проверка — тест словаря (P26-CU2).
+- Числа и даты из DAL в компонент передаются числами / ISO, форматирует компонент через `@/lib/i18n/format` (P26-CU4); тест-страж на `toFixed(` и ISO-даты в `components` и `lib/analytics`.

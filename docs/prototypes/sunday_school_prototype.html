@@ -56,6 +56,7 @@
   Уроки                [+] lessons, lesson, lessonForm, verses, calendar; [~] диапазон золотых стихов — форма выбора стиха, проверить диапазоны
   Проверка ДЗ          [+] check, lessonTable (сдано позже, корректировка проверенных уроков)
   Кирпичики, рейтинг   [+] bricks, rating
+  P26 (ADR-019): «Сегодня» в календаре, «Техническая запись» в журнале, фильтр по группе и «Показать ещё» в «Ученики», «Регулярно ходят: N из M», «Уроки 1, 3», термин-подсказка у правого края. Прототип не моделирует права реальной роли: неактивные пункты меню предпросмотра (D23) — только в приложении
   P25 (ADR-018): понятные названия («регулярно ходят», «из 10», «% к прошлому году»), termHint() «?», поиск учеников, «Как мы считали» свёрнуто
   Аналитика по годам   [+] полоса лет и таблица итогов на analytics, school, pupil; итоги года и «Все годы» на group; разница с прошлым годом, пороги N=10 / M=4 (не утверждены), год по умолчанию, снимки закрытых лет (multi_year_analytics.md)
   Аналитика            [+] analytics, school; [~] «кто какие уроки провёл» (9.1.4), динамика успеваемости (9.1.3), строка качества данных (9.1) — присутствуют фрагментарно
@@ -502,7 +503,7 @@ const S = {
   awarded:[], ledger:[], audit:[], penalties:[], penOpen:null, achMode:{ on:true, off:[] }, lastNew:[],
   rec:{ state:'idle', t:0, verse:'Еф. 4:32', lid:8, timer:null, showText:false }, debtLid:7,
   consent:{ 1:{ voice:true, photo:true }, 2:{ voice:false, photo:true } },
-  bricksOpen:null, fixOpen:null, peopleTab:'pupils', peopleQ:'', usersTab:'pending', userOpen:null,
+  bricksOpen:null, fixOpen:null, peopleTab:'pupils', peopleQ:'', peopleGroup:'', peopleMore:false, usersTab:'pending', userOpen:null,
   yearClosed:false, year:null, pupilYear:null, pupilMetric:'att', period:'year', anaGroup:'Средняя', month:11, verseQ:'', groupSel:[], groupEdit:'Средняя',
   lf:null, lang:'ru', loginAdminOpen:false, tblPad:null, versesOpen:false
 };
@@ -739,7 +740,8 @@ const termHint = (term, text) => `<span class="relative inline-flex align-middle
 const kids = n => `${n} ${plural(n,'ребёнок','ребёнка','детей')}`;
 function closeTermHints(except){ document.querySelectorAll('[data-term-hint][aria-expanded=true]').forEach(b=>{ if (b!==except){ b.setAttribute('aria-expanded','false'); b.nextElementSibling.hidden = true; } }); }
 document.addEventListener('click', e=>{ const b = e.target.closest('[data-term-hint]'); closeTermHints(b); if (!b) return;
-  const open = b.getAttribute('aria-expanded')!=='true'; b.setAttribute('aria-expanded', String(open)); b.nextElementSibling.hidden = !open; });
+  const open = b.getAttribute('aria-expanded')!=='true'; b.setAttribute('aria-expanded', String(open)); const pop = b.nextElementSibling; pop.hidden = !open;
+  if (open){ pop.classList.remove('right-0'); pop.classList.add('left-0'); if (pop.getBoundingClientRect().right > innerWidth - 8){ pop.classList.remove('left-0'); pop.classList.add('right-0'); } } });
 document.addEventListener('keydown', e=>{ if (e.key==='Escape'){ const o = document.querySelector('[data-term-hint][aria-expanded=true]'); if (o){ closeTermHints(null); o.focus(); } } });
 const mean = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
 const ref = r => `<span class="inline-flex items-center whitespace-nowrap rounded-md bg-paper px-1.5 py-px text-sm font-medium text-ink ring-1 ring-line">${r}</span>`;
@@ -1887,7 +1889,7 @@ function vCalendar(){
   const bdDay = p => p.born.slice(5)==='02-29' ? 28 : +p.born.slice(8,10);
   const bdOf = d => showBd ? PUPILS.filter(p=>p.active && p.born && +p.born.slice(5,7)===month && bdDay(p)===d) : [];
   return pageHead(`${mName} 2026`, S.role==='parent' ? 'Средняя группа · только просмотр' : 'Средняя группа',
-    `<div class="flex gap-1"><button type="button" data-act="month" data-val="10" aria-label="Октябрь" class="${B_OUTLINE} w-11 px-0" ${month===10?'disabled':''}>${ic('i-left','size-4')}</button>
+    `<div class="flex gap-1"><button type="button" data-act="month" data-val="10" class="${B_OUTLINE}" ${month===10?'aria-current="date"':''}>Сегодня</button><button type="button" data-act="month" data-val="10" aria-label="Октябрь" class="${B_OUTLINE} w-11 px-0" ${month===10?'disabled':''}>${ic('i-left','size-4')}</button>
      <button type="button" data-act="month" data-val="11" aria-label="Ноябрь" class="${B_OUTLINE} w-11 px-0" ${month===11?'disabled':''}>${ic('i-right','size-4')}</button></div>
      ${canEdit ? `<button type="button" data-act="event-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Событие</button>` : ''}`) + `
   <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
@@ -1927,7 +1929,7 @@ function vVerses(){
     ${list.map(r=>{ const u = used(r); return `<li class="grid grid-cols-1 gap-2 px-5 py-4 md:grid-cols-[8rem_minmax(0,1fr)_12rem] md:gap-6">
       <p>${ref(r)}</p>
       <p class="font-display text-[1.0625rem] italic leading-relaxed text-ink-2">${VERSES[r]}</p>
-      <p class="text-sm text-muted md:text-right">${u.length ? 'Уроки: '+u.map(l=>l.n).join(', ') : 'Не использован'}</p></li>`; }).join('') || '<li class="px-5 py-4 text-muted">Ничего не найдено</li>'}
+      <p class="text-sm text-muted md:text-right">${u.length ? 'Уроки '+u.map(l=>l.n).sort((a,b)=>a-b).join(', ') : 'Не использован'}</p></li>`; }).join('') || '<li class="px-5 py-4 text-muted">Ничего не найдено</li>'}
   </ul>`;
 }
 
@@ -2002,7 +2004,7 @@ function vAnalytics(){
     <div>
       <p class="text-sm text-muted">Средняя явка ${termHint('Средняя явка','Считаем детей, которые были не меньше чем на половине проверенных уроков, — «регулярно ходят». Редкие визиты не портят картину группы.')}</p>
       <p class="mt-1 font-display text-[3.5rem] font-medium leading-none tabular-nums tracking-[-0.02em]">${pct(attA)}</p>
-      <p class="mt-1 text-sm text-ink-2">Регулярно ходят: ${kids(A.length)} (были на половине уроков и больше)</p>
+      <p class="mt-1 text-sm text-ink-2">Регулярно ходят: ${A.length} из ${L.A.length+L.B.length+L.C.length+L.D.length}</p>
     </div>
     <dl class="grid grid-cols-3 gap-2 border-t border-line pt-3 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-3">
       <div><dt class="text-sm text-muted">Стихов за урок ${termHint('Стихов за урок','Сколько золотых стихов ребёнок в среднем рассказывает на уроке. Считаем по тем, кто регулярно ходит.')}</dt><dd class="mt-1 font-display text-2xl tabular-nums">${f1(avgOf('v'))}</dd><dd class="text-base text-muted">в среднем · ${kids(nObs('nV'))}</dd></div>
@@ -2485,10 +2487,10 @@ function vPeople(){
   const tabs = [['pupils','Ученики'],['families','Семьи'],['unassigned','Без группы']];
   let body = '', action = '';
   if (S.peopleTab==='pupils'){ action = `<button type="button" data-act="pupil-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Ученик</button>`;
-    const pq = (S.peopleQ||'').trim().toLowerCase(), plist = PUPILS.concat(INACTIVE).filter(p=>!pq || p.name.toLowerCase().includes(pq));
-    body = `<div class="mb-3"><label for="pq" class="${LABEL}">Найти ученика</label><input id="pq" type="search" data-input="peopleQ" value="${S.peopleQ||''}" placeholder="Фамилия или имя" class="${FIELD}"></div><ul class="${CARD} divide-y divide-line">${plist.map(p=>`<li class="flex items-center justify-between gap-4 px-5 py-3">
+    const pq = (S.peopleQ||'').trim().toLowerCase(), plist0 = PUPILS.concat(INACTIVE).filter(p=>(!pq || p.name.toLowerCase().includes(pq)) && (!S.peopleGroup || p.group===S.peopleGroup)), plist = S.peopleMore ? plist0 : plist0.slice(0,10);
+    body = `<div class="mb-3 flex flex-wrap gap-1.5" role="group" aria-label="Группа">${['','Младшая','Средняя','Старшая'].map(g=>`<button type="button" data-act="pgroup" data-val="${g}" aria-pressed="${(S.peopleGroup||'')===g}" class="h-9 rounded-lg border px-3 text-base ${(S.peopleGroup||'')===g ? SEG_ON : SEG_OFF}">${g || 'Все группы'}</button>`).join('')}</div><div class="mb-3"><label for="pq" class="${LABEL}">Найти ученика</label><input id="pq" type="search" data-input="peopleQ" value="${S.peopleQ||''}" placeholder="Фамилия или имя" class="${FIELD}"></div><ul class="${CARD} divide-y divide-line">${plist.map(p=>`<li class="flex items-center justify-between gap-4 px-5 py-3">
       <button type="button" data-act="pupil-open" data-pid="${p.id}" class="min-w-0 text-left"><span class="block font-medium hover:text-cobalt">${p.name}</span><span class="block text-sm text-muted">${p.born ? bornRu(p.born) : 'данные удалены'} · ${p.group} группа${p.active?'':' · неактивен'} · ${famOfKid(p.id) ? 'семья '+famOfKid(p.id).name : '<span class="text-warn">без семьи</span>'} · ${hasKidConsent(p.id) ? 'согласие '+(KID_CONSENT[p.id].how==='paper'?'на бумаге':'в приложении') : '<span class="text-warn">нет согласия</span>'}</span></button>
-      <button type="button" data-act="pupil-edit" data-pid="${p.id}" class="inline-flex h-9 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-edit','size-4')} Изменить</button></li>`).join('') || '<li class="px-5 py-4 text-ink-2">Никого не нашли. Проверьте написание или очистите поиск.</li>'}</ul>`; }
+      <button type="button" data-act="pupil-edit" data-pid="${p.id}" class="inline-flex h-9 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-edit','size-4')} Изменить</button></li>`).join('') || '<li class="px-5 py-4 text-ink-2">Никого не нашли. Проверьте написание или очистите поиск.</li>'}</ul>${plist0.length>plist.length ? `<button type="button" data-act="pmore" class="${B_OUTLINE} mt-3">Показать ещё (${plist0.length-plist.length})</button>` : ''}`; }
   if (S.peopleTab==='families'){ action = `<button type="button" data-act="family-new" class="${B_PRIMARY}">${ic('i-plus','size-4')} Семья</button>`; body = familiesTab(); }
   if (S.peopleTab==='unassigned') body = `<ul class="${CARD} divide-y divide-line">${UNASSIGNED.map(u=>`<li class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
       <div><p class="font-medium">${u.name}</p><p class="text-sm text-muted">${bornRu(u.born)} · ${u.note} · ${famOfKid(u.id) ? `семья ${famLink(famOfKid(u.id))}` : 'без семьи'}</p>
@@ -2572,9 +2574,10 @@ function vAchievements(){
 function vAudit(){
   return pageHead('Журнал изменений', 'Записи не редактируются и не удаляются.') + `
   <ol class="${CARD} divide-y divide-line">
-    ${S.audit.map(([t,who,what,chg,why])=>`<li class="grid grid-cols-1 gap-1 px-5 py-4 md:grid-cols-[8rem_10rem_minmax(0,1fr)] md:gap-6">
+    ${S.audit.map(([t,who,what,chg,why],i)=>`<li class="grid grid-cols-1 gap-1 px-5 py-4 md:grid-cols-[8rem_10rem_minmax(0,1fr)] md:gap-6">
       <p class="text-sm tabular-nums text-muted">${t}</p><p class="text-sm font-medium">${who}</p>
-      <div class="min-w-0"><p>${what}</p><p class="text-sm text-ink-2">${chg}</p>${why ? `<p class="mt-1 text-sm text-muted">Причина: ${why}</p>` : ''}</div></li>`).join('')}
+      <div class="min-w-0"><p>${what}</p><p class="text-sm text-ink-2">${chg}</p>${why ? `<p class="mt-1 text-sm text-muted">Причина: ${why}</p>` : ''}
+      <details class="mt-1 text-sm text-muted"><summary class="cursor-pointer">Техническая запись</summary><p class="mt-1 font-mono text-sm">запись №${S.audit.length-i} · ${t} · ${who} · ${what}</p></details></div></li>`).join('')}
   </ol>`;
 }
 
@@ -3903,6 +3906,8 @@ document.addEventListener('click', e=>{
     case 'group-new': groupNewDialog(); break;
     case 'gs-toggle': SETTINGS[el.dataset.k].on = !SETTINGS[el.dataset.k].on; render(); break;
     case 'ptab': S.peopleTab = el.dataset.tab; render(); break;
+    case 'pgroup': S.peopleGroup = el.dataset.val; S.peopleMore = false; render(); break;
+    case 'pmore': S.peopleMore = true; render(); break;
     case 'pupil-new': pupilDialog(null); break;
     case 'pupil-edit': pupilDialog(pupil(+el.dataset.pid)); break;
     case 'enroll': enrollDialog(UNASSIGNED.find(u=>u.id===+el.dataset.id)); break;
@@ -3919,7 +3924,7 @@ document.addEventListener('input', e=>{
   const t = e.target, k = t.dataset.input;
   if (k==='comment'){ const R=roster(S.checkLesson); S.hc[S.checkLesson][R[S.cur].id].comment = t.value; }
   if (k==='close-confirm') document.getElementById('cyBtn').disabled = t.value.trim().replace('-','–') !== YEAR;
-  if (k==='peopleQ'){ S.peopleQ = t.value; const pos=t.selectionStart; render(); const n=document.getElementById('pq'); n.focus(); n.setSelectionRange(pos,pos); }
+  if (k==='peopleQ'){ S.peopleQ = t.value; S.peopleMore = false; const pos=t.selectionStart; render(); const n=document.getElementById('pq'); n.focus(); n.setSelectionRange(pos,pos); }
   if (k==='verseQ'){ S.verseQ = t.value; const pos=t.selectionStart; render(); const n=document.getElementById('vq'); n.focus(); n.setSelectionRange(pos,pos); }
   if (t.dataset.lf){ S.lf[t.dataset.lf] = t.type==='checkbox' ? t.checked : t.value; if (S.lf.err[t.dataset.lf]){ delete S.lf.err[t.dataset.lf]; } }
   if (t.dataset.pk){ S.lf.picker[t.dataset.pk] = t.value; const pk=S.lf.picker; const r = pk.ch && pk.from ? `${pk.book} ${pk.ch}:${pk.from}${pk.to && pk.to!==pk.from ? '–'+pk.to : ''}` : '';
