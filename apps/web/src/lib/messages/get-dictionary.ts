@@ -21,6 +21,7 @@ const loaders: Record<MessageLocale, Record<MessageNamespace, () => Promise<{ de
     admin: () => import("./ru/admin.json"),
     analytics: () => import("./ru/analytics.json"),
     parent: () => import("./ru/parent.json"),
+    guide: () => import("./ru/guide.json").then((m) => ({ default: m.default as unknown as Dictionary })),
   },
   en: {
     common: () => import("./en/common.json"),
@@ -29,6 +30,7 @@ const loaders: Record<MessageLocale, Record<MessageNamespace, () => Promise<{ de
     admin: () => import("./en/admin.json"),
     analytics: () => import("./en/analytics.json"),
     parent: () => import("./en/parent.json"),
+    guide: () => import("./en/guide.json").then((m) => ({ default: m.default as unknown as Dictionary })),
   },
 };
 

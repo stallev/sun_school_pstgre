@@ -168,7 +168,8 @@
       "childConsent": "Consent",
       "settings": "App settings",
       "profile": "Profile",
-      "userProfile": "User profile"
+      "userProfile": "User profile",
+      "guide": "How to use"
     },
     "nav": {
       "today": "Today",
@@ -194,6 +195,7 @@
       "child": "Child progress",
       "child_data": "Data and consents",
       "settings": "Settings",
+      "guide": "How to use",
       "desc": {
         "lessons_all": "List, create and edit",
         "check": "Current lesson",

@@ -1,0 +1,454 @@
+{
+  "tocHeading": "Contents",
+  "roles": {
+    "teacher": {
+      "sections": [
+        {
+          "id": "today",
+          "title": "Today",
+          "steps": [
+            {
+              "text": "On ",
+              "link": { "href": "/today", "label": "Today" },
+              "textAfter": " you see homework check progress — “N of M” pupils done."
+            },
+            {
+              "text": "“Continue check” opens the current lesson where you left off."
+            },
+            {
+              "text": "“New lesson” creates a lesson on the chosen date only while a school year is active."
+            }
+          ]
+        },
+        {
+          "id": "lessons",
+          "title": "Lessons",
+          "steps": [
+            {
+              "text": "The full lesson list is under ",
+              "link": { "href": "/lessons", "label": "All lessons" },
+              "textAfter": ": date, regular or review type, lead teacher, memory verses and test flag."
+            },
+            {
+              "text": "You cannot create a new lesson without an active school year."
+            },
+            {
+              "text": "In a closed school year, lessons and marks are read-only for teachers."
+            }
+          ]
+        },
+        {
+          "id": "homework",
+          "title": "Homework check",
+          "steps": [
+            {
+              "text": "Open ",
+              "link": { "href": "/check", "label": "Homework check" },
+              "textAfter": " — the app sends you to the current lesson or explains there is nothing to check."
+            },
+            {
+              "text": "For each pupil set attendance, verse scores on a 0–2 scale, test, workbook, singing and a comment if needed."
+            },
+            {
+              "text": "“Not graded” is a separate choice — it is not zero."
+            },
+            {
+              "text": "Tap “Finish” when every pupil on the lesson has been recorded."
+            }
+          ]
+        },
+        {
+          "id": "homework-edits",
+          "title": "Editing marks",
+          "steps": [
+            {
+              "text": "Open the summary table or class sheet from the lesson card to adjust a mark after the check."
+            },
+            {
+              "text": "For late submission, mark “submitted later”; the score still belongs to the lesson date."
+            },
+            {
+              "text": "In a closed school year teachers cannot edit — only an administrator can, with a change-log entry."
+            }
+          ]
+        },
+        {
+          "id": "group",
+          "title": "Group members",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/group", "label": "Group members" },
+              "textAfter": " add or remove pupils."
+            },
+            {
+              "text": "Set a birth date in the pupil row — it powers birthdays on the calendar."
+            }
+          ]
+        },
+        {
+          "id": "bricks",
+          "title": "Bricks",
+          "steps": [
+            {
+              "text": "On ",
+              "link": { "href": "/bricks", "label": "Bricks" },
+              "textAfter": " each pupil shows earned, issued and remaining balance."
+            },
+            {
+              "text": "You cannot issue more bricks than the remaining balance."
+            },
+            {
+              "text": "Fix mistakes with a new ledger entry and note — old rows are never deleted."
+            }
+          ]
+        },
+        {
+          "id": "calendar",
+          "title": "Calendar",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/calendar", "label": "Calendar" },
+              "textAfter": " create and edit your group’s events."
+            },
+            {
+              "text": "Pupils’ birthdays are shown for viewing only — you cannot change them here."
+            }
+          ]
+        },
+        {
+          "id": "rating",
+          "title": "Ranking",
+          "steps": [
+            {
+              "text": "On ",
+              "link": { "href": "/rating", "label": "Ranking" },
+              "textAfter": " see your group’s place and metrics among school groups."
+            }
+          ]
+        },
+        {
+          "id": "analytics",
+          "title": "Analytics",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/analytics", "label": "Analytics" },
+              "textAfter": " pick a school year and review group charts."
+            },
+            {
+              "text": "A pupil card shows trends and year totals, including years before a transfer."
+            }
+          ]
+        },
+        {
+          "id": "achievements",
+          "title": "Group achievements",
+          "requiresFeature": "achievements",
+          "steps": [
+            {
+              "text": "On Today and in the group roster, mark who to nominate and confirm suggestions."
+            },
+            {
+              "text": "Issue rewards or penalties manually on ",
+              "link": { "href": "/group/points", "label": "group points" },
+              "textAfter": " when that screen is available."
+            }
+          ]
+        },
+        {
+          "id": "verses",
+          "title": "Memory verses",
+          "steps": [
+            {
+              "text": "The school verse library is in ",
+              "link": { "href": "/verses", "label": "Memory verses" },
+              "textAfter": "."
+            }
+          ]
+        },
+        {
+          "id": "profile",
+          "title": "Profile",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/profile", "label": "Profile" },
+              "textAfter": " manage how you sign in."
+            },
+            {
+              "text": "You can request deletion of your account and cancel the request before it is completed."
+            }
+          ]
+        }
+      ]
+    },
+    "admin": {
+      "sections": [
+        {
+          "id": "school-year",
+          "title": "School and school year",
+          "steps": [
+            {
+              "text": "School metrics are on ",
+              "link": { "href": "/school", "label": "School" },
+              "textAfter": ". Only one school year may be active."
+            },
+            {
+              "text": "Create, activate and close a year under ",
+              "link": { "href": "/year", "label": "School year" },
+              "textAfter": "."
+            },
+            {
+              "text": "After closing, teachers see read-only data; closing cannot be undone."
+            },
+            {
+              "text": "Administrators may edit a closed year — each change is written to the change log."
+            }
+          ]
+        },
+        {
+          "id": "approvals",
+          "title": "Access requests",
+          "steps": [
+            {
+              "text": "New users appear in ",
+              "link": { "href": "/approvals", "label": "Access requests" },
+              "textAfter": ": name, sign-in method and waiting time."
+            },
+            {
+              "text": "When approving, choose a role and for teachers — groups in the active year; approval without groups is allowed with a warning."
+            },
+            {
+              "text": "If you reject, give a reason the user will see."
+            }
+          ]
+        },
+        {
+          "id": "users",
+          "title": "Users",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/users", "label": "Users" },
+              "textAfter": " search by name, filter by status and open a profile."
+            },
+            {
+              "text": "You can edit names and roles, disable access or merge duplicate sign-ins."
+            },
+            {
+              "text": "You cannot disable or demote the last administrator."
+            }
+          ]
+        },
+        {
+          "id": "pupils",
+          "title": "Pupils",
+          "steps": [
+            {
+              "text": "Pupil cards live in ",
+              "link": { "href": "/people", "label": "Pupils and families" },
+              "textAfter": ": name, birth date, enrollment and transfers."
+            },
+            {
+              "text": "Mark paper guardian consent before enrollment — enrollment without consent is blocked."
+            },
+            {
+              "text": "Transfers keep history; a pupil can stay “without a group”."
+            }
+          ]
+        },
+        {
+          "id": "groups",
+          "title": "Groups",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/groups", "label": "Groups" },
+              "textAfter": " set the name, group language and assign teachers for the school year."
+            }
+          ]
+        },
+        {
+          "id": "families",
+          "title": "Families",
+          "requiresFeature": "parents",
+          "steps": [
+            {
+              "text": "Link parents to children and manage consents in ",
+              "link": { "href": "/family", "label": "Families" },
+              "textAfter": "."
+            }
+          ]
+        },
+        {
+          "id": "bricks-admin",
+          "title": "Bricks",
+          "steps": [
+            {
+              "text": "Issue bricks and view the log for all groups in ",
+              "link": { "href": "/bricks", "label": "Bricks" },
+              "textAfter": " (People menu)."
+            },
+            {
+              "text": "Corrections are new entries only — rows are not deleted."
+            }
+          ]
+        },
+        {
+          "id": "achievements-admin",
+          "title": "Achievements and penalties",
+          "requiresFeature": "achievements",
+          "steps": [
+            {
+              "text": "The achievements and penalties catalogue is under ",
+              "link": { "href": "/achievements", "label": "Achievements and penalties" },
+              "textAfter": "; per-group points are on each group page."
+            },
+            {
+              "text": "Manual recalculation updates awards without duplicates; revoke from a pupil card."
+            }
+          ]
+        },
+        {
+          "id": "analytics-rating",
+          "title": "Analytics and ranking",
+          "steps": [
+            {
+              "text": "Summary charts are in ",
+              "link": { "href": "/analytics", "label": "Analytics" },
+              "textAfter": " with school year and group selection."
+            },
+            {
+              "text": "Ranking by group is on ",
+              "link": { "href": "/rating", "label": "Ranking" },
+              "textAfter": "."
+            }
+          ]
+        },
+        {
+          "id": "audit",
+          "title": "Change log",
+          "steps": [
+            {
+              "text": "Open the ",
+              "link": { "href": "/audit", "label": "Change log" },
+              "textAfter": " and filter by period or event type."
+            },
+            {
+              "text": "Log rows cannot be deleted or edited — only appended."
+            }
+          ]
+        },
+        {
+          "id": "deletions",
+          "title": "Deletion requests",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/deletions", "label": "Deletion requests" },
+              "textAfter": " use tabs Open, Completed, and Rejected or cancelled."
+            },
+            {
+              "text": "Before execution you see a plan of what will be deleted or anonymised; confirm by typing the word “delete”."
+            },
+            {
+              "text": "If you reject, give a reason the requester will see."
+            }
+          ]
+        },
+        {
+          "id": "settings",
+          "title": "App settings",
+          "steps": [
+            {
+              "text": "Interface language for the whole school and the school time zone are in ",
+              "link": { "href": "/settings", "label": "App settings" },
+              "textAfter": "."
+            },
+            {
+              "text": "The time zone defines the calendar day for Today and “submitted later” marks."
+            }
+          ]
+        }
+      ]
+    },
+    "parent": {
+      "sections": [
+        {
+          "id": "consent",
+          "title": "Consent for your child",
+          "steps": [
+            {
+              "text": "Each child needs separate electronic consent from this adult."
+            },
+            {
+              "text": "Without consent ",
+              "link": { "href": "/child", "label": "Child progress" },
+              "textAfter": " stays unavailable."
+            }
+          ]
+        },
+        {
+          "id": "progress",
+          "title": "Child progress",
+          "steps": [
+            {
+              "text": "On ",
+              "link": { "href": "/child", "label": "Child progress" },
+              "textAfter": " — attendance, trends and bricks."
+            },
+            {
+              "text": "There is no voice verse check in the app."
+            },
+            {
+              "text": "The on-page digest stays the same if you reopen it within the same week."
+            }
+          ]
+        },
+        {
+          "id": "achievements-parent",
+          "title": "Achievements",
+          "requiresFeature": "achievements",
+          "steps": [
+            {
+              "text": "Confirmed achievements and penalties appear on the same progress screen."
+            }
+          ]
+        },
+        {
+          "id": "calendar-parent",
+          "title": "Calendar",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/calendar", "label": "Calendar" },
+              "textAfter": " you see your children’s group events only — read-only."
+            },
+            {
+              "text": "Pupil birthdays are not shown to parents."
+            }
+          ]
+        },
+        {
+          "id": "contacts",
+          "title": "Contacts and deletion",
+          "steps": [
+            {
+              "text": "Your phone and email, consent withdrawal and a child data deletion request — ",
+              "link": { "href": "/child/data", "label": "Data and consents" },
+              "textAfter": "."
+            },
+            {
+              "text": "If you withdraw the last consent for a child, the app offers a full data deletion request."
+            },
+            {
+              "text": "You can cancel an open deletion request before an administrator completes it."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -41,6 +41,7 @@ describe("resolveNavDefs", () => {
       "/rating",
       "/calendar",
       "/analytics",
+      "/guide",
     ]);
   });
 
@@ -62,6 +63,7 @@ describe("resolveNavDefs", () => {
       "/achievements",
       "/verses",
       "/settings",
+      "/guide",
     ]);
   });
 

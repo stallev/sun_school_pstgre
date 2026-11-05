@@ -50,6 +50,7 @@
 | `/verses` | `verses` | teacher, admin | Золотые стихи (справочник) |
 | `/analytics` | `analytics` | teacher, admin | Аналитика группы; `?year=` — учебный год (по умолчанию: активный → последний закрытый), `?gradeId=` (admin) |
 | `/analytics/pupils/[pupilId]` | `pupil` | teacher, admin | Аналитика ученика; «По годам»; `?pupilYear=`, `?metric=` ([`analytics_screens_spec`](../implementation/mvp/specs/analytics_screens_spec.md) §4, §6.5) |
+| `/guide` | `guide` | teacher, admin, parent | «Как пользоваться»: текст по роли оболочки или режиму «Смотреть как»; parent — только при `features.parents = true`, иначе 404 |
 
 ### 4.3 Teacher
 

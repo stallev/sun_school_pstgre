@@ -94,6 +94,7 @@ const TEACHER_NAV: NavEntryDef[] = [
     ],
   },
   { key: "analytics", messageKey: "shell.nav.analytics", href: "/analytics" },
+  { key: "guide", messageKey: "shell.nav.guide", href: "/guide" },
 ];
 
 const PARENT_NAV: NavEntryDef[] = [
@@ -105,6 +106,7 @@ const PARENT_NAV: NavEntryDef[] = [
     descriptionMessageKey: "shell.nav.desc.child_data",
     href: "/child/data",
   },
+  { key: "guide", messageKey: "shell.nav.guide", href: "/guide" },
 ];
 
 const ADMIN_NAV: NavEntryDef[] = [
@@ -219,6 +221,7 @@ const ADMIN_NAV: NavEntryDef[] = [
       },
     ],
   },
+  { key: "guide", messageKey: "shell.nav.guide", href: "/guide" },
 ];
 
 export const NAV_BY_ROLE: Record<UserRole, NavEntryDef[]> = {
@@ -254,4 +257,5 @@ export const NAV_PATH_PATTERNS: ReadonlyArray<{ pattern: RegExp; navKey: string 
   { pattern: /^\/groups(\/|$)/, navKey: "groups" },
   { pattern: /^\/year$/, navKey: "year" },
   { pattern: /^\/settings$/, navKey: "settings" },
+  { pattern: /^\/guide$/, navKey: "guide" },
 ];

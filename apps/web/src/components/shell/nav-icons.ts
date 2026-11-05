@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   ChartColumnIcon,
   ChartLineIcon,
+  CircleHelpIcon,
   ClipboardCheckIcon,
   GlobeIcon,
   HomeIcon,
@@ -45,6 +46,7 @@ const NAV_ICON_BY_KEY: Record<string, LucideIcon> = {
   year: CalendarIcon,
   achievements: TrophyIcon,
   settings: GlobeIcon,
+  guide: CircleHelpIcon,
 };
 
 export const getNavIcon = (navKey: string): LucideIcon | null => NAV_ICON_BY_KEY[navKey] ?? null;
