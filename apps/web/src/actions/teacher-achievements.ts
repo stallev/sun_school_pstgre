@@ -21,13 +21,17 @@ import { getPrisma } from "@/lib/db.server";
 import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
 import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 
-const revalidateAchievementSurfaces = () => {
+const revalidateAchievementSurfaces = (lessonIdForCheck?: string | null) => {
   revalidatePath("/today");
   revalidatePath("/group");
   revalidatePath("/bricks");
   revalidatePath("/rating");
   revalidatePath("/analytics/pupils/[pupilId]", "page");
   revalidatePath("/groups/[groupId]", "page");
+  if (lessonIdForCheck) {
+    revalidatePath(`/lessons/${lessonIdForCheck}/check`);
+    revalidatePath(`/lessons/${lessonIdForCheck}/table`);
+  }
 };
 
 // Client sends only the suggestion id (and an optional dismiss reason): points, key, evidence, group
@@ -94,7 +98,12 @@ export async function awardManuallyFormAction(
     checkIds,
   };
   const result = await awardManually(await getPrisma(), actor.userId, raw);
-  if (result.ok) revalidateAchievementSurfaces();
+  if (result.ok) {
+    const cacheLessonId = formData.get("cacheRevalidateLessonId");
+    revalidateAchievementSurfaces(
+      typeof cacheLessonId === "string" && cacheLessonId.length > 0 ? cacheLessonId : null,
+    );
+  }
   return result;
 }
 
@@ -123,7 +132,10 @@ export async function issuePenaltyFormAction(
     points: Number(formData.get("points")),
     reason: formData.get("reason"),
   });
-  if (result.ok) revalidateAchievementSurfaces();
+  if (result.ok) {
+    const lessonId = formData.get("lessonId");
+    revalidateAchievementSurfaces(typeof lessonId === "string" ? lessonId : null);
+  }
   return result;
 }
 
@@ -180,6 +192,11 @@ export async function cancelPenaltyFormAction(
     penaltyId: formData.get("penaltyId"),
     reason: formData.get("reason"),
   });
-  if (result.ok) revalidateAchievementSurfaces();
+  if (result.ok) {
+    const cacheLessonId = formData.get("cacheRevalidateLessonId");
+    revalidateAchievementSurfaces(
+      typeof cacheLessonId === "string" && cacheLessonId.length > 0 ? cacheLessonId : null,
+    );
+  }
   return result;
 }

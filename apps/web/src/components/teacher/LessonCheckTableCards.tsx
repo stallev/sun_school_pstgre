@@ -9,6 +9,9 @@ import { CustomLink } from "@/components/ui/custom-link";
 import { LateBadge } from "@/components/teacher/LateBadge";
 import { LessonLeaderMark } from "@/components/teacher/LessonLeaderMark";
 import { LessonCheckPressToggle } from "@/components/teacher/LessonCheckPressToggle";
+import type { CheckLessonMarksActions } from "@/components/teacher/CheckLessonMarksHost.client";
+import { CheckPupilMarksInline } from "@/components/teacher/CheckPupilMarksInline.client";
+import type { CheckLessonPupilMarks } from "@/lib/achievements/check-lesson-marks-types";
 import type { LessonTablePupilRow } from "@/data/checks/load-lesson-table-page.server";
 import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-display";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
@@ -36,6 +39,8 @@ type LessonCheckTableCardsProps = {
   onTestScoreChange: (pupilId: string, score: number | null) => void;
   onNotebookScoreChange: (pupilId: string, score: number | null) => void;
   onVerseScoreChange: (pupilId: string, lessonVerseId: string, score: number | null) => void;
+  marksActions: Pick<CheckLessonMarksActions, "openAward" | "openPenalty">;
+  getPupilMarks: (pupilId: string) => CheckLessonPupilMarks | null;
 };
 
 export const LessonCheckTableCards = ({
@@ -58,6 +63,8 @@ export const LessonCheckTableCards = ({
   onTestScoreChange,
   onNotebookScoreChange,
   onVerseScoreChange,
+  marksActions,
+  getPupilMarks,
 }: LessonCheckTableCardsProps) => (
   <ul className="space-y-2" aria-busy={pending}>
     {rows.map((row, index) => {
@@ -190,6 +197,19 @@ export const LessonCheckTableCards = ({
           {hasConflict ? (
             <p className="mt-2 text-sm text-danger">{messages.conflictTitle}</p>
           ) : null}
+          {(() => {
+            const pupilMarks = getPupilMarks(row.pupilId);
+            return pupilMarks ? (
+              <CheckPupilMarksInline
+                pupilId={row.pupilId}
+                pupilName={row.displayName}
+                pupilMarks={pupilMarks}
+                messages={messages}
+                actions={marksActions}
+                variant="card"
+              />
+            ) : null;
+          })()}
         </li>
       );
     })}

@@ -16,6 +16,7 @@ import {
   buildLessonCheckDescription,
   pickTeacherCheckMessages,
 } from "@/lib/messages/pick-teacher-check-messages.server";
+import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { fillMessage } from "@/lib/messages/fill-message";
 
 type LessonTableContentProps = {
@@ -31,12 +32,13 @@ export const LessonTableContent = async ({ params }: LessonTableContentProps) =>
   const appLocale = messageLocaleToAppLocale(locale);
   const timeZone = await getSchoolTimezone();
   const db = await getPrisma();
-  const data = await loadLessonTablePage(db, actor.userId, lessonId, isAdmin);
+  const data = await loadLessonTablePage(db, actor.userId, lessonId, isAdmin, locale, timeZone);
   const [teacherDict, commonDict] = await Promise.all([
     getDictionary(locale, "teacher"),
     getDictionary(locale, "common"),
   ]);
   const messages = pickTeacherCheckMessages(teacherDict, commonDict);
+  const achievementMessages = pickTeacherAchievementsMessages(teacherDict);
   const dictionaries = { teacher: teacherDict, common: commonDict };
 
   if (data.kind === "not_found") {
@@ -57,7 +59,9 @@ export const LessonTableContent = async ({ params }: LessonTableContentProps) =>
     <LessonCheckTable
       data={data}
       lessonDescription={lessonDescription}
+      lessonDateLabel={lessonDateLabel}
       messages={messages}
+      achievementMessages={achievementMessages}
       dictionaries={dictionaries}
       versesAccordion={
         <LessonVersesAccordion

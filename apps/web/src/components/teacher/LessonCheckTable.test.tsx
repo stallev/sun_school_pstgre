@@ -4,6 +4,8 @@ import { LESSON_KIND, LESSON_STATUS, buildScoringSnapshot } from "@sunschool/dom
 import { LessonCheckTable } from "@/components/teacher/LessonCheckTable";
 import type { LessonTablePageData } from "@/data/checks/load-lesson-table-page.server";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
+import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
+import teacherRu from "@/lib/messages/ru/teacher.json";
 
 const tableHarness = vi.hoisted(() => ({ canFinish: false }));
 
@@ -60,6 +62,8 @@ const messages = {
   tableFootnote: "note",
 } as TeacherCheckMessages;
 
+const achievementMessages = pickTeacherAchievementsMessages(teacherRu);
+
 const pageData: Extract<LessonTablePageData, { kind: "page" }> = {
   kind: "page",
   lessonId: "lesson-1",
@@ -97,6 +101,7 @@ const pageData: Extract<LessonTablePageData, { kind: "page" }> = {
       verseScores: {},
     },
   ],
+  lessonMarks: { marksEnabled: false },
 };
 
 describe("LessonCheckTable (P26-T6)", () => {
@@ -105,7 +110,9 @@ describe("LessonCheckTable (P26-T6)", () => {
       <LessonCheckTable
         data={pageData}
         lessonDescription="Урок 5 · 4 октября"
+        lessonDateLabel="4 октября"
         messages={messages}
+        achievementMessages={achievementMessages}
         dictionaries={{ teacher: {}, common: {} }}
       />,
     );
@@ -122,7 +129,9 @@ describe("LessonCheckTable (P26-T6)", () => {
       <LessonCheckTable
         data={pageData}
         lessonDescription="Урок 5 · 4 октября"
+        lessonDateLabel="4 октября"
         messages={messages}
+        achievementMessages={achievementMessages}
         dictionaries={{ teacher: {}, common: {} }}
       />,
     );

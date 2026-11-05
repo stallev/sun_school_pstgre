@@ -50,6 +50,7 @@ const page = (overrides: Partial<PageData> = {}): PageData => ({
   versesToRecite: [{ lessonVerseId: "v1", position: 1 }],
   scoring,
   pupils: [pupil("a", "Анна", 25), pupil("b", "Борис", 25), pupil("c", "Вера", 10), pupil("d", "Глеб", null, false)],
+  lessonMarks: { marksEnabled: false },
   ...overrides,
 });
 

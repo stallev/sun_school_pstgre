@@ -152,6 +152,7 @@
 - Один экран `lessonForm` обслуживает `/lessons/new` и `/lessons/[lessonId]/edit`.
 - P23 ([ADR-016](../prds/07_governance/adr_016_confirmable_achievements_and_events.md)): подтверждение достижения — модалка в панели ученика и счётчик на карточке группы (`/group`, `/groups/[groupId]`); карточка родителя — на `/child`; событие `worship_recital` — в диалоге ручной выдачи. **Новых маршрутов и query-параметров нет.**
 - P24 ([ADR-017](../prds/07_governance/adr_017_shell_container_toast_buttons.md)): **один новый маршрут — `/lessons/[lessonId]/sheet` (ведомость урока, без оболочки, `target="_blank"`).** Остальное: Диалог «Дата рождения» — на `/group` (teacher); дни рождения — на `/calendar` (teacher, admin); сворачивание сайдбара — cookie `sidebar_collapsed`, не query-параметр; правки формы `/lessons/[lessonId]/check` без новых query-параметров.
+- ADR-021: отметки достижения и штрафа живут на существующих `/lessons/[lessonId]/check` и `/lessons/[lessonId]/table`. **Новых маршрутов и query-параметров нет.**
 
 ## Change log
 
@@ -164,3 +165,4 @@
 | 2026-10-23 | §4.5: `/family`, `/child`, `/child/data`, `/child/consent` (флаг `features.parents`); §5 — только `/verse*` (P13-CU11) |
 | 2026-11-02 | §10: P23 (ADR-016) — подтверждаемые достижения и событие живут на существующих экранах; новых путей нет |
 | 2026-11-03 | §4.2 `/calendar`: дни рождения (teacher, admin); §10: P24 (ADR-017) — новых маршрутов нет |
+| 2026-11-05 | §10: ADR-021 — отметки на существующих `/lessons/[lessonId]/check` и `/table`; новых путей нет |

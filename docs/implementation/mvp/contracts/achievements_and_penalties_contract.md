@@ -2,8 +2,8 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.2  
-**Дата:** 2026-10-22  
+**Версия:** 1.3  
+**Дата:** 2026-11-05  
 **Волна:** W8-11  
 **Зависит от:** [`adr_012_achievements_and_penalties.md`](../../../prds/07_governance/adr_012_achievements_and_penalties.md), [`achievements_spec.md`](../../../my_specs/achievements_spec.md) (ДС-1…ДС-15, ШТ-1…ШТ-10, §7, §9), [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §4, §6, [`bricks_ledger_contract.md`](./bricks_ledger_contract.md) §3, [`homework_check_contract.md`](./homework_check_contract.md) §5.5–§5.8, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-52…AZ-57), [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) PKG-03, INV-17, INV-23  
 **Связанные документы:** [`change_log_contract.md`](./change_log_contract.md), [`deletion_requests_contract.md`](./deletion_requests_contract.md), [`achievements_screens_spec.md`](../specs/achievements_screens_spec.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -82,6 +82,8 @@
 - `practice` остаётся `is_active = false` до волны 3. Неактивная строка не участвует в `evaluate`.
 - Признак `requires_confirmation` (ADR-016): у `verses` — `true` (миграция P23); seed не затирает значение существующей строки. Правило `EVENT` — только ручная выдача, `evaluate` его пропускает, как `MANUAL`.
 - Строка `worship_recital` («Рассказал стихотворение на богослужении» / “Recited a poem at the service”): `REWARD`, `EVENT`, категория `MEMORY`, `metric = null`, `threshold = null`, один уровень `{ tier: 1, length: 1, points: 6 }`, `requires_confirmation = false`, `is_active = true`. Создаётся seed (P23-CU3).
+- Строка `active_work` («Активная работа на уроке» / “Active work in class”, ADR-021): `REWARD`, `EVENT`, категория `EFFORT`, `metric = null`, `threshold = null`, один уровень `{ tier: 1, length: 1, points: 3 }`, `requires_confirmation = false`, `is_active = true`. Создаётся seed той же формы, что `worship_recital`. Редактор баллов группы подхватывает строку сам (уровень 1), как `worship_recital`.
+- С проверки ДЗ (`/lessons/[lessonId]/check` и `/lessons/[lessonId]/table`) в диалог попадают только `worship_recital` и `active_work` плюс действующие штрафы каталога. Это состав диалога, не новый use-case: `awardManually` и `issuePenalty` не меняются, серверный список «только эти два кода» не вводится. Дата `active_work` в этом диалоге скрыта и равна дате урока; ключ события по-прежнему ученик + достижение + дата (два урока одного дня делят ключ — ADR-021 §4 п. 4). Статус `CHECK_COMPLETED` выдачу не блокирует.
 - Журнал: `achievement.catalog_upserted`, `achievement.catalog_toggled`.
 
 ### 6.2 `evaluatePupil`
@@ -235,6 +237,7 @@
 - Не принимать баллы и снимок правила с клиента.
 - Не вызывать `evaluate` вне интерактивной транзакции с блокировкой ученика.
 - Коды `ACHIEVEMENT_` и `PENALTY_` добавить в domain до использования в DAL.
+- Не заводить allow-list кодов для проверки ДЗ и не менять `award_key` события ключом урока (ADR-021).
 
 ## Change log
 
@@ -244,3 +247,4 @@
 | 2026-10-24 | v1.1 — баллы группы: §4, §6.1, ссылка на `achievement_group_points_contract` (ADR-015) |
 | 2026-11-02 | v1.2 — ADR-016 (P23): §4 операции предложений и `EVENT`, §5 `eventOn`, §6.1 `requires_confirmation` и `worship_recital`, §6.2 ветка предложения, §6.4 событие, §7–§9 |
 | 2026-11-02 | v1.2.1 — P23-CU8: Q-1 закрыт (ключ события = дата `eventOn`), §5/§6.4/§9 уточнены |
+| 2026-11-05 | v1.3 — ADR-021: §6.1 строка `active_work`; с проверки в диалог попадают только `worship_recital` и `active_work`, use-case не меняется |

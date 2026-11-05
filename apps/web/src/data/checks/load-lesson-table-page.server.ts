@@ -3,7 +3,10 @@ import "server-only";
 import { buildScoringSnapshot } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { loadCheckLessonAccess } from "./check-read-shared.server";
+import { loadCheckLessonMarks } from "./load-check-lesson-marks.server";
 import { getLessonTable } from "./get-lesson-table";
+import type { CheckLessonMarksData } from "@/lib/achievements/check-lesson-marks-types";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { CheckRosterPupilRow } from "./check-read-shared.server";
 import type { LessonVerseToRecite, LessonKind, LessonStatus, ScoringSnapshot } from "@sunschool/domain";
 
@@ -39,6 +42,7 @@ export type LessonTablePageData =
       versesToRecite: readonly LessonVerseToRecite[];
       scoring: ScoringSnapshot;
       pupils: LessonTablePupilRow[];
+      lessonMarks: CheckLessonMarksData;
     };
 
 const mapPupil = (
@@ -70,6 +74,8 @@ export async function loadLessonTablePage(
   actorUserId: string,
   lessonId: string,
   isAdmin: boolean,
+  locale: MessageLocale,
+  timeZone: string,
 ): Promise<LessonTablePageData> {
   const [table, access] = await Promise.all([
     getLessonTable(db, actorUserId, lessonId),
@@ -107,6 +113,17 @@ export async function loadLessonTablePage(
   const verseIds = table.versesToRecite.map((verse) => verse.lessonVerseId);
   const pupils = table.rows.map((row) => mapPupil(row, verseIds));
 
+  const lessonMarks = await loadCheckLessonMarks(db, {
+    gradeId: access.lesson.gradeId,
+    academicYearId: access.lesson.academicYearId,
+    lessonId: table.lessonId,
+    lessonDateIso: table.lessonDateIso,
+    pupilIds: pupils.map((row) => row.pupilId),
+    canMutate: table.canMutate,
+    locale,
+    timeZone,
+  });
+
   return {
     kind: "page",
     lessonId: table.lessonId,
@@ -123,5 +140,6 @@ export async function loadLessonTablePage(
     versesToRecite: table.versesToRecite,
     scoring,
     pupils,
+    lessonMarks,
   };
 }

@@ -4,6 +4,13 @@ export const REWARD_CATEGORY_ORDER = ["CONSISTENCY", "EFFORT", "MEMORY"] as cons
 export type RewardCategoryKey = (typeof REWARD_CATEGORY_ORDER)[number];
 
 export const PRACTICE_ACHIEVEMENT_CODE = "practice";
+export const WORSHIP_RECITAL_ACHIEVEMENT_CODE = "worship_recital";
+export const ACTIVE_WORK_ACHIEVEMENT_CODE = "active_work";
+export const CHECK_LESSON_AWARD_CODES = [
+  WORSHIP_RECITAL_ACHIEVEMENT_CODE,
+  ACTIVE_WORK_ACHIEVEMENT_CODE,
+] as const;
+export type CheckLessonAwardCode = (typeof CHECK_LESSON_AWARD_CODES)[number];
 
 export type CatalogTierDto = {
   tier: number;

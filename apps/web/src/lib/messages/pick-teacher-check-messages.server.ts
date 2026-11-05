@@ -130,6 +130,22 @@ export const pickTeacherCheckMessages = (
   tableVersesMobile: getMessage(teacher, "check.table.verses_mobile"),
   tableOpenPupilAria: getMessage(teacher, "check.table.open_pupil_aria"),
   tableProgressHeader: getMessage(teacher, "check.table.progress_header"),
+  marksAwardButton: getMessage(teacher, "check.marks.award_button"),
+  marksPenaltyButton: getMessage(teacher, "check.marks.penalty_button"),
+  marksGradesNote: getMessage(teacher, "check.marks.grades_note"),
+  marksRowMenuLabel: getMessage(teacher, "check.marks.row_menu_label"),
+  marksMenuAward: getMessage(teacher, "check.marks.menu_award"),
+  marksMenuPenalty: getMessage(teacher, "check.marks.menu_penalty"),
+  marksPenaltyIssued: getMessage(teacher, "check.marks.penalty_issued"),
+  marksRemovePenalty: getMessage(teacher, "check.marks.remove_penalty"),
+  marksAwardDialogTitle: getMessage(teacher, "check.marks.award_dialog_title"),
+  marksAwardDialogIntro: getMessage(teacher, "check.marks.award_dialog_intro"),
+  marksActiveWorkLesson: getMessage(teacher, "check.marks.active_work_lesson"),
+  marksAwardSubmit: getMessage(teacher, "check.marks.award_submit"),
+  marksAwardPointsHint: getMessage(teacher, "check.marks.award_points_hint"),
+  marksEventDateHint: getMessage(teacher, "check.marks.event_date_hint"),
+  marksPenaltyDialogTitle: getMessage(teacher, "check.marks.penalty_dialog_title"),
+  marksPenaltyDialogIntro: getMessage(teacher, "check.marks.penalty_dialog_intro"),
 });
 
 export const buildLessonCheckDescription = (

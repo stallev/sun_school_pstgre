@@ -82,6 +82,7 @@ const pageData = {
     { ...pupilRow("pupil-1", "Alex"), present: null },
     pupilRow("pupil-2", "Blake"),
   ],
+  lessonMarks: { marksEnabled: false as const },
 };
 
 type HookSnapshot = ReturnType<typeof useSequentialCheck>;

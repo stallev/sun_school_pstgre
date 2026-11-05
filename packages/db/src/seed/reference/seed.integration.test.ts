@@ -118,6 +118,17 @@ describe.skipIf(!enabled)("reference seed on the dev database", () => {
     expect({ length: tier.length, points: tier.points }).toEqual({ length: 1, points: 6 });
   });
 
+  it("creates active_work as a non-confirmable EVENT row (ADR-021)", async () => {
+    const row = await prisma.achievement.findUniqueOrThrow({ where: { code: "active_work" } });
+    expect(row.ruleType).toBe("EVENT");
+    expect(row.requiresConfirmation).toBe(false);
+    expect(row.category).toBe("EFFORT");
+    const tier = await prisma.achievementTier.findUniqueOrThrow({
+      where: { achievementId_tier: { achievementId: row.id, tier: 1 } },
+    });
+    expect({ length: tier.length, points: tier.points }).toEqual({ length: 1, points: 3 });
+  });
+
   it("does not overwrite requires_confirmation of an existing row", async () => {
     const row = await prisma.achievement.findUniqueOrThrow({ where: { code: "worship_recital" } });
     await prisma.achievement.update({ where: { id: row.id }, data: { requiresConfirmation: true } });

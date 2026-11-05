@@ -540,7 +540,9 @@ const ACH = [
   { code:'lessons',  name:'Верный ученик',          en:'Faithful pupil',     cat:'Постоянство', type:'Накопление', rule:'Уроков с выполненным ДЗ, всего',         tiers:[[5,5],[15,10],[30,20]], active:true },
   { code:'first',    name:'Первый идеальный стих',  en:'First perfect verse',cat:'Память',      type:'Разовое',    rule:'Стих на «2» — впервые',                   tiers:[[1,2]], active:true },
   { code:'singing',  name:'Голос хора',             en:'Voice of the choir', cat:'Постоянство', type:'Накопление', rule:'Спевка, всего раз',                       tiers:[[5,5],[15,10]], active:true },
-  { code:'hundred',  name:'Сто кирпичиков',         en:'One hundred bricks', cat:'Старание',    type:'Накопление', rule:'100 баллов за уроки (бонусы не считаются)', tiers:[[100,10]], active:true }
+  { code:'hundred',  name:'Сто кирпичиков',         en:'One hundred bricks', cat:'Старание',    type:'Накопление', rule:'100 баллов за уроки (бонусы не считаются)', tiers:[[100,10]], active:true },
+  { code:'worship_recital', name:'Рассказал стихотворение на богослужении', en:'Recited a poem at the service', cat:'Память', type:'Событие', rule:'Вручную, дата события', tiers:[[1,6]], active:true },
+  { code:'active_work', name:'Активная работа на уроке', en:'Active work in class', cat:'Старание', type:'Событие', rule:'Вручную, за дату этого урока', tiers:[[1,3]], active:true }
 ];
 /* Штрафы (анти-достижения, 7.5): только вручную, отрицательные баллы, можно снять */
 const PEN = [
@@ -558,7 +560,7 @@ function CURD(){ return '25.10'; }
    Факт = запись проверки «ученик × урок». Состояние факта для правила:
    pass — засчитан, fail — не засчитан (рвёт серию), skip — пропуск.
    ========================================================= */
-const KIND = { 'Серия':'streak', 'Накопление':'accum', 'Разовое':'once' };
+const KIND = { 'Серия':'streak', 'Накопление':'accum', 'Разовое':'once', 'Событие':'event' };
 const inOff = d => S.achMode.off.some(p=> num(d)>=num(p.from) && (!p.to || num(d)<=num(p.to)));
 function factState(code, lid, pid){
   const L = lessonById(lid), r = S.hc[lid] && S.hc[lid][pid];
@@ -583,7 +585,9 @@ function evaluate(pid){
   const out = [], has = (code,tier) => S.awarded.concat(out).some(a=>a.pid===pid && a.code===code && a.tier===tier);
   const lids = factLessons(pid);
   ACH.filter(a=>a.active).forEach(a=>{
-    const kind = KIND[a.type], st = lids.map(l=>[l, ...factState(a.code, l, pid)]);
+    const kind = KIND[a.type];
+    if (kind==='event') return;
+    const st = lids.map(l=>[l, ...factState(a.code, l, pid)]);
     if (kind==='streak'){
       const runs = []; let run = [];
       st.forEach(([l,s])=>{ if (s==='pass') run.push(l); else if (s==='fail'){ if (run.length) runs.push(run); run = []; } });
@@ -1150,15 +1154,43 @@ const pen = code => PEN.find(x=>x.code===code);
 const sgnInt = v => (v>0?'+':v<0?'−':'') + Math.abs(v);
 const activePens = pid => S.penalties.filter(x=>x.pid===pid && !x.off);
 const lessonPen = (pid, lid) => S.penalties.find(x=>x.pid===pid && x.lid===lid && !x.off);
-/* Строка в проверке ДЗ: один действующий штраф на ученика за урок (ШТ-4) */
-function penRow(pid, lid){
+const CHECK_AWARD_CODES = ['worship_recital', 'active_work'];
+const canMarkFromCheck = () => S.achMode.on && !(S.yearClosed && S.role!=='admin');
+const eventTaken = (pid, code, date) => S.awarded.some(x=>x.pid===pid && x.code===code && x.date===date);
+function checkEventCaptions(pid, lid){
+  const L = lessonById(lid);
+  return CHECK_AWARD_CODES.map(code=>{
+    const a = S.awarded.find(x=>x.pid===pid && x.code===code && x.date===L.d && !x.revoked);
+    return a ? `${ach(code).name} · ${a.date}` : '';
+  }).filter(Boolean);
+}
+/* Карточка проверки: два события и штраф. Выключенный режим и закрытый год скрывают блок. */
+function checkMarksRow(pid, lid){
+  if (!canMarkFromCheck()) return '';
   const x = lessonPen(pid, lid);
-  return `<div class="flex flex-wrap items-center gap-2 pb-3">
-    ${!S.achMode.on && !x ? '<span class="text-sm text-muted">Штрафы недоступны: режим достижений в группе выключен</span>' : x ? `<span class="inline-flex min-w-0 items-center gap-1.5 text-sm font-medium text-penalty">${ic('i-flag','size-4')}<span>Штраф: ${pen(x.code).name} · ${sgnInt(x.pts)}</span></span>
-      <button type="button" data-act="pen-off" data-id="${x.id}" class="inline-flex h-8 items-center gap-1 rounded-md px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-undo','size-4')} Снять</button>`
-    : `<button type="button" data-act="pen-open" data-pid="${pid}" data-lid="${lid}" class="${B_PENALTY_OUTLINE} h-9 px-3 text-sm">${ic('i-flag','size-4')} Штраф за поведение</button>
-      <span class="text-sm text-muted">Баллы урока не меняет — уменьшает кирпичики</span>`}
+  const captions = checkEventCaptions(pid, lid);
+  const penBtn = x
+    ? `<span class="inline-flex min-w-0 items-center gap-1.5 text-sm font-medium text-penalty">${ic('i-flag','size-4')}<span>Штраф: ${pen(x.code).name} · ${sgnInt(x.pts)}</span></span>
+      <button type="button" data-act="pen-off" data-id="${x.id}" class="inline-flex h-9 items-center gap-1 rounded-lg px-2 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-undo','size-4')} Снять</button>`
+    : `<button type="button" data-act="check-pen" data-pid="${pid}" data-lid="${lid}" class="${B_PENALTY_OUTLINE}">${ic('i-flag','size-4')} Штраф</button>`;
+  return `<div class="flex flex-col gap-2 border-b border-line py-3">
+    <div class="flex flex-wrap items-center gap-2">
+      <button type="button" data-act="check-award" data-pid="${pid}" data-lid="${lid}" class="${B_OUTLINE}">${ic('i-award','size-4')} Достижение</button>
+      ${penBtn}
+    </div>
+    ${captions.length ? `<p class="text-sm text-ink-2">${captions.join(' · ')}</p>` : ''}
+    <p class="text-sm text-muted">Оценки урока не меняются.</p>
   </div>`;
+}
+function checkRowMenu(pid, lid){
+  if (!canMarkFromCheck()) return '';
+  return `<details class="relative shrink-0">
+    <summary class="inline-flex h-9 cursor-pointer list-none items-center rounded-lg px-2 text-ink-2 hover:bg-paper" aria-label="Отметки: ${pupil(pid).name}"><svg class="size-4" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg></summary>
+    <div class="absolute left-0 z-30 mt-1 min-w-52 rounded-lg border border-line bg-surface py-1 shadow-float">
+      <button type="button" data-act="check-award" data-pid="${pid}" data-lid="${lid}" class="flex h-9 w-full items-center gap-2 px-3 text-left hover:bg-paper">${ic('i-award','size-4')} Выдать достижение</button>
+      <button type="button" data-act="check-pen" data-pid="${pid}" data-lid="${lid}" class="flex h-9 w-full items-center gap-2 px-3 text-left text-penalty hover:bg-paper">${ic('i-flag','size-4')} Выдать штраф</button>
+    </div>
+  </details>`;
 }
 /* Список штрафов ученика: учитель и админ — со снятием, родитель — только чтение */
 function penList(pid, canEdit){
@@ -1195,8 +1227,8 @@ function awardList(pid, canRevoke){
   if (!list.length) return '<p class="text-sm text-muted">Пока нет достижений.</p>';
   return `<ul class="divide-y divide-line">${list.map(a=>`<li class="flex gap-3 py-2.5 ${a.revoked?'text-ink-2':''}"><span class="mt-1.5">${tierDot(a.tier)}</span>
     <div class="min-w-0 flex-1">
-      <p class="font-medium">${ach(a.code).name} <span class="font-normal text-muted">· ${TIER[a.tier]}${a.src==='manual' ? ' · вручную' : ''}</span></p>
-      <p class="text-sm text-ink-2">${ach(a.code).rule}. За уроки ${lessonsWord(a.ev)} · ${a.revoked ? '<span class="text-muted">баллы сняты</span>' : '+'+a.pts+' '+plural(a.pts,'кирпичик','кирпичика','кирпичиков')}</p>
+      <p class="font-medium">${ach(a.code).name} <span class="font-normal text-muted">· ${KIND[ach(a.code).type]==='event' ? 'событие' : TIER[a.tier]}${a.src==='manual' ? ' · вручную' : ''}</span></p>
+      <p class="text-sm text-ink-2">${ach(a.code).rule}. ${a.ev && a.ev.length ? 'За уроки '+lessonsWord(a.ev) : 'Дата '+a.date} · ${a.revoked ? '<span class="text-muted">баллы сняты</span>' : '+'+a.pts+' '+plural(a.pts,'кирпичик','кирпичика','кирпичиков')}</p>
       ${a.reason ? `<p class="text-sm text-muted">Причина: ${a.reason}</p>` : ''}
       ${a.revoked ? `<p class="mt-0.5 text-sm text-muted">Отозвано ${a.revoked.date}: ${a.revoked.reason}. Уроки остаются занятыми — повторно за них не выдаётся.</p>`
         : canRevoke ? `<button type="button" data-act="ach-revoke" data-id="${a.id}" class="mt-1 -ml-1.5 inline-flex h-8 items-center gap-1 rounded-md px-1.5 text-sm text-ink-2 hover:bg-paper hover:text-ink">${ic('i-undo','size-4')} Отозвать</button>` : ''}
@@ -1523,11 +1555,12 @@ function vLessonTable(){
   const workSpan = (L.test ? 1 : 0) + 2;
   const top = topScorerIds(L.id), isTop = id => top.includes(id), stickyBg = id => isTop(id) ? 'bg-gold-soft' : 'bg-card';
   return `${backLink('lesson','К уроку')}
-  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-    <div class="min-w-0 flex-1"><h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1>
-      <p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t}</p><p class="text-sm text-muted">${L.d} · были ${presentN} · не проверены ${uncheckedN} · проверено ${checked} из ${all.length}</p>
-      <div class="mt-2 max-w-md">${meter(checked, all.length || 1, 'Проверено')}</div></div>
-    <div class="flex flex-wrap items-center gap-2">${corr ? '' : `<button type="button" data-act="tbl-finish" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-ok','size-4')} Завершить проверку</button><span class="inline-flex items-center text-sm text-muted">Достижения начислятся после завершения${termHint('достижения','Завершение отмечает сохранённых учеников проверенными и пересчитывает достижения за год. Кого в таблице не заполняли, тот не учитывается. Длинная серия стихов сначала предлагается учителю.')}</span>`}<button type="button" data-act="check-open" data-lid="${L.id}" class="${corr ? B_PRIMARY : B_OUTLINE}">${ic('i-check','size-4')} Последовательная проверка</button>${sheetLink(L.id)}</div>
+  <div class="mb-4">
+    <h1 class="font-display text-[1.75rem] font-medium leading-[1.1] sm:text-[2.125rem]">Сводная таблица</h1>
+    <p class="mt-1 text-ink-2">Урок ${L.n} · ${L.t}</p>
+    <p class="text-sm text-muted">${L.d} · были ${presentN} · не проверены ${uncheckedN} · проверено ${checked} из ${all.length}</p>
+    <div class="mt-2 max-w-md">${meter(checked, all.length || 1, 'Проверено')}</div>
+    <div class="mt-3 flex flex-wrap items-center gap-2">${corr ? '' : `<button type="button" data-act="tbl-finish" data-lid="${L.id}" class="${B_PRIMARY}">${ic('i-ok','size-4')} Завершить проверку</button><span class="inline-flex items-center text-sm text-muted">Достижения начислятся после завершения${termHint('достижения','Завершение отмечает сохранённых учеников проверенными и пересчитывает достижения за год. Кого в таблице не заполняли, тот не учитывается. Длинная серия стихов сначала предлагается учителю.')}</span>`}<button type="button" data-act="check-open" data-lid="${L.id}" class="${corr ? B_PRIMARY : B_OUTLINE}">${ic('i-check','size-4')} Последовательная проверка</button>${sheetLink(L.id)}</div>
   </div>
   ${corr ? `<p class="mb-3 flex items-start gap-2 rounded-lg bg-amber-soft px-3 py-2 text-sm">${ic('i-alert','size-4 mt-0.5 text-amber-ink')} Урок проверен. Правки пересчитают баллы и попадут в журнал, новые оценки получат отметку «сдано ${TODAY}».</p>` : ''}
   ${verseAccordion(L)}
@@ -1560,8 +1593,13 @@ function vLessonTable(){
       <tbody class="divide-y divide-line">
         ${ids.map((id,i)=>{ const r=recs[id]; return `<tr class="${isTop(id) ? 'bg-gold-soft' : ''}">
           <td class="py-1.5 pl-4 pr-2 tabular-nums ${isTop(id) ? 'border-l-4 border-gold text-ink-2' : 'text-muted'}">${i+1}</td>
-          <td class="sticky left-0 z-10 ${stickyBg(id)} py-1.5 pr-2"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button>${isTop(id) ? ' ' + topMark() : ''}
-            <span class="mt-0.5 flex flex-wrap items-center gap-2">${rowStatus(r)}${lateOnce(r)}</span></td>
+          <td class="sticky left-0 z-10 ${stickyBg(id)} py-1.5 pr-2">
+            <div class="flex items-start justify-between gap-1">
+              <button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="text-left font-medium text-cobalt-ink hover:underline">${pupil(id).name}</button>
+              ${checkRowMenu(id, L.id)}
+            </div>${isTop(id) ? ' ' + topMark() : ''}
+            <span class="mt-0.5 flex flex-wrap items-center gap-2">${rowStatus(r)}${lateOnce(r)}</span>
+            ${checkEventCaptions(id, L.id).concat(lessonPen(id, L.id) ? ['Штраф: '+pen(lessonPen(id, L.id).code).name+' · '+sgnInt(lessonPen(id, L.id).pts)] : []).map(function(line){ return '<span class="mt-0.5 block text-sm text-ink-2">'+line+'</span>'; }).join('')}</td>
           <td class="px-2 py-1.5 text-center">${pressBtn(id,'present',r.present,'Присутствие')}</td>
           ${rv.map((ref,k)=>`<td class="px-1 py-1.5 text-center">${padCell(id,'v'+k,r.v[k],ref,false,2)}</td>`).join('')}
           ${L.test ? `<td class="px-1 py-1.5 text-center">${padCell(id,'test',r.test,'Тест',false,10)}</td>` : ''}
@@ -1578,6 +1616,11 @@ function vLessonTable(){
         <div class="min-w-0 flex-1"><button type="button" data-act="fix-pupil" data-lid="${L.id}" data-pid="${id}" class="inline-block max-w-full truncate text-left font-medium text-cobalt-ink">${pupil(id).name}</button>${isTop(id) ? ' ' + topMark() : ''}
           <span class="mt-0.5 flex flex-wrap items-center gap-2">${rowStatus(r)}${lateOnce(r)}</span></div>
         <span class="font-display text-lg tabular-nums">${r.done ? pts(r) : '—'}</span></div>
+      ${checkEventCaptions(id, L.id).concat(lessonPen(id, L.id) ? ['Штраф: '+pen(lessonPen(id, L.id).code).name+' · '+sgnInt(lessonPen(id, L.id).pts)] : []).map(function(line){ return '<p class="mt-1 text-sm text-ink-2">'+line+'</p>'; }).join('')}
+      ${canMarkFromCheck() ? `<div class="mt-3 flex flex-wrap gap-2">
+        <button type="button" data-act="check-award" data-pid="${id}" data-lid="${L.id}" class="${B_OUTLINE}">${ic('i-award','size-4')} Достижение</button>
+        <button type="button" data-act="check-pen" data-pid="${id}" data-lid="${L.id}" class="${B_PENALTY_OUTLINE}">${ic('i-flag','size-4')} Штраф</button>
+      </div>` : ''}
       <div class="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-sm">
         <div class="flex items-center gap-2"><span class="text-muted">Был</span>${pressBtn(id,'present',r.present,'Присутствие')}</div>
         <div class="flex items-center gap-2"><span class="text-muted">Спевка</span>${pressBtn(id,'sing',r.sing,'Спевка')}</div>
@@ -1744,7 +1787,7 @@ function vCheck(){
       </div>` : `<div class="border-b border-line py-3"><button type="button" data-act="reveal-scores" class="${B_OUTLINE}">Показать оценки</button></div>`}
       <div class="py-3"><label for="cmt" class="mb-1 block text-sm font-medium text-ink">Комментарий</label>
         <input id="cmt" data-input="comment" value="${c.comment}" class="${FIELD}" placeholder="Необязательно"></div>
-      ${penRow(p.id, lid)}
+      ${checkMarksRow(p.id, lid)}
       ${corr ? `<div class="flex flex-wrap items-center gap-2 border-t border-line py-3"><span class="text-sm font-medium">Причина:</span>${['Сдал позже','Ошибка ввода','Другое'].map(r=>`<button type="button" data-act="reason" data-val="${r}" aria-pressed="${S.reason===r}" class="${CHIP} ${S.reason===r ? SEG_ON : SEG_OFF}">${r}</button>`).join('')}</div>` : ''}
       <div class="hidden items-center justify-between gap-2 border-t border-line py-3 lg:flex">
         <button type="button" data-act="prev" class="${B_GHOST}" ${S.cur===0?'disabled':''}>${ic('i-left','size-4')} Предыдущий</button>
@@ -3445,15 +3488,26 @@ function evRows(pid, code, tier){
     <p id="aw-cnt" class="mt-1.5 text-sm text-ink-2"></p>`;
 }
 function evCount(){
-  const f = document.querySelector('[data-form=award]'); if (!f) return;
-  const [code, tier] = f.ach.value.split('|'), need = needOf(ach(code), +tier);
+  const f = document.querySelector('[data-form=award]'); if (!f || !f.ach) return;
+  const [code, tier] = f.ach.value.split('|');
+  if (KIND[ach(code).type]==='event') return;
+  const need = needOf(ach(code), +tier);
   const got = [...f.querySelectorAll('[name=ev]:checked')].reduce((s,x)=>s + +x.dataset.w, 0);
   const el = document.getElementById('aw-cnt');
   el.textContent = code==='hundred' ? `Баллов в отмеченных уроках: ${got} из ${need}` : `Отмечено уроков: ${got} из ${need}`;
   el.className = 'mt-1.5 text-sm ' + (got >= need ? 'text-ok' : 'text-ink-2');
 }
+function awardProof(pid, code, tier){
+  const a = ach(code);
+  if (KIND[a.type]==='event'){
+    return `<div><label for="aw-d" class="${LABEL}">Дата</label><input id="aw-d" name="eventOn" type="date" value="${isoOf(TODAY)}" max="${isoOf(TODAY)}" class="${FIELD} sm:w-48">
+      <p class="mt-1.5 text-sm text-muted">В пределах учебного года, не позже сегодня. Повтор в тот же день — конфликт.</p></div>`;
+  }
+  return `<div><p class="${LABEL}">За какие уроки <span class="font-normal text-muted">— система отметила последние подходящие</span></p>
+    <div id="aw-ev">${evRows(pid, code, tier)}</div></div>`;
+}
 function awardDialog(pid){
-  const opts = ACH.filter(a=>a.active).flatMap(a=>a.tiers.map((t,i)=> KIND[a.type]==='once' && i>0 ? '' : `<option value="${a.code}|${i}" data-pts="${t[1]}">${a.name}${a.tiers.length>1?' · '+TIER[i]:''} · ${KIND[a.type]==='streak' ? t[0]+' подряд' : KIND[a.type]==='once' ? 'разовое' : (a.code==='hundred' ? t[0]+' баллов' : t[0]+' раз')}</option>`)).join('');
+  const opts = ACH.filter(a=>a.active).flatMap(a=>a.tiers.map((t,i)=> KIND[a.type]==='once' && i>0 ? '' : `<option value="${a.code}|${i}" data-pts="${t[1]}">${a.name}${a.tiers.length>1?' · '+TIER[i]:''} · ${KIND[a.type]==='streak' ? t[0]+' подряд' : KIND[a.type]==='once' ? 'разовое' : KIND[a.type]==='event' ? 'событие' : (a.code==='hundred' ? t[0]+' баллов' : t[0]+' раз')}</option>`)).join('');
   const p0 = pid || PUPILS[0].id, first = ACH.find(a=>a.active);
   openDialog(dlgHead('Выдать достижение вручную','Когда автоматика не сработала или есть другая причина. Отмеченные уроки будут заняты — автоматика не выдаст то же самое второй раз.') + `
   <form data-form="award" class="mt-5 space-y-4" novalidate>
@@ -3464,17 +3518,54 @@ function awardDialog(pid){
     </div>
     <div><label for="aw-a" class="${LABEL}">Достижение и уровень</label>
       <select id="aw-a" name="ach" data-input="award-re" class="${SEL}">${opts}</select></div>
-    <div><p class="${LABEL}">За какие уроки <span class="font-normal text-muted">— система отметила последние подходящие</span></p>
-      <div id="aw-ev">${evRows(p0, first.code, 0)}</div></div>
+    <div id="aw-proof">${awardProof(p0, first.code, 0)}</div>
     <div><label for="aw-r" class="${LABEL}">Причина</label><textarea id="aw-r" name="reason" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Обязательно: попадёт в журнал"></textarea></div>
     ${dlgFoot('Выдать')}
   </form>`);
   setTimeout(evCount, 0);
 }
+function eventDateOk(iso){
+  if (!iso) return 'Укажите дату';
+  if (iso < '2026-09-06' || iso > '2027-05-30') return 'Дата вне учебного года';
+  if (iso > isoOf(TODAY)) return 'Дата не позже сегодня';
+  return '';
+}
+function checkAwardDialog(pid, lid){
+  const L = lessonById(lid);
+  const radios = CHECK_AWARD_CODES.map((code,i)=>{ const a = ach(code);
+    return `<label class="flex cursor-pointer items-center gap-3 rounded-lg border border-line px-3 py-2 has-[:checked]:border-cobalt-ink has-[:checked]:bg-cobalt-soft has-[:checked]:font-bold has-[:checked]:text-cobalt-ink">
+      <input type="radio" name="code" value="${code}" data-input="check-code" data-pts="${a.tiers[0][1]}" ${i===0?'checked':''} class="size-4 accent-cobalt-ink">
+      <span class="min-w-0 flex-1">${a.name}</span><span class="tabular-nums">+${a.tiers[0][1]}</span></label>`; }).join('');
+  openDialog(dlgHead('Достижение', `${pupil(pid).name} · урок ${L.n} · ${L.d}`) + `
+  <form data-form="check-award" data-pid="${pid}" data-lid="${lid}" class="mt-5 space-y-4" novalidate>
+    <p class="text-sm text-ink-2">Ученик и урок зафиксированы. Оценки урока не меняются.</p>
+    <div role="radiogroup" aria-label="Достижение" class="space-y-2">${radios}</div>
+    <div id="ck-date-wrap"><label for="ck-d" class="${LABEL}">Дата</label><input id="ck-d" name="eventOn" type="date" value="${isoOf(L.d)}" max="${isoOf(TODAY)}" class="${FIELD} sm:w-48">
+      <p class="mt-1.5 text-sm text-muted">По умолчанию — дата урока. Можно сменить в пределах года, не позже сегодня.</p></div>
+    <p id="ck-lesson-wrap" class="hidden text-sm text-ink-2">За этот урок · ${L.d}</p>
+    <div><label for="ck-pts" class="${LABEL}">Баллы</label><input id="ck-pts" name="pts" inputmode="numeric" value="${ach(CHECK_AWARD_CODES[0]).tiers[0][1]}" class="${FIELD} tabular-nums sm:w-32">
+      <p id="ck-hint" class="mt-1.5 text-sm text-muted">Не больше баллов группы (сейчас как в каталоге: ${ach(CHECK_AWARD_CODES[0]).tiers[0][1]}).</p></div>
+    <div><label for="ck-r" class="${LABEL}">Причина</label><textarea id="ck-r" name="reason" rows="2" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="Обязательно: попадёт в журнал"></textarea></div>
+    ${dlgFoot('Выдать')}
+  </form>`);
+}
+function checkPenaltyDialog(pid, lid){
+  const L = lessonById(lid), first = PEN.find(x=>x.active);
+  openDialog(dlgHead('Штраф', `${pupil(pid).name} · урок ${L.n} · ${L.d}`) + `
+  <form data-form="check-penalty" data-pid="${pid}" data-lid="${lid}" class="mt-5 space-y-4" novalidate>
+    <p class="text-sm text-ink-2">Ученик и урок зафиксированы. Оценки урока не меняются.</p>
+    <div><label for="pn-t" class="${LABEL}">За что</label>
+      <select id="pn-t" name="code" data-input="pen-type" class="${SEL}">${PEN.filter(x=>x.active).map(x=>`<option value="${x.code}" data-pts="${-x.pts}">${x.name} · ${sgnInt(x.pts)}</option>`).join('')}</select></div>
+    <div><label for="pn-q" class="${LABEL}">Сколько кирпичиков снять</label><input id="pn-q" name="qty" inputmode="numeric" value="${-first.pts}" class="${FIELD} tabular-nums sm:w-32">
+      <p id="pn-hint" class="mt-1.5 text-sm text-muted">По каталогу: ${-first.pts}. Меньше — можно, больше — нельзя.</p></div>
+    <div><label for="ck-pr" class="${LABEL}">Что произошло</label><textarea id="ck-pr" name="reason" rows="3" class="w-full rounded-lg border border-muted bg-surface px-3 py-2.5 focus:border-cobalt focus:outline-none" placeholder="О поступке, а не о ребёнке"></textarea></div>
+    ${dlgFoot('Выдать штраф', B_PENALTY)}
+  </form>`);
+}
 function revokeDialog(a){
   openDialog(dlgHead('Отозвать достижение?', `${pupil(a.pid).name} · ${ach(a.code).name} · ${TIER[a.tier]}`) + `
   <form data-form="revoke" data-id="${a.id}" class="mt-5 space-y-4" novalidate>
-    <ul class="space-y-1.5 text-sm text-ink-2"><li>— Баллы (${a.pts}) снимутся с «набрано» кирпичиков.</li><li>— Уроки ${lessonsWord(a.ev)} останутся занятыми: за них это достижение этого уровня больше не выдаётся — ни автоматически, ни при пересчёте.</li><li>— Отзыв окончателен и попадёт в журнал.</li></ul>
+    <ul class="space-y-1.5 text-sm text-ink-2"><li>— Баллы (${a.pts}) снимутся с «набрано» кирпичиков.</li><li>— ${a.ev && a.ev.length ? `Уроки ${lessonsWord(a.ev)} останутся занятыми: за них это достижение этого уровня больше не выдаётся — ни автоматически, ни при пересчёте.` : `Дата ${a.date} останется занятой: повтор на эту дату не выдаётся.`}</li><li>— Отзыв окончателен и попадёт в журнал.</li></ul>
     <div><label for="rv-r" class="${LABEL}">Причина</label><input id="rv-r" name="reason" class="${FIELD}" placeholder="Например: выдано по ошибочной оценке"></div>
     ${dlgFoot('Отозвать', B_DANGER_FILL)}
   </form>`);
@@ -3601,7 +3692,7 @@ function achDialog(a){
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="ac-n" class="${LABEL}">Название</label><input id="ac-n" name="name" value="${a?a.name:''}" class="${FIELD}"></div>
       <div><label for="ac-e" class="${LABEL}">По-английски</label><input id="ac-e" value="${a?a.en:''}" class="${FIELD}"></div></div>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2"><div><label for="ac-c" class="${LABEL}">Категория</label><select id="ac-c" class="${SEL}">${['Постоянство','Старание','Память'].map(c=>`<option ${a&&a.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
-      <div><label for="ac-t" class="${LABEL}">Тип правила</label><select id="ac-t" class="${SEL}">${['Серия','Накопление','Разовое'].map(c=>`<option ${a&&a.type===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
+      <div><label for="ac-t" class="${LABEL}">Тип правила</label><select id="ac-t" class="${SEL}">${['Серия','Накопление','Разовое','Событие'].map(c=>`<option ${a&&a.type===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
     <div><label for="ac-r" class="${LABEL}">Условие</label><select id="ac-r" class="${SEL}">${['Все стихи урока на «2»','Тетрадь от 9 баллов','Тест от 8 баллов','Урок с выполненным ДЗ','Спевка','Баллы за уроки'].map(c=>`<option>${c}</option>`).join('')}</select></div>
     <div><p class="${LABEL}">Уровни: сколько раз → баллы</p>
       <div class="space-y-2">${[0,1,2].map(i=>`<div class="grid grid-cols-[6rem_minmax(0,1fr)_minmax(0,1fr)] items-center gap-2"><span class="inline-flex items-center gap-2 text-sm">${tierDot(i)}${TIER[i]}</span>
@@ -3855,6 +3946,10 @@ document.addEventListener('click', e=>{
     case 'bricks-toggle': { const id=+el.dataset.pid; S.bricksOpen = S.bricksOpen===id ? null : id; S.fixOpen=null; render(); break; }
     case 'fix-open': S.fixOpen = S.fixOpen===el.dataset.id ? null : el.dataset.id; S.bricksOpen = +el.dataset.pid; render(); break;
     case 'award-open': if (!S.achMode.on){ toast('Режим достижений выключен в настройках группы'); break; } awardDialog(el.dataset.pid ? +el.dataset.pid : null); break;
+    case 'check-award':
+    case 'check-pen':
+      if (!canMarkFromCheck()){ toast(S.yearClosed && S.role!=='admin' ? 'Год закрыт: отметки выдаёт только администратор' : 'Режим достижений выключен в настройках группы'); break; }
+      if (el.dataset.act==='check-pen') checkPenaltyDialog(+el.dataset.pid, +el.dataset.lid); else checkAwardDialog(+el.dataset.pid, +el.dataset.lid); break;
     case 'ach-revoke': revokeDialog(S.awarded.find(a=>a.id===el.dataset.id)); break;
     case 'ach-recalc': { const n = recalc(PUPILS.map(p=>p.id)); audit('Достижения','Ручной пересчёт: новых выдач '+n.length); render(); toast(S.achMode.on ? (n.length ? `Пересчитано: новых выдач ${n.length}` : 'Пересчитано: новых выдач нет — дублей не бывает') : 'Режим достижений выключен — пересчёт не выполняется'); break; }
     case 'ach-mode': if (S.achMode.on){ achModeOffDialog(); break; }
@@ -3960,7 +4055,12 @@ document.addEventListener('change', e=>{
   }
   if (t.dataset.input==='pen-type'){ const p = t.selectedOptions[0].dataset.pts; document.getElementById('pn-q').value = p; document.getElementById('pn-hint').textContent = `По каталогу: ${p}. Меньше — можно, больше — нельзя.`; }
   if (t.dataset.input==='award-re'){ const f = t.form, [code,tier] = f.ach.value.split('|'), pts = f.ach.selectedOptions[0].dataset.pts;
-    document.getElementById('aw-ev').innerHTML = evRows(+f.pid.value, code, +tier); f.pts.value = pts; document.getElementById('aw-hint').textContent = `По каталогу: ${pts}. Больше — нельзя.`; evCount(); }
+    document.getElementById('aw-proof').innerHTML = awardProof(+f.pid.value, code, +tier); f.pts.value = pts; document.getElementById('aw-hint').textContent = `По каталогу: ${pts}. Больше — нельзя.`; evCount(); }
+  if (t.dataset.input==='check-code'){ const worship = t.value==='worship_recital', pts = t.dataset.pts;
+    document.getElementById('ck-date-wrap').classList.toggle('hidden', !worship);
+    document.getElementById('ck-lesson-wrap').classList.toggle('hidden', worship);
+    document.getElementById('ck-pts').value = pts;
+    document.getElementById('ck-hint').textContent = `Не больше баллов группы (сейчас как в каталоге: ${pts}).`; }
   if (t.name==='ev') evCount();
   if (t.dataset.input==='group-lang'){ const g = GROUPS.find(x=>x.name===S.groupEdit); g.lang = t.value; audit('Настройки группы · '+g.name, 'Язык и перевод Библии: '+BIBLE[g.lang]); toast('Перевод группы: '+BIBLE[g.lang]); }
   if (t.dataset.input==='award-ach'){ const p = t.selectedOptions[0].dataset.pts; document.getElementById('aw-pts').value = p; document.getElementById('aw-hint').textContent = `По каталогу: ${p}. Больше — нельзя.`; }
@@ -4038,16 +4138,50 @@ document.addEventListener('submit', e=>{
   }
   if (kind==='award'){
     const pid = +f.pid.value, [code,t] = f.ach.value.split('|'), tier = +t, a = ach(code), max = a.tiers[tier][1], p = parseInt(f.pts.value,10), reason = f.reason.value.trim();
-    const boxes = [...f.querySelectorAll('[name=ev]:checked')], ev = boxes.map(x=>+x.value).sort((x,y)=>x-y), got = boxes.reduce((s,x)=>s + +x.dataset.w, 0), need = needOf(a, tier);
     if (!Number.isInteger(p) || p<0) return fail('Баллы — целое число от 0');
     if (p > max) return fail(`Не больше значения из каталога (${max})`);
+    if (!reason) return fail('Укажите причину');
+    if (KIND[a.type]==='event'){
+      const dateErr = eventDateOk(f.eventOn && f.eventOn.value);
+      if (dateErr) return fail(dateErr);
+      const date = ddmm(f.eventOn.value);
+      if (eventTaken(pid, code, date)) return fail('Уже выдано на эту дату');
+      S.awarded.push({ id:'M'+Date.now(), pid, code, tier, pts:p, ev:[], date, src:'manual', by:ME[S.role].name, reason });
+      audit('Достижение вручную · '+pupil(pid).name, `${a.name} · событие ${date}, +${p}`, reason);
+      closeDialog(); render(); toast(`${pupil(pid).name}: «${a.name}», +${p}`); return;
+    }
+    const boxes = [...f.querySelectorAll('[name=ev]:checked')], ev = boxes.map(x=>+x.value).sort((x,y)=>x-y), got = boxes.reduce((s,x)=>s + +x.dataset.w, 0), need = needOf(a, tier);
     if (got < need) return fail(code==='hundred' ? `В отмеченных уроках ${got} баллов, нужно ${need}` : `Отметьте не меньше ${need} ${plural(need,'урока','уроков','уроков')}`);
     if (ev.some(l=>claimed(pid,code,tier).includes(l))) return fail('Часть уроков уже занята этим достижением этого уровня');
     if (KIND[a.type]!=='streak' && S.awarded.some(x=>x.pid===pid && x.code===code && x.tier===tier)) return fail('Этот уровень уже выдан в этом учебном году');
-    if (!reason) return fail('Укажите причину');
     S.awarded.push({ id:'M'+Date.now(), pid, code, tier, pts:p, ev, date:CURD(), src:'manual', by:ME[S.role].name, reason });
     audit('Достижение вручную · '+pupil(pid).name, `${a.name} · ${TIER[tier]}, +${p} · уроки ${lessonsWord(ev)}`, reason);
     closeDialog(); render(); toast(`${pupil(pid).name}: «${ach(code).name}», +${p}`); return;
+  }
+  if (kind==='check-award'){
+    const pid = +f.dataset.pid, lid = +f.dataset.lid, code = f.code.value, a = ach(code), L = lessonById(lid);
+    if (!a) return fail('Выберите достижение');
+    const iso = code==='active_work' ? isoOf(L.d) : f.eventOn.value;
+    const dateErr = eventDateOk(iso);
+    if (dateErr) return fail(dateErr);
+    const date = ddmm(iso), max = a.tiers[0][1], p = parseInt(f.pts.value,10), reason = f.reason.value.trim();
+    if (!Number.isInteger(p) || p<0) return fail('Баллы — целое число от 0');
+    if (p > max) return fail(`Не больше значения из каталога (${max})`);
+    if (!reason) return fail('Укажите причину');
+    if (eventTaken(pid, code, date)) return fail('Уже выдано на эту дату');
+    S.awarded.push({ id:'M'+Date.now(), pid, code, tier:0, pts:p, ev:[], date, src:'manual', by:ME[S.role].name, reason });
+    audit('Достижение вручную · '+pupil(pid).name, `${a.name} · ${date}, +${p}`, reason);
+    closeDialog(); render(); toast(`${pupil(pid).name}: «${a.name}», +${p}`); return;
+  }
+  if (kind==='check-penalty'){
+    const pid = +f.dataset.pid, lid = +f.dataset.lid, x = pen(f.code.value), q = parseInt(f.qty.value,10), reason = f.reason.value.trim();
+    if (!Number.isInteger(q) || q<1) return fail('Сколько кирпичиков снять — целое число от 1');
+    if (q > -x.pts) return fail(`Не больше значения из каталога (${-x.pts})`);
+    if (reason.length < 5) return fail('Опишите, что произошло');
+    if (lessonPen(pid, lid)) return fail('На этом уроке у ученика уже есть штраф. Снимите его, если нужно выдать другой.');
+    S.penalties.push({ id:'P'+Date.now(), pid, code:x.code, lid, pts:-q, date:TODAY, by:ME[S.role].name, reason, off:null });
+    audit('Штраф · '+pupil(pid).name, `${x.name} · урок ${lessonById(lid).n}, −${q}`, reason);
+    closeDialog(); render(); toast(`${pupil(pid).name}: штраф −${q}. Оценки урока не изменились.`); return;
   }
   if (kind==='event'){
     const d = f.d.value, t = f.t.value.trim(), type = f.type.value;

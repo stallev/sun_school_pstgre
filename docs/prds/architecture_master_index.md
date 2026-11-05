@@ -72,6 +72,7 @@
 | ADR-018 Понятная терминология, подсказки терминов, единые форматы, режим «Смотреть как» | [`07_governance/adr_018_ui_terminology_and_term_hints.md`](./07_governance/adr_018_ui_terminology_and_term_hints.md) | P25 | Canonical; код не начат |
 | ADR-019 Меню «Смотреть как», журнал на языке пользователя, единые форматы, нагрузка на пул БД | [`07_governance/adr_019_view_as_menu_and_db_pool.md`](./07_governance/adr_019_view_as_menu_and_db_pool.md) | P26 | Canonical; код не начат |
 | ADR-020 Подсказки «?» везде (`TermLabel`), словарь по срезам, остатки журнала и форматов | [`07_governance/adr_020_term_hints_everywhere_and_audit_polish.md`](./07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) | P27 | Canonical; код не начат |
+| ADR-021 Отметки достижения и штрафа с проверки ДЗ | [`07_governance/adr_021_check_lesson_marks.md`](./07_governance/adr_021_check_lesson_marks.md) | реализовано (P27+) | Canonical |
 | Authorization matrix | [`04_authorization_privacy/authorization_matrix.md`](./04_authorization_privacy/authorization_matrix.md) | W5-02 | Canonical |
 | Auth runtime spec | [`05_runtime/auth_runtime_spec.md`](./05_runtime/auth_runtime_spec.md) | W5-08 | Canonical |
 | Policy enforcement, privacy handling, runtime README / backend / monorepo packages / cache policy | — | W5-01, W5-03…W5-07, W5-09 | Не требуется на lean (покрыто ADR-001/002/003, `authorization_matrix`, контрактами W8) |
@@ -167,3 +168,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-11-03 | v1.44 — P25 «Понятный интерфейс»: ADR-018 (термины, `TermHint`, форматы, «Смотреть как»), `P25_phase_description` + `P25_tasks`; analytics spec → v1.6, shell → v2.3, UX-03 → v2.3, Lab → v2.3, check flow → v1.6, UI states → v1.6; прототип обновлён |
 | 2026-11-04 | v1.45 — P26: ADR-019 (меню «Смотреть как» с неактивными пунктами, журнал на языке пользователя, единые форматы, нагрузка на пул БД), `P26_phase_description` + `P26_tasks`; shell → v2.4, UI states → v1.7, change log contract → v1.8, analytics spec → v1.7, UX-03 → v2.4, check flow → v1.7; прототип обновлён; P25 реализована |
 | 2026-11-04 | v1.46 — P27: ADR-020 (`TermLabel`, словарь подсказок по срезам, остатки журнала, форматов и поясов), `P27_phase_description` + `P27_tasks`; UX-03 → v2.5, Lab → v2.5, shell → v2.5, UI states → v1.8, change log → v1.9, analytics → v1.8; P26 реализована |
+| 2026-11-05 | v1.47 — ADR-021: отметки с проверки ДЗ (`active_work`, диалоги на check и table); реализовано |
