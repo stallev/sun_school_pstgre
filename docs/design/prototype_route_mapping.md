@@ -61,6 +61,7 @@
 | `deletions` | `vDeletions` | `/deletions` | admin | [`deletion_requests_contract`](../implementation/mvp/contracts/deletion_requests_contract.md) (P06) |
 | `audit` | `vAudit` | `/audit` | admin | [`change_log_contract`](../implementation/mvp/contracts/change_log_contract.md) (P06) |
 | `settings` | `vSettings` | `/settings` | admin | `global_shell_spec` |
+| `guide` | `vGuide` | `/guide` | teacher, admin, parent | Инструкция по роли |
 
 Маршруты без экрана прототипа: `/privacy` (публичный текст согласия, статичная страница; spec — `access_and_registration_spec`).
 

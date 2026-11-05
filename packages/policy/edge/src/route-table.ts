@@ -29,6 +29,7 @@ export type RouteRule = {
 const ADMIN: readonly UserRole[] = [USER_ROLE.ADMIN];
 const TEACHER: readonly UserRole[] = [USER_ROLE.TEACHER];
 const ADMIN_OR_TEACHER: readonly UserRole[] = [USER_ROLE.ADMIN, USER_ROLE.TEACHER];
+const ALL_GUIDE_ROLES: readonly UserRole[] = [USER_ROLE.ADMIN, USER_ROLE.TEACHER, USER_ROLE.PARENT];
 
 /** First match wins; an exact segment boundary is required (`/users` ≠ `/users-x`). */
 export const ROUTE_RULES: readonly RouteRule[] = [
@@ -56,6 +57,8 @@ export const ROUTE_RULES: readonly RouteRule[] = [
   { pattern: /^\/users(\/[^/]+)?$/, audience: "app", roles: ADMIN },
   { pattern: /^\/groups\/[^/]+\/points$/, audience: "app", roles: ADMIN },
   { pattern: /^\/groups(\/[^/]+)?$/, audience: "app", roles: ADMIN },
+
+  { pattern: /^\/guide$/, audience: "app", roles: ALL_GUIDE_ROLES },
 ];
 
 /** Path without query, hash and trailing slash; always starts with `/`. */

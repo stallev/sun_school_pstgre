@@ -248,7 +248,7 @@ const I18N = {
         bricks:'Кирпичики', rating:'Рейтинг', calendar:'Календарь', analytics:'Аналитика', child:'Успехи ребёнка', verses_p:'Стихи', verse_week:'Стих недели',
         verse_debts:'Невыученные стихи', child_data:'Данные и согласия', school:'Школа', analytics_groups:'Аналитика групп', audit:'Журнал изменений', people:'Люди',
         approvals:'Заявки на доступ', users:'Пользователи', people_cards:'Ученики и семьи', deletions:'Запросы на удаление', study:'Учёба', groups:'Группы',
-        year:'Учебный год', achievements:'Достижения и штрафы', settings:'Настройки приложения', request:'Заявка' },
+        year:'Учебный год', achievements:'Достижения и штрафы', settings:'Настройки приложения', request:'Заявка', guide:'Как пользоваться' },
       navd:{ lessons_all:'Список, создание и правка', check:'Текущий урок', verses:'Библиотека школы', group_members:'Добавить и исключить учеников', bricks:'Выдача и история',
         rating:'Только для учителей', calendar:'Уроки, выезды, отмены', verse_week:'Рассказать стих текущего урока', verse_debts:'Стихи прошедших уроков',
         analytics_groups:'Графики и выборки', rating_a:'По группам', audit:'Кто, что и когда менял', approvals:'Новые пользователи', users:'Профили, роли, доступ',
@@ -258,7 +258,7 @@ const I18N = {
         group:'Моя группа', bricks:'Кирпичики', rating:'Рейтинг', calendar:'Календарь', verses:'Золотые стихи', child:'Успехи ребёнка', verse:'Стих недели',
         verseDebts:'Невыученные стихи', verseLesson:'Стихи урока', childData:'Данные и согласия', childConsent:'Согласие', school:'Школа', users:'Пользователи',
         approvals:'Заявки на доступ', userProfile:'Профиль пользователя', deletions:'Запросы на удаление', register:'Регистрация', groups:'Группы', groupEdit:'Группа',
-        people:'Ученики и семьи', family:'Семья', year:'Учебный год', achievements:'Достижения и штрафы', audit:'Журнал изменений', pending:'Заявка', profile:'Профиль', settings:'Настройки приложения' },
+        people:'Ученики и семьи', family:'Семья', year:'Учебный год', achievements:'Достижения и штрафы', audit:'Журнал изменений', pending:'Заявка', profile:'Профиль', settings:'Настройки приложения', guide:'Как пользоваться' },
       actions:{ save:'Сохранить', cancel:'Отмена' },
       en_notice:'Prototype: shell, navigation, sign-in, registration, profile and settings are translated. Other screens are translated in the Next.js code from the same dictionaries.'
     },
@@ -308,7 +308,7 @@ const I18N = {
         bricks:'Bricks', rating:'Ranking', calendar:'Calendar', analytics:'Analytics', child:'Child progress', verses_p:'Verses', verse_week:'Verse of the week',
         verse_debts:'Unlearned verses', child_data:'Data and consents', school:'School', analytics_groups:'Group analytics', audit:'Change log', people:'People',
         approvals:'Access requests', users:'Users', people_cards:'Pupils and families', deletions:'Deletion requests', study:'Teaching', groups:'Groups',
-        year:'School year', achievements:'Achievements and penalties', settings:'App settings', request:'Request' },
+        year:'School year', achievements:'Achievements and penalties', settings:'App settings', request:'Request', guide:'How to use' },
       navd:{ lessons_all:'List, create and edit', check:'Current lesson', verses:'School library', group_members:'Add and remove pupils', bricks:'Issue and history',
         rating:'Teachers only', calendar:'Lessons, trips, cancellations', verse_week:'Recite this week’s verse', verse_debts:'Verses from past lessons',
         analytics_groups:'Charts and samples', rating_a:'By group', audit:'Who changed what and when', approvals:'New users', users:'Profiles, roles, access',
@@ -318,7 +318,7 @@ const I18N = {
         group:'My group', bricks:'Bricks', rating:'Ranking', calendar:'Calendar', verses:'Memory verses', child:'Child progress', verse:'Verse of the week',
         verseDebts:'Unlearned verses', verseLesson:'Lesson verses', childData:'Data and consents', childConsent:'Consent', school:'School', users:'Users',
         approvals:'Access requests', userProfile:'User profile', deletions:'Deletion requests', register:'Registration', groups:'Groups', groupEdit:'Group',
-        people:'Pupils and families', family:'Family', year:'School year', achievements:'Achievements and penalties', audit:'Change log', pending:'Request', profile:'Profile', settings:'App settings' },
+        people:'Pupils and families', family:'Family', year:'School year', achievements:'Achievements and penalties', audit:'Change log', pending:'Request', profile:'Profile', settings:'App settings', guide:'How to use' },
       actions:{ save:'Save', cancel:'Cancel' },
       en_notice:'Prototype: shell, navigation, sign-in, registration, profile and settings are translated. Other screens are translated in the Next.js code from the same dictionaries.'
     },
@@ -401,14 +401,17 @@ const NAV = {
   teacher: [['today',n_('today'),'i-home'],
     { id:'t-lessons', label:n_('lessons'), icon:'i-book', items:[['lessons',n_('lessons_all'),'i-book',d_('lessons_all')],['check',n_('check'),'i-check',d_('check')],['verses',n_('verses'),'i-scroll',d_('verses')]] },
     { id:'t-group', label:n_('group'), icon:'i-users', items:[['group',n_('group_members'),'i-users',d_('group_members')],['bricks',n_('bricks'),'i-brick',d_('bricks')],['rating',n_('rating'),'i-rank',d_('rating')],['calendar',n_('calendar'),'i-cal',d_('calendar')]] },
-    ['analytics',n_('analytics'),'i-chart']],
+    ['analytics',n_('analytics'),'i-chart'],
+    ['guide',n_('guide'),'i-help']],
   parent:  [['child',n_('child'),'i-person'],
     { id:'p-verses', label:n_('verses_p'), icon:'i-mic', items:[['verse',n_('verse_week'),'i-mic',d_('verse_week')],['verseDebts',n_('verse_debts'),'i-scroll',d_('verse_debts')]] },
-    ['calendar',n_('calendar'),'i-cal'],['childData',n_('child_data'),'i-shield']],
+    ['calendar',n_('calendar'),'i-cal'],['childData',n_('child_data'),'i-shield'],
+    ['guide',n_('guide'),'i-help']],
   admin:   [['school',n_('school'),'i-school'],
     { id:'a-ana', label:n_('analytics'), icon:'i-chart', items:[['analytics',n_('analytics_groups'),'i-chart',d_('analytics_groups')],['rating',n_('rating'),'i-rank',d_('rating_a')],['audit',n_('audit'),'i-log',d_('audit')]] },
     { id:'a-people', label:n_('people'), icon:'i-users', items:[['approvals',n_('approvals'),'i-key',d_('approvals')],['users',n_('users'),'i-person',d_('users')],['people',n_('people_cards'),'i-users',d_('people_cards')],['deletions',n_('deletions'),'i-shield',d_('deletions')],['bricks',n_('bricks'),'i-brick',d_('bricks')]] },
     { id:'a-study', label:n_('study'), icon:'i-grid', items:[['groups',n_('groups'),'i-grid',d_('groups')],['year',n_('year'),'i-cal',d_('year')],['calendar',n_('calendar'),'i-cal',d_('calendar')],['achievements',n_('achievements'),'i-award',d_('achievements')],['verses',n_('verses'),'i-scroll',d_('verses')],['settings',n_('settings'),'i-globe',d_('settings')]] }],
+    ['guide',n_('guide'),'i-help']],
   subscriber: [['pending',n_('request'),'i-lock']]
 };
 const FIRST_VIEW = { teacher:'today', parent:'child', admin:'school', subscriber:'pending' };
@@ -2902,6 +2905,30 @@ function kidConsentRow(id){
 const hasKidConsent = id => !!KID_CONSENT[id];
 
 /* ---------- Настройки приложения: язык (ЛК-7) ---------- */
+function vGuide(){
+  const role = S.role==='parent' ? 'parent' : S.role==='admin' ? 'admin' : 'teacher';
+  const sections = {
+    teacher: [
+      ['today-lessons','Сегодня и уроки',['На экране «Сегодня» — прогресс проверки и вход в текущий урок.','Список уроков — в «Все уроки»; новый урок только при активном учебном году.','В закрытом году правки недоступны.']],
+      ['homework','Проверка ДЗ',['Откройте «Проверка ДЗ» — приложение перенаправит к текущему уроку.','Завершите проверку, когда все отметки внесены.','Сводная таблица и ведомость — с карточки урока.']],
+      ['bricks','Кирпичики',['На «Кирпичики» выдавайте награды; ошибки исправляют новой записью.']],
+      ['profile','Профиль',['В профиле — способы входа и запрос на удаление учётки.']]
+    ],
+    admin: [
+      ['school-year','Школа и год',['«Школа» — показатели; один активный учебный год.','Закрытие года — в «Учебный год».']],
+      ['people','Люди и группы',['Ученики — в «Ученики и семьи»; группы и назначения — в «Группы».']],
+      ['audit','Журнал',['Журнал изменений — кто и когда менял данные.']]
+    ],
+    parent: [
+      ['consent','Согласие',['Для каждого ребёнка нужно отдельное согласие.']],
+      ['progress','Успехи',['На «Успехи ребёнка» — посещаемость и кирпичики.']],
+      ['calendar-parent','Календарь',['Календарь — только чтение, без дней рождения.']]
+    ]
+  }[role];
+  const toc = sections.map(s=>`<li><a class="text-cobalt-ink underline-offset-2 hover:underline" href="#${s[0]}">${s[1]}</a></li>`).join('');
+  const body = sections.map(s=>`<section id="${s[0]}" class="scroll-mt-24 space-y-2"><h2 class="${H2}">${s[1]}</h2><ol class="list-decimal space-y-2 pl-5 text-base">${s[2].map(x=>`<li>${x}</li>`).join('')}</ol></section>`).join('');
+  return pageHead(t('common.titles.guide'), '') + `<div class="mx-auto max-w-3xl space-y-8"><nav class="${CARD} p-4" aria-label="Содержание"><h2 class="${H2} mb-3">Содержание</h2><ul class="space-y-2">${toc}</ul></nav>${body}</div>`;
+}
 function vSettings(){
   const ns = ['common','auth','teacher','parent','admin','analytics'];
   const size = n => (JSON.stringify(I18N[APP.lang][n]).length/1024).toFixed(1).replace('.',',');
@@ -3721,7 +3748,7 @@ function confirmDialog(title, text, act, label){
    РЕНДЕР
    ========================================================= */
 const VIEWS = { today:vToday, lessons:vLessons, lesson:vLesson, lessonTable:vLessonTable, lessonForm:vLessonForm, check:vCheck, analytics:vAnalytics, pupil:vPupil, group:vGroup, bricks:vBricks, rating:vRating, calendar:vCalendar, verses:vVerses,
-  child:vChild, verse:vVerse, verseDebts:vVerseDebts, verseLesson:vVerseLesson, childData:vChildData, school:vSchool, settings:vSettings, family:vFamily, childConsent:vChildConsent, users:vUsers, approvals:vApprovals, userProfile:vUserProfile, deletions:vDeletions, register:vRegister, groups:vGroups, groupEdit:vGroupEdit, people:vPeople, year:vYear, achievements:vAchievements, audit:vAudit, pending:vPending, profile:vProfile };
+  child:vChild, verse:vVerse, verseDebts:vVerseDebts, verseLesson:vVerseLesson, childData:vChildData, school:vSchool, settings:vSettings, guide:vGuide, family:vFamily, childConsent:vChildConsent, users:vUsers, approvals:vApprovals, userProfile:vUserProfile, deletions:vDeletions, register:vRegister, groups:vGroups, groupEdit:vGroupEdit, people:vPeople, year:vYear, achievements:vAchievements, audit:vAudit, pending:vPending, profile:vProfile };
 
 function render(){
   if (SHEET_ID){ renderSheet(+SHEET_ID); return; }

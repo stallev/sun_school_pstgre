@@ -1,0 +1,299 @@
+{
+  "tocHeading": "Contents",
+  "roles": {
+    "teacher": {
+      "sections": [
+        {
+          "id": "today-lessons",
+          "title": "Today and lessons",
+          "steps": [
+            {
+              "text": "On ",
+              "link": { "href": "/today", "label": "Today" },
+              "textAfter": " you see homework check progress and a quick path into the current lesson."
+            },
+            {
+              "text": "The full lesson list, creation and edits live under ",
+              "link": { "href": "/lessons", "label": "All lessons" },
+              "textAfter": ". You can add a lesson only while a school year is active."
+            },
+            {
+              "text": "In a closed school year, lessons and marks are read-only for teachers."
+            }
+          ]
+        },
+        {
+          "id": "homework",
+          "title": "Homework check",
+          "steps": [
+            {
+              "text": "Open ",
+              "link": { "href": "/check", "label": "Homework check" },
+              "textAfter": " — the app sends you to the current lesson or explains there is nothing to check."
+            },
+            {
+              "text": "Go through pupils in order, save marks, and finish the check when every answer is recorded."
+            },
+            {
+              "text": "The summary table and class sheet open from the lesson card; you can fix a mark there if you made a mistake."
+            }
+          ]
+        },
+        {
+          "id": "group",
+          "title": "Group roster",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/group", "label": "Group roster" },
+              "textAfter": " add or remove pupils and set birth dates for the calendar."
+            }
+          ]
+        },
+        {
+          "id": "bricks",
+          "title": "Bricks",
+          "steps": [
+            {
+              "text": "On ",
+              "link": { "href": "/bricks", "label": "Bricks" },
+              "textAfter": " issue rewards and review the log. Mistakes are corrected with a new entry; rows are not deleted."
+            }
+          ]
+        },
+        {
+          "id": "calendar-rating",
+          "title": "Calendar, ranking and analytics",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/calendar", "label": "Calendar" },
+              "textAfter": " — lessons, events and your group’s birthdays."
+            },
+            {
+              "text": "Group ranking is on ",
+              "link": { "href": "/rating", "label": "Ranking" },
+              "textAfter": "; charts by school year are under Analytics."
+            },
+            {
+              "text": "Open ",
+              "link": { "href": "/analytics", "label": "Analytics" },
+              "textAfter": " for group and pupil charts."
+            }
+          ]
+        },
+        {
+          "id": "achievements",
+          "title": "Group achievements",
+          "requiresFeature": "achievements",
+          "steps": [
+            {
+              "text": "When achievements are enabled, confirm suggestions and review group points on ",
+              "link": { "href": "/group/points", "label": "group points" },
+              "textAfter": " when that screen is available."
+            }
+          ]
+        },
+        {
+          "id": "verses",
+          "title": "Memory verses",
+          "steps": [
+            {
+              "text": "The school verse library is in ",
+              "link": { "href": "/verses", "label": "Memory verses" },
+              "textAfter": "."
+            }
+          ]
+        },
+        {
+          "id": "profile",
+          "title": "Profile",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/profile", "label": "Profile" },
+              "textAfter": " manage sign-in methods and request deletion of your account if needed."
+            }
+          ]
+        }
+      ]
+    },
+    "admin": {
+      "sections": [
+        {
+          "id": "school-year",
+          "title": "School and school year",
+          "steps": [
+            {
+              "text": "School metrics are on ",
+              "link": { "href": "/school", "label": "School" },
+              "textAfter": ". Only one school year may be active."
+            },
+            {
+              "text": "Start and close a year under ",
+              "link": { "href": "/year", "label": "School year" },
+              "textAfter": ". After closing, teachers see read-only data; admins may edit with audit entries."
+            }
+          ]
+        },
+        {
+          "id": "approvals-users",
+          "title": "Requests and users",
+          "steps": [
+            {
+              "text": "New users appear in ",
+              "link": { "href": "/approvals", "label": "Access requests" },
+              "textAfter": ": assign a role and groups; if you reject, give a reason."
+            },
+            {
+              "text": "Profiles, disable and merge duplicates in ",
+              "link": { "href": "/users", "label": "Users" },
+              "textAfter": "."
+            }
+          ]
+        },
+        {
+          "id": "pupils",
+          "title": "Pupils and groups",
+          "steps": [
+            {
+              "text": "Pupil cards, paper consent, enrollment and transfers — ",
+              "link": { "href": "/people", "label": "Pupils and families" },
+              "textAfter": "."
+            },
+            {
+              "text": "Group language, teacher assignments and settings — ",
+              "link": { "href": "/groups", "label": "Groups" },
+              "textAfter": "."
+            }
+          ]
+        },
+        {
+          "id": "families",
+          "title": "Families",
+          "requiresFeature": "parents",
+          "steps": [
+            {
+              "text": "Link parents to children and manage consents in ",
+              "link": { "href": "/family", "label": "Families" },
+              "textAfter": "."
+            }
+          ]
+        },
+        {
+          "id": "bricks-admin",
+          "title": "Bricks",
+          "steps": [
+            {
+              "text": "Issue bricks and view the log for all groups in ",
+              "link": { "href": "/bricks", "label": "Bricks" },
+              "textAfter": " (People menu)."
+            }
+          ]
+        },
+        {
+          "id": "achievements-admin",
+          "title": "Achievements and penalties",
+          "requiresFeature": "achievements",
+          "steps": [
+            {
+              "text": "The achievements and penalties catalogue is under ",
+              "link": { "href": "/achievements", "label": "Achievements and penalties" },
+              "textAfter": "; per-group points are on each group page."
+            }
+          ]
+        },
+        {
+          "id": "analytics-audit",
+          "title": "Analytics and change log",
+          "steps": [
+            {
+              "text": "Summary charts are in ",
+              "link": { "href": "/analytics", "label": "Analytics" },
+              "textAfter": "; school ranking and the change log are separate menu items."
+            },
+            {
+              "text": "Open the ",
+              "link": { "href": "/audit", "label": "Change log" },
+              "textAfter": " to see who changed what and when."
+            }
+          ]
+        },
+        {
+          "id": "deletions-settings",
+          "title": "Deletion and settings",
+          "steps": [
+            {
+              "text": "Personal data deletion requests are in ",
+              "link": { "href": "/deletions", "label": "Deletion requests" },
+              "textAfter": "."
+            },
+            {
+              "text": "Interface language for the whole school is in ",
+              "link": { "href": "/settings", "label": "App settings" },
+              "textAfter": "."
+            }
+          ]
+        }
+      ]
+    },
+    "parent": {
+      "sections": [
+        {
+          "id": "consent",
+          "title": "Consent for your child",
+          "steps": [
+            {
+              "text": "Each child needs separate electronic consent — without it ",
+              "link": { "href": "/child", "label": "Progress" },
+              "textAfter": " stays unavailable."
+            }
+          ]
+        },
+        {
+          "id": "progress",
+          "title": "Child progress",
+          "steps": [
+            {
+              "text": "On ",
+              "link": { "href": "/child", "label": "Progress" },
+              "textAfter": " — attendance, bricks and, when enabled, achievements. There is no voice verse check in the app."
+            }
+          ]
+        },
+        {
+          "id": "achievements-parent",
+          "title": "Achievements",
+          "requiresFeature": "achievements",
+          "steps": [
+            {
+              "text": "Confirmed achievements appear on the same progress screen."
+            }
+          ]
+        },
+        {
+          "id": "calendar-parent",
+          "title": "Calendar",
+          "steps": [
+            {
+              "text": "In ",
+              "link": { "href": "/calendar", "label": "Calendar" },
+              "textAfter": " you see your children’s group events only — read-only, no birthdays."
+            }
+          ]
+        },
+        {
+          "id": "contacts",
+          "title": "Contacts and deletion",
+          "steps": [
+            {
+              "text": "Your phone and email, consent withdrawal and a child data deletion request — ",
+              "link": { "href": "/child/data", "label": "Data and consents" },
+              "textAfter": "."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

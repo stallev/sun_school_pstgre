@@ -33,6 +33,7 @@ const SHELL_SCREEN_TITLE_KEYS: ShellScreenTitleKey[] = [
   "settings",
   "profile",
   "userProfile",
+  "guide",
 ];
 
 /** Client-safe shell copy slice (serializable strings only). */

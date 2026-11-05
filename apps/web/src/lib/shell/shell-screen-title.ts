@@ -29,7 +29,8 @@ export type ShellScreenTitleKey =
   | "childConsent"
   | "settings"
   | "profile"
-  | "userProfile";
+  | "userProfile"
+  | "guide";
 
 const SHELL_TITLE_PATTERNS: ReadonlyArray<{ pattern: RegExp; titleKey: ShellScreenTitleKey }> = [
   { pattern: /^\/today$/, titleKey: "today" },
@@ -64,6 +65,7 @@ const SHELL_TITLE_PATTERNS: ReadonlyArray<{ pattern: RegExp; titleKey: ShellScre
   { pattern: /^\/year$/, titleKey: "year" },
   { pattern: /^\/settings$/, titleKey: "settings" },
   { pattern: /^\/profile$/, titleKey: "profile" },
+  { pattern: /^\/guide$/, titleKey: "guide" },
 ];
 
 export type ShellScreenTitles = Record<ShellScreenTitleKey, string>;

@@ -39,6 +39,7 @@ const LAB_SCREEN_TITLES: ShellScreenTitles = {
   settings: "Settings",
   profile: "Profile",
   userProfile: "User profile",
+  guide: "How to use",
 };
 
 const LAB_SHELL_MESSAGES: ShellMessages = {
