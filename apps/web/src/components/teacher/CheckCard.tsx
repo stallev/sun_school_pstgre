@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { LessonKind, LessonVerseToRecite } from "@sunschool/domain";
 import { LESSON_KIND } from "@sunschool/domain";
 import { AlertText, ContentText } from "@/components/atoms";
@@ -34,6 +35,7 @@ type CheckCardProps = {
   onNotebookScoreChange: (value: number | null) => void;
   onCommentChange: (value: string) => void;
   onReasonChange: (value: string) => void;
+  marksSlot?: ReactNode;
 };
 
 export const CheckCard = ({
@@ -53,6 +55,7 @@ export const CheckCard = ({
   onNotebookScoreChange,
   onCommentChange,
   onReasonChange,
+  marksSlot = null,
 }: CheckCardProps) => {
   const isReview = lessonKind === LESSON_KIND.REVIEW;
   const presentValue = pupil.presentChoice === null ? null : pupil.presentChoice ? "yes" : "no";
@@ -135,6 +138,7 @@ export const CheckCard = ({
           maxLength={500}
         />
       </div>
+      {marksSlot}
       {isCorrection ? (
         <div className="flex flex-wrap items-center gap-2 py-3">
           <ContentText className="text-sm font-medium">{messages.reasonLabel}</ContentText>

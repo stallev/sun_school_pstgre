@@ -1,5 +1,6 @@
 import { CustomLink } from "@/components/ui/custom-link";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { PEOPLE_LIST_FILTER, type PeopleListFilter } from "@/data/people/people-list-filters";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import { buildPeopleListHref } from "@/lib/people/parse-people-filter";

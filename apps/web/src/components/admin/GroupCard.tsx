@@ -1,7 +1,8 @@
 import { ChevronRight } from "lucide-react";
 import { ContentText } from "@/components/atoms/ContentText";
 import { CustomLink } from "@/components/ui/custom-link";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { formatGroupAgeRange } from "@/lib/admin/format-group-age-range";
 import type { GroupListRow } from "@/data/school/load-groups-admin-list.server";
 import { formatGroupLanguageLabel } from "@/data/school/load-groups-admin-list.server";

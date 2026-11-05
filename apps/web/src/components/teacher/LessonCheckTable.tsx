@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { CheckProgress } from "@/components/teacher/CheckProgress";
 import { LessonCheckTableCards } from "@/components/teacher/LessonCheckTableCards";
+import { CheckLessonMarksHost } from "@/components/teacher/CheckLessonMarksHost.client";
 import { LessonCheckTableFilters } from "@/components/teacher/LessonCheckTableFilters";
 import { LessonCheckTableRow } from "@/components/teacher/LessonCheckTableRow";
 import { LessonTableFinishCheck } from "@/components/teacher/LessonTableFinishCheck";
@@ -25,6 +26,7 @@ import { formatLessonCheckRowTotal } from "@/lib/check/lesson-check-row-total-di
 import { useLessonCheckTable } from "@/components/teacher/use-lesson-check-table";
 import type { LessonTablePageData } from "@/data/checks/load-lesson-table-page.server";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
+import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 import { useMdUp } from "@/lib/ui/use-md-up";
@@ -33,7 +35,9 @@ import { cn } from "@/lib/utils";
 type LessonCheckTableProps = {
   data: Extract<LessonTablePageData, { kind: "page" }>;
   lessonDescription: string;
+  lessonDateLabel: string;
   messages: TeacherCheckMessages;
+  achievementMessages: TeacherAchievementsMessages;
   dictionaries: Record<string, Dictionary>;
   /** Server-rendered verse texts accordion (check flow spec §5.2б). */
   versesAccordion?: ReactNode;
@@ -42,7 +46,9 @@ type LessonCheckTableProps = {
 export const LessonCheckTable = ({
   data,
   lessonDescription,
+  lessonDateLabel,
   messages,
+  achievementMessages,
   dictionaries,
   versesAccordion = null,
 }: LessonCheckTableProps) => {
@@ -100,6 +106,16 @@ export const LessonCheckTable = ({
   );
 
   return (
+    <CheckLessonMarksHost
+      lessonMarks={data.lessonMarks}
+      lessonSubtitle={subtitle}
+      lessonDateLabel={lessonDateLabel}
+      messages={messages}
+      achievementMessages={achievementMessages}
+      dictionaries={dictionaries}
+      formError={messages.formError}
+    >
+      {(marksActions) => (
     <div className="space-y-4">
       <header className="space-y-1">
         <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
@@ -245,6 +261,8 @@ export const LessonCheckTable = ({
                     onVerseScoreChange={(lessonVerseId, score) =>
                       table.mutateVerseScore(row.pupilId, lessonVerseId, score)
                     }
+                    marksActions={marksActions}
+                    pupilMarks={marksActions.getPupilMarks(row.pupilId)}
                   />
                 ))}
               </TableBody>
@@ -272,10 +290,14 @@ export const LessonCheckTable = ({
           onTestScoreChange={table.mutateTestScore}
           onNotebookScoreChange={table.mutateNotebookScore}
           onVerseScoreChange={table.mutateVerseScore}
+          marksActions={marksActions}
+          getPupilMarks={marksActions.getPupilMarks}
         />
       )}
 
       <p className="text-sm text-muted-foreground">{messages.tableFootnote}</p>
     </div>
+      )}
+    </CheckLessonMarksHost>
   );
 };

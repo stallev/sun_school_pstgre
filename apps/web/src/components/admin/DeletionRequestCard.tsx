@@ -9,7 +9,8 @@ import { DeletionRejectDialog } from "@/components/admin/DeletionRejectDialog.cl
 import { DeletionTakeButton } from "@/components/admin/DeletionTakeButton.client";
 import { StatusText } from "@/components/ui/status-text";
 import { CustomLink } from "@/components/ui/custom-link";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { countDeletionPlanTotals, type DeletionAdminRow } from "@/data/deletions/load-deletion-admin-list.server";
 import { formatDeletionRequestedByLine } from "@/lib/deletions/format-deletion-requested-by-line";
 import { formatRelativeCalendarDay } from "@/lib/i18n/relative-day";

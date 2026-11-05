@@ -11,6 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { LessonCheckTable } from "@/components/teacher/LessonCheckTable";
 import commonRu from "@/lib/messages/ru/common.json";
 import teacherRu from "@/lib/messages/ru/teacher.json";
+import { pickTeacherAchievementsMessages } from "@/lib/messages/pick-teacher-achievements-messages.server";
 import { pickTeacherCheckMessages } from "@/lib/messages/pick-teacher-check-messages.server";
 
 const harness = vi.hoisted(() => ({
@@ -55,6 +56,7 @@ vi.mock("@/components/teacher/use-lesson-check-table", () => ({
 }));
 
 const messages = pickTeacherCheckMessages(teacherRu, commonRu);
+const achievementMessages = pickTeacherAchievementsMessages(teacherRu);
 
 const pageData = {
   kind: "page" as const,
@@ -79,6 +81,7 @@ const pageData = {
     weights: { verses: 1, test: 1, notebook: 1, singing: 1 },
   }),
   pupils: [harness.pupilRow],
+  lessonMarks: { marksEnabled: false as const },
 };
 
 describe("LessonCheckTable mobile score pad", () => {
@@ -121,7 +124,14 @@ describe("LessonCheckTable mobile score pad", () => {
   it("choosing a digit on the cards test pad calls mutateTestScore (not closed before click)", async () => {
     await act(async () => {
       root.render(
-        <LessonCheckTable data={pageData} lessonDescription="1 January" messages={messages} dictionaries={{}} />,
+        <LessonCheckTable
+          data={pageData}
+          lessonDescription="1 January"
+          lessonDateLabel="1 January"
+          messages={messages}
+          achievementMessages={achievementMessages}
+          dictionaries={{}}
+        />,
       );
     });
 
@@ -153,7 +163,14 @@ describe("LessonCheckTable mobile score pad", () => {
     harness.conflictIds = new Set(["pupil-1"]);
     await act(async () => {
       root.render(
-        <LessonCheckTable data={pageData} lessonDescription="1 January" messages={messages} dictionaries={{}} />,
+        <LessonCheckTable
+          data={pageData}
+          lessonDescription="1 January"
+          lessonDateLabel="1 January"
+          messages={messages}
+          achievementMessages={achievementMessages}
+          dictionaries={{}}
+        />,
       );
     });
 

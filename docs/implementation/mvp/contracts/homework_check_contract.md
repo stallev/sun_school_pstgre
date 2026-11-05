@@ -2,8 +2,8 @@
 
 **Тип:** Contract  
 **Статус:** Canonical  
-**Версия:** 1.3  
-**Дата:** 2026-10-22  
+**Версия:** 1.5  
+**Дата:** 2026-11-05  
 **Волна:** W8-05  
 **Зависит от:** [`monorepo_boundaries_contract.md`](./monorepo_boundaries_contract.md), [`school_year_and_groups_contract.md`](./school_year_and_groups_contract.md), [`lifecycle_models.md`](../../../prds/02_domain_model/lifecycle_models.md) §5.6–§5.7, [`domain_invariants.md`](../../../prds/02_domain_model/domain_invariants.md) INV-02, INV-11…INV-15, INV-19…INV-21, [`authorization_matrix.md`](../../../prds/04_authorization_privacy/authorization_matrix.md) (AZ-30…AZ-36, AZ-P5, AZ-P6), [`database_schema_v1.md`](../../../prds/03_data_model/database_schema_v1.md) §5.4–§5.5, §7, [`adr_004_timezone_scheduling_model.md`](../../../prds/07_governance/adr_004_timezone_scheduling_model.md), [`adr_009_bible_translations_and_verse_numbering.md`](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md), [`sunday_school_data_analytics_spec.md`](../../../my_specs/sunday_school_data_analytics_spec.md) (§3.11, §3.12, БП-1…БП-5, БП-10, БП-12, УЧ-1…УЧ-4, ПБ-5)  
 **Связанные документы:** [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) §5, §7.2, [`ui_states_contract.md`](../../../design/ui_states_contract.md) D3…D7, D10, D14, [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -18,7 +18,7 @@
 ## 2. Scope / Out of scope
 
 **В scope:** `lesson`, `lesson_golden_verse`, `golden_verse`, `homework_check`, `homework_verse_score`, `homework_score_event`, правила баллов и «сдано позже».  
-**Вне scope:** кирпичики ([`bricks_ledger_contract.md`](./bricks_ledger_contract.md)); достижения и штрафы (post-MVP); голосовая проверка (post-MVP, источник оценки `VOICE` не используется); аналитические отчёты.
+**Вне scope:** кирпичики ([`bricks_ledger_contract.md`](./bricks_ledger_contract.md)); голосовая проверка (post-MVP, источник оценки `VOICE` не используется); аналитические отчёты. Выдача достижения и штраф с экранов проверки — не операции этого контракта: диалог вызывает `awardManually` и `issuePenalty` ([`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) §6.1, §6.4, §6.5, [ADR-021](../../../prds/07_governance/adr_021_check_lesson_marks.md)). Операции §3 не расширяются. Статус `CHECK_COMPLETED` эти вызовы не блокирует и не требует причину исправления оценок.
 
 ## 3. Операции
 
@@ -247,6 +247,7 @@ points_total = Σ(verseScore_i) × w_verses
 | [`bricks_ledger_contract.md`](./bricks_ledger_contract.md) | Остаток |
 | [`change_log_contract.md`](./change_log_contract.md) | Action-коды |
 | [`adr_009_bible_translations_and_verse_numbering.md`](../../../prds/07_governance/adr_009_bible_translations_and_verse_numbering.md) | Нумерация стихов |
+| [`achievements_and_penalties_contract.md`](./achievements_and_penalties_contract.md) | Выдача и штраф с экранов проверки (не операции §3) |
 
 **Registry:** [`documentation_creation_registry.md`](../../../meta/documentation_creation_registry.md) — wave W8-05
 
@@ -257,6 +258,7 @@ points_total = Σ(verseScore_i) × w_verses
 - Не пересчитывать старые баллы при смене весов.
 - Не менять присутствие задним числом из-за поздней сдачи.
 - Не принимать текст стиха с клиента; хранить диапазон в Синодальной нумерации.
+- Не расширять операции §3 выдачей достижения и штрафа: это `awardManually` и `issuePenalty` (ADR-021).
 
 ## Change log
 
@@ -267,3 +269,4 @@ points_total = Σ(verseScore_i) × w_verses
 | 2026-10-19 | v1.2 — §5.6: правка закрытого года версионирует снимок итогов (P08) |
 | 2026-10-22 | v1.3 — §5.6 и §5.8: пересчёт достижений при включённом флаге (P12) |
 | 2026-11-04 | v1.4 — §5.8: завершение проверки со сводной таблицы (`finishLessonTableCheck`) |
+| 2026-11-05 | v1.5 — ADR-021: достижения и штрафы сняты с «вне scope»; операции §3 не расширяются, ссылка на контракт достижений |

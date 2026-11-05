@@ -2,17 +2,11 @@
 
 import { Popover } from "@base-ui/react/popover";
 import { useId, useState } from "react";
+import { type NonEmptyTerm } from "@/components/ui/non-empty-term";
 import { TermHint, type TermHintSide } from "@/components/ui/term-hint";
 import { cn } from "@/lib/utils";
 
-export type NonEmptyTerm = string & { readonly __nonEmptyTerm: unique symbol };
-
-export const nonEmptyTerm = (value: string): NonEmptyTerm => {
-  if (value.length === 0) {
-    throw new Error("TermLabel term must be non-empty");
-  }
-  return value as NonEmptyTerm;
-};
+export { nonEmptyTerm, type NonEmptyTerm } from "@/components/ui/non-empty-term";
 
 type TermLabelBaseProps = {
   term: NonEmptyTerm;

@@ -11,7 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { cn } from "@/lib/utils";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages, AnalyticsYearMessages } from "@/lib/messages/analytics-messages";

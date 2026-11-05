@@ -5,6 +5,7 @@ import {
   type LessonVerseToRecite,
   type ScoringSnapshot,
 } from "@sunschool/domain";
+import type { CheckLessonMarksData } from "@/lib/achievements/check-lesson-marks-types";
 
 export type SequentialCheckPupil = {
   pupilId: string;
@@ -41,6 +42,7 @@ export type SequentialCheckPageData =
       versesToRecite: readonly LessonVerseToRecite[];
       scoring: ScoringSnapshot;
       pupils: SequentialCheckPupil[];
+      lessonMarks: CheckLessonMarksData;
     };
 
 export const isCorrectionMode = (

@@ -1,5 +1,6 @@
 import { ContentText } from "@/components/atoms/ContentText";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import type { GroupAnalyticsSnapshot } from "@/data/analytics/analytics-compute.server";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { HintTerm } from "@/lib/messages/pick-hints-messages";

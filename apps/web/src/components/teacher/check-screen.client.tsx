@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CustomLink } from "@/components/ui/custom-link";
 import { CheckBottomBar } from "@/components/teacher/CheckBottomBar";
+import { CheckLessonMarksHost } from "@/components/teacher/CheckLessonMarksHost.client";
+import { CheckMarksBlock } from "@/components/teacher/CheckMarksBlock.client";
 import { CheckUnsavedDialog } from "@/components/teacher/CheckUnsavedDialog.client";
 import { CheckCard } from "@/components/teacher/CheckCard";
 import { CheckCardHeader } from "@/components/teacher/CheckCardHeader";
@@ -22,13 +24,16 @@ import { useSequentialCheck } from "@/components/teacher/use-sequential-check";
 import type { SequentialCheckPageData } from "@/data/checks/sequential-check-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
 import type { TeacherCheckMessages } from "@/lib/messages/teacher-check-messages";
+import type { TeacherAchievementsMessages } from "@/lib/messages/teacher-achievements-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
 
 type CheckScreenProps = {
   data: Extract<SequentialCheckPageData, { kind: "page" }>;
   initialPupilId: string | null;
   lessonDescription: string;
+  lessonDateLabel: string;
   messages: TeacherCheckMessages;
+  achievementMessages: TeacherAchievementsMessages;
   dictionaries: Record<string, Dictionary>;
   /** Server-rendered verse texts accordion (check flow spec §5.2б). */
   versesAccordion?: ReactNode;
@@ -38,7 +43,9 @@ export const CheckScreen = ({
   data,
   initialPupilId,
   lessonDescription,
+  lessonDateLabel,
   messages,
+  achievementMessages,
   dictionaries,
   versesAccordion = null,
 }: CheckScreenProps) => {
@@ -112,6 +119,31 @@ export const CheckScreen = ({
   const lessonMeta = lessonDescription;
 
   return (
+    <CheckLessonMarksHost
+      lessonMarks={data.lessonMarks}
+      lessonSubtitle={lessonMeta}
+      lessonDateLabel={lessonDateLabel}
+      messages={messages}
+      achievementMessages={achievementMessages}
+      dictionaries={dictionaries}
+      formError={messages.formError}
+    >
+      {(marksActions) => {
+        const pupilMarks = marksActions.getPupilMarks(pupil.pupilId);
+        const marksSlot =
+          pupilMarks !== null ? (
+            <CheckMarksBlock
+              pupilMarks={pupilMarks}
+              messages={messages}
+              onAward={() => marksActions.openAward(pupil.pupilId, pupil.displayName)}
+              onPenalty={() => marksActions.openPenalty(pupil.pupilId, pupil.displayName)}
+              onCancelPenalty={() => {
+                if (pupilMarks.penalty) marksActions.openCancelPenalty(pupilMarks.penalty.id);
+              }}
+            />
+          ) : null;
+
+        return (
     <div className="space-y-4 pb-24 lg:pb-6">
       <header className="space-y-1">
         <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
@@ -250,6 +282,7 @@ export const CheckScreen = ({
                 onNotebookScoreChange={(value) => screen.updateActive({ notebookScore: value })}
                 onCommentChange={(value) => screen.updateActive({ comment: value })}
                 onReasonChange={screen.setReason}
+                marksSlot={marksSlot}
               />
               <CheckBottomBar
                 variant="inline"
@@ -310,5 +343,8 @@ export const CheckScreen = ({
         onDiscard={screen.handleUnsavedDiscard}
       />
     </div>
+        );
+      }}
+    </CheckLessonMarksHost>
   );
 };

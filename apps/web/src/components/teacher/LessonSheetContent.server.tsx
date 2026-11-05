@@ -22,7 +22,14 @@ export const LessonSheetContent = async ({ params }: LessonSheetContentProps) =>
   const isAdmin = actor.roles.includes(USER_ROLE.ADMIN);
   const locale = await getUiLocale();
   const timeZone = await getSchoolTimezone();
-  const data = await loadLessonTablePage(await getPrisma(), actor.userId, lessonId, isAdmin);
+  const data = await loadLessonTablePage(
+    await getPrisma(),
+    actor.userId,
+    lessonId,
+    isAdmin,
+    locale,
+    timeZone,
+  );
   if (data.kind === "not_found") {
     notFound();
   }

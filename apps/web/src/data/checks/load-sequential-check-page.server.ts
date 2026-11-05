@@ -3,12 +3,15 @@ import "server-only";
 import { buildScoringSnapshot } from "@sunschool/domain";
 import type { PrismaClient } from "@sunschool/db";
 import { lessonDateToIso } from "@/data/lessons/lesson-shared.server";
+import { loadCheckLessonMarks } from "./load-check-lesson-marks.server";
 import { loadCheckLessonAccess } from "./check-read-shared.server";
 import { getCheckRoster } from "./get-check-roster";
 import type {
   SequentialCheckPageData,
   SequentialCheckPupil,
 } from "./sequential-check-types";
+import type { CheckLessonMarksData } from "@/lib/achievements/check-lesson-marks-types";
+import type { MessageLocale } from "@/lib/messages/dictionary-types";
 
 export type { SequentialCheckPageData, SequentialCheckPupil } from "./sequential-check-types";
 export { isCorrectionMode } from "./sequential-check-types";
@@ -61,6 +64,8 @@ export async function loadSequentialCheckPage(
   actorUserId: string,
   lessonId: string,
   isAdmin: boolean,
+  locale: MessageLocale,
+  timeZone: string,
 ): Promise<SequentialCheckPageData> {
   const [roster, access] = await Promise.all([
     getCheckRoster(db, actorUserId, lessonId),
@@ -107,12 +112,24 @@ export async function loadSequentialCheckPage(
     pupil.comment = commentByPupil.get(pupil.pupilId) ?? "";
   }
 
+  const lessonDateIso = lessonDateToIso(access.lesson.lessonDate);
+  const lessonMarks: CheckLessonMarksData = await loadCheckLessonMarks(db, {
+    gradeId: access.lesson.gradeId,
+    academicYearId: access.lesson.academicYearId,
+    lessonId: roster.lessonId,
+    lessonDateIso,
+    pupilIds: pupils.map((p) => p.pupilId),
+    canMutate: roster.canMutate,
+    locale,
+    timeZone,
+  });
+
   return {
     kind: "page",
     lessonId: roster.lessonId,
     lessonOrdinal: access.lesson.ordinal,
     lessonTitle: access.lesson.title,
-    lessonDateIso: lessonDateToIso(access.lesson.lessonDate),
+    lessonDateIso,
     lessonStatus: roster.lessonStatus,
     lessonKind: roster.lessonKind,
     hasTest: roster.hasTest,
@@ -122,5 +139,6 @@ export async function loadSequentialCheckPage(
     versesToRecite: roster.versesToRecite,
     scoring,
     pupils,
+    lessonMarks,
   };
 }

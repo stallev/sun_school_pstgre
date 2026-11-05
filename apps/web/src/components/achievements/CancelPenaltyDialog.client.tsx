@@ -22,6 +22,7 @@ type CancelPenaltyDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   penaltyId: string;
+  cacheRevalidateLessonId?: string;
   messages: TeacherAchievementsMessages;
   dictionaries: Record<string, Dictionary>;
   formError: string;
@@ -31,6 +32,7 @@ export const CancelPenaltyDialog = ({
   open,
   onOpenChange,
   penaltyId,
+  cacheRevalidateLessonId,
   messages,
   dictionaries,
   formError,
@@ -60,6 +62,9 @@ export const CancelPenaltyDialog = ({
         </DialogHeader>
         <form action={formAction} className="grid gap-4" aria-busy={pending}>
           <input type="hidden" name="penaltyId" value={penaltyId} />
+          {cacheRevalidateLessonId ? (
+            <input type="hidden" name="cacheRevalidateLessonId" value={cacheRevalidateLessonId} />
+          ) : null}
           <div className="flex flex-wrap gap-2">
             {[messages.penaltyOffReasonPreset1, messages.penaltyOffReasonPreset2, messages.penaltyOffReasonPreset3].map(
               (preset) => (

@@ -1,4 +1,5 @@
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { fillMessage } from "@/lib/messages/fill-message";
 
 type RatingTableMetricHeaderProps = {

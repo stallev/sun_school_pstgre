@@ -1,6 +1,7 @@
 import { ACCOUNT_STATUS, type AccountStatus } from "@sunschool/domain";
 import { CustomLink } from "@/components/ui/custom-link";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import type { UsersStatusCounts } from "@/data/access/load-users-list.server";
 import { cn } from "@/lib/utils";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
