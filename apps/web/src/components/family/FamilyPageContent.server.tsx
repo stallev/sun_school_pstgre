@@ -24,7 +24,8 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { pickFamilyAdminMessages } from "@/lib/messages/pick-family-admin-messages.server";
 import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 
 export type FamilyPageProps = {

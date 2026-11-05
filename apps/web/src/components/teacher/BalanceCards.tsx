@@ -1,6 +1,7 @@
 import { BalancePupilActions } from "@/components/teacher/BalancePupilActions.client";
 import { StatusText } from "@/components/ui/status-text";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { BricksBalanceRow } from "@/data/bricks/load-bricks-page.server";
 import { BricksEarnedBonusLine } from "@/lib/achievements/format-bricks-bonus-line";

@@ -1,7 +1,8 @@
 import { DELETION_PLAN_ACTION, type DeletionPlan } from "@sunschool/domain";
 import { ContentText, SectionTitle } from "@/components/atoms";
 import { Banner } from "@/components/patterns/Banner";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 

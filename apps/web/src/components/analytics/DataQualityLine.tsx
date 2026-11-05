@@ -1,7 +1,8 @@
 import { AlertTriangleIcon } from "lucide-react";
 import { ContentText } from "@/components/atoms/ContentText";
 import { CustomLink } from "@/components/ui/custom-link";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { fillMessage } from "@/lib/messages/fill-message";
 import type { AnalyticsMessages } from "@/lib/messages/analytics-messages";
 import type { HintTerm } from "@/lib/messages/pick-hints-messages";

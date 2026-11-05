@@ -27,7 +27,8 @@ import { getUiLocale } from "@/lib/i18n/get-ui-locale.server";
 import { pickAdminMessages } from "@/lib/messages/pick-admin-messages.server";
 import { getDictionary, getMessage } from "@/lib/messages/get-dictionary";
 import { buildPeopleListHref, parsePeopleListQuery } from "@/lib/people/parse-people-filter";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { pickAdminHintsSubset } from "@/lib/messages/pick-admin-hints-messages.server";
 
 export type PeoplePageProps = {

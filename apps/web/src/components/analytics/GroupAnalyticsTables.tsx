@@ -1,7 +1,8 @@
 import { SAMPLE_LAYER } from "@sunschool/domain";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
 import { ContentText } from "@/components/atoms/ContentText";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { Card } from "@/components/ui/card";
 import {
   Table,

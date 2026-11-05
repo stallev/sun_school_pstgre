@@ -1,5 +1,6 @@
 import { ContentText } from "@/components/atoms/ContentText";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import type { TeacherBricksMessages } from "@/lib/messages/teacher-bricks-messages";
 import type { GlossaryTerm } from "@/lib/messages/pick-glossary-messages";
 import { fillMessage } from "@/lib/messages/fill-message";
