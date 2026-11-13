@@ -16,7 +16,7 @@ export const RatingTableMetricHeader = ({
   termHintAriaLabel,
 }: RatingTableMetricHeaderProps) => (
   <TermLabel
-    className="inline-flex items-center justify-end gap-1"
+    className="inline-flex items-center justify-end gap-hint"
     term={nonEmptyTerm(label)}
     hint={hint}
     ariaLabel={fillMessage(termHintAriaLabel, { term })}

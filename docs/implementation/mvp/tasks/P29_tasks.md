@@ -162,22 +162,22 @@ Review `diff-only`: профиль `lean` D6 (presentational и копирайт
 
 Review `diff-only`: профиль `lean` D6 (presentational).
 
-- [ ] P29-T19 · T1 · **D-10** · Spec: [ADR-022 §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 D-14](../../../design/visual_identity_contract.md)
+- [x] P29-T19 · T1 · **D-10** · Spec: [ADR-022 §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 D-14](../../../design/visual_identity_contract.md)
       Files: `apps/web/src/components/ui/{custom-link,button,segmented-control-links}.tsx`, потребители: `apps/web/src/components/analytics/*` (чипы периода, «Ученик ↑», «Год рождения»), `apps/web/src/components/teacher/{LessonDetailPageContent.server,LessonsPageContent.server}.tsx`, `apps/web/src/components/family/{FamilyPageContent.server,FamilyListRow}.tsx`, `apps/web/src/components/admin/UserProfilePageContent.server.tsx` (имена — по факту), тесты
       Acceptance: ссылки-кнопки и чипы — высота ≥ 36 px (`min-h-8` + вертикальный `padding`): «2024–2025 / 2025–2026 / 2026–2027», «Ученик ↑», «Год рождения», «Все уроки», «К уроку», «Назначить семью», «Аналитика группы», «Добавить учителя»; ссылки внутри текста исключены; замер на `/analytics`, `/lessons/new`, `/lessons/[id]`, `/family`, `/analytics/pupils/[id]` — ни одного интерактивного элемента ниже 36 px
       Paths: H [все перечисленные ≥ 36 px] · N [длинная подпись → перенос, высота растёт, не обрезается; в тексте — ссылка исключена] · S n/a — presentational
 
-- [ ] P29-T20 · T1 · **D-11** · Spec: [ADR-022 §4.2, §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: цепочки чипов
+- [x] P29-T20 · T1 · **D-11** · Spec: [ADR-022 §4.2, §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: цепочки чипов
       Files: `apps/web/src/components/ui/{segmented-control,segmented-control-links,toggle-group}.tsx`, `apps/web/src/components/admin/{UsersStatusFilter,PeopleListFilter,DeletionAdminList.server}.tsx`, `apps/web/src/components/analytics/*` (табы), тесты
       Acceptance: зазор в цепочке чипов и табов — `gap-chip` по обеим осям (≥ 8 px), между цепочками — `gap-stack`; при переносе на 360–768 вертикальный зазор рядов ≥ 8 px; замер на `/users`, `/people`, `/deletions`, `/analytics`
       Paths: H [зазор ≥ 8 px] · N [один чип → без лишнего отступа; перенос на 3 ряда → ритм сохраняется] · S n/a — presentational
 
-- [ ] P29-T21 · T1 · **D-15** · Spec: [UX-03 §8 (Чип / сегмент)](../../../design/visual_identity_contract.md) · [ADR-022 §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `seg()`
+- [x] P29-T21 · T1 · **D-15** · Spec: [UX-03 §8 (Чип / сегмент)](../../../design/visual_identity_contract.md) · [ADR-022 §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `seg()`
       Files: `apps/web/src/components/ui/segmented-control.tsx` (+ `segmented-control.test.tsx`), `apps/web/src/components/analytics/{ChartTableToggle,PupilAnalyticsPageContent.server}.tsx` (потребители «График / Таблица» на `/analytics` — по факту)
       Acceptance: «График / Таблица» — `SegmentedControl` с общей рамкой группы и разделителем (зазор внутри 0), снаружи `gap-stack` до соседних блоков; на `/analytics` и `/analytics/pupils/[id]`; тест рендера (общий контейнер `role="radiogroup"`)
       Paths: H [группа в одной рамке] · N [одна опция → без разделителя; `disabled` — различим по тексту/контрасту] · S n/a — presentational
 
-- [ ] P29-T22 · T1 · **D-16** · Spec: [ADR-022 §4.2 (`--space-hint`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vRating`
+- [x] P29-T22 · T1 · **D-16** · Spec: [ADR-022 §4.2 (`--space-hint`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vRating`
       Files: `apps/web/src/components/analytics/{RatingTableMetricHeader,RatingPrivacyNote,RatingPageContent.server}.tsx`, `apps/web/src/app/(app)/rating/page.tsx`
       Acceptance: значок «?» на `/rating` отстоит от следующей подписи ≥ `--space-hint` (8 px); на 360 «Рейтинг видя…» и «Группа» не соприкасаются (зазор ≥ 8 px — замер)
       Paths: H [зазор ≥ 8 px] · N [длинная подпись → перенос] · S n/a — presentational

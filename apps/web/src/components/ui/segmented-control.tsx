@@ -20,6 +20,8 @@ type SegmentedControlProps<T extends string, M extends "radio" | "toggle" = "rad
   mode?: M;
   /** Content width by default (P24); `false` allows full-width / grid via `className`. */
   fit?: boolean;
+  /** One shared border with dividers between options, zero inner gap (UX-03 §8, ADR-022 §4.3). */
+  grouped?: boolean;
   className?: string;
 };
 
@@ -34,6 +36,7 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
   invalid = false,
   mode,
   fit = true,
+  grouped = false,
   className,
   ...aria
 }: SegmentedControlProps<T, M>) => {
@@ -95,8 +98,11 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
       aria-disabled={disabled || undefined}
       className={cn(
         fit
-          ? "inline-flex max-w-full flex-wrap gap-1.5"
-          : "flex w-full flex-wrap gap-2 [&>button]:min-w-0 [&>button]:flex-1",
+          ? "inline-flex max-w-full flex-wrap"
+          : "flex w-full flex-wrap [&>button]:min-w-0 [&>button]:flex-1",
+        grouped
+          ? "divide-x divide-line-strong overflow-hidden rounded-lg border border-line-strong"
+          : "gap-chip",
         className,
       )}
     >
@@ -118,7 +124,11 @@ export const SegmentedControl = <T extends string, M extends "radio" | "toggle" 
             tabIndex={resolvedMode === "radio" ? (index === tabStop ? 0 : -1) : undefined}
             onClick={() => handleSelect(option.value, checked)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            className={cn(chipClass(checked), fit && "min-w-14")}
+            className={cn(
+              chipClass(checked),
+              fit && "min-w-14",
+              grouped && "rounded-none border-0",
+            )}
           >
             {option.label}
           </button>

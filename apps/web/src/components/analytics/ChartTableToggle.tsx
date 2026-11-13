@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import { Heading } from "@/components/atoms/Heading";
 import { ContentText } from "@/components/atoms/ContentText";
 import { EmptyState } from "@/components/patterns/EmptyState";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import {
   Table,
   TableBody,
@@ -148,26 +148,16 @@ export const ChartTableToggle = ({
         <Heading as="h3" level="section" className="text-lg">
           {title}
         </Heading>
-        <div className="flex gap-1">
-          <Button
-            type="button"
-            variant="outline"
-            className={showTable ? undefined : "border-line-strong bg-surface font-medium"}
-            aria-pressed={!showTable}
-            onClick={() => handleToggle(false)}
-          >
-            {messages.showChart}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className={showTable ? "border-line-strong bg-surface font-medium" : undefined}
-            aria-pressed={showTable}
-            onClick={() => handleToggle(true)}
-          >
-            {messages.showTable}
-          </Button>
-        </div>
+        <SegmentedControl
+          aria-label={title}
+          grouped
+          value={showTable ? "table" : "chart"}
+          onValueChange={(next) => handleToggle(next === "table")}
+          options={[
+            { value: "chart", label: messages.showChart },
+            { value: "table", label: messages.showTable },
+          ]}
+        />
       </div>
       <div className="mt-4 min-h-0 flex-1">
         {!hasChart ? (

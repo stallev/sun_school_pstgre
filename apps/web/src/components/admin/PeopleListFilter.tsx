@@ -50,7 +50,7 @@ export const PeopleListFilterNav = ({
   legacyCount,
 }: PeopleListFilterNavProps) => (
   <nav
-    className="-mb-px flex gap-hint overflow-x-auto overflow-y-hidden border-b border-line"
+    className="-mb-px flex gap-chip overflow-x-auto overflow-y-hidden border-b border-line"
     aria-label={messages.people.filterAll}
     role="tablist"
   >

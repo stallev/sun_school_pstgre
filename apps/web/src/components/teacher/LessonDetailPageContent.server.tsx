@@ -43,7 +43,7 @@ export const LessonDetailPageContent = async ({ params }: LessonDetailPageProps)
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <CustomLink href="/lessons" className="text-sm text-cobalt-ink">
+        <CustomLink href="/lessons" variant="action" className="text-sm text-cobalt-ink">
           {formMessages.backToLessons}
         </CustomLink>
         <ContentText tone="secondary" className="text-sm">
