@@ -2,8 +2,8 @@
 
 **Тип:** UX-контракт (UX-06)  
 **Статус:** Canonical  
-**Версия:** 1.4  
-**Дата:** 2026-11-04  
+**Версия:** 1.5  
+**Дата:** 2026-11-13  
 **Волна:** W7-03 (v1.1 — W12, P14; v1.2 — P24)  
 **Зависит от:** [`ui_states_contract.md`](./ui_states_contract.md), [`visual_identity_contract.md`](./visual_identity_contract.md) (D-6…D-8), [`authorization_matrix.md`](../prds/04_authorization_privacy/authorization_matrix.md), [`domain_invariants.md`](../prds/02_domain_model/domain_invariants.md), [`lifecycle_models.md`](../prds/02_domain_model/lifecycle_models.md), [`database_schema_v1.md`](../prds/03_data_model/database_schema_v1.md), [`ai_form_handling_pattern.md`](../guidelines/react/ai_form_handling_pattern.md), [`sunday_school_data_analytics_spec.md`](../my_specs/sunday_school_data_analytics_spec.md) (РГ-2, РГ-3, БП-4, БП-12, ПБ-5, УД-2)  
 **Связанные документы:** [`adr_004_timezone_scheduling_model.md`](../prds/07_governance/adr_004_timezone_scheduling_model.md), [`adr_008_i18n_ru_en_dictionary_slices.md`](../prds/07_governance/adr_008_i18n_ru_en_dictionary_slices.md), [`canonical_routes.md`](./canonical_routes.md), [`architecture_master_index.md`](../prds/architecture_master_index.md)  
@@ -42,7 +42,7 @@
 | **F6** | Введённые значения при ошибке **не теряются**. React 19 сбрасывает неуправляемые поля после action — сервер возвращает введённое в `state`, поля читают `defaultValue` (или поле управляемое) |
 | **F7** | Отправка: `disabled={pending}`, `aria-busy={pending}`, подпись-герундий («Сохраняем…»), повторная отправка заблокирована; результат — toast 2000 ms (`ui-toast-mutations`), ошибка — на месте **и** toast |
 | **F8** | Кнопка отправки есть всегда и не скрыта в sticky-панели мимо клавиатуры; основное действие одно (`cobalt-ink`), второстепенные — контурные; в мобильной форме кнопки внизу в зоне большого пальца, цель ≥ 44 px |
-| **F9** | Поля: `border-muted` (D-7, контраст ≥ 3:1), высота по шкале D-9 (`h-10` = 45 px, ≥ 44 px), `font-size` 18 px (`text-base`; без автозума iOS), подходящие `inputmode`, `autocomplete`, `enterkeyhint`. Подпись поля — `text-base font-medium` |
+| **F9** | Поля: `border-muted` (D-7, контраст ≥ 3:1), высота по шкале D-9 (v2.6, ADR-022 §4.3: `h-9` = 40,5 px, компактное `h-8` = 36 px в фильтрах и таблицах; прежний `h-10` = 45 px упразднён; цель касания ≥ 44 px на < `md` — через `touch` `h-11` у главного действия и расширенную область касания, UX-03 §9 п. 4), `font-size` 18 px (`text-base`; без автозума iOS), подходящие `inputmode`, `autocomplete`, `enterkeyhint`. Подпись поля — `text-base font-medium` |
 | **F13** | Нативные `<select>`, `<input type="checkbox">`, `<input type="date">` запрещены (UX-03 D-13, ADR-014 R-7): выбор из списка — `Select`, флажок — `Checkbox`, дата — `DateField` (ввод в формате локали, значение отправляется ISO `YYYY-MM-DD`; формат — `lib/i18n/format.ts`, не локаль браузера). Для form-submit компонент рендерит скрытый `<input name>`; ошибка и `aria-*` — как у F3 |
 | **F14** | Соседние контролы в одной строке формы (поле + кнопка, фильтры) — одной высоты (D-9); кнопка основного действия в карточке не растягивается на всю ширину, если поля короче контейнера (`w-auto`, прижата влево); на 390 px допустима `w-full` |
 | **F10** | Формы Class B (отправка с iOS Safari, критичные мутации: проверка ДЗ, кирпичики, регистрация) используют транспорт по `ios-safari-mutation-transport`; отдельные тесты не обязательны на lean, но путь отмечается в спецификации экрана |
@@ -194,3 +194,4 @@
 | 2026-11-03 | v1.2 — P24: §7.1 модальный диалог несохранённых изменений из трёх действий вместо `window.confirm`; §7.2 ссылка на поток проверки ДЗ |
 | 2026-11-03 | v1.3 — P25 (ADR-018): поиск и фильтры длинных списков, опасные действия в меню «⋯», форма «Новый ученик» в диалоге — см. [`P25_phase_description.md`](../implementation/mvp/phases_tasks_descriptions/P25_phase_description.md) |
 | 2026-11-04 | v1.4 — P26 (ADR-019): длинные списки (`/people`, `/deletions`) — фильтр по группе, «Показать ещё» вместо бесконечной страницы, подсказка поиска только при вводе одной буквы; панель, относящаяся к вкладке, показывается только на ней |
+| 2026-11-13 | v1.5 — P29 (ADR-022 §4.3, Phase DoR audit): F9 высота поля `h-9` / `h-8` вместо `h-10` (45 px) |

@@ -2,8 +2,8 @@
 
 **Тип:** Spec  
 **Статус:** Canonical  
-**Версия:** 2.5  
-**Дата:** 2026-11-04  
+**Версия:** 2.6  
+**Дата:** 2026-11-13  
 **Волна:** W15-01 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
 **Зависит от:** [`visual_identity_contract.md`](../../../design/visual_identity_contract.md) (UX-03), [`ui_states_contract.md`](../../../design/ui_states_contract.md) (UX-05), [`forms_and_validation_ux.md`](../../../design/forms_and_validation_ux.md) (UX-06), [`global_shell_spec.md`](./global_shell_spec.md), [`responsive_navigation_contract.md`](../../../design/responsive_navigation_contract.md), [`canonical_routes.md`](../../../design/canonical_routes.md), [`project_quality_profile.md`](../../../meta/project_quality_profile.md) (D8, D10), [`typography_text_guidelines.md`](../../../guidelines/typography_text_guidelines.md), [`seed_data_spec.md`](../../../prds/03_data_model/seed_data_spec.md) §8  
 **Связанные документы:** [`sunday_school_prototype.html`](../../../prototypes/sunday_school_prototype.html) (`<head>`: token dump, gap-список; хелперы и константы), [`prototype_class_parity_spec.md`](./prototype_class_parity_spec.md) (сопоставление классов прототипа и компонентов), [`redesign_v2_ui_spec.md`](../../../design/redesign_v2_ui_spec.md), [`adr_014_app_redesign_v2.md`](../../../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_001_stack_and_runtime.md`](../../../prds/07_governance/adr_001_stack_and_runtime.md), [`architecture_master_index.md`](../../../prds/architecture_master_index.md)  
@@ -79,14 +79,14 @@
 
 | Компонент | Варианты / состояния | Рецепт | Прототип |
 |-----------|----------------------|--------|----------|
-| `Button` | `default` (cobalt-ink, hover cobalt-deep, D-6), `outline`, `ghost`, `destructive` (контур), `destructive-solid` (только `ConfirmDialog`); размеры (P24, UX-03 D-14): `default` — компактный `h-9 px-3`, ширина по содержимому (как «Выдать»); `field` (`h-10`, только рядом с полем, F14); `touch` (`h-11`, главное действие и нижняя панель на < `md`); `icon` (`size-9`), `icon-touch` (`size-11`); размер `compact` удалён (стал `default`); текст `text-base font-medium`; `pending` (spinner + `aria-busy`), `disabled` | UX-03 §8 | `BTN`, `B_PRIMARY`, `B_OUTLINE`, `B_GHOST`, `B_DANGER` |
-| `Card` | `p-4 sm:p-5`; без тени | UX-03 §7–§8 | `CARD` |
-| `Input`, `Textarea` | границы `muted` (D-7), `h-10`, `text-base`; состояния `invalid`, `disabled` | UX-03 §8; UX-06 F3, F9 | `FIELD` |
-| `Select` (Base UI; уже в `components/ui/select.tsx`) | триггер как `Input` (`w-full`, `h-10`, `text-base`), шеврон справа, панель `DD_PANEL`, пункт `min-h-10 text-base`; **нативный `<select>` запрещён** (UX-03 D-13). Для form-submit — проп `name` на `Select.Root` (Base UI рендерит скрытый input); размеры `default` и `compact` (`h-9`) | UX-03 §8; UX-06 F3, F9 | `FIELD`, `SEL` |
+| `Button` | `default` (cobalt-ink, hover cobalt-deep, D-6), `outline`, `ghost`, `destructive` (контур), `destructive-solid` (только `ConfirmDialog`); размеры (P24, UX-03 D-14): `default` — компактный `h-9 px-3`, ширина по содержимому (как «Выдать»); ~~`field` (`h-10`)~~ — **упразднён в v2.6 (ADR-022 §4.3)**: кнопка рядом с полем наследует высоту поля (`h-9` / `h-8` в компактном ряду); `touch` (`h-11`, главное действие и нижняя панель на < `md`); `icon` (`size-9`), `icon-touch` (`size-11`); `compact` (`h-8`, 36 px) — **v2.6**: только кнопка в компактном ряду рядом с полем `h-8` (UX-03 §8; в P24 прежний `compact` = `h-9` стал `default`); текст `text-base font-medium`; `pending` (spinner + `aria-busy`), `disabled` | UX-03 §8 | `BTN`, `B_PRIMARY`, `B_OUTLINE`, `B_GHOST`, `B_DANGER` |
+| `Card` | `p-card` (16,2 / 24,3 px, v2.6); без тени; пустое состояние ≤ 24 px | UX-03 §7–§8 | `CARD` |
+| `Input`, `Textarea` | границы `muted` (D-7), `h-9` (40,5 px; компактное `h-8` — 36 px, v2.6, ADR-022), `text-base`; состояния `invalid`, `disabled` | UX-03 §8; UX-06 F3, F9 | `FIELD` |
+| `Select` (Base UI; уже в `components/ui/select.tsx`) | триггер как `Input` (`w-full`, `h-9`, `text-base`; v2.6), шеврон справа, панель `DD_PANEL`, пункт `min-h-9 text-base`; **нативный `<select>` запрещён** (UX-03 D-13). Для form-submit — проп `name` на `Select.Root` (Base UI рендерит скрытый input); размеры `default` (`h-9`) и `compact` (`h-8`; v2.6) | UX-03 §8; UX-06 F3, F9 | `FIELD`, `SEL` |
 | `DateField` (v2.0) | поле + кнопка-календарь (`Popover`), ввод в формате локали из `lib/i18n/format.ts`, значение — ISO `YYYY-MM-DD` в `name`-input; **нативный `type=date` запрещён** | UX-03 §8 | `FIELD`, `type=date` |
 | `Field`/`Label` | подпись над полем (`text-base font-medium`), ошибка, подсказка (`text-sm`) | UX-06 F1, F3 | `LABEL` |
 | `Checkbox`, `Switch` | `Checkbox` `size-5`, подпись `text-base`, зона касания ≥ 44 px; `Switch` как есть | — | `toggle`, чекбокс согласия |
-| Чип выбора (v2.0) = `SegmentedControl` | единый чип (UX-03 D-10): невыбранный `border-input`, выбранный `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`; высота `h-9` (P24, D-14; проп `size` удалён), ширина по содержимому; режим `radio` (по умолчанию, `role="radiogroup"`) и `toggle` (`aria-pressed`, независимые чипы-фильтры); заменяет ручные кнопки в `AnalyticsGradeChips`, `AnalyticsPeriodChips`, `YearStrip` | UX-03 §8 | `CHIP`, `yearChips`, `groupChips`, `periodChips` |
+| Чип выбора (v2.0) = `SegmentedControl` | единый чип (UX-03 D-10): невыбранный `border-input`, выбранный `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`; высота `h-9` (P24, D-14; проп `size` удалён; v2.6 — в компактном ряду рядом с полем `h-8` высота `h-8`, UX-03 §8 «Чип / сегмент»), зазор в цепочке `gap-chip`, ширина по содержимому; режим `radio` (по умолчанию, `role="radiogroup"`) и `toggle` (`aria-pressed`, независимые чипы-фильтры); заменяет ручные кнопки в `AnalyticsGradeChips`, `AnalyticsPeriodChips`, `YearStrip` | UX-03 §8 | `CHIP`, `yearChips`, `groupChips`, `periodChips` |
 | `PageSection` (v2.0) | ширина страницы: `full` (по умолчанию, контейнер оболочки `max-w-[1600px] mx-auto`, P24), `form` (`max-w-3xl`, 48rem), `wide` (`max-w-5xl`, 64rem) — по левому краю контейнера; `(auth)` — `AuthScreen` | UX-03 §7 | `#view` |
 | `SegmentedControl` | `role="radiogroup"`; 2–4 опции; выбранный по D-10; кнопки `h-9 px-3`; проп `fit` (по умолчанию, P24) — по ширине содержимого, без растягивания на контейнер; секция Lab показывает `fit` и `fit={false}` на 390 / 1280 | UX-06 §5; UX-03 D-14 | `seg()` (опция `fit`) |
 | `ScoreSelector` | «— / 0…N», `radiogroup`, 4 или 12 кнопок, сетка 6 колонок на мобильном | [`homework_check_flow_spec.md`](./homework_check_flow_spec.md) §5.3 | `scoreRow()` |
@@ -104,6 +104,15 @@
 | `TermHint` | кнопка «?» + popover на `@base-ui/react/popover` (P25, UX-03 D-17); Lab: состояния «закрыт / открыт / длинный текст / фокус / на касании» и список терминов глоссария | [`adr_018_ui_terminology_and_term_hints.md`](../../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md) §4 п. 2 | `termHint` (P27: `TermLabel`, `TermHeader`, вариант `reason` — слово всегда видно; Lab: «в абзаце», «в таблице», «у правого края», «длинный текст», «reason») |
 
 Подсистема shadcn/Base UI подтверждается на preflight (Q-01); при расхождении имён — `components.json` и этот список корректируются вместе.
+
+### 5.3а Новые секции Lab v2.6 (ADR-022; секция до использования на экранах, C-2)
+
+| Секция | Содержимое | Критерий Lab |
+|--------|------------|--------------|
+| **Spacing scale** | Ряд плашек по токенам `--space-hint|label|chip|stack|card|section|page-x` с подписью rem / px при корне 18; примеры «цепочка чипов `gap-chip`», «подпись → поле `mb-label`», «карточка → карточка `gap-card`»; антипример «сырой `gap-1.5`» помечен «запрещено» | Замер: зазор цепочки ≥ 8 px; значения совпадают с UX-03 §7а |
+| **Field heights** | Поле, `Select`, `DateField` в двух размерах: `h-9` (40,5 px) и `h-8` (36 px); кнопка рядом с полем наследует высоту; ряд фильтров из 3 полей + кнопка — верхние края ±1 px; ряд подписей со значком «?» и без — поля на одной линии; `touch` `h-11` на 390 px | Замер `getBoundingClientRect` (высота ±1 px, `top` ±1 px) |
+| **TermLabel (позиция, без двоеточий)** | «слово ?» в абзаце (значок `inline`, строка не раздувается), в подписи поля (`min-h-5`), в шапке таблицы, у правого края; антипримеры «значок после значения», «после двоеточия», «внутри кнопки», «дубль подписи и кнопки»; тест `aria-label` без `{ }` | Нет двоеточия после значка; высота строки с значком == без значка (±1 px) |
+| **Responsive table → cards** | Одна таблица данных (журнал: Когда · Кто · Действие · Сущность · Детали) на трёх ширинах: 390 (карточки), 1024 (карточки или таблица в обёртке), ≥ 1280 (таблица `table-layout: fixed`, без внутреннего скролла); «широкое» в обёртке `overflow-x-auto min-w-0` — страница не растягивается | `scrollWidth` страницы == `innerWidth`; на ≥ 1280 у обёртки журнала `scrollWidth <= clientWidth` |
 
 ### 5.4 Паттерны (L3)
 
@@ -156,7 +165,8 @@
 | Лидер урока (P24, D-16) | `gold` (`#EAB308`), `gold-soft`, `gold-ink` — токены в `:root` и `@theme inline`, строки в `lib/design-lab/tokens.ts` (сетка цветов и пары контраста); секция Lab «Лидер урока»: золотая строка списка (в покое / активная) и строка таблицы — до использования на экранах (C-2) |
 | Шрифты | `next/font`: Alegreya (display), Source Sans 3 (body; v2.0, D-2), subsets `latin` + `cyrillic`; переменные `--font-display`, `--font-body` |
 | Размер | `html { font-size: 112.5% }` (18 px), размеры в `rem` (D-5 v2.0) |
-| Высоты контролов | `--control-h` (2.5rem), `--control-h-compact` (2.25rem), `--control-h-touch` (2.75rem) (D-9) |
+| Высоты контролов | `--control-h` (2.25rem = 40,5 px), `--control-h-compact` (2rem = 36 px), `--control-h-touch` (2.75rem) (D-9 v2.6, ADR-022 §4.3; прежние 2.5 / 2.25 — упразднены) |
+| Интервалы (v2.6) | `--space-hint` 0.45rem, `--space-label` 0.35rem, `--space-chip` 0.45rem, `--space-stack` 0.9rem, `--space-card` 0.9 / 1.35rem, `--space-section` 1.8 / 2.2rem, `--space-page-x` 0.9 / 1.35 / 1.8rem в `:root`; `@theme inline` → `--spacing-*` (UX-03 §7а) |
 | Фокус `main` | `main:focus:not(:focus-visible) { outline: none }` (D-12) |
 | Кривая | `ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1)` |
 | Кастомный вариант | `reduce-transparency` (`prefers-reduced-transparency`) |
@@ -299,3 +309,4 @@ apps/web/src/
 | 2026-11-03 | v2.3 — P25 (ADR-018): §5.3 `TermHint` — секция Lab до использования на экранах (C-2) |
 | 2026-11-04 | v2.4 — P26 (ADR-019): `TermHint` — состояние «у правого края» и `aria-label` «Что значит «…»?»; `RowActionsMenu` — секция Lab (если ещё нет) и пример «Исправить» в `/bricks` |
 | 2026-11-04 | v2.5 — P27 (ADR-020): §5.3 `TermLabel`, `TermHeader`, вариант `reason`; состояния Lab «в таблице», «reason», «без подписи — ошибка» |
+| 2026-11-13 | v2.6 — P29 (ADR-022): `Button` без размера `field`; поля `h-9` / `h-8`; `Card` `p-card`; токены интервалов и высот; секции Lab «Spacing scale», «Field heights», «TermLabel (позиция, без двоеточий)», «Responsive table → cards» (§5.3а). Phase DoR audit: `Button` / `Select` / чип — размер `compact` = `h-8` (по UX-03 §8 v2.6) |

@@ -73,6 +73,7 @@
 | ADR-019 Меню «Смотреть как», журнал на языке пользователя, единые форматы, нагрузка на пул БД | [`07_governance/adr_019_view_as_menu_and_db_pool.md`](./07_governance/adr_019_view_as_menu_and_db_pool.md) | P26 | Canonical; код не начат |
 | ADR-020 Подсказки «?» везде (`TermLabel`), словарь по срезам, остатки журнала и форматов | [`07_governance/adr_020_term_hints_everywhere_and_audit_polish.md`](./07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) | P27 | Canonical; код не начат |
 | ADR-021 Отметки достижения и штрафа с проверки ДЗ | [`07_governance/adr_021_check_lesson_marks.md`](./07_governance/adr_021_check_lesson_marks.md) | реализовано (P27+) | Canonical |
+| ADR-022 Оболочка по ширине (сайдбар с `xl`), токены интервалов, поля 40,5 / 36 px, сетка форм, «воздух», правила «?» | [`07_governance/adr_022_responsive_shell_spacing_and_density.md`](./07_governance/adr_022_responsive_shell_spacing_and_density.md) |
 | Authorization matrix | [`04_authorization_privacy/authorization_matrix.md`](./04_authorization_privacy/authorization_matrix.md) | W5-02 | Canonical |
 | Auth runtime spec | [`05_runtime/auth_runtime_spec.md`](./05_runtime/auth_runtime_spec.md) | W5-08 | Canonical |
 | Policy enforcement, privacy handling, runtime README / backend / monorepo packages / cache policy | — | W5-01, W5-03…W5-07, W5-09 | Не требуется на lean (покрыто ADR-001/002/003, `authorization_matrix`, контрактами W8) |
@@ -169,3 +170,4 @@ HTML-прототип: [`../prototypes/sunday_school_prototype.html`](../prototy
 | 2026-11-04 | v1.45 — P26: ADR-019 (меню «Смотреть как» с неактивными пунктами, журнал на языке пользователя, единые форматы, нагрузка на пул БД), `P26_phase_description` + `P26_tasks`; shell → v2.4, UI states → v1.7, change log contract → v1.8, analytics spec → v1.7, UX-03 → v2.4, check flow → v1.7; прототип обновлён; P25 реализована |
 | 2026-11-04 | v1.46 — P27: ADR-020 (`TermLabel`, словарь подсказок по срезам, остатки журнала, форматов и поясов), `P27_phase_description` + `P27_tasks`; UX-03 → v2.5, Lab → v2.5, shell → v2.5, UI states → v1.8, change log → v1.9, analytics → v1.8; P26 реализована |
 | 2026-11-05 | v1.47 — ADR-021: отметки с проверки ДЗ (`active_work`, диалоги на check и table); реализовано |
+| 2026-11-13 | v1.48 — P29: ADR-022 (граница сайдбара `xl`, токены интервалов, поля 40,5 / 36 px, «воздух», правила «?»), `P29_phase_description` + `P29_tasks`; UX-03 → v2.6, Lab → v2.6, UX-02 / shell → v2.2 / v2.6, ADR-017 amended |

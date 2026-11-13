@@ -1,8 +1,8 @@
 # ADR-017 — Центрированный контейнер, сворачиваемый сайдбар, toast и компактные кнопки
 
 **Тип:** ADR  
-**Статус:** ACCEPTED  
-**Версия:** 1.0  
+**Статус:** ACCEPTED (п. 2 и п. 4 — amended by [ADR-022](./adr_022_responsive_shell_spacing_and_density.md))  
+**Версия:** 1.1  
 **Дата:** 2026-11-03  
 **Волна:** P24  
 **Зависит от:** [`adr_014_app_redesign_v2.md`](./adr_014_app_redesign_v2.md) (R-4, R-6, R-8), [`visual_identity_contract.md`](../../design/visual_identity_contract.md) (UX-03), [`responsive_navigation_contract.md`](../../design/responsive_navigation_contract.md) (UX-02), [`global_shell_spec.md`](../../implementation/mvp/specs/global_shell_spec.md), [`adr_002_nextjs_vercel_runtime_policy.md`](./adr_002_nextjs_vercel_runtime_policy.md) §5  
@@ -30,9 +30,9 @@
 ## 4. Decision
 
 1. **Контейнер.** Шапка (правая часть) и `#view` — в одном контейнере `max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8`, **по центру** области `main`. `PageSection` (`form` / `wide`) — по левому краю контейнера. Отменяет ADR-014 R-4 в части ширины и выравнивания.
-2. **Сайдбар.** На `lg+` два состояния: развёрнут (`16rem`) и rail (`4rem`, только иконки с `aria-label` и tooltip, бейдж-точка). Кнопка сворачивания — в шапке над колонкой сайдбара (`aria-expanded`, `aria-controls`). Состояние — cookie `sidebar_collapsed` (`1` / `0`, `Path=/`, `Max-Age=31536000`, `SameSite=Lax`, не `HttpOnly` — UI-предпочтение без ПД); `(app)/layout.tsx` читает её через `cookies()` и рендерит нужную сетку сразу, без мигания. < `lg` — drawer без изменений.
+2. **Сайдбар.** *(amended by ADR-022 §4.1: раскрытый по умолчанию — только с `xl` (≥ 1280); на `lg` — rail по умолчанию; cookie приоритетнее; причина — на 1024 px под контент оставалось ~647 px.)* На `lg+` два состояния: развёрнут (`16rem`) и rail (`4rem`, только иконки с `aria-label` и tooltip, бейдж-точка). Кнопка сворачивания — в шапке над колонкой сайдбара (`aria-expanded`, `aria-controls`). Состояние — cookie `sidebar_collapsed` (`1` / `0`, `Path=/`, `Max-Age=31536000`, `SameSite=Lax`, не `HttpOnly` — UI-предпочтение без ПД); `(app)/layout.tsx` читает её через `cookies()` и рендерит нужную сетку сразу, без мигания. < `lg` — drawer без изменений.
 3. **Toast.** ≥ `lg` — справа снизу (`bottom-right`, отступ `bottom-6 right-6`), < `lg` — сверху по центру. Success — `ok-soft` / `ok` + `CircleCheck`; error — `danger-soft` / `danger` + `CircleAlert`; нейтральный — `surface` / `line`. 2000 мс (`PRODUCT_TOAST_DURATION_MS`). Иконка декоративна, смысл — в тексте.
-4. **Кнопки.** Единый компактный размер `h-9 px-3 text-base rounded-lg`, ширина по содержимому — для `Button` всех вариантов, чипов, `SegmentedControl` (новый проп `fit`, по умолчанию по ширине содержимого) и кнопок `ScorePad` / `ScoreSelector`. `touch` (`h-11`) — только главное действие и нижняя панель на < `md`. Рядом с полем ввода кнопка выравнивается по полю (`size="field"`, `h-10`, F14). Поля ввода остаются `h-10` (ADR-014 R-6).
+4. **Кнопки.** Единый компактный размер `h-9 px-3 text-base rounded-lg`, ширина по содержимому — для `Button` всех вариантов, чипов, `SegmentedControl` (новый проп `fit`, по умолчанию по ширине содержимого) и кнопок `ScorePad` / `ScoreSelector`. `touch` (`h-11`) — только главное действие и нижняя панель на < `md`. Рядом с полем ввода кнопка выравнивается по полю (`size="field"`, `h-10`, F14). Поля ввода остаются `h-10` (ADR-014 R-6). *(amended by ADR-022 §4.3: поле `h-9` (40,5) / компактное `h-8` (36); `size="field"` упразднён — кнопка наследует высоту поля.)*
 
 ## 5. Rejected alternatives
 
@@ -105,3 +105,4 @@
 | Date | Change |
 |------|--------|
 | 2026-11-03 | v1.0 — ACCEPTED (подготовка P24) |
+| 2026-11-13 | v1.1 — п. 2 и п. 4 amended by ADR-022 (граница сайдбара `xl`, высота полей) |
