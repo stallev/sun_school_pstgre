@@ -76,6 +76,22 @@ describe("CalendarMonthHeader", () => {
     expect(html).toContain("month=2026-11");
   });
 
+  it("centres arrows with the month title and keeps Today after them with token gaps", () => {
+    const html = renderToStaticMarkup(
+      <CalendarMonthHeader
+        gradeId="g1"
+        monthKey="2026-11"
+        todayMonthKey="2026-11"
+        calendarHref={(gradeId, month) => `/calendar?gradeId=${gradeId}&month=${month}`}
+        messages={baseMessages}
+      />,
+    );
+    expect(html).toContain("justify-center");
+    expect(html).toContain("gap-chip");
+    expect(html).toContain("px-page");
+    expect(html.indexOf("Today")).toBeGreaterThan(html.indexOf("Декабрь"));
+  });
+
   it("omits aria-current on Today when another month is open", () => {
     const html = renderToStaticMarkup(
       <CalendarMonthHeader

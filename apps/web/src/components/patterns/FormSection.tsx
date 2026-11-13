@@ -9,11 +9,11 @@ type FormSectionProps = {
 };
 
 export const FormSection = ({ title, description, children }: FormSectionProps) => (
-  <section className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5">
-    <div className="space-y-1">
+  <section className="flex flex-col gap-stack rounded-xl border border-line bg-surface p-card">
+    <div className="flex flex-col gap-hint">
       <SectionTitle>{title}</SectionTitle>
       {description ? <ContentText tone="muted">{description}</ContentText> : null}
     </div>
-    <div className="space-y-4">{children}</div>
+    <div className="flex flex-col gap-stack">{children}</div>
   </section>
 );

@@ -188,22 +188,22 @@ Review `diff-only`: профиль `lean` D6 (presentational).
 
 Review `diff-only`: профиль `lean` D6 (presentational).
 
-- [ ] P29-T23 · T1 · **D-17** · Spec: [ADR-022 §4.2 (`--space-label`, `--space-hint`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vYear`
+- [x] P29-T23 · T1 · **D-17** · Spec: [ADR-022 §4.2 (`--space-label`, `--space-hint`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vYear`
       Files: `apps/web/src/components/admin/{YearCard,YearCloseButton,YearPageContent.server,CreateYearForm.client}.tsx`
       Acceptance: на `/year` одно значение «подпись → поле» (`--space-label`, 6,3 ±1 px) и одно «слово → значок» (`--space-hint`, 8,1 ±1 px); замер трёх связок («Причина → поле», «15 уроков · … ?», «Закрыть год ↔ кнопка») — значения из токенов
       Paths: H [три связки на токенах] · N [нет «Причины» → без пустого места] · S n/a — presentational
 
-- [ ] P29-T24 · T1 · **D-18** · Spec: [ADR-022 §4.2 (`--space-card`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vFamily`
+- [x] P29-T24 · T1 · **D-18** · Spec: [ADR-022 §4.2 (`--space-card`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vFamily`
       Files: `apps/web/src/components/family/{FamilyPageContent.server,FamilyListRow}.tsx`, `apps/web/src/components/patterns/RecordCard.tsx`
       Acceptance: карточки семьи — зазор `--space-card` (≥ 16 px) на всех ширинах (был 1 px); список — один столбец до `xl`
       Paths: H [зазор между карточками ≥ 16 px] · N [одна семья → без лишнего отступа] · S n/a — presentational; только admin
 
-- [ ] P29-T25 · T1 · **D-19** · Spec: [UX-03 §7а](../../../design/visual_identity_contract.md) · Prototype: `vCalendar`
+- [x] P29-T25 · T1 · **D-19** · Spec: [UX-03 §7а](../../../design/visual_identity_contract.md) · Prototype: `vCalendar`
       Files: `apps/web/src/components/teacher/{CalendarMonthHeader,CalendarMonth,CalendarPageContent.server}.tsx` (+ `CalendarMonthHeader.test.tsx`)
       Acceptance: шапка календаря `[‹] Ноябрь 2026 [›]` — по центру, стрелки `h-9 w-9` с зазором ≥ 8 px от названия месяца; «Сегодня» отдельной строкой справа/снизу на ширинах < 768 (на 360 — не ближе 8 px к стрелкам); название месяца не прижато к краю (боковой отступ ≥ `--space-page-x`)
       Paths: H [360: шапка читаема] · N [короткий и длинный месяц → без смещения стрелок; месяц без событий → без изменений] · S n/a — presentational
 
-- [ ] P29-T26 · T1 · **D-29** · Spec: [ADR-022 §4.4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vLessonForm`
+- [x] P29-T26 · T1 · **D-29** · Spec: [ADR-022 §4.4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vLessonForm`
       Files: `apps/web/src/components/teacher/{LessonForm,LessonDetailVersePanel,VersePicker}.tsx`, `apps/web/src/components/ui/{date-field,field}.tsx`, `apps/web/src/components/patterns/FormSection.tsx`, `apps/web/src/app/(app)/lessons/{new,[lessonId]/edit}/page.tsx` (имена — по факту)
       Acceptance: все поля формы урока (`Группа`, `Ведёт`, `Дата урока`, `Тема`) — `w-full` колонки, правый край общий; `DateField` со встроенной иконкой; один шаг между полями — `--space-stack` (16 ±1 px; прежние 18–24 / 30 px — нет); блок «Тип урока» — тот же шаг; на 1440 левая и правая карточки («Золотые стихи») — `items-start`, высоты независимы
       Paths: H [поля одной ширины, шаг 16 px] · N [ошибка поля → высота не «прыгает» (место под `AlertText`); узкая ширина → одна колонка] · S n/a — presentational; валидация и мутации не меняются

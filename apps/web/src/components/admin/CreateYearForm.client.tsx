@@ -46,16 +46,16 @@ export const CreateYearForm = ({ dictionaries, uiLocale, formError }: CreateYear
   return (
     <form
       action={formAction}
-      className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5"
+      className="flex flex-col gap-stack rounded-xl border border-line bg-surface p-card"
       aria-busy={pending}
     >
       <SectionTitle>{messages.year.createTitle}</SectionTitle>
-      <div className="grid gap-4 md:grid-cols-2">
-        <label className="grid gap-1 text-sm">
+      <div className="grid gap-stack md:grid-cols-2">
+        <label className="grid gap-label text-sm">
           <span>{messages.year.nameLabel}</span>
           <Input name="name" required disabled={pending} />
         </label>
-        <label className="grid gap-1 text-sm">
+        <label className="grid gap-label text-sm">
           <span>{messages.year.startsOnLabel}</span>
           <FormDateField
             name="startsOn"
@@ -65,7 +65,7 @@ export const CreateYearForm = ({ dictionaries, uiLocale, formError }: CreateYear
             className="max-w-none"
           />
         </label>
-        <label className="grid gap-1 text-sm md:col-span-2">
+        <label className="grid gap-label text-sm md:col-span-2">
           <span>{messages.year.endsOnLabel}</span>
           <FormDateField
             name="endsOn"

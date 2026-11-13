@@ -31,9 +31,39 @@ export const CalendarMonthHeader = ({
   const monthTitle = formatCalendarMonthTitle(monthKey, locale);
 
   return (
-    <div className="flex flex-wrap items-center gap-1">
+    <div className="flex flex-wrap items-center justify-center gap-chip">
+      <div className="flex items-center gap-chip">
+        <Button
+          variant="outline"
+          size="icon"
+          render={
+            <CustomLink
+              href={calendarHref(gradeId, prevMonth)}
+              aria-label={formatCalendarMonthName(prevMonth, locale)}
+            />
+          }
+        >
+          <ChevronLeft className="size-4" aria-hidden />
+        </Button>
+        <Heading as="h2" level="section" className="px-page text-center" aria-live="polite">
+          {monthTitle}
+        </Heading>
+        <Button
+          variant="outline"
+          size="icon"
+          render={
+            <CustomLink
+              href={calendarHref(gradeId, nextMonth)}
+              aria-label={formatCalendarMonthName(nextMonth, locale)}
+            />
+          }
+        >
+          <ChevronRight className="size-4" aria-hidden />
+        </Button>
+      </div>
       <Button
         variant="outline"
+        className="ml-auto max-md:w-full"
         render={
           <CustomLink
             href={calendarHref(gradeId, todayMonthKey)}
@@ -42,33 +72,6 @@ export const CalendarMonthHeader = ({
         }
       >
         {messages.today}
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        render={
-          <CustomLink
-            href={calendarHref(gradeId, prevMonth)}
-            aria-label={formatCalendarMonthName(prevMonth, locale)}
-          />
-        }
-      >
-        <ChevronLeft className="size-4" aria-hidden />
-      </Button>
-      <Heading as="h2" level="section" className="px-1" aria-live="polite">
-        {monthTitle}
-      </Heading>
-      <Button
-        variant="outline"
-        size="icon"
-        render={
-          <CustomLink
-            href={calendarHref(gradeId, nextMonth)}
-            aria-label={formatCalendarMonthName(nextMonth, locale)}
-          />
-        }
-      >
-        <ChevronRight className="size-4" aria-hidden />
       </Button>
     </div>
   );

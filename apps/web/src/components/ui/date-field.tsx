@@ -90,7 +90,7 @@ export const DateField = ({
   };
 
   return (
-    <div className={cn("flex w-full max-w-sm items-center gap-2", className)}>
+    <div className={cn("relative flex w-full max-w-sm items-center", className)}>
       {name ? <input type="hidden" name={name} value={hiddenValue} disabled={disabled} /> : null}
       <Input
         id={inputId}
@@ -102,7 +102,7 @@ export const DateField = ({
         placeholder={getDateInputPlaceholder(locale)}
         value={text}
         size={size}
-        className="max-w-none flex-1"
+        className={cn("max-w-none flex-1", size === "compact" ? "pr-8" : "pr-9")}
         onFocus={() => {
           setIsEditing(true);
           setDraft(formattedValue);
@@ -120,9 +120,8 @@ export const DateField = ({
           disabled={disabled}
           aria-label={calendarAriaLabel}
           className={cn(
-            "inline-flex shrink-0 items-center justify-center rounded-lg border border-input bg-surface text-ink transition-[color,background-color,border-color] duration-100 ease-out-soft hover:bg-paper disabled:pointer-events-none disabled:opacity-45",
+            "absolute right-0 top-0 inline-flex shrink-0 items-center justify-center rounded-lg text-muted transition-[color,background-color] duration-100 ease-out-soft hover:text-ink disabled:pointer-events-none disabled:opacity-45",
             size === "compact" ? "size-8" : "size-9",
-            showInvalid && "border-destructive",
           )}
         >
           <CalendarIcon className="size-4" aria-hidden />

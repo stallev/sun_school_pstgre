@@ -134,15 +134,15 @@ export const LessonForm = ({
     <form
       id={formId}
       onSubmit={handleSubmit}
-      className="grid max-w-5xl grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start"
+      className="grid w-full grid-cols-1 gap-stack lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start"
       aria-busy={busy}
     >
       {data.lessonId ? <input type="hidden" name="lessonId" value={data.lessonId} /> : null}
       <input type="hidden" name="gradeId" value={gradeId} />
       <input type="hidden" name="kind" value={kind} />
-      <section className="space-y-5 rounded-xl border border-line bg-surface p-4 sm:p-5">
+      <section className="flex min-w-0 flex-col gap-stack rounded-xl border border-line bg-surface p-card">
         {data.grades.length > 1 ? (
-          <label className="grid gap-1 text-sm">
+          <label className="grid w-full gap-label text-sm">
             <span>{messages.gradeLabel}</span>
             <FormSelect
               value={gradeId}
@@ -159,8 +159,8 @@ export const LessonForm = ({
             />
           </label>
         ) : null}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_8rem]">
-          <label className="grid gap-1 text-sm" htmlFor={`${formId}-date`}>
+        <div className="grid grid-cols-1 gap-stack sm:grid-cols-[minmax(0,1fr)_8rem]">
+          <label className="grid w-full gap-label text-sm" htmlFor={`${formId}-date`}>
             <span>{messages.dateLabel}</span>
             <FormDateField
               id={`${formId}-date`}
@@ -175,17 +175,19 @@ export const LessonForm = ({
               calendarAriaLabel={dateFieldCopy.calendarAriaLabel}
               className="max-w-none"
             />
-            {fieldError("lessonDate") ? <AlertText>{fieldError("lessonDate")}</AlertText> : null}
+            <div className="min-h-5">
+              {fieldError("lessonDate") ? <AlertText>{fieldError("lessonDate")}</AlertText> : null}
+            </div>
           </label>
           {data.ordinal ? (
-            <div>
+            <div className="grid content-start gap-label">
               <p className="text-sm font-medium">{messages.ordinalLabel}</p>
-              <p className="flex h-11 items-center rounded-lg bg-paper px-3 tabular-nums text-ink-2">{data.ordinal}</p>
+              <p className="flex h-9 items-center rounded-lg bg-paper px-stack tabular-nums text-ink-2">{data.ordinal}</p>
             </div>
           ) : null}
         </div>
-        <div>
-          <p className="mb-2 text-sm font-medium">
+        <div className="grid gap-label">
+          <p className="text-sm font-medium">
             <TermLabel
               term={nonEmptyTerm(formHints.lessonType.term)}
               hint={formHints.lessonType.hint}
@@ -193,7 +195,7 @@ export const LessonForm = ({
             />
           </p>
           {data.kindLocked ? (
-            <p className="flex h-10 items-center rounded-lg bg-paper px-3 text-sm text-ink-2">
+            <p className="flex h-9 items-center rounded-lg bg-paper px-stack text-sm text-ink-2">
               {messages.kindLockedHint}
             </p>
           ) : (
@@ -208,11 +210,11 @@ export const LessonForm = ({
               onValueChange={handleKindChange}
             />
           )}
-          <ContentText className="mt-2 text-sm text-ink-2">
+          <ContentText className="text-sm text-ink-2">
             {isReview ? messages.kindReviewHint : messages.kindRegularHint}
           </ContentText>
         </div>
-        <label className="grid gap-1 text-sm" htmlFor={`${formId}-title`}>
+        <label className="grid w-full gap-label text-sm" htmlFor={`${formId}-title`}>
           <span>{messages.titleLabel}</span>
           <Input
             ref={titleRef}
@@ -224,9 +226,11 @@ export const LessonForm = ({
             aria-invalid={Boolean(fieldError("title"))}
             onChange={(e) => setTitle(e.target.value)}
           />
-          {fieldError("title") ? <AlertText>{fieldError("title")}</AlertText> : null}
+          <div className="min-h-5">
+            {fieldError("title") ? <AlertText>{fieldError("title")}</AlertText> : null}
+          </div>
         </label>
-        <label className="grid gap-1 text-sm" htmlFor={`${formId}-lead`}>
+        <label className="grid w-full gap-label text-sm" htmlFor={`${formId}-lead`}>
           <span>
             <TermLabel
               term={nonEmptyTerm(formHints.lessonLeader.term)}
@@ -248,9 +252,11 @@ export const LessonForm = ({
             onValueChange={setLeadTeacherId}
           />
           <ContentText className="text-sm text-muted">{messages.leadHint}</ContentText>
-          {fieldError("leadTeacherId") ? <AlertText>{fieldError("leadTeacherId")}</AlertText> : null}
+          <div className="min-h-5">
+            {fieldError("leadTeacherId") ? <AlertText>{fieldError("leadTeacherId")}</AlertText> : null}
+          </div>
         </label>
-        <label className="grid gap-1 text-sm" htmlFor={`${formId}-body`}>
+        <label className="grid w-full gap-label text-sm" htmlFor={`${formId}-body`}>
           <span>
             {messages.bodyLabel}{" "}
             <span className="font-normal text-muted">{messages.bodyOptional}</span>
@@ -266,7 +272,7 @@ export const LessonForm = ({
           />
         </label>
         {!isReview ? (
-          <label className="flex items-center gap-3">
+          <label className="flex items-center gap-chip">
             <Switch
               checked={hasTest}
               disabled={busy || data.checksLockedFields}
@@ -278,24 +284,24 @@ export const LessonForm = ({
       </section>
 
       {isReview ? (
-        <section className="rounded-xl border border-line bg-surface p-4 sm:p-5">
+        <section className="flex min-w-0 flex-col gap-stack rounded-xl border border-line bg-surface p-card">
           <SectionTitle>{messages.reviewPanelTitle}</SectionTitle>
-          <ul className="mt-3 space-y-1.5 text-sm text-ink-2">
+          <ul className="flex flex-col gap-chip text-sm text-ink-2">
             {messages.reviewPanelBullets.map((line) => (
               <li key={line}>— {line}</li>
             ))}
           </ul>
         </section>
       ) : (
-        <section className="rounded-xl border border-line bg-surface p-4 sm:p-5">
+        <section className="flex min-w-0 flex-col gap-stack rounded-xl border border-line bg-surface p-card">
           <SectionTitle>{messages.versesTitle}</SectionTitle>
-          <ContentText className="mt-1 text-sm text-ink-2">
+          <ContentText className="text-sm text-ink-2">
             {fillMessage(messages.versesHint, {
               max: data.maxVersesPerLesson,
               translation: translationLabel,
             })}
           </ContentText>
-          <div className="mt-4" id={`${formId}-verses`}>
+          <div id={`${formId}-verses`}>
             <VerseRefList
               verses={verses}
               books={data.books}
@@ -304,10 +310,10 @@ export const LessonForm = ({
               onRemove={(index) => setVerses((prev) => prev.filter((_, i) => i !== index))}
             />
           </div>
-          {fieldError("verses") ? <AlertText className="mt-2">{fieldError("verses")}</AlertText> : null}
+          {fieldError("verses") ? <AlertText>{fieldError("verses")}</AlertText> : null}
           {hasMissingVerses ? (
-            <Banner tone="warning" title={messages.missingVersesTitle} className="mt-3">
-              <ul className="list-disc pl-5">
+            <Banner tone="warning" title={messages.missingVersesTitle}>
+              <ul className="list-disc pl-card">
                 {verses
                   .filter((row) => row.hasMissing)
                   .map((row) => {
@@ -332,7 +338,7 @@ export const LessonForm = ({
         </section>
       )}
 
-      <div className="flex flex-col-reverse gap-2 sm:flex-row lg:col-span-2">
+      <div className="flex flex-col-reverse gap-chip sm:flex-row lg:col-span-2">
         <Button type="button" variant="ghost" className="min-h-11" render={<CustomLink href={cancelHref} />}>
           {messages.cancel}
         </Button>

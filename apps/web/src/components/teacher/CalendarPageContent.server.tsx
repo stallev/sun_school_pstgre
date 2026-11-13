@@ -60,7 +60,7 @@ export const CalendarPageContent = async ({
 
   if (data.kind === "no_active_year") {
     return (
-      <div className="space-y-6">
+      <div className="flex flex-col gap-stack">
         <PageHeader title={messages.pageTitle} />
         <EmptyState
           title={getMessage(teacherDict, "lesson.no_year_title")}
@@ -72,7 +72,7 @@ export const CalendarPageContent = async ({
 
   if (data.kind === "unassigned") {
     return (
-      <div className="space-y-6">
+      <div className="flex flex-col gap-stack">
         <PageHeader title={messages.pageTitle} />
         <EmptyState title={listMessages.unassignedTitle} description={listMessages.unassignedDescription} />
       </div>
@@ -98,12 +98,12 @@ export const CalendarPageContent = async ({
       });
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-stack">
       <PageHeader
         title={messages.pageTitle}
         description={pageDescription}
         actions={
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-chip">
             <CalendarMonthHeader
               gradeId={data.gradeId}
               monthKey={data.monthKey}
