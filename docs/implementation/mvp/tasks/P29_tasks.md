@@ -126,32 +126,32 @@ Review `diff-only`: профиль `lean` D6 (presentational, словарь).
 
 Review `diff-only`: профиль `lean` D6 (presentational и копирайт; права и данные не меняются).
 
-- [ ] P29-T13 · T1 · **D-04** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vUsers`
+- [x] P29-T13 · T1 · **D-04** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vUsers`
       Files: `apps/web/src/components/admin/{UserRow,UsersPageContent.server,UsersStatusFilter}.tsx` (+ `UserRow.test.tsx`)
       Acceptance: слово-термин «Статусы» и значок «?» в строках пользователей не выводятся (строка — только значение статуса: «Ожидает решения»); на экране ровно один «?» о статусах — у подписи группы табов статусов (ADR-022 §4.7 п. 1; содержимое подсказки — таблица «статус → что делать» — задача T39 U-05); тест `UserRow`: в строке нет «Статусы» и нет кнопки-подсказки
       Paths: H [строка: «Ожидает решения» без «Статусы» и без «?»; один «?» на экран у табов] · N [статус неизвестен → без значка; тёзки различимы (ADR-020) — не регрессия] · S n/a — presentational; только admin (права не меняются)
 
-- [ ] P29-T14 · T1 · **D-06** · Spec: [ADR-022 §4.7 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2 (в)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vYear`
+- [x] P29-T14 · T1 · **D-06** · Spec: [ADR-022 §4.7 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2 (в)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vYear`
       Files: `apps/web/src/components/admin/{YearCard,YearCloseButton,YearPageContent.server}.tsx` (+ `YearCloseButton.test.tsx`), `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: подпись «Закрыть год ?» заменена заголовком секции «Закрыть учебный год» (значок — у заголовка); кнопка — «Закрыть 2026–2027» (глагол с объектом, период из данных); строка «15 уроков · 3 группы · 90 учеников» — без одинокого «?» (значок убран либо вынесен в «Состав года»); «Причина (необязательно) ?» — значок после слова, без разрыва
       Paths: H [нет дубля «Закрыть год» + «Закрыть год»] · N [нет периода → «Закрыть год»; нет учеников → «0 учеников»] · S n/a — presentational; диалог подтверждения и права не меняются
 
-- [ ] P29-T15 · T1 · **D-07** · Spec: [ADR-022 §4.6, §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vAchievements`
+- [x] P29-T15 · T1 · **D-07** · Spec: [ADR-022 §4.6, §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vAchievements`
       Files: `apps/web/src/components/achievements/{AchievementsPageContent.server,AchievementsRecalcBar.client,AchievementsRulesNote.client,AchievementCatalogRow,AchievementsPageHeaderActions.client}.tsx`
       Acceptance: карточка «Пересчёт идёт сам…» — текст на всю ширину, кнопка под ним (`< md`) / справа с `shrink-0` (`md+`); нет дубля подписи «Пересчитать достижения ?» и кнопки; абзац «Серия ? …» — значок `inline` `1em` `align-middle`, межстрочный отступ не раздут (высота строки с значком == без, ±1 px); на 768 левый текстовый столбец ≥ 280 px
       Paths: H [768: текст не ужат до ~130 px; один заголовок действия] · N [нет достижений → пустое состояние; длинные названия → перенос] · S n/a — presentational
 
-- [ ] P29-T16 · T1 · **D-09** · Spec: [ADR-022 §4.2, §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vPeople`
+- [x] P29-T16 · T1 · **D-09** · Spec: [ADR-022 §4.2, §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vPeople`
       Files: `apps/web/src/components/admin/{PeoplePageContent.server,PeopleListFilter,PeopleGroupFilter,PupilRow,LegacyConsentList}.tsx` (+ `PupilRow.test.tsx`)
       Acceptance: вертикальный ритм «поиск → табы → пояснение → чипы групп → кнопка» — `--space-stack` (16,2 ±1 px) между блоками; «Без согласия: N» отступает от линии табов ≥ 8 px; «+ Добавить ученика» и «Согласие на бумаге ?» — на общей базовой линии, зазор ≥ `--space-chip`; одинокий «?» после «Перевести» в строках учеников убран (значок — у слова «Согласие на бумаге» один раз над списком)
       Paths: H [ритм 16 px; нет «?» после кнопки] · N [список пуст → пустое состояние ≤ 24 px; 0 «без согласия» → строка скрыта] · S n/a — presentational; только admin
 
-- [ ] P29-T17 · T1 · **D-24** · Spec: [ADR-022 §4.2, §4.4, §4.7 п. 3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vPeople`
+- [x] P29-T17 · T1 · **D-24** · Spec: [ADR-022 §4.2, §4.4, §4.7 п. 3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vPeople`
       Files: `apps/web/src/components/admin/{PeopleSearch.client,PeopleListFilter,PupilRowActions.client,TransferDialog}.tsx`, `apps/web/src/components/ui/segmented-control-links.tsx`
       Acceptance: подпись «Найти ученика» над полем (расстояние `--space-label`), поле ≤ 480 px; контейнер табов — `overflow-y: hidden` (нет вертикального мини-скроллбара); «Без согласия: N» — счётчик внутри таба, не отдельная строка; в кнопке «Перевести» нет значка «?» (подсказка рядом, вне кнопки); поиск, табы и чипы групп — на одной левой оси
       Paths: H [нет мини-скроллбара; «Перевести» без значка] · N [узкая ширина → табы прокручиваются по X внутри обёртки; N = 0 → счётчик скрыт] · S n/a — presentational
 
-- [ ] P29-T18 · T0 · **U-08** · Spec: [homework_check_flow_spec R-19](../specs/homework_check_flow_spec.md) · [ADR-018 (тексты)](../../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md) · Prototype: `vLessonTable`
+- [x] P29-T18 · T0 · **U-08** · Spec: [homework_check_flow_spec R-19](../specs/homework_check_flow_spec.md) · [ADR-018 (тексты)](../../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md) · Prototype: `vLessonTable`
       Files: `apps/web/src/lib/messages/{ru,en}/teacher.json` (`lessons.table.finish*`), `apps/web/src/components/teacher/LessonTableFinishCheck.tsx`
       Acceptance: текст «Достижения начислятся после завершения достижения» → «Достижения начислятся после завершения проверки»; `en` — «Achievements are awarded after the check is finished»; «?» — по тексту один раз (после слова «достижения»)
       Paths: H [верный текст] · N [нет опечаток в `en`] · S n/a — тексты

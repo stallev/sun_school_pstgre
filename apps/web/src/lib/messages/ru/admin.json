@@ -252,6 +252,7 @@
     "activate_confirm_title": "Активировать учебный год?",
     "activate_confirm_description": "Может быть только один активный год. Уроки можно создавать в активном году.",
     "close": "Закрыть год",
+    "close_named": "Закрыть {period}",
     "close_confirm_title": "Закрыть учебный год?",
     "close_confirm_description": "Для учителей данные года станут только для чтения. Это действие нельзя отменить.",
     "close_reason_label": "Причина (необязательно)",
@@ -274,7 +275,7 @@
       "many": "{count} учеников",
       "other": "{count} учеников"
     },
-    "danger_zone_title": "Опасные действия",
+    "danger_zone_title": "Закрыть учебный год",
     "danger_zone_close_lead": "Закрытие года нельзя отменить. Для учителей данные года станут только для чтения.",
     "create_next_toggle": "Создать следующий год",
     "archive_summary": "Данные года в архиве",

@@ -136,6 +136,7 @@ export type AdminMessages = {
     activateConfirmTitle: string;
     activateConfirmDescription: string;
     close: string;
+    closeNamed: string;
     closeConfirmTitle: string;
     closeConfirmDescription: string;
     closeReasonLabel: string;

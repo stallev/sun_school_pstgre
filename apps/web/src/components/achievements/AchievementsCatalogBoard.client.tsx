@@ -77,20 +77,14 @@ export const AchievementsCatalogBoard = ({
           />
         }
       />
-      <AchievementsRecalcBar
-        messages={messages}
-        dictionaries={dictionaries}
-        recalcHint={hints.ach_recalc}
-        termHintAriaLabel={termHintAriaLabel}
-      />
+      <AchievementsRecalcBar messages={messages} dictionaries={dictionaries} />
       <AchievementsRulesNote
         messages={messages}
         seriesHint={hints.ach_series}
-        cumulativeHint={hints.ach_cumulative}
         reviewLesson={reviewLesson}
         termHintAriaLabel={termHintAriaLabel}
       />
-      <div className="space-y-8">
+      <div className="flex flex-col gap-section">
         {REWARD_CATEGORY_ORDER.map((category) => {
           const rows = rewardsByCategory.get(category) ?? [];
           return (
@@ -117,7 +111,7 @@ export const AchievementsCatalogBoard = ({
           );
         })}
         <section>
-          <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+          <div className="mb-card flex flex-wrap items-end justify-between gap-stack">
             <div>
               <SectionTitle>{messages.sectionPenalties}</SectionTitle>
               <ContentText tone="secondary" className="mt-1 max-w-[62ch] text-sm">

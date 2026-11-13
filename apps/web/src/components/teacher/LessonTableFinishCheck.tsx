@@ -35,7 +35,8 @@ export const LessonTableFinishCheck = ({
       disabled={disabled}
       onFinish={onFinish}
     />
-    <ContentText tone="muted">{note}</ContentText>
-    <TermLabel term={nonEmptyTerm(hintTerm)} hint={hint} ariaLabel={hintAriaLabel} />
+    <ContentText tone="muted">
+      <TermLabel term={nonEmptyTerm(hintTerm)} hint={hint} ariaLabel={hintAriaLabel} /> {note}
+    </ContentText>
   </div>
 );

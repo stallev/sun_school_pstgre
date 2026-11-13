@@ -13,9 +13,10 @@ vi.mock("@/components/patterns/ConfirmDialog", () => ({
 
 const adminMessages = {
   year: {
-    dangerZoneTitle: "Опасная зона",
+    dangerZoneTitle: "Закрыть учебный год",
     dangerZoneCloseLead: "Lead",
     close: "Закрыть год",
+    closeNamed: "Закрыть {period}",
     closeConfirmTitle: "Confirm",
     closeConfirmDescription: "Desc",
   },
@@ -37,12 +38,13 @@ describe("YearCloseButton", () => {
     container.remove();
   });
 
-  it("shows close hint term and reason hint near controls", () => {
+  const renderButton = (yearName: string) => {
     act(() => {
       root.render(
         <AdminMessagesProvider messages={adminMessages}>
           <YearCloseButton
             yearId="y1"
+            yearName={yearName}
             pending={false}
             closeAction={() => {}}
             closeHint={{ term: "Закрыть год", hint: "Только чтение для учителей." }}
@@ -51,9 +53,20 @@ describe("YearCloseButton", () => {
         </AdminMessagesProvider>,
       );
     });
-    const text = container.textContent ?? "";
-    expect(text).toContain("Закрыть год");
+    return container.textContent ?? "";
+  };
+
+  it("titles the section with the hint and names the period on the button", () => {
+    const text = renderButton("2026–2027");
+    expect(text).toContain("Закрыть учебный год");
+    expect(text).toContain("Закрыть 2026–2027");
     expect(text).toContain("Причина (необязательно)");
-    expect(container.querySelectorAll("button[aria-label]").length).toBeGreaterThan(0);
+    expect(container.querySelectorAll("button[aria-label]").length).toBe(2);
+  });
+
+  it("does not duplicate the «Закрыть год» label and falls back without a period", () => {
+    const text = renderButton("  ");
+    expect(text.match(/Закрыть год/g)?.length).toBe(1);
+    expect(text).not.toContain("{period}");
   });
 });

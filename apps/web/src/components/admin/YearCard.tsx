@@ -9,7 +9,6 @@ import { ContentText, SectionTitle } from "@/components/atoms";
 import { StatusText } from "@/components/ui/status-text";
 import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { AcademicYearListRow } from "@/data/school/load-academic-years-list.server";
 import { formatAcademicYearStatusLabel } from "@/lib/admin/format-academic-year-status-label";
 import { resolveYearCardSummaryLine } from "@/lib/admin/format-year-summary-line";
@@ -24,7 +23,6 @@ type YearCardProps = {
   dictionaries: Record<string, Dictionary>;
   formError: string;
   uiLocale: MessageLocale;
-  yearTotalsHint: HintTerm;
   yearCloseHint: HintTerm;
   yearCloseReasonHint: HintTerm;
 };
@@ -34,7 +32,6 @@ export const YearCard = ({
   dictionaries,
   formError,
   uiLocale,
-  yearTotalsHint,
   yearCloseHint,
   yearCloseReasonHint,
 }: YearCardProps) => {
@@ -77,8 +74,8 @@ export const YearCard = ({
   });
 
   return (
-    <article className="flex h-full flex-col space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5">
-      <div className="flex items-start justify-between gap-3">
+    <article className="flex h-full flex-col gap-stack rounded-xl border border-line bg-surface p-card">
+      <div className="flex items-start justify-between gap-stack">
         <SectionTitle>{row.name}</SectionTitle>
         <StatusText tone="neutral" className="shrink-0 text-sm">
           {statusLabel}
@@ -87,12 +84,9 @@ export const YearCard = ({
       <ContentText tone="muted" className="text-sm">
         {formatDate(row.startsOn, uiLocale)} — {formatDate(row.endsOn, uiLocale)}
       </ContentText>
-      <TermLabel
-        term={nonEmptyTerm(summaryLine)}
-        hint={yearTotalsHint.hint}
-        ariaLabel={yearTotalsHint.term}
-        className="text-sm text-ink-2"
-      />
+      <ContentText tone="secondary" className="text-sm">
+        {summaryLine}
+      </ContentText>
       {row.status === ACADEMIC_YEAR_STATUS.DRAFT ? (
         <form action={activateAction} id={`activate-year-${row.yearId}`}>
           <input type="hidden" name="yearId" value={row.yearId} />
@@ -117,6 +111,7 @@ export const YearCard = ({
       {row.status === ACADEMIC_YEAR_STATUS.ACTIVE ? (
         <YearCloseButton
           yearId={row.yearId}
+          yearName={row.name}
           pending={pending}
           closeAction={closeAction}
           closeHint={yearCloseHint}

@@ -12,7 +12,6 @@ import { PupilRow } from "@/components/admin/PupilRow";
 import { ShowMore } from "@/components/admin/ShowMore";
 import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
-import { CustomLink } from "@/components/ui/custom-link";
 import { readConsentTextVersionFromDb } from "@/data/access/consent-text-version.server";
 import { loadPeopleAdminList } from "@/data/people/load-people-admin-list.server";
 import { PEOPLE_LIST_FILTER } from "@/data/people/people-list-filters";
@@ -52,7 +51,6 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
     "consent_paper",
     "consent_migrated",
     "pupil_states",
-    "pupil_transfer",
   ] as const);
   const defaultDate = isoTodayUtc();
   const [list, legacyPending] = await Promise.all([
@@ -78,7 +76,7 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+      <div className="flex min-w-0 max-w-full flex-col gap-stack overflow-x-hidden">
         <PageHeader title={adminMessages.page.peopleTitle} />
         {!isLegacyTab ? (
           <>
@@ -92,17 +90,8 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               messages={adminMessages}
               pupilStatesHint={hints.pupil_states}
               migratedHint={hints.consent_migrated}
+              legacyCount={legacyPending.rows.length}
             />
-            {query.filter === PEOPLE_LIST_FILTER.ALL && legacyPending.rows.length > 0 ? (
-              <p className="text-sm">
-                <CustomLink href={buildPeopleListHref({ filter: PEOPLE_LIST_FILTER.LEGACY })}>
-                  {adminMessages.people.legacyCountLink.replace(
-                    "{count}",
-                    String(legacyPending.rows.length),
-                  )}
-                </CustomLink>
-              </p>
-            ) : null}
             <PeopleGroupFilter
               groups={list.groups}
               activeGroupId={list.activeGroupId}
@@ -110,11 +99,22 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               displayQuery={query.displayQuery}
               messages={adminMessages}
             />
-            <PeopleAddPupilDialog
-              dictionaries={dictionaries}
-              uiLocale={locale}
-              formError={formError}
-            />
+            <div className="flex flex-wrap items-center gap-chip">
+              <PeopleAddPupilDialog
+                dictionaries={dictionaries}
+                uiLocale={locale}
+                formError={formError}
+              />
+              {list.pupils.length > 0 ? (
+                <TermLabel
+                  term={nonEmptyTerm(hints.consent_paper.term)}
+                  hint={hints.consent_paper.hint}
+                  ariaLabel={hints.consent_paper.term}
+                  className="text-sm text-ink-2"
+                  popoverSide="top"
+                />
+              ) : null}
+            </div>
             {list.pupils.length === 0 ? (
               <EmptyState
                 title={
@@ -130,13 +130,6 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               />
             ) : (
               <>
-                <TermLabel
-                  term={nonEmptyTerm(hints.consent_paper.term)}
-                  hint={hints.consent_paper.hint}
-                  ariaLabel={hints.consent_paper.term}
-                  className="text-sm text-ink-2"
-                  popoverSide="top"
-                />
                 <ul className="overflow-hidden rounded-xl border border-line bg-surface divide-y divide-line">
                   {list.pupils.map((row) => (
                     <PupilRow
@@ -150,7 +143,6 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
                       formError={formError}
                       closeLabel={closeLabel}
                       messages={adminMessages}
-                      pupilTransferHint={hints.pupil_transfer}
                       historySlot={<PupilEntityHistoryList pupilId={row.pupilId} />}
                     />
                   ))}
@@ -172,6 +164,7 @@ export const PeoplePageContent = async ({ searchParams }: PeoplePageProps) => {
               messages={adminMessages}
               pupilStatesHint={hints.pupil_states}
               migratedHint={hints.consent_migrated}
+              legacyCount={legacyPending.rows.length}
             />
             <LegacyConsentList
               deadlineOn={legacyPending.deadlineOn}

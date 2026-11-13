@@ -9,7 +9,6 @@ import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 type AchievementsRulesNoteProps = {
   messages: AchievementsCatalogMessages;
   seriesHint: HintTerm;
-  cumulativeHint: HintTerm;
   reviewLesson: GlossaryTerm;
   termHintAriaLabel: string;
 };
@@ -17,29 +16,16 @@ type AchievementsRulesNoteProps = {
 export const AchievementsRulesNote = ({
   messages,
   seriesHint,
-  cumulativeHint,
   reviewLesson,
   termHintAriaLabel,
 }: AchievementsRulesNoteProps) => (
   <ContentText tone="secondary" className="mb-6 max-w-3xl text-sm">
     <TermLabel
-      term={nonEmptyTerm(cumulativeHint.term)}
-      hint={cumulativeHint.hint}
+      term={nonEmptyTerm(seriesHint.term)}
+      hint={seriesHint.hint}
       ariaLabel={termHintAriaLabel}
     />{" "}
-    ·{" "}
-    <TermLabel
-      term={nonEmptyTerm(seriesHint.term)}
-      hint={seriesHint.hint}
-      ariaLabel={termHintAriaLabel}
-    />
-    <br />
-    <TermLabel
-      term={nonEmptyTerm(seriesHint.term)}
-      hint={seriesHint.hint}
-      ariaLabel={termHintAriaLabel}
-    />
-    : {messages.rulesNoteSeriesLead}{" "}
+    {messages.rulesNoteSeriesLead}{" "}
     <TermLabel
       term={nonEmptyTerm(messages.rulesNoteOverviewTerm)}
       hint={reviewLesson.hint}

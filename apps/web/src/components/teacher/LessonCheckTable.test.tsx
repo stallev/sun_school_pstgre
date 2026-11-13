@@ -43,8 +43,8 @@ const messages = {
   tableLinkSequential: "Последовательная проверка",
   completeCheck: "Завершить проверку",
   tableFinishing: "Завершаем…",
-  tableAchievementsNote: "Достижения начислятся после завершения",
-  tableAchievementsTerm: "достижения",
+  tableAchievementsNote: "начислятся после завершения проверки",
+  tableAchievementsTerm: "Достижения",
   tableAchievementsHint: "Подробнее про начисление.",
   termHintAriaLabel: "Что значит «{term}»?",
   sheetOpen: "Печатная ведомость",
@@ -136,8 +136,8 @@ describe("LessonCheckTable (P26-T6)", () => {
       />,
     );
     expect(html).toContain("Завершить проверку");
-    expect(html).toContain("Достижения начислятся после завершения");
-    expect(html).toContain("Что значит «достижения»?");
+    expect(html).toContain("начислятся после завершения проверки");
+    expect(html).toContain("Что значит «Достижения»?");
     tableHarness.canFinish = false;
   });
 });

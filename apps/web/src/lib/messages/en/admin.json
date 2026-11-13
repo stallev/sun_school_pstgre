@@ -252,6 +252,7 @@
     "activate_confirm_title": "Activate this school year?",
     "activate_confirm_description": "Only one year can be active. Lessons can be created in the active year.",
     "close": "Close year",
+    "close_named": "Close {period}",
     "close_confirm_title": "Close this school year?",
     "close_confirm_description": "Teachers will have read-only access to this year's data. This cannot be undone.",
     "close_reason_label": "Reason (optional)",
@@ -274,7 +275,7 @@
       "many": "{count} pupils",
       "other": "{count} pupils"
     },
-    "danger_zone_title": "Dangerous actions",
+    "danger_zone_title": "Close academic year",
     "danger_zone_close_lead": "Closing a year cannot be undone. Teachers will have read-only access to that year's data.",
     "create_next_toggle": "Create next school year",
     "archive_summary": "Year data is archived",

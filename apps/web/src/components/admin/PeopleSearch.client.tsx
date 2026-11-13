@@ -43,7 +43,7 @@ export const PeopleSearch = ({ initialQuery }: PeopleSearchProps) => {
   const hintId = showMinHint ? "people-search-min-hint" : undefined;
 
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col gap-label">
       <label htmlFor="people-search" className="text-sm font-medium text-ink">
         {messages.people.searchLabel}
       </label>
@@ -55,7 +55,7 @@ export const PeopleSearch = ({ initialQuery }: PeopleSearchProps) => {
         placeholder={messages.people.searchPlaceholder}
         autoComplete="off"
         aria-describedby={hintId}
-        className="max-w-md"
+        className="max-w-[480px]"
       />
       {showMinHint ? (
         <p id={hintId} className="text-sm text-muted-foreground">

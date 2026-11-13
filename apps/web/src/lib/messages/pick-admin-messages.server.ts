@@ -157,6 +157,7 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     activateConfirmTitle: getMessage(admin, "year.activate_confirm_title"),
     activateConfirmDescription: getMessage(admin, "year.activate_confirm_description"),
     close: getMessage(admin, "year.close"),
+    closeNamed: getMessage(admin, "year.close_named"),
     closeConfirmTitle: getMessage(admin, "year.close_confirm_title"),
     closeConfirmDescription: getMessage(admin, "year.close_confirm_description"),
     closeReasonLabel: getMessage(admin, "year.close_reason_label"),
