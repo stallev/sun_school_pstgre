@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export const CountBadge = ({ className, ...props }: ComponentProps<"span">) => (
   <span
     className={cn(
-      "inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-cobalt-ink px-1.5 text-xs font-medium text-surface tabular-nums",
+      "inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-cobalt-ink px-1.5 text-xs font-bold text-surface tabular-nums",
       className,
     )}
     {...props}

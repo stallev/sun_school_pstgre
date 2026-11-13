@@ -2,7 +2,7 @@
 
 import { USER_ROLE, type UserRole } from "@sunschool/domain";
 import { usePathname, useRouter } from "next/navigation";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import { BrandMark } from "@/components/patterns/BrandMark";
 import { CustomLink } from "@/components/ui/custom-link";
 import { NavDrawer } from "@/components/shell/nav-drawer";
@@ -19,16 +19,26 @@ import {
   shellRailDataAttribute,
 } from "@/lib/shell/shell-layout-classes";
 import { resolveShellScreenTitle } from "@/lib/shell/shell-screen-title";
+import type { SidebarPreference } from "@/lib/shell/sidebar-collapsed-cookie";
 import { cn } from "@/lib/utils";
 
 const SIDEBAR_NAV_ID = "sidebar";
+const XL_MEDIA_QUERY = "(min-width: 1280px)";
+
+const subscribeToXl = (onChange: () => void) => {
+  const query = window.matchMedia(XL_MEDIA_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+const getIsXl = () => window.matchMedia(XL_MEDIA_QUERY).matches;
+const getIsXlOnServer = () => false;
 
 type ShellHeaderProps = {
   homeHref: string;
   displayName: string;
   nav: ShellNavPayload;
   badgeCounts: NavBadgeCounts;
-  initialSidebarCollapsed: boolean;
+  initialSidebarPreference: SidebarPreference;
   children: ReactNode;
 };
 
@@ -47,7 +57,7 @@ export const ShellHeader = ({
   displayName,
   nav,
   badgeCounts,
-  initialSidebarCollapsed,
+  initialSidebarPreference,
   children,
 }: ShellHeaderProps) => {
   const messages = useShellMessages();
@@ -59,7 +69,11 @@ export const ShellHeader = ({
   const roleName =
     nav.shellRole === USER_ROLE.ADMIN ? messages.roleNameAdmin : messages.roleNameTeacher;
   const resolvedName = displayName || messages.displayNameFallback;
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(initialSidebarCollapsed);
+  const [sidebarPreference, setSidebarPreference] = useState(initialSidebarPreference);
+  const isXl = useSyncExternalStore(subscribeToXl, getIsXl, getIsXlOnServer);
+  const isAutoRail = sidebarPreference === "auto";
+  // Real state for the toggle only; layout classes come from the preference, never from the width.
+  const sidebarCollapsed = isAutoRail ? !isXl : sidebarPreference === "collapsed";
   const showViewAsBadge = nav.viewAsRole !== nav.shellRole;
   const viewModeLabel = showViewAsBadge
     ? formatViewModeLabel(
@@ -94,10 +108,10 @@ export const ShellHeader = ({
   return (
     <div
       className="group/shell flex min-h-dvh flex-col"
-      data-rail={shellRailDataAttribute(sidebarCollapsed)}
+      data-rail={shellRailDataAttribute(sidebarPreference)}
     >
       <header className="sticky top-0 z-40 overflow-visible border-b border-line bg-surface/90 backdrop-blur-md reduce-transparency:bg-surface reduce-transparency:backdrop-blur-none">
-        <div className="mx-auto flex h-14 w-full max-w-[1600px] items-center gap-2 px-4 sm:px-6 lg:gap-0 lg:px-0">
+        <div className="mx-auto flex h-14 w-full max-w-[1600px] items-center gap-chip px-page lg:gap-0 lg:px-0">
           <NavDrawer
             {...navProps}
             displayName={resolvedName}
@@ -106,14 +120,17 @@ export const ShellHeader = ({
           <div
             className={cn(
               "flex min-w-0 items-center gap-2.5 lg:h-full lg:shrink-0 lg:border-r lg:border-line lg:px-5",
-              sidebarCollapsed ? "lg:w-16 lg:justify-center lg:px-0" : "lg:w-64",
+              sidebarPreference === "expanded" && "lg:w-64",
+              sidebarPreference === "collapsed" && "lg:w-16 lg:justify-center lg:px-0",
+              isAutoRail && "lg:w-16 lg:justify-center lg:px-0 xl:w-64 xl:justify-start xl:px-5",
             )}
           >
             <CustomLink
               href={homeHref}
               className={cn(
                 "flex min-w-0 flex-1 items-center gap-2.5 no-underline lg:flex-none",
-                sidebarCollapsed && "lg:justify-center",
+                sidebarPreference === "collapsed" && "lg:justify-center",
+                isAutoRail && "lg:justify-center xl:justify-start",
               )}
             >
               <span className="min-w-0 lg:hidden">
@@ -124,17 +141,30 @@ export const ShellHeader = ({
                   {resolvedName} · {roleName}
                 </span>
               </span>
-              <span className="hidden lg:inline-flex">
-                <BrandMark brandName={sidebarCollapsed ? undefined : messages.brand} />
-              </span>
+              {isAutoRail ? (
+                <>
+                  <span className="hidden lg:inline-flex xl:hidden">
+                    <BrandMark />
+                  </span>
+                  <span className="hidden xl:inline-flex">
+                    <BrandMark brandName={messages.brand} />
+                  </span>
+                </>
+              ) : (
+                <span className="hidden lg:inline-flex">
+                  <BrandMark brandName={sidebarCollapsed ? undefined : messages.brand} />
+                </span>
+              )}
             </CustomLink>
           </div>
           <ShellSidebarToggle
             sidebarCollapsed={sidebarCollapsed}
-            onSidebarCollapsedChange={setSidebarCollapsed}
+            onSidebarCollapsedChange={(collapsed) =>
+              setSidebarPreference(collapsed ? "collapsed" : "expanded")
+            }
             controlsId={SIDEBAR_NAV_ID}
           />
-          <div className="ms-auto flex min-w-0 flex-1 items-center justify-end gap-1.5 lg:px-8">
+          <div className="ms-auto flex min-w-0 flex-1 items-center justify-end gap-chip lg:px-page">
             {showViewAsBadge ? <ViewAsBadge label={viewModeLabel} /> : null}
             <UserMenu
               displayName={resolvedName}
@@ -147,13 +177,13 @@ export const ShellHeader = ({
           </div>
         </div>
       </header>
-      <div className={shellGridClassName(sidebarCollapsed)}>
+      <div className={shellGridClassName(sidebarPreference)}>
         <SidebarNav
           id={SIDEBAR_NAV_ID}
           items={displayItems}
           activeKey={activeKey}
           badgeCounts={badgeCounts}
-          collapsed={sidebarCollapsed}
+          rail={sidebarPreference}
           emptyHint={nav.previewNavEmptyHint}
         />
         {children}

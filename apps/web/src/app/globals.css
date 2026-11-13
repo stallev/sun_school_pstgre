@@ -68,9 +68,17 @@
   --chart-3: var(--series-3);
 
   --radius: 0.5rem;
-  --control-h: 2.5rem;
-  --control-h-compact: 2.25rem;
+  --control-h: 2.25rem;
+  --control-h-compact: 2rem;
   --control-h-touch: 2.75rem;
+  /* Spacing scale (UX-03 §7а, ADR-022 §4.2): px/18 at the 18 px root; mapped to `--spacing-*` in @theme. */
+  --space-hint: 0.45rem;
+  --space-label: 0.35rem;
+  --space-chip: 0.45rem;
+  --space-stack: 0.9rem;
+  --space-card: 0.9rem;
+  --space-section: 1.8rem;
+  --space-page-x: 0.9rem;
   --float-shadow: 0 10px 30px rgb(15 23 42 / 0.12);
 }
 
@@ -133,8 +141,24 @@
   --font-body: var(--font-sans);
   --font-heading: var(--font-display);
 
+  --spacing-hint: var(--space-hint);
+  --spacing-label: var(--space-label);
+  --spacing-chip: var(--space-chip);
+  --spacing-stack: var(--space-stack);
+  --spacing-card: var(--space-card);
+  --spacing-section: var(--space-section);
+  --spacing-page: var(--space-page-x);
+
   --shadow-float: var(--float-shadow);
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* card / section / page-x grow with the viewport (ADR-022 §4.2). */
+@media (min-width: 48rem) {
+  :root { --space-card: 1.35rem; --space-section: 2.2rem; --space-page-x: 1.35rem; }
+}
+@media (min-width: 64rem) {
+  :root { --space-page-x: 1.8rem; }
 }
 
 @custom-variant reduce-transparency (@media (prefers-reduced-transparency: reduce));

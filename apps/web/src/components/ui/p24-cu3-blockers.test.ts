@@ -6,12 +6,12 @@ import { describe, expect, it } from "vitest";
 const webSrc = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 describe("P24-CU3 blocker regressions", () => {
-  it("RosterTable add-pupil submit uses size=field next to FormSelect", () => {
+  it("RosterTable add-pupil submit inherits the field height (no size=field, ADR-022 §4.3)", () => {
     const source = fs.readFileSync(
       path.join(webSrc, "components/teacher/RosterTable.tsx"),
       "utf8",
     );
-    expect(source).toMatch(/type="submit"[\s\S]*size="field"/);
+    expect(source).not.toMatch(/size=.field./);
     expect(source).not.toMatch(/type="submit"[\s\S]*min-h-11/);
   });
 

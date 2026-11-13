@@ -6,7 +6,7 @@ const touchHitPadding =
   "max-md:relative max-md:after:absolute max-md:after:-inset-y-1 max-md:after:inset-x-0"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-transparent text-base font-medium whitespace-nowrap transition-[background-color,transform] duration-150 ease-out-soft outline-none select-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:pointer-events-none disabled:opacity-45 aria-busy:pointer-events-none aria-busy:opacity-70 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center gap-chip rounded-lg border border-transparent text-base font-medium whitespace-nowrap transition-[background-color,transform] duration-150 ease-out-soft outline-none select-none active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 disabled:pointer-events-none disabled:opacity-45 aria-busy:pointer-events-none aria-busy:opacity-70 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -26,8 +26,9 @@ const buttonVariants = cva(
           "h-9 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
           touchHitPadding,
         ),
-        field:
-          "h-10 px-3.5 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3",
+        /** Next to a compact (h-8) field or inside a dense row (ADR-022 §4.3). */
+        compact:
+          "h-8 px-3 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5",
         touch: "h-11 px-5",
         icon: cn("size-9", touchHitPadding),
         "icon-touch": "size-11",

@@ -104,8 +104,8 @@ export const TYPE_SCALE = [
 ] as const;
 
 export const SHAPES = [
-  { name: "Field / button (default)", classes: "rounded-lg h-10", spec: "rounded-lg · h-10 (45 px)" },
-  { name: "Compact control (tables)", classes: "rounded-lg h-9", spec: "rounded-lg · h-9 (40.5 px)" },
+  { name: "Field / button (default)", classes: "rounded-lg h-9", spec: "rounded-lg · h-9 (40.5 px)" },
+  { name: "Compact control (tables)", classes: "rounded-lg h-8", spec: "rounded-lg · h-8 (36 px)" },
   { name: "Touch primary", classes: "rounded-lg h-11", spec: "rounded-lg · h-11 (49.5 px)" },
   { name: "Card", classes: "rounded-xl border border-line bg-surface", spec: "rounded-xl · border line · no shadow" },
   { name: "Bottom sheet", classes: "rounded-t-2xl", spec: "rounded-t-2xl · max-h-[92dvh]" },
@@ -117,3 +117,43 @@ export const MOTION = [
   { name: "motion-reduce", spec: "no scale / panel transitions", duration: "—" },
   { name: "reduce-transparency", spec: "no backdrop blur", duration: "—" },
 ] as const;
+
+export type SpaceToken = {
+  /** CSS variable declared in `:root` of `globals.css`. */
+  variable: `--space-${string}`;
+  /** Tailwind namespace entry in `@theme inline` (`--spacing-*`). */
+  theme: `--spacing-${string}`;
+  /** Utility written out in full so Tailwind can see it. */
+  utility: string;
+  /** rem on mobile / on `md+` / on `lg+` (same value repeated when it does not change). */
+  rem: readonly [string, string, string];
+  /** px at the 18 px root, same order as `rem`. */
+  px: readonly [string, string, string];
+  role: string;
+};
+
+/** UX-03 §7а / ADR-022 §4.2. The Lab recomputes nothing here: `tokens.test.ts` checks `globals.css`. */
+export const SPACE_TOKENS: readonly SpaceToken[] = [
+  { variable: "--space-hint", theme: "--spacing-hint", utility: "gap-hint", rem: ["0.45", "0.45", "0.45"], px: ["8.1", "8.1", "8.1"], role: "word → «?», icon → text in a button" },
+  { variable: "--space-label", theme: "--spacing-label", utility: "mb-label", rem: ["0.35", "0.35", "0.35"], px: ["6.3", "6.3", "6.3"], role: "label → field" },
+  { variable: "--space-chip", theme: "--spacing-chip", utility: "gap-chip", rem: ["0.45", "0.45", "0.45"], px: ["8.1", "8.1", "8.1"], role: "chain of chips / tabs / buttons, both axes" },
+  { variable: "--space-stack", theme: "--spacing-stack", utility: "gap-stack", rem: ["0.9", "0.9", "0.9"], px: ["16.2", "16.2", "16.2"], role: "between blocks inside a card, between form fields" },
+  { variable: "--space-card", theme: "--spacing-card", utility: "p-card", rem: ["0.9", "1.35", "1.35"], px: ["16.2", "24.3", "24.3"], role: "card → card, card padding" },
+  { variable: "--space-section", theme: "--spacing-section", utility: "py-section", rem: ["1.8", "2.2", "2.2"], px: ["32.4", "39.6", "39.6"], role: "section → section of a page" },
+  { variable: "--space-page-x", theme: "--spacing-page", utility: "px-page", rem: ["0.9", "1.35", "1.8"], px: ["16.2", "24.3", "32.4"], role: "side padding of the shell container" },
+];
+
+export type ControlHeight = {
+  variable: "--control-h" | "--control-h-compact" | "--control-h-touch";
+  rem: string;
+  px: string;
+  utility: string;
+  role: string;
+};
+
+/** UX-03 D-9 / D-14, ADR-022 §4.3. */
+export const CONTROL_HEIGHTS: readonly ControlHeight[] = [
+  { variable: "--control-h", rem: "2.25", px: "40.5", utility: "h-9", role: "field, Select, DateField, button" },
+  { variable: "--control-h-compact", rem: "2", px: "36", utility: "h-8", role: "filters, tables; minimum interactive size" },
+  { variable: "--control-h-touch", rem: "2.75", px: "49.5", utility: "h-11", role: "primary action below md" },
+];

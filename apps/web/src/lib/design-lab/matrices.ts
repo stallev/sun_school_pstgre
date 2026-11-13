@@ -12,7 +12,7 @@ export const BUTTON_VARIANTS = [
 
 export const BUTTON_SIZES = [
   "default",
-  "field",
+  "compact",
   "touch",
   "icon",
   "icon-touch",

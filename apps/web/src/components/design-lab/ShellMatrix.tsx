@@ -133,6 +133,17 @@ export const ShellMatrix = () => (
           />
         </div>
       </MatrixCell>
+      <MatrixCell label="SidebarNav — rail по умолчанию на lg (auto: rail до xl, развёрнут с xl)">
+        <div className="max-w-xs rounded-xl border border-line bg-surface max-xl:max-w-[4.5rem]">
+          <SidebarNav
+            items={SAMPLE_NAV}
+            activeKey="today"
+            badgeCounts={{ approvals: 3, peopleGroup: 5 }}
+            asideClassName="static block h-auto"
+            rail="auto"
+          />
+        </div>
+      </MatrixCell>
       <MatrixCell label="UserMenu">
         <UserMenu displayName="Anna Teacher" />
       </MatrixCell>

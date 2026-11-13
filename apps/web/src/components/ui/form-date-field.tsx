@@ -17,6 +17,7 @@ type FormDateFieldProps = {
   locale: MessageLocale;
   calendarAriaLabel: string;
   className?: string;
+  size?: "default" | "compact";
 };
 
 export const FormDateField = ({
@@ -32,6 +33,7 @@ export const FormDateField = ({
   locale,
   calendarAriaLabel,
   className,
+  size,
 }: FormDateFieldProps) => {
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const value = valueProp ?? uncontrolled;
@@ -54,6 +56,7 @@ export const FormDateField = ({
       locale={locale}
       calendarAriaLabel={calendarAriaLabel}
       className={className}
+      size={size}
     />
   );
 };

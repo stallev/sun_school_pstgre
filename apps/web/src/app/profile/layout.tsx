@@ -18,7 +18,7 @@ import { pickAuthMessages } from "@/lib/messages/auth-messages";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
 import { resolveShellRole } from "@/lib/shell/nav-resolver";
 import {
-  parseSidebarCollapsedCookie,
+  parseSidebarPreferenceCookie,
   SIDEBAR_COLLAPSED_COOKIE_NAME,
 } from "@/lib/shell/sidebar-collapsed-cookie";
 import { resolveViewAsRole, VIEW_AS_COOKIE_NAME } from "@/lib/shell/view-as-cookie";
@@ -49,7 +49,7 @@ const ProfileLayout = async ({ children }: ProfileLayoutProps) => {
   const authMessages = pickAuthMessages(authDictionary);
   const shellMessages = pickShellMessages(common);
   const cookieStore = await cookies();
-  const sidebarCollapsed = parseSidebarCollapsedCookie(
+  const sidebarPreference = parseSidebarPreferenceCookie(
     cookieStore.get(SIDEBAR_COLLAPSED_COOKIE_NAME)?.value,
   );
 
@@ -74,7 +74,7 @@ const ProfileLayout = async ({ children }: ProfileLayoutProps) => {
           displayName={shellUser.displayName}
           nav={nav}
           badgeCounts={badgeCounts}
-          sidebarCollapsed={sidebarCollapsed}
+          sidebarPreference={sidebarPreference}
         >
           {children}
         </AppShell>

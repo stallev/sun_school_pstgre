@@ -23,7 +23,7 @@ import { getPrisma } from "@/lib/db.server";
 import { pickShellMessages } from "@/lib/messages/shell-messages";
 import { resolveShellRole } from "@/lib/shell/nav-resolver";
 import {
-  parseSidebarCollapsedCookie,
+  parseSidebarPreferenceCookie,
   SIDEBAR_COLLAPSED_COOKIE_NAME,
 } from "@/lib/shell/sidebar-collapsed-cookie";
 import { resolveViewAsRole, VIEW_AS_COOKIE_NAME } from "@/lib/shell/view-as-cookie";
@@ -62,7 +62,7 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
   const locale = await getUiLocale();
   const { APP_ENV } = getServerEnv();
   const cookieStore = await cookies();
-  const sidebarCollapsed = parseSidebarCollapsedCookie(
+  const sidebarPreference = parseSidebarPreferenceCookie(
     cookieStore.get(SIDEBAR_COLLAPSED_COOKIE_NAME)?.value,
   );
   const viewAsRole = resolveViewAsRole(
@@ -126,7 +126,7 @@ const AppGroupLayout = async ({ children }: AppGroupLayoutProps) => {
       displayName={shellUser.displayName}
       nav={nav}
       badgeCounts={badgeCounts}
-      sidebarCollapsed={sidebarCollapsed}
+      sidebarPreference={sidebarPreference}
     >
       {legacyConsentBanner}
       <ShellBanners banners={shellBanners} />

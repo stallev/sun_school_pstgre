@@ -92,7 +92,7 @@ export const GroupPointsRow = ({
                 onChange={(event) => onDraftChange(event.target.value)}
                 placeholder={messages.placeholderInherit}
                 aria-invalid={fieldError ? true : undefined}
-                className="h-10 max-w-[8rem]"
+                className="max-w-[8rem]"
                 disabled={!canEdit}
               />
               {differs ? (

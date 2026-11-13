@@ -7,6 +7,7 @@ import type { ShellNavPayload } from "@/data/shell/build-shell-nav.server";
 import type { ShellMessages } from "@/lib/messages/shell-messages";
 import type { NavBadgeCounts } from "@/components/shell/shell-nav-types";
 import { shellViewContainerClassName } from "@/lib/shell/shell-layout-classes";
+import type { SidebarPreference } from "@/lib/shell/sidebar-collapsed-cookie";
 
 type AppShellProps = {
   shellMessages: ShellMessages;
@@ -14,7 +15,7 @@ type AppShellProps = {
   displayName: string;
   nav: ShellNavPayload;
   badgeCounts: NavBadgeCounts;
-  sidebarCollapsed: boolean;
+  sidebarPreference: SidebarPreference;
   children: ReactNode;
 };
 
@@ -24,7 +25,7 @@ export const AppShell = ({
   displayName,
   nav,
   badgeCounts,
-  sidebarCollapsed,
+  sidebarPreference,
   children,
 }: AppShellProps) => (
   <ShellMessagesProvider messages={shellMessages}>
@@ -34,7 +35,7 @@ export const AppShell = ({
       displayName={displayName}
       nav={nav}
       badgeCounts={badgeCounts}
-      initialSidebarCollapsed={sidebarCollapsed}
+      initialSidebarPreference={sidebarPreference}
     >
       <main
         id="main"

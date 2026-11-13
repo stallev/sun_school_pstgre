@@ -50,11 +50,11 @@ describe("parity normalization", () => {
     });
     expect(mergedDefault).toContain("bg-cobalt-ink");
     expect(mergedDefault).toContain("h-9");
-    const mergedField = extractCvaClasses(buttonSource, {
+    const mergedCompact = extractCvaClasses(buttonSource, {
       variant: "default",
-      size: "field",
+      size: "compact",
     });
-    expect(mergedField).toContain("h-10");
+    expect(mergedCompact).toContain("h-8");
   });
 });
 

@@ -17,7 +17,12 @@ type NavLinkRowProps = {
   /** Sidebar and drawer row metrics (global_shell_spec §6.1). */
   density?: "drawer" | "sidebar";
   collapsed?: boolean;
+  /** No saved choice: icon-only below `xl`, full row from `xl` — pure CSS, no width read (ADR-022 §4.1). */
+  auto?: boolean;
 };
+
+const AUTO_ROW_CLASS = "max-xl:mx-auto max-xl:size-10 max-xl:justify-center max-xl:gap-0 max-xl:px-0";
+const AUTO_LABEL_CLASS = "max-xl:sr-only";
 
 const badgeLabel = (template: string, count: number) => template.replace("{count}", String(count));
 
@@ -26,7 +31,7 @@ const buildAccessibleLabel = (label: string, count: number, template: string) =>
 
 const sidebarRowClass = (isActive: boolean, isDisabled: boolean) =>
   cn(
-    "flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-1.5 text-left text-base leading-tight no-underline transition-[background-color,color] duration-100",
+    "flex min-h-10 w-full items-center gap-stack rounded-lg px-3 py-1.5 text-left text-base leading-tight no-underline transition-[background-color,color] duration-100",
     isDisabled
       ? "cursor-not-allowed text-muted"
       : cn(
@@ -52,18 +57,20 @@ const railRowClass = (isActive: boolean, isDisabled: boolean) =>
 
 const DisabledNavRow = ({
   className,
+  labelClassName,
   label,
   title,
   children,
 }: {
   className: string;
+  labelClassName?: string;
   label: string;
   title: string;
   children: ReactNode;
 }) => (
   <span className={className} aria-disabled="true" title={title} role="link">
     {children}
-    <span className="min-w-0 flex-1">{label}</span>
+    <span className={cn("min-w-0 flex-1", labelClassName)}>{label}</span>
   </span>
 );
 
@@ -74,6 +81,7 @@ export const NavLinkRow = ({
   onNavigate,
   density = "drawer",
   collapsed = false,
+  auto = false,
 }: NavLinkRowProps) => {
   const messages = useShellMessages();
   const isDisabled = leaf.navDisabled === true;
@@ -101,7 +109,9 @@ export const NavLinkRow = ({
           density === "sidebar" ? sidebarRowClass(false, true) : cn(
             "flex h-11 min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-base text-muted",
           ),
+          density === "sidebar" && auto && AUTO_ROW_CLASS,
         )}
+        labelClassName={density === "sidebar" && auto ? AUTO_LABEL_CLASS : undefined}
         label={leaf.label}
         title={disabledReason}
       >
@@ -140,13 +150,18 @@ export const NavLinkRow = ({
       <CustomLink
         href={leaf.href}
         aria-current={isActive ? "page" : undefined}
+        title={auto ? leaf.label : undefined}
         onClick={onNavigate}
-        className={sidebarRowClass(isActive, false)}
+        className={cn(sidebarRowClass(isActive, false), auto && AUTO_ROW_CLASS)}
       >
         <NavIcon navKey={leaf.key} className={!isActive ? "text-ink-2" : undefined} />
-        <span className="min-w-0 flex-1">{leaf.label}</span>
+        <span className={cn("min-w-0 flex-1", auto && AUTO_LABEL_CLASS)}>{leaf.label}</span>
         {count > 0 ? (
-          <NavBadge count={count} ariaLabel={badgeLabel(messages.badgeInQueue, count)} />
+          <NavBadge
+            count={count}
+            ariaLabel={badgeLabel(messages.badgeInQueue, count)}
+            className={auto ? "max-xl:hidden" : undefined}
+          />
         ) : null}
       </CustomLink>
     );

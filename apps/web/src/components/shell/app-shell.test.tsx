@@ -10,21 +10,31 @@ const appShellSource = readFileSync(
 );
 
 describe("shellGridClassName", () => {
-  it("uses 16rem column when expanded", () => {
-    expect(shellGridClassName(false)).toContain("lg:grid-cols-[16rem_minmax(0,1fr)]");
+  it("uses 16rem column on every width ≥ lg when the user chose expanded", () => {
+    const classes = shellGridClassName("expanded");
+    expect(classes).toContain("lg:grid-cols-[16rem_minmax(0,1fr)]");
+    expect(classes).not.toContain("xl:grid-cols");
   });
 
-  it("uses 4rem rail column when collapsed", () => {
-    expect(shellGridClassName(true)).toContain("lg:grid-cols-[4rem_minmax(0,1fr)]");
+  it("uses 4rem rail column when the user chose collapsed", () => {
+    const classes = shellGridClassName("collapsed");
+    expect(classes).toContain("lg:grid-cols-[4rem_minmax(0,1fr)]");
+    expect(classes).not.toContain("xl:grid-cols");
+  });
+
+  it("defaults to rail on lg and expanded from xl without a saved choice", () => {
+    const classes = shellGridClassName("auto");
+    expect(classes).toContain("lg:grid-cols-[4rem_minmax(0,1fr)]");
+    expect(classes).toContain("xl:grid-cols-[16rem_minmax(0,1fr)]");
   });
 
   it("includes motion-reduce transition guard", () => {
-    expect(shellGridClassName(false)).toContain("motion-reduce:transition-none");
+    expect(shellGridClassName("auto")).toContain("motion-reduce:transition-none");
   });
 
   it("centers the sidebar grid with the header shell box", () => {
-    expect(shellGridClassName(false)).toContain("max-w-[1600px]");
-    expect(shellGridClassName(false)).toContain("mx-auto");
+    expect(shellGridClassName("auto")).toContain("max-w-[1600px]");
+    expect(shellGridClassName("auto")).toContain("mx-auto");
   });
 });
 

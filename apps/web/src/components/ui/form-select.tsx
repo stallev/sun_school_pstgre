@@ -31,6 +31,8 @@ type FormSelectProps = {
   invalid?: boolean;
   "aria-label"?: string;
   triggerClassName?: string;
+  /** `compact` = h-8 (filters, tables); default h-9 (ADR-022 §4.3). */
+  size?: "default" | "compact";
 };
 
 export const FormSelect = ({
@@ -47,6 +49,7 @@ export const FormSelect = ({
   invalid,
   "aria-label": ariaLabel,
   triggerClassName,
+  size,
 }: FormSelectProps) => {
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const value = valueProp ?? uncontrolled;
@@ -84,6 +87,7 @@ export const FormSelect = ({
           id={id}
           aria-label={ariaLabel}
           aria-invalid={invalid || undefined}
+          size={size}
           className={cn("w-full", triggerClassName)}
         >
           <SelectValue placeholder={triggerPlaceholder} />

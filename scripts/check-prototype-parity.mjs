@@ -155,9 +155,9 @@ export function extractCvaClasses(source, { variant, size } = {}) {
   const pickVariant = (key, name) => {
     if (!name) return "";
     const block = new RegExp(`${key}:\\s*\\{([\\s\\S]*?)\\}`, "m").exec(variantsBody)?.[1] ?? "";
-    const quoted = new RegExp(`${name}:\\s*"([^"]+)"`).exec(block);
+    const quoted = new RegExp(`"?${name}"?:\\s*"([^"]+)"`).exec(block);
     if (quoted?.[1]) return quoted[1];
-    const cnHead = new RegExp(`${name}:\\s*cn\\(`).exec(block);
+    const cnHead = new RegExp(`"?${name}"?:\\s*cn\\(`).exec(block);
     if (!cnHead) return "";
     const openParen = block.indexOf("(", cnHead.index + cnHead[0].length - 1);
     let depth = 0;
@@ -338,8 +338,11 @@ export function compareRow(row, { prototypeHtml, rootDir = REPO_ROOT } = {}) {
   const protoVsExpect = diffSets(protoSet, expectSet, allowed);
   const componentVsExpect = diffSets(componentSet, expectSet, allowed);
 
-  const forbidden =
-    [...componentSet, ...protoSet].some((t) => t.startsWith("__forbidden__:"));
+  // `allowed_forbidden`: forbidden arbitrary values a row may legitimately use (e.g. `text-xs` in the count badge, UX-03 §6).
+  const allowedForbidden = new Set((row.allowed_forbidden ?? []).map((t) => `__forbidden__:${t}`));
+  const forbidden = [...componentSet, ...protoSet].some(
+    (t) => t.startsWith("__forbidden__:") && !allowedForbidden.has(t),
+  );
 
   const drift = forbidden || protoVsExpect.drift || componentVsExpect.drift;
 

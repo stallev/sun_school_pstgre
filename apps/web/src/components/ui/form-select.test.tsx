@@ -80,4 +80,21 @@ describe("FormSelect empty options (P14-CU6 N-path)", () => {
     expect(trigger?.textContent).toContain("2026–2027");
     expect(trigger?.textContent).not.toContain("9d1f0c2e");
   });
+
+  it("renders h-9 by default and exposes compact (h-8) via size (P29-T4)", () => {
+    act(() => {
+      root.render(
+        <>
+          <FormSelect options={[{ value: "a", label: "A" }]} />
+          <FormSelect size="compact" options={[{ value: "a", label: "A" }]} />
+        </>,
+      );
+    });
+    const triggers = container.querySelectorAll('[data-slot="select-trigger"]');
+    expect(triggers[0]?.className).toContain("h-9");
+    expect(triggers[0]?.className).not.toContain("h-10");
+    expect(triggers[0]?.getAttribute("data-size")).toBe("default");
+    expect(triggers[1]?.getAttribute("data-size")).toBe("compact");
+    expect(triggers[1]?.className).toContain("data-[size=compact]:h-8");
+  });
 });
