@@ -30,7 +30,7 @@ describe("BricksPageSummary (D-1)", () => {
           messages={
             {
               summaryRule: "rule",
-              summaryToIssueAmount: ": {total}",
+              summaryToIssueAmount: "{total}",
               summaryNegative: "neg {count}",
             } as Parameters<typeof BricksPageSummary>[0]["messages"]
           }
@@ -40,7 +40,7 @@ describe("BricksPageSummary (D-1)", () => {
       );
     });
     const text = container.textContent ?? "";
-    expect(text.indexOf("К выдаче")).toBeLessThan(text.indexOf(": 1057"));
-    expect(text).toContain(": 1057");
+    expect(text.indexOf("К выдаче")).toBeLessThan(text.indexOf("1057"));
+    expect(text).not.toContain(":");
   });
 });

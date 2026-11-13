@@ -3,7 +3,7 @@
 import { Popover } from "@base-ui/react/popover";
 import { useId, useState } from "react";
 import { type NonEmptyTerm } from "@/components/ui/non-empty-term";
-import { TermHint, type TermHintSide } from "@/components/ui/term-hint";
+import { resolveTermAriaLabel, TermHint, type TermHintSide } from "@/components/ui/term-hint";
 import { cn } from "@/lib/utils";
 
 export { nonEmptyTerm, type NonEmptyTerm } from "@/components/ui/non-empty-term";
@@ -33,7 +33,7 @@ const renderTermLabelDefault = ({
   className,
   popoverSide = "bottom",
 }: TermLabelDefaultProps) => (
-  <span className={cn("inline-flex flex-wrap items-center gap-1", className)}>
+  <span className={cn("inline-flex items-center gap-1 align-middle", className)}>
     <span>{term}</span>
     <TermHint term={term} hint={hint} ariaLabel={ariaLabel} side={popoverSide} />
   </span>
@@ -50,7 +50,7 @@ const TermLabelReason = ({ term, hint, ariaLabel, className }: TermLabelReasonPr
         type="button"
         aria-disabled="true"
         aria-describedby={open ? popupId : undefined}
-        aria-label={ariaLabel}
+        aria-label={resolveTermAriaLabel(ariaLabel, term)}
         aria-expanded={open}
         aria-controls={open ? popupId : undefined}
         className={cn(

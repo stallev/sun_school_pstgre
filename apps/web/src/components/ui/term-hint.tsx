@@ -6,7 +6,11 @@ import { useId, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const touchHitPadding =
-  "relative after:absolute after:-inset-y-1 after:-inset-x-1";
+  "relative after:absolute after:-inset-2";
+
+/** D-08: a dictionary template that still holds «{term}» never reaches aria-label. */
+export const resolveTermAriaLabel = (ariaLabel: string, term: string): string =>
+  ariaLabel.includes("{term}") ? ariaLabel.split("{term}").join(term) : ariaLabel;
 
 const POPUP_EDGE_THRESHOLD_PX = 160;
 
@@ -28,7 +32,7 @@ type TermHintProps = {
 
 /** UX-03 D-17 · ADR-018: «?» popover beside a domain term. */
 export const TermHint = ({
-  term: _term,
+  term,
   hint,
   ariaLabel,
   className,
@@ -61,16 +65,16 @@ export const TermHint = ({
   }, [open]);
 
   return (
-    <span ref={anchorRef} className="relative inline-flex align-middle">
+    <span ref={anchorRef} className="relative inline-flex h-[1em] align-middle">
       <Popover.Root open={open} onOpenChange={handleOpenChange}>
         <Popover.Trigger
           nativeButton
           type="button"
-          aria-label={ariaLabel}
+          aria-label={resolveTermAriaLabel(ariaLabel, term)}
           aria-expanded={open}
           aria-controls={open ? popupId : undefined}
           className={cn(
-            "inline-flex size-9 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out-soft hover:text-cobalt-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none",
+            "inline-flex size-[1em] shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors duration-150 ease-out-soft hover:text-cobalt-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none",
             touchHitPadding,
             className,
           )}

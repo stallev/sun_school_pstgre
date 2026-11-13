@@ -105,17 +105,17 @@ Review `diff-only`: профиль `lean` D6 (отображение; права
 
 Review `diff-only`: профиль `lean` D6 (presentational, словарь).
 
-- [ ] P29-T10 · T1 · **D-08** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 D-17, D-19 ж–и](../../../design/visual_identity_contract.md) · [Lab «TermLabel (позиция, без двоеточий)»](../specs/design_system_lab_spec.md)
+- [x] P29-T10 · T1 · **D-08** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 D-17, D-19 ж–и](../../../design/visual_identity_contract.md) · [Lab «TermLabel (позиция, без двоеточий)»](../specs/design_system_lab_spec.md)
       Files: `apps/web/src/components/ui/{term-label,term-hint,term-header}.tsx`, `apps/web/src/components/ui/non-empty-term.ts` (+ тесты `term-label.test.tsx`, `term-hint.test.tsx`), `apps/web/src/lib/messages/{ru,en}/*.json` (`glossary.*`, шаблон `aria-label`), `apps/web/src/lib/messages/{hints-dictionary-parity,forbidden-terms}.test.ts`, `apps/web/src/components/design-lab/TermHintMatrix.tsx`
       Acceptance: **D-08:** `aria-label` кнопки-подсказки — «Что значит «{term}»?» с подставленным термином (на `/verses` — «Что значит «По книгам»?»); тест: ни в одном `hint`/`term`/`aria-label` нет `{` и `}` (по всем срезам и локалям); `TermLabel` не добавляет двоеточий; значок `inline`, высота `1em`, `align-middle`: высота строки со значком == без значка (±1 px, тест рендера + Lab); значок не принимает `Button` в детях (тип/тест «TermLabel внутри кнопки — ошибка»); секция Lab «TermLabel (позиция, без двоеточий)» с антипримерами
       Paths: H [`/verses`: корректный `aria-label`; строка с «?» не выше строки без] · N [`term` с кавычками → экранирование; пустой `term` → ошибка типа/теста; `en` без подстановки → тест падает] · S n/a — тексты и presentational
 
-- [ ] P29-T11 · T1 · **D-05** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 D-19 з](../../../design/visual_identity_contract.md) · Prototype: `vBricks`
+- [x] P29-T11 · T1 · **D-05** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 D-19 з](../../../design/visual_identity_contract.md) · Prototype: `vBricks`
       Files: `apps/web/src/components/teacher/{BricksPageSummary,BalanceCards,BalanceTable,BricksPageContent.server,BricksLedgerPanel}.tsx` (+ `BricksPageSummary.test.tsx`)
       Acceptance: «К выдаче ? 1050» — слово, значок, значение (двоеточия после значка нет); подписи «Набрано / Выдано / Остаток» в карточке — одна строка из трёх статов (3 колонки) и кнопки справа на 768; кнопка «Выдать» отделена от «⋯» и от числа `gap-chip`; `tabular-nums`; тест рендера «К выдаче»
       Paths: H [`/bricks`: `К выдаче ? 1050`; 768: три стата в строке] · N [0 кирпичиков → «0»; отрицательный остаток → без поломки раскладки; 30+ карточек → без дублей значков] · S n/a — presentational
 
-- [ ] P29-T12 · T1 · **D-13** · Spec: [ADR-022 §4.7 п. 1](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vSchool`
+- [x] P29-T12 · T1 · **D-13** · Spec: [ADR-022 §4.7 п. 1](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vSchool`
       Files: `apps/web/src/components/analytics/{SchoolPageContent.server,SchoolGroupCards,SchoolGroupsTable,AnalyticsTableTermHeader}.tsx`, `apps/web/src/components/admin/SchoolAnalyticsTable.tsx`, `apps/web/src/lib/messages/{ru,en}/analytics.json`
       Acceptance: в режиме карточек (`< lg`) у метрик группы «Регулярно ходят», «Средний балл», «Посещаемость» значок «?» есть **один раз на экран** (у первой карточки, в шапке блока метрик) и берёт те же ключи словаря, что шапка таблицы на `≥ lg`; в таблице — только в шапке
       Paths: H [телефон: подсказки к тем же числам] · N [нет групп → пустое состояние; ключ отсутствует → тест] · S n/a — presentational

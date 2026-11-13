@@ -47,15 +47,17 @@ describe("TermHint source (UX-03 D-17)", () => {
     const source = fs.readFileSync(path.join(uiDir, "term-hint.tsx"), "utf8");
     expect(source).toContain("@base-ui/react/popover");
     expect(source).toContain("CircleHelp");
-    expect(source).toContain("after:-inset-y-1");
+    expect(source).toContain("after:-inset-2");
     expect(source).toContain("motion-reduce:transition-none");
     expect(source).toContain("aria-expanded");
     expect(source).toContain("aria-controls");
   });
 
-  it("extends touch hit area on width and height at every breakpoint (≥44px with size-9)", () => {
+  it("keeps the icon at 1em so a line with «?» is not taller, hit area grows via ::after (D-08)", () => {
     const source = fs.readFileSync(path.join(uiDir, "term-hint.tsx"), "utf8");
-    expect(source).toContain("after:-inset-x-1");
+    expect(source).toContain("size-[1em]");
+    expect(source).toContain("align-middle");
+    expect(source).toContain("after:-inset-2");
     expect(source).not.toContain("after:inset-x-0");
     expect(source).not.toContain("max-md:after:-inset-y-1");
   });
@@ -108,6 +110,17 @@ describe("TermHint interaction", () => {
       document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     });
     expect(trigger?.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("fills «{term}» in a raw aria-label template (D-08, /verses)", async () => {
+    await act(async () => {
+      root.render(
+        <TermHint term="По книгам" hint="Подсказка." ariaLabel={commonRu.term_hint.aria_label} />,
+      );
+    });
+    const label = container.querySelector("button")?.getAttribute("aria-label") ?? "";
+    expect(label).toBe("Что значит «По книгам»?");
+    expect(label).not.toMatch(/[{}]/);
   });
 
   it("keeps only one hint open when two sit side by side", async () => {

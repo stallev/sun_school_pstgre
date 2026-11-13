@@ -115,6 +115,16 @@ describe("hints dictionary parity (P27 CU2)", () => {
     assertHintShape("analytics", readHints(analyticsEn), "en");
   });
 
+  it("keeps «{ }» out of every term and hint (D-08)", () => {
+    const slices = { teacherRu, teacherEn, adminRu, adminEn, analyticsRu, analyticsEn };
+    for (const [name, dictionary] of Object.entries(slices)) {
+      for (const [key, entry] of Object.entries(readHints(dictionary))) {
+        expect(entry.term, `${name}.${key}.term`).not.toMatch(/[{}]/);
+        expect(entry.hint, `${name}.${key}.hint`).not.toMatch(/[{}]/);
+      }
+    }
+  });
+
   it("avoids duplicate visible terms within a slice unless documented", () => {
     assertNoDuplicateTerms("teacher", readHints(teacherRu), TEACHER_TERM_DUP_EXCEPTIONS);
     assertNoDuplicateTerms("admin", readHints(adminRu), ADMIN_TERM_DUP_EXCEPTIONS);
