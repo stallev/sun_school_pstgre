@@ -39,7 +39,7 @@ export const LessonCheckTableFilters = ({
       className="sticky top-0 z-20 -mx-1 bg-background px-1 pb-2 pt-1"
       aria-busy={pending}
     >
-      <div className="flex flex-wrap items-center gap-2 text-sm">
+      <div className="flex flex-wrap items-center gap-chip text-sm">
         <button type="button" aria-pressed={allOn} className={chipClass(allOn)} onClick={onAll}>
           {allLabel}
         </button>

@@ -116,7 +116,7 @@ export const LessonCheckTable = ({
       formError={messages.formError}
     >
       {(marksActions) => (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <header className="space-y-1">
         <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
           {messages.linkLesson}
@@ -194,8 +194,8 @@ export const LessonCheckTable = ({
       />
 
       {mdUp ? (
-        <Card>
-          <div ref={tableScrollRef} className="overflow-x-auto">
+        <Card className="min-w-0">
+          <div ref={tableScrollRef} className="min-w-0 overflow-x-auto">
             <Table>
               <TableHeader
                 className={cn(stickyTableHead && "[&_tr]:sticky [&_tr]:top-0 [&_tr]:z-[1] [&_tr]:bg-card")}

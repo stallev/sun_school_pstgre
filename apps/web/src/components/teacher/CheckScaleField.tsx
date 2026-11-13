@@ -54,7 +54,7 @@ export const CheckScaleField = ({
       {bandLabel ? (
         <ContentText className={cn("text-sm", bandClassName)}>{bandLabel}</ContentText>
       ) : null}
-      <div className="hidden lg:block">
+      <div className="hidden xl:block">
         <ScorePad
           layout="inline"
           max={10}
@@ -65,7 +65,7 @@ export const CheckScaleField = ({
           onValueChange={onValueChange}
         />
       </div>
-      <div className="lg:hidden">
+      <div className="xl:hidden">
         <button
           type="button"
           disabled={disabled}

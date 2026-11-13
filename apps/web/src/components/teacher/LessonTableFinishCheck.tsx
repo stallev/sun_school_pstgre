@@ -27,7 +27,7 @@ export const LessonTableFinishCheck = ({
   hint,
   hintAriaLabel,
 }: LessonTableFinishCheckProps) => (
-  <div className="flex flex-wrap items-center gap-1">
+  <div className="flex min-w-0 flex-wrap items-center gap-chip">
     <LessonTableFinishCheckButton
       label={label}
       pendingLabel={pendingLabel}

@@ -68,17 +68,17 @@ Tier T1: общие примитивы (`Input`, `Select`, `DateField`, `Button`
 
 Review `diff-only`: профиль `lean` D6 (presentational; мутации и права не меняются).
 
-- [ ] P29-T5 · T1 · **D-01** · Spec: [ADR-022 §4.5 п. 1–2](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [check flow R-18, R-19](../specs/homework_check_flow_spec.md) · Prototype: `vLessonTable`
+- [x] P29-T5 · T1 · **D-01** · Spec: [ADR-022 §4.5 п. 1–2](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [check flow R-18, R-19](../specs/homework_check_flow_spec.md) · Prototype: `vLessonTable`
       Files: `apps/web/src/components/teacher/{LessonTableContent.server,LessonCheckTable,LessonCheckTableFilters,LessonTableFinishCheck,LessonTableFinishCheckButton}.tsx`, `apps/web/src/app/(app)/lessons/[lessonId]/table/page.tsx` (имена — по факту), `apps/web/src/components/patterns/PageHeader.tsx` (панель действий), тесты
       Acceptance: на 768 / 1024 / 1440 `scrollWidth` страницы == `innerWidth`; широкая таблица в обёртке `overflow-x-auto min-w-0`, у flex-родителей `min-w-0`; заголовок «Таблица всех оценок» и строка «Урок 5 · 4 октября» не ломаются в столбик (заголовок `basis-full`, панель «Завершить проверку» — отдельной строкой под ним, пока ширина контента < 960 px); на 360 таблица читаема (прокрутка внутри обёртки)
       Paths: H [768–1440 без скролла страницы; панель действий не сжимает заголовок] · N [очень длинная тема урока → перенос; 0 учеников → пустое состояние ≤ 24 px; нет оценок → «—»] · S n/a — presentational
 
-- [ ] P29-T6 · T1 · **D-02** · Spec: [ADR-022 §4.5 п. 4–5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [check flow §5.1 (v1.11: две колонки с `xl`), §5.2а](../specs/homework_check_flow_spec.md) · Prototype: `vCheck` (390, 1024)
+- [x] P29-T6 · T1 · **D-02** · Spec: [ADR-022 §4.5 п. 4–5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [check flow §5.1 (v1.11: две колонки с `xl`), §5.2а](../specs/homework_check_flow_spec.md) · Prototype: `vCheck` (390, 1024)
       Files: `apps/web/src/components/teacher/{LessonCheckPageContent.server,CheckEntryPageContent.server,check-screen.client,CheckPupilList,CheckScaleField,CheckScoresSection,CheckCard,CheckBottomBar}.tsx`, `apps/web/src/components/ui/{score-selector,score-pad,segmented-control}.tsx` (имена — по факту), тесты
       Acceptance: двухколоночный режим (список + карточка ученика) — с `xl` (≥ 1280; Q-2); на 1024 — одна колонка, список учеников — раскрывающийся блок; шкала «Тест 0–8» — `SegmentedControl` `h-9 min-w-9` с переносом на 2 ряда (0–4, 5–8) на ширинах < `xl`, кнопка ≥ 36 px; кнопки «Таблица всех оценок» и «Печатная ведомость» не сжимают заголовок «Проверка ДЗ» (заголовок в одну строку на 1024)
       Paths: H [1024: одна колонка, шкала теста нажимаема; `xl`: две колонки] · N [тест 0 баллов / 10 баллов → шкала не ломается; клавиши ←/→ работают, как раньше; длинное имя → перенос] · S n/a — presentational; запись оценок не меняется
 
-- [ ] P29-T7 · T1 · **D-03** · Spec: [ADR-022 §4.5 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [check flow §5.2а](../specs/homework_check_flow_spec.md)
+- [x] P29-T7 · T1 · **D-03** · Spec: [ADR-022 §4.5 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [check flow §5.2а](../specs/homework_check_flow_spec.md)
       Files: `apps/web/src/components/teacher/{CheckCardHeader,CheckProgress,CheckPupilList,check-screen.client}.tsx`, `apps/web/src/components/patterns/CheckCardHeader.tsx`, тесты
       Acceptance: 360–768: имя ученика — первая строка карточки на всю ширину, **без `truncate`** (перенос по словам); «15 баллов · Заполнено полей: 5 из 5» — отдельной строкой; зазор между строками списка в раскрывающемся блоке «Ученики · N из M» ≥ 8 px (`gap-chip`)
       Paths: H [имя «Борисова По…» показывается целиком] · N [имя из 40 знаков → перенос по словам, страница не шире окна; 0 заполненных полей → «0 из N»] · S n/a — presentational

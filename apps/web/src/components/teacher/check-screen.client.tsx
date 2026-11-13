@@ -144,7 +144,7 @@ export const CheckScreen = ({
           ) : null;
 
         return (
-    <div className="space-y-4 pb-24 lg:pb-6">
+    <div className="min-w-0 space-y-4 pb-24 lg:pb-6">
       <header className="space-y-1">
         <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
           {messages.linkLesson}
@@ -206,8 +206,8 @@ export const CheckScreen = ({
 
       {versesAccordion}
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start">
-        <details className="rounded-xl border border-line bg-surface lg:hidden">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[16rem_minmax(0,1fr)] xl:items-start">
+        <details className="rounded-xl border border-line bg-surface xl:hidden">
           <summary className="flex h-11 cursor-pointer list-none items-center justify-between px-3">
             <span className="text-sm text-ink-2">
               {fillMessage(messages.pupilsToggle, {
@@ -230,7 +230,7 @@ export const CheckScreen = ({
         </details>
 
         <aside
-          className="hidden rounded-xl border border-line bg-surface p-1.5 lg:sticky lg:top-6 lg:block"
+          className="hidden rounded-xl border border-line bg-surface p-1.5 xl:sticky xl:top-6 xl:block"
           aria-label={messages.pupilsListLabel}
         >
           <CheckPupilList
@@ -243,7 +243,7 @@ export const CheckScreen = ({
           />
         </aside>
 
-        <Card className="px-4 pb-1 sm:px-5">
+        <Card className="min-w-0 px-4 pb-1 sm:px-5">
           <CheckCardHeader
             name={pupil.displayName}
             indexLabel={fillMessage(messages.pupilIndex, {

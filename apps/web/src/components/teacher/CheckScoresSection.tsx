@@ -134,7 +134,7 @@ export const CheckScoresSection = ({
   }
 
   return (
-    <div className={cn("lg:grid lg:grid-cols-2 lg:gap-x-8 lg:gap-y-5")}>
+    <div className={cn("xl:grid xl:grid-cols-2 xl:gap-x-8 xl:gap-y-5")}>
       <div>{versesColumn}</div>
       <div>{scalesColumn}</div>
     </div>
