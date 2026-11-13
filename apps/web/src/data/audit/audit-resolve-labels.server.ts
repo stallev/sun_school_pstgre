@@ -53,7 +53,7 @@ export async function resolveAuditEntryLabels(
           firstName: true,
           lastName: true,
           middleName: true,
-          roleAssignments: {
+          roles: {
             select: { role: true },
           },
         },
@@ -63,7 +63,7 @@ export async function resolveAuditEntryLabels(
     actors.map((user) => {
       const displayName = formatAppUserDisplayName(user, ctx.deletedUserTemplate);
       if (displayName.length > 0) return [user.id, displayName] as const;
-      const assignments = user.roleAssignments as { role: string }[];
+      const assignments = user.roles as { role: string }[];
       const isAdmin = assignments.some((assignment) => assignment.role === USER_ROLE.ADMIN);
       if (isAdmin) return [user.id, ctx.adminWithoutNameLabel] as const;
       return [user.id, entityTypeLabel(ctx, AUDIT_ENTITY_TYPE.APP_USER)] as const;

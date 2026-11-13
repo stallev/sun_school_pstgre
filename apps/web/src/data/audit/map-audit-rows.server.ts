@@ -55,10 +55,10 @@ function formatAuditActionPhrase(adminDict: Dictionary, row: RawAuditRow): strin
   if (row.action === AUDIT_ACTION.ACHIEVEMENT_CATALOG_TOGGLED) {
     const payload = readRecord(row.newValue ?? row.oldValue);
     if (payload.isActive === true) {
-      return getMessage(adminDict, "audit.actions.achievement.catalog_toggled_on");
+      return resolveAuditActionLabel(adminDict, `${row.action}_on`);
     }
     if (payload.isActive === false) {
-      return getMessage(adminDict, "audit.actions.achievement.catalog_toggled_off");
+      return resolveAuditActionLabel(adminDict, `${row.action}_off`);
     }
     return resolveAuditActionLabel(adminDict, row.action);
   }
