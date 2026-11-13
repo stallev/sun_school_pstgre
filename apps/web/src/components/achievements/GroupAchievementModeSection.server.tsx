@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { loadGradeAchievementUi } from "@/data/achievements/load-grade-achievement-ui.server";
 import { getPrisma } from "@/lib/db.server";
 import { getSchoolTimezone } from "@/lib/i18n/get-school-timezone.server";
@@ -10,12 +11,14 @@ type GroupAchievementModeSectionProps = {
   gradeId: string;
   academicYearId: string;
   canMutate: boolean;
+  footer?: ReactNode;
 };
 
 export const GroupAchievementModeSection = async ({
   gradeId,
   academicYearId,
   canMutate,
+  footer,
 }: GroupAchievementModeSectionProps) => {
   const locale = await getUiLocale();
   const timeZone = await getSchoolTimezone();
@@ -36,6 +39,7 @@ export const GroupAchievementModeSection = async ({
       messages={messages}
       dictionaries={{ teacher: teacherDict, common: commonDict }}
       formError={getMessage(commonDict, "errors.form")}
+      footer={footer}
     />
   );
 };

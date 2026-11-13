@@ -214,22 +214,22 @@ Review `diff-only`: профиль `lean` D6 (presentational).
 
 Review `diff-only`: профиль `lean` D6 (presentational).
 
-- [ ] P29-T27 · T1 · **D-25** · Spec: [ADR-022 §4.6 п. 1–4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGroupEdit`
+- [x] P29-T27 · T1 · **D-25** · Spec: [ADR-022 §4.6 п. 1–4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGroupEdit`
       Files: `apps/web/src/components/admin/{GroupDetailPageContent.server,GroupSettingsForm,TeacherAssignmentList}.tsx` (+ `TeacherAssignmentList.test.ts`), `apps/web/src/components/ui/{checkbox,form-checkbox}.tsx`
       Acceptance: `/groups/[id]` — один столбец до `xl`; на `xl+` — 8/4 («Учителя на год» `sticky`, `items-start`, пустой колонки на 450+ px нет); чекбоксы «Стихи / Тест / Тетрадь / Пение» — одна строка с переносом (`flex-wrap gap-x-stack gap-y-chip`, шаг ≤ 36 px); числовые настройки — сетка `auto-fit minmax(10rem, 1fr)`, подпись «Стихов за урок» в одну строку; карточка достижений — компактная строка «заголовок · статус · переключатель» с описанием под заголовком (нет 200+ px пустоты), «Настроить баллы для группы» — ссылка внутри этой карточки; доля пустоты карточек ≤ 30 %
       Paths: H [768–1440: нет пустой колонки; чекбоксы в строку] · N [ни одного учителя на год → пустое состояние ≤ 24 px; узкая ширина → перенос чекбоксов] · S n/a — presentational; права и мутации не меняются
 
-- [ ] P29-T28 · T1 · **D-26** · Spec: [ADR-022 §4.6 п. 2–3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vApprovals`
+- [x] P29-T28 · T1 · **D-26** · Spec: [ADR-022 §4.6 п. 2–3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vApprovals`
       Files: `apps/web/src/components/admin/{ApprovalRow,ApprovalRoleSelect,ApprovalsPageContent.server,ApproveRequestDialog.client}.tsx` (+ `approval-role-select.test.ts`)
       Acceptance: «Роли ?» и «Группы ?» — чипы-чекбоксы в строку с переносом (шаг 32–36 px), вместо списка с шагом ~48 px; метаданные заявки («Подана 3 нояб. · Версия согласия») — над ролями, не узкой левой колонкой; кнопки «Одобрить / Отклонить» — один ряд под ролями; карточка заявки ≤ 260 px на 1440 при пяти ролях/группах (замер)
       Paths: H [карточка ≤ 260 px] · N [много групп → перенос на новые строки; нет групп → «Группы» скрыты; заявка без роли → кнопка «Одобрить» неактивна, как раньше] · S n/a — presentational; решение по заявке и права не меняются
 
-- [ ] P29-T29 · T0 · **D-30** · Spec: [ADR-022 §4.6 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vToday`
+- [x] P29-T29 · T0 · **D-30** · Spec: [ADR-022 §4.6 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vToday`
       Files: `apps/web/src/components/teacher/{TodayLessonCard,TodayPageContent.server}.tsx` (+ `TodayLessonCard.test.tsx`)
       Acceptance: в карточке «Кого отметить в классе» кнопка «Включить в настройках группы» — по ширине содержимого, `variant="outline"`; пустое состояние — текст + ссылка; нет `w-full` на `md+`
       Paths: H [вторичная кнопка не баннер] · N [нет прав на настройки → без кнопки, как раньше] · S n/a — presentational
 
-- [ ] P29-T30 · T1 · **D-31** · Spec: [ADR-022 §4.6 п. 1, 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vYear`
+- [x] P29-T30 · T1 · **D-31** · Spec: [ADR-022 §4.6 п. 1, 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vYear`
       Files: `apps/web/src/components/admin/{YearCard,YearPageContent.server,YearPageSkeleton}.tsx` (+ `YearCard.test.ts`)
       Acceptance: сетка `/year` — `items-start`; карточка закрытого года («2025–2026») — компактная, без опасной зоны, высота по содержимому (пустота снизу ≤ 30 %); список лет — один столбец до `xl`
       Paths: H [закрытый год без 316 px пустоты] · N [один год → без сетки; нет закрытых → только активный] · S n/a — presentational

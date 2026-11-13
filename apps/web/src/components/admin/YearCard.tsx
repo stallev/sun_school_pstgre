@@ -74,7 +74,7 @@ export const YearCard = ({
   });
 
   return (
-    <article className="flex h-full flex-col gap-stack rounded-xl border border-line bg-surface p-card">
+    <article className="flex flex-col gap-stack rounded-xl border border-line bg-surface p-card">
       <div className="flex items-start justify-between gap-stack">
         <SectionTitle>{row.name}</SectionTitle>
         <StatusText tone="neutral" className="shrink-0 text-sm">

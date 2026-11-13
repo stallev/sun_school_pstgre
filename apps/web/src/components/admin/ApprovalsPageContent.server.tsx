@@ -59,7 +59,7 @@ export const ApprovalsPageContent = async () => {
             description={adminMessages.approvals.emptyDescription}
           />
         ) : (
-          <ul className="space-y-3">
+          <ul className="space-y-stack">
             {rows.map((row) => (
               <li key={row.requestId}>
                 <ApprovalRow

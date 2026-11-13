@@ -41,9 +41,9 @@ export const YearPageContent = async ({ messages, dictionaries, uiLocale, formEr
         {years.length === 0 ? (
           <EmptyState title={messages.year.emptyTitle} description={messages.year.emptyDescription} />
         ) : (
-          <ul className="grid items-stretch gap-stack lg:grid-cols-2">
+          <ul className="grid items-start gap-stack xl:grid-cols-2">
             {years.map((row) => (
-              <li key={row.yearId} className="h-full">
+              <li key={row.yearId}>
                 <YearCard
                   row={row}
                   dictionaries={dictionaries}

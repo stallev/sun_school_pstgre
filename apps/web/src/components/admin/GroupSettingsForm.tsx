@@ -122,7 +122,7 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
         <input type="hidden" name="yearId" value={detail.yearId} />
         <input type="hidden" name="weightsJson" value={weightsJson} />
         <input type="hidden" name="labelsJson" value={labelsJson} />
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="flex flex-wrap gap-x-stack gap-y-chip">
           {(
             [
               ["useVerses", messages.group.settingsVerses, useVerses, setUseVerses],
@@ -131,7 +131,7 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
               ["useSinging", messages.group.settingsSinging, useSinging, setUseSinging],
             ] as const
           ).map(([name, label, checked, setChecked]) => (
-            <label key={name} className="flex min-h-11 items-center gap-2 text-sm">
+            <label key={name} className="flex min-h-8 items-center gap-chip text-sm">
               <FormCheckbox
                 name={name}
                 checked={checked}
@@ -142,7 +142,8 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
             </label>
           ))}
         </div>
-        <label className="grid max-w-24 gap-1 text-base font-medium">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] items-start gap-stack">
+        <label className="grid gap-hint text-base font-medium">
           <span>{messages.group.settingsMaxVerses}</span>
           <Input
             name="maxVersesPerLesson"
@@ -158,7 +159,7 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
             {messages.group.settingsMaxVersesHint}
           </ContentText>
         </label>
-        <label className="grid max-w-24 gap-1 text-base font-medium">
+        <label className="grid gap-hint text-base font-medium">
           <span>{messages.group.settingsRecitationDays}</span>
           <Input
             name="recitationDaysN"
@@ -174,6 +175,7 @@ export const GroupSettingsForm = ({ detail, dictionaries, formError }: GroupSett
             {messages.group.settingsRecitationDaysHint}
           </ContentText>
         </label>
+        </div>
         <Button
           type="submit"
           className="w-full sm:w-auto"

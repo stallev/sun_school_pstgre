@@ -53,14 +53,16 @@ export const GroupDetailPageContent = async ({ params }: GroupDetailPageProps) =
           gradeId={detail.gradeId}
           academicYearId={detail.yearId}
           canMutate={detail.yearStatus === ACADEMIC_YEAR_STATUS.ACTIVE}
+          footer={
+            <GroupPointsCardLink
+              gradeId={detail.gradeId}
+              academicYearId={detail.yearId}
+              href={`/groups/${detail.gradeId}/points`}
+            />
+          }
         />
         <GroupSuggestionCount gradeId={detail.gradeId} academicYearId={detail.yearId} />
-        <GroupPointsCardLink
-          gradeId={detail.gradeId}
-          academicYearId={detail.yearId}
-          href={`/groups/${detail.gradeId}/points`}
-        />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
+        <div className="grid grid-cols-1 gap-stack xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-start">
           <GroupSettingsForm
             key={`${detail.gradeId}-${detail.language}`}
             detail={detail}

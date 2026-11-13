@@ -53,7 +53,7 @@ export const TeacherAssignmentList = ({
   const pending = assignPending || unassignPending;
 
   return (
-    <section className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5">
+    <section className="space-y-stack self-start rounded-xl border border-line bg-surface p-card xl:sticky xl:top-page-x">
       <SectionTitle>{messages.group.teachersTitle}</SectionTitle>
       {detail.assignments.length === 0 ? (
         <ContentText tone="secondary">{messages.group.teachersEmpty}</ContentText>
