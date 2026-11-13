@@ -95,7 +95,7 @@ describe("listAuditLog", () => {
             firstName: "A",
             lastName: "Admin",
             middleName: null,
-            roleAssignments: [{ role: USER_ROLE.ADMIN }],
+            roles: [{ role: USER_ROLE.ADMIN }],
           },
         ]),
       },
