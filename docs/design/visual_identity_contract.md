@@ -2,10 +2,10 @@
 
 **Тип:** UX Contract  
 **Статус:** Canonical  
-**Версия:** 2.5  
-**Дата:** 2026-11-04  
+**Версия:** 2.6  
+**Дата:** 2026-11-13  
 **Волна:** W2-03 (v2.0 — W12, P14; v2.1 — P24, ADR-017)  
-**Зависит от:** [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html) (token dump и `@theme static` в `<head>`), [`typography_text_guidelines.md`](../guidelines/typography_text_guidelines.md), [`ai_semantics_a11y_guidelines.md`](../guidelines/react/ai_semantics_a11y_guidelines.md), [`canonical_routes.md`](./canonical_routes.md), [`adr_014_app_redesign_v2.md`](../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_017_shell_container_toast_buttons.md`](../prds/07_governance/adr_017_shell_container_toast_buttons.md)  
+**Зависит от:** [`sunday_school_prototype.html`](../prototypes/sunday_school_prototype.html) (token dump и `@theme static` в `<head>`), [`typography_text_guidelines.md`](../guidelines/typography_text_guidelines.md), [`ai_semantics_a11y_guidelines.md`](../guidelines/react/ai_semantics_a11y_guidelines.md), [`canonical_routes.md`](./canonical_routes.md), [`adr_014_app_redesign_v2.md`](../prds/07_governance/adr_014_app_redesign_v2.md), [`adr_017_shell_container_toast_buttons.md`](../prds/07_governance/adr_017_shell_container_toast_buttons.md), [`adr_022_responsive_shell_spacing_and_density.md`](../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)  
 **Связанные документы:** [`responsive_navigation_contract.md`](./responsive_navigation_contract.md), [`prototype_route_mapping.md`](./prototype_route_mapping.md), [`redesign_v2_ui_spec.md`](./redesign_v2_ui_spec.md), [`prototype_class_parity_spec.md`](../implementation/mvp/specs/prototype_class_parity_spec.md), [`architecture_master_index.md`](../prds/architecture_master_index.md)  
 **Проверено по:** Tailwind CSS v4.3 (`@theme`, `@theme inline`, `@theme static`) — tailwindcss.com/docs/theme через WebFetch, 2026-10-10; shadcn/ui theming (CSS-переменные `:root` / `.dark`, `@theme inline`, имена токенов) — ui.shadcn.com/docs/theming, 2026-10-10. Контраст рассчитан по формуле WCAG 2.1 (относительная яркость sRGB), 2026-10-10; v2.0 пары цветов не меняет. Source Sans 3 — fonts.google.com/specimen/Source+Sans+3 (variable, latin + cyrillic), 2026-10-24. Context7 недоступен.
 
@@ -32,17 +32,17 @@
 | D-6 | Основная кнопка — заливка `cobalt-ink` (6.70:1), hover — новый токен `cobalt-deep` | Решение владельца 2026-10-10; AA для текста кнопки |
 | D-7 | Границы полей и чипов выбора — `muted` (4.76:1) | Решение владельца: нетекстовый контраст ≥ 3:1 |
 | D-8 | Баннер ошибки: иконка `danger`, жирный заголовок, текст `ink` на `danger-soft` | Решение владельца; контраст текста 14.61:1 |
-| D-9 | Шкала высот контролов: `default` `h-10` (45 px), `compact` `h-9` (40.5 px, только в таблицах), `touch` `h-11` (49.5 px); токены `--control-h`, `--control-h-compact`, `--control-h-touch` (ADR-014 R-6) | Аудит: 38 / 43 / 47 px вразнобой; соседние контролы одной высоты |
+| D-9 | Шкала высот контролов (**v2.6, ADR-022 §4.3**): поле `Input` / `Select` / `DateField` — `h-9` (40,5 px), компактное — `h-8` (36 px, фильтры и таблицы), `touch` `h-11` (49,5 px; цель касания ≥ 44 px, только основное действие и нижняя панель на < `md`); токены `--control-h`, `--control-h-compact`, `--control-h-touch`. Прежний `default` `h-10` (45 px) упразднён. Минимум интерактивного элемента — 36 px (`h-8`); ссылка внутри текста исключена. Кнопка рядом с полем наследует высоту поля | Аудит 2026-11-13 (D-28): поля 45 px раздувают формы, кнопка и поле на одной линии расходятся |
 | D-10 | Выбранный чип и сегмент — `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink`; solid `ink` как «выбрано» запрещён (ADR-014 R-5) | Аудит: два вида выбранного на разных экранах |
 | D-11 | Бюджет акцента: `cobalt-ink` — основная кнопка, текущий пункт, ссылки в прозе, главная цифра экрана; имена в таблицах и числа календаря — `ink` (ADR-014 R-10) | Аудит: акцент размазан по именам рейтинга и числам календаря |
 | D-12 | Программный фокус `main#main` без рамки; `:focus-visible` на интерактиве сохраняется (ADR-014 R-9) | Аудит: 2 px cobalt-рамка вокруг страницы после каждой навигации |
 | D-13 | Нативные `select`, `checkbox`, `date` в продуктовом UI запрещены (ADR-014 R-7) | Аудит: системный вид, `mm/dd/yyyy` при русском интерфейсе |
-| D-14 | **Единый компактный размер кнопок** (P24, ADR-017): `Button` (`default`, `outline`, `ghost`, `destructive`), чипы, сегменты `SegmentedControl` и кнопки `ScorePad` / `ScoreSelector` — `h-9 px-3 text-base rounded-lg`, ширина по содержимому (`w-auto`), как кнопка «Выдать» в списке выдачи кирпичиков. Крупнее — только `touch` (`h-11`, ≥ 44 px) на < `md` для главного действия формы и кнопок нижней панели. Кнопка в одной строке с полем ввода выравнивается по полю (`size="field"`, `h-10`, F14 UX-06). Иконка — `size="icon"` `size-9` | Аудит P24: кнопки 40–50 px и сегменты на всю ширину карточки занимали экран проверки ДЗ; одна кнопка «Выдать» читалась лучше |
+| D-14 | **Единый компактный размер кнопок** (P24, ADR-017): `Button` (`default`, `outline`, `ghost`, `destructive`), чипы, сегменты `SegmentedControl` и кнопки `ScorePad` / `ScoreSelector` — `h-9 px-3 text-base rounded-lg`, ширина по содержимому (`w-auto`), как кнопка «Выдать» в списке выдачи кирпичиков. Крупнее — только `touch` (`h-11`, ≥ 44 px) на < `md` для главного действия формы и кнопок нижней панели. Кнопка в одной строке с полем ввода **наследует высоту поля** (`h-9` или `h-8` в компактном ряду; `size="field"` `h-10` упразднён, ADR-022 §4.3, F14 UX-06). Иконка — `size="icon"` `size-9` | Аудит P24: кнопки 40–50 px и сегменты на всю ширину карточки занимали экран проверки ДЗ; одна кнопка «Выдать» читалась лучше |
 | D-15 | **Toast** (P24, ADR-017): success — `bg-ok-soft border border-ok text-ink` + иконка `CircleCheck` `text-ok`; error — `bg-danger-soft border border-danger text-ink` + иконка `CircleAlert` `text-danger`; нейтральный — `bg-surface border-line`; 2000 мс; ≥ `lg` справа снизу, < `lg` сверху | Пользователь не отличал успех от ошибки; тёмный toast по центру снизу перекрывал полосу действий |
 | D-16 | **Лидер урока** (P24): ученик(и) с наибольшим итогом за урок — строка/элемент списка `bg-gold-soft`, иконка `Trophy` `text-gold-ink`, левая граница `border-l-4 border-gold`, `sr-only` «Лучший результат урока»; цвет никогда не единственный признак; `ink`/`ink-2` на `gold-soft` ≥ 6.6, а `ok` / `danger` / `muted` / `amber-ink` на `gold-soft` дают 4.15–4.38 (< 4.5), поэтому внутри строки лидера не используются; применяется на проверке, сводной таблице и ведомости | Учителю нужно сразу видеть лучший результат урока, не сравнивая числа |
 | D-17 | **Подсказка термина `TermHint`** (P25, ADR-018): иконка `CircleHelp` `size-4` `text-muted` в кнопке `h-9 w-9` (область касания ≥ 44 px на < `md` через `after:`), `aria-label` = «Что значит «термин»?» (P26); по клику / Enter — popover (у правого края окна раскрывается влево — `align="end"`, P26) `bg-surface border border-line shadow-float rounded-lg p-3 text-base`, ширина `min(20rem, 100vw - 2rem)`, 1–2 предложения (≤ 200 знаков), Esc и клик вне закрывают; фокус возвращается на кнопку; без анимации при `motion-reduce`. Не заменяет подпись и не несёт единственный смысл. На экранах используется только через `TermLabel` / `TermHeader` (P27, ADR-020): слово (`term`) всегда видно рядом со значком; прямой импорт `TermHint` запрещён |
 | D-18 | **Форматы** (P25, ADR-018): процент — целое с `%`; дробные — запятая по локали (`@/lib/i18n/format`); баллы — «значение из максимума»; дата — «4 окт. 2026»; сравнение — «+1% к прошлому году» и «+0,1 к прошлому году» (один шаблон для всех метрик, P26); прогресс — «10 из 30»; ISO-даты и `toFixed` в UI запрещены |
-| D-19 | **Правила размещения «?»** (P27, ADR-020 §4 п. 2–3): (а) слово, которое учитель или администратор не употребляет в обычной речи, получает «?»; (б) у вычисляемой цифры подсказка отвечает «что считаем, по кому, за какой период»; (в) у необратимой или массовой кнопки подсказка объясняет последствия рядом с кнопкой (диалог подтверждения остаётся); (г) у неактивного элемента причина — по нажатию (вариант `reason`), `title` — только дополнение; (д) текст ≤ 3 строк (определение · «Как считается» · пример или «Подробнее»), ≤ 200 знаков, не повторяет подпись; (е) в таблицах и заголовках колонок popover открывается вверх (`TermHeader`), в абзацах — вниз, у правого края — влево |
+| D-19 | **Правила размещения «?»** (P27, ADR-020 §4 п. 2–3): (а) слово, которое учитель или администратор не употребляет в обычной речи, получает «?»; (б) у вычисляемой цифры подсказка отвечает «что считаем, по кому, за какой период»; (в) у необратимой или массовой кнопки подсказка объясняет последствия рядом с кнопкой (диалог подтверждения остаётся); (г) у неактивного элемента причина — по нажатию (вариант `reason`), `title` — только дополнение; (д) текст ≤ 3 строк (определение · «Как считается» · пример или «Подробнее»), ≤ 200 знаков, не повторяет подпись; (е) в таблицах и заголовках колонок popover открывается вверх (`TermHeader`), в абзацах — вниз, у правого края — влево; **(ж, v2.6 ADR-022 §4.7)** один смысл — один раз на экран: в таблицах значок только в шапке, в списках карточек — у первой карточки, не в каждой строке; **(з)** значок стоит после слова, не после значения, кнопки или двоеточия, `TermLabel` двоеточий не добавляет, значок не меняет высоту строки (`inline`, `1em`, `align-middle`) и не стоит внутри кнопки; **(и)** нет дубля подписи и кнопки («Закрыть год ?» + «Закрыть год»); `aria-label` и словарь не содержат `{` `}` (тест) |
 
 ## 4. Токены цвета
 
@@ -147,10 +147,10 @@
 
 | Элемент | Правило |
 |---------|---------|
-| Поля, `Select`, `DateField` | `rounded-lg`; высота — шкала D-9: `h-10` по умолчанию, `h-9` внутри таблиц, `h-11` на мобильном рядом с `touch`-кнопкой. Соседние контролы одного ряда одной высоты |
-| Кнопки, чипы, сегменты, кнопки шкалы | `rounded-lg h-9 px-3`, ширина по содержимому (D-14, P24); `touch` `h-11` — только главное действие и нижняя панель на < `md`; рядом с полем — `size="field"` `h-10` |
-| Контейнер страницы | `max-w-[1600px] mx-auto` (**по центру** области `main`), `px-4 sm:px-6 lg:px-8`; тот же контейнер у правой части шапки (ADR-017, отменяет «влево» ADR-014 R-4). Узкая страница — `PageSection width="form"` (`max-w-3xl`, 48rem) или `"wide"` (`max-w-5xl`, 64rem) внутри контейнера, по его левому краю; экраны `(auth)` используют свою рамку `AuthScreen` |
-| Сайдбар (`lg+`) | развёрнут `w-64` (16rem = 288 px при базе 18), свёрнут (rail) `w-16` (4rem) — только иконки `size-5` в строке `h-10 w-10`, tooltip и `aria-label` (P24, ADR-017); `border-r border-line bg-surface`, высота `100dvh` минус шапка, прокрутка внутри; строка пункта развёрнутого сайдбара `min-h-10 rounded-lg px-3 py-1.5 text-base leading-tight` (длинная подпись переносится на вторую строку, не усекается) |
+| Поля, `Select`, `DateField` | `rounded-lg`; высота — шкала D-9 (v2.6): `h-9` по умолчанию (40,5 px), `h-8` компактное (36 px, фильтры и таблицы), `h-11` на мобильном рядом с `touch`-кнопкой. Соседние контролы одного ряда одной высоты, верхние края совпадают ±1 px |
+| Кнопки, чипы, сегменты, кнопки шкалы | `rounded-lg h-9 px-3`, ширина по содержимому (D-14, P24); `touch` `h-11` — только главное действие и нижняя панель на < `md`; рядом с полем — высота поля (`h-9` / `h-8`), отдельного размера нет |
+| Контейнер страницы | `max-w-[1600px] mx-auto` (**по центру** области `main`), боковой отступ `--space-page-x` (16,2 / 24,3 / 32,4 px; v2.6, прежние `px-4 sm:px-6 lg:px-8` = 18 / 27 / 36 px заменены); тот же контейнер у правой части шапки (ADR-017, отменяет «влево» ADR-014 R-4). Узкая страница — `PageSection width="form"` (`max-w-3xl`, 48rem) или `"wide"` (`max-w-5xl`, 64rem) внутри контейнера, по его левому краю; экраны `(auth)` используют свою рамку `AuthScreen` |
+| Сайдбар | **v2.6 (ADR-022 §4.1):** `< lg` — drawer; `lg` (1024–1279) — rail по умолчанию; `xl+` (≥ 1280) — развёрнут по умолчанию; cookie `sidebar_collapsed` приоритетнее умолчания. Развёрнут `w-64` (16rem = 288 px при базе 18), свёрнут (rail) `w-16` (4rem) — только иконки `size-5` в строке `h-10 w-10`, tooltip и `aria-label` (P24, ADR-017); `border-r border-line bg-surface`, высота `100dvh` минус шапка, прокрутка внутри; строка пункта развёрнутого сайдбара `min-h-10 rounded-lg px-3 py-1.5 text-base leading-tight` (длинная подпись переносится на вторую строку, не усекается) |
 | Карточки | `rounded-xl border border-line bg-surface`; без тени |
 | Bottom-sheet | `rounded-t-2xl`, `max-h-[92dvh]`, нижний отступ `env(safe-area-inset-bottom)` |
 | Выпадающие панели | `rounded-xl border border-line` + одна тень `shadow-[0_10px_30px_rgba(15,23,42,0.12)]` |
@@ -158,21 +158,37 @@
 
 Глубина — границами, не тенями; тень только у плавающих панелей (dropdown, toast).
 
+## 7а. Spacing scale (v2.6, ADR-022 §4.2)
+
+Токены в `:root` (в `rem` = px/18), маппинг в `@theme inline` как `--spacing-*` (утилиты `gap-hint`, `gap-chip`, `p-card`, `py-section`, `px-page`).
+
+| Токен | rem | px при корне 18 | Где |
+|-------|-----|-----------------|-----|
+| `--space-hint` | 0.45rem | 8,1 | слово → значок «?», иконка → текст в кнопке |
+| `--space-label` | 0.35rem | 6,3 | подпись → поле |
+| `--space-chip` | 0.45rem | 8,1 | цепочка чипов, табов, кнопок (обе оси) |
+| `--space-stack` | 0.9rem | 16,2 | блоки внутри карточки, поля формы, цепочка → цепочка |
+| `--space-card` | 0.9rem / 1.35rem (`md+`) | 16,2 / 24,3 | карточка → карточка, `padding` карточки |
+| `--space-section` | 1.8rem / 2.2rem (`md+`) | 32,4 / 39,6 | секция → секция |
+| `--space-page-x` | 0.9 / 1.35 / 1.8rem | 16,2 / 24,3 / 32,4 | боковой отступ контейнера (mobile / `md` / `lg+`) |
+
+**Правила.** (1) В product-коде запрещены сырые `gap-*`, `space-x/y-*`, `p*-*` из шкалы Tailwind — только токены (ESLint, исключения `components/ui/**` и `design-lab/**`). (2) Форма — 12-колоночная сетка `gap-x-stack gap-y-stack`; подпись `min-h-5`, значок «?» не меняет её высоту. (3) Сетки карточек — `items-start`; чекбоксы и чипы — в строку с переносом, шаг ≤ 36 px; вторичные кнопки по ширине содержимого; пустое состояние `p` ≤ 24 px. (4) Широкое содержимое (таблицы, шкалы, графики, `pre`) — в обёртке `overflow-x-auto min-w-0`, страница не растягивается; списки и журнал до `lg` — карточки. (5) Заголовок страницы не сжимается панелью действий: панель переносится под заголовок, пока ширина контента < 960 px.
+
 ## 8. Рецепты компонентов
 
 | Компонент | Рецепт (прототип) | shadcn |
 |-----------|-------------------|--------|
-| Кнопка основная | `BTN` (`h-9 px-3 text-base font-medium rounded-lg`, ширина по содержимому, D-14) + `bg-cobalt-ink text-surface hover:bg-cobalt-deep` (D-6); на < `md` главное действие — `touch` `h-11` | `Button` `default` (размеры `default` = компактный, `touch`, `field`, `icon`) |
+| Кнопка основная | `BTN` (`h-9 px-3 text-base font-medium rounded-lg`, ширина по содержимому, D-14) + `bg-cobalt-ink text-surface hover:bg-cobalt-deep` (D-6); на < `md` главное действие — `touch` `h-11` | `Button` `default` (размеры `default` = `h-9`, `compact` = `h-8`, `touch`, `icon`; `field` упразднён в v2.6) |
 | Кнопка контурная | `border border-line-strong bg-surface text-ink hover:bg-paper` | `Button` `outline` |
 | Кнопка текстовая | `text-ink hover:bg-line/60` | `Button` `ghost` |
 | Кнопка опасная | `border border-danger/60 text-danger hover:bg-danger-soft`; заливка `bg-danger text-surface` — только в `ConfirmDialog` (R-11) | `Button` `destructive` / `destructive-solid` |
 | Кнопка штрафа (post-MVP) | `bg-penalty text-surface` | custom |
-| Поле | `h-10 w-full rounded-lg border border-muted bg-surface px-3 text-base focus:border-cobalt-ink` + `label` над полем (`mb-1.5 text-base font-medium`) | `Input`, `Label` |
-| Select | Триггер как поле: `h-10 w-full rounded-lg border border-muted bg-surface px-3 text-base`, справа шеврон `size-4 text-muted`; панель `DD_PANEL`, пункт `h-10 rounded-lg px-2.5 text-base`, выбранный `bg-cobalt-soft text-cobalt-ink` (D-13) | `Select` |
+| Поле | `h-9 w-full rounded-lg border border-muted bg-surface px-3 text-base focus:border-cobalt-ink` + `label` над полем (`min-h-5 mb-label text-base font-medium`; значок «?» в подписи `inline`, не раздувает строку); компактное — `h-8` | `Input`, `Label` |
+| Select | Триггер как поле: `h-9 w-full rounded-lg border border-muted bg-surface px-3 text-base`, справа шеврон `size-4 text-muted`; панель `DD_PANEL`, пункт `h-9 rounded-lg px-2.5 text-base`, выбранный `bg-cobalt-soft text-cobalt-ink` (D-13) | `Select` |
 | Checkbox | `size-5 rounded border border-muted bg-surface`; выбран `border-cobalt-ink bg-cobalt-ink`, галочка `text-surface`; подпись `text-base` рядом, область касания ≥ 44 px | `Checkbox` |
 | DateField | Как поле, `inputmode="numeric"`, ввод `ДД.ММ.ГГГГ` / ISO по локали из `lib/i18n/format.ts`, справа кнопка-иконка календаря `size-10`; панель календаря `DD_PANEL` | `DateField` (+ `Popover`) |
-| Чип / сегмент | Невыбранный `h-9 rounded-lg border border-input bg-surface px-3 text-base hover:border-ink-2` (D-14; сегменты по ширине содержимого, не на ширину карточки — режим `fit`); выбранный `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink` (D-10); `role="radio"` / `aria-pressed` | `SegmentedControl` (режимы `radio`, `toggle`) |
-| Карточка | `rounded-xl border border-line bg-surface p-4 sm:p-5` | `Card` |
+| Чип / сегмент | Невыбранный `h-9` (в компактном ряду `h-8`) `rounded-lg border border-input bg-surface px-3 text-base hover:border-ink-2` (D-14; зазор в цепочке `gap-chip`; сегменты по ширине содержимого, не на ширину карточки — режим `fit`); выбранный `border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink` (D-10); `role="radio"` / `aria-pressed` | `SegmentedControl` (режимы `radio`, `toggle`) |
+| Карточка | `rounded-xl border border-line bg-surface p-card` (16,2 / 24,3 px, v2.6); пустое состояние `p` ≤ 24 px | `Card` |
 | Пункт сайдбара | `min-h-10 rounded-lg px-3 py-1.5 text-base leading-tight text-ink hover:bg-line/60`; текущий `bg-cobalt-soft font-bold text-cobalt-ink` + `aria-current="page"`; заголовок группы `px-3 pt-4 pb-1 text-sm font-medium text-muted`. Rail (P24): `h-10 w-10 justify-center`, только иконка, `aria-label` + tooltip; бейдж — точка `size-2 bg-cobalt-ink` на иконке | `SidebarNav` |
 | Меню (drawer) | панель слева `w-[min(20rem,86vw)]`, `bg-surface`, затемнение `bg-ink/40` | `Sheet` |
 | Диалог | bottom-sheet `bg-surface`, затемнение `bg-ink/45`, `role="dialog" aria-modal` | `Dialog` / `Drawer` |
@@ -188,7 +204,7 @@
 1. Длительности 100–300 мс, кривая `ease-out-soft` (`cubic-bezier(0.22,1,0.36,1)`).
 2. `motion-reduce:` отключает масштабирование и переходы панелей; `reduce-transparency:` убирает размытие шапки.
 3. Фокус всегда виден (`focus-visible`), контур `cobalt` 2 px со смещением.
-4. Цель касания: на < `md` (сенсорный ввод) — ≥ 44 px: главное действие и нижняя панель — `touch` `h-11`; компактные кнопки `h-9` (40.5 px) получают увеличенную область касания (псевдоэлемент `after:-inset-y-1`). На ≥ `md` компактный размер `h-9` допустим для всех кнопок (D-14; WCAG 2.2 SC 2.5.8 — ≥ 24 px).
+4. Цель касания: на < `md` (сенсорный ввод) — ≥ 44 px: главное действие и нижняя панель — `touch` `h-11`; компактные кнопки `h-9` (40,5 px) и `h-8` (36 px) получают увеличенную область касания (псевдоэлемент `after:-inset-y-1`). На ≥ `md` компактный размер `h-9` допустим для всех кнопок (D-14; WCAG 2.2 SC 2.5.8 — ≥ 24 px).
 5. Информация не передаётся только цветом: у статуса есть текст или иконка.
 6. Текущий пункт меню — `aria-current="page"`, раскрываемое — `aria-expanded`.
 
@@ -206,6 +222,9 @@
 | Акцент | `cobalt-ink` на действиях, текущем пункте, ссылках в прозе | Cobalt на именах в таблицах и числах календаря |
 | Красный | Ошибки и удаление | Штраф или «минус» красным |
 | Декор | Без градиентов и эмодзи в интерфейсе | Эмодзи в кнопках |
+| Интервалы | Токены §7а (`gap-chip`, `p-card`) | `gap-1/1.5/2/3`, `space-y-*`, `p-4` вне `components/ui/**` |
+| Широкое | Таблица, шкала, график, `pre` внутри обёртки `overflow-x-auto min-w-0` | Страница шире окна; `truncate` на имени ученика в заголовке |
+| Воздух | `items-start` у сеток карточек, чекбоксы в строку с переносом | Карточка на высоту соседа; вертикальный список чекбоксов с шагом ≥ 40 px |
 | Прототип | Эталон внешнего вида, не кода | Копирование JS-шаблонов в приложение |
 
 Реализация каталога компонентов и страницы `/design-system` — [`design_system_lab_spec.md`](../implementation/mvp/specs/design_system_lab_spec.md) (W15).
@@ -236,6 +255,8 @@
 - [ ] v2.0: сверка классов прототипа и компонентов по [`prototype_class_parity_spec.md`](../implementation/mvp/specs/prototype_class_parity_spec.md) — исход: трасса `Parity: N строк, расхождений 0`.
 - [ ] v2.1 (P24): `Button` `default` — `h-9 px-3`, без `w-full` на `md+`; сегменты и чипы — `h-9`; toast success / error различаются фоном и иконкой, длительность 2000 мс; контейнер `max-w-[1600px] mx-auto` — исход: тесты `button`, `segmented-control`, `product-toaster` + parity.
 
+- [ ] v2.6 (P29, ADR-022): поле `h-9` (40,5 ±1 px), компактное `h-8` (36 ±1 px), кнопка рядом с полем той же высоты; зазор в цепочке чипов ≥ 8 px; верхние края полей в ряду ±1 px; на 1024 px под контентом ≥ 900 px; `scrollWidth` страницы == `innerWidth` на 360 / 768 / 1024 / 1440; в `aria-label` и словаре нет `{` `}` — исход: замер + тесты.
+
 ## 13. Open questions
 
 | ID | Вопрос | Владелец | Блокирует |
@@ -265,6 +286,7 @@
 - v2.0: не писать `text-xs` и `text-[0.9375rem]` в содержимом экрана; не создавать нативные `select` / `checkbox` / `date`; не вводить собственный контейнер ширины на странице (§7).
 - v2.0: старые D-2 и D-5 не применять — действуют версии из таблицы §3.
 - v2.1: не возвращать `h-10` как размер кнопки по умолчанию и тёмный toast `bg-ink`; не прижимать контейнер влево.
+- v2.6: не возвращать поле 45 px, `size="field"` и раскрытый сайдбар на `lg` по умолчанию; не писать сырые `gap-*` / `space-y-*` / `p-N` в product-коде; значок «?» — не в кнопке, не после значения, не в каждой строке.
 
 ## Change log
 
@@ -278,3 +300,4 @@
 | 2026-11-03 | v2.3 — P25 (ADR-018): D-17 `TermHint`, D-18 форматы процентов, чисел и дат |
 | 2026-11-04 | v2.4 — P26 (ADR-019): D-17 `aria-label` «Что значит «…»?», выравнивание у правого края; D-18 один шаблон сравнения, «10 из 30», запрет ISO-дат и `toFixed` |
 | 2026-11-04 | v2.5 — P27 (ADR-020): D-17 видимая подпись (`TermLabel` / `TermHeader`); D-19 правила размещения «?», позиция в таблицах |
+| 2026-11-13 | v2.6 — P29 (ADR-022): D-9 поле `h-9` / `h-8` (поправка 45 px), D-14 без `size="field"`, D-19 п. (ж)–(и); §7 граница сайдбара `xl`, `--space-page-x`; новый §7а Spacing scale; §8 поле, Select, чип, карточка; §10, §12 |

@@ -11,6 +11,7 @@
 
 Список документов реализации Sunday School. Каноническая карта проекта — [`architecture_master_index.md`](../../prds/architecture_master_index.md); этот файл — быстрый вход для исполнителя фазы.
 
+**P29 (2026-11-13)** — адаптивность, интервалы, поля 40,5 / 36 px, «воздух» и понятность (четвёртый аудит): [`P29_tasks.md`](./tasks/P29_tasks.md); документы и прототип готовы, реализация не начата. Номер P28 в навигаторе не используется.  
 **P27 (2026-11-04)** — подсказки «?» и остатки третьего аудита: [`P27_tasks.md`](./tasks/P27_tasks.md); документы и прототип готовы, реализация не начата.  
 **P26 (2026-11-04)** — по повторному аудиту и Sentry: [`P26_tasks.md`](./tasks/P26_tasks.md); реализована (CU1–CU10).  
 **P25 (2026-11-03)** — понятный интерфейс по аудиту юзабилити: [`P25_tasks.md`](./tasks/P25_tasks.md); реализована (CU1–CU9 в `dev`, `d8bfab0`, 2026-11-04).  
@@ -47,8 +48,9 @@
 | P25 | Понятный интерфейс: термины, подсказки, форматы, устойчивые страницы, «Смотреть как» ([ADR-018](../../prds/07_governance/adr_018_ui_terminology_and_term_hints.md)) | [P25](./phases_tasks_descriptions/P25_phase_description.md) | [P25](./tasks/P25_tasks.md) |
 | P26 | Меню предпросмотра, журнал на языке пользователя, единые форматы, остатки экранов, пул БД ([ADR-019](../../prds/07_governance/adr_019_view_as_menu_and_db_pool.md)) | [P26](./phases_tasks_descriptions/P26_phase_description.md) | [P26](./tasks/P26_tasks.md) |
 | P27 | Подсказки «?» везде, журнал без UUID и дублей, русские пояса, склонения ([ADR-020](../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md)) | [P27](./phases_tasks_descriptions/P27_phase_description.md) | [P27](./tasks/P27_tasks.md) |
+| P29 | Адаптивность оболочки (сайдбар с `xl`), шкала интервалов, поля 40,5 / 36 px, таблицы в обёртке, «воздух», правила «?» ([ADR-022](../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)) | [P29](./phases_tasks_descriptions/P29_phase_description.md) | [P29](./tasks/P29_tasks.md) |
 
-Нумерация фаз реализации (P01…P15, P23…P27) не совпадает с промптами bootstrap (P0…P6).
+Нумерация фаз реализации (P01…P15, P23…P27, P29) не совпадает с промптами bootstrap (P0…P6).
 
 ## Контракты
 

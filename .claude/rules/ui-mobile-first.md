@@ -20,8 +20,8 @@ paths:
 |-------|-----------|-----------------|
 | default | 0 | Base layout, bottom nav, sheets |
 | `md` | 768px | Sidebar вместо bottom nav; tablet padding |
-| `lg` | 1024px | Filter sidebars, multi-column, wider sidebar |
-| `xl` / `2xl` | 1280 / 1536px | Wide layouts; shell container `max-w-[1600px] mx-auto` (ADR-017) |
+| `lg` | 1024px | Sidebar as rail `4rem` by default (ADR-022); tables from `lg`, cards below |
+| `xl` / `2xl` | 1280 / 1536px | Expanded sidebar `16rem` by default (ADR-022 §4.1); two-column check, audit table without inner scroll; shell container `max-w-[1600px] mx-auto` (ADR-017) |
 
 ## Обязательные паттерны
 
@@ -31,12 +31,14 @@ paths:
 4. **Edge-to-edge mobile** — cover photos, chip scroll: `-mx-4 md:mx-0`, `overflow-x-auto no-scrollbar`.
 5. **Touch targets** — интерактивные элементы **≥ 44×44px** (`min-h-11 min-w-11` или эквивалент padding).
 6. **Safe area** — bottom nav: `paddingBottom: env(safe-area-inset-bottom)`; контент над nav: `pb-6` минимум.
-7. **Приёмка** — проверять экран на **390px**, затем `md` и `lg` перед merge UI-задачи.
+7. **Горизонтальный скролл** — `scrollWidth` страницы == `innerWidth` на 360 / 768 / 1024 / 1440; широкое содержимое прокручивается внутри обёртки `overflow-x-auto min-w-0` (ADR-022 §4.5); списки и журнал до `lg` — карточки.
+8. **Касание** — основное действие на `< md` — `touch` `h-11` (≥ 44 px); остальные интерактивные ≥ 36 px (`h-8`), зазор между соседними ≥ 8 px (`gap-chip`).
+9. **Приёмка** — проверять экран на **390px**, затем `md` и `lg` перед merge UI-задачи.
 
 ## Антипаттерны
 
 - Desktop-first: base = wide grid, `max-md:` «ломает» layout.
-- Горизонтальный scroll всей страницы (кроме chip-рядов).
+- Горизонтальный scroll всей страницы (кроме chip-рядов); внутренний scroll основной таблицы журнала на `xl+`.
 - Hover-only affordances без tap-альтернативы на mobile.
 
 ## Связанные правила
