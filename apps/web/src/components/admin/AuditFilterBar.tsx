@@ -50,10 +50,10 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
   <form
     method="get"
     action="/audit"
-    className="grid gap-4 rounded-xl border border-line bg-surface p-4 sm:p-5 md:grid-cols-2 lg:grid-cols-3"
+    className="grid grid-cols-12 gap-x-stack gap-y-stack rounded-xl border border-line bg-surface p-card"
   >
-    <div className="space-y-2">
-      <Label htmlFor="audit-from">{labels.from}</Label>
+    <div className="col-span-12 space-y-label md:col-span-4">
+      <Label htmlFor="audit-from" className="min-h-5">{labels.from}</Label>
       <FormDateField
         id="audit-from"
         name="from"
@@ -63,8 +63,8 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         className="max-w-none"
       />
     </div>
-    <div className="space-y-2">
-      <Label htmlFor="audit-to">{labels.to}</Label>
+    <div className="col-span-12 space-y-label md:col-span-4">
+      <Label htmlFor="audit-to" className="min-h-5">{labels.to}</Label>
       <FormDateField
         id="audit-to"
         name="to"
@@ -74,8 +74,8 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         className="max-w-none"
       />
     </div>
-    <div className="space-y-2">
-      <Label htmlFor="audit-actor">{labels.actor}</Label>
+    <div className="col-span-12 space-y-label md:col-span-4">
+      <Label htmlFor="audit-actor" className="min-h-5">{labels.actor}</Label>
       <FormSelect
         id="audit-actor"
         name="actor"
@@ -85,8 +85,8 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         triggerClassName="max-w-none"
       />
     </div>
-    <div className="space-y-2">
-      <Label htmlFor="audit-entity-type">
+    <div className="col-span-12 space-y-label md:col-span-6">
+      <Label htmlFor="audit-entity-type" className="min-h-5">
         <TermLabel
           term={nonEmptyTerm(labels.entityType)}
           hint={labels.entityTypeHint}
@@ -106,8 +106,8 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         triggerClassName="max-w-none"
       />
     </div>
-    <div className="space-y-2 md:col-span-2">
-      <Label htmlFor="audit-action">{labels.action}</Label>
+    <div className="col-span-12 space-y-label md:col-span-6">
+      <Label htmlFor="audit-action" className="min-h-5">{labels.action}</Label>
       <FormSelect
         id="audit-action"
         name="action"
@@ -120,30 +120,32 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         triggerClassName="max-w-none"
       />
     </div>
-    <div className="flex items-center gap-2 md:col-span-2 lg:col-span-3">
-      <Checkbox
-        id="audit-show-system"
-        checked={showSystem}
-        onCheckedChange={(checked) => setShowSystem(checked === true)}
-      />
-      {showSystem ? <input type="hidden" name="showSystem" value="1" /> : null}
-      <Label htmlFor="audit-show-system" className="font-normal">
-        <TermLabel
-          term={nonEmptyTerm(labels.showSystem)}
-          hint={labels.showSystemHint}
-          ariaLabel={labels.showSystemHintAria}
-          popoverSide="top"
+    <div className="col-span-12 flex flex-wrap items-center justify-between gap-x-stack gap-y-stack">
+      <div className="flex items-center gap-chip">
+        <Checkbox
+          id="audit-show-system"
+          checked={showSystem}
+          onCheckedChange={(checked) => setShowSystem(checked === true)}
         />
-      </Label>
-    </div>
-    <div className="flex flex-wrap items-end gap-2 md:col-span-2 lg:col-span-3">
-      <Button type="submit" className="min-h-11">{labels.submit}</Button>
-      <CustomLink
-        href="/audit"
-        className="inline-flex min-h-11 items-center rounded-lg border border-border bg-card px-4 text-sm hover:bg-paper"
-      >
-        {labels.reset}
-      </CustomLink>
+        {showSystem ? <input type="hidden" name="showSystem" value="1" /> : null}
+        <Label htmlFor="audit-show-system" className="font-normal">
+          <TermLabel
+            term={nonEmptyTerm(labels.showSystem)}
+            hint={labels.showSystemHint}
+            ariaLabel={labels.showSystemHintAria}
+            popoverSide="top"
+          />
+        </Label>
+      </div>
+      <div className="flex flex-wrap items-center gap-chip">
+        <Button type="submit">{labels.submit}</Button>
+        <CustomLink
+          href="/audit"
+          className="inline-flex h-9 items-center rounded-lg border border-border bg-card px-card text-sm hover:bg-paper"
+        >
+          {labels.reset}
+        </CustomLink>
+      </div>
     </div>
   </form>
   );

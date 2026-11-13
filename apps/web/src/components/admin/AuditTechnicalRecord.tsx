@@ -21,7 +21,7 @@ export const AuditTechnicalRecord = ({ term, hint, hintAriaLabel, json }: AuditT
           popoverSide="top"
         />
       </summary>
-      <pre className="mt-2 max-h-48 overflow-auto break-all rounded-lg border border-line bg-paper p-3 font-mono text-sm text-ink-2">
+      <pre className="mt-2 max-h-48 overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-all rounded-lg border border-line bg-paper p-chip font-mono text-sm text-ink-2">
         {json}
       </pre>
     </details>
