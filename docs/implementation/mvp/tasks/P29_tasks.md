@@ -307,32 +307,32 @@ Review `diff-only`: профиль `lean` D6 (копирайт и presentational
 
 Review `diff-only`: профиль `lean` D6 (presentational; редактор баллов, права и мутации не меняются).
 
-- [ ] P29-T42 · T1 · **D-27** · Spec: [ADR-022 §4.5 п. 1, 3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-015](../../../prds/07_governance/adr_015_group_achievement_points.md) (редактор баллов; не меняется) · Prototype: `/groups/[id]/points`
+- [x] P29-T42 · T1 · **D-27** · Spec: [ADR-022 §4.5 п. 1, 3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-015](../../../prds/07_governance/adr_015_group_achievement_points.md) (редактор баллов; не меняется) · Prototype: `/groups/[id]/points`
       Files: `apps/web/src/components/achievements/{GroupPointsTable.client,GroupPointsTableGrid.client,GroupPointsRow,AdminGroupPointsPageContent.server,TeacherGroupPointsPageContent.server}.tsx` (+ `GroupPointsRow.test.tsx`), `apps/web/src/app/(app)/groups/[groupId]/points/page.tsx`, `apps/web/src/app/(app)/group/points/page.tsx`; хук `use-group-points-editor-drafts.ts` не меняется
       Acceptance: до `lg` — список карточек (на строку достижения: название · уровень · условие · общее · поле группы); на `≥ lg` — таблица в обёртке; «Как зарабатывается» — отдельная строка раскрытия на всю ширину; поле «Как в общем» — `min-w-28`, плейсхолдер короче; колонка «Переопределение баллов» ≥ 112 px (не 1 px); на 390 нет внутреннего скролла
       Paths: H [768: карточки, поле видно; ≥ lg: таблица] · N [нет достижений → пустое состояние; значение вне диапазона — валидация как раньше; длинное название → перенос] · S n/a — presentational; сохранение баллов, права и `route-table.ts` не меняются
 
-- [ ] P29-T43 · T1 · **D-36** · Spec: [ADR-022 §4.6 п. 3, 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vAchievements` · **требует визуальной проверки** живого экрана (отчёт §7.2)
+- [x] P29-T43 · T1 · **D-36** · Spec: [ADR-022 §4.6 п. 3, 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vAchievements` · **требует визуальной проверки** живого экрана (отчёт §7.2)
       Files: `apps/web/src/components/achievements/{AchievementsPageContent.server,AchievementsCatalogBoard.client,AchievementCatalogRow,AchievementTierDot}.tsx` (+ `AchievementCatalogRow.test.tsx`)
       Acceptance: уровни достижения — таблица 3 строки × (уровень · условие · баллы), карточка достижения ≤ 260 px на 1440 при 3 уровнях (было 450–595); текстовые колонки на 768–1024 ≥ 280 px; перед правкой — визуальная проверка живого экрана записана в Change log (подтверждено / не подтверждено)
       Paths: H [карточки компактные] · N [один уровень → без таблицы; нет уровней → строка скрыта] · S n/a — presentational
 
-- [ ] P29-T44 · T1 · **D-12** · Spec: [ADR-022 §4.7 п. 2–3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGroups`
+- [x] P29-T44 · T1 · **D-12** · Spec: [ADR-022 §4.7 п. 2–3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGroups`
       Files: `apps/web/src/components/admin/{GroupCard,GroupsPageContent.server}.tsx`, `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: метаданные карточки группы — `ul` с разделителями через `li::before`, перенос по элементу (точка-разделитель не в начале строки на 360–1440); значок «?» — вплотную после слова «Русский» без собственных `margin`
       Paths: H [360: точка не в начале строки] · N [нет учителя → «Без учителя»; один элемент → без разделителя] · S n/a — presentational
 
-- [ ] P29-T45 · T1 · **D-14** · Spec: [ADR-022 §4.2, §4.4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vLessonForm`, `vLessons`
+- [x] P29-T45 · T1 · **D-14** · Spec: [ADR-022 §4.2, §4.4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vLessonForm`, `vLessons`
       Files: `apps/web/src/components/teacher/{LessonForm,LessonListRow,LessonsPageContent.server,LessonCard,LessonInlineProgress}.tsx` (+ `LessonsList.test.tsx` — тест строк списка; отдельного `LessonsList.tsx` нет)
       Acceptance: «Ведёт ?» — подпись над полем, значок через `--space-hint` (8 px до следующего поля больше нет «5 px плотно»); в списке уроков на 360 «Проверено 11 из 30» — один `Badge`-подобный элемент (одна высота строки), стрелка «›» не отрывается от строки
       Paths: H [подпись и значок в ритме; бейдж проверки одной высоты] · N [0 из 0 → «—»; 30 из 30 → «Проверено»] · S n/a — presentational
 
-- [ ] P29-T46 · T0 · **D-20** · Spec: [ADR-022 §4.6](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)
+- [x] P29-T46 · T0 · **D-20** · Spec: [ADR-022 §4.6](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)
       Files: `apps/web/src/components/admin/{DeletionRequestCard,DeletionAdminList.server}.tsx`, `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: «Просрочен» и «просрочен на 28 дн.» в одной карточке → один бейдж «Просрочен на 28 дн.» (склонение через `plural`); срок отсутствует → без бейджа
       Paths: H [один бейдж] · N [0 дн. → «Просрочен сегодня»; 1 / 2 / 5 дн. — склонения] · S n/a — presentational
 
-- [ ] P29-T47 · T1 · **D-21** · Spec: [ADR-022 §4.5 п. 2](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [global_shell_spec §4 (`shell-header.client.tsx`), §6.4](../specs/global_shell_spec.md) · [UX-02 §4 «Шапка»](../../../design/responsive_navigation_contract.md)
+- [x] P29-T47 · T1 · **D-21** · Spec: [ADR-022 §4.5 п. 2](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [global_shell_spec §4 (`shell-header.client.tsx`), §6.4](../specs/global_shell_spec.md) · [UX-02 §4 «Шапка»](../../../design/responsive_navigation_contract.md)
       Files: `apps/web/src/components/shell/shell-header.client.tsx`, `apps/web/src/components/patterns/PageHeader.tsx`, `apps/web/src/components/shell/{shell-navigation.client,shell-route-announcer.client}.tsx` (+ `shell-header.client.test.ts`)
       Acceptance: на мобильных заголовок шапки и `h1` страницы не дублируются: шапка показывает раздел/роль, `h1` — заголовок страницы; если `h1` совпадает с шапкой — на `< lg` `h1` `sr-only`; на `/school`, `/groups`, `/settings` — один видимый заголовок; объявление смены маршрута (`aria-live`) не меняется
       Paths: H [360: «Школа» один раз] · N [заголовок страницы ≠ шапка → оба видимы; длинный заголовок → перенос] · S n/a — presentational
@@ -452,4 +452,5 @@ Review `diff-only`: профиль `lean` D6 (presentational; **U-11 не мен
 |------|--------|
 | 2026-11-13 | v1.0 — Canonical (подготовка P29): CU1–CU13, трассировка 49 дефектов; ADR-022, UX-03 v2.6, Lab v2.6, правила и прототип обновлены до CU1 |
 | 2026-11-13 | v1.1 — Phase DoR audit: пути `Files` по факту, якоря `§`, T1 (cookie-модуль, `profile/layout`), T3 (корневой `eslint.config.mjs`, `no-restricted-syntax` + baseline в `ignores`), T4 (parity P-10/P-11 в том же CU), T13 ↔ T39, T50 (S n/a, фолбэк), счёт строк трассировки (2 инфра-строки) |
+| 2026-11-14 | CU12 — визуальная проверка живого экрана `/achievements` (T43) не выполнялась (runtime-проверка — только по запросу): высота карточки достижения не подтверждена, уровни выведены столбцом, текстовые колонки ≥ 17,5 rem |
 | 2026-11-13 | v1.2 — Q-1…Q-6 закрыты принятием умолчаний (токены ADR §4.2; проверка ДЗ в две колонки с `xl`; поля 40,5 / 36 ±1 px; ESLint-baseline; D-12/14/20/21 в CU12; `touch` `h-11` оставлен) |

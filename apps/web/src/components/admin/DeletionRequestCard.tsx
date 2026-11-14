@@ -96,12 +96,11 @@ export const DeletionRequestCard = ({
           <StatusText tone={statusTone(row.status)}>{statusLabel}</StatusText>
           {isOpen ? (
             row.isOverdue ? (
-              <div className="flex flex-col gap-label">
-                <StatusText tone="danger">{d.statusOverdue}</StatusText>
-                <ContentText className="text-sm tabular-nums text-danger">
-                  {formatDeletionDays(d.daysOverdue, row.daysRemaining)}
-                </ContentText>
-              </div>
+              <StatusText tone="danger" className="tabular-nums">
+                {row.daysRemaining === 0
+                  ? d.statusOverdue
+                  : formatDeletionDays(d.daysOverdue, row.daysRemaining)}
+              </StatusText>
             ) : (
               <ContentText className="text-sm tabular-nums text-ink-2">
                 {formatDeletionDays(d.daysLeft, row.daysRemaining)}

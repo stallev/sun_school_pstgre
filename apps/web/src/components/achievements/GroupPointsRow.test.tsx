@@ -4,6 +4,7 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { GroupPointsCard } from "@/components/achievements/GroupPointsCard";
 import { GroupPointsRow } from "@/components/achievements/GroupPointsRow";
 import type { GroupPointsTableRowDto } from "@/data/achievements/load-group-points-page.server";
 import type { GroupPointsMessages } from "@/lib/messages/group-points-messages";
@@ -101,6 +102,29 @@ describe("GroupPointsRow read-only group column", () => {
 
     await renderRow(row);
     expect(container.textContent).not.toContain("Inactive");
+  });
+
+  it("renders the same read-only values in the card layout below lg", async () => {
+    await act(async () => {
+      root.render(
+        <ul>
+          <GroupPointsCard
+            row={row}
+            draftValue=""
+            canEdit={false}
+            differs={false}
+            messages={messages}
+            onDraftChange={() => {}}
+            onReset={() => {}}
+          />
+        </ul>,
+      );
+    });
+
+    expect(container.textContent).toContain("Achievement");
+    expect(container.textContent).toContain("+10");
+    expect(container.textContent).toContain("+4");
+    expect(container.querySelector("table")).toBeNull();
   });
 
   it("expands the earning description on demand", async () => {

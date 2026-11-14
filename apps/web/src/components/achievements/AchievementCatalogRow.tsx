@@ -47,7 +47,7 @@ export const AchievementCatalogRow = ({
   const rule = splitAchievementRuleText(description);
 
   return (
-    <li className="grid grid-cols-1 gap-3 px-5 py-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] md:items-center md:gap-6">
+    <li className="grid grid-cols-1 gap-stack p-card md:grid-cols-[minmax(17.5rem,1fr)_minmax(17.5rem,1.2fr)] md:items-start lg:grid-cols-[minmax(17.5rem,1fr)_minmax(17.5rem,1.2fr)_auto] lg:items-center">
       <button type="button" onClick={onEdit} className="min-w-0 text-left">
         <span className="flex items-center gap-2 font-medium hover:text-cobalt-ink">
           {penalty ? <FlagIcon className="size-4 text-penalty" aria-hidden /> : null}
@@ -78,7 +78,7 @@ export const AchievementCatalogRow = ({
           </span>
         </p>
       ) : (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-chip">
           {row.tiers.length > 1 ? (
             <TermLabel
               term={nonEmptyTerm(tierLevelsHint.term)}
@@ -87,19 +87,19 @@ export const AchievementCatalogRow = ({
               className="text-sm"
             />
           ) : null}
-          <div className="flex flex-wrap gap-x-5 gap-y-1">
+          <ul className="flex flex-col gap-hint">
             {row.tiers.map((tier) => (
-              <span key={tier.tier} className="inline-flex items-center gap-2 text-sm">
+              <li key={tier.tier} className="flex items-center gap-chip text-sm">
                 <AchievementTierDot tierIndex={tier.tier - 1} />
                 <span className="text-ink-2">
                   {formatAchievementTierLine(row, tier, messages, messageLocale)}
                 </span>
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-stack md:col-span-2 lg:col-span-1">
         <span className={`text-sm ${statusClass}`}>{formatStatus(row, messages)}</span>
         <AchievementCatalogToggle
           achievementId={row.id}

@@ -18,7 +18,6 @@ import {
   shellGridClassName,
   shellRailDataAttribute,
 } from "@/lib/shell/shell-layout-classes";
-import { resolveShellScreenTitle } from "@/lib/shell/shell-screen-title";
 import type { SidebarPreference } from "@/lib/shell/sidebar-collapsed-cookie";
 import { cn } from "@/lib/utils";
 
@@ -64,8 +63,6 @@ export const ShellHeader = ({
   const pathname = usePathname();
   const router = useRouter();
 
-  const screenTitle =
-    resolveShellScreenTitle(pathname, messages.screenTitles) ?? messages.brand;
   const roleName =
     nav.shellRole === USER_ROLE.ADMIN ? messages.roleNameAdmin : messages.roleNameTeacher;
   const resolvedName = displayName || messages.displayNameFallback;
@@ -135,7 +132,7 @@ export const ShellHeader = ({
             >
               <span className="min-w-0 lg:hidden">
                 <span className="block truncate font-display text-lg font-medium leading-tight text-ink">
-                  {screenTitle}
+                  {messages.brand}
                 </span>
                 <span className="block truncate text-sm text-muted">
                   {resolvedName} · {roleName}
