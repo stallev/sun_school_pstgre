@@ -36,11 +36,11 @@ export const UsersStatusFilter = ({
       term={nonEmptyTerm(statusHint.term)}
       hint={statusHint.hint}
       ariaLabel={statusHint.term}
-      className="text-sm text-ink-2"
+      className="text-sm font-medium text-ink-2"
       popoverSide="top"
     />
     <nav
-      className="-mb-px flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line"
+      className="-mb-px flex gap-chip overflow-x-auto overflow-y-hidden border-b border-line"
       aria-label={messages.users.tabNav}
       role="tablist"
     >

@@ -34,6 +34,8 @@ type DateFieldProps = {
   calendarAriaLabel: string;
   id?: string;
   className?: string;
+  /** `compact` = h-8 (filters, tables); default h-9 (ADR-022 §4.3). */
+  size?: "default" | "compact";
 };
 
 export const DateField = ({
@@ -48,6 +50,7 @@ export const DateField = ({
   calendarAriaLabel,
   id: idProp,
   className,
+  size = "default",
 }: DateFieldProps) => {
   const autoId = useId();
   const inputId = idProp ?? autoId;
@@ -87,7 +90,7 @@ export const DateField = ({
   };
 
   return (
-    <div className={cn("flex w-full max-w-sm items-center gap-2", className)}>
+    <div className={cn("relative flex w-full max-w-sm items-center", className)}>
       {name ? <input type="hidden" name={name} value={hiddenValue} disabled={disabled} /> : null}
       <Input
         id={inputId}
@@ -98,7 +101,8 @@ export const DateField = ({
         aria-invalid={showInvalid || undefined}
         placeholder={getDateInputPlaceholder(locale)}
         value={text}
-        className="max-w-none flex-1"
+        size={size}
+        className={cn("max-w-none flex-1", size === "compact" ? "pr-8" : "pr-9")}
         onFocus={() => {
           setIsEditing(true);
           setDraft(formattedValue);
@@ -116,8 +120,8 @@ export const DateField = ({
           disabled={disabled}
           aria-label={calendarAriaLabel}
           className={cn(
-            "inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-input bg-surface text-ink transition-[color,background-color,border-color] duration-100 ease-out-soft hover:bg-paper disabled:pointer-events-none disabled:opacity-45",
-            showInvalid && "border-destructive",
+            "absolute right-0 top-0 inline-flex shrink-0 items-center justify-center rounded-lg text-muted transition-[color,background-color] duration-100 ease-out-soft hover:text-ink disabled:pointer-events-none disabled:opacity-45",
+            size === "compact" ? "size-8" : "size-9",
           )}
         >
           <CalendarIcon className="size-4" aria-hidden />

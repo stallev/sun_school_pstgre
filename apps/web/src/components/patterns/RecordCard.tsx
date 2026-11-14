@@ -33,7 +33,7 @@ export const RecordCard = ({
     <li
       className={cn(
         "rounded-xl border border-line bg-card",
-        isAnalytics ? "p-3" : "p-4",
+        "p-card",
         selected && "bg-paper",
         className,
       )}
@@ -59,7 +59,7 @@ export const RecordCard = ({
       {fields.length > 0 ? (
         <dl
           className={cn(
-            "grid grid-cols-2 gap-x-3 gap-y-2",
+            "grid grid-cols-2 gap-x-stack gap-y-chip",
             isAnalytics
               ? "mt-2 text-[1.25rem] leading-snug"
               : "mt-3 text-sm",
@@ -76,7 +76,7 @@ export const RecordCard = ({
         </dl>
       ) : null}
       {actions ? (
-        <div className={cn("flex flex-wrap gap-2", isAnalytics ? "mt-2" : "mt-3")}>{actions}</div>
+        <div className={cn("flex flex-wrap gap-chip", isAnalytics ? "mt-2" : "mt-3")}>{actions}</div>
       ) : null}
     </li>
   );

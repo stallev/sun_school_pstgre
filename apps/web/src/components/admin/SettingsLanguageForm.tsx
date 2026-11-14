@@ -44,7 +44,7 @@ export const SettingsLanguageForm = ({
   }));
 
   return (
-    <form action={formAction} className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5">
+    <form action={formAction} className="flex flex-col gap-stack rounded-xl border border-line bg-surface p-card">
       <SectionTitle>{messages.settings.languageTitle}</SectionTitle>
       <ContentText tone="secondary">{messages.settings.languageHint}</ContentText>
       <input type="hidden" name="locale" value={locale} />

@@ -14,6 +14,7 @@ type PeopleListFilterNavProps = {
   messages: AdminMessages;
   pupilStatesHint: HintTerm;
   migratedHint: HintTerm;
+  legacyCount: number;
 };
 
 const filterTabs: {
@@ -46,9 +47,10 @@ export const PeopleListFilterNav = ({
   messages,
   pupilStatesHint,
   migratedHint,
+  legacyCount,
 }: PeopleListFilterNavProps) => (
   <nav
-    className="-mb-px flex gap-1 overflow-x-auto border-b border-line"
+    className="-mb-px flex gap-chip overflow-x-auto overflow-y-hidden border-b border-line"
     aria-label={messages.people.filterAll}
     role="tablist"
   >
@@ -60,7 +62,9 @@ export const PeopleListFilterNav = ({
         displayQuery,
         page: 1,
       });
-      const hint = tab.hint?.({ pupilStatesHint, migratedHint }) ?? null;
+      // На вкладке «перенесённые» то же «?» стоит в заголовке списка — один раз на экран.
+      const isLegacyHeadingHint = isActive && tab.key === PEOPLE_LIST_FILTER.LEGACY;
+      const hint = isLegacyHeadingHint ? null : (tab.hint?.({ pupilStatesHint, migratedHint }) ?? null);
       const label = tab.label(messages);
       return (
         <CustomLink
@@ -69,7 +73,7 @@ export const PeopleListFilterNav = ({
           role="tab"
           aria-selected={isActive}
           className={cn(
-            "-mb-px inline-flex h-11 shrink-0 items-center border-b-2 px-3 text-sm transition-[color,border-color] duration-100",
+            "-mb-px inline-flex h-11 shrink-0 items-center gap-chip border-b-2 px-card text-sm transition-[color,border-color] duration-100",
             isActive
               ? "border-ink font-bold text-ink"
               : "border-transparent text-ink-2 hover:text-ink",
@@ -85,6 +89,9 @@ export const PeopleListFilterNav = ({
           ) : (
             label
           )}
+          {tab.key === PEOPLE_LIST_FILTER.LEGACY && legacyCount > 0 ? (
+            <span className="tabular-nums text-muted">{legacyCount}</span>
+          ) : null}
         </CustomLink>
       );
     })}

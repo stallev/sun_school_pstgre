@@ -87,7 +87,7 @@
     },
     "bricks_to_issue": {
       "term": "To issue",
-      "hint": "Bricks the pupil can still receive: earned minus already issued."
+      "hint": "Bricks the pupil can still receive: Earned − Issued = Left."
     },
     "bricks": {
       "term": "bricks",

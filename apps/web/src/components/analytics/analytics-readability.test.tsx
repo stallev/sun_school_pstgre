@@ -201,7 +201,7 @@ describe("analytics readability components", () => {
           messages={
             {
               summaryRule: "rule",
-              summaryToIssueAmount: ": {total}",
+              summaryToIssueAmount: "{total}",
               summaryNegative: "neg {count}",
             } as Parameters<typeof BricksPageSummary>[0]["messages"]
           }
@@ -212,6 +212,7 @@ describe("analytics readability components", () => {
     });
     expect(container.querySelector('button[aria-label="Что значит «К выдаче»?"]')).not.toBeNull();
     expect(container.textContent).toContain("К выдаче");
-    expect(container.textContent).toContain(": 5");
+    expect(container.textContent).not.toContain(":");
+    expect(container.textContent).toContain("5");
   });
 });

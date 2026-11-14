@@ -1,8 +1,14 @@
 export const SIDEBAR_COLLAPSED_COOKIE_NAME = "sidebar_collapsed";
 
-/** Server: `cookies().get(name)?.value` — collapsed only when value is exactly `"1"`. */
-export const parseSidebarCollapsedCookie = (value: string | undefined): boolean =>
-  value === "1";
+/** `auto` = no explicit choice: rail on `lg`, expanded from `xl` (ADR-022 §4.1). */
+export type SidebarPreference = "collapsed" | "expanded" | "auto";
+
+/** Server: `cookies().get(name)?.value` — `1` collapsed, `0` expanded, anything else → no choice. */
+export const parseSidebarPreferenceCookie = (value: string | undefined): SidebarPreference => {
+  if (value === "1") return "collapsed";
+  if (value === "0") return "expanded";
+  return "auto";
+};
 
 /** Client: persist UI preference (not HttpOnly). */
 export const writeSidebarCollapsedCookie = (collapsed: boolean): void => {

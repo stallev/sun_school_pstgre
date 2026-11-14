@@ -79,9 +79,9 @@ export const VersePicker = ({
   const busy = disabled || isPending;
 
   return (
-    <div className="mt-5 border-t border-line pt-4">
-      <p className="mb-2 text-sm font-medium text-ink">{messages.pickerAdd}</p>
-      <div className="grid grid-cols-2 gap-2">
+    <div className="flex flex-col gap-chip border-t border-line pt-card">
+      <p className="text-sm font-medium text-ink">{messages.pickerAdd}</p>
+      <div className="grid grid-cols-2 gap-chip">
         <div className="col-span-2">
         <FormSelect
           aria-label={messages.pickerBook}
@@ -120,9 +120,9 @@ export const VersePicker = ({
           onChange={(e) => setToVerse(e.target.value)}
         />
       </div>
-      <p className="mt-2 text-sm text-ink-2">{messages.pickerHint}</p>
-      {pickerError ? <AlertText className="mt-2">{pickerError}</AlertText> : null}
-      <Button type="button" variant="outline" className="mt-3 w-full min-h-11" disabled={busy} onClick={handleAdd}>
+      <p className="text-sm text-ink-2">{messages.pickerHint}</p>
+      {pickerError ? <AlertText>{pickerError}</AlertText> : null}
+      <Button type="button" variant="outline" className="w-full" disabled={busy} onClick={handleAdd}>
         <PlusIcon className="size-4" aria-hidden />
         {messages.pickerAdd}
       </Button>

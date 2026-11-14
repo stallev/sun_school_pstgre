@@ -11,8 +11,8 @@ type RatingPrivacyNoteProps = {
 };
 
 export const RatingPrivacyNote = ({ badgeLabel, hint, termHintAriaLabel }: RatingPrivacyNoteProps) => (
-  <p className="mb-0 flex max-w-3xl flex-wrap items-center gap-2 text-sm text-ink-2">
-    <span className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-line bg-paper px-3 font-medium">
+  <p className="mb-0 flex max-w-3xl flex-wrap items-center gap-chip text-sm text-ink-2">
+    <span className="inline-flex min-h-11 items-center gap-hint rounded-lg border border-line bg-paper px-3 font-medium">
       <LockIcon className="size-4 shrink-0 text-muted" aria-hidden />
       <TermLabel
         term={nonEmptyTerm(badgeLabel)}

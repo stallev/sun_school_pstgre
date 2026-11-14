@@ -121,6 +121,6 @@ describe("CheckScoresSection absent collapse", () => {
         />,
       );
     });
-    expect(container.querySelector(".lg\\:grid-cols-2")).toBeTruthy();
+    expect(container.querySelector(".xl\\:grid-cols-2")).toBeTruthy();
   });
 });

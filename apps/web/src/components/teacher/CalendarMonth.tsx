@@ -87,17 +87,17 @@ export const CalendarMonth = ({
   const birthdayLabel = (name: string) => fillMessage(messages.birthday, { name });
 
   return (
-    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-      <Card className="min-w-0 p-2 sm:p-4">
+    <div className="grid grid-cols-1 gap-stack xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+      <Card className="min-w-0 p-chip sm:p-card">
         <div className="grid grid-cols-7 text-center text-xs text-muted sm:text-sm">
           {messages.weekdays.map((label) => (
-            <div key={label} className="py-2">{label}</div>
+            <div key={label} className="py-chip">{label}</div>
           ))}
         </div>
         <div className="grid grid-cols-7 gap-px overflow-hidden rounded-lg bg-line">
           {cells.map((day, index) => {
             if (!day) {
-              return <div key={`empty-${index}`} className="min-h-14 bg-paper p-1 sm:min-h-24 sm:p-2" />;
+              return <div key={`empty-${index}`} className="min-h-14 bg-paper p-hint sm:min-h-24" />;
             }
             const event = eventByDay.get(day);
             const dayBirthdays = birthdaysForDay(birthdaysByDay, day);
@@ -116,7 +116,7 @@ export const CalendarMonth = ({
                   {day}
                 </span>
                 {meta && event ? (
-                  <span className={`mt-0.5 flex items-center gap-1 ${meta.className}`}>
+                  <span className={`mt-0.5 flex items-center gap-hint${meta.className}`}>
                     <meta.icon className="size-4" aria-hidden />
                     <span className="hidden truncate text-xs sm:inline">{meta.label}</span>
                   </span>
@@ -140,7 +140,7 @@ export const CalendarMonth = ({
                   key={dateIso}
                   href={href}
                   className={cn(
-                    "flex min-h-14 flex-col items-start justify-start bg-surface p-1 text-left hover:bg-paper sm:min-h-24 sm:p-2",
+                    "flex min-h-14 flex-col items-start justify-start bg-surface p-hint text-left hover:bg-paper sm:min-h-24",
                     isOpen && "ring-2 ring-ring ring-inset",
                   )}
                 >
@@ -149,13 +149,13 @@ export const CalendarMonth = ({
               );
             }
             return (
-              <div key={dateIso} className="min-h-14 bg-surface p-1 sm:min-h-24 sm:p-2">
+              <div key={dateIso} className="min-h-14 bg-surface p-hint sm:min-h-24">
                 {cellInner}
               </div>
             );
           })}
         </div>
-        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 px-1 text-sm text-ink-2">
+        <div className="mt-3 flex flex-wrap gap-x-stack gap-y-chip text-sm text-ink-2">
           {(
             [
               [GRADE_EVENT_TYPE.LESSON, messages.typeLesson, "text-cobalt-ink"] as const,
@@ -165,14 +165,14 @@ export const CalendarMonth = ({
           ).map(([type, label, className]) => {
             const meta = typeMeta(type, messages);
             return (
-              <span key={type} className="inline-flex items-center gap-1.5">
+              <span key={type} className="inline-flex items-center gap-chip">
                 <meta.icon className={cn("size-4", className)} aria-hidden />
                 {label}
               </span>
             );
           })}
           {birthdays.length > 0 ? (
-            <span className="inline-flex items-center gap-1.5 text-amber-ink">
+            <span className="inline-flex items-center gap-chip text-amber-ink">
               <Cake className="size-4" aria-hidden />
               {birthdayLegendLabel(messages.birthday)}
             </span>
@@ -183,7 +183,7 @@ export const CalendarMonth = ({
         <SectionTitle className="mb-3">{messages.monthEventsTitle}</SectionTitle>
         <Card className="divide-y divide-line">
           {events.length === 0 && birthdays.length === 0 ? (
-            <ContentText className="px-5 py-4 text-sm text-muted">{messages.emptyMonth}</ContentText>
+            <ContentText className="p-card text-sm text-muted">{messages.emptyMonth}</ContentText>
           ) : (
             <>
               {events.map((event) => {
@@ -193,7 +193,7 @@ export const CalendarMonth = ({
                     key={event.eventId}
                     href={buildHref(gradeId, monthKey, { eventId: event.eventId })}
                     className={cn(
-                      "flex w-full items-center gap-4 px-5 py-3.5 text-left hover:bg-paper/70",
+                      "flex w-full items-center gap-stack px-card py-chip text-left hover:bg-paper/70",
                       openEventId === event.eventId && "bg-paper/70",
                     )}
                   >
@@ -214,7 +214,7 @@ export const CalendarMonth = ({
               {birthdays.map((row) => (
                 <div
                   key={row.pupilId}
-                  className="flex w-full items-center gap-4 px-5 py-3.5 text-left"
+                  className="flex w-full items-center gap-stack px-card py-chip text-left"
                 >
                   <span className="w-10 shrink-0 font-display text-xl tabular-nums">
                     {row.dayOfMonth}

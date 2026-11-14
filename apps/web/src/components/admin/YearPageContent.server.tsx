@@ -31,26 +31,24 @@ export const YearPageContent = async ({ messages, dictionaries, uiLocale, formEr
   const hints = pickAdminHintsSubset(dictionaries.admin, [
     "year_close",
     "year_close_reason",
-    "year_totals_line",
   ] as const);
 
   return (
     <AdminMessagesProvider messages={messages}>
-      <PageSection width="full" className="min-w-0 space-y-6 overflow-x-hidden">
+      <PageSection width="full" className="flex min-w-0 flex-col gap-stack overflow-x-hidden">
         <PageHeader title={messages.page.yearTitle} />
         <CreateYearForm dictionaries={dictionaries} uiLocale={uiLocale} formError={formError} />
         {years.length === 0 ? (
           <EmptyState title={messages.year.emptyTitle} description={messages.year.emptyDescription} />
         ) : (
-          <ul className="grid items-stretch gap-4 lg:grid-cols-2">
+          <ul className="grid items-start gap-stack xl:grid-cols-2">
             {years.map((row) => (
-              <li key={row.yearId} className="h-full">
+              <li key={row.yearId}>
                 <YearCard
                   row={row}
                   dictionaries={dictionaries}
                   formError={formError}
                   uiLocale={uiLocale}
-                  yearTotalsHint={hints.year_totals_line}
                   yearCloseHint={hints.year_close}
                   yearCloseReasonHint={hints.year_close_reason}
                 />

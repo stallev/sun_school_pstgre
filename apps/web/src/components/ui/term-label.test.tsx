@@ -35,6 +35,21 @@ describe("TermLabel (ADR-020)", () => {
     expect(container.querySelector('button[aria-label="Что значит «К выдаче»?"]')).not.toBeNull();
   });
 
+  it("substitutes the term into a «{term}» aria-label template and adds no colon", async () => {
+    await act(async () => {
+      root.render(
+        <TermLabel
+          term={nonEmptyTerm("По книгам")}
+          hint="Подсказка."
+          ariaLabel="Что значит «{term}»?"
+        />,
+      );
+    });
+    expect(container.querySelector('button[aria-label="Что значит «По книгам»?"]')).not.toBeNull();
+    expect(container.innerHTML).not.toMatch(/[{}]/);
+    expect(container.textContent).not.toContain(":");
+  });
+
   it("rejects empty term at runtime", () => {
     expect(() => nonEmptyTerm("")).toThrow(/non-empty/i);
   });

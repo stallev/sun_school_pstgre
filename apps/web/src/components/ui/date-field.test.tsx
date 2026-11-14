@@ -135,4 +135,21 @@ describe("DateField form-submit hidden ISO (P14-CU3)", () => {
     expect(onChange).toHaveBeenCalledWith("2026-05-10");
     expect(visible.getAttribute("aria-invalid")).toBeNull();
   });
+
+  it("sizes input and calendar trigger to h-9 by default and h-8 when compact (P29-T4)", () => {
+    act(() => {
+      root.render(
+        <>
+          <DateField value="" onChange={vi.fn()} locale="ru" calendarAriaLabel="A" />
+          <DateField value="" onChange={vi.fn()} locale="ru" calendarAriaLabel="B" size="compact" />
+        </>,
+      );
+    });
+    const inputs = container.querySelectorAll('[data-slot="input"]');
+    expect(inputs[0]?.className).toContain("h-9");
+    expect(inputs[0]?.className).not.toContain("h-10");
+    expect(inputs[1]?.getAttribute("data-size")).toBe("compact");
+    expect(container.querySelector('button[aria-label="A"]')?.className).toContain("size-9");
+    expect(container.querySelector('button[aria-label="B"]')?.className).toContain("size-8");
+  });
 });

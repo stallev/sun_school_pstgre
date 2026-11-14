@@ -20,12 +20,12 @@ export const PeopleGroupFilter = ({
   displayQuery,
   messages,
 }: PeopleGroupFilterProps) => (
-  <div className="flex flex-wrap gap-1.5" role="group" aria-label={messages.people.groupFilterLabel}>
+  <div className="flex flex-wrap gap-chip" role="group" aria-label={messages.people.groupFilterLabel}>
     <CustomLink
       href={buildPeopleListHref({ filter: activeFilter, displayQuery, page: 1 })}
       aria-pressed={!activeGroupId}
       className={cn(
-        "inline-flex h-9 items-center rounded-lg border px-3 text-sm transition-[color,background-color,border-color] duration-100",
+        "inline-flex h-9 items-center rounded-lg border px-card text-sm transition-[color,background-color,border-color] duration-100",
         !activeGroupId
           ? "border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink"
           : "border-line bg-surface text-ink-2 hover:bg-paper hover:text-ink",
@@ -46,7 +46,7 @@ export const PeopleGroupFilter = ({
           })}
           aria-pressed={isActive}
           className={cn(
-            "inline-flex h-9 items-center rounded-lg border px-3 text-sm transition-[color,background-color,border-color] duration-100",
+            "inline-flex h-9 items-center rounded-lg border px-card text-sm transition-[color,background-color,border-color] duration-100",
             isActive
               ? "border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink"
               : "border-line bg-surface text-ink-2 hover:bg-paper hover:text-ink",

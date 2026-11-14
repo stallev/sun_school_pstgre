@@ -17,7 +17,6 @@ import { formatPupilMeta } from "@/lib/admin/format-pupil-meta";
 import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
-import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type PupilRowProps = {
   row: PupilListRow;
@@ -29,7 +28,6 @@ type PupilRowProps = {
   formError: string;
   closeLabel: string;
   messages: AdminMessages;
-  pupilTransferHint: HintTerm;
   historySlot?: ReactNode;
 };
 
@@ -46,7 +44,6 @@ export const PupilRow = ({
   formError,
   closeLabel,
   messages,
-  pupilTransferHint,
   historySlot,
 }: PupilRowProps) => {
   const [editOpen, setEditOpen] = useState(false);
@@ -57,9 +54,9 @@ export const PupilRow = ({
   const meta = formatPupilMeta(messages, row);
 
   return (
-    <li className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="min-w-0 space-y-1">
-        <div className="flex flex-wrap items-center gap-2">
+    <li className="flex flex-col gap-stack px-card py-card sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 flex-col gap-hint">
+        <div className="flex flex-wrap items-center gap-chip">
           <ContentText className="font-medium text-ink hover:text-cobalt-ink">{row.displayName}</ContentText>
           {row.groupName ? <Badge variant="outline">{row.groupName}</Badge> : null}
         </div>
@@ -80,7 +77,6 @@ export const PupilRow = ({
         uiLocale={uiLocale}
         formError={formError}
         closeLabel={closeLabel}
-        pupilTransferHint={pupilTransferHint}
         onEdit={() => setEditOpen(true)}
       />
       <Dialog open={editOpen} onOpenChange={setEditOpen}>

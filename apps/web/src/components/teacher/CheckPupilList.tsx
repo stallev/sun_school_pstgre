@@ -43,7 +43,7 @@ export const CheckPupilList = ({
   topScorerLabel,
   onSelect,
 }: CheckPupilListProps) => (
-  <ul className="space-y-0.5" aria-label={listLabel}>
+  <ul className="flex flex-col gap-chip" aria-label={listLabel}>
     {pupils.map((pupil) => {
       const active = pupil.pupilId === activePupilId;
       const leader = topScorerIds.has(pupil.pupilId);
@@ -73,7 +73,7 @@ export const CheckPupilList = ({
             <span className={cn("text-xs", leader ? "text-ink-2" : pupil.homeworkChecked ? "text-ok" : "text-muted")}>
               {statusLabel}
             </span>
-            <span className="min-w-0 flex-1 truncate">{pupil.displayName}</span>
+            <span className="min-w-0 flex-1 break-words">{pupil.displayName}</span>
             {leader ? <LessonLeaderMark label={topScorerLabel} /> : null}
             {pupil.late ? <LateBadge label={lateLabel} plain={leader} /> : null}
             {pupil.homeworkChecked && pupil.pointsTotal !== null ? (

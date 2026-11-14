@@ -45,7 +45,7 @@ const NewLessonPage = async ({ searchParams }: NewLessonPageProps) => {
 
   if (data.kind === "no_active_year") {
     return (
-      <div className="space-y-6">
+      <div className="flex flex-col gap-stack">
         <PageHeader title={messages.newTitle} />
         <EmptyState
           title={getMessage(teacherDict, "lesson.no_year_title")}
@@ -60,7 +60,7 @@ const NewLessonPage = async ({ searchParams }: NewLessonPageProps) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-stack">
       <PageHeader
         title={messages.newTitle}
         description={fillMessage(messages.pageSubtitle, { group: gradeName, year: data.yearName })}

@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/patterns/EmptyState";
 import { PageHeader } from "@/components/patterns/PageHeader";
 import { ForbiddenState } from "@/components/patterns/ForbiddenState";
 import { CustomLink } from "@/components/ui/custom-link";
+import { PageSection } from "@/components/ui/page-section";
 import { readConsentTextVersionFromDb } from "@/data/access/consent-text-version.server";
 import {
   loadFamiliesAdminList,
@@ -82,21 +83,21 @@ export const FamilyPageContent = async ({ searchParams }: FamilyPageProps) => {
 
     return (
       <AdminMessagesProvider messages={adminMessages}>
-        <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:py-8">
+        <PageSection width="full">
           <FamilyDetailBoard
-          detail={detailResult.data}
-          attachOptions={attachOptions}
-          messages={messages}
-          dictionaries={dictionaries}
-          uiLocale={locale}
-          consentTextVersion={consentTextVersion}
-          defaultSignedOn={isoTodayUtc()}
-          createdLabel={createdLabel}
-          journalSlot={
-            <FamilyEntityHistoryList familyId={familyId} sectionTitle={messages.sectionJournal} />
-          }
+            detail={detailResult.data}
+            attachOptions={attachOptions}
+            messages={messages}
+            dictionaries={dictionaries}
+            uiLocale={locale}
+            consentTextVersion={consentTextVersion}
+            defaultSignedOn={isoTodayUtc()}
+            createdLabel={createdLabel}
+            journalSlot={
+              <FamilyEntityHistoryList familyId={familyId} sectionTitle={messages.sectionJournal} />
+            }
           />
-        </div>
+        </PageSection>
       </AdminMessagesProvider>
     );
   }
@@ -106,45 +107,45 @@ export const FamilyPageContent = async ({ searchParams }: FamilyPageProps) => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 md:px-6 lg:py-8">
-      <PageHeader
-        title={messages.pageTitle}
-        description={messages.pageSubtitle}
-        actions={<FamilyCreateDialog messages={messages} dictionaries={dictionaries} />}
-      />
-      {listResult.data.families.length === 0 ? (
-        <EmptyState title={messages.emptyTitle} description={messages.emptyDescription} />
-      ) : (
-        <>
-          <TermLabel
-            term={nonEmptyTerm(familyHints.family_login.term)}
-            hint={familyHints.family_login.hint}
-            ariaLabel={familyHints.family_login.term}
-            className="text-sm text-ink-2"
-            popoverSide="top"
-          />
-          <ul className="overflow-hidden rounded-xl border border-line bg-card divide-y divide-line">
-            {listResult.data.families.map((row) => (
-              <FamilyListRow key={row.familyId} row={row} messages={messages} />
-            ))}
-          </ul>
-        </>
-      )}
-      {listResult.data.unassignedPupilCount > 0 ? (
-        <div className="space-y-2 text-sm text-ink-2">
-          <p>
-            {messages.unassignedNote.replace(
-              "{count}",
-              String(listResult.data.unassignedPupilCount),
-            )}{" "}
-            {messages.unassignedExplanation}
-          </p>
-          <CustomLink href="/people" className="font-medium text-cobalt-ink hover:underline">
-            {messages.unassignedAssignLink}
-          </CustomLink>
-        </div>
-      ) : null}
-      </div>
+      <PageSection width="full" className="flex min-w-0 flex-col gap-stack">
+        <PageHeader
+          title={messages.pageTitle}
+          description={messages.pageSubtitle}
+          actions={<FamilyCreateDialog messages={messages} dictionaries={dictionaries} />}
+        />
+        {listResult.data.families.length === 0 ? (
+          <EmptyState title={messages.emptyTitle} description={messages.emptyDescription} />
+        ) : (
+          <>
+            <TermLabel
+              term={nonEmptyTerm(familyHints.family_login.term)}
+              hint={familyHints.family_login.hint}
+              ariaLabel={familyHints.family_login.term}
+              className="text-sm text-ink-2"
+              popoverSide="top"
+            />
+            <ul className="grid grid-cols-1 items-start gap-card xl:grid-cols-2">
+              {listResult.data.families.map((row) => (
+                <FamilyListRow key={row.familyId} row={row} messages={messages} />
+              ))}
+            </ul>
+          </>
+        )}
+        {listResult.data.unassignedPupilCount > 0 ? (
+          <div className="flex flex-col gap-chip text-sm text-ink-2">
+            <p>
+              {messages.unassignedNote.replace(
+                "{count}",
+                String(listResult.data.unassignedPupilCount),
+              )}{" "}
+              {messages.unassignedExplanation}
+            </p>
+            <CustomLink href="/people" className="font-medium text-cobalt-ink hover:underline">
+              {messages.unassignedAssignLink}
+            </CustomLink>
+          </div>
+        ) : null}
+      </PageSection>
     </AdminMessagesProvider>
   );
 };

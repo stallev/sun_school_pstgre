@@ -57,6 +57,7 @@ export const SchoolAnalyticsTable = ({
       averageTemplate={averageTemplate}
       formatLocale={formatLocale}
       tableHints={tableHints}
+      termHintAriaLabel={termHintAriaLabel}
     />
     <Card className="hidden p-0 lg:block">
       <Table className="text-left text-base">

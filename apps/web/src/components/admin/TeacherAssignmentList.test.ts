@@ -6,14 +6,15 @@ import { describe, expect, it } from "vitest";
 const adminDir = path.dirname(fileURLToPath(import.meta.url));
 
 describe("P14-CU5 TeacherAssignmentList assign row layout", () => {
-  it("assign controls use size field in one sm+ row (ADR-017 /groups/[groupId])", () => {
+  it("assign controls sit in one sm+ row, button inherits the field height (ADR-017 /groups/[groupId])", () => {
     const source = fs.readFileSync(path.join(adminDir, "TeacherAssignmentList.tsx"), "utf8");
     const assignBlock =
       source.match(/available\.length > 0[\s\S]*?noTeachersAvailable/)?.[0] ?? "";
 
     expect(assignBlock).toContain("flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2");
     expect(assignBlock).toMatch(/FormSelect[\s\S]*triggerClassName="min-w-0 flex-1"/);
-    expect(assignBlock).toMatch(/Button type="submit" size="field"/);
+    expect(assignBlock).toMatch(/Button type="submit"/);
+    expect(assignBlock).not.toMatch(/size=.field./);
     expect(assignBlock).not.toContain("min-h-11");
     expect(assignBlock).not.toContain("sm:items-end");
   });

@@ -32,12 +32,12 @@ export const SettingsPageContent = async () => {
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <PageSection width="wide" className="min-w-0 space-y-6 overflow-x-hidden">
+      <PageSection width="wide" className="min-w-0 flex flex-col gap-section overflow-x-hidden">
         <PageHeader
           title={adminMessages.page.settingsTitle}
           description={adminMessages.settings.pageSubtitle}
         />
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start">
+        <div className="grid grid-cols-1 gap-stack lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start">
           <SettingsLanguageForm
             currentLocale={currentLocale}
             dictionaries={dictionaries}

@@ -13,11 +13,18 @@ import { PatternsGallery } from "@/components/design-lab/PatternsGallery";
 import { ShellMatrix } from "@/components/design-lab/ShellMatrix";
 import { ShapeMotion } from "@/components/design-lab/ShapeMotion";
 import { TableMatrix } from "@/components/design-lab/TableMatrix";
+import { SpacingScale } from "@/components/design-lab/SpacingScale";
+import { FieldHeights } from "@/components/design-lab/FieldHeights";
 import { TypeScale } from "@/components/design-lab/TypeScale";
 import { WidthFrame } from "@/components/design-lab/WidthFrame";
 import { TermHintMatrix } from "@/components/design-lab/TermHintMatrix";
 import { RowActionsMenuMatrix } from "@/components/design-lab/RowActionsMenuMatrix";
-import { termHintLabSection, rowActionsMenuLabSection } from "@/lib/design-lab/sections";
+import {
+  termHintLabSection,
+  rowActionsMenuLabSection,
+  spacingScaleLabSection,
+  fieldHeightsLabSection,
+} from "@/lib/design-lab/sections";
 import { SuggestionConfirmLab } from "@/components/design-lab/SuggestionConfirmLab";
 import { AchievementsCatalogLab } from "@/components/design-lab/AchievementsCatalogLab";
 import { FamilyAdminLab } from "@/components/design-lab/FamilyAdminLab";
@@ -30,6 +37,8 @@ const ANCHORS = [
   { id: "contrast", label: "Contrast" },
   { id: "type", label: "Type" },
   { id: "shape", label: "Shape & motion" },
+  { id: spacingScaleLabSection.id, label: spacingScaleLabSection.anchorLabel },
+  { id: fieldHeightsLabSection.id, label: fieldHeightsLabSection.anchorLabel },
   { id: "buttons", label: "Buttons" },
   { id: "fields", label: "Fields" },
   { id: "choices", label: "Choices" },
@@ -70,11 +79,26 @@ const DesignSystemPage = () => (
         <ShapeMotion />
       </LabSection>
 
+      <LabSection
+        id={spacingScaleLabSection.id}
+        title={spacingScaleLabSection.title}
+        hint={spacingScaleLabSection.hint}
+      >
+        <SpacingScale />
+      </LabSection>
+
       <LabSection id="buttons" title="L2 · Button" hint="variant × state × size">
         <ButtonMatrix />
       </LabSection>
       <LabSection id="fields" title="L2 · Input / Textarea / Field" hint="UX-03 D-7: field border is muted">
         <FieldMatrix />
+      </LabSection>
+      <LabSection
+        id={fieldHeightsLabSection.id}
+        title={fieldHeightsLabSection.title}
+        hint={fieldHeightsLabSection.hint}
+      >
+        <FieldHeights />
       </LabSection>
       <LabSection id="date-field" title="L2 · DateField" hint="ISO value, locale display, calendar popover">
         <DateFieldMatrix />

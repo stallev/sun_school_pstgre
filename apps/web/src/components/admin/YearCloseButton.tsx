@@ -7,10 +7,12 @@ import { ConfirmDialog } from "@/components/patterns/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
+import { fillMessage } from "@/lib/messages/fill-message";
 import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type YearCloseButtonProps = {
   yearId: string;
+  yearName: string;
   pending: boolean;
   closeAction: (payload: FormData) => void;
   closeHint: HintTerm;
@@ -19,6 +21,7 @@ type YearCloseButtonProps = {
 
 export const YearCloseButton = ({
   yearId,
+  yearName,
   pending,
   closeAction,
   closeHint,
@@ -26,18 +29,38 @@ export const YearCloseButton = ({
 }: YearCloseButtonProps) => {
   const messages = useAdminMessages();
   const [closeReason, setCloseReason] = useState("");
+  const period = yearName.trim();
+  const closeLabel =
+    period.length > 0 ? fillMessage(messages.year.closeNamed, { period }) : messages.year.close;
+
+  const confirmPhrase = closeLabel.toLocaleLowerCase();
 
   return (
-    <section className="mt-auto space-y-3 border-t border-line pt-4">
-      <SectionTitle>{messages.year.dangerZoneTitle}</SectionTitle>
-      <ContentText className="text-sm text-ink-2">{messages.year.dangerZoneCloseLead}</ContentText>
-      <form action={closeAction} id={`close-year-${yearId}`} className="space-y-3">
+    <section className="mt-auto flex flex-col gap-stack border-t border-line pt-card">
+      <SectionTitle>
+        <TermLabel
+          term={nonEmptyTerm(messages.year.dangerZoneTitle)}
+          hint={closeHint.hint}
+          ariaLabel={closeHint.term}
+        />
+      </SectionTitle>
+      <div className="flex flex-col gap-hint text-sm text-ink-2">
+        <ContentText className="font-medium text-ink">{messages.year.closeWillHappenTitle}</ContentText>
+        <ul className="list-inside list-disc space-y-hint">
+          {messages.year.closeWillHappenItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <ContentText className="font-bold text-danger">{messages.year.dangerZoneCloseLead}</ContentText>
+      </div>
+      <form action={closeAction} id={`close-year-${yearId}`} className="flex flex-col gap-stack">
         <input type="hidden" name="yearId" value={yearId} />
-        <label className="grid gap-1 text-sm">
+        <label className="grid gap-label text-sm">
           <TermLabel
             term={nonEmptyTerm(closeReasonHint.term)}
             hint={closeReasonHint.hint}
             ariaLabel={closeReasonHint.term}
+            className="w-fit"
           />
           <Input
             name="reason"
@@ -46,30 +69,25 @@ export const YearCloseButton = ({
             disabled={pending}
           />
         </label>
-        <div className="flex flex-wrap items-center gap-2">
-          <TermLabel
-            term={nonEmptyTerm(closeHint.term)}
-            hint={closeHint.hint}
-            ariaLabel={closeHint.term}
-          />
-          <ConfirmDialog
-            trigger={
-              <Button type="button" variant="destructive" disabled={pending} aria-busy={pending}>
-                {messages.year.close}
-              </Button>
-            }
-            title={messages.year.closeConfirmTitle}
-            description={messages.year.closeConfirmDescription}
-            confirmLabel={messages.year.close}
-            cancelLabel={messages.form.cancel}
-            pending={pending}
-            destructive
-            onConfirm={() => {
-              const form = document.getElementById(`close-year-${yearId}`) as HTMLFormElement | null;
-              form?.requestSubmit();
-            }}
-          />
-        </div>
+        <ConfirmDialog
+          trigger={
+            <Button type="button" variant="destructive" disabled={pending} aria-busy={pending}>
+              {closeLabel}
+            </Button>
+          }
+          title={messages.year.closeConfirmTitle}
+          description={messages.year.closeConfirmDescription}
+          confirmLabel={closeLabel}
+          cancelLabel={messages.form.cancel}
+          pending={pending}
+          destructive
+          confirmPhrase={confirmPhrase}
+          confirmPhraseLabel={fillMessage(messages.year.closeConfirmTypeLabel, { phrase: confirmPhrase })}
+          onConfirm={() => {
+            const form = document.getElementById(`close-year-${yearId}`) as HTMLFormElement | null;
+            form?.requestSubmit();
+          }}
+        />
       </form>
     </section>
   );

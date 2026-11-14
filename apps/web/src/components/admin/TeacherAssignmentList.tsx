@@ -53,7 +53,7 @@ export const TeacherAssignmentList = ({
   const pending = assignPending || unassignPending;
 
   return (
-    <section className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5">
+    <section className="space-y-stack self-start rounded-xl border border-line bg-surface p-card xl:sticky xl:top-page-x">
       <SectionTitle>{messages.group.teachersTitle}</SectionTitle>
       {detail.assignments.length === 0 ? (
         <ContentText tone="secondary">{messages.group.teachersEmpty}</ContentText>
@@ -96,7 +96,7 @@ export const TeacherAssignmentList = ({
               placeholder={messages.group.assignTeacherPlaceholder}
               options={available.map((row) => ({ value: row.userId, label: row.displayName }))}
             />
-            <Button type="submit" size="field" className="w-full shrink-0 sm:w-auto" disabled={pending} aria-busy={pending}>
+            <Button type="submit" className="w-full shrink-0 sm:w-auto" disabled={pending} aria-busy={pending}>
               {assignPending ? messages.group.submitPending : messages.group.assignTeacher}
             </Button>
           </div>

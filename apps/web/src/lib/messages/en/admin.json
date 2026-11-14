@@ -111,6 +111,7 @@
       "many": "bricks",
       "other": "bricks"
     },
+    "rules_note_title": "Rules",
     "rules_note_series_lead": "one streak awards each tier once; after a break, tiers can be earned again.",
     "rules_note_overview_in_series": "do not count in verse and test streaks.",
     "rules_note_tail": "Point changes apply only to future awards. Achievement bonuses do not feed rules — One hundred bricks counts lesson points only.",
@@ -252,6 +253,7 @@
     "activate_confirm_title": "Activate this school year?",
     "activate_confirm_description": "Only one year can be active. Lessons can be created in the active year.",
     "close": "Close year",
+    "close_named": "Close {period}",
     "close_confirm_title": "Close this school year?",
     "close_confirm_description": "Teachers will have read-only access to this year's data. This cannot be undone.",
     "close_reason_label": "Reason (optional)",
@@ -274,8 +276,13 @@
       "many": "{count} pupils",
       "other": "{count} pupils"
     },
-    "danger_zone_title": "Dangerous actions",
-    "danger_zone_close_lead": "Closing a year cannot be undone. Teachers will have read-only access to that year's data.",
+    "danger_zone_title": "Close academic year",
+    "danger_zone_close_lead": "This cannot be undone",
+    "close_will_happen_title": "What will happen",
+    "close_will_happen_1": "Teachers will only be able to view this year's data",
+    "close_will_happen_2": "Closing cannot be undone",
+    "close_will_happen_3": "The change journal is kept",
+    "close_confirm_type_label": "To confirm, type “{phrase}”",
     "create_next_toggle": "Create next school year",
     "archive_summary": "Year data is archived",
     "toast_created": "School year created",
@@ -618,10 +625,10 @@
     "requested_by": "Requested by: {name}",
     "requested_by_with_role": "Requested by: {name} · {role}",
     "requester_name_fallback": "User without a name",
-    "status_overdue": "Overdue",
+    "status_overdue": "Overdue today",
     "reason_prefix": "“{reason}”",
     "days_left": "{count} days left",
-    "days_overdue": "{count} days overdue",
+    "days_overdue": "Overdue by {count} days",
     "taken_by": "In progress: {name}",
     "status_new": "New",
     "status_in_progress": "In progress",
@@ -809,15 +816,15 @@
     },
     "approval_groups": {
       "term": "Groups (active year)",
-      "hint": "Groups a teacher can be assigned to after approval"
+      "hint": "The teacher role is granted together with groups"
     },
     "consent_version": {
-      "term": "Consent version",
-      "hint": "Which consent text version was accepted at registration"
+      "term": "Consent",
+      "hint": "Version of the consent text the user agreed to at registration"
     },
     "user_statuses": {
       "term": "Statuses",
-      "hint": "Registered — signed in, no request yet. Pending — request sent. Active — role granted"
+      "hint": "Registered — waiting for a request. Pending — approve or reject. Needs a role — assign one. Active — working. Disabled — sign-in closed. Rejected — request declined"
     },
     "need_role": {
       "term": "Needs: assign role",
@@ -829,11 +836,11 @@
     },
     "deletion_anonymize": {
       "term": "Will anonymize",
-      "hint": "Name becomes “Removed pupil”; records stay in school history"
+      "hint": "Name and contacts become “Removed pupil”; records in the journal stay"
     },
     "deletion_actions": {
       "term": "Request actions",
-      "hint": "Take in progress — start handling. Execute — finish deletion or anonymization"
+      "hint": "“Take in progress” — the request becomes “In progress” and the requester sees it is being handled. “Execute” — finish deletion or anonymization"
     },
     "family_login": {
       "term": "Family login",

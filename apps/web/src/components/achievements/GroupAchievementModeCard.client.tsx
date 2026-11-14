@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import { toast } from "sonner";
 import { setGroupAchievementModeAction } from "@/actions/teacher-achievements";
 import { SectionTitle } from "@/components/atoms/SectionTitle";
@@ -23,6 +23,7 @@ type GroupAchievementModeCardProps = {
   messages: TeacherAchievementsMessages;
   dictionaries: Record<string, Dictionary>;
   formError: string;
+  footer?: ReactNode;
 };
 
 export const GroupAchievementModeCard = ({
@@ -34,6 +35,7 @@ export const GroupAchievementModeCard = ({
   messages,
   dictionaries,
   formError,
+  footer,
 }: GroupAchievementModeCardProps) => {
   const [pending, startTransition] = useTransition();
   const [offOpen, setOffOpen] = useState(false);
@@ -76,23 +78,24 @@ export const GroupAchievementModeCard = ({
 
   return (
     <>
-      <Card className="mb-4 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-        <div className="min-w-0">
+      <Card className="items-start gap-chip p-card">
+        <div className="flex w-full flex-wrap items-center justify-between gap-chip">
           <SectionTitle>{messages.modeCardTitle}</SectionTitle>
-          <ContentText className="mt-1 max-w-[70ch] text-sm text-ink-2">{description}</ContentText>
+          <div className="flex shrink-0 items-center gap-chip">
+            <ContentText className={`text-sm ${achievementsEnabled ? "text-ink-2" : "text-muted"}`}>
+              {achievementsEnabled ? messages.modeOnLabel : messages.modeOffLabel}
+            </ContentText>
+            <Switch
+              checked={achievementsEnabled}
+              disabled={!canMutate || pending}
+              aria-busy={pending}
+              aria-label={messages.modeToggleAria}
+              onCheckedChange={handleToggle}
+            />
+          </div>
         </div>
-        <div className="flex shrink-0 items-center gap-3">
-          <ContentText className={`text-sm ${achievementsEnabled ? "text-ink-2" : "text-muted"}`}>
-            {achievementsEnabled ? messages.modeOnLabel : messages.modeOffLabel}
-          </ContentText>
-          <Switch
-            checked={achievementsEnabled}
-            disabled={!canMutate || pending}
-            aria-busy={pending}
-            aria-label={messages.modeToggleAria}
-            onCheckedChange={handleToggle}
-          />
-        </div>
+        <ContentText className="max-w-[70ch] text-sm text-ink-2">{description}</ContentText>
+        {footer}
       </Card>
       <AchievementModeOffDialog
         open={offOpen}

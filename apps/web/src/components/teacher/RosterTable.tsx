@@ -179,7 +179,7 @@ export const RosterTable = ({
               }))}
             />
           </label>
-          <Button type="submit" size="field" disabled={pending} aria-busy={pending}>
+          <Button type="submit" disabled={pending} aria-busy={pending}>
             {pending ? <Loader2Icon className="size-4 animate-spin" aria-hidden /> : null}
             {messages.addPupilSubmit}
           </Button>

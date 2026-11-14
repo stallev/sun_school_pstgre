@@ -13,7 +13,7 @@ export const AchievementsPageHeaderActions = ({
   messages,
   onAddReward,
 }: AchievementsPageHeaderActionsProps) => (
-  <Button type="button" className="min-h-11" onClick={onAddReward}>
+  <Button type="button" onClick={onAddReward}>
     <PlusIcon className="size-4" aria-hidden />
     {messages.addReward}
   </Button>

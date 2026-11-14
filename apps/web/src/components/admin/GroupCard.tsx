@@ -12,6 +12,10 @@ import type { AdminMessages } from "@/lib/messages/admin-messages";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
+/** Separator lives in `::before`; a wrapped line hangs its dot into the clipped left margin. */
+const META_ITEM_CLASS =
+  "relative pl-chip before:absolute before:left-0 before:content-['·'] before:text-muted";
+
 type GroupCardProps = {
   row: GroupListRow;
   messages: AdminMessages;
@@ -33,19 +37,23 @@ export const GroupCard = ({ row, messages, uiLocale, groupLanguageHint }: GroupC
   return (
     <CustomLink
       href={`/groups/${row.gradeId}`}
-      className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-paper/70 sm:gap-6"
+      className="flex w-full items-center gap-stack p-card text-left transition-colors hover:bg-paper/70"
     >
       <span className="min-w-0 flex-1">
         <ContentText className="font-display text-xl font-medium text-ink">{row.name}</ContentText>
-        <ContentText tone="secondary" className="mt-0.5 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sm">
-          <TermLabel
-            term={nonEmptyTerm(languageLabel)}
-            hint={groupLanguageHint.hint}
-            ariaLabel={groupLanguageHint.term}
-          />
-          {ageLabel ? <span>· {ageLabel}</span> : null}
-          {teacherLabel ? <span>· {teacherLabel}</span> : null}
-        </ContentText>
+        <div className="mt-0.5 overflow-hidden">
+          <ul className="-ml-chip flex flex-wrap items-center text-sm text-ink-2">
+            <li className={META_ITEM_CLASS}>
+              <TermLabel
+                term={nonEmptyTerm(languageLabel)}
+                hint={groupLanguageHint.hint}
+                ariaLabel={groupLanguageHint.term}
+              />
+            </li>
+            {ageLabel ? <li className={META_ITEM_CLASS}>{ageLabel}</li> : null}
+            {teacherLabel ? <li className={META_ITEM_CLASS}>{teacherLabel}</li> : null}
+          </ul>
+        </div>
         {!row.isActive ? (
           <ContentText tone="secondary" className="mt-0.5 block text-sm">
             {messages.group.statusInactive}

@@ -22,7 +22,7 @@ export const CheckedStateProgressLabel = ({
   className = "text-sm tabular-nums text-ink-2",
 }: CheckedStateProgressLabelProps) => (
   <p className={className}>
-    <span className="inline-flex flex-wrap items-center gap-x-1">
+    <span className="inline-flex flex-nowrap items-center gap-hint whitespace-nowrap">
       <TermLabel
         term={nonEmptyTerm(hint.term)}
         hint={hint.hint}

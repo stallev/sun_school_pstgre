@@ -1,4 +1,6 @@
 import { StatusText } from "@/components/ui/status-text";
+import { nonEmptyTerm } from "@/components/ui/non-empty-term";
+import { TermLabel } from "@/components/ui/term-label";
 import { RecordCard } from "@/components/patterns/RecordCard";
 import type { SchoolGroupRow } from "@/data/analytics/load-school-analytics-page.server";
 import type { HintTerm } from "@/lib/messages/pick-hints-messages";
@@ -26,7 +28,20 @@ type SchoolGroupCardsProps = {
   averageTemplate: string;
   formatLocale: MessageLocale;
   tableHints: SchoolTableHints;
+  termHintAriaLabel: string;
 };
+
+/** ADR-022 §4.7: «?» once per screen — only the first card carries the hint, same keys as the table header. */
+const metricLabel = (hint: HintTerm, withHint: boolean, termHintAriaLabel: string) =>
+  withHint ? (
+    <TermLabel
+      term={nonEmptyTerm(hint.term)}
+      hint={hint.hint}
+      ariaLabel={fillMessage(termHintAriaLabel, { term: hint.term })}
+    />
+  ) : (
+    hint.term
+  );
 
 const attendanceLabel = (row: SchoolGroupRow, percentTemplate: string): string | null => {
   if (row.attendancePercent === null) return null;
@@ -40,9 +55,11 @@ export const SchoolGroupCards = ({
   averageTemplate,
   formatLocale,
   tableHints,
+  termHintAriaLabel,
 }: SchoolGroupCardsProps) => (
   <ul className="space-y-2 lg:space-y-3 lg:hidden" aria-label={messages.groupsTableTitle}>
-    {rows.map((row) => {
+    {rows.map((row, index) => {
+      const isFirst = index === 0;
       const lastLabel = formatSchoolLastLessonLabel(row, messages);
       const lastTone =
         row.lastLessonStatus === "ok" ? "ok" : row.lastLessonStatus === "warn" ? "warn" : "neutral";
@@ -56,7 +73,7 @@ export const SchoolGroupCards = ({
           fields={[
             { label: messages.columnTeachers, value: row.teacherNames, wide: true },
             {
-              label: tableHints.regularAttendance.term,
+              label: metricLabel(tableHints.regularAttendance, isFirst, termHintAriaLabel),
               value: (
                 <span className="tabular-nums">
                   {fillMessage(messages.pupilsSampleValue, {
@@ -67,7 +84,7 @@ export const SchoolGroupCards = ({
               ),
             },
             {
-              label: tableHints.averageScore.term,
+              label: metricLabel(tableHints.averageScore, isFirst, termHintAriaLabel),
               value: formatSchoolGroupScoreAverage(
                 row.scoreAverage,
                 averageTemplate,
@@ -76,7 +93,7 @@ export const SchoolGroupCards = ({
               ),
             },
             {
-              label: tableHints.attendanceRate.term,
+              label: metricLabel(tableHints.attendanceRate, isFirst, termHintAriaLabel),
               value:
                 rounded === null || percent === null ? (
                   "—"

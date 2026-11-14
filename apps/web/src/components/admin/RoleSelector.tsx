@@ -69,26 +69,28 @@ export const RoleSelector = ({
             messages.approvals.rolesLabel
           )}
         </FieldLabel>
-        <label className="flex min-h-11 items-center gap-3">
-          <FormCheckbox
-            name="roles"
-            value={USER_ROLE.ADMIN}
-            checked={adminSelected}
-            onCheckedChange={setAdminSelected}
-            disabled={disabled}
-          />
-          <ContentText>{messages.approvals.roleAdmin}</ContentText>
-        </label>
-        <label className="flex min-h-11 items-center gap-3">
-          <FormCheckbox
-            name="roles"
-            value={USER_ROLE.TEACHER}
-            checked={teacherSelected}
-            onCheckedChange={setTeacherSelected}
-            disabled={disabled}
-          />
-          <ContentText>{messages.approvals.roleTeacher}</ContentText>
-        </label>
+        <div className="flex flex-wrap gap-x-stack gap-y-chip">
+          <label className="flex min-h-8 items-center gap-chip">
+            <FormCheckbox
+              name="roles"
+              value={USER_ROLE.ADMIN}
+              checked={adminSelected}
+              onCheckedChange={setAdminSelected}
+              disabled={disabled}
+            />
+            <ContentText>{messages.approvals.roleAdmin}</ContentText>
+          </label>
+          <label className="flex min-h-8 items-center gap-chip">
+            <FormCheckbox
+              name="roles"
+              value={USER_ROLE.TEACHER}
+              checked={teacherSelected}
+              onCheckedChange={setTeacherSelected}
+              disabled={disabled}
+            />
+            <ContentText>{messages.approvals.roleTeacher}</ContentText>
+          </label>
+        </div>
       </FieldGroup>
 
       {teacherSelected ? (
@@ -108,18 +110,20 @@ export const RoleSelector = ({
           {grades.length === 0 ? (
             <ContentText tone="secondary">{messages.approvals.groupsLabel}</ContentText>
           ) : (
-            grades.map((grade) => (
-              <label key={grade.gradeId} className="flex min-h-11 items-center gap-3">
-                <FormCheckbox
-                  name="gradeIds"
-                  value={grade.gradeId}
-                  checked={selectedGradeIds.includes(grade.gradeId)}
-                  onCheckedChange={(checked) => toggleGrade(grade.gradeId, checked)}
-                  disabled={disabled}
-                />
-                <ContentText>{grade.name}</ContentText>
-              </label>
-            ))
+            <div className="flex flex-wrap gap-x-stack gap-y-chip">
+              {grades.map((grade) => (
+                <label key={grade.gradeId} className="flex min-h-8 items-center gap-chip">
+                  <FormCheckbox
+                    name="gradeIds"
+                    value={grade.gradeId}
+                    checked={selectedGradeIds.includes(grade.gradeId)}
+                    onCheckedChange={(checked) => toggleGrade(grade.gradeId, checked)}
+                    disabled={disabled}
+                  />
+                  <ContentText>{grade.name}</ContentText>
+                </label>
+              ))}
+            </div>
           )}
         </FieldGroup>
       ) : null}

@@ -50,7 +50,7 @@ export const UsersPageContent = async ({
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <PageSection width="full" className="min-w-0 space-y-6 overflow-x-hidden">
+      <PageSection width="full" className="flex min-w-0 flex-col gap-stack overflow-x-hidden">
         <PageHeader
           title={adminMessages.page.usersTitle}
           description={adminMessages.users.pageSubtitle}
@@ -78,8 +78,7 @@ export const UsersPageContent = async ({
                 row={row}
                 messages={adminMessages}
                 disambiguator={disambiguators.get(row.userId) ?? null}
-                statusHint={hints.user_statuses}
-                needRoleHint={hints.need_role}
+                needRoleLabel={hints.need_role.term}
               />
             ))}
           </ul>

@@ -25,7 +25,7 @@ export const SegmentedControlLinks = ({
   <div
     role="radiogroup"
     aria-label={aria["aria-label"]}
-    className={cn("flex flex-wrap gap-2", className)}
+    className={cn("flex flex-wrap gap-chip", className)}
   >
     {options.map((option) => {
       const checked = option.value === value;

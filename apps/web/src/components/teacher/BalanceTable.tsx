@@ -91,7 +91,6 @@ export const BalanceTable = ({
         selectedPupilId={selectedPupilId}
         messages={messages}
         columnHints={columnHints}
-        termHintAriaLabel={termHintAriaLabel}
         achievementMessages={achievementMessages}
         onSelectPupil={selectPupil}
         onIssue={(pupilId) => openDialog("issue", pupilId)}

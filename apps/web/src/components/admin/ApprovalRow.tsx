@@ -104,23 +104,22 @@ export const ApprovalRow = ({
 
   return (
     <article className="rounded-xl border border-line bg-surface">
-      <div className="grid grid-cols-1 gap-4 p-4 sm:p-5">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] md:items-start md:gap-6">
-          <div className="min-w-0 space-y-1">
+      <div className="grid grid-cols-1 gap-stack p-card">
+        <div className="grid grid-cols-1 gap-stack">
+          <div className="min-w-0 space-y-hint">
             <SectionTitle className="font-medium text-cobalt-ink">{row.displayName}</SectionTitle>
-            <p className="text-sm text-ink-2">{loginMethods}</p>
-            <p className="text-sm text-ink-2">{metaLine}</p>
-            <div className="flex flex-wrap items-center gap-1.5 text-sm text-ink-2">
+            <p className="text-sm text-ink-2">{[loginMethods, metaLine].filter(Boolean).join(" · ")}</p>
+            <div className="flex flex-wrap items-center gap-chip text-sm text-ink-2">
               <TermLabel
                 term={nonEmptyTerm(consentVersionHint.term)}
                 hint={consentVersionHint.hint}
                 ariaLabel={consentVersionHint.term}
                 popoverSide="top"
               />
-              <span>{row.consentVersion}</span>
+              <span>{row.consentVersion || "—"}</span>
             </div>
           </div>
-          <form action={formAction} className="space-y-4" aria-busy={pending}>
+          <form action={formAction} className="space-y-stack" aria-busy={pending}>
             <input type="hidden" name="requestId" value={row.requestId} />
             <ApprovalRoleSelect
               grades={grades}
@@ -130,7 +129,7 @@ export const ApprovalRow = ({
               rolesHint={rolesHint}
               groupsHint={groupsHint}
             />
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-chip">
               <Button type="submit" disabled={pending} aria-busy={pending} className={FORM_SUBMIT_BUTTON_CLASS}>
                 {pending ? (
                   <>

@@ -27,7 +27,7 @@ export const LessonTableFinishCheck = ({
   hint,
   hintAriaLabel,
 }: LessonTableFinishCheckProps) => (
-  <div className="flex flex-wrap items-center gap-1">
+  <div className="flex min-w-0 flex-wrap items-center gap-chip">
     <LessonTableFinishCheckButton
       label={label}
       pendingLabel={pendingLabel}
@@ -35,7 +35,8 @@ export const LessonTableFinishCheck = ({
       disabled={disabled}
       onFinish={onFinish}
     />
-    <ContentText tone="muted">{note}</ContentText>
-    <TermLabel term={nonEmptyTerm(hintTerm)} hint={hint} ariaLabel={hintAriaLabel} />
+    <ContentText tone="muted">
+      <TermLabel term={nonEmptyTerm(hintTerm)} hint={hint} ariaLabel={hintAriaLabel} /> {note}
+    </ContentText>
   </div>
 );

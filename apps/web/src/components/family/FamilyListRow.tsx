@@ -9,10 +9,10 @@ type FamilyListRowProps = {
 };
 
 export const FamilyListRow = ({ row, messages }: FamilyListRowProps) => (
-  <li>
+  <li className="min-w-0 overflow-hidden rounded-xl border border-line bg-card">
     <CustomLink
       href={`/family?id=${row.familyId}`}
-      className="grid w-full grid-cols-1 gap-2 px-5 py-4 text-left transition-colors hover:bg-paper/70 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.3fr)_minmax(0,1fr)_1.5rem] sm:items-center sm:gap-6"
+      className="grid w-full grid-cols-1 gap-chip p-card text-left transition-colors hover:bg-paper/70 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.3fr)_minmax(0,1fr)_1.5rem] sm:items-center sm:gap-stack"
     >
       <span className="font-display text-lg font-medium text-ink">{row.name}</span>
       <span className="min-w-0 text-sm text-ink-2">

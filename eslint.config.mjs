@@ -1,6 +1,7 @@
 // Root ESLint flat config.
 // Package boundaries (monorepo_boundaries_contract.md §4, PKG-01…PKG-03) are enforced with the
 // built-in `no-restricted-imports` — no extra plugin. Decision recorded in P5-CU8.
+import fs from "node:fs";
 import js from "@eslint/js";
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import tseslint from "typescript-eslint";
@@ -69,6 +70,40 @@ const NO_RAW_COLOR = [
       "JSXAttribute[name.name='style'] Property[key.name=/^(color|background|backgroundColor|borderColor|outlineColor|fill|stroke)$/]",
     message: "No inline colour styles: use Tailwind utilities over tokens (UX-03 §10).",
   },
+];
+
+// Spacing scale (ADR-022 §4.2, UX-03 §7а): product code uses tokens (gap-chip, p-card, px-page …), not raw
+// Tailwind numbers. Matches utilities inside string literals and template strings, i.e. className="…",
+// cn("…"), cva("…"), `…`. Dynamic class names built at runtime are not visible to a static rule
+// (documented limit); `0`, `px`, `auto` and tokens do not match the number group.
+// esquery regexes drop backslashes: only character classes here.
+const RAW_SPACING =
+  "(^|[ :])(gap|gap-x|gap-y|space-x|space-y|p|px|py|pt|pb|pl|pr)-(0[.]5|[1-9][0-9]*([.]5)?)($| )";
+const NO_RAW_SPACING = [
+  {
+    selector: `Literal[value=/${RAW_SPACING}/]`,
+    message: "No raw spacing numbers: use a spacing token (gap-chip, gap-stack, p-card, px-page …) — UX-03 §7а.",
+  },
+  {
+    selector: `TemplateElement[value.raw=/${RAW_SPACING}/]`,
+    message: "No raw spacing numbers: use a spacing token (gap-chip, gap-stack, p-card, px-page …) — UX-03 §7а.",
+  },
+];
+// Files that predate the rule: each CU of P29 removes the files it edits from this list (P29_tasks T3).
+const SPACING_BASELINE = JSON.parse(
+  fs.readFileSync(new URL("./apps/web/eslint-spacing-baseline.json", import.meta.url), "utf8"),
+);
+const SPACING_FILES = [
+  "apps/web/src/components/**/*.{ts,tsx}",
+  "apps/web/src/app/**/*.{ts,tsx}",
+];
+const SPACING_IGNORES = [
+  "apps/web/src/components/ui/**",
+  "apps/web/src/components/design-lab/**",
+  "apps/web/src/app/(dev)/**",
+  "apps/web/src/**/*.test.{ts,tsx}",
+  // Route paths contain glob metacharacters: `(app)`, `[lessonId]`.
+  ...SPACING_BASELINE.map((file) => file.replace(/[()[\]]/g, String.raw`\$&`)),
 ];
 
 const boundary = (files, patterns) => ({
@@ -183,6 +218,18 @@ export default tseslint.config(
     files: ["apps/web/src/**/*.{tsx,jsx}"],
     ignores: [...DESIGN_LAB_FILES, "apps/web/src/components/ui/**", "apps/web/src/**/*.test.{tsx,jsx}"],
     rules: { "no-restricted-syntax": ["error", ...CYRILLIC_IN_JSX] },
+  },
+  // Last, so it wins over the earlier `no-restricted-syntax` blocks for these files: it repeats their
+  // selectors (colour for .ts, Cyrillic for .tsx) and adds NO_RAW_SPACING.
+  {
+    files: SPACING_FILES.map((glob) => glob.replace("{ts,tsx}", "ts")),
+    ignores: SPACING_IGNORES,
+    rules: { "no-restricted-syntax": ["error", ...NO_RAW_COLOR, ...NO_RAW_SPACING] },
+  },
+  {
+    files: SPACING_FILES.map((glob) => glob.replace("{ts,tsx}", "tsx")),
+    ignores: SPACING_IGNORES,
+    rules: { "no-restricted-syntax": ["error", ...CYRILLIC_IN_JSX, ...NO_RAW_SPACING] },
   },
   boundary(["apps/web/src/proxy.ts", "apps/web/src/middleware.ts"], [
     ...WEB_PATTERNS,

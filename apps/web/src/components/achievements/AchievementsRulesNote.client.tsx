@@ -9,7 +9,6 @@ import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 type AchievementsRulesNoteProps = {
   messages: AchievementsCatalogMessages;
   seriesHint: HintTerm;
-  cumulativeHint: HintTerm;
   reviewLesson: GlossaryTerm;
   termHintAriaLabel: string;
 };
@@ -17,34 +16,29 @@ type AchievementsRulesNoteProps = {
 export const AchievementsRulesNote = ({
   messages,
   seriesHint,
-  cumulativeHint,
   reviewLesson,
   termHintAriaLabel,
 }: AchievementsRulesNoteProps) => (
-  <ContentText tone="secondary" className="mb-6 max-w-3xl text-sm">
-    <TermLabel
-      term={nonEmptyTerm(cumulativeHint.term)}
-      hint={cumulativeHint.hint}
-      ariaLabel={termHintAriaLabel}
-    />{" "}
-    ·{" "}
-    <TermLabel
-      term={nonEmptyTerm(seriesHint.term)}
-      hint={seriesHint.hint}
-      ariaLabel={termHintAriaLabel}
-    />
-    <br />
-    <TermLabel
-      term={nonEmptyTerm(seriesHint.term)}
-      hint={seriesHint.hint}
-      ariaLabel={termHintAriaLabel}
-    />
-    : {messages.rulesNoteSeriesLead}{" "}
-    <TermLabel
-      term={nonEmptyTerm(messages.rulesNoteOverviewTerm)}
-      hint={reviewLesson.hint}
-      ariaLabel={termHintAriaLabel}
-    />{" "}
-    {messages.rulesNoteOverviewInSeries} {messages.rulesNoteTail}
-  </ContentText>
+  <section className="mb-6 flex max-w-3xl min-w-0 flex-col gap-hint" aria-label={messages.rulesNoteTitle}>
+    <ContentText className="font-medium text-ink">{messages.rulesNoteTitle}</ContentText>
+    <ul className="list-inside list-disc space-y-hint text-sm text-ink-2">
+      <li>
+        <TermLabel
+          term={nonEmptyTerm(seriesHint.term)}
+          hint={seriesHint.hint}
+          ariaLabel={termHintAriaLabel}
+        />{" "}
+        {messages.rulesNoteSeriesLead}
+      </li>
+      <li>
+        <TermLabel
+          term={nonEmptyTerm(messages.rulesNoteOverviewTerm)}
+          hint={reviewLesson.hint}
+          ariaLabel={termHintAriaLabel}
+        />{" "}
+        {messages.rulesNoteOverviewInSeries}
+      </li>
+      <li>{messages.rulesNoteTail}</li>
+    </ul>
+  </section>
 );

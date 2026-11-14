@@ -22,12 +22,16 @@ export const AuditEntryRow = ({
   reasonPrefix,
 }: AuditEntryRowProps) => (
   <TableRow>
-    <TableCell className="px-5 py-4 align-top whitespace-nowrap tabular-nums text-sm text-muted">
+    <TableCell className="px-card py-stack align-top whitespace-normal break-words tabular-nums text-sm text-muted">
       {occurredLabel}
     </TableCell>
-    <TableCell className="px-5 py-4 align-top text-sm font-medium">{entry.actorLabel}</TableCell>
-    <TableCell className="px-5 py-4 align-top text-sm">{entry.actionPhrase}</TableCell>
-    <TableCell className="px-5 py-4 align-top text-sm" title={entry.entityIdTitle || undefined}>
+    <TableCell className="px-card py-stack align-top whitespace-normal break-words text-sm font-medium">
+      {entry.actorLabel}
+    </TableCell>
+    <TableCell className="px-card py-stack align-top whitespace-normal break-words text-sm">
+      {entry.actionPhrase}
+    </TableCell>
+    <TableCell className="px-card py-stack align-top whitespace-normal break-words text-sm" title={entry.entityIdTitle || undefined}>
       {entry.entityHref ? (
         <CustomLink href={entry.entityHref} className="text-cobalt-ink" title={entry.entityIdTitle || undefined}>
           {entry.entityDisplay}
@@ -36,7 +40,7 @@ export const AuditEntryRow = ({
         <span title={entry.entityIdTitle || undefined}>{entry.entityDisplay}</span>
       )}
     </TableCell>
-    <TableCell className="min-w-0 px-5 py-4 align-top">
+    <TableCell className="min-w-0 px-card py-stack align-top whitespace-normal break-words">
       <AuditChangeList lines={entry.changeLines} reason={entry.reason} reasonPrefix={reasonPrefix} />
       <AuditTechnicalRecord
         term={technicalRecordTerm}

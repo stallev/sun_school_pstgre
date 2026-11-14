@@ -1,7 +1,12 @@
 {
   "tocHeading": "Contents",
+  "tocJump": "Back to contents",
   "roles": {
     "teacher": {
+      "tocGroups": [
+        { "title": "Teacher", "ids": ["today", "lessons", "homework", "homework-edits", "group", "bricks", "achievements", "verses"] },
+        { "title": "Shared", "ids": ["calendar", "rating", "analytics", "profile"] }
+      ],
       "sections": [
         {
           "id": "today",
@@ -185,6 +190,10 @@
       ]
     },
     "admin": {
+      "tocGroups": [
+        { "title": "Administrator", "ids": ["school-year", "approvals", "users", "pupils", "groups", "families", "bricks-admin", "achievements-admin", "deletions", "settings"] },
+        { "title": "Shared", "ids": ["analytics-rating", "audit"] }
+      ],
       "sections": [
         {
           "id": "school-year",

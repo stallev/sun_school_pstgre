@@ -21,7 +21,7 @@ const chipClass = (checked: boolean, invalid: boolean | undefined, layout: Score
   cn(
     "inline-flex items-center justify-center rounded-lg border bg-surface text-base font-medium tabular-nums text-ink transition-[color,background-color,border-color,transform] duration-100 ease-out-soft hover:bg-paper active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 motion-reduce:transition-none motion-reduce:active:scale-100",
     layout === "inline"
-      ? "h-9 min-w-9 px-1 lg:min-w-0 lg:flex-1"
+      ? "h-9 min-w-9 px-1 xl:min-w-0 xl:flex-1"
       : "min-h-11 min-w-11 px-3",
     checked
       ? "border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink hover:bg-cobalt-soft"
@@ -184,7 +184,7 @@ export const ScorePad = ({
       aria-busy={ariaBusy || undefined}
       className={cn(
         layout === "inline"
-          ? "flex flex-wrap gap-0.5 lg:flex-nowrap lg:gap-1"
+          ? "flex flex-wrap gap-0.5 xl:flex-nowrap xl:gap-1"
           : "inline-flex flex-wrap justify-center gap-0.5",
         className,
       )}

@@ -17,11 +17,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { RowActionsMenu, RowActionsMenuItem } from "@/components/ui/row-actions-menu";
-import { TermLabel, nonEmptyTerm } from "@/components/ui/term-label";
 import type { PeopleGroupOption, PupilListRow } from "@/data/school/load-people-admin-list.server";
 import type { MessageLocale } from "@/lib/messages/dictionary-types";
 import type { Dictionary } from "@/lib/messages/get-dictionary";
-import type { HintTerm } from "@/lib/messages/pick-hints-messages";
 
 type PupilRowActionsProps = {
   row: PupilListRow;
@@ -32,7 +30,6 @@ type PupilRowActionsProps = {
   uiLocale: MessageLocale;
   formError: string;
   closeLabel: string;
-  pupilTransferHint: HintTerm;
   onEdit: () => void;
 };
 
@@ -53,7 +50,6 @@ export const PupilRowActions = ({
   uiLocale,
   formError,
   closeLabel,
-  pupilTransferHint,
   onEdit,
 }: PupilRowActionsProps) => {
   const messages = useAdminMessages();
@@ -78,19 +74,12 @@ export const PupilRowActions = ({
   };
 
   const primaryButton = (label: ReactNode, onClick: () => void) => (
-    <Button type="button" className="h-9" onClick={onClick}>
+    <Button type="button" className="h-9 min-w-28" onClick={onClick}>
       {label}
     </Button>
   );
 
-  const transferLabel = (
-    <TermLabel
-      term={nonEmptyTerm(pupilTransferHint.term)}
-      hint={pupilTransferHint.hint}
-      ariaLabel={pupilTransferHint.term}
-      popoverSide="top"
-    />
-  );
+  const transferLabel = messages.people.transferAction;
 
   let primaryAction: ReactNode;
   if (primary === "enroll") {
@@ -102,7 +91,7 @@ export const PupilRowActions = ({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-chip">
       {primaryAction}
       <RowActionsMenu triggerLabel={messages.people.rowActionsMenuLabel}>
         {primary !== "edit" ? (

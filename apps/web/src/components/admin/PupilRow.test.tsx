@@ -12,8 +12,11 @@ describe("PupilRow (P27-CU6)", () => {
     expect(source).not.toMatch(/messages\.people\.consentPaper/);
   });
 
-  it("passes pupil_transfer hint to PupilRowActions", () => {
-    const source = fs.readFileSync(path.join(componentDir, "PupilRow.tsx"), "utf8");
-    expect(source).toMatch(/pupilTransferHint/);
+  it("renders no lone hint after «Перевести» in pupil rows (P29)", () => {
+    const row = fs.readFileSync(path.join(componentDir, "PupilRow.tsx"), "utf8");
+    const actions = fs.readFileSync(path.join(componentDir, "PupilRowActions.client.tsx"), "utf8");
+    expect(row).not.toMatch(/pupilTransferHint|TermLabel/);
+    expect(actions).not.toMatch(/pupilTransferHint|TermLabel|TermHint/);
+    expect(actions).toMatch(/messages\.people\.transferAction/);
   });
 });

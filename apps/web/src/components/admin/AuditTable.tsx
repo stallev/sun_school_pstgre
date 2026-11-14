@@ -37,7 +37,7 @@ export const AuditTable = ({
   reasonPrefix,
 }: AuditTableProps) => (
   <>
-    <ul className="space-y-3 lg:hidden">
+    <ul className="space-y-stack lg:hidden">
       {entries.map((entry) => (
         <AuditEntryCard
           key={entry.id}
@@ -55,22 +55,29 @@ export const AuditTable = ({
       ))}
     </ul>
     <div className="hidden overflow-hidden rounded-xl border border-line bg-surface lg:block">
-      <Table>
+      <Table className="table-fixed">
+        <colgroup>
+          <col className="w-[14%]" />
+          <col className="w-[18%]" />
+          <col className="w-[20%]" />
+          <col className="w-[24%]" />
+          <col className="w-[24%]" />
+        </colgroup>
         <TableHeader>
           <TableRow>
-            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            <TableHead scope="col" className="px-card py-chip font-normal whitespace-normal break-words text-muted">
               {columnOccurred}
             </TableHead>
-            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            <TableHead scope="col" className="px-card py-chip font-normal whitespace-normal break-words text-muted">
               {columnActor}
             </TableHead>
-            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            <TableHead scope="col" className="px-card py-chip font-normal whitespace-normal break-words text-muted">
               {columnAction}
             </TableHead>
-            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            <TableHead scope="col" className="px-card py-chip font-normal whitespace-normal break-words text-muted">
               {columnEntity}
             </TableHead>
-            <TableHead scope="col" className="px-5 py-3 font-normal text-muted">
+            <TableHead scope="col" className="px-card py-chip font-normal whitespace-normal break-words text-muted">
               {columnDetails}
             </TableHead>
           </TableRow>

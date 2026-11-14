@@ -49,7 +49,7 @@ const EditLessonPage = async ({ params }: EditLessonPageProps) => {
     : messages.newTitle;
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-stack">
       <PageHeader
         title={title}
         description={fillMessage(messages.pageSubtitle, { group: gradeName, year: data.yearName })}

@@ -52,7 +52,7 @@ export const TodayAchievementMarkSection = async ({
         {isAdmin ? (
           <>
             <ContentText className="mt-2 text-ink-2">{messages.todayMarkOffAdminLead}</ContentText>
-            <Button variant="outline" className="mt-3 min-h-11" render={<CustomLink href={`/groups/${gradeId}`} />}>
+            <Button variant="outline" className="mt-3 w-fit" render={<CustomLink href={`/groups/${gradeId}`} />}>
               {messages.todayMarkEnableInSettings}
             </Button>
           </>

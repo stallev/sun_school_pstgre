@@ -5,11 +5,41 @@ import { describe, expect, it } from "vitest";
 
 const uiDir = path.dirname(fileURLToPath(import.meta.url));
 
-describe("SegmentedControl fit (P24-CU2 §5.2)", () => {
-  it("uses gap-1.5 and min-w-14 on chips when fit", () => {
+describe("SegmentedControl fit and gap (P24-CU2 §5.2, P29-T20/T21)", () => {
+  it("uses gap-chip between chips and min-w-14 on chips when fit", () => {
     const source = fs.readFileSync(path.join(uiDir, "segmented-control.tsx"), "utf8");
-    expect(source).toContain("inline-flex max-w-full flex-wrap gap-1.5");
+    expect(source).toContain("inline-flex max-w-full flex-wrap");
+    expect(source).toContain('"gap-chip"');
     expect(source).toMatch(/fit && "min-w-14"/);
+  });
+
+  it("grouped: one shared border, dividers, no inner gap, radiogroup container", () => {
+    const source = fs.readFileSync(path.join(uiDir, "segmented-control.tsx"), "utf8");
+    expect(source).toContain("grouped?: boolean");
+    expect(source).toContain("divide-x divide-line-strong overflow-hidden rounded-lg border");
+    expect(source).toContain('"rounded-none border-0"');
+    expect(source).toContain('"radiogroup"');
+  });
+});
+
+describe("Chip and link-button height (P29-T19)", () => {
+  it("chips are h-9 (40.5 px, above the 36 px floor)", () => {
+    const chipSource = fs.readFileSync(
+      path.join(uiDir, "../../lib/ui/segmented-chip-classes.ts"),
+      "utf8",
+    );
+    expect(chipSource).toMatch(/\bh-9\b/);
+  });
+
+  it("CustomLink action variant has min-h-8 hit area", () => {
+    const source = fs.readFileSync(path.join(uiDir, "custom-link.tsx"), "utf8");
+    expect(source).toContain('variant === "action"');
+    expect(source).toContain("min-h-8");
+  });
+
+  it("SegmentedControlLinks uses gap-chip", () => {
+    const source = fs.readFileSync(path.join(uiDir, "segmented-control-links.tsx"), "utf8");
+    expect(source).toContain("gap-chip");
   });
 });
 

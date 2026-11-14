@@ -13,7 +13,13 @@ export type GuideSection = {
   steps: GuideStep[];
 };
 
+export type GuideTocGroup = {
+  title: string;
+  ids: string[];
+};
+
 export type GuideRoleContent = {
+  tocGroups?: GuideTocGroup[];
   sections: GuideSection[];
 };
 
@@ -21,5 +27,6 @@ export type GuideContentRole = "teacher" | "admin" | "parent";
 
 export type GuideDictionary = {
   tocHeading: string;
+  tocJump: string;
   roles: Record<GuideContentRole, GuideRoleContent>;
 };

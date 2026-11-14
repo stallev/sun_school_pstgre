@@ -15,7 +15,7 @@ type BaseProps = StateMessageProps & { icon: LucideIcon };
 
 /** Shared centered layout for empty / error / forbidden states (UX-05). */
 export const StateMessage = ({ icon, title, description, action, footer }: BaseProps) => (
-  <div className="flex flex-col items-center gap-3 rounded-xl border border-line bg-surface px-4 py-10 text-center">
+  <div className="flex flex-col items-center gap-chip rounded-xl border border-line bg-surface p-card text-center">
     <Icon icon={icon} className="size-8 text-muted" />
     <SectionTitle>{title}</SectionTitle>
     {description ? (

@@ -32,7 +32,7 @@ export const GroupPointsCardLink = async ({
   const label = getMessage(adminDict, "achievements.group_points_card_link");
 
   return (
-    <Button type="button" variant="outline" className="min-h-11" render={<CustomLink href={href} />}>
+    <Button type="button" variant="outline" render={<CustomLink href={href} />}>
       {label}
     </Button>
   );

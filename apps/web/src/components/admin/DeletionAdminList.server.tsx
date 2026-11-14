@@ -77,7 +77,7 @@ export const DeletionAdminList = async ({
       <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
         <PageHeader title={messages.page.deletionsTitle} description={d.pageSubtitle} />
         <nav
-          className="-mb-px flex gap-1 overflow-x-auto border-b border-line"
+          className="-mb-px flex gap-chip overflow-x-auto border-b border-line"
           aria-label={d.tabNav}
           role="tablist"
         >
