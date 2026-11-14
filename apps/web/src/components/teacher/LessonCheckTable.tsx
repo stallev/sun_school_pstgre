@@ -118,7 +118,7 @@ export const LessonCheckTable = ({
       {(marksActions) => (
     <div className="min-w-0 space-y-4">
       <header className="space-y-1">
-        <CustomLink href={`/lessons/${data.lessonId}`} className="text-sm text-cobalt-ink">
+        <CustomLink href={`/lessons/${data.lessonId}`} className="inline-flex min-h-8 items-center text-sm text-cobalt-ink">
           {messages.linkLesson}
         </CustomLink>
       </header>

@@ -83,7 +83,7 @@ export const YearTotalsTable = ({
       label={fillMessage(yearMessages.tableCaption, { group: groupLabel })}
     />
     <Card className="hidden lg:block">
-      <Table className="text-left text-base">
+      <Table className="text-left text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
         <caption className="sr-only">{fillMessage(yearMessages.tableCaption, { group: groupLabel })}</caption>
         <TableHeader className="border-b border-line text-sm text-muted">
           <TableRow>
@@ -120,7 +120,7 @@ export const YearTotalsTable = ({
                     type="button"
                     onClick={() => onSelectYear(row.yearId)}
                     aria-current={selected ? "true" : undefined}
-                    className="text-left hover:text-cobalt-ink"
+                    className="-mx-1 inline-flex min-h-8 items-center px-1 text-left hover:text-cobalt-ink"
                   >
                     {row.yearName}
                   </button>

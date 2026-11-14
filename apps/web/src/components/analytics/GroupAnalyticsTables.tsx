@@ -117,7 +117,7 @@ const PupilLayerTable = ({
         />
       ) : (
       <Card className="hidden p-0 lg:block">
-        <Table className="text-base">
+        <Table className="text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
           <TableHeader className="border-b border-line text-sm text-muted">
             <TableRow className="hover:bg-transparent">
               <TableHead scope="col" className="px-5 py-3 font-normal">
@@ -258,7 +258,7 @@ export const GroupAnalyticsTables = ({
           <>
           <BirthYearCohortCards rows={birthYearRows} messages={messages} />
           <Card className="hidden p-0 lg:block">
-            <Table className="text-base">
+            <Table className="text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
               <TableHeader className="border-b border-line text-sm text-muted">
                 <TableRow className="hover:bg-transparent">
                   <TableHead scope="col" className="px-5 py-3 font-normal">

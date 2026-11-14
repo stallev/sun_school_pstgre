@@ -23,6 +23,8 @@ type AchievementCatalogRowProps = {
   dictionaries: Record<string, Dictionary>;
   messageLocale: MessageLocale;
   tierLevelsHint: HintTerm;
+  /** One «?» per meaning per screen: only the first multi-tier row carries the hint. */
+  showTierHint?: boolean;
   termHintAriaLabel: string;
   onEdit: () => void;
 };
@@ -38,6 +40,7 @@ export const AchievementCatalogRow = ({
   dictionaries,
   messageLocale,
   tierLevelsHint,
+  showTierHint = false,
   termHintAriaLabel,
   onEdit,
 }: AchievementCatalogRowProps) => {
@@ -80,12 +83,16 @@ export const AchievementCatalogRow = ({
       ) : (
         <div className="flex flex-col gap-chip">
           {row.tiers.length > 1 ? (
-            <TermLabel
-              term={nonEmptyTerm(tierLevelsHint.term)}
-              hint={tierLevelsHint.hint}
-              ariaLabel={termHintAriaLabel}
-              className="text-sm"
-            />
+            showTierHint ? (
+              <TermLabel
+                term={nonEmptyTerm(tierLevelsHint.term)}
+                hint={tierLevelsHint.hint}
+                ariaLabel={termHintAriaLabel}
+                className="text-sm"
+              />
+            ) : (
+              <span className="text-sm">{tierLevelsHint.term}</span>
+            )
           ) : null}
           <ul className="flex flex-col gap-hint">
             {row.tiers.map((tier) => (

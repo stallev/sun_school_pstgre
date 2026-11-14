@@ -52,7 +52,7 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
     action="/audit"
     className="grid grid-cols-12 gap-x-stack gap-y-stack rounded-xl border border-line bg-surface p-card"
   >
-    <div className="col-span-12 space-y-label md:col-span-4">
+    <div className="col-span-12 space-y-label md:col-span-4 xl:col-span-2">
       <Label htmlFor="audit-from" className="min-h-5">{labels.from}</Label>
       <FormDateField
         id="audit-from"
@@ -63,7 +63,7 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         className="max-w-none"
       />
     </div>
-    <div className="col-span-12 space-y-label md:col-span-4">
+    <div className="col-span-12 space-y-label md:col-span-4 xl:col-span-2">
       <Label htmlFor="audit-to" className="min-h-5">{labels.to}</Label>
       <FormDateField
         id="audit-to"
@@ -74,7 +74,7 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         className="max-w-none"
       />
     </div>
-    <div className="col-span-12 space-y-label md:col-span-4">
+    <div className="col-span-12 space-y-label md:col-span-4 xl:col-span-3">
       <Label htmlFor="audit-actor" className="min-h-5">{labels.actor}</Label>
       <FormSelect
         id="audit-actor"
@@ -85,7 +85,7 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         triggerClassName="max-w-none"
       />
     </div>
-    <div className="col-span-12 space-y-label md:col-span-6">
+    <div className="col-span-12 space-y-label md:col-span-6 xl:col-span-3">
       <Label htmlFor="audit-entity-type" className="min-h-5">
         <TermLabel
           term={nonEmptyTerm(labels.entityType)}
@@ -106,7 +106,7 @@ export const AuditFilterBar = ({ values, actorOptions, dateFieldCopy, labels }: 
         triggerClassName="max-w-none"
       />
     </div>
-    <div className="col-span-12 space-y-label md:col-span-6">
+    <div className="col-span-12 space-y-label md:col-span-6 xl:col-span-2">
       <Label htmlFor="audit-action" className="min-h-5">{labels.action}</Label>
       <FormSelect
         id="audit-action"

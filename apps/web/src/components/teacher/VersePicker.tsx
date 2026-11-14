@@ -122,7 +122,7 @@ export const VersePicker = ({
       </div>
       <p className="text-sm text-ink-2">{messages.pickerHint}</p>
       {pickerError ? <AlertText>{pickerError}</AlertText> : null}
-      <Button type="button" variant="outline" className="w-full" disabled={busy} onClick={handleAdd}>
+      <Button type="button" variant="outline" className="self-start" disabled={busy} onClick={handleAdd}>
         <PlusIcon className="size-4" aria-hidden />
         {messages.pickerAdd}
       </Button>

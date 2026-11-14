@@ -62,6 +62,14 @@ export const AchievementsCatalogBoard = ({
     return map;
   }, [rewards]);
 
+  const firstTierHintRowId = useMemo(() => {
+    for (const category of REWARD_CATEGORY_ORDER) {
+      const row = (rewardsByCategory.get(category) ?? []).find((candidate) => candidate.tiers.length > 1);
+      if (row) return row.id;
+    }
+    return penalties.find((candidate) => candidate.tiers.length > 1)?.id ?? null;
+  }, [rewardsByCategory, penalties]);
+
   return (
     <>
       <PageHeader
@@ -99,6 +107,7 @@ export const AchievementsCatalogBoard = ({
                     dictionaries={dictionaries}
                     messageLocale={messageLocale}
                     tierLevelsHint={hints.ach_levels}
+                    showTierHint={row.id === firstTierHintRowId}
                     termHintAriaLabel={termHintAriaLabel}
                     onEdit={() => {
                       setRewardEdit(row);
@@ -140,6 +149,7 @@ export const AchievementsCatalogBoard = ({
                 dictionaries={dictionaries}
                 messageLocale={messageLocale}
                 tierLevelsHint={hints.ach_levels}
+                showTierHint={row.id === firstTierHintRowId}
                 termHintAriaLabel={termHintAriaLabel}
                 onEdit={() => {
                   setPenaltyEdit(row);

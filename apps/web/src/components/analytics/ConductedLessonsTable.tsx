@@ -40,7 +40,7 @@ export const ConductedLessonsTable = ({
       <>
         <ConductedLessonsCards snapshot={snapshot} messages={messages} />
         <Card className="hidden p-0 lg:block">
-          <Table className="text-base">
+          <Table className="text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
             <TableCaption className="sr-only">{messages.conducted.tableCaption}</TableCaption>
             <TableHeader className="border-b border-line text-sm text-muted">
               <TableRow className="hover:bg-transparent">

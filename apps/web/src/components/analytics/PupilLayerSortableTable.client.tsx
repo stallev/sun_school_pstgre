@@ -109,7 +109,7 @@ export const PupilLayerSortableTable = ({
 
   return (
     <Card className="hidden p-0 lg:block">
-      <Table className="text-base">
+      <Table className="text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
         <TableHeader className="border-b border-line text-sm text-muted">
           <TableRow className="hover:bg-transparent">
             {(
@@ -130,7 +130,7 @@ export const PupilLayerSortableTable = ({
               >
                 <button
                   type="button"
-                  className="inline-flex items-center text-left hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  className="-mx-1 inline-flex min-h-8 items-center px-1 text-left hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   onClick={() => handleSort(key)}
                 >
                   {sortLabel(key, label)}

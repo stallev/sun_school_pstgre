@@ -72,7 +72,7 @@ export const CheckScaleField = ({
           aria-expanded={padOpen}
           aria-controls={padOpen ? padId : undefined}
           aria-label={triggerLabel}
-          className="inline-flex min-h-11 min-w-[3rem] items-center justify-center rounded-lg border border-line bg-surface px-3 tabular-nums hover:border-ink-2 disabled:opacity-45"
+          className="inline-flex min-h-11 min-w-[3rem] md:min-h-9 items-center justify-center rounded-lg border border-line bg-surface px-3 tabular-nums hover:border-ink-2 disabled:opacity-45"
           onClick={() => setPadOpen((open) => !open)}
           onKeyDown={onTriggerKeyDown}
         >

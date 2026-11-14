@@ -111,6 +111,7 @@ export const GroupPointsTable = ({
           />
           <Button
             type="button"
+            className="self-start"
             onClick={handleSave}
             disabled={pending || !hasChanges}
             aria-busy={pending}

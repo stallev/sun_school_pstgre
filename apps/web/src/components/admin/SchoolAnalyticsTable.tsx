@@ -60,7 +60,7 @@ export const SchoolAnalyticsTable = ({
       termHintAriaLabel={termHintAriaLabel}
     />
     <Card className="hidden p-0 lg:block">
-      <Table className="text-left text-base">
+      <Table className="text-left text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
         <caption className="sr-only">{messages.groupsTableTitle}</caption>
         <TableHeader className="border-b border-line text-sm text-muted-foreground">
           <TableRow className="hover:bg-transparent">

@@ -83,7 +83,7 @@ export const GuideToc = ({ heading, jumpLabel, groups }: GuideTocProps) => {
                       href={`#${section.id}`}
                       aria-current={activeId === section.id ? "location" : undefined}
                       className={cn(
-                        "text-base font-normal",
+                        "inline-flex min-h-8 items-center py-hint text-base font-normal",
                         activeId === section.id && "font-bold text-cobalt-ink",
                       )}
                     >
@@ -100,7 +100,7 @@ export const GuideToc = ({ heading, jumpLabel, groups }: GuideTocProps) => {
         <a
           href={`#${TOC_ID}`}
           onClick={handleJumpToToc}
-          className="fixed right-page bottom-sectionz-30 inline-flex h-11 items-center rounded-lg bg-cobalt-ink px-cardtext-base font-medium text-primary-foreground no-underline shadow-float hover:bg-cobalt-deep lg:hidden"
+          className="fixed right-page bottom-section z-30 inline-flex h-11 items-center rounded-lg bg-cobalt-ink px-card text-base font-medium text-primary-foreground no-underline shadow-float hover:bg-cobalt-deep lg:hidden"
         >
           {jumpLabel}
         </a>
