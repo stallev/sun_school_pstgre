@@ -51,12 +51,12 @@ export const EntityHistoryList = async ({
   const emptyDescription = getMessage(adminDict, "audit.history_empty_description");
 
   return (
-    <section className="space-y-3" aria-labelledby="entity-history-heading">
+    <section className="flex flex-col gap-stack" aria-labelledby="entity-history-heading">
       <ContentText id="entity-history-heading" className="font-medium text-ink">{title}</ContentText>
       {result.data.length === 0 ? (
         <EmptyState title={emptyTitle} description={emptyDescription} />
       ) : (
-        <ul className="rounded-xl border border-line bg-surface px-4">
+        <ul className="rounded-xl border border-line bg-surface px-card">
           {result.data.map((entry) => (
             <AuditHistoryItem
               key={entry.id}

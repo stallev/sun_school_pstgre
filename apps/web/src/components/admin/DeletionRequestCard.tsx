@@ -80,9 +80,9 @@ export const DeletionRequestCard = ({
       );
 
   return (
-    <li className="rounded-xl border border-line bg-surface p-4 sm:p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 space-y-1">
+    <li className="rounded-xl border border-line bg-surface p-card">
+      <div className="flex flex-wrap items-start justify-between gap-stack">
+        <div className="flex min-w-0 flex-col gap-label">
           <ContentText tone="muted" className="text-sm">
             {typeLabel} · {requestedRelative}
           </ContentText>
@@ -92,11 +92,11 @@ export const DeletionRequestCard = ({
             {row.reason ? ` · ${d.reasonPrefix.replace("{reason}", row.reason)}` : ""}
           </ContentText>
         </div>
-        <div className="text-right space-y-1">
+        <div className="flex flex-col gap-label text-right">
           <StatusText tone={statusTone(row.status)}>{statusLabel}</StatusText>
           {isOpen ? (
             row.isOverdue ? (
-              <div className="space-y-1">
+              <div className="flex flex-col gap-label">
                 <StatusText tone="danger">{d.statusOverdue}</StatusText>
                 <ContentText className="text-sm tabular-nums text-danger">
                   {formatDeletionDays(d.daysOverdue, row.daysRemaining)}
@@ -118,7 +118,7 @@ export const DeletionRequestCard = ({
 
       {isOpen && row.plan ? (
         <>
-          <div className="mt-4">
+          <div className="mt-stack">
             <DeletionPlanView
               plan={row.plan}
               messages={d}
@@ -126,7 +126,7 @@ export const DeletionRequestCard = ({
               anonymizeHint={anonymizePlanHint}
             />
           </div>
-          <div className="mt-4 space-y-2 border-t border-line pt-4">
+          <div className="mt-stack flex flex-col gap-chip border-t border-line pt-stack">
             <TermLabel
               term={nonEmptyTerm(deletionActionHint.term)}
               hint={deletionActionHint.hint}
@@ -134,7 +134,7 @@ export const DeletionRequestCard = ({
               className="text-sm text-ink-2"
               popoverSide="top"
             />
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-chip">
               {row.status === DELETION_REQUEST_STATUS.NEW ? (
                 <DeletionTakeButton requestId={row.requestId} dictionaries={dictionaries} formError={formError} />
               ) : null}

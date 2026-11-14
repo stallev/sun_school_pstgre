@@ -45,10 +45,10 @@ export const UserProfilePageContent = async ({
 
   return (
     <AdminMessagesProvider messages={adminMessages}>
-      <div className="min-w-0 max-w-full space-y-6 overflow-x-hidden">
+      <div className="min-w-0 max-w-full flex-col gap-section overflow-x-hidden flex">
         <PageHeader title={profile.displayName} description={adminMessages.page.profileTitle} />
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
-          <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-stack lg:grid-cols-2 lg:items-start">
+          <div className="flex flex-col gap-stack">
             <FormSection title={adminMessages.users.updateName}>
               <UpdateUserNameForm
                 userId={profile.userId}
@@ -62,7 +62,7 @@ export const UserProfilePageContent = async ({
               />
             </FormSection>
             <FormSection title={adminMessages.users.profileLoginMethods}>
-              <ul className="space-y-2">
+              <ul className="flex flex-col gap-chip">
                 {profile.identities.map((identity) => (
                   <li key={`${identity.provider}-${identity.label}`}>
                     <ContentText>{identity.label}</ContentText>
@@ -73,7 +73,7 @@ export const UserProfilePageContent = async ({
             <FormSection title={adminMessages.users.profileStatus}>
               <ContentText>{formatAccountStatusLabel(profile.status, adminMessages)}</ContentText>
             </FormSection>
-            <section className="flex flex-wrap gap-2">
+            <section className="flex flex-wrap gap-chip">
               {profile.status === ACCOUNT_STATUS.ACTIVE ? (
                 <DisableAccessConfirm
                   userId={profile.userId}
@@ -92,7 +92,7 @@ export const UserProfilePageContent = async ({
               ) : null}
             </section>
           </div>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-stack">
             <FormSection title={adminMessages.users.profileRoles}>
               <UserProfileRoles
                 userId={profile.userId}
@@ -106,7 +106,7 @@ export const UserProfilePageContent = async ({
             <FormSection title={adminMessages.users.profileAuditLink}>
               <UserEntityHistoryList userId={profile.userId} />
             </FormSection>
-            <section className="flex flex-wrap gap-2">
+            <section className="flex flex-wrap gap-chip">
               <MergeUsersDialog
                 keepUserId={profile.userId}
                 dictionaries={dictionaries}

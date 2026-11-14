@@ -7,9 +7,9 @@ type GuideSectionBlockProps = {
 };
 
 export const GuideSectionBlock = ({ section }: GuideSectionBlockProps) => (
-  <section id={section.id} className="scroll-mt-24 space-y-3">
+  <section id={section.id} className="scroll-mt-16 flex flex-col gap-chip">
     <SectionTitle as="h2">{section.title}</SectionTitle>
-    <ol className="list-decimal space-y-2 pl-5">
+    <ol className="flex list-decimal flex-col gap-chip pl-section">
       {section.steps.map((step, index) => (
         <li key={`${section.id}-${index}`}>
           <GuideStepLine step={step} />

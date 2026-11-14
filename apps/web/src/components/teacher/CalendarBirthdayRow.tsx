@@ -7,7 +7,7 @@ type CalendarBirthdayRowProps = {
 };
 
 export const CalendarBirthdayRow = ({ label, compact = false }: CalendarBirthdayRowProps) => (
-  <span className="mt-0.5 flex min-w-0 items-center gap-1 text-amber-ink">
+  <span className="flex min-w-0 items-center gap-label text-amber-ink">
     <Cake className="size-4 shrink-0" aria-hidden />
     <span className={cn("text-sm", compact && "hidden truncate sm:inline")}>{label}</span>
   </span>

@@ -51,10 +51,10 @@ export const GuidePageContent = async () => {
   const pageTitle = getMessage(commonDict, "shell.titles.guide");
 
   return (
-    <PageSection width="form" className="space-y-8 px-4 py-6 md:px-6 lg:py-8">
+    <PageSection width="form" className="flex flex-col gap-section">
       <PageHeader title={pageTitle} />
       <GuideToc heading={guide.tocHeading} sections={sections} />
-      <div className="space-y-10">
+      <div className="flex flex-col gap-section">
         {sections.map((section) => (
           <GuideSectionBlock key={section.id} section={section} />
         ))}

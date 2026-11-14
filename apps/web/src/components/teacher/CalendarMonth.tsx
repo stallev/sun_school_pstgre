@@ -193,7 +193,7 @@ export const CalendarMonth = ({
                     key={event.eventId}
                     href={buildHref(gradeId, monthKey, { eventId: event.eventId })}
                     className={cn(
-                      "flex w-full items-center gap-stack p-card text-left hover:bg-paper/70",
+                      "flex w-full items-center gap-stack px-card py-chip text-left hover:bg-paper/70",
                       openEventId === event.eventId && "bg-paper/70",
                     )}
                   >
@@ -214,7 +214,7 @@ export const CalendarMonth = ({
               {birthdays.map((row) => (
                 <div
                   key={row.pupilId}
-                  className="flex w-full items-center gap-stack p-card text-left"
+                  className="flex w-full items-center gap-stack px-card py-chip text-left"
                 >
                   <span className="w-10 shrink-0 font-display text-xl tabular-nums">
                     {row.dayOfMonth}

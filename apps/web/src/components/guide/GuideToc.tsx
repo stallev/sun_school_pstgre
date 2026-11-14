@@ -8,11 +8,11 @@ type GuideTocProps = {
 };
 
 export const GuideToc = ({ heading, sections }: GuideTocProps) => (
-  <nav aria-label={heading} className="rounded-xl border border-line bg-surface p-4">
+  <nav aria-label={heading} className="rounded-xl border border-line bg-surface p-card">
     <SectionTitle as="h2" className="mb-3 text-base">
       {heading}
     </SectionTitle>
-    <ul className="space-y-2">
+    <ul className="flex flex-col gap-chip">
       {sections.map((section) => (
         <li key={section.id}>
           <CustomLink href={`#${section.id}`} className="text-base font-normal">

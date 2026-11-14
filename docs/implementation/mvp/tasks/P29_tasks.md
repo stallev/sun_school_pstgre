@@ -240,22 +240,22 @@ Review `diff-only`: профиль `lean` D6 (presentational).
 
 Review `diff-only`: профиль `lean` D6 (presentational).
 
-- [ ] P29-T31 · T1 · **D-32** · Spec: [ADR-022 §4.5 п. 3, §4.6 п. 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vRating`
+- [x] P29-T31 · T1 · **D-32** · Spec: [ADR-022 §4.5 п. 3, §4.6 п. 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vRating`
       Files: `apps/web/src/components/analytics/{RatingTable,RatingPageContent.server}.tsx` (сейчас `RatingTable` — карточки `RecordCard` до `lg`, `Card` с таблицей от `lg`), `apps/web/src/components/patterns/RecordCard.tsx` (при необходимости)
       Acceptance: на ≥ 768 рейтинг — строка-таблица (имя · баллы · …), карточка — только на `< 768` (граница `md` вместо нынешней `lg`); число баллов — по правому краю; свободного места справа 356 px нет (замер: колонка баллов у правого края контейнера)
       Paths: H [768: таблица] · N [пустой рейтинг → пустое состояние ≤ 24 px; одинаковые баллы → стабильный порядок, как раньше] · S n/a — presentational
 
-- [ ] P29-T32 · T1 · **D-33** · Spec: [ADR-022 §4.2 (`--space-card`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 §8 (Карточка)](../../../design/visual_identity_contract.md)
+- [x] P29-T32 · T1 · **D-33** · Spec: [ADR-022 §4.2 (`--space-card`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [UX-03 §8 (Карточка)](../../../design/visual_identity_contract.md)
       Files: `apps/web/src/components/ui/card.tsx`, `apps/web/src/components/admin/{SettingsPageContent.server,SettingsLanguageForm,DeletionRequestCard}.tsx`, `apps/web/src/components/teacher/{CalendarMonth,CalendarBirthdayRow}.tsx` (+ `DeletionRequestCard.test.tsx`)
       Acceptance: `Card` по умолчанию — `p-card` (16,2 / 24,3 px); на `/settings`, `/deletions`, `/calendar` паддинг карточки ≤ 24,3 px, без «24 сверху и 42 по бокам»; «Язык интерфейса» — без пустоты справа (контент по ширине или карточка по ширине содержимого); карточка события календаря — вертикальный паддинг ≤ `--space-chip` + 2 px при одной строке
       Paths: H [паддинги по токену] · N [длинный заголовок → перенос] · S n/a — presentational
 
-- [ ] P29-T33 · T0 · **D-34** · Spec: [ADR-022 §4.6 п. 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ui_states_contract S2](../../../design/ui_states_contract.md)
+- [x] P29-T33 · T0 · **D-34** · Spec: [ADR-022 §4.6 п. 5](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ui_states_contract S2](../../../design/ui_states_contract.md)
       Files: `apps/web/src/components/patterns/EmptyState.tsx`, `apps/web/src/components/admin/{UserProfilePageContent.server,EntityHistoryList}.tsx`
       Acceptance: `EmptyState` — `padding` ≤ 24 px (был 45 px вертикально); «Записей пока нет» на `/users/[id]` — высота ≤ 96 px при двух строках; один вариант `EmptyState` на все экраны
       Paths: H [компактное пустое состояние] · N [без иконки / без действия → высота не «прыгает»] · S n/a — presentational
 
-- [ ] P29-T34 · T0 · **D-35** · Spec: [ADR-022 §4.2 (`--space-section`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGuide`
+- [x] P29-T34 · T0 · **D-35** · Spec: [ADR-022 §4.2 (`--space-section`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGuide`
       Files: `apps/web/src/app/(app)/guide/page.tsx`, `apps/web/src/components/guide/*.tsx` (имена — по факту)
       Acceptance: зазор между разделами `/guide` — `--space-section` (32,4 / 39,6 px, был 45 px); `scroll-margin-top` у заголовков разделов = высота шапки (56 px) + 8 px
       Paths: H [зазор 32 px] · N [якорная ссылка на раздел → заголовок не под шапкой] · S n/a — presentational
