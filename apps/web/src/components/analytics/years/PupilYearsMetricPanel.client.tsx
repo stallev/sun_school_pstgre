@@ -114,7 +114,7 @@ export const PupilYearsMetricPanel = ({
         </button>
       </div>
       {showTable ? (
-        <Table className="text-base">
+        <Table className="text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
           <TableHeader>
             <TableRow>
               <TableHead scope="col">{pupilYearMessages.chartColumnYear}</TableHead>

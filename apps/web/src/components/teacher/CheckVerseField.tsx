@@ -23,7 +23,7 @@ type CheckVerseFieldProps = {
 
 const chipClass = (checked: boolean, quiet: boolean) =>
   cn(
-    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border px-3 text-[0.9375rem] font-medium tabular-nums",
+    "inline-flex min-h-11 min-w-11 md:min-h-9 md:min-w-9 items-center justify-center rounded-lg border px-3 text-[0.9375rem] font-medium tabular-nums",
     checked
       ? "border-cobalt-ink bg-cobalt-soft font-bold text-cobalt-ink"
       : quiet

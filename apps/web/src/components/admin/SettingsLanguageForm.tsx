@@ -57,7 +57,7 @@ export const SettingsLanguageForm = ({
       />
       <Button
         type="submit"
-        className="w-full sm:w-auto"
+        className="self-start"
         disabled={pending || locale === currentLocale}
         aria-busy={pending}
       >

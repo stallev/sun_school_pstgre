@@ -40,7 +40,7 @@ export const SchoolClosedGroupsTable = ({
     <section className="space-y-3">
       <SchoolClosedGroupCards yearName={yearName} rows={rows} messages={messages} />
       <Card className="hidden p-0 lg:block">
-        <Table className="text-left text-base">
+        <Table className="text-left text-base [&_td]:whitespace-normal [&_th]:whitespace-normal">
           <caption className="sr-only">{fillMessage(schoolMessages.closedTableCaption, { year: yearName })}</caption>
           <TableHeader className="border-b border-line text-base text-muted-foreground">
             <TableRow>

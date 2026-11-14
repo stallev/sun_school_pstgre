@@ -54,7 +54,7 @@ export const PupilLessonTable = ({
         showCorrectActions={showCorrectActions}
       />
       <Card className="hidden p-0 lg:block">
-        <Table className="text-left">
+        <Table className="text-left [&_td]:whitespace-normal [&_th]:whitespace-normal">
           <TableHeader className="border-b border-line text-sm text-muted">
             <TableRow className="hover:bg-transparent">
               <TableHead scope="col" className="px-5 py-3 font-normal">

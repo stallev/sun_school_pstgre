@@ -76,7 +76,7 @@ export const CreateYearForm = ({ dictionaries, uiLocale, formError }: CreateYear
           />
         </label>
       </div>
-      <Button type="submit" disabled={pending} aria-busy={pending}>
+      <Button type="submit" className="self-start" disabled={pending} aria-busy={pending}>
         {pending ? messages.year.submitPending : messages.year.createSubmit}
       </Button>
     </form>
