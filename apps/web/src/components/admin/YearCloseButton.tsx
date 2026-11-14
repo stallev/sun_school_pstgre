@@ -33,6 +33,8 @@ export const YearCloseButton = ({
   const closeLabel =
     period.length > 0 ? fillMessage(messages.year.closeNamed, { period }) : messages.year.close;
 
+  const confirmPhrase = closeLabel.toLocaleLowerCase();
+
   return (
     <section className="mt-auto flex flex-col gap-stack border-t border-line pt-card">
       <SectionTitle>
@@ -42,7 +44,15 @@ export const YearCloseButton = ({
           ariaLabel={closeHint.term}
         />
       </SectionTitle>
-      <ContentText className="text-sm text-ink-2">{messages.year.dangerZoneCloseLead}</ContentText>
+      <div className="flex flex-col gap-hint text-sm text-ink-2">
+        <ContentText className="font-medium text-ink">{messages.year.closeWillHappenTitle}</ContentText>
+        <ul className="list-inside list-disc space-y-hint">
+          {messages.year.closeWillHappenItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <ContentText className="font-bold text-danger">{messages.year.dangerZoneCloseLead}</ContentText>
+      </div>
       <form action={closeAction} id={`close-year-${yearId}`} className="flex flex-col gap-stack">
         <input type="hidden" name="yearId" value={yearId} />
         <label className="grid gap-label text-sm">
@@ -71,6 +81,8 @@ export const YearCloseButton = ({
           cancelLabel={messages.form.cancel}
           pending={pending}
           destructive
+          confirmPhrase={confirmPhrase}
+          confirmPhraseLabel={fillMessage(messages.year.closeConfirmTypeLabel, { phrase: confirmPhrase })}
           onConfirm={() => {
             const form = document.getElementById(`close-year-${yearId}`) as HTMLFormElement | null;
             form?.requestSubmit();

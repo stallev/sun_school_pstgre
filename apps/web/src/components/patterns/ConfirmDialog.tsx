@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactElement, RefObject } from "react";
+import { useState, type ReactElement, type RefObject } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogClose,
@@ -23,6 +24,9 @@ type ConfirmDialogConfirmProps = {
   onConfirm: () => void;
   destructive?: boolean;
   pending?: boolean;
+  /** When set, the confirm button stays disabled until the user types this phrase (case-insensitive). */
+  confirmPhrase?: string;
+  confirmPhraseLabel?: string;
 };
 
 type ConfirmDialogUnsavedProps = {
@@ -95,32 +99,48 @@ export const ConfirmDialog = (props: ConfirmDialogProps) => {
     );
   }
 
-  const {
-    trigger,
-    title,
-    description,
-    confirmLabel,
-    cancelLabel,
-    onConfirm,
-    destructive = false,
-    pending = false,
-  } = props;
+  return <ConfirmDialogConfirm {...props} />;
+};
+
+const isPhraseTyped = (typed: string, phrase: string | undefined): boolean =>
+  phrase === undefined || typed.trim().toLocaleLowerCase() === phrase.trim().toLocaleLowerCase();
+
+const ConfirmDialogConfirm = ({
+  trigger,
+  title,
+  description,
+  confirmLabel,
+  cancelLabel,
+  onConfirm,
+  destructive = false,
+  pending = false,
+  confirmPhrase,
+  confirmPhraseLabel,
+}: ConfirmDialogConfirmProps) => {
+  const [typed, setTyped] = useState("");
+  const phraseMatches = isPhraseTyped(typed, confirmPhrase);
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => setTyped("")}>
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        {confirmPhrase !== undefined ? (
+          <label className="grid gap-label text-sm">
+            <span>{confirmPhraseLabel}</span>
+            <Input value={typed} onChange={(event) => setTyped(event.target.value)} autoComplete="off" />
+          </label>
+        ) : null}
         <DialogFooter>
           <DialogClose render={<Button variant="outline" disabled={pending} />}>
             {cancelLabel}
           </DialogClose>
           <Button
             variant={destructive ? "destructive-solid" : "default"}
-            disabled={pending}
+            disabled={pending || !phraseMatches}
             aria-busy={pending}
             onClick={onConfirm}
           >

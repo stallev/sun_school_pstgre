@@ -167,6 +167,13 @@ export const pickAdminMessages = (admin: Dictionary): AdminMessages => ({
     summaryPupils: getPluralForms(admin, "year.summary_pupils"),
     dangerZoneTitle: getMessage(admin, "year.danger_zone_title"),
     dangerZoneCloseLead: getMessage(admin, "year.danger_zone_close_lead"),
+    closeWillHappenTitle: getMessage(admin, "year.close_will_happen_title"),
+    closeWillHappenItems: [
+      getMessage(admin, "year.close_will_happen_1"),
+      getMessage(admin, "year.close_will_happen_2"),
+      getMessage(admin, "year.close_will_happen_3"),
+    ],
+    closeConfirmTypeLabel: getMessage(admin, "year.close_confirm_type_label"),
     createNextToggle: getMessage(admin, "year.create_next_toggle"),
     archiveSummary: getMessage(admin, "year.archive_summary"),
     toastCreated: getMessage(admin, "year.toast_created"),

@@ -116,7 +116,7 @@ export const ApprovalRow = ({
                 ariaLabel={consentVersionHint.term}
                 popoverSide="top"
               />
-              <span>{row.consentVersion}</span>
+              <span>{row.consentVersion || "—"}</span>
             </div>
           </div>
           <form action={formAction} className="space-y-stack" aria-busy={pending}>

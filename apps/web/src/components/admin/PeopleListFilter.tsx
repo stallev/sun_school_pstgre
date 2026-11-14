@@ -62,7 +62,9 @@ export const PeopleListFilterNav = ({
         displayQuery,
         page: 1,
       });
-      const hint = tab.hint?.({ pupilStatesHint, migratedHint }) ?? null;
+      // На вкладке «перенесённые» то же «?» стоит в заголовке списка — один раз на экран.
+      const isLegacyHeadingHint = isActive && tab.key === PEOPLE_LIST_FILTER.LEGACY;
+      const hint = isLegacyHeadingHint ? null : (tab.hint?.({ pupilStatesHint, migratedHint }) ?? null);
       const label = tab.label(messages);
       return (
         <CustomLink

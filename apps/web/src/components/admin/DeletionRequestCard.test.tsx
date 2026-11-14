@@ -12,4 +12,11 @@ describe("DeletionRequestCard (P27-CU6)", () => {
     expect(source).toMatch(/requestedByRoleEmail/);
     expect(source).toMatch(/TermLabel/);
   });
+
+  it("places the action hint next to the buttons, never inside them (P29-T37)", () => {
+    const source = fs.readFileSync(path.join(componentDir, "DeletionRequestCard.tsx"), "utf8");
+    expect(source.indexOf("deletionActionHint.hint")).toBeLessThan(source.indexOf("<DeletionTakeButton"));
+    const take = fs.readFileSync(path.join(componentDir, "DeletionTakeButton.client.tsx"), "utf8");
+    expect(take).not.toMatch(/TermLabel/);
+  });
 });

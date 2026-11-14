@@ -146,6 +146,9 @@ export type AdminMessages = {
     summaryPupils: PluralForms;
     dangerZoneTitle: string;
     dangerZoneCloseLead: string;
+    closeWillHappenTitle: string;
+    closeWillHappenItems: readonly [string, string, string];
+    closeConfirmTypeLabel: string;
     createNextToggle: string;
     archiveSummary: string;
     toastCreated: string;

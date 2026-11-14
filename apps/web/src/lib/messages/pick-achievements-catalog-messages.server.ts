@@ -10,6 +10,7 @@ export type AchievementsCatalogMessages = {
   recalcHint: string;
   recalcButton: string;
   rulesNote: string;
+  rulesNoteTitle: string;
   rulesNoteSeriesLead: string;
   rulesNoteOverviewInSeries: string;
   rulesNoteOverviewTerm: string;
@@ -65,6 +66,7 @@ export const pickAchievementsCatalogMessages = (
   recalcHint: getMessage(admin, "achievements.recalc_hint"),
   recalcButton: getMessage(admin, "achievements.recalc_button"),
   rulesNote: getMessage(admin, "achievements.rules_note"),
+  rulesNoteTitle: getMessage(admin, "achievements.rules_note_title"),
   rulesNoteSeriesLead: getMessage(admin, "achievements.rules_note_series_lead"),
   rulesNoteOverviewInSeries: getMessage(admin, "achievements.rules_note_overview_in_series"),
   rulesNoteOverviewTerm: getMessage(admin, "achievements.rules_note_overview_term"),

@@ -266,37 +266,37 @@ Review `diff-only`: профиль `lean` D6 (presentational).
 
 Review `diff-only`: профиль `lean` D6 (копирайт и presentational; права, мутации и данные не меняются).
 
-- [ ] P29-T35 · T1 · **U-01** · Spec: [ADR-022 §4.7 п. 1](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2 (б)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vBricks`
+- [x] P29-T35 · T1 · **U-01** · Spec: [ADR-022 §4.7 п. 1](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2 (б)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vBricks`
       Files: `apps/web/src/components/teacher/{BricksPageSummary,BalanceCards,BalanceTable,BalancePupilActions.client}.tsx`, `apps/web/src/lib/messages/{ru,en}/teacher.json` (`hints.t.bricks_*`), тесты
       Acceptance: один «?» у «К выдаче» с формулой «Набрано − Выдано = Остаток»; значки в карточках учеников убраны, подписи «Набрано / Выдано / Остаток» — обычным текстом (значок живёт в шапке/первой карточке); на `/bricks` значков ≤ 5 вместо ~94
       Paths: H [значков ≤ 5; формула в «К выдаче»] · N [нет учеников → без значков] · S n/a — presentational
 
-- [ ] P29-T36 · T1 · **U-02** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 каталог (`/approvals`)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vApprovals`
+- [x] P29-T36 · T1 · **U-02** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 каталог (`/approvals`)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vApprovals`
       Files: `apps/web/src/components/admin/{ApprovalRow,ApprovalsPageContent.server}.tsx`, `apps/web/src/lib/messages/{ru,en}/admin.json` (`hints.a.approvals_*`)
       Acceptance: «Версия согласия v1» → «Согласие v1» + «?» («Версия текста согласия, с которой пользователь согласился при регистрации»); у «Группы (активный год)» подсказка «Роль учителя выдаётся вместе с группами»; ключи `ru` и `en`, ≤ 200 знаков
       Paths: H [подсказки по тексту] · N [нет версии согласия → «—»] · S n/a — presentational; только admin
 
-- [ ] P29-T37 · T1 · **U-03** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 каталог (`/deletions`)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vDeletions`
+- [x] P29-T37 · T1 · **U-03** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 каталог (`/deletions`)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vDeletions`
       Files: `apps/web/src/components/admin/{DeletionRequestCard,DeletionTakeButton.client,DeletionPlanView}.tsx` (+ `DeletionRequestCard.test.tsx`), `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: «?» у «Обезличим» («Имя и контакты заменяются на «Удалённый ученик»; записи в журнале остаются»); у «Взять в работу» — что меняется для заявителя (подсказка рядом с кнопкой, **не внутри**); один бейдж срока «Просрочен на 28 дн.» (D-20 — отдельной задачей, здесь только подсказка)
       Paths: H [подсказки у «Обезличим» и «Взять в работу»] · N [нет срока → без бейджа; подсказка вне кнопки] · S n/a — presentational; только admin
 
-- [ ] P29-T38 · T1 · **U-04** · Spec: [ADR-022 §4.7 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2 (в)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vYear`
+- [x] P29-T38 · T1 · **U-04** · Spec: [ADR-022 §4.7 п. 4](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · [ADR-020 §4 п. 2 (в)](../../../prds/07_governance/adr_020_term_hints_everywhere_and_audit_polish.md) · Prototype: `vYear`
       Files: `apps/web/src/components/admin/{YearCloseButton,YearPageContent.server}.tsx` (+ `YearCloseButton.test.tsx`), `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: над кнопкой закрытия года — список «Что произойдёт» (3 пункта: учителя — только чтение; нельзя отменить; журнал сохраняется) и строка «Это нельзя отменить»; диалог подтверждения требует ввод «закрыть 2026–2027» (период из данных); `ConfirmDialog` остаётся
       Paths: H [список и подтверждение текстом] · N [неверный ввод → кнопка подтверждения неактивна; период не определён → «закрыть год»] · S n/a — presentational; мутация закрытия года и права не меняются
 
-- [ ] P29-T39 · T1 · **U-05** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vUsers`
+- [x] P29-T39 · T1 · **U-05** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vUsers`
       Files: `apps/web/src/components/admin/{UsersStatusFilter,UsersPageContent.server,UserRow}.tsx`, `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: один «?» у заголовка группы табов с таблицей «статус → что делать» («Регистрация», «Ожидает решения», «Нужно: выдать роль», «Активен», «Отключён», «Отклонён»); в строке — только значение статуса (без значка)
       Paths: H [одна таблица статусов] · N [неизвестный статус → строка без значка] · S n/a — presentational; только admin
 
-- [ ] P29-T40 · T1 · **U-06** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vPeople`
+- [x] P29-T40 · T1 · **U-06** · Spec: [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vPeople`
       Files: `apps/web/src/components/admin/{PeoplePageContent.server,PeopleListFilter,LegacyConsentBadge,LegacyConsentList}.tsx`, `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: «Перенесённые» без согласия и «Согласие на бумаге» — подсказки только через `TermLabel` (один стиль; других `title`/самодельных значков нет); grep по `LegacyConsentBadge` — только `TermLabel`
       Paths: H [один стиль подсказок] · N [нет перенесённых → строка скрыта] · S n/a — presentational; только admin
 
-- [ ] P29-T41 · T1 · **U-07** · Spec: [ADR-022 §4.6, §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vAchievements`
+- [x] P29-T41 · T1 · **U-07** · Spec: [ADR-022 §4.6, §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vAchievements`
       Files: `apps/web/src/components/achievements/{AchievementsPageContent.server,AchievementsRulesNote.client}.tsx`, `apps/web/src/lib/messages/{ru,en}/admin.json`
       Acceptance: плотный абзац про серии разбит на 3 пункта списка «Правила» с заголовком; «?» только у «Серия» и «Обзорный урок» (по одному на экран); левая колонка текста на 768 ≥ 280 px
       Paths: H [список из 3 пунктов] · N [нет правил → пустое состояние] · S n/a — presentational
