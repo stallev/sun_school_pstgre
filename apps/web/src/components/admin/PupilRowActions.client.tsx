@@ -74,7 +74,7 @@ export const PupilRowActions = ({
   };
 
   const primaryButton = (label: ReactNode, onClick: () => void) => (
-    <Button type="button" className="h-9" onClick={onClick}>
+    <Button type="button" className="h-9 min-w-28" onClick={onClick}>
       {label}
     </Button>
   );

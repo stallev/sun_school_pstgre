@@ -73,7 +73,7 @@ export const UserRow = ({
       </div>
       <Button
         variant={showNeedsRole ? "default" : "outline"}
-        className="w-full md:w-auto"
+        className="w-full min-w-28 md:w-auto"
         render={<CustomLink href={profileHref} />}
       >
         {primaryActionLabel}

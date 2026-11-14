@@ -108,7 +108,7 @@ export const DeletionRequestCard = ({
             )
           ) : null}
           {row.takenByDisplayName ? (
-            <ContentText tone="muted" className="text-xs">
+            <ContentText tone="muted" className="text-sm">
               {d.takenBy.replace("{name}", row.takenByDisplayName)}
             </ContentText>
           ) : null}

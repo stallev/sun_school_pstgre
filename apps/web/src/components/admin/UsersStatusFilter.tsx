@@ -36,7 +36,7 @@ export const UsersStatusFilter = ({
       term={nonEmptyTerm(statusHint.term)}
       hint={statusHint.hint}
       ariaLabel={statusHint.term}
-      className="text-sm text-ink-2"
+      className="text-sm font-medium text-ink-2"
       popoverSide="top"
     />
     <nav

@@ -10,6 +10,7 @@ import { PageSection } from "@/components/ui/page-section";
 import { readFeaturesParentsEnabled } from "@/data/families/family-feature.server";
 import { readProductFeatureFlags } from "@/data/shell/read-product-feature-flags.server";
 import { requireRole } from "@/lib/auth/require-user";
+import { buildGuideTocGroups } from "@/lib/guide/build-guide-toc-groups";
 import { filterGuideSections } from "@/lib/guide/filter-guide-sections";
 import type { GuideDictionary } from "@/lib/guide/guide-content-types";
 import { getPrisma } from "@/lib/db.server";
@@ -53,7 +54,11 @@ export const GuidePageContent = async () => {
   return (
     <PageSection width="form" className="flex flex-col gap-section">
       <PageHeader title={pageTitle} />
-      <GuideToc heading={guide.tocHeading} sections={sections} />
+      <GuideToc
+        heading={guide.tocHeading}
+        jumpLabel={guide.tocJump}
+        groups={buildGuideTocGroups(sections, guide.roles[contentRole].tocGroups)}
+      />
       <div className="flex flex-col gap-section">
         {sections.map((section) => (
           <GuideSectionBlock key={section.id} section={section} />

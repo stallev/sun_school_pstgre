@@ -90,8 +90,11 @@ export const UserMenu = ({
         >
           {profileInitial(displayName)}
         </span>
-        <span className="hidden max-w-[10rem] truncate text-base font-medium xl:inline">
+        <span className="hidden min-w-0 max-w-[14rem] truncate text-base font-medium xl:inline" title={displayName}>
           {displayName}
+          {roleSubtitle ? (
+            <span className="font-normal text-muted"> · {roleSubtitle}</span>
+          ) : null}
         </span>
         <ChevronDownIcon className="size-4 shrink-0 text-ink-2 hidden sm:block" aria-hidden />
       </button>
@@ -102,7 +105,7 @@ export const UserMenu = ({
           role="menu"
         >
           <div className="border-b border-line px-2.5 pt-1 pb-2">
-            <p className="font-medium text-ink">{displayName}</p>
+            <p className="break-words font-medium text-ink">{displayName}</p>
             {roleSubtitle ? <p className="text-sm text-muted">{roleSubtitle}</p> : null}
           </div>
           <CustomLink

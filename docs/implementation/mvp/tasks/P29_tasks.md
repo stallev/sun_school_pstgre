@@ -343,22 +343,22 @@ Review `diff-only`: профиль `lean` D6 (presentational; редактор �
 
 Review `diff-only`: профиль `lean` D6 (presentational; **U-11 не меняет `lib/auth/**` и форму сессии** — только отображение уже доступного имени, иначе — отдельный T3-CU).
 
-- [ ] P29-T48 · T1 · **U-09** · Spec: [ADR-022 §4.2 (`--space-section`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGuide`
+- [x] P29-T48 · T1 · **U-09** · Spec: [ADR-022 §4.2 (`--space-section`)](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md) · Prototype: `vGuide`
       Files: `apps/web/src/app/(app)/guide/page.tsx`, `apps/web/src/components/guide/*.tsx` (имена — по факту), `apps/web/src/lib/messages/{ru,en}/guide.json` (`tocHeading`, `roles` — структура оглавления)
       Acceptance: оглавление `/guide` сгруппировано по ролям (администратор / учитель / общие), 13 пунктов не одним списком; активный пункт подсвечивается при прокрутке (`aria-current="location"`); на мобильных — плавающая кнопка «К оглавлению»; `reduced-motion` → без плавной прокрутки
       Paths: H [группы по ролям; подсветка] · N [нет JS → оглавление — обычные ссылки; пустая группа → скрыта] · S n/a — presentational; видимость руководства по ролям не меняется
 
-- [ ] P29-T49 · T0 · **U-10** · Spec: [ADR-022 §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)
+- [x] P29-T49 · T0 · **U-10** · Spec: [ADR-022 §4.3](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)
       Files: `apps/web/src/components/admin/{UserRow,PupilRow,ApprovalRow,DeletionRequestCard}.tsx`, `apps/web/src/components/ui/{row-actions-menu,button}.tsx`
       Acceptance: колонка действий в списках («Профиль», «Выдать роль» и т. п.) — `min-w-28` (≈ 126 px), ширина не «прыгает» между строками (замер ±1 px по строкам списка на `/users`, `/people`)
       Paths: H [единая ширина колонки действий] · N [одно действие → та же ширина; длинная подпись → перенос] · S n/a — presentational
 
-- [ ] P29-T50 · T1 · **U-11** · Spec: [global_shell_spec §6.3 «Меню пользователя» (отображаемое имя без email)](../specs/global_shell_spec.md) · [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)
+- [x] P29-T50 · T1 · **U-11** · Spec: [global_shell_spec §6.3 «Меню пользователя» (отображаемое имя без email)](../specs/global_shell_spec.md) · [ADR-022 §4.7](../../../prds/07_governance/adr_022_responsive_shell_spacing_and_density.md)
       Files: `apps/web/src/components/shell/{user-menu,shell-header.client}.tsx` (+ `shell-header.client.test.ts`), `apps/web/src/lib/messages/{ru,en}/common.json`
       Acceptance: в шапке/меню профиля — отображаемое имя пользователя; роль — вторичной подписью («Иван Петров · администратор»); нет имени → «Пользователь · {роль}» (ключ `common.shell.display_name_fallback`, как сейчас); email в шапке не показывается; источник имени — проп `displayName`, который `app-shell.tsx` уже передаёт в `shell-header.client.tsx` и `UserMenu` (без изменений `lib/auth/**`, `(app)/layout.tsx`, сессии, маршрутов); тест `shell-header`: имя + роль, фолбэк при пустом имени, нет `@` в тексте шапки
       Paths: H [шапка: имя + роль] · N [пустое имя → фолбэк; длинное имя → `truncate` с `title` только в шапке (плотная строка, исключение ADR-022 §4.5 п. 4), в меню — перенос] · S n/a — новых данных нет: показывается то же отображаемое имя текущего пользователя, что уже приходит в шапку (`displayName`); email и чужие данные не выводятся; auth, сессия и policy не меняются. Если для имени понадобится менять `lib/auth/**` или форму сессии — S-триггер, отдельный CU T3
 
-- [ ] P29-T51 · T0 · **U-12** · Spec: [UX-03 §6, §10 (`text-sm` — пол)](../../../design/visual_identity_contract.md)
+- [x] P29-T51 · T0 · **U-12** · Spec: [UX-03 §6, §10 (`text-sm` — пол)](../../../design/visual_identity_contract.md)
       Files: `apps/web/src/components/ui/{label,field}.tsx`, `apps/web/src/components/admin/{UsersStatusFilter,PeopleGroupFilter}.tsx`, `apps/web/src/components/teacher/{LessonsGradeFilter,LessonCheckTableFilters}.tsx`
       Acceptance: подписи полей/секций в мобильных списках («Статусы», «Группа», «Период») ≥ 15,75 px (`text-sm` — нижний предел; не `text-xs`), вес `font-medium`; замер `getComputedStyle` ≥ 15,75 px на 360
       Paths: H [подписи ≥ 15,75 px] · N [локаль `en` — длиннее → перенос] · S n/a — presentational
